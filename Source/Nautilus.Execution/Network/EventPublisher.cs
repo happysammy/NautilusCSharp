@@ -19,7 +19,7 @@ namespace Nautilus.Execution.Network
     /// <summary>
     /// Provides an event publisher for the messaging server.
     /// </summary>
-    public sealed class EventPublisher : Publisher
+    public sealed class EventPublisher : MessagePublisher
     {
         private const string NAUTILUS = "NAUTILUS";
         private const string ACCOUNT = "ACCOUNT";

@@ -17,7 +17,7 @@ namespace Nautilus.Data.Network
     /// <summary>
     /// Provides a publisher for <see cref="Tick"/> data.
     /// </summary>
-    public sealed class TickPublisher : Publisher
+    public sealed class TickPublisher : MessagePublisher
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TickPublisher"/> class.

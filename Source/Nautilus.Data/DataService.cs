@@ -112,11 +112,11 @@ namespace Nautilus.Data
             this.CreateTrimTickDataJob();
             this.CreateTrimBarDataJob();
 
-            this.Send(DataServiceAddress.TickResponder, start);
+            this.Send(DataServiceAddress.TickProvider, start);
             this.Send(DataServiceAddress.TickPublisher, start);
-            this.Send(DataServiceAddress.BarResponder, start);
+            this.Send(DataServiceAddress.BarProvider, start);
             this.Send(DataServiceAddress.BarPublisher, start);
-            this.Send(DataServiceAddress.InstrumentResponder, start);
+            this.Send(DataServiceAddress.InstrumentProvider, start);
             this.Send(DataServiceAddress.InstrumentPublisher, start);
         }
 
@@ -125,11 +125,11 @@ namespace Nautilus.Data
         {
             this.Send(DataServiceAddress.DatabaseTaskManager, stop);
             this.Send(DataServiceAddress.FixGateway, stop);
-            this.Send(DataServiceAddress.TickResponder, stop);
+            this.Send(DataServiceAddress.TickProvider, stop);
             this.Send(DataServiceAddress.TickPublisher, stop);
-            this.Send(DataServiceAddress.BarResponder, stop);
+            this.Send(DataServiceAddress.BarProvider, stop);
             this.Send(DataServiceAddress.BarPublisher, stop);
-            this.Send(DataServiceAddress.InstrumentResponder, stop);
+            this.Send(DataServiceAddress.InstrumentProvider, stop);
             this.Send(DataServiceAddress.InstrumentPublisher, stop);
         }
 

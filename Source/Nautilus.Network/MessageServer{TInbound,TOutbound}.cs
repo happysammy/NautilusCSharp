@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="Server{T}.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="MessageServer{TInbound,TOutbound}.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
@@ -24,19 +24,21 @@ namespace Nautilus.Network
     /// <summary>
     /// The base class for all messaging servers.
     /// </summary>
-    /// <typeparam name="T">The inbound message type.</typeparam>
-    public abstract class Server<T> : Component
-        where T : Message
+    /// <typeparam name="TInbound">The inbound message type.</typeparam>
+    /// <typeparam name="TOutbound">The outbound response type.</typeparam>
+    public abstract class MessageServer<TInbound, TOutbound> : Component
+        where TInbound : Message
+        where TOutbound : Response
     {
-        private readonly IMessageSerializer<T> inboundSerializer;
-        private readonly IMessageSerializer<Response> outboundSerializer;
+        private readonly IMessageSerializer<TInbound> inboundSerializer;
+        private readonly IMessageSerializer<TOutbound> outboundSerializer;
         private readonly CancellationTokenSource cts;
         private readonly RouterSocket socket;
 
         private bool isReceiving;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Server{TInbound}"/> class.
+        /// Initializes a new instance of the <see cref="MessageServer{TInbound, TOutbound}"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
         /// <param name="inboundSerializer">The inbound message serializer.</param>
@@ -44,10 +46,10 @@ namespace Nautilus.Network
         /// <param name="host">The consumer host address.</param>
         /// <param name="port">The consumer port.</param>
         /// <param name="id">The consumer identifier.</param>
-        protected Server(
+        protected MessageServer(
             IComponentryContainer container,
-            IMessageSerializer<T> inboundSerializer,
-            IMessageSerializer<Response> outboundSerializer,
+            IMessageSerializer<TInbound> inboundSerializer,
+            IMessageSerializer<TOutbound> outboundSerializer,
             NetworkAddress host,
             NetworkPort port,
             Guid id)
@@ -93,7 +95,7 @@ namespace Nautilus.Network
         protected override void OnStart(Start start)
         {
             this.socket.Bind(this.ServerAddress.Value);
-            this.Log.Debug($"Bound router socket to {this.ServerAddress}");
+            this.Log.Debug($"Bound {this.socket.GetType().Name} to {this.ServerAddress}");
 
             this.isReceiving = true;
             Task.Run(this.StartWork, this.cts.Token);
@@ -105,7 +107,7 @@ namespace Nautilus.Network
             this.isReceiving = false;
             this.cts.Cancel();
             this.socket.Unbind(this.ServerAddress.Value);
-            this.Log.Debug($"Unbound router socket from {this.ServerAddress}");
+            this.Log.Debug($"Unbound {this.socket.GetType().Name} from {this.ServerAddress}");
 
             this.socket.Dispose();
         }
@@ -115,17 +117,24 @@ namespace Nautilus.Network
         /// </summary>
         /// <param name="receiverId">The receiver identity.</param>
         /// <param name="outbound">The outbound message to send.</param>
-        protected void SendMessage(byte[] receiverId, Response outbound)
+        protected void SendMessage(byte[] receiverId, TOutbound outbound)
         {
-            var message = new NetMQMessage(3);
-            message.Append(receiverId);
-            message.AppendEmptyFrame(); // Delimiter
-            message.Append(this.outboundSerializer.Serialize(outbound));
+            try
+            {
+                var message = new NetMQMessage(3);
+                message.Append(receiverId);
+                message.AppendEmptyFrame(); // Delimiter
+                message.Append(this.outboundSerializer.Serialize(outbound));
 
-            this.socket.SendMultipartMessage(message);
+                this.socket.SendMultipartMessage(message);
 
-            this.SentCount++;
-            this.Log.Verbose($"Sent message[{this.SentCount}] {outbound}");
+                this.SentCount++;
+                this.Log.Verbose($"Sent message[{this.SentCount}] {outbound}");
+            }
+            catch (Exception ex)
+            {
+                this.Log.Error(ex.Message);
+            }
         }
 
         /// <summary>
@@ -143,7 +152,12 @@ namespace Nautilus.Network
                 message,
                 correlationId,
                 Guid.NewGuid(),
-                this.TimeNow());
+                this.TimeNow()) as TOutbound;
+
+            if (rejected is null)
+            {
+                return; // This can never happen due to generic type constraints.
+            }
 
             this.SendMessage(receiverId, rejected);
         }
@@ -165,7 +179,7 @@ namespace Nautilus.Network
             var senderId = zmqMessage[0];
             var payload = this.inboundSerializer.Deserialize(zmqMessage[2]);
 
-            var received = new ReceivedMessage<T>(senderId, payload);
+            var received = new ReceivedMessage<TInbound>(senderId, payload);
 
             this.SendToSelf(received);
 
@@ -179,7 +193,7 @@ namespace Nautilus.Network
         /// <param name="message">The unhandled object.</param>
         private void UnhandledRequest(object message)
         {
-            if (message is ReceivedMessage<T> request)
+            if (message is ReceivedMessage<TInbound> request)
             {
                 var errorMessage = $"Message type {request.Payload.Type.Name} not valid on this port";
                 this.SendRejected(request.SenderId, request.Payload.Id, errorMessage);

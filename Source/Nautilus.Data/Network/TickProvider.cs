@@ -22,7 +22,7 @@ namespace Nautilus.Data.Network
     /// <summary>
     /// Provides a responder for <see cref="Instrument"/> data requests.
     /// </summary>
-    public sealed class TickProvider : Server<Request>
+    public sealed class TickProvider : MessageServer<Request, Response>
     {
         private readonly ITickRepository repository;
 

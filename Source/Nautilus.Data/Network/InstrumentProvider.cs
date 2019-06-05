@@ -21,7 +21,7 @@ namespace Nautilus.Data.Network
     /// <summary>
     /// Provides a responder for <see cref="Instrument"/> data requests.
     /// </summary>
-    public sealed class InstrumentProvider : Server<Request>
+    public sealed class InstrumentProvider : MessageServer<Request, Response>
     {
         private readonly IInstrumentRepository repository;
         private readonly IInstrumentSerializer instrumentSerializer;

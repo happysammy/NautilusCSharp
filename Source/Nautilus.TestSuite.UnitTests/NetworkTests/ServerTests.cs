@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="RouterTests.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="ServerTests.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -13,7 +13,9 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
     using System.Text;
     using System.Threading.Tasks;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messages.Responses;
     using Nautilus.Network;
+    using Nautilus.Serialization;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NetMQ;
@@ -27,7 +29,8 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         private readonly ITestOutputHelper output;
         private readonly IComponentryContainer container;
         private readonly MockLoggingAdapter mockLoggingAdapter;
-        private readonly MockMessagingAgent testReceiver;
+        private readonly MockSerializer serializer;
+        private readonly MsgPackResponseSerializer responseSerializer;
 
         public ServerTests(ITestOutputHelper output)
         {
@@ -37,16 +40,15 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             var containerFactory = new StubComponentryContainerFactory();
             this.container = containerFactory.Create();
             this.mockLoggingAdapter = containerFactory.LoggingAdapter;
-            this.testReceiver = new MockMessagingAgent();
-            this.testReceiver.RegisterHandler<string>(this.testReceiver.OnMessage);
+            this.serializer = new MockSerializer();
+            this.responseSerializer = new MsgPackResponseSerializer();
         }
 
         [Fact]
         internal void Test_can_receive_one_message()
         {
             // Arrange
-            var server = new MockServer(
-                this.testReceiver.Endpoint,
+            var server = new MockMessageServer(
                 this.container,
                 NetworkAddress.LocalHost,
                 new NetworkPort(5555),
@@ -58,18 +60,18 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             requester.Connect(testAddress);
 
             // Act
-            var message = new MockMessage("TEST", Guid.NewGuid(), StubZonedDateTime.UnixEpoch());
-            var serialized = new MockSerializer().Serialize(message);
-            requester.SendFrame(serialized);
+            var message = new MockMessage(
+                "TEST",
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
 
-            Task.Delay(100).Wait();
-
-            // var response = requester.ReceiveMultipartMessage();
+            requester.SendFrame(this.serializer.Serialize(message));
+            var response = this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
 
             // Assert
-            // this.output.WriteLine(Encoding.UTF8.GetString(response));
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
-            Assert.Contains("MSG", this.testReceiver.Messages);
+            Assert.Equal(typeof(MessageReceived), response.Type);
+            Assert.Contains(message, server.ReceivedMessages);
 
             // Tear Down
             requester.Disconnect(testAddress);
@@ -82,8 +84,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         internal void Test_can_receive_multiple_messages()
         {
             // Arrange
-            var server = new MockServer(
-                this.testReceiver.Endpoint,
+            var server = new MockMessageServer(
                 this.container,
                 NetworkAddress.LocalHost,
                 new NetworkPort(5556),
@@ -95,19 +96,29 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             requester.Connect(testAddress);
 
             // Act
-            requester.SendFrame("MSG-1");
-            var response1 = Encoding.UTF8.GetString(requester.ReceiveFrameBytes());
-            requester.SendFrame("MSG-2");
-            var response2 = Encoding.UTF8.GetString(requester.ReceiveFrameBytes());
+            var message1 = new MockMessage(
+                "TEST1",
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
 
-            Task.Delay(100).Wait();
+            var message2 = new MockMessage(
+                "TEST2",
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            requester.SendFrame(this.serializer.Serialize(message1));
+            var response1 = this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
+
+            requester.SendFrame(this.serializer.Serialize(message2));
+            var response2 = this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
+
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdapter, this.output);
-            Assert.Contains("MSG-1", this.testReceiver.Messages);
-            Assert.Contains("MSG-2", this.testReceiver.Messages);
-            Assert.Equal("OK", response1);
-            Assert.Equal("OK", response2);
+            Assert.Contains(message1, server.ReceivedMessages);
+            Assert.Contains(message2, server.ReceivedMessages);
+            Assert.Equal(typeof(MessageReceived), response1.Type);
+            Assert.Equal(typeof(MessageReceived), response2.Type);
 
             // Tear Down
             requester.Disconnect(testAddress);
@@ -120,8 +131,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         internal void Test_can_be_stopped()
         {
             // Arrange
-            var server = new MockServer(
-                this.testReceiver.Endpoint,
+            var server = new MockMessageServer(
                 this.container,
                 NetworkAddress.LocalHost,
                 new NetworkPort(5557),
@@ -132,19 +142,30 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             var requester = new RequestSocket(testAddress);
             requester.Connect(testAddress);
 
-            requester.SendFrame("MSG");
-            requester.ReceiveFrameBytes();
-            Task.Delay(100).Wait();
+            var message1 = new MockMessage(
+                "TEST1",
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            requester.SendFrame(this.serializer.Serialize(message1));
+            var response1 = this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
 
             // Act
             server.Stop();
+            Task.Delay(100).Wait(); // Allow server to stop
 
-            requester.SendFrame("AFTER-STOPPED");
+            var message2 = new MockMessage(
+                "AFTER-STOP",
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+            requester.SendFrame(this.serializer.Serialize(message2));
+
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdapter, this.output);
-            Assert.Contains("MSG", this.testReceiver.Messages);
-            Assert.DoesNotContain("AFTER-STOPPED", this.testReceiver.Messages);
+            Assert.Equal(typeof(MessageReceived), response1.Type);
+            Assert.Contains(message1, server.ReceivedMessages);
+            Assert.DoesNotContain(message2, server.ReceivedMessages);
 
             // Tear Down
             requester.Disconnect(testAddress);
@@ -156,8 +177,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         internal void Test_can_receive_one_thousand_messages_in_order()
         {
             // Arrange
-            var server = new MockServer(
-                this.testReceiver.Endpoint,
+            var server = new MockMessageServer(
                 this.container,
                 NetworkAddress.LocalHost,
                 new NetworkPort(5558),
@@ -171,17 +191,21 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             // Act
             for (var i = 0; i < 1000; i++)
             {
-                requester.SendFrame($"MSG-{i}");
-                requester.ReceiveFrameBytes();
+                var message = new MockMessage(
+                    $"TEST-{i}",
+                    Guid.NewGuid(),
+                    StubZonedDateTime.UnixEpoch());
+
+                requester.SendFrame(this.serializer.Serialize(message));
+                this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
             }
 
-            Task.Delay(100).Wait();
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdapter, this.output);
-            Assert.Equal(1000, this.testReceiver.Messages.Count);
-            Assert.Equal("MSG-999", this.testReceiver.Messages[this.testReceiver.Messages.Count - 1]);
-            Assert.Equal("MSG-998", this.testReceiver.Messages[this.testReceiver.Messages.Count - 2]);
+            Assert.Equal(1000, server.ReceivedMessages.Count);
+            Assert.Equal("TEST-999", server.ReceivedMessages[server.ReceivedMessages.Count - 1].Payload);
+            Assert.Equal("TEST-998", server.ReceivedMessages[server.ReceivedMessages.Count - 2].Payload);
 
             // Tear Down
             requester.Disconnect(testAddress);
@@ -194,8 +218,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         internal void Test_can_receive_one_thousand_messages_from_multiple_request_sockets()
         {
             // Arrange
-            var server = new MockServer(
-                this.testReceiver.Endpoint,
+            var server = new MockMessageServer(
                 this.container,
                 NetworkAddress.LocalHost,
                 new NetworkPort(5559),
@@ -211,21 +234,30 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             // Act
             for (var i = 0; i < 1000; i++)
             {
-                requester1.SendFrame($"MSG-{i} from 1");
-                requester2.SendFrame($"MSG-{i} from 2");
-                requester1.ReceiveFrameBytes();
-                requester2.ReceiveFrameBytes();
+                var message1 = new MockMessage(
+                    $"TEST-{i} from 1",
+                    Guid.NewGuid(),
+                    StubZonedDateTime.UnixEpoch());
+
+                var message2 = new MockMessage(
+                    $"TEST-{i} from 2",
+                    Guid.NewGuid(),
+                    StubZonedDateTime.UnixEpoch());
+
+                requester1.SendFrame(this.serializer.Serialize(message1));
+                this.responseSerializer.Deserialize(requester1.ReceiveFrameBytes());
+                requester2.SendFrame(this.serializer.Serialize(message2));
+                this.responseSerializer.Deserialize(requester2.ReceiveFrameBytes());
             }
 
-            Task.Delay(100).Wait();
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdapter, this.output);
-            Assert.Equal(2000, this.testReceiver.Messages.Count);
-            Assert.Equal("MSG-999 from 2", this.testReceiver.Messages[this.testReceiver.Messages.Count - 1]);
-            Assert.Equal("MSG-999 from 1", this.testReceiver.Messages[this.testReceiver.Messages.Count - 2]);
-            Assert.Equal("MSG-998 from 2", this.testReceiver.Messages[this.testReceiver.Messages.Count - 3]);
-            Assert.Equal("MSG-998 from 1", this.testReceiver.Messages[this.testReceiver.Messages.Count - 4]);
+            Assert.Equal(2000, server.ReceivedMessages.Count);
+            Assert.Equal("TEST-999 from 2", server.ReceivedMessages[server.ReceivedMessages.Count - 1].Payload);
+            Assert.Equal("TEST-999 from 1", server.ReceivedMessages[server.ReceivedMessages.Count - 2].Payload);
+            Assert.Equal("TEST-998 from 2", server.ReceivedMessages[server.ReceivedMessages.Count - 3].Payload);
+            Assert.Equal("TEST-998 from 1", server.ReceivedMessages[server.ReceivedMessages.Count - 4].Payload);
 
             // Tear Down
             requester1.Disconnect(testAddress);

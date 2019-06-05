@@ -18,7 +18,7 @@ namespace Nautilus.Execution.Network
     /// <summary>
     /// Provides a command server for received and deserializing commands.
     /// </summary>
-    public sealed class CommandServer : Server<Command>
+    public sealed class CommandServer : MessageServer<Command, Response>
     {
         private readonly IEndpoint receiver;
 

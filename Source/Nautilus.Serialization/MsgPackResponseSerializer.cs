@@ -35,6 +35,9 @@ namespace Nautilus.Serialization
 
             switch (response)
             {
+                case MessageReceived res:
+                    package.Add(nameof(res.MessageType), res.MessageType);
+                    break;
                 case MessageRejected res:
                     package.Add(nameof(res.Message), res.Message);
                     break;
@@ -62,6 +65,12 @@ namespace Nautilus.Serialization
 
             switch (response)
             {
+                case nameof(MessageReceived):
+                    return new MessageReceived(
+                        unpacked[nameof(MessageReceived.MessageType)].ToString(),
+                        correlationId,
+                        id,
+                        timestamp);
                 case nameof(MessageRejected):
                     return new MessageRejected(
                         unpacked[nameof(MessageRejected.Message)].ToString(),

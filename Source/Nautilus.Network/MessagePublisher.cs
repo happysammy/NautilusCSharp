@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="Publisher.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="MessagePublisher.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
@@ -20,19 +20,19 @@ namespace Nautilus.Network
     /// <summary>
     /// Provides a messaging consumer.
     /// </summary>
-    public abstract class Publisher : Component
+    public abstract class MessagePublisher : Component
     {
         private readonly PublisherSocket socket;
         private int cycles;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Publisher"/> class.
+        /// Initializes a new instance of the <see cref="MessagePublisher"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
         /// <param name="host">The publishers host address.</param>
         /// <param name="port">The publishers port.</param>
         /// <param name="id">The publishers identifier.</param>
-        protected Publisher(
+        protected MessagePublisher(
             IComponentryContainer container,
             NetworkAddress host,
             NetworkPort port,
@@ -62,14 +62,14 @@ namespace Nautilus.Network
         protected override void OnStart(Start start)
         {
             this.socket.Bind(this.ServerAddress.Value);
-            this.Log.Debug($"Bound publisher socket to {this.ServerAddress}");
+            this.Log.Debug($"Bound {this.socket.GetType().Name} to {this.ServerAddress}");
         }
 
         /// <inheritdoc />
         protected override void OnStop(Stop stop)
         {
             this.socket.Unbind(this.ServerAddress.Value);
-            this.Log.Debug($"Unbound publisher socket from {this.ServerAddress}");
+            this.Log.Debug($"Unbound {this.socket.GetType().Name} from {this.ServerAddress}");
 
             this.socket.Dispose();
         }

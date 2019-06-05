@@ -33,7 +33,7 @@ namespace Nautilus.Common.Messages.Responses
             Guid id,
             ZonedDateTime timestamp)
             : base(
-                typeof(StatusResponse),
+                typeof(MessageReceived),
                 correlationId,
                 id,
                 timestamp)

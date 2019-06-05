@@ -23,7 +23,7 @@ namespace Nautilus.Data.Network
     /// <summary>
     /// Provides a responder for <see cref="Instrument"/> data requests.
     /// </summary>
-    public sealed class BarProvider : Server<Request>
+    public sealed class BarProvider : MessageServer<Request, Response>
     {
         private readonly IBarRepository repository;
 

@@ -72,7 +72,7 @@ namespace NautilusData
             var instrumentRepository = new RedisInstrumentRepository(redisConnection);
             instrumentRepository.CacheAll();
 
-            var tickResponder = new TickProvider(
+            var tickProvider = new TickProvider(
                 container,
                 tickRepository,
                 new MsgPackRequestSerializer(),
@@ -85,7 +85,7 @@ namespace NautilusData
                 config.ServerAddress,
                 config.TickSubscribePort);
 
-            var barResponder = new BarProvider(
+            var barProvider = new BarProvider(
                 container,
                 barRepository,
                 new MsgPackRequestSerializer(),
@@ -98,7 +98,7 @@ namespace NautilusData
                 config.ServerAddress,
                 config.BarSubscribePort);
 
-            var instrumentResponder = new InstrumentProvider(
+            var instrumentProvider = new InstrumentProvider(
                 container,
                 instrumentRepository,
                 new MsgPackInstrumentSerializer(),
@@ -139,11 +139,11 @@ namespace NautilusData
                 { DataServiceAddress.DatabaseTaskManager, databaseTaskManager.Endpoint },
                 { DataServiceAddress.BarAggregationController, barAggregationController.Endpoint },
                 { DataServiceAddress.TickStore, tickRepository.Endpoint },
-                { DataServiceAddress.TickResponder, tickResponder.Endpoint },
+                { DataServiceAddress.TickProvider, tickProvider.Endpoint },
                 { DataServiceAddress.TickPublisher, tickPublisher.Endpoint },
-                { DataServiceAddress.BarResponder, barResponder.Endpoint },
+                { DataServiceAddress.BarProvider, barProvider.Endpoint },
                 { DataServiceAddress.BarPublisher, barPublisher.Endpoint },
-                { DataServiceAddress.InstrumentResponder, instrumentResponder.Endpoint },
+                { DataServiceAddress.InstrumentProvider, instrumentProvider.Endpoint },
                 { DataServiceAddress.InstrumentPublisher, instrumentPublisher.Endpoint },
             };
 
