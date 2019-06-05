@@ -84,7 +84,7 @@ namespace Nautilus.Network
             this.socket.SendMultipartBytes(topic, message);
 
             this.cycles++;
-            this.Log.Verbose($"Published message[{this.cycles}] on {this.ServerAddress.Value}.");
+            this.Log.Verbose($"Published message[{this.cycles}]");
         }
     }
 }

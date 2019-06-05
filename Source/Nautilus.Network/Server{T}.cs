@@ -125,7 +125,7 @@ namespace Nautilus.Network
             this.socket.SendMultipartMessage(message);
 
             this.SentCount++;
-            this.Log.Verbose($"Sent message[{this.SentCount}] on {this.ServerAddress.Value}.");
+            this.Log.Verbose($"Sent message[{this.SentCount}] {outbound}");
         }
 
         /// <summary>
@@ -170,8 +170,7 @@ namespace Nautilus.Network
             this.SendToSelf(received);
 
             this.ReceivedCount++;
-            this.Log.Verbose($"Received message[{this.ReceivedCount}] " +
-                             $"{received.Payload.Type.Name} on {this.ServerAddress.Value}.");
+            this.Log.Verbose($"Received message[{this.ReceivedCount}] {received.Payload}");
         }
 
         /// <summary>
