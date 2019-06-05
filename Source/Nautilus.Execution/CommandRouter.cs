@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="CommandServer.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="CommandRouter.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
@@ -23,34 +23,37 @@ namespace Nautilus.Execution
     /// Provides a <see cref="Command"/> message server using the ZeroMQ protocol.
     /// </summary>
     [PerformanceOptimized]
-    public class CommandServer : ComponentBusConnected
+    public class CommandRouter : ComponentBusConnected
     {
-        private readonly IEndpoint commandRouter;
+        private readonly CommandServer commandServer;
         private readonly Throttler commandThrottler;
         private readonly Throttler newOrderThrottler;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CommandServer"/> class.
+        /// Initializes a new instance of the <see cref="CommandRouter"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
-        /// <param name="commandSerializer">The command serializer.</param>
+        /// <param name="inboundSerializer">The inbound message serializer.</param>
+        /// <param name="outboundSerializer">The outbound message serializer.</param>
         /// <param name="orderManager">The order manager endpoint.</param>
         /// <param name="config">The service configuration.</param>
-        public CommandServer(
+        public CommandRouter(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
-            ICommandSerializer commandSerializer,
+            IMessageSerializer<Command> inboundSerializer,
+            IMessageSerializer<Response> outboundSerializer,
             IEndpoint orderManager,
             Configuration config)
             : base(container, messagingAdapter)
         {
-            this.commandRouter = new CommandRouter(
+            this.commandServer = new Network.CommandServer(
                 container,
-                commandSerializer,
+                inboundSerializer,
+                outboundSerializer,
                 this.Endpoint,
                 config.ServerAddress,
-                config.CommandsPort).Endpoint;
+                config.CommandsPort);
 
             this.commandThrottler = new Throttler(
                 container,
@@ -75,14 +78,14 @@ namespace Nautilus.Execution
         protected override void OnStart(Start message)
         {
             // Forward start message.
-            this.commandRouter.Send(message);
+            this.commandServer.Endpoint.Send(message);
         }
 
         /// <inheritdoc />
         protected override void OnStop(Stop message)
         {
             // Forward stop message.
-            this.commandRouter.Send(message);
+            this.commandServer.Endpoint.Send(message);
         }
 
         private void OnMessage(SubmitOrder message)

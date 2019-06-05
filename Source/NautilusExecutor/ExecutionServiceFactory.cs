@@ -67,10 +67,11 @@ namespace NautilusExecutor
                 messagingAdapter,
                 fixGateway);
 
-            var commandServer = new CommandServer(
+            var commandServer = new CommandRouter(
                 container,
                 messagingAdapter,
                 new MsgPackCommandSerializer(),
+                new MsgPackResponseSerializer(),
                 orderManager.Endpoint,
                 config);
 

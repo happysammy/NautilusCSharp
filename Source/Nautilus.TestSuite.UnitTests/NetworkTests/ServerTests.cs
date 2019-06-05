@@ -22,14 +22,14 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class RouterTests
+    public class ServerTests
     {
         private readonly ITestOutputHelper output;
         private readonly IComponentryContainer container;
         private readonly MockLoggingAdapter mockLoggingAdapter;
         private readonly MockMessagingAgent testReceiver;
 
-        public RouterTests(ITestOutputHelper output)
+        public ServerTests(ITestOutputHelper output)
         {
             // Fixture Setup
             this.output = output;
@@ -45,17 +45,17 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         internal void Test_can_receive_one_message()
         {
             // Arrange
-            const string testAddress = "tcp://127.0.0.1:5555";
-            var requester = new RequestSocket(testAddress);
-            requester.Connect(testAddress);
-
-            var consumer = new MockRouter(
+            var server = new MockServer(
                 this.testReceiver.Endpoint,
                 this.container,
                 NetworkAddress.LocalHost,
                 new NetworkPort(5555),
                 Guid.NewGuid());
-            consumer.Start();
+            server.Start();
+
+            const string testAddress = "tcp://127.0.0.1:5555";
+            var requester = new RequestSocket(testAddress);
+            requester.Connect(testAddress);
 
             // Act
             requester.SendFrame("MSG");
@@ -72,7 +72,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             // Tear Down
             requester.Disconnect(testAddress);
             requester.Dispose();
-            consumer.Stop();
+            server.Stop();
             Task.Delay(100).Wait();  // Allows sockets to dispose
         }
 
@@ -80,17 +80,17 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         internal void Test_can_receive_multiple_messages()
         {
             // Arrange
-            const string testAddress = "tcp://127.0.0.1:5556";
-            var requester = new RequestSocket(testAddress);
-            requester.Connect(testAddress);
-
-            var consumer = new MockRouter(
+            var server = new MockServer(
                 this.testReceiver.Endpoint,
                 this.container,
                 NetworkAddress.LocalHost,
                 new NetworkPort(5556),
                 Guid.NewGuid());
-            consumer.Start();
+            server.Start();
+
+            const string testAddress = "tcp://127.0.0.1:5556";
+            var requester = new RequestSocket(testAddress);
+            requester.Connect(testAddress);
 
             // Act
             requester.SendFrame("MSG-1");
@@ -110,7 +110,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             // Tear Down
             requester.Disconnect(testAddress);
             requester.Dispose();
-            consumer.Stop();
+            server.Stop();
             Task.Delay(100).Wait();  // Allows sockets to dispose
         }
 
@@ -118,24 +118,24 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         internal void Test_can_be_stopped()
         {
             // Arrange
-            const string testAddress = "tcp://127.0.0.1:5557";
-            var requester = new RequestSocket(testAddress);
-            requester.Connect(testAddress);
-
-            var consumer = new MockRouter(
+            var server = new MockServer(
                 this.testReceiver.Endpoint,
                 this.container,
                 NetworkAddress.LocalHost,
                 new NetworkPort(5557),
                 Guid.NewGuid());
-            consumer.Start();
+            server.Start();
+
+            const string testAddress = "tcp://127.0.0.1:5557";
+            var requester = new RequestSocket(testAddress);
+            requester.Connect(testAddress);
 
             requester.SendFrame("MSG");
             requester.ReceiveFrameBytes();
             Task.Delay(100).Wait();
 
             // Act
-            consumer.Stop();
+            server.Stop();
 
             requester.SendFrame("AFTER-STOPPED");
 
@@ -154,17 +154,17 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         internal void Test_can_receive_one_thousand_messages_in_order()
         {
             // Arrange
-            const string testAddress = "tcp://127.0.0.1:5558";
-            var requester = new RequestSocket(testAddress);
-            requester.Connect(testAddress);
-
-            var consumer = new MockRouter(
+            var server = new MockServer(
                 this.testReceiver.Endpoint,
                 this.container,
                 NetworkAddress.LocalHost,
                 new NetworkPort(5558),
                 Guid.NewGuid());
-            consumer.Start();
+            server.Start();
+
+            const string testAddress = "tcp://127.0.0.1:5558";
+            var requester = new RequestSocket(testAddress);
+            requester.Connect(testAddress);
 
             // Act
             for (var i = 0; i < 1000; i++)
@@ -184,7 +184,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             // Tear Down
             requester.Disconnect(testAddress);
             requester.Dispose();
-            consumer.Stop();
+            server.Stop();
             Task.Delay(100).Wait();  // Allows sockets to dispose
         }
 
@@ -192,19 +192,19 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         internal void Test_can_receive_one_thousand_messages_from_multiple_request_sockets()
         {
             // Arrange
-            const string testAddress = "tcp://127.0.0.1:5559";
-            var requester1 = new RequestSocket(testAddress);
-            var requester2 = new RequestSocket(testAddress);
-            requester1.Connect(testAddress);
-            requester2.Connect(testAddress);
-
-            var consumer = new MockRouter(
+            var server = new MockServer(
                 this.testReceiver.Endpoint,
                 this.container,
                 NetworkAddress.LocalHost,
                 new NetworkPort(5559),
                 Guid.NewGuid());
-            consumer.Start();
+            server.Start();
+
+            const string testAddress = "tcp://127.0.0.1:5559";
+            var requester1 = new RequestSocket(testAddress);
+            var requester2 = new RequestSocket(testAddress);
+            requester1.Connect(testAddress);
+            requester2.Connect(testAddress);
 
             // Act
             for (var i = 0; i < 1000; i++)
@@ -230,7 +230,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             requester2.Disconnect(testAddress);
             requester1.Dispose();
             requester2.Dispose();
-            consumer.Stop();
+            server.Stop();
             Task.Delay(100).Wait();  // Allows sockets to dispose
         }
     }

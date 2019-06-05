@@ -1,5 +1,5 @@
 ﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="CommandRejected.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="MessageReceived.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -15,22 +15,20 @@ namespace Nautilus.Common.Messages.Responses
     using NodaTime;
 
     /// <summary>
-    /// A response indicating that a command has been rejected.
+    /// A response acknowledging receipt of a message.
     /// </summary>
     [Immutable]
-    public sealed class CommandRejected : Response
+    public sealed class MessageReceived : Response
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CommandRejected"/> class.
+        /// Initializes a new instance of the <see cref="MessageReceived"/> class.
         /// </summary>
-        /// <param name="commandType">The command type.</param>
-        /// <param name="rejectedReason">The rejected reason.</param>
+        /// <param name="messageType">The message type.</param>
         /// <param name="correlationId">The request correlation identifier.</param>
         /// <param name="id">The documents identifier.</param>
         /// <param name="timestamp">The documents timestamp.</param>
-        public CommandRejected(
-            string commandType,
-            string rejectedReason,
+        public MessageReceived(
+            string messageType,
             Guid correlationId,
             Guid id,
             ZonedDateTime timestamp)
@@ -43,18 +41,12 @@ namespace Nautilus.Common.Messages.Responses
             Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
-            this.CommandType = commandType;
-            this.RejectedReason = rejectedReason;
+            this.MessageType = messageType;
         }
 
         /// <summary>
         /// Gets the responses component name.
         /// </summary>
-        public string CommandType { get; }
-
-        /// <summary>
-        /// Gets the responses rejected reason.
-        /// </summary>
-        public string RejectedReason { get; }
+        public string MessageType { get; }
     }
 }

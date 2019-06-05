@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="InstrumentDealer.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="InstrumentProvider.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -11,6 +11,7 @@ namespace Nautilus.Data.Network
     using System;
     using System.Linq;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Messages.Requests;
     using Nautilus.Data.Messages.Responses;
@@ -20,33 +21,33 @@ namespace Nautilus.Data.Network
     /// <summary>
     /// Provides a responder for <see cref="Instrument"/> data requests.
     /// </summary>
-    public sealed class InstrumentDealer : Dealer
+    public sealed class InstrumentProvider : Server<Request>
     {
         private readonly IInstrumentRepository repository;
         private readonly IInstrumentSerializer instrumentSerializer;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="InstrumentDealer"/> class.
+        /// Initializes a new instance of the <see cref="InstrumentProvider"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
         /// <param name="repository">The instrument repository.</param>
         /// <param name="instrumentSerializer">The instrument serializer.</param>
-        /// <param name="requestSerializer">The request serializer.</param>
-        /// <param name="responseSerializer">The response serializer.</param>
+        /// <param name="inboundSerializer">The inbound message serializer.</param>
+        /// <param name="outboundSerializer">The outbound message serializer.</param>
         /// <param name="host">The host address.</param>
         /// <param name="port">The port.</param>
-        public InstrumentDealer(
+        public InstrumentProvider(
             IComponentryContainer container,
             IInstrumentRepository repository,
             IInstrumentSerializer instrumentSerializer,
-            IRequestSerializer requestSerializer,
-            IResponseSerializer responseSerializer,
+            IMessageSerializer<Request> inboundSerializer,
+            IMessageSerializer<Response> outboundSerializer,
             NetworkAddress host,
             NetworkPort port)
             : base(
                 container,
-                requestSerializer,
-                responseSerializer,
+                inboundSerializer,
+                outboundSerializer,
                 host,
                 port,
                 Guid.NewGuid())
@@ -54,17 +55,18 @@ namespace Nautilus.Data.Network
             this.repository = repository;
             this.instrumentSerializer = instrumentSerializer;
 
-            this.RegisterHandler<InstrumentRequest>(this.OnMessage);
-            this.RegisterHandler<InstrumentsRequest>(this.OnMessage);
+            this.RegisterHandler<ReceivedMessage<InstrumentRequest>>(this.OnMessage);
+            this.RegisterHandler<ReceivedMessage<InstrumentsRequest>>(this.OnMessage);
         }
 
-        private void OnMessage(InstrumentRequest request)
+        private void OnMessage(ReceivedMessage<InstrumentRequest> message)
         {
+            var request = message.Payload;
             var query = this.repository.FindInCache(request.Symbol);
 
             if (query.IsFailure)
             {
-                this.SendBadRequest(request, query.Message);
+                this.SendRejected(message.SenderId, request.Id, query.Message);
                 this.Log.Error(query.Message);
             }
 
@@ -75,16 +77,17 @@ namespace Nautilus.Data.Network
                 Guid.NewGuid(),
                 this.TimeNow());
 
-            this.SendResponse(request.RequesterId, response);
+            this.SendMessage(message.SenderId, response);
         }
 
-        private void OnMessage(InstrumentsRequest request)
+        private void OnMessage(ReceivedMessage<InstrumentsRequest> message)
         {
+            var request = message.Payload;
             var query = this.repository.FindInCache(request.Venue);
 
             if (query.IsFailure)
             {
-                this.SendBadRequest(request, query.Message);
+                this.SendRejected(message.SenderId, request.Id, query.Message);
                 this.Log.Error(query.Message);
             }
 
@@ -99,7 +102,7 @@ namespace Nautilus.Data.Network
                 Guid.NewGuid(),
                 this.TimeNow());
 
-            this.SendResponse(request.RequesterId, response);
+            this.SendMessage(message.SenderId, response);
         }
     }
 }

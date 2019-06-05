@@ -72,7 +72,7 @@ namespace NautilusData
             var instrumentRepository = new RedisInstrumentRepository(redisConnection);
             instrumentRepository.CacheAll();
 
-            var tickResponder = new TickDealer(
+            var tickResponder = new TickProvider(
                 container,
                 tickRepository,
                 new MsgPackRequestSerializer(),
@@ -85,7 +85,7 @@ namespace NautilusData
                 config.ServerAddress,
                 config.TickSubscribePort);
 
-            var barResponder = new BarDealer(
+            var barResponder = new BarProvider(
                 container,
                 barRepository,
                 new MsgPackRequestSerializer(),
@@ -98,7 +98,7 @@ namespace NautilusData
                 config.ServerAddress,
                 config.BarSubscribePort);
 
-            var instrumentResponder = new InstrumentDealer(
+            var instrumentResponder = new InstrumentProvider(
                 container,
                 instrumentRepository,
                 new MsgPackInstrumentSerializer(),

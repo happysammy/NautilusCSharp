@@ -20,7 +20,7 @@ namespace Nautilus.Serialization
     /// <summary>
     /// Provides a <see cref="Command"/> message binary serializer for the MessagePack specification.
     /// </summary>
-    public sealed class MsgPackCommandSerializer : ICommandSerializer
+    public sealed class MsgPackCommandSerializer : IMessageSerializer<Command>
     {
         /// <inheritdoc />
         public byte[] Serialize(Command command)

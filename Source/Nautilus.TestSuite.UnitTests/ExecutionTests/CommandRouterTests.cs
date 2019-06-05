@@ -48,9 +48,10 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             var requester = new RequestSocket(TestAddress);
             requester.Connect(TestAddress);
 
-            var commandConsumer = new CommandRouter(
+            var commandConsumer = new CommandServer(
                 this.setupContainer,
                 new MsgPackCommandSerializer(),
+                new MsgPackResponseSerializer(),
                 this.testReceiver,
                 this.localHost,
                 new NetworkPort(5553));

@@ -20,7 +20,7 @@ namespace Nautilus.Serialization
     /// <summary>
     /// Provides a <see cref="Response"/> message binary serializer for the MessagePack specification.
     /// </summary>
-    public sealed class MsgPackResponseSerializer : IResponseSerializer
+    public sealed class MsgPackResponseSerializer : IMessageSerializer<Response>
     {
         /// <inheritdoc />
         public byte[] Serialize(Response response)
@@ -35,7 +35,7 @@ namespace Nautilus.Serialization
 
             switch (response)
             {
-                case BadRequest res:
+                case MessageRejected res:
                     package.Add(nameof(res.Message), res.Message);
                     break;
                 case BarDataResponse res:
@@ -62,9 +62,9 @@ namespace Nautilus.Serialization
 
             switch (response)
             {
-                case nameof(BadRequest):
-                    return new BadRequest(
-                        unpacked[nameof(BadRequest.Message)].ToString(),
+                case nameof(MessageRejected):
+                    return new MessageRejected(
+                        unpacked[nameof(MessageRejected.Message)].ToString(),
                         correlationId,
                         id,
                         timestamp);

@@ -8,4 +8,5 @@
 
 using System.Runtime.CompilerServices;
 
+[assembly:InternalsVisibleTo("Nautilus.TestSuite.TestKit")]
 [assembly:InternalsVisibleTo("Nautilus.TestSuite.UnitTests")]

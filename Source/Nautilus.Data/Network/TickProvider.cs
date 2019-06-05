@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="BarDealer.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="TickProvider.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -12,78 +12,77 @@ namespace Nautilus.Data.Network
     using System.Linq;
     using System.Text;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Messages.Requests;
     using Nautilus.Data.Messages.Responses;
     using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network;
 
     /// <summary>
     /// Provides a responder for <see cref="Instrument"/> data requests.
     /// </summary>
-    public sealed class BarDealer : Dealer
+    public sealed class TickProvider : Server<Request>
     {
-        private readonly IBarRepository repository;
+        private readonly ITickRepository repository;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BarDealer"/> class.
+        /// Initializes a new instance of the <see cref="TickProvider"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
-        /// <param name="repository">The instrument repository.</param>
-        /// <param name="requestSerializer">The request serializer.</param>
-        /// <param name="responseSerializer">The response serializer.</param>
+        /// <param name="repository">The tick repository.</param>
+        /// <param name="inboundSerializer">The inbound message serializer.</param>
+        /// <param name="outboundSerializer">The outbound message serializer.</param>
         /// <param name="host">The host address.</param>
         /// <param name="port">The port.</param>
-        public BarDealer(
+        public TickProvider(
             IComponentryContainer container,
-            IBarRepository repository,
-            IRequestSerializer requestSerializer,
-            IResponseSerializer responseSerializer,
+            ITickRepository repository,
+            IMessageSerializer<Request> inboundSerializer,
+            IMessageSerializer<Response> outboundSerializer,
             NetworkAddress host,
             NetworkPort port)
             : base(
                 container,
-                requestSerializer,
-                responseSerializer,
+                inboundSerializer,
+                outboundSerializer,
                 host,
                 port,
                 Guid.NewGuid())
         {
             this.repository = repository;
 
-            this.RegisterHandler<BarDataRequest>(this.OnMessage);
+            this.RegisterHandler<ReceivedMessage<TickDataRequest>>(this.OnMessage);
         }
 
-        private void OnMessage(BarDataRequest request)
+        private void OnMessage(ReceivedMessage<TickDataRequest> message)
         {
-            var barType = new BarType(request.Symbol, request.BarSpecification);
+            var request = message.Payload;
+
             var query = this.repository.Find(
-                barType,
+                request.Symbol,
                 request.FromDateTime,
                 request.ToDateTime);
 
             if (query.IsFailure)
             {
-                this.SendBadRequest(request, query.Message);
+                this.SendRejected(message.SenderId, request.Id, query.Message);
                 this.Log.Error(query.Message);
             }
 
-            var bars = query
+            var ticks = query
                 .Value
-                .Bars
-                .Select(b => Encoding.UTF8.GetBytes(b.ToString()))
+                .Select(t => Encoding.UTF8.GetBytes(t.ToString()))
                 .ToArray();
 
-            var response = new BarDataResponse(
+            var response = new TickDataResponse(
                 request.Symbol,
-                request.BarSpecification,
-                bars,
+                ticks,
                 request.Id,
                 this.NewGuid(),
                 this.TimeNow());
 
-            this.SendResponse(request.RequesterId, response);
+            this.SendMessage(message.SenderId, response);
         }
     }
 }
