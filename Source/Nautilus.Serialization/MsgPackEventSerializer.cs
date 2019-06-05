@@ -22,7 +22,7 @@ namespace Nautilus.Serialization
     /// <summary>
     /// Provides an <see cref="Event"/> message binary serializer for the MessagePack specification.
     /// </summary>
-    public sealed class MsgPackEventSerializer : IEventSerializer
+    public sealed class MsgPackEventSerializer : ISerializer<Event>
     {
         /// <inheritdoc />
         public byte[] Serialize(Event @event)

@@ -220,10 +220,9 @@ namespace Nautilus.Common.Componentry
         private void Open<T>(Envelope<T> envelope)
             where T : Message
         {
-            var message = envelope.Open(this.clock.TimeNow());
-            this.Endpoint.Send(message);
+            this.Endpoint.Send(envelope.Message);
 
-            this.Log.Verbose($"Received {message}.");
+            this.Log.Verbose($"Received {envelope}.");
         }
 
         private string CreateComponentName()

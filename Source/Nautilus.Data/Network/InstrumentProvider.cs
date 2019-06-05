@@ -24,7 +24,7 @@ namespace Nautilus.Data.Network
     public sealed class InstrumentProvider : MessageServer<Request, Response>
     {
         private readonly IInstrumentRepository repository;
-        private readonly IInstrumentSerializer instrumentSerializer;
+        private readonly ISerializer<Instrument> instrumentSerializer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InstrumentProvider"/> class.
@@ -39,7 +39,7 @@ namespace Nautilus.Data.Network
         public InstrumentProvider(
             IComponentryContainer container,
             IInstrumentRepository repository,
-            IInstrumentSerializer instrumentSerializer,
+            ISerializer<Instrument> instrumentSerializer,
             IMessageSerializer<Request> inboundSerializer,
             IMessageSerializer<Response> outboundSerializer,
             NetworkAddress host,

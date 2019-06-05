@@ -20,7 +20,7 @@ namespace Nautilus.Data.Network
     /// </summary>
     public sealed class InstrumentPublisher : MessagePublisher
     {
-        private readonly IInstrumentSerializer serializer;
+        private readonly ISerializer<Instrument> serializer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InstrumentPublisher"/> class.
@@ -31,7 +31,7 @@ namespace Nautilus.Data.Network
         /// <param name="port">The port.</param>
         public InstrumentPublisher(
             IComponentryContainer container,
-            IInstrumentSerializer serializer,
+            ISerializer<Instrument> serializer,
             NetworkAddress host,
             NetworkPort port)
             : base(

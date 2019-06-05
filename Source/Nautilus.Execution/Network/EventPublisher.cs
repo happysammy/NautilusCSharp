@@ -24,7 +24,7 @@ namespace Nautilus.Execution.Network
         private const string NAUTILUS = "NAUTILUS";
         private const string ACCOUNT = "ACCOUNT";
         private const string EXECUTION = "EXECUTION";
-        private readonly IEventSerializer serializer;
+        private readonly ISerializer<Event> serializer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EventPublisher"/> class.
@@ -35,7 +35,7 @@ namespace Nautilus.Execution.Network
         /// <param name="port">The publishers port.</param>
         public EventPublisher(
             IComponentryContainer container,
-            IEventSerializer serializer,
+            ISerializer<Event> serializer,
             NetworkAddress host,
             NetworkPort port)
             : base(

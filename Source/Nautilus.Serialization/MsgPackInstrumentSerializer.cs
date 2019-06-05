@@ -19,7 +19,7 @@ namespace Nautilus.Serialization
     /// <summary>
     /// Provides an <see cref="Instrument"/> binary serializer for the MessagePack specification.
     /// </summary>
-    public sealed class MsgPackInstrumentSerializer : IInstrumentSerializer
+    public sealed class MsgPackInstrumentSerializer : ISerializer<Instrument>
     {
         /// <inheritdoc />
         public byte[] Serialize(Instrument instrument)

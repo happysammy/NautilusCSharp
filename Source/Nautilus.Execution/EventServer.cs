@@ -34,7 +34,7 @@ namespace Nautilus.Execution
         public EventServer(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
-            IEventSerializer eventSerializer,
+            ISerializer<Event> eventSerializer,
             Configuration config)
             : base(container, messagingAdapter)
         {

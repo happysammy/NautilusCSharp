@@ -14,21 +14,8 @@ namespace Nautilus.Common.Interfaces
     /// Provides a binary serializer for <see cref="Message"/>s of type T.
     /// </summary>
     /// <typeparam name="T">The <see cref="Message"/> type.</typeparam>
-    public interface IMessageSerializer<T>
+    public interface IMessageSerializer<T> : ISerializer<T>
         where T : Message
     {
-        /// <summary>
-        /// Returns the serialized message bytes.
-        /// </summary>
-        /// <param name="message">The message to serialize.</param>
-        /// <returns>The serialized message bytes.</returns>
-        byte[] Serialize(T message);
-
-        /// <summary>
-        /// Returns the deserialize <see cref="Message"/>.
-        /// </summary>
-        /// <param name="commandBytes">The message bytes to deserialize.</param>
-        /// <returns>The deserialized <see cref="Message"/>.</returns>
-        T Deserialize(byte[] commandBytes);
     }
 }

@@ -20,40 +20,40 @@ namespace Nautilus.Messaging
     public sealed class Envelope<T>
         where T : Message
     {
-        private readonly T message;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="Envelope{T}"/> class.
         /// </summary>
+        /// <param name="message">The message payload.</param>
         /// <param name="receiver">The envelope receiver.</param>
         /// <param name="sender">The envelope sender.</param>
-        /// <param name="message">The message payload.</param>
-        /// <param name="id">The envelopes identifier.</param>
         /// <param name="timestamp">The envelopes timestamp.</param>
         public Envelope(
+            T message,
             Address receiver,
             Address sender,
-            T message,
-            Guid id,
             ZonedDateTime timestamp)
         {
-            Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
+            this.Message = message;
             this.Receiver = receiver;
             this.Sender = sender;
-            this.Id = id;
+            this.Id = message.Id;
             this.Timestamp = timestamp;
-            this.message = message;
         }
 
         /// <summary>
-        /// Gets the envelope receiver.
+        /// Gets the envelopes message.
+        /// </summary>
+        public T Message { get; }
+
+        /// <summary>
+        /// Gets the envelopes receiver.
         /// </summary>
         public Address Receiver { get; }
 
         /// <summary>
-        /// Gets the envelope sender.
+        /// Gets the envelopes sender.
         /// </summary>
         public Address Sender { get; }
 
@@ -68,34 +68,6 @@ namespace Nautilus.Messaging
         public ZonedDateTime Timestamp { get; }
 
         /// <summary>
-        /// Gets the envelopes opened time.
-        /// </summary>
-        public ZonedDateTime? OpenedTime { get; private set; }
-
-        /// <summary>
-        /// Gets a value indicating whether the envelope has been opened.
-        /// </summary>
-        public bool IsOpened => this.OpenedTime.HasValue;
-
-        /// <summary>
-        /// Opens the envelope and returns the contained message (records the opened time if not
-        /// already opened).
-        /// </summary>
-        /// <param name="currentTime">The current time.</param>
-        /// <returns>The contained message of type T.</returns>
-        public T Open(ZonedDateTime currentTime)
-        {
-            Debug.NotDefault(currentTime, nameof(currentTime));
-
-            if (this.OpenedTime is null)
-            {
-                this.OpenedTime = currentTime;
-            }
-
-            return this.message;
-        }
-
-        /// <summary>
         /// Returns the hash code for this <see cref="Envelope{T}"/>.
         /// </summary>
         /// <returns>The hash code <see cref="int"/>.</returns>
@@ -105,6 +77,6 @@ namespace Nautilus.Messaging
         /// Returns a string representation of this <see cref="Envelope{T}"/>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"Envelope<{typeof(T).Name}>[{this.message}]";
+        public override string ToString() => $"Envelope<{typeof(T).Name}>[{this.Message}]";
     }
 }

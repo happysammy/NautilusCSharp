@@ -60,28 +60,25 @@ namespace Nautilus.Common.Messaging
             {
                     case Command msg:
                         var commandEnvelope = new Envelope<Command>(
+                            msg,
                             receiver,
                             sender,
-                            msg,
-                            message.Id,
                             message.Timestamp);
                         this.commandBus.Send(commandEnvelope);
                         break;
                     case Event msg:
                         var eventEnvelope = new Envelope<Event>(
+                            msg,
                             receiver,
                             sender,
-                            msg,
-                            message.Id,
                             message.Timestamp);
                         this.eventBus.Send(eventEnvelope);
                         break;
                     case Document msg:
                         var serviceEnvelope = new Envelope<Document>(
+                            msg,
                             receiver,
                             sender,
-                            msg,
-                            message.Id,
                             message.Timestamp);
                         this.documentBus.Send(serviceEnvelope);
                         break;
