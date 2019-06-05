@@ -38,7 +38,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             this.container = containerFactory.Create();
             this.mockLoggingAdapter = containerFactory.LoggingAdapter;
             this.testReceiver = new MockMessagingAgent();
-            this.testReceiver.RegisterHandler<byte[]>(this.testReceiver.OnMessage);
+            this.testReceiver.RegisterHandler<string>(this.testReceiver.OnMessage);
         }
 
         [Fact]
@@ -58,14 +58,16 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             requester.Connect(testAddress);
 
             // Act
-            requester.SendFrame("MSG");
+            var message = new MockMessage("TEST", Guid.NewGuid(), StubZonedDateTime.UnixEpoch());
+            var serialized = new MockSerializer().Serialize(message);
+            requester.SendFrame(serialized);
 
             Task.Delay(100).Wait();
 
-            var response = requester.ReceiveFrameBytes();
+            // var response = requester.ReceiveMultipartMessage();
 
             // Assert
-            this.output.WriteLine(Encoding.UTF8.GetString(response));
+            // this.output.WriteLine(Encoding.UTF8.GetString(response));
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
             Assert.Contains("MSG", this.testReceiver.Messages);
 
