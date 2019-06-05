@@ -14,6 +14,7 @@ namespace Nautilus.Data.Messages.Requests
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.Network;
     using NodaTime;
 
     /// <summary>

@@ -10,10 +10,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
-    using Nautilus.Common.Enums;
-    using Nautilus.Common.Messages.Requests;
-    using Nautilus.Common.Messages.Responses;
-    using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.Common.Messages.Commands;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;
 
@@ -24,17 +21,11 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
         internal void Equal_WithDifferentMessagesOfTheSameContent_CanEquateById()
         {
             // Arrange
-            var message1 = new StatusResponse(
-                new Label("SomeComponent1"),
-                State.Running,
-                Guid.NewGuid(),
+            var message1 = new Start(
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            var message2 = new StatusResponse(
-                new Label("SomeComponent2"),
-                State.Running,
-                Guid.NewGuid(),
+            var message2 = new Start(
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -54,33 +45,14 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
         {
             // Arrange
             var guid = Guid.NewGuid();
-            var message = new StatusRequest(guid, StubZonedDateTime.UnixEpoch());
+            var message = new Start(guid, StubZonedDateTime.UnixEpoch());
 
             // Act
             var result = message.ToString();
 
             // Assert
-            Assert.StartsWith("StatusRequest(", result);
+            Assert.StartsWith("Start(", result);
             Assert.EndsWith(")", result);
-        }
-
-        [Fact]
-        internal void ToString_WhenOverridden_ReturnsExpectedString()
-        {
-            // Arrange
-            var message = new StatusResponse(
-                new Label("CommandBus"),
-                State.Running,
-                Guid.NewGuid(),
-                Guid.NewGuid(),
-                StubZonedDateTime.UnixEpoch());
-
-            // Act
-            var result = message.ToString();
-
-            // Assert
-            Assert.StartsWith("StatusResponse(", result);
-            Assert.EndsWith("-CommandBus=Running", result);
         }
     }
 }

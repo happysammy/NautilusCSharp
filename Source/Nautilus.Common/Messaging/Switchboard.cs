@@ -67,14 +67,21 @@ namespace Nautilus.Common.Messaging
         public void SendToReceiver<T>(Envelope<T> envelope)
             where T : Message
         {
-            if (!this.addresses.ContainsKey(envelope.Receiver))
+            if (envelope.Receiver is null)
             {
                 // Receiver address not found.
                 this.deadLetterHandler(envelope);
                 return;
             }
 
-            this.addresses[envelope.Receiver].Send(envelope);
+            if (!this.addresses.ContainsKey((Address)envelope.Receiver))
+            {
+                // Receiver address not found.
+                this.deadLetterHandler(envelope);
+                return;
+            }
+
+            this.addresses[(Address)envelope.Receiver].Send(envelope);
         }
 
         /// <summary>

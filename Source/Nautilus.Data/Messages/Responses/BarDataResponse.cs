@@ -13,6 +13,7 @@ namespace Nautilus.Data.Messages.Responses
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.Network;
     using NodaTime;
 
     /// <summary>

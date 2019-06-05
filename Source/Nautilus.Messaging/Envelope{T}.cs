@@ -29,8 +29,8 @@ namespace Nautilus.Messaging
         /// <param name="timestamp">The envelopes timestamp.</param>
         public Envelope(
             T message,
-            Address receiver,
-            Address sender,
+            Address? receiver,
+            Address? sender,
             ZonedDateTime timestamp)
         {
             Debug.NotDefault(timestamp, nameof(timestamp));
@@ -50,12 +50,12 @@ namespace Nautilus.Messaging
         /// <summary>
         /// Gets the envelopes receiver.
         /// </summary>
-        public Address Receiver { get; }
+        public Address? Receiver { get; }
 
         /// <summary>
         /// Gets the envelopes sender.
         /// </summary>
-        public Address Sender { get; }
+        public Address? Sender { get; }
 
         /// <summary>
         /// Gets the envelope identifier.

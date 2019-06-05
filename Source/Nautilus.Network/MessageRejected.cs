@@ -1,12 +1,12 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="Request.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="MessageRejected.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Core
+namespace Nautilus.Network
 {
     using System;
     using Nautilus.Core.Annotations;
@@ -14,28 +14,38 @@ namespace Nautilus.Core
     using NodaTime;
 
     /// <summary>
-    /// The base class for all <see cref="Request"/> messages.
+    /// Represents a rejected message response.
     /// </summary>
     [Immutable]
-    public abstract class Request : Message
+    public sealed class MessageRejected : Response
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Request"/> class.
+        /// Initializes a new instance of the <see cref="MessageRejected"/> class.
         /// </summary>
-        /// <param name="type">The request type.</param>
-        /// <param name="id">The request identifier.</param>
-        /// <param name="timestamp">The request timestamp.</param>
-        protected Request(
-            Type type,
+        /// <param name="message">The response message.</param>
+        /// <param name="correlationId">The response correlation identifier.</param>
+        /// <param name="id">The response identifier.</param>
+        /// <param name="timestamp">The response timestamp.</param>
+        public MessageRejected(
+            string message,
+            Guid correlationId,
             Guid id,
             ZonedDateTime timestamp)
             : base(
-                type,
+                typeof(MessageRejected),
+                correlationId,
                 id,
                 timestamp)
         {
             Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));
+
+            this.Message = message;
         }
+
+        /// <summary>
+        /// Gets the responses message.
+        /// </summary>
+        public string Message { get; }
     }
 }

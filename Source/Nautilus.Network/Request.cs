@@ -1,34 +1,33 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="Response.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="Request.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Core
+namespace Nautilus.Network
 {
     using System;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using NodaTime;
 
     /// <summary>
-    /// The base class for all <see cref="Response"/> messages.
+    /// The base class for all <see cref="Request"/> messages.
     /// </summary>
     [Immutable]
-    public abstract class Response : Message
+    public abstract class Request : Message
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Response"/> class.
+        /// Initializes a new instance of the <see cref="Request"/> class.
         /// </summary>
-        /// <param name="type">The response type.</param>
-        /// <param name="correlationId">The response correlation identifier.</param>
-        /// <param name="id">The response identifier.</param>
-        /// <param name="timestamp">The response timestamp.</param>
-        protected Response(
+        /// <param name="type">The request type.</param>
+        /// <param name="id">The request identifier.</param>
+        /// <param name="timestamp">The request timestamp.</param>
+        protected Request(
             Type type,
-            Guid correlationId,
             Guid id,
             ZonedDateTime timestamp)
             : base(
@@ -38,13 +37,6 @@ namespace Nautilus.Core
         {
             Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));
-
-            this.CorrelationId = correlationId;
         }
-
-        /// <summary>
-        /// Gets the responses correlation identifier.
-        /// </summary>
-        public Guid CorrelationId { get; }
     }
 }

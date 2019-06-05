@@ -11,7 +11,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using System;
     using System.Collections.Generic;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messages.Responses;
     using Nautilus.Core;
     using Nautilus.Network;
     using Nautilus.Serialization;

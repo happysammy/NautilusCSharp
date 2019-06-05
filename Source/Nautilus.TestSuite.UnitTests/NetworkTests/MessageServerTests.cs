@@ -13,7 +13,6 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
     using System.Threading.Tasks;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messages.Responses;
     using Nautilus.Network;
     using Nautilus.Serialization;
     using Nautilus.TestSuite.TestKit;

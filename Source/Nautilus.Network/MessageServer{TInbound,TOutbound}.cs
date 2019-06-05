@@ -15,7 +15,6 @@ namespace Nautilus.Network
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
-    using Nautilus.Common.Messages.Responses;
     using Nautilus.Core;
     using Nautilus.Core.Correctness;
     using NetMQ;

@@ -1,12 +1,12 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="MessageRejected.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="Response.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Common.Messages.Responses
+namespace Nautilus.Network
 {
     using System;
     using Nautilus.Core;
@@ -15,38 +15,37 @@ namespace Nautilus.Common.Messages.Responses
     using NodaTime;
 
     /// <summary>
-    /// Represents a rejected message response.
+    /// The base class for all <see cref="Response"/> messages.
     /// </summary>
     [Immutable]
-    public sealed class MessageRejected : Response
+    public abstract class Response : Message
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="MessageRejected"/> class.
+        /// Initializes a new instance of the <see cref="Response"/> class.
         /// </summary>
-        /// <param name="message">The response message.</param>
+        /// <param name="type">The response type.</param>
         /// <param name="correlationId">The response correlation identifier.</param>
         /// <param name="id">The response identifier.</param>
         /// <param name="timestamp">The response timestamp.</param>
-        public MessageRejected(
-            string message,
+        protected Response(
+            Type type,
             Guid correlationId,
             Guid id,
             ZonedDateTime timestamp)
             : base(
-                typeof(MessageRejected),
-                correlationId,
+                type,
                 id,
                 timestamp)
         {
             Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
-            this.Message = message;
+            this.CorrelationId = correlationId;
         }
 
         /// <summary>
-        /// Gets the responses message.
+        /// Gets the responses correlation identifier.
         /// </summary>
-        public string Message { get; }
+        public Guid CorrelationId { get; }
     }
 }
