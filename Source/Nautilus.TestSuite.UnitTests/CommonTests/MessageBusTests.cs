@@ -75,9 +75,9 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
 
             // Assert
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
-            Assert.Empty(this.messageBus.UnhandledMessages);
-            Assert.Single(this.messageBus.DeadLetters);
-            Assert.Contains(string.Empty, this.messageBus.DeadLetters);
+            Assert.Empty(this.messageBus.DeadLetters);
+            Assert.Single(this.messageBus.UnhandledMessages);
+            Assert.Contains(string.Empty, this.messageBus.UnhandledMessages);
         }
     }
 }

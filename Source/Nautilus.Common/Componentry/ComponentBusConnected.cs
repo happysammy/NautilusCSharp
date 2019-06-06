@@ -32,9 +32,9 @@ namespace Nautilus.Common.Componentry
         {
             this.messagingAdapter = messagingAdapter;
 
-            this.RegisterHandler<Envelope<Command>>(this.OnMessage);
-            this.RegisterHandler<Envelope<Event>>(this.OnMessage);
-            this.RegisterHandler<Envelope<Document>>(this.OnMessage);
+            this.RegisterHandler<Envelope<Command>>(this.Open);
+            this.RegisterHandler<Envelope<Event>>(this.Open);
+            this.RegisterHandler<Envelope<Document>>(this.Open);
         }
 
         /// <summary>
@@ -72,17 +72,8 @@ namespace Nautilus.Common.Componentry
             }
         }
 
-        private void OnMessage(Envelope<Command> envelope)
-        {
-            this.SendToSelf(envelope.Message);
-        }
-
-        private void OnMessage(Envelope<Event> envelope)
-        {
-            this.SendToSelf(envelope.Message);
-        }
-
-        private void OnMessage(Envelope<Document> envelope)
+        private void Open<T>(Envelope<T> envelope)
+            where T : Message
         {
             this.SendToSelf(envelope.Message);
         }
