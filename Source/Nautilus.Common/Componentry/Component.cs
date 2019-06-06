@@ -174,7 +174,7 @@ namespace Nautilus.Common.Componentry
 
         private void OnMessage(Start message)
         {
-            this.Log.Information($"Starting from {message}...");
+            this.Log.Information($"Starting from {message} message...");
 
             this.OnStart(message);
             this.startedTimes.Add(this.TimeNow());
@@ -185,7 +185,7 @@ namespace Nautilus.Common.Componentry
 
         private void OnMessage(Stop message)
         {
-            this.Log.Information($"Stopping from {message}...");
+            this.Log.Information($"Stopping from {message} message...");
 
             this.OnStop(message);
             this.stoppedTimes.Add(this.TimeNow());
