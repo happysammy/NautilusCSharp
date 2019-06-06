@@ -17,6 +17,7 @@ namespace Nautilus.Data.Network
     using Nautilus.Data.Messages.Responses;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.Messaging;
     using Nautilus.Network;
     using Nautilus.Network.Messages;
 
@@ -53,12 +54,12 @@ namespace Nautilus.Data.Network
         {
             this.repository = repository;
 
-            this.RegisterHandler<ReceivedMessage<BarDataRequest>>(this.OnMessage);
+            this.RegisterHandler<Envelope<BarDataRequest>>(this.OnMessage);
         }
 
-        private void OnMessage(ReceivedMessage<BarDataRequest> message)
+        private void OnMessage(Envelope<BarDataRequest> envelope)
         {
-            var request = message.Payload;
+            var request = envelope.Message;
             var barType = new BarType(request.Symbol, request.BarSpecification);
             var query = this.repository.Find(
                 barType,
@@ -67,7 +68,7 @@ namespace Nautilus.Data.Network
 
             if (query.IsFailure)
             {
-                this.SendRejected(message.SenderId, request.Id, query.Message);
+                this.SendRejected(envelope.Sender, request.Id, query.Message);
                 this.Log.Error(query.Message);
             }
 
@@ -85,7 +86,7 @@ namespace Nautilus.Data.Network
                 this.NewGuid(),
                 this.TimeNow());
 
-            this.SendMessage(message.SenderId, response);
+            this.SendMessage(envelope.Sender, response);
         }
     }
 }

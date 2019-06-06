@@ -9,20 +9,19 @@
 namespace Nautilus.Common.Messaging
 {
     using System.Collections.Generic;
+    using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core;
-    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging;
 
     /// <summary>
     /// Provides a generic message bus.
     /// </summary>
     /// <typeparam name="T">The message bus type.</typeparam>
-    public sealed class MessageBus<T> : MessagingAgent
+    public sealed class MessageBus<T> : Component
         where T : Message
     {
-        private readonly ILogger log;
         private readonly List<object> deadLetters;
 
         private Switchboard switchboard;
@@ -32,33 +31,27 @@ namespace Nautilus.Common.Messaging
         /// </summary>
         /// <param name="container">The componentry container.</param>
         public MessageBus(IComponentryContainer container)
+        : base(container)
         {
-            this.Name = new Label($"MessageBus<{typeof(T).Name}>");
-            this.log = container.LoggerFactory.Create(this.Name);
             this.deadLetters = new List<object>();
             this.switchboard = Switchboard.Empty();
 
             this.RegisterHandler<InitializeSwitchboard>(this.OnMessage);
             this.RegisterHandler<Envelope<T>>(this.OnMessage);
-            this.RegisterHandler<Stop>(this.OnStop);
             this.RegisterUnhandled(this.AddToDeadLetters);
         }
-
-        /// <summary>
-        /// Gets the name of the message bus.
-        /// </summary>
-        public Label Name { get; }
 
         /// <summary>
         /// Gets the list of dead letters (unhandled messages).
         /// </summary>
         public IEnumerable<object> DeadLetters => this.deadLetters;
 
-        private void OnStop(Stop message)
+        /// <inheritdoc />
+        protected override void OnStop(Stop message)
         {
             foreach (var letter in this.deadLetters)
             {
-                this.log.Warning($"[DEAD LETTER] {letter}.");
+                this.Log.Warning($"[DEAD LETTER] {letter}.");
             }
         }
 
@@ -66,24 +59,22 @@ namespace Nautilus.Common.Messaging
         {
             this.switchboard = message.Switchboard;
             this.switchboard.RegisterDeadLetterChannel(this.AddToDeadLetters);
-            this.log.Information("Switchboard initialized.");
+
+            this.Log.Information("Switchboard initialized.");
         }
 
         private void OnMessage(Envelope<T> envelope)
         {
             this.switchboard.SendToReceiver(envelope);
-            this.LogEnvelope(envelope);
-        }
 
-        private void LogEnvelope(Envelope<T> envelope)
-        {
-            this.log.Verbose($"[{this.ProcessedCount}] {envelope.Sender} -> {envelope} -> {envelope.Receiver}");
+            this.Log.Verbose($"[{this.ProcessedCount}] {envelope.Sender} -> {envelope} -> {envelope.Receiver}");
         }
 
         private void AddToDeadLetters(object message)
         {
-            this.log.Error($"Unhandled message [{message}].");
             this.deadLetters.Add(message);
+
+            this.Log.Error($"Unhandled message [{message}].");
         }
     }
 }

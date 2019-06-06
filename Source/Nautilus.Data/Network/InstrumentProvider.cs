@@ -15,6 +15,7 @@ namespace Nautilus.Data.Network
     using Nautilus.Data.Messages.Requests;
     using Nautilus.Data.Messages.Responses;
     using Nautilus.DomainModel.Entities;
+    using Nautilus.Messaging;
     using Nautilus.Network;
     using Nautilus.Network.Messages;
 
@@ -55,18 +56,18 @@ namespace Nautilus.Data.Network
             this.repository = repository;
             this.instrumentSerializer = instrumentSerializer;
 
-            this.RegisterHandler<ReceivedMessage<InstrumentRequest>>(this.OnMessage);
-            this.RegisterHandler<ReceivedMessage<InstrumentsRequest>>(this.OnMessage);
+            this.RegisterHandler<Envelope<InstrumentRequest>>(this.OnMessage);
+            this.RegisterHandler<Envelope<InstrumentsRequest>>(this.OnMessage);
         }
 
-        private void OnMessage(ReceivedMessage<InstrumentRequest> message)
+        private void OnMessage(Envelope<InstrumentRequest> envelope)
         {
-            var request = message.Payload;
+            var request = envelope.Message;
             var query = this.repository.FindInCache(request.Symbol);
 
             if (query.IsFailure)
             {
-                this.SendRejected(message.SenderId, request.Id, query.Message);
+                this.SendRejected(envelope.Sender, request.Id, query.Message);
                 this.Log.Error(query.Message);
             }
 
@@ -77,17 +78,17 @@ namespace Nautilus.Data.Network
                 Guid.NewGuid(),
                 this.TimeNow());
 
-            this.SendMessage(message.SenderId, response);
+            this.SendMessage(envelope.Sender, response);
         }
 
-        private void OnMessage(ReceivedMessage<InstrumentsRequest> message)
+        private void OnMessage(Envelope<InstrumentsRequest> envelope)
         {
-            var request = message.Payload;
+            var request = envelope.Message;
             var query = this.repository.FindInCache(request.Venue);
 
             if (query.IsFailure)
             {
-                this.SendRejected(message.SenderId, request.Id, query.Message);
+                this.SendRejected(envelope.Sender, request.Id, query.Message);
                 this.Log.Error(query.Message);
             }
 
@@ -102,7 +103,7 @@ namespace Nautilus.Data.Network
                 Guid.NewGuid(),
                 this.TimeNow());
 
-            this.SendMessage(message.SenderId, response);
+            this.SendMessage(envelope.Sender, response);
         }
     }
 }

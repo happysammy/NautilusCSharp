@@ -16,6 +16,7 @@ namespace Nautilus.Data.Network
     using Nautilus.Data.Messages.Requests;
     using Nautilus.Data.Messages.Responses;
     using Nautilus.DomainModel.Entities;
+    using Nautilus.Messaging;
     using Nautilus.Network;
     using Nautilus.Network.Messages;
 
@@ -52,12 +53,12 @@ namespace Nautilus.Data.Network
         {
             this.repository = repository;
 
-            this.RegisterHandler<ReceivedMessage<TickDataRequest>>(this.OnMessage);
+            this.RegisterHandler<Envelope<TickDataRequest>>(this.OnMessage);
         }
 
-        private void OnMessage(ReceivedMessage<TickDataRequest> message)
+        private void OnMessage(Envelope<TickDataRequest> envelope)
         {
-            var request = message.Payload;
+            var request = envelope.Message;
 
             var query = this.repository.Find(
                 request.Symbol,
@@ -66,7 +67,7 @@ namespace Nautilus.Data.Network
 
             if (query.IsFailure)
             {
-                this.SendRejected(message.SenderId, request.Id, query.Message);
+                this.SendRejected(envelope.Sender, request.Id, query.Message);
                 this.Log.Error(query.Message);
             }
 
@@ -82,7 +83,7 @@ namespace Nautilus.Data.Network
                 this.NewGuid(),
                 this.TimeNow());
 
-            this.SendMessage(message.SenderId, response);
+            this.SendMessage(envelope.Sender, response);
         }
     }
 }

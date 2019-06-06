@@ -48,10 +48,8 @@ namespace Nautilus.Common.Componentry
             this.Log = container.LoggerFactory.Create(this.Name);
             this.State = initial;
 
-            this.RegisterHandler<Envelope<Command>>(this.Open);
-            this.RegisterHandler<Envelope<Event>>(this.Open);
-            this.RegisterHandler<Envelope<Document>>(this.Open);
-
+            this.RegisterHandler<Envelope<Start>>(this.Open);
+            this.RegisterHandler<Envelope<Stop>>(this.Open);
             this.RegisterHandler<Start>(this.OnMessage);
             this.RegisterHandler<Stop>(this.OnMessage);
             this.RegisterUnhandled(this.Unhandled);
@@ -177,10 +175,14 @@ namespace Nautilus.Common.Componentry
             this.commandHandler.Execute<T>(action);
         }
 
-        /// <summary>
-        /// Calls the Start() virtual method.
-        /// </summary>
-        /// <param name="message">The start message.</param>
+        private void Open<T>(Envelope<T> envelope)
+            where T : Message
+        {
+            this.Endpoint.Send(envelope.Message);
+
+            this.Log.Verbose($"Received {envelope}.");
+        }
+
         private void OnMessage(Start message)
         {
             this.Log.Information($"Starting from {message}...");
@@ -192,10 +194,6 @@ namespace Nautilus.Common.Componentry
             this.Log.Information($"{this.State}...");
         }
 
-        /// <summary>
-        /// Calls the Stop() virtual method.
-        /// </summary>
-        /// <param name="message">The stop message.</param>
         private void OnMessage(Stop message)
         {
             this.Log.Information($"Stopping from {message}...");
@@ -211,18 +209,6 @@ namespace Nautilus.Common.Componentry
         {
             this.Log.Error($"Unhandled message [{message}].");
             this.AddToUnhandledMessages(message);
-        }
-
-        /// <summary>
-        /// Opens the envelope and then sends the message back to the actor component.
-        /// </summary>
-        /// <param name="envelope">The message envelope.</param>
-        private void Open<T>(Envelope<T> envelope)
-            where T : Message
-        {
-            this.Endpoint.Send(envelope.Message);
-
-            this.Log.Verbose($"Received {envelope}.");
         }
 
         private string CreateComponentName()

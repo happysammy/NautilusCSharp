@@ -11,6 +11,7 @@ namespace Nautilus.Execution.Network
     using System;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
+    using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Network;
     using Nautilus.Network.Messages;
@@ -48,14 +49,14 @@ namespace Nautilus.Execution.Network
         {
             this.receiver = receiver;
 
-            this.RegisterHandler<ReceivedMessage<Command>>(this.OnMessage);
+            this.RegisterHandler<Envelope<Command>>(this.OnMessage);
         }
 
-        private void OnMessage(ReceivedMessage<Command> message)
+        private void OnMessage(Envelope<Command> envelope)
         {
-            var command = message.Payload;
+            var command = envelope.Message;
             this.receiver.Send(command);
-            this.Log.Debug($"Received {message.Payload}.");
+            this.Log.Debug($"Received {command}.");
 
             var response = new MessageReceived(
                 command.Type.Name,
@@ -63,7 +64,7 @@ namespace Nautilus.Execution.Network
                 Guid.NewGuid(),
                 this.TimeNow());
 
-            this.SendMessage(message.SenderId, response);
+            this.SendMessage(envelope.Sender, response);
         }
     }
 }

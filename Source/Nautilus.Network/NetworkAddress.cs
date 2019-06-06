@@ -18,6 +18,8 @@ namespace Nautilus.Network
     [Immutable]
     public sealed class NetworkAddress
     {
+        private readonly string value;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="NetworkAddress"/> class.
         /// </summary>
@@ -27,7 +29,7 @@ namespace Nautilus.Network
         {
             Condition.NotEmptyOrWhiteSpace(address, nameof(address));
 
-            this.Value = address;
+            this.value = address;
         }
 
         /// <summary>
@@ -37,14 +39,9 @@ namespace Nautilus.Network
         public static NetworkAddress LocalHost { get; } = new NetworkAddress("127.0.0.1");
 
         /// <summary>
-        /// Gets the network address value.
-        /// </summary>
-        public string Value { get; }
-
-        /// <summary>
         /// Returns a string representation of this <see cref="NetworkAddress"/>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => this.Value;
+        public override string ToString() => this.value;
     }
 }

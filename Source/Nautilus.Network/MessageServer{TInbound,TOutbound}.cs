@@ -17,6 +17,7 @@ namespace Nautilus.Network
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core;
     using Nautilus.Core.Correctness;
+    using Nautilus.Messaging;
     using Nautilus.Network.Messages;
     using NetMQ;
     using NetMQ.Sockets;
@@ -115,14 +116,20 @@ namespace Nautilus.Network
         /// <summary>
         /// Sends a message with the given payload to the given receiver identity address.
         /// </summary>
-        /// <param name="receiverId">The receiver identity.</param>
+        /// <param name="receiver">The receiver address.</param>
         /// <param name="outbound">The outbound message to send.</param>
-        protected void SendMessage(byte[] receiverId, TOutbound outbound)
+        protected void SendMessage(Address? receiver, TOutbound outbound)
         {
             try
             {
+                if (receiver is null)
+                {
+                    this.Log.Error($"Cannot send {outbound} response (no receiver address).");
+                    return;
+                }
+
                 var message = new NetMQMessage(3);
-                message.Append(receiverId);
+                message.Append(Encoding.UTF8.GetBytes(receiver.ToString()));
                 message.AppendEmptyFrame(); // Delimiter
                 message.Append(this.outboundSerializer.Serialize(outbound));
 
@@ -140,11 +147,11 @@ namespace Nautilus.Network
         /// <summary>
         /// Sends a MessageRejected to the given receiver identity address.
         /// </summary>
-        /// <param name="receiverId">The receiver identity.</param>
+        /// <param name="receiver">The receiver address.</param>
         /// <param name="correlationId">The correlation identifier.</param>
         /// <param name="message">The rejected message.</param>
         protected void SendRejected(
-            byte[] receiverId,
+            Address? receiver,
             Guid correlationId,
             string message)
         {
@@ -159,7 +166,7 @@ namespace Nautilus.Network
                 return; // This can never happen due to generic type constraints.
             }
 
-            this.SendMessage(receiverId, rejected);
+            this.SendMessage(receiver, rejected);
         }
 
         private Task StartWork()
@@ -176,15 +183,19 @@ namespace Nautilus.Network
         private void ReceiveMessage()
         {
             var zmqMessage = this.socket.ReceiveMultipartBytes();
-            var senderId = zmqMessage[0];
+            var senderId = Encoding.UTF8.GetString(zmqMessage[0]);
             var payload = this.inboundSerializer.Deserialize(zmqMessage[2]);
 
-            var received = new ReceivedMessage<TInbound>(senderId, payload);
+            var received = new Envelope<TInbound>(
+                payload,
+                null,
+                new Address(senderId),
+                this.TimeNow());
 
             this.SendToSelf(received);
 
             this.ReceivedCount++;
-            this.Log.Verbose($"Received message[{this.ReceivedCount}] {received.Payload}");
+            this.Log.Verbose($"Received message[{this.ReceivedCount}] {received}");
         }
 
         /// <summary>
@@ -193,11 +204,12 @@ namespace Nautilus.Network
         /// <param name="message">The unhandled object.</param>
         private void UnhandledRequest(object message)
         {
-            if (message is ReceivedMessage<TInbound> request)
+            if (message is Envelope<TInbound> request)
             {
-                var errorMessage = $"Message type {request.Payload.Type.Name} not valid on this port";
-                this.SendRejected(request.SenderId, request.Payload.Id, errorMessage);
+                var errorMessage = $"Message type {request.Message.Type.Name} not valid on this port";
                 this.Log.Error(errorMessage);
+
+                this.SendRejected(request.Sender, request.Message.Id, errorMessage);
             }
 
             this.AddToUnhandledMessages(message);
