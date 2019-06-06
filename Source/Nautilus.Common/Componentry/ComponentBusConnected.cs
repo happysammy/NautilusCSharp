@@ -74,17 +74,17 @@ namespace Nautilus.Common.Componentry
 
         private void OnMessage(Envelope<Command> envelope)
         {
-            this.Endpoint.Send(envelope.Message);
+            this.SendToSelf(envelope.Message);
         }
 
         private void OnMessage(Envelope<Event> envelope)
         {
-            this.Endpoint.Send(envelope.Message);
+            this.SendToSelf(envelope.Message);
         }
 
         private void OnMessage(Envelope<Document> envelope)
         {
-            this.Endpoint.Send(envelope.Message);
+            this.SendToSelf(envelope.Message);
         }
     }
 }

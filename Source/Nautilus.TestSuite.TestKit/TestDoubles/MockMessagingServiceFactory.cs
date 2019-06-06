@@ -27,9 +27,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             var documentBus = new MessageBus<Document>(container);
 
             var messagingAdapter = new MessagingAdapter(
-                commandBus.Endpoint,
-                eventBus.Endpoint,
-                documentBus.Endpoint);
+                commandBus,
+                eventBus,
+                documentBus);
 
             var receiver = new MockMessagingAgent();
 

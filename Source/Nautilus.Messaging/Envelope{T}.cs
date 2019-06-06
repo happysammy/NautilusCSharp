@@ -14,7 +14,7 @@ namespace Nautilus.Messaging
     using NodaTime;
 
     /// <summary>
-    /// Provides an envelope wrapper for all messages sent via the messaging service.
+    /// Provides a message wrapper with optional sender and receiver addresses.
     /// </summary>
     /// <typeparam name="T">The message type.</typeparam>
     public sealed class Envelope<T>
@@ -77,6 +77,6 @@ namespace Nautilus.Messaging
         /// Returns a string representation of this <see cref="Envelope{T}"/>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"Envelope<{typeof(T).Name}>({this.Id})";
+        public override string ToString() => $"Envelope<{typeof(T).Name}>[{this.Message}]";
     }
 }

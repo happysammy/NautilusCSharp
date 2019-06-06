@@ -14,16 +14,15 @@ namespace Nautilus.Common.Messaging
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Messaging;
-    using Nautilus.Messaging.Interfaces;
     using NodaTime;
 
     /// <inheritdoc />
     [Immutable]
     public sealed class MessagingAdapter : IMessagingAdapter
     {
-        private readonly IEndpoint cmdBus;
-        private readonly IEndpoint evtBus;
-        private readonly IEndpoint docBus;
+        private readonly MessageBus<Command> cmdBus;
+        private readonly MessageBus<Event> evtBus;
+        private readonly MessageBus<Document> docBus;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MessagingAdapter"/> class.
@@ -32,9 +31,9 @@ namespace Nautilus.Common.Messaging
         /// <param name="evtBus">The event bus endpoint.</param>
         /// <param name="docBus">The document bus endpoint.</param>
         public MessagingAdapter(
-            IEndpoint cmdBus,
-            IEndpoint evtBus,
-            IEndpoint docBus)
+            MessageBus<Command> cmdBus,
+            MessageBus<Event> evtBus,
+            MessageBus<Document> docBus)
         {
             this.cmdBus = cmdBus;
             this.evtBus = evtBus;
@@ -48,9 +47,9 @@ namespace Nautilus.Common.Messaging
         /// <param name="message">The message.</param>
         public void Send(InitializeSwitchboard message)
         {
-            this.cmdBus.Send(message);
-            this.evtBus.Send(message);
-            this.docBus.Send(message);
+            this.cmdBus.Endpoint.Send(message);
+            this.evtBus.Endpoint.Send(message);
+            this.docBus.Endpoint.Send(message);
         }
 
         /// <inheritdoc />
@@ -69,7 +68,7 @@ namespace Nautilus.Common.Messaging
                             receiver,
                             sender,
                             timestamp);
-                        this.cmdBus.Send(cmdEnvelope);
+                        this.cmdBus.Endpoint.Send(cmdEnvelope);
                         break;
                     case Event evt:
                         var evtEnvelope = new Envelope<Event>(
@@ -77,7 +76,7 @@ namespace Nautilus.Common.Messaging
                             receiver,
                             sender,
                             timestamp);
-                        this.evtBus.Send(evtEnvelope);
+                        this.evtBus.Endpoint.Send(evtEnvelope);
                         break;
                     case Document doc:
                         var docEnvelope = new Envelope<Document>(
@@ -85,7 +84,7 @@ namespace Nautilus.Common.Messaging
                             receiver,
                             sender,
                             timestamp);
-                        this.docBus.Send(docEnvelope);
+                        this.docBus.Endpoint.Send(docEnvelope);
                         break;
                     default:
                         throw ExceptionFactory.InvalidSwitchArgument(message, nameof(message));

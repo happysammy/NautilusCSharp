@@ -23,14 +23,10 @@ namespace Nautilus.Common.Messaging
         /// <returns>The messaging adapter.</returns>
         public static MessagingAdapter Create(IComponentryContainer container)
         {
-            var cmdBus = new MessageBus<Command>(container);
-            var evtBus = new MessageBus<Event>(container);
-            var docBus = new MessageBus<Document>(container);
-
             return new MessagingAdapter(
-                cmdBus.Endpoint,
-                evtBus.Endpoint,
-                docBus.Endpoint);
+                new MessageBus<Command>(container),
+                new MessageBus<Event>(container),
+                new MessageBus<Document>(container));
         }
     }
 }
