@@ -10,7 +10,6 @@ namespace Nautilus.Common.Componentry
 {
     using System.Collections.Generic;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messages.Commands;
     using Nautilus.Core;
     using Nautilus.Messaging;
 
@@ -33,8 +32,9 @@ namespace Nautilus.Common.Componentry
         {
             this.messagingAdapter = messagingAdapter;
 
-            this.RegisterHandler<Envelope<Start>>(this.OnMessage);
-            this.RegisterHandler<Envelope<Stop>>(this.OnMessage);
+            this.RegisterHandler<Envelope<Command>>(this.OnMessage);
+            this.RegisterHandler<Envelope<Event>>(this.OnMessage);
+            this.RegisterHandler<Envelope<Document>>(this.OnMessage);
         }
 
         /// <summary>
@@ -72,12 +72,17 @@ namespace Nautilus.Common.Componentry
             }
         }
 
-        private void OnMessage(Envelope<Start> envelope)
+        private void OnMessage(Envelope<Command> envelope)
         {
             this.Endpoint.Send(envelope.Message);
         }
 
-        private void OnMessage(Envelope<Stop> envelope)
+        private void OnMessage(Envelope<Event> envelope)
+        {
+            this.Endpoint.Send(envelope.Message);
+        }
+
+        private void OnMessage(Envelope<Document> envelope)
         {
             this.Endpoint.Send(envelope.Message);
         }

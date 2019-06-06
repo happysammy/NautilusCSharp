@@ -13,7 +13,6 @@ namespace Nautilus.Common.Messaging
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
-    using Nautilus.Core.Enums;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
     using NodaTime;
@@ -62,29 +61,32 @@ namespace Nautilus.Common.Messaging
             ZonedDateTime timestamp)
             where T : Message
         {
-            var envelope = new Envelope<T>(
-                message,
-                receiver,
-                sender,
-                timestamp);
-
-            switch (message.BaseType)
+            switch (message)
             {
-                    case MessageType.Command:
-                        this.cmdBus.Send(envelope);
+                    case Command cmd:
+                        var cmdEnvelope = new Envelope<Command>(
+                            cmd,
+                            receiver,
+                            sender,
+                            timestamp);
+                        this.cmdBus.Send(cmdEnvelope);
                         break;
-                    case MessageType.Event:
-                        this.evtBus.Send(envelope);
+                    case Event evt:
+                        var evtEnvelope = new Envelope<Event>(
+                            evt,
+                            receiver,
+                            sender,
+                            timestamp);
+                        this.evtBus.Send(evtEnvelope);
                         break;
-                    case MessageType.Document:
-                        this.docBus.Send(envelope);
+                    case Document doc:
+                        var docEnvelope = new Envelope<Document>(
+                            doc,
+                            receiver,
+                            sender,
+                            timestamp);
+                        this.docBus.Send(docEnvelope);
                         break;
-                    case MessageType.Unknown:
-                        goto default;
-                    case MessageType.Request:
-                        goto default;
-                    case MessageType.Response:
-                        goto default;
                     default:
                         throw ExceptionFactory.InvalidSwitchArgument(message, nameof(message));
             }
