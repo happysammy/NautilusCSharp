@@ -13,6 +13,7 @@ namespace Nautilus.Execution.Network
     using Nautilus.Core;
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Network;
+    using Nautilus.Network.Messages;
 
     /// <summary>
     /// Provides a command server for received and deserializing commands.

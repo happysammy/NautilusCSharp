@@ -14,6 +14,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Network;
+    using Nautilus.Network.Messages;
     using Nautilus.Serialization;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;

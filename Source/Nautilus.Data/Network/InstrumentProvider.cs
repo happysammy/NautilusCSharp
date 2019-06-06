@@ -11,12 +11,12 @@ namespace Nautilus.Data.Network
     using System;
     using System.Linq;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Messages.Requests;
     using Nautilus.Data.Messages.Responses;
     using Nautilus.DomainModel.Entities;
     using Nautilus.Network;
+    using Nautilus.Network.Messages;
 
     /// <summary>
     /// Provides a responder for <see cref="Instrument"/> data requests.

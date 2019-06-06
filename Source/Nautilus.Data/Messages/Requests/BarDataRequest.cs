@@ -9,12 +9,11 @@
 namespace Nautilus.Data.Messages.Requests
 {
     using System;
-    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Network;
+    using Nautilus.Network.Messages;
     using NodaTime;
 
     /// <summary>

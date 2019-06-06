@@ -17,6 +17,7 @@ namespace Nautilus.Execution
     using Nautilus.Execution.Network;
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Network;
+    using Nautilus.Network.Messages;
     using NodaTime;
 
     /// <summary>

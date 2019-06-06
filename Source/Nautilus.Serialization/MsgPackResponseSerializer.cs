@@ -13,7 +13,7 @@ namespace Nautilus.Serialization
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.Data.Messages.Responses;
-    using Nautilus.Network;
+    using Nautilus.Network.Messages;
     using Nautilus.Serialization.Internal;
 
     /// <summary>

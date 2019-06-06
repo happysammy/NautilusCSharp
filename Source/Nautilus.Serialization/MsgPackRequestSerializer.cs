@@ -14,7 +14,7 @@ namespace Nautilus.Serialization
     using Nautilus.Core.Extensions;
     using Nautilus.Data.Messages.Requests;
     using Nautilus.DomainModel.Enums;
-    using Nautilus.Network;
+    using Nautilus.Network.Messages;
     using Nautilus.Serialization.Internal;
 
     /// <summary>
