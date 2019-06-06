@@ -16,7 +16,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     /// <summary>
     /// Provides a mock publisher for testing.
     /// </summary>
-    public sealed class MockPublisher : MessagePublisher
+    public sealed class MockPublisher : Publisher<string>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MockPublisher"/> class.
@@ -30,6 +30,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             NetworkPort port)
             : base(
                 container,
+                new MockSerializer(),
                 host,
                 port,
                 Guid.NewGuid())
@@ -37,12 +38,22 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             this.RegisterHandler<(string, string)>(this.OnMessage);
         }
 
-        private void OnMessage((string, string) toPublish)
+        private void OnMessage((string Topic, string Message) toPublish)
         {
-            var (topic, message) = toPublish;
-            this.Publish(
-                Encoding.UTF8.GetBytes(topic),
-                Encoding.UTF8.GetBytes(message));
+            this.Publish(toPublish.Topic, toPublish.Message);
+        }
+
+        private sealed class MockSerializer : ISerializer<string>
+        {
+            public byte[] Serialize(string message)
+            {
+                return Encoding.UTF8.GetBytes(message);
+            }
+
+            public string Deserialize(byte[] bytes)
+            {
+                return Encoding.UTF8.GetString(bytes);
+            }
         }
     }
 }

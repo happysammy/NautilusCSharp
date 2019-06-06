@@ -38,9 +38,9 @@ namespace Nautilus.Execution
         public static Address CommandServer { get; } = new Address(nameof(CommandServer));
 
         /// <summary>
-        /// Gets the <see cref="EventServer"/> component messaging address.
+        /// Gets the <see cref="EventPublisher"/> component messaging address.
         /// </summary>
-        public static Address EventServer { get; } = new Address(nameof(EventServer));
+        public static Address EventPublisher { get; } = new Address(nameof(EventPublisher));
 
         /// <summary>
         /// Gets the <see cref="OrderManager"/> component messaging address.

@@ -16,6 +16,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network;
+    using Nautilus.Serialization;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NetMQ;
@@ -27,7 +28,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
     public class TickPublisherTests
     {
         private readonly ITestOutputHelper output;
-        private readonly IComponentryContainer setupContainer;
+        private readonly IComponentryContainer container;
         private readonly MockLoggingAdapter mockLoggingAdapter;
 
         public TickPublisherTests(ITestOutputHelper output)
@@ -36,7 +37,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
             this.output = output;
 
             var setupFactory = new StubComponentryContainerFactory();
-            this.setupContainer = setupFactory.Create();
+            this.container = setupFactory.Create();
             this.mockLoggingAdapter = setupFactory.LoggingAdapter;
         }
 
@@ -45,7 +46,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
         {
             // Arrange
             var publisher = new TickPublisher(
-                this.setupContainer,
+                this.container,
+                new TickSerializer(),
                 NetworkAddress.LocalHost,
                 new NetworkPort(55506));
             publisher.Start();

@@ -22,12 +22,12 @@ namespace Nautilus.Network.Messages
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageReceived"/> class.
         /// </summary>
-        /// <param name="messageType">The message type.</param>
+        /// <param name="receivedType">The received message type.</param>
         /// <param name="correlationId">The request correlation identifier.</param>
         /// <param name="id">The documents identifier.</param>
         /// <param name="timestamp">The documents timestamp.</param>
         public MessageReceived(
-            string messageType,
+            string receivedType,
             Guid correlationId,
             Guid id,
             ZonedDateTime timestamp)
@@ -40,12 +40,12 @@ namespace Nautilus.Network.Messages
             Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
-            this.MessageType = messageType;
+            this.ReceivedType = receivedType;
         }
 
         /// <summary>
-        /// Gets the responses component name.
+        /// Gets the responses received message type.
         /// </summary>
-        public string MessageType { get; }
+        public string ReceivedType { get; }
     }
 }

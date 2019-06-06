@@ -9,7 +9,6 @@
 namespace Nautilus.Execution.Network
 {
     using System;
-    using System.Text;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
     using Nautilus.DomainModel.Events;
@@ -19,12 +18,11 @@ namespace Nautilus.Execution.Network
     /// <summary>
     /// Provides an event publisher for the messaging server.
     /// </summary>
-    public sealed class EventPublisher : MessagePublisher
+    public sealed class EventPublisher : Publisher<Event>
     {
         private const string NAUTILUS = "NAUTILUS";
         private const string ACCOUNT = "ACCOUNT";
         private const string EXECUTION = "EXECUTION";
-        private readonly ISerializer<Event> serializer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EventPublisher"/> class.
@@ -40,12 +38,11 @@ namespace Nautilus.Execution.Network
             NetworkPort port)
             : base(
                 container,
+                serializer,
                 host,
                 port,
                 Guid.NewGuid())
         {
-            this.serializer = serializer;
-
             this.RegisterHandler<Event>(this.OnMessage);
         }
 
@@ -63,12 +60,6 @@ namespace Nautilus.Execution.Network
                     this.Publish(NAUTILUS, message);
                     break;
             }
-        }
-
-        private void Publish(string topic, Event message)
-        {
-            this.Log.Debug($"Publishing[{topic}] {message}");
-            this.Publish(Encoding.UTF8.GetBytes(topic), this.serializer.Serialize(message));
         }
     }
 }

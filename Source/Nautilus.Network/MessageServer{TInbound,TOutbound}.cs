@@ -116,9 +116,9 @@ namespace Nautilus.Network
         /// <summary>
         /// Sends a message with the given payload to the given receiver identity address.
         /// </summary>
-        /// <param name="receiver">The receiver address.</param>
         /// <param name="outbound">The outbound message to send.</param>
-        protected void SendMessage(Address? receiver, TOutbound outbound)
+        /// <param name="receiver">The receiver address.</param>
+        protected void SendMessage(TOutbound outbound, Address? receiver)
         {
             try
             {
@@ -136,7 +136,7 @@ namespace Nautilus.Network
                 this.socket.SendMultipartMessage(message);
 
                 this.SentCount++;
-                this.Log.Verbose($"Sent message[{this.SentCount}] {outbound}");
+                this.Log.Debug($"Sent message[{this.SentCount}] {outbound}");
             }
             catch (Exception ex)
             {
@@ -145,19 +145,40 @@ namespace Nautilus.Network
         }
 
         /// <summary>
+        /// Sends a MessageReceived to the given receiver identity address.
+        /// </summary>
+        /// <param name="receivedMessage">The received message.</param>
+        /// <param name="receiver">The receiver address.</param>
+        protected void SendReceived(Message receivedMessage, Address? receiver)
+        {
+            var received = new MessageReceived(
+                receivedMessage.Type.Name,
+                receivedMessage.Id,
+                Guid.NewGuid(),
+                this.TimeNow()) as TOutbound;
+
+            if (received is null)
+            {
+                return; // This can never happen due to generic type constraints.
+            }
+
+            this.SendMessage(received, receiver);
+        }
+
+        /// <summary>
         /// Sends a MessageRejected to the given receiver identity address.
         /// </summary>
+        /// <param name="rejectedReason">The rejected reason.</param>
+        /// <param name="rejectedMessage">The rejected message.</param>
         /// <param name="receiver">The receiver address.</param>
-        /// <param name="correlationId">The correlation identifier.</param>
-        /// <param name="message">The rejected message.</param>
         protected void SendRejected(
-            Address? receiver,
-            Guid correlationId,
-            string message)
+            string rejectedReason,
+            Message rejectedMessage,
+            Address? receiver)
         {
             var rejected = new MessageRejected(
-                message,
-                correlationId,
+                rejectedReason,
+                rejectedMessage.Id,
                 Guid.NewGuid(),
                 this.TimeNow()) as TOutbound;
 
@@ -166,7 +187,7 @@ namespace Nautilus.Network
                 return; // This can never happen due to generic type constraints.
             }
 
-            this.SendMessage(receiver, rejected);
+            this.SendMessage(rejected, receiver);
         }
 
         private Task StartWork()
@@ -184,18 +205,18 @@ namespace Nautilus.Network
         {
             var zmqMessage = this.socket.ReceiveMultipartBytes();
             var senderId = Encoding.UTF8.GetString(zmqMessage[0]);
-            var payload = this.inboundSerializer.Deserialize(zmqMessage[2]);
+            var received = this.inboundSerializer.Deserialize(zmqMessage[2]);
 
-            var received = new Envelope<TInbound>(
-                payload,
+            var envelope = new Envelope<TInbound>(
+                received,
                 null,
                 new Address(senderId),
                 this.TimeNow());
 
-            this.SendToSelf(received);
+            this.SendToSelf(envelope);
 
             this.ReceivedCount++;
-            this.Log.Verbose($"Received message[{this.ReceivedCount}] {received}");
+            this.Log.Debug($"Received message[{this.ReceivedCount}] {received}");
         }
 
         /// <summary>
@@ -209,7 +230,7 @@ namespace Nautilus.Network
                 var errorMessage = $"Message type {request.Message.Type.Name} not valid on this port";
                 this.Log.Error(errorMessage);
 
-                this.SendRejected(request.Sender, request.Message.Id, errorMessage);
+                this.SendRejected(errorMessage, request.Message, request.Sender);
             }
 
             this.AddToUnhandledMessages(message);

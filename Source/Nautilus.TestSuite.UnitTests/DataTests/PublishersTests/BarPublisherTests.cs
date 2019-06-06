@@ -14,6 +14,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
     using Nautilus.Common.Interfaces;
     using Nautilus.Data.Network;
     using Nautilus.Network;
+    using Nautilus.Serialization;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NetMQ;
@@ -44,6 +45,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
             // Arrange
             var publisher = new BarPublisher(
                 this.setupContainer,
+                new BarSerializer(),
                 NetworkAddress.LocalHost,
                 new NetworkPort(55511));
             publisher.Start();

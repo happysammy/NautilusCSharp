@@ -56,13 +56,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             var received = envelope.Message;
             this.ReceivedMessages.Add(received);
 
-            var response = new MessageReceived(
-                received.Type.Name,
-                received.Id,
-                Guid.NewGuid(),
-                this.TimeNow());
-
-            this.SendMessage(envelope.Sender, response);
+            this.SendReceived(received, envelope.Sender);
         }
     }
 }

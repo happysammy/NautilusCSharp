@@ -56,15 +56,8 @@ namespace Nautilus.Execution.Network
         {
             var command = envelope.Message;
             this.receiver.Send(command);
-            this.Log.Debug($"Received {command}.");
 
-            var response = new MessageReceived(
-                command.Type.Name,
-                command.Id,
-                Guid.NewGuid(),
-                this.TimeNow());
-
-            this.SendMessage(envelope.Sender, response);
+            this.SendReceived(command, envelope.Receiver);
         }
     }
 }

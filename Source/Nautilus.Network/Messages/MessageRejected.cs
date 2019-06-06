@@ -22,12 +22,12 @@ namespace Nautilus.Network.Messages
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageRejected"/> class.
         /// </summary>
-        /// <param name="message">The response message.</param>
+        /// <param name="rejectedReason">The rejected reason.</param>
         /// <param name="correlationId">The response correlation identifier.</param>
         /// <param name="id">The response identifier.</param>
         /// <param name="timestamp">The response timestamp.</param>
         public MessageRejected(
-            string message,
+            string rejectedReason,
             Guid correlationId,
             Guid id,
             ZonedDateTime timestamp)
@@ -39,13 +39,14 @@ namespace Nautilus.Network.Messages
         {
             Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));
+            Debug.NotEmptyOrWhiteSpace(rejectedReason, nameof(rejectedReason));
 
-            this.Message = message;
+            this.RejectedReason = rejectedReason;
         }
 
         /// <summary>
-        /// Gets the responses message.
+        /// Gets the responses rejected request reason.
         /// </summary>
-        public string Message { get; }
+        public string RejectedReason { get; }
     }
 }

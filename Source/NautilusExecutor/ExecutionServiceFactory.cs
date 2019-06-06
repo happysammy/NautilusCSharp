@@ -19,6 +19,7 @@ namespace NautilusExecutor
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Execution;
+    using Nautilus.Execution.Network;
     using Nautilus.Fix;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
@@ -75,15 +76,15 @@ namespace NautilusExecutor
                 orderManager.Endpoint,
                 config);
 
-            var eventServer = new EventServer(
+            var eventPublisher = new EventPublisher(
                 container,
-                messagingAdapter,
                 new MsgPackEventSerializer(),
-                config);
+                config.ServerAddress,
+                config.EventsPort);
 
             // Wire up service
             fixGateway.RegisterConnectionEventReceiver(ExecutionServiceAddress.Core);
-            fixGateway.RegisterAccountEventReceiver(ExecutionServiceAddress.EventServer);
+            fixGateway.RegisterAccountEventReceiver(ExecutionServiceAddress.EventPublisher);
             fixGateway.RegisterOrderEventReceiver(ExecutionServiceAddress.OrderManager);
 
             var addresses = new Dictionary<Address, IEndpoint>
@@ -92,7 +93,7 @@ namespace NautilusExecutor
                 { ExecutionServiceAddress.FixGateway, fixGateway.Endpoint },
                 { ExecutionServiceAddress.OrderManager, orderManager.Endpoint },
                 { ExecutionServiceAddress.CommandServer, commandServer.Endpoint },
-                { ExecutionServiceAddress.EventServer, eventServer.Endpoint },
+                { ExecutionServiceAddress.EventPublisher, eventPublisher.Endpoint },
             };
 
             return new ExecutionService(

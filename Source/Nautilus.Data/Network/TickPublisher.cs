@@ -9,7 +9,6 @@
 namespace Nautilus.Data.Network
 {
     using System;
-    using System.Text;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network;
@@ -17,20 +16,23 @@ namespace Nautilus.Data.Network
     /// <summary>
     /// Provides a publisher for <see cref="Tick"/> data.
     /// </summary>
-    public sealed class TickPublisher : MessagePublisher
+    public sealed class TickPublisher : Publisher<Tick>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TickPublisher"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
+        /// <param name="serializer">The tick serializer.</param>
         /// <param name="host">The host address.</param>
         /// <param name="port">The port.</param>
         public TickPublisher(
             IComponentryContainer container,
+            ISerializer<Tick> serializer,
             NetworkAddress host,
             NetworkPort port)
             : base(
                 container,
+                serializer,
                 host,
                 port,
                 Guid.NewGuid())
@@ -40,9 +42,7 @@ namespace Nautilus.Data.Network
 
         private void OnMessage(Tick tick)
         {
-            this.Publish(
-                Encoding.UTF8.GetBytes(tick.Symbol.ToString()),
-                Encoding.UTF8.GetBytes(tick.ToString()));
+            this.Publish(tick.Symbol.ToString(), tick);
         }
     }
 }

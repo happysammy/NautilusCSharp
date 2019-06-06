@@ -67,7 +67,7 @@ namespace Nautilus.Data.Network
 
             if (query.IsFailure)
             {
-                this.SendRejected(envelope.Sender, request.Id, query.Message);
+                this.SendRejected(query.Message, request, envelope.Sender);
                 this.Log.Error(query.Message);
             }
 
@@ -78,7 +78,7 @@ namespace Nautilus.Data.Network
                 Guid.NewGuid(),
                 this.TimeNow());
 
-            this.SendMessage(envelope.Sender, response);
+            this.SendMessage(response, envelope.Sender);
         }
 
         private void OnMessage(Envelope<InstrumentsRequest> envelope)
@@ -88,7 +88,7 @@ namespace Nautilus.Data.Network
 
             if (query.IsFailure)
             {
-                this.SendRejected(envelope.Sender, request.Id, query.Message);
+                this.SendRejected(query.Message, request, envelope.Sender);
                 this.Log.Error(query.Message);
             }
 
@@ -103,7 +103,7 @@ namespace Nautilus.Data.Network
                 Guid.NewGuid(),
                 this.TimeNow());
 
-            this.SendMessage(envelope.Sender, response);
+            this.SendMessage(response, envelope.Sender);
         }
     }
 }

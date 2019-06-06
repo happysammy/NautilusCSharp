@@ -82,6 +82,7 @@ namespace NautilusData
 
             var tickPublisher = new TickPublisher(
                 container,
+                new TickSerializer(),
                 config.ServerAddress,
                 config.TickSubscribePort);
 
@@ -95,6 +96,7 @@ namespace NautilusData
 
             var barPublisher = new BarPublisher(
                 container,
+                new BarSerializer(),
                 config.ServerAddress,
                 config.BarSubscribePort);
 

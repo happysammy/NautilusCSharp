@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="MessagePublisher.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="Publisher{T}.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
@@ -20,19 +20,23 @@ namespace Nautilus.Network
     /// <summary>
     /// Provides a messaging consumer.
     /// </summary>
-    public abstract class MessagePublisher : Component
+    /// <typeparam name="T">The publishing message type.</typeparam>
+    public abstract class Publisher<T> : Component
     {
+        private readonly ISerializer<T> serializer;
         private readonly PublisherSocket socket;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MessagePublisher"/> class.
+        /// Initializes a new instance of the <see cref="Publisher{T}"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
+        /// <param name="serializer">The message serializer.</param>
         /// <param name="host">The publishers host address.</param>
         /// <param name="port">The publishers port.</param>
         /// <param name="id">The publishers identifier.</param>
-        protected MessagePublisher(
+        protected Publisher(
             IComponentryContainer container,
+            ISerializer<T> serializer,
             NetworkAddress host,
             NetworkPort port,
             Guid id)
@@ -40,6 +44,7 @@ namespace Nautilus.Network
         {
             Condition.NotDefault(id, nameof(id));
 
+            this.serializer = serializer;
             this.socket = new PublisherSocket()
             {
                 Options =
@@ -84,12 +89,12 @@ namespace Nautilus.Network
         /// </summary>
         /// <param name="topic">The messages topic.</param>
         /// <param name="message">The message to publish.</param>
-        protected void Publish(byte[] topic, byte[] message)
+        protected void Publish(string topic, T message)
         {
-            this.socket.SendMultipartBytes(topic, message);
+            this.socket.SendMultipartBytes(Encoding.UTF8.GetBytes(topic), this.serializer.Serialize(message));
 
             this.PublishedCount++;
-            this.Log.Verbose($"Published message[{this.PublishedCount}]");
+            this.Log.Debug($"Published message[{this.PublishedCount}] Topic={topic}, Message={message}");
         }
     }
 }

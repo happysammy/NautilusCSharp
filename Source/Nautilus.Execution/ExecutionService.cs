@@ -83,7 +83,7 @@ namespace Nautilus.Execution
             {
                 this.Send(ExecutionServiceAddress.FixGateway, message);
                 this.Send(ExecutionServiceAddress.CommandServer, message);
-                this.Send(ExecutionServiceAddress.EventServer, message);
+                this.Send(ExecutionServiceAddress.EventPublisher, message);
             }
             else
             {
@@ -97,7 +97,7 @@ namespace Nautilus.Execution
             // Forward stop message.
             this.Send(ExecutionServiceAddress.FixGateway, message);
             this.Send(ExecutionServiceAddress.CommandServer, message);
-            this.Send(ExecutionServiceAddress.EventServer, message);
+            this.Send(ExecutionServiceAddress.EventPublisher, message);
         }
 
         private void OnMessage(ConnectFix message)

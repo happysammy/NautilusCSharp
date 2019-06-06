@@ -9,7 +9,6 @@
 namespace Nautilus.Data.Network
 {
     using System;
-    using System.Text;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network;
@@ -17,20 +16,23 @@ namespace Nautilus.Data.Network
     /// <summary>
     /// Provides a publisher for <see cref="Bar"/> data.
     /// </summary>
-    public sealed class BarPublisher : MessagePublisher
+    public sealed class BarPublisher : Publisher<Bar>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="BarPublisher"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
+        /// <param name="serializer">The bar serializer.</param>
         /// <param name="host">The host address.</param>
         /// <param name="port">The port.</param>
         public BarPublisher(
             IComponentryContainer container,
+            ISerializer<Bar> serializer,
             NetworkAddress host,
             NetworkPort port)
             : base(
                 container,
+                serializer,
                 host,
                 port,
                 Guid.NewGuid())
@@ -40,9 +42,7 @@ namespace Nautilus.Data.Network
 
         private void OnMessage((BarType BarType, Bar Bar) data)
         {
-            this.Publish(
-                Encoding.UTF8.GetBytes(data.BarType.ToString()),
-                Encoding.UTF8.GetBytes(data.Bar.ToString()));
+            this.Publish(data.BarType.ToString(), data.Bar);
         }
     }
 }

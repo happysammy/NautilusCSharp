@@ -31,7 +31,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
         private readonly NetworkAddress localHost = new NetworkAddress("127.0.0.1");
         private readonly ITestOutputHelper output;
-        private readonly IComponentryContainer setupContainer;
+        private readonly IComponentryContainer container;
         private readonly MockLoggingAdapter mockLoggingAdapter;
         private readonly IEndpoint testReceiver;
 
@@ -41,7 +41,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             this.output = output;
 
             var setupFactory = new StubComponentryContainerFactory();
-            this.setupContainer = setupFactory.Create();
+            this.container = setupFactory.Create();
             this.mockLoggingAdapter = setupFactory.LoggingAdapter;
             this.testReceiver = new MockMessagingAgent().Endpoint;
         }
@@ -53,7 +53,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             const string testAddress = "tcp://127.0.0.1:56601";
 
             var publisher = new EventPublisher(
-                this.setupContainer,
+                this.container,
                 new MsgPackEventSerializer(),
                 this.localHost,
                 new NetworkPort(56601));

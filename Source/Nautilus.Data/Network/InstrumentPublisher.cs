@@ -9,7 +9,6 @@
 namespace Nautilus.Data.Network
 {
     using System;
-    using System.Text;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Documents;
     using Nautilus.DomainModel.Entities;
@@ -18,7 +17,7 @@ namespace Nautilus.Data.Network
     /// <summary>
     /// Provides a publisher for <see cref="Instrument"/> data.
     /// </summary>
-    public sealed class InstrumentPublisher : MessagePublisher
+    public sealed class InstrumentPublisher : Publisher<Instrument>
     {
         private readonly ISerializer<Instrument> serializer;
 
@@ -36,6 +35,7 @@ namespace Nautilus.Data.Network
             NetworkPort port)
             : base(
                 container,
+                serializer,
                 host,
                 port,
                 Guid.NewGuid())
@@ -47,9 +47,7 @@ namespace Nautilus.Data.Network
 
         private void OnMessage(DataDelivery<Instrument> data)
         {
-            this.Publish(
-                Encoding.UTF8.GetBytes(data.Data.Symbol.ToString()),
-                this.serializer.Serialize(data.Data));
+            this.Publish(data.Data.Symbol.ToString(), data.Data);
         }
     }
 }

@@ -255,7 +255,7 @@ namespace Nautilus.Execution
                 }
             }
 
-            this.Send(ExecutionServiceAddress.EventServer, @event);
+            this.Send(ExecutionServiceAddress.EventPublisher, @event);
             this.Log.Debug($"Sent {@event} to EventServer.");
         }
 
