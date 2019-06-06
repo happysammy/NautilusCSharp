@@ -10,6 +10,7 @@ namespace Nautilus.Common.Componentry
 {
     using System.Collections.Generic;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messages.Commands;
     using Nautilus.Core;
     using Nautilus.Messaging;
 
@@ -31,6 +32,9 @@ namespace Nautilus.Common.Componentry
             : base(container)
         {
             this.messagingAdapter = messagingAdapter;
+
+            this.RegisterHandler<Envelope<Start>>(this.OnMessage);
+            this.RegisterHandler<Envelope<Stop>>(this.OnMessage);
         }
 
         /// <summary>
@@ -42,7 +46,11 @@ namespace Nautilus.Common.Componentry
         protected void Send<T>(Address receiver, T message)
             where T : Message
         {
-            this.messagingAdapter.Send(receiver, message, this.Address);
+            this.messagingAdapter.Send(
+                message,
+                receiver,
+                this.Address,
+                this.TimeNow());
         }
 
         /// <summary>
@@ -56,8 +64,22 @@ namespace Nautilus.Common.Componentry
         {
             for (var i = 0; i < receivers.Count; i++)
             {
-                this.messagingAdapter.Send(receivers[i], message, this.Address);
+                this.messagingAdapter.Send(
+                    message,
+                    receivers[i],
+                    this.Address,
+                    this.TimeNow());
             }
+        }
+
+        private void OnMessage(Envelope<Start> envelope)
+        {
+            this.Endpoint.Send(envelope.Message);
+        }
+
+        private void OnMessage(Envelope<Stop> envelope)
+        {
+            this.Endpoint.Send(envelope.Message);
         }
     }
 }

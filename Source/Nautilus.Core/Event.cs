@@ -11,6 +11,7 @@ namespace Nautilus.Core
     using System;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
+    using Nautilus.Core.Enums;
     using NodaTime;
 
     /// <summary>
@@ -30,6 +31,7 @@ namespace Nautilus.Core
             Guid id,
             ZonedDateTime timestamp)
             : base(
+                MessageType.Event,
                 type,
                 id,
                 timestamp)

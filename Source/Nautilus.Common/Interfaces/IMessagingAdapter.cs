@@ -10,6 +10,7 @@ namespace Nautilus.Common.Interfaces
 {
     using Nautilus.Core;
     using Nautilus.Messaging;
+    using NodaTime;
 
     /// <summary>
     /// Provides a means for components to send messages to other components via the message bus.
@@ -21,10 +22,11 @@ namespace Nautilus.Common.Interfaces
         /// from the given sender.
         /// </summary>
         /// <typeparam name="T">The message type.</typeparam>
-        /// <param name="receiver">The receiver address.</param>
         /// <param name="message">The message.</param>
+        /// <param name="receiver">The receiver address.</param>
         /// <param name="sender">The sender address.</param>
-        void Send<T>(Address receiver, T message, Address sender)
+        /// <param name="timestamp">The send timestamp.</param>
+        void Send<T>(T message, Address receiver, Address sender, ZonedDateTime timestamp)
             where T : Message;
     }
 }

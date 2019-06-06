@@ -214,13 +214,14 @@ namespace Nautilus.Fix
                 foreach (var receiver in this.connectionEventReceivers)
                 {
                     this.messagingAdapter.Send(
-                        receiver,
                         new FixSessionConnected(
                             this.Broker,
                             sessionId.ToString(),
                             this.NewGuid(),
                             this.TimeNow()),
-                        new Address(nameof(FixGateway)));
+                        receiver,
+                        new Address(nameof(FixGateway)),
+                        this.TimeNow());
                 }
 
                 this.Log.Debug($"Logon - {sessionId}");
@@ -238,13 +239,14 @@ namespace Nautilus.Fix
                 foreach (var receiver in this.connectionEventReceivers)
                 {
                     this.messagingAdapter.Send(
-                        receiver,
                         new FixSessionDisconnected(
                             this.Broker,
                             sessionId.ToString(),
                             this.NewGuid(),
                             this.TimeNow()),
-                        new Address(nameof(FixGateway)));
+                        receiver,
+                        new Address(nameof(FixGateway)),
+                        this.TimeNow());
                 }
 
                 this.Log.Debug($"Logout - {sessionId}");

@@ -11,6 +11,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using System;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Enums;
     using NodaTime;
 
     /// <summary>
@@ -29,7 +30,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             string payload,
             Guid id,
             ZonedDateTime timestamp)
-            : base(typeof(MockMessage), id, timestamp)
+            : base(MessageType.Request, typeof(MockMessage), id, timestamp)
         {
             this.Payload = payload;
         }

@@ -14,7 +14,6 @@ namespace Nautilus.Common.Componentry
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
-    using Nautilus.Core;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging;
     using NodaTime;
@@ -48,8 +47,6 @@ namespace Nautilus.Common.Componentry
             this.Log = container.LoggerFactory.Create(this.Name);
             this.State = initial;
 
-            this.RegisterHandler<Envelope<Start>>(this.Open);
-            this.RegisterHandler<Envelope<Stop>>(this.Open);
             this.RegisterHandler<Start>(this.OnMessage);
             this.RegisterHandler<Stop>(this.OnMessage);
             this.RegisterUnhandled(this.Unhandled);
@@ -173,14 +170,6 @@ namespace Nautilus.Common.Componentry
             where T : Exception
         {
             this.commandHandler.Execute<T>(action);
-        }
-
-        private void Open<T>(Envelope<T> envelope)
-            where T : Message
-        {
-            this.Endpoint.Send(envelope.Message);
-
-            this.Log.Verbose($"Received {envelope}.");
         }
 
         private void OnMessage(Start message)

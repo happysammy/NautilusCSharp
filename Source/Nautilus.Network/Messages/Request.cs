@@ -12,6 +12,7 @@ namespace Nautilus.Network.Messages
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
+    using Nautilus.Core.Enums;
     using NodaTime;
 
     /// <summary>
@@ -31,6 +32,7 @@ namespace Nautilus.Network.Messages
             Guid id,
             ZonedDateTime timestamp)
             : base(
+                MessageType.Request,
                 type,
                 id,
                 timestamp)

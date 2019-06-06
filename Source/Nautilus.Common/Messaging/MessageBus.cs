@@ -37,8 +37,7 @@ namespace Nautilus.Common.Messaging
             this.switchboard = Switchboard.Empty();
 
             this.RegisterHandler<InitializeSwitchboard>(this.OnMessage);
-            this.RegisterHandler<Envelope<T>>(this.OnMessage);
-            this.RegisterUnhandled(this.AddToDeadLetters);
+            this.RegisterHandler<object>(this.OnMessage);
         }
 
         /// <summary>
@@ -63,8 +62,10 @@ namespace Nautilus.Common.Messaging
             this.Log.Information("Switchboard initialized.");
         }
 
-        private void OnMessage(Envelope<T> envelope)
+        private void OnMessage(object envelope)
         {
+            // TODO: Implement.
+            if (envelope is Envelope<T>)
             this.switchboard.SendToReceiver(envelope);
 
             this.Log.Verbose($"[{this.ProcessedCount}] {envelope.Sender} -> {envelope} -> {envelope.Receiver}");

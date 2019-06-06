@@ -48,12 +48,12 @@ namespace Nautilus.Messaging
         public T Message { get; }
 
         /// <summary>
-        /// Gets the envelopes receiver.
+        /// Gets the envelopes receiver (optional).
         /// </summary>
         public Address? Receiver { get; }
 
         /// <summary>
-        /// Gets the envelopes sender.
+        /// Gets the envelopes sender (optional).
         /// </summary>
         public Address? Sender { get; }
 
@@ -77,6 +77,6 @@ namespace Nautilus.Messaging
         /// Returns a string representation of this <see cref="Envelope{T}"/>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"Envelope<{typeof(T).Name}>[{this.Message}]";
+        public override string ToString() => $"Envelope<{typeof(T).Name}>({this.Id})";
     }
 }

@@ -13,6 +13,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using Nautilus.Core;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
+    using NodaTime;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public sealed class MockMessagingAdapter : IMessagingAdapter
@@ -24,7 +25,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             this.testEndpoint = testEndpoint;
         }
 
-        public void Send<T>(Address receiver, T message, Address sender)
+        public void Send<T>(T message, Address receiver, Address sender, ZonedDateTime timestamp)
             where T : Message
         {
             this.testEndpoint.Send(message);

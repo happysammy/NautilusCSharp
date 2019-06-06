@@ -11,6 +11,7 @@ namespace Nautilus.Core
     using System;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
+    using Nautilus.Core.Enums;
     using NodaTime;
 
     /// <summary>
@@ -22,10 +23,12 @@ namespace Nautilus.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="Message"/> class.
         /// </summary>
+        /// <param name="baseType">The message base type.</param>
         /// <param name="type">The message type.</param>
         /// <param name="id">The message identifier.</param>
         /// <param name="timestamp">The message timestamp.</param>
         protected Message(
+            MessageType baseType,
             Type type,
             Guid id,
             ZonedDateTime timestamp)
@@ -34,10 +37,16 @@ namespace Nautilus.Core
             Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
+            this.BaseType = baseType;
             this.Type = type;
             this.Id = id;
             this.Timestamp = timestamp;
         }
+
+        /// <summary>
+        /// Gets the messages base type.
+        /// </summary>
+        public MessageType BaseType { get; }
 
         /// <summary>
         /// Gets the message type.

@@ -13,31 +13,33 @@ namespace Nautilus.Common.Messaging
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
+    using Nautilus.Core.Enums;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
+    using NodaTime;
 
     /// <inheritdoc />
     [Immutable]
     public sealed class MessagingAdapter : IMessagingAdapter
     {
-        private readonly IEndpoint commandBus;
-        private readonly IEndpoint eventBus;
-        private readonly IEndpoint documentBus;
+        private readonly IEndpoint cmdBus;
+        private readonly IEndpoint evtBus;
+        private readonly IEndpoint docBus;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MessagingAdapter"/> class.
         /// </summary>
-        /// <param name="commandBus">The command bus endpoint.</param>
-        /// <param name="eventBus">The event bus endpoint.</param>
-        /// <param name="documentBus">The document bus endpoint.</param>
+        /// <param name="cmdBus">The command bus endpoint.</param>
+        /// <param name="evtBus">The event bus endpoint.</param>
+        /// <param name="docBus">The document bus endpoint.</param>
         public MessagingAdapter(
-            IEndpoint commandBus,
-            IEndpoint eventBus,
-            IEndpoint documentBus)
+            IEndpoint cmdBus,
+            IEndpoint evtBus,
+            IEndpoint docBus)
         {
-            this.commandBus = commandBus;
-            this.eventBus = eventBus;
-            this.documentBus = documentBus;
+            this.cmdBus = cmdBus;
+            this.evtBus = evtBus;
+            this.docBus = docBus;
         }
 
         /// <summary>
@@ -47,41 +49,42 @@ namespace Nautilus.Common.Messaging
         /// <param name="message">The message.</param>
         public void Send(InitializeSwitchboard message)
         {
-            this.commandBus.Send(message);
-            this.eventBus.Send(message);
-            this.documentBus.Send(message);
+            this.cmdBus.Send(message);
+            this.evtBus.Send(message);
+            this.docBus.Send(message);
         }
 
         /// <inheritdoc />
-        public void Send<T>(Address receiver, T message, Address sender)
+        public void Send<T>(
+            T message,
+            Address receiver,
+            Address sender,
+            ZonedDateTime timestamp)
             where T : Message
         {
-            switch (message)
+            var envelope = new Envelope<T>(
+                message,
+                receiver,
+                sender,
+                timestamp);
+
+            switch (message.BaseType)
             {
-                    case Command msg:
-                        var commandEnvelope = new Envelope<Command>(
-                            msg,
-                            receiver,
-                            sender,
-                            message.Timestamp);
-                        this.commandBus.Send(commandEnvelope);
+                    case MessageType.Command:
+                        this.cmdBus.Send(envelope);
                         break;
-                    case Event msg:
-                        var eventEnvelope = new Envelope<Event>(
-                            msg,
-                            receiver,
-                            sender,
-                            message.Timestamp);
-                        this.eventBus.Send(eventEnvelope);
+                    case MessageType.Event:
+                        this.evtBus.Send(envelope);
                         break;
-                    case Document msg:
-                        var serviceEnvelope = new Envelope<Document>(
-                            msg,
-                            receiver,
-                            sender,
-                            message.Timestamp);
-                        this.documentBus.Send(serviceEnvelope);
+                    case MessageType.Document:
+                        this.docBus.Send(envelope);
                         break;
+                    case MessageType.Unknown:
+                        goto default;
+                    case MessageType.Request:
+                        goto default;
+                    case MessageType.Response:
+                        goto default;
                     default:
                         throw ExceptionFactory.InvalidSwitchArgument(message, nameof(message));
             }
