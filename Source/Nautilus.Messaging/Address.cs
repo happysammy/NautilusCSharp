@@ -107,5 +107,11 @@ namespace Nautilus.Messaging
         {
             return Hash.GetCode(this.StringValue);
         }
+
+        /// <summary>
+        /// Returns a string representation of the <see cref="Address"/>.
+        /// </summary>
+        /// <returns>A <see cref="string"/>.</returns>
+        public override string ToString() => this.StringValue;
     }
 }

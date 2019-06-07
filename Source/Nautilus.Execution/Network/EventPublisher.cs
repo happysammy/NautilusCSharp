@@ -13,6 +13,7 @@ namespace Nautilus.Execution.Network
     using Nautilus.Core;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Events.Base;
+    using Nautilus.Messaging;
     using Nautilus.Network;
 
     /// <summary>
@@ -43,7 +44,13 @@ namespace Nautilus.Execution.Network
                 port,
                 Guid.NewGuid())
         {
+            this.RegisterHandler<Envelope<Event>>(this.Open);
             this.RegisterHandler<Event>(this.OnMessage);
+        }
+
+        private void Open(Envelope<Event> envelope)
+        {
+            this.OnMessage(envelope.Message);
         }
 
         private void OnMessage(Event message)

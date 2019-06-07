@@ -80,6 +80,8 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 Guid.NewGuid());
             server.Start();
 
+            Task.Delay(100).Wait(); // Allow server to start
+
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
 
             // Assert
@@ -103,6 +105,8 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 new NetworkPort(5555),
                 Guid.NewGuid());
             server.Start();
+
+            Task.Delay(100).Wait(); // Allow server to start
 
             const string testAddress = "tcp://127.0.0.1:5555";
             var requester = new RequestSocket(testAddress);
@@ -142,6 +146,8 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 new NetworkPort(5556),
                 Guid.NewGuid());
             server.Start();
+
+            Task.Delay(100).Wait(); // Allow server to start
 
             const string testAddress = "tcp://127.0.0.1:5556";
             var requester = new RequestSocket(testAddress);
@@ -192,6 +198,8 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 Guid.NewGuid());
             server.Start();
 
+            Task.Delay(100).Wait(); // Allow server to start
+
             const string testAddress = "tcp://127.0.0.1:5557";
             var requester = new RequestSocket(testAddress);
             requester.Connect(testAddress);
@@ -238,6 +246,8 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 Guid.NewGuid());
             server.Start();
 
+            Task.Delay(100).Wait(); // Allow server to start
+
             const string testAddress = "tcp://127.0.0.1:5558";
             var requester = new RequestSocket(testAddress);
             requester.Connect(testAddress);
@@ -280,6 +290,8 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 new NetworkPort(5559),
                 Guid.NewGuid());
             server.Start();
+
+            Task.Delay(100).Wait(); // Allow server to start
 
             const string testAddress = "tcp://127.0.0.1:5559";
             var requester1 = new RequestSocket(testAddress);
