@@ -76,6 +76,8 @@ namespace Nautilus.Common.Componentry
             where T : Message
         {
             this.SendToSelf(envelope.Message);
+
+            this.Log.Verbose($"Received {envelope}.");
         }
     }
 }

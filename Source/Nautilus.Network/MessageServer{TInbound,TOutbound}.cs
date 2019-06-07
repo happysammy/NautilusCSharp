@@ -115,7 +115,7 @@ namespace Nautilus.Network
         }
 
         /// <summary>
-        /// Sends a message with the given payload to the given receiver identity address.
+        /// Sends a message with the given payload to the given receiver address.
         /// </summary>
         /// <param name="outbound">The outbound message to send.</param>
         /// <param name="receiver">The receiver address.</param>
@@ -147,7 +147,7 @@ namespace Nautilus.Network
         }
 
         /// <summary>
-        /// Sends a MessageReceived to the given receiver identity address.
+        /// Sends a MessageReceived message to the given receiver address.
         /// </summary>
         /// <param name="receivedMessage">The received message.</param>
         /// <param name="receiver">The receiver address.</param>
@@ -168,7 +168,7 @@ namespace Nautilus.Network
         }
 
         /// <summary>
-        /// Sends a MessageRejected to the given receiver identity address.
+        /// Sends a MessageRejected message to the given receiver address.
         /// </summary>
         /// <param name="rejectedReason">The rejected reason.</param>
         /// <param name="rejectedMessage">The rejected message.</param>
@@ -236,6 +236,21 @@ namespace Nautilus.Network
             }
 
             this.AddToUnhandledMessages(message);
+        }
+
+        private void Open(Envelope<Command> envelope)
+        {
+            this.SendToSelf(envelope.Message);
+        }
+
+        private void Open(Envelope<Event> envelope)
+        {
+            this.SendToSelf(envelope.Message);
+        }
+
+        private void Open(Envelope<Document> envelope)
+        {
+            this.SendToSelf(envelope.Message);
         }
     }
 }
