@@ -164,7 +164,7 @@ namespace Nautilus.Network
 
             if (received is null)
             {
-                return; // This can never happen due to generic type constraints.
+                return; // This can never happen due to generic type constraints
             }
 
             this.SendMessage(received, receiver);
@@ -189,7 +189,7 @@ namespace Nautilus.Network
 
             if (rejected is null)
             {
-                return; // This can never happen due to generic type constraints.
+                return; // This can never happen due to generic type constraints
             }
 
             this.SendMessage(rejected, receiver);

@@ -14,7 +14,7 @@ namespace Nautilus.Network.Messages
     using NodaTime;
 
     /// <summary>
-    /// Represents a rejected message response.
+    /// A response indicating rejection of a message.
     /// </summary>
     [Immutable]
     public sealed class MessageRejected : Response
@@ -37,9 +37,9 @@ namespace Nautilus.Network.Messages
                 id,
                 timestamp)
         {
+            Debug.NotEmptyOrWhiteSpace(rejectedReason, nameof(rejectedReason));
             Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));
-            Debug.NotEmptyOrWhiteSpace(rejectedReason, nameof(rejectedReason));
 
             this.RejectedReason = rejectedReason;
         }
