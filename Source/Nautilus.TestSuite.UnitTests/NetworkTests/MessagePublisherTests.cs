@@ -49,10 +49,10 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             var publisher = new MockPublisher(
                 this.setupContainer,
                 NetworkAddress.LocalHost,
-                new NetworkPort(55504));
+                new NetworkPort(55555));
 
             // Assert
-            Assert.Equal("tcp://127.0.0.1:55504", publisher.ServerAddress.Value);
+            Assert.Equal("tcp://127.0.0.1:55555", publisher.ServerAddress.Value);
             Assert.Equal(State.Init, publisher.State);
             Assert.Equal(0, publisher.PublishedCount);
         }
@@ -64,11 +64,11 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             var publisher = new MockPublisher(
                 this.setupContainer,
                 NetworkAddress.LocalHost,
-                new NetworkPort(55504));
+                new NetworkPort(55555));
             publisher.Start();
 
             Task.Delay(100).Wait();
-            const string testAddress = "tcp://localhost:55504";
+            const string testAddress = "tcp://localhost:55555";
             var subscriber = new SubscriberSocket(testAddress);
             subscriber.Connect(testAddress);
             subscriber.Subscribe(TEST_TOPIC);
