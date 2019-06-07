@@ -31,6 +31,7 @@ namespace Nautilus.Network
         where TInbound : Message
         where TOutbound : Response
     {
+        private readonly byte[] delimiter = { };
         private readonly IMessageSerializer<TInbound> inboundSerializer;
         private readonly IMessageSerializer<TOutbound> outboundSerializer;
         private readonly CancellationTokenSource cts;
@@ -122,21 +123,22 @@ namespace Nautilus.Network
         {
             try
             {
-                if (receiver is null)
+                Debug.NotNull(receiver, nameof(receiver));
+                Debug.True(receiver.HasValue, nameof(receiver));
+
+                if (receiver is null || !receiver.Value.HasBytesValue)
                 {
-                    this.Log.Error($"Cannot send {outbound} response (no receiver address).");
+                    this.Log.Error($"Cannot send message {outbound} (no receiver address).");
                     return;
                 }
 
-                var message = new NetMQMessage(3);
-                message.Append(Encoding.UTF8.GetBytes(receiver.ToString()));
-                message.AppendEmptyFrame(); // Delimiter
-                message.Append(this.outboundSerializer.Serialize(outbound));
-
-                this.socket.SendMultipartMessage(message);
+                this.socket.SendMultipartBytes(
+                    receiver.Value.BytesValue,
+                    this.delimiter,
+                    this.outboundSerializer.Serialize(outbound));
 
                 this.SentCount++;
-                this.Log.Debug($"Sent message[{this.SentCount}] {outbound}");
+                this.Log.Debug($"Sent message[{this.SentCount}] {outbound} to Address({receiver}).");
             }
             catch (Exception ex)
             {
@@ -203,20 +205,20 @@ namespace Nautilus.Network
 
         private void ReceiveMessage()
         {
-            var zmqMessage = this.socket.ReceiveMultipartBytes();
-            var senderId = Encoding.UTF8.GetString(zmqMessage[0]);
+            var zmqMessage = this.socket.ReceiveMultipartBytes(3);
+            var sender = new Address(zmqMessage[0]);
             var received = this.inboundSerializer.Deserialize(zmqMessage[2]);
 
             var envelope = new Envelope<TInbound>(
                 received,
                 null,
-                new Address(senderId),
+                sender,
                 this.TimeNow());
 
             this.SendToSelf(envelope);
 
             this.ReceivedCount++;
-            this.Log.Debug($"Received message[{this.ReceivedCount}] {received}");
+            this.Log.Debug($"Received message[{this.ReceivedCount}] {received} from Address({sender}).");
         }
 
         /// <summary>
@@ -227,10 +229,10 @@ namespace Nautilus.Network
         {
             if (message is Envelope<TInbound> request)
             {
-                var errorMessage = $"Message type {request.Message.Type.Name} not valid on this port";
-                this.Log.Error(errorMessage);
-
+                var errorMessage = $"Message type {request.Message.Type.Name} not valid at this address {this.ServerAddress}.";
                 this.SendRejected(errorMessage, request.Message, request.Sender);
+
+                this.Log.Error(errorMessage);
             }
 
             this.AddToUnhandledMessages(message);

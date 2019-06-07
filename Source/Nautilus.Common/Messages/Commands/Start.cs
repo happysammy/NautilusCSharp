@@ -28,11 +28,5 @@ namespace Nautilus.Common.Messages.Commands
             : base(typeof(Start), id, timestamp)
         {
         }
-
-        /// <summary>
-        /// Returns a string representation of this message.
-        /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{nameof(Start)}({this.Id})";
     }
 }

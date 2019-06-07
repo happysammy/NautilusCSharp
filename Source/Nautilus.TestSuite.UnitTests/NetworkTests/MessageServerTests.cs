@@ -69,6 +69,31 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         }
 
         [Fact]
+        internal void StartedServer_IsInCorrectState()
+        {
+            // Arrange
+            // Act
+            var server = new MockMessageServer(
+                this.container,
+                NetworkAddress.LocalHost,
+                new NetworkPort(5555),
+                Guid.NewGuid());
+            server.Start();
+
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+
+            // Assert
+            Assert.Equal("tcp://127.0.0.1:5555", server.ServerAddress.ToString());
+            Assert.Equal(State.Running, server.State);
+            Assert.Equal(0, server.ReceivedCount);
+            Assert.Equal(0, server.SentCount);
+
+            // Tear Down
+            server.Stop();
+            Task.Delay(100).Wait();  // Allows sockets to dispose
+        }
+
+        [Fact]
         internal void GivenOneMessage_StoresAndSendsResponseToSender()
         {
             // Arrange
@@ -96,7 +121,6 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
 
             // Assert
             Assert.Equal(typeof(MessageReceived), response.Type);
-            Assert.Equal(State.Running, server.State);
             Assert.Equal(1, server.ReceivedCount);
             Assert.Equal(1, server.SentCount);
             Assert.Contains(message, server.ReceivedMessages);

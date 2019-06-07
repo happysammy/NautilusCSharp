@@ -12,7 +12,6 @@ namespace Nautilus.Network.Messages
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
-    using Nautilus.Core.Enums;
     using NodaTime;
 
     /// <summary>
@@ -34,7 +33,6 @@ namespace Nautilus.Network.Messages
             Guid id,
             ZonedDateTime timestamp)
             : base(
-                MessageType.Response,
                 type,
                 id,
                 timestamp)
@@ -49,5 +47,11 @@ namespace Nautilus.Network.Messages
         /// Gets the responses correlation identifier.
         /// </summary>
         public Guid CorrelationId { get; }
+
+        /// <summary>
+        /// Returns a string representation of this <see cref="Message"/>.
+        /// </summary>
+        /// <returns>A <see cref="string"/>.</returns>
+        public override string ToString() => $"{this.Type.Name}(CorrelationId={this.CorrelationId})";
     }
 }

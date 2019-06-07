@@ -52,6 +52,7 @@ namespace Nautilus.Common.Componentry
             this.RegisterUnhandled(this.Unhandled);
 
             this.InitializedTime = this.clock.TimeNow();
+            this.Log.Debug("Initialized.");
         }
 
         /// <summary>

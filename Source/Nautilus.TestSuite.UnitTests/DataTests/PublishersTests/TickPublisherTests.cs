@@ -69,6 +69,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
             var receivedTopic = subscriber.ReceiveFrameBytes();
             var receivedMessage = subscriber.ReceiveFrameBytes();
 
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+
             // Assert
             Assert.Equal(tick.Symbol.ToString(), Encoding.UTF8.GetString(receivedTopic));
             Assert.Equal(tick.ToString(), Encoding.UTF8.GetString(receivedMessage));
@@ -78,7 +80,6 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
             subscriber.Disconnect(testAddress);
             subscriber.Dispose();
             publisher.Stop();
-            LogDumper.Dump(this.mockLoggingAdapter, this.output);
             Task.Delay(100).Wait();  // Allows sockets to dispose
         }
     }

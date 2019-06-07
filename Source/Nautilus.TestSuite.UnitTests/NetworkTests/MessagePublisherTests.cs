@@ -25,7 +25,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
     [SuppressMessage("ReSharper", "SA1310", Justification = "Easier to read.")]
     public class MessagePublisherTests
     {
-        private const string TEST_TOPIC = "test_topic";
+        private const string TEST_TOPIC = "TEST";
 
         private readonly ITestOutputHelper output;
         private readonly IComponentryContainer setupContainer;

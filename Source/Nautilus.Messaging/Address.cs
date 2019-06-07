@@ -9,6 +9,7 @@
 namespace Nautilus.Messaging
 {
     using System;
+    using System.Text;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
@@ -19,7 +20,19 @@ namespace Nautilus.Messaging
     [Immutable]
     public struct Address : IEquatable<object>, IEquatable<Address>
     {
-        private readonly string value;
+        private static readonly byte[] Empty = { };
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Address"/> structure.
+        /// </summary>
+        /// <param name="value">The value of the address.</param>
+        public Address(byte[] value)
+        {
+            Debug.NotEmpty(value, nameof(value));
+
+            this.StringValue = Encoding.UTF8.GetString(value);
+            this.BytesValue = value;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Address"/> structure.
@@ -29,8 +42,24 @@ namespace Nautilus.Messaging
         {
             Debug.NotEmptyOrWhiteSpace(value, nameof(value));
 
-            this.value = value;
+            this.StringValue = value;
+            this.BytesValue = Empty;
         }
+
+        /// <summary>
+        /// Gets addresses string value.
+        /// </summary>
+        public string StringValue { get; }
+
+        /// <summary>
+        /// Gets addresses byte[] value (can be an empty byte[]).
+        /// </summary>
+        public byte[] BytesValue { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether the address has a bytes represented value.
+        /// </summary>
+        public bool HasBytesValue => this.BytesValue != Empty;
 
         /// <summary>
         /// Returns a value indicating whether the <see cref="Address"/>s are equal.
@@ -67,7 +96,7 @@ namespace Nautilus.Messaging
         /// <returns>A <see cref="bool"/>.</returns>
         public bool Equals(Address other)
         {
-            return this.value == other.value;
+            return this.StringValue == other.StringValue;
         }
 
         /// <summary>
@@ -76,13 +105,7 @@ namespace Nautilus.Messaging
         /// <returns>An <see cref="int"/>.</returns>
         public override int GetHashCode()
         {
-            return Hash.GetCode(this.value);
+            return Hash.GetCode(this.StringValue);
         }
-
-        /// <summary>
-        /// Returns a string representation of the <see cref="Address"/>.
-        /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => this.value;
     }
 }
