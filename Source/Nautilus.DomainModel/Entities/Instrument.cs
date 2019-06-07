@@ -62,7 +62,7 @@ namespace Nautilus.DomainModel.Entities
             ZonedDateTime timestamp)
             : base(instrumentId, timestamp)
         {
-            // Keep validation logic here.
+            // Keep validation logic here
             Condition.NotNegativeInt32(tickPrecision, nameof(tickPrecision));
             Condition.PositiveDecimal(tickSize, nameof(tickSize));
             Condition.PositiveInt32(roundLotSize, nameof(roundLotSize));

@@ -9,6 +9,7 @@
 namespace Nautilus.DomainModel.Enums
 {
     using System.Diagnostics.CodeAnalysis;
+    using Nautilus.Core.Annotations;
 
     /// <summary>
     /// The venue an instrument is traded on.
@@ -19,6 +20,7 @@ namespace Nautilus.DomainModel.Enums
         /// <summary>
         /// An unknown venue.
         /// </summary>
+        [InvalidValue]
         UNKNOWN = 0,
 
         /// <summary>

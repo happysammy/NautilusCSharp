@@ -8,6 +8,8 @@
 
 namespace Nautilus.DomainModel.Enums
 {
+    using Nautilus.Core.Annotations;
+
     /// <summary>
     /// The status of an order at the brokerage.
     /// </summary>
@@ -16,6 +18,7 @@ namespace Nautilus.DomainModel.Enums
         /// <summary>
         /// Unknown order status.
         /// </summary>
+        [InvalidValue]
         Unknown = 0,
 
         /// <summary>

@@ -9,6 +9,7 @@
 namespace Nautilus.DomainModel.Enums
 {
     using System.Diagnostics.CodeAnalysis;
+    using Nautilus.Core.Annotations;
     using Nautilus.DomainModel.Aggregates;
 
     /// <summary>
@@ -20,6 +21,7 @@ namespace Nautilus.DomainModel.Enums
         /// <summary>
         /// An undefined order side.
         /// </summary>
+        [InvalidValue]
         UNKNOWN = 0,
 
         /// <summary>

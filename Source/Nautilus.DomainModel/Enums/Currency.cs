@@ -9,6 +9,7 @@
 namespace Nautilus.DomainModel.Enums
 {
     using System.Diagnostics.CodeAnalysis;
+    using Nautilus.Core.Annotations;
 
     /// <summary>
     /// Represents an ISO 4217 currency code.
@@ -19,6 +20,7 @@ namespace Nautilus.DomainModel.Enums
         /// <summary>
         /// Unknown currency code.
         /// </summary>
+        [InvalidValue]
         Unknown = 0,
 
         /// <summary>

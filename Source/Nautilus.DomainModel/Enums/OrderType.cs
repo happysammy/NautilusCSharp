@@ -9,6 +9,7 @@
 namespace Nautilus.DomainModel.Enums
 {
     using System.Diagnostics.CodeAnalysis;
+    using Nautilus.Core.Annotations;
 
     /// <summary>
     /// Represents an order type.
@@ -19,6 +20,7 @@ namespace Nautilus.DomainModel.Enums
         /// <summary>
         /// The order type is unknown (this should never happen).
         /// </summary>
+        [InvalidValue]
         UNKNOWN = 0,
 
         /// <summary>

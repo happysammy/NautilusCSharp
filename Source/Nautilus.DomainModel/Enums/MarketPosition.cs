@@ -8,6 +8,8 @@
 
 namespace Nautilus.DomainModel.Enums
 {
+    using Nautilus.Core.Annotations;
+
     /// <summary>
     /// Represents relative market position.
     /// </summary>
@@ -16,6 +18,7 @@ namespace Nautilus.DomainModel.Enums
         /// <summary>
         /// An unknown market position.
         /// </summary>
+        [InvalidValue]
         Unknown = -1,
 
         /// <summary>
