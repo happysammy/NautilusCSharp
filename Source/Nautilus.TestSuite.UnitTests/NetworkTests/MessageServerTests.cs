@@ -10,6 +10,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+    using System.Text;
     using System.Threading.Tasks;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -96,6 +97,53 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         }
 
         [Fact]
+        internal void GivenMessage_WhichIsInvalidForThisPort_RespondsWithMessageRejected()
+        {
+            // Arrange
+            var server = new MockMessageServer(
+                this.container,
+                NetworkAddress.LocalHost,
+                new NetworkPort(5555),
+                Guid.NewGuid());
+            server.Start();
+
+            Task.Delay(100).Wait(); // Allow server to start
+
+            const string testAddress1 = "tcp://127.0.0.1:5555";
+            var requester1 = new RequestSocket(testAddress1);
+            requester1.Connect(testAddress1);
+
+            const string testAddress2 = "tcp://127.0.0.1:5555";
+            var requester2 = new RequestSocket(testAddress2);
+            requester2.Connect(testAddress2);
+
+            // Act
+            requester1.SendFrame(Encoding.UTF8.GetBytes("WOW"));
+
+            var message = new MockMessage(
+                "TEST",
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+            requester2.SendFrame(this.serializer.Serialize(message));
+            var response = this.responseSerializer.Deserialize(requester2.ReceiveFrameBytes());
+
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+
+            // Assert
+            Assert.Equal(typeof(MessageReceived), response.Type);
+            Assert.Equal(1, server.ReceivedCount);
+            Assert.Equal(1, server.SentCount);
+
+            // Tear Down
+            requester1.Disconnect(testAddress1);
+            requester2.Disconnect(testAddress1);
+            requester1.Dispose();
+            requester2.Dispose();
+            server.Stop();
+            Task.Delay(100).Wait();  // Allows sockets to dispose
+        }
+
+        [Fact]
         internal void GivenOneMessage_StoresAndSendsResponseToSender()
         {
             // Arrange
@@ -143,13 +191,13 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             var server = new MockMessageServer(
                 this.container,
                 NetworkAddress.LocalHost,
-                new NetworkPort(5556),
+                new NetworkPort(5555),
                 Guid.NewGuid());
             server.Start();
 
             Task.Delay(100).Wait(); // Allow server to start
 
-            const string testAddress = "tcp://127.0.0.1:5556";
+            const string testAddress = "tcp://127.0.0.1:5555";
             var requester = new RequestSocket(testAddress);
             requester.Connect(testAddress);
 
@@ -194,13 +242,13 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             var server = new MockMessageServer(
                 this.container,
                 NetworkAddress.LocalHost,
-                new NetworkPort(5557),
+                new NetworkPort(5555),
                 Guid.NewGuid());
             server.Start();
 
             Task.Delay(100).Wait(); // Allow server to start
 
-            const string testAddress = "tcp://127.0.0.1:5557";
+            const string testAddress = "tcp://127.0.0.1:5555";
             var requester = new RequestSocket(testAddress);
             requester.Connect(testAddress);
 
@@ -242,13 +290,13 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             var server = new MockMessageServer(
                 this.container,
                 NetworkAddress.LocalHost,
-                new NetworkPort(5558),
+                new NetworkPort(5555),
                 Guid.NewGuid());
             server.Start();
 
             Task.Delay(100).Wait(); // Allow server to start
 
-            const string testAddress = "tcp://127.0.0.1:5558";
+            const string testAddress = "tcp://127.0.0.1:5555";
             var requester = new RequestSocket(testAddress);
             requester.Connect(testAddress);
 
@@ -287,13 +335,13 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             var server = new MockMessageServer(
                 this.container,
                 NetworkAddress.LocalHost,
-                new NetworkPort(5559),
+                new NetworkPort(5555),
                 Guid.NewGuid());
             server.Start();
 
             Task.Delay(100).Wait(); // Allow server to start
 
-            const string testAddress = "tcp://127.0.0.1:5559";
+            const string testAddress = "tcp://127.0.0.1:5555";
             var requester1 = new RequestSocket(testAddress);
             var requester2 = new RequestSocket(testAddress);
             requester1.Connect(testAddress);

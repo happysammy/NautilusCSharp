@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="Publisher{T}.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="MessagePublisher{T}.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
@@ -23,20 +23,20 @@ namespace Nautilus.Network
     /// Provides a messaging consumer.
     /// </summary>
     /// <typeparam name="T">The publishing message type.</typeparam>
-    public abstract class Publisher<T> : Component
+    public abstract class MessagePublisher<T> : Component
     {
         private readonly ISerializer<T> serializer;
         private readonly PublisherSocket socket;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Publisher{T}"/> class.
+        /// Initializes a new instance of the <see cref="MessagePublisher{T}"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
         /// <param name="serializer">The message serializer.</param>
         /// <param name="host">The publishers host address.</param>
         /// <param name="port">The publishers port.</param>
         /// <param name="id">The publishers identifier.</param>
-        protected Publisher(
+        protected MessagePublisher(
             IComponentryContainer container,
             ISerializer<T> serializer,
             NetworkAddress host,

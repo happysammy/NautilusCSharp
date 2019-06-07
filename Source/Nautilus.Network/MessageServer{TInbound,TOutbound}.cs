@@ -9,6 +9,7 @@
 namespace Nautilus.Network
 {
     using System;
+    using System.Runtime.Serialization;
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
@@ -70,6 +71,8 @@ namespace Nautilus.Network
                     Identity = Encoding.Unicode.GetBytes(id.ToString()),
                 },
             };
+
+            this.isReceiving = false;
 
             this.ServerAddress = new ZmqServerAddress(host, port);
             this.ReceivedCount = 0;
@@ -205,20 +208,27 @@ namespace Nautilus.Network
 
         private void ReceiveMessage()
         {
-            var zmqMessage = this.socket.ReceiveMultipartBytes(3);
-            var sender = new Address(zmqMessage[0]);
-            var received = this.inboundSerializer.Deserialize(zmqMessage[2]);
+            try
+            {
+                var zmqMessage = this.socket.ReceiveMultipartBytes(3);
+                var sender = new Address(zmqMessage[0]);
+                var received = this.inboundSerializer.Deserialize(zmqMessage[2]);
 
-            var envelope = new Envelope<TInbound>(
-                received,
-                null,
-                sender,
-                this.TimeNow());
+                var envelope = new Envelope<TInbound>(
+                    received,
+                    null,
+                    sender,
+                    this.TimeNow());
 
-            this.SendToSelf(envelope);
+                this.SendToSelf(envelope);
 
-            this.ReceivedCount++;
-            this.Log.Debug($"Received message[{this.ReceivedCount}] {received} from Address({sender}).");
+                this.ReceivedCount++;
+                this.Log.Debug($"Received message[{this.ReceivedCount}] {received} from Address({sender}).");
+            }
+            catch (SerializationException ex)
+            {
+                this.Log.Error("Received malformed message." + Environment.NewLine + ex);
+            }
         }
 
         /// <summary>
@@ -236,21 +246,6 @@ namespace Nautilus.Network
             }
 
             this.AddToUnhandledMessages(message);
-        }
-
-        private void Open(Envelope<Command> envelope)
-        {
-            this.SendToSelf(envelope.Message);
-        }
-
-        private void Open(Envelope<Event> envelope)
-        {
-            this.SendToSelf(envelope.Message);
-        }
-
-        private void Open(Envelope<Document> envelope)
-        {
-            this.SendToSelf(envelope.Message);
         }
     }
 }

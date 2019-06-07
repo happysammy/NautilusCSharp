@@ -16,7 +16,7 @@ namespace Nautilus.Data.Network
     /// <summary>
     /// Provides a publisher for <see cref="Bar"/> data.
     /// </summary>
-    public sealed class BarPublisher : Publisher<Bar>
+    public sealed class BarPublisher : MessagePublisher<Bar>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="BarPublisher"/> class.
