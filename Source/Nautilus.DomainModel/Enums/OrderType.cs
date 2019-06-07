@@ -8,17 +8,15 @@
 
 namespace Nautilus.DomainModel.Enums
 {
-    using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core.Annotations;
 
     /// <summary>
     /// Represents an order type.
     /// </summary>
-    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Align with Python enums.")]
     public enum OrderType
     {
         /// <summary>
-        /// The order type is unknown (this should never happen).
+        /// The order type is unknown (invalid value).
         /// </summary>
         [InvalidValue]
         UNKNOWN = 0,

@@ -8,12 +8,9 @@
 
 namespace Nautilus.DomainModel.Enums
 {
-    using System.Diagnostics.CodeAnalysis;
-
     /// <summary>
     /// Represents a price quote type.
     /// </summary>
-    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Align with Python enums.")]
     public enum QuoteType
     {
         /// <summary>

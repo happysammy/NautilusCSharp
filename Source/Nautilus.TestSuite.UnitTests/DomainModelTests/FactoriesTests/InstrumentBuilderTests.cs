@@ -71,7 +71,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FactoriesTests
                 new Symbol("SPX500", Venue.FXCM),
                 new BrokerSymbol("NONE"),
                 Currency.CAD,
-                SecurityType.Bond,
+                SecurityType.BOND,
                 2,
                 0.01m,
                 1,

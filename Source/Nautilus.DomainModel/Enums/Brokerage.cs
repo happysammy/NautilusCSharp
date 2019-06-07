@@ -8,12 +8,9 @@
 
 namespace Nautilus.DomainModel.Enums
 {
-    using System.Diagnostics.CodeAnalysis;
-
     /// <summary>
     /// The brokerage enumeration.
     /// </summary>
-    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Align with Python enums.")]
     public enum Brokerage
     {
         /// <summary>

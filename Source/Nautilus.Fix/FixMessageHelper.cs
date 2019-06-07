@@ -144,7 +144,7 @@ namespace Nautilus.Fix
             // TODO
             if (type == "1")
             {
-                return SecurityType.Forex;
+                return SecurityType.FOREX;
             }
 
             return SecurityType.CFD;

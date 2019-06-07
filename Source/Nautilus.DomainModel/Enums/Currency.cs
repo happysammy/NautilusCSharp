@@ -8,17 +8,15 @@
 
 namespace Nautilus.DomainModel.Enums
 {
-    using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core.Annotations;
 
     /// <summary>
     /// Represents an ISO 4217 currency code.
     /// </summary>
-    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Align with Python enums.")]
     public enum Currency
     {
         /// <summary>
-        /// Unknown currency code.
+        /// Unknown currency code (invalid value).
         /// </summary>
         [InvalidValue]
         Unknown = 0,

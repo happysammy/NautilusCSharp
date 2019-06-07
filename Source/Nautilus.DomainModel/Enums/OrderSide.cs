@@ -8,18 +8,16 @@
 
 namespace Nautilus.DomainModel.Enums
 {
-    using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core.Annotations;
     using Nautilus.DomainModel.Aggregates;
 
     /// <summary>
     /// Represents the execution direction of an <see cref="Order"/>.
     /// </summary>
-    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Align with Python enums.")]
     public enum OrderSide
     {
         /// <summary>
-        /// An undefined order side.
+        /// An undefined order side (invalid value).
         /// </summary>
         [InvalidValue]
         UNKNOWN = 0,

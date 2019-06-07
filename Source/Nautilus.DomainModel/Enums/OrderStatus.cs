@@ -16,7 +16,7 @@ namespace Nautilus.DomainModel.Enums
     public enum OrderStatus
     {
         /// <summary>
-        /// Unknown order status.
+        /// Unknown order status (invalid value).
         /// </summary>
         [InvalidValue]
         Unknown = 0,

@@ -8,17 +8,15 @@
 
 namespace Nautilus.DomainModel.Enums
 {
-    using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core.Annotations;
 
     /// <summary>
     /// The time in force for an order.
     /// </summary>
-    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Align with Python enums.")]
     public enum TimeInForce
     {
         /// <summary>
-        /// The time in force is unknown.
+        /// The time in force is unknown (invalid value).
         /// </summary>
         [InvalidValue]
         UNKNOWN = 0,

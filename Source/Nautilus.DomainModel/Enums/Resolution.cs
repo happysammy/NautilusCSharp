@@ -8,12 +8,9 @@
 
 namespace Nautilus.DomainModel.Enums
 {
-    using System.Diagnostics.CodeAnalysis;
-
     /// <summary>
     /// Represents the granularity of a time resolution.
     /// </summary>
-    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Align with Python enums.")]
     public enum Resolution
     {
         /// <summary>

@@ -16,22 +16,22 @@ namespace Nautilus.DomainModel.Enums
         /// <summary>
         /// Foreign Exchange security type.
         /// </summary>
-        Forex = 0,
+        FOREX = 0,
 
         /// <summary>
         /// Bond security type.
         /// </summary>
-        Bond = 1,
+        BOND = 1,
 
         /// <summary>
         /// Equity security type.
         /// </summary>
-        Equity = 2,
+        EQUITY = 2,
 
         /// <summary>
         /// Futures security type.
         /// </summary>
-        Future = 3,
+        FUTURE = 3,
 
         /// <summary>
         /// Contract For Difference security type.
@@ -42,6 +42,6 @@ namespace Nautilus.DomainModel.Enums
         /// <summary>
         /// Option security type.
         /// </summary>
-        Option = 5,
+        OPTION = 5,
     }
 }
