@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="MessagePublisherTests.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="PublisherTests.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -23,7 +23,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("ReSharper", "SA1310", Justification = "Easier to read.")]
-    public class MessagePublisherTests
+    public class PublisherTests
     {
         private const string TEST_TOPIC = "TEST";
 
@@ -31,7 +31,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         private readonly IComponentryContainer setupContainer;
         private readonly MockLoggingAdapter mockLoggingAdapter;
 
-        public MessagePublisherTests(ITestOutputHelper output)
+        public PublisherTests(ITestOutputHelper output)
         {
             // Fixture Setup
             this.output = output;
