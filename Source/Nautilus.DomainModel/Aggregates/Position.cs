@@ -31,7 +31,7 @@ namespace Nautilus.DomainModel.Aggregates
         private readonly List<ExecutionId> executionIds;
         private readonly List<ExecutionTicket> executionTickets;
 
-        private int relativeQuantity;
+        private int internalQuantity;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Position"/> class.
@@ -266,10 +266,10 @@ namespace Nautilus.DomainModel.Aggregates
             switch (orderSide)
             {
                 case OrderSide.BUY:
-                    this.relativeQuantity += quantity;
+                    this.internalQuantity += quantity;
                     break;
                 case OrderSide.SELL:
-                    this.relativeQuantity -= quantity;
+                    this.internalQuantity -= quantity;
                     break;
                 case OrderSide.UNKNOWN:
                     goto default;
@@ -277,7 +277,7 @@ namespace Nautilus.DomainModel.Aggregates
                     throw ExceptionFactory.InvalidSwitchArgument(orderSide, nameof(orderSide));
             }
 
-            this.Quantity = Quantity.Create(Math.Abs(this.relativeQuantity));
+            this.Quantity = Quantity.Create(Math.Abs(this.internalQuantity));
 
             // Update peak quantity
             if (this.Quantity > this.PeakQuantity)
@@ -285,13 +285,13 @@ namespace Nautilus.DomainModel.Aggregates
                 this.PeakQuantity = this.Quantity;
             }
 
-            // Market position logic.
-            if (this.relativeQuantity > 0)
+            // Market position logic
+            if (this.internalQuantity > 0)
             {
                 this.MarketPosition = MarketPosition.Long;
                 this.IsExited = false;
             }
-            else if (this.relativeQuantity < 0)
+            else if (this.internalQuantity < 0)
             {
                 this.MarketPosition = MarketPosition.Short;
                 this.IsExited = false;

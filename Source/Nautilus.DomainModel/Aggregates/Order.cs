@@ -148,7 +148,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the orders last identifier.
         /// </summary>
-        public OrderId IdLast => this.orderIds.Last();  // Should always contain an initial OrderId.
+        public OrderId IdLast => this.orderIds.Last();  // Should always contain an initial OrderId
 
         /// <summary>
         /// Gets the orders last identifier for the broker.
@@ -372,7 +372,7 @@ namespace Nautilus.DomainModel.Aggregates
                 { new StateTransition(new State(OrderStatus.PartiallyFilled), Trigger.Event(typeof(OrderFilled))), new State(OrderStatus.Filled) },
             };
 
-            // Check that all OrderCancelReject events leave the state unchanged.
+            // Check that all OrderCancelReject events leave the state unchanged
             Debug.True(
                 stateTransitionTable
                 .Where(kvp => kvp.Key.Trigger.ToString().Equals(nameof(OrderCancelReject)))
@@ -394,68 +394,68 @@ namespace Nautilus.DomainModel.Aggregates
             }
         }
 
-        private void When(OrderInitialized orderEvent)
+        private void When(OrderInitialized @event)
         {
-            // Do nothing.
+            // Do nothing
         }
 
-        private void When(OrderSubmitted orderEvent)
+        private void When(OrderSubmitted @event)
         {
-            // Do nothing.
+            // Do nothing
         }
 
-        private void When(OrderRejected orderEvent)
+        private void When(OrderRejected @event)
         {
             this.IsComplete = true;
         }
 
-        private void When(OrderAccepted orderEvent)
+        private void When(OrderAccepted @event)
         {
-            // Do nothing.
+            // Do nothing
         }
 
-        private void When(OrderWorking orderEvent)
+        private void When(OrderWorking @event)
         {
-            this.UpdateBrokerOrderIds(orderEvent.OrderIdBroker);
+            this.UpdateBrokerOrderIds(@event.OrderIdBroker);
             this.IsActive = true;
         }
 
-        private void When(OrderCancelReject orderEvent)
+        private void When(OrderCancelReject @event)
         {
-            // Do nothing.
+            // Do nothing
         }
 
-        private void When(OrderCancelled orderEvent)
+        private void When(OrderCancelled @event)
         {
             this.IsActive = false;
             this.IsComplete = true;
         }
 
-        private void When(OrderExpired orderEvent)
+        private void When(OrderExpired @event)
         {
             this.IsActive = false;
             this.IsComplete = true;
         }
 
-        private void When(OrderModified orderEvent)
+        private void When(OrderModified @event)
         {
-            this.UpdateBrokerOrderIds(orderEvent.OrderIdBroker);
-            this.Price = orderEvent.ModifiedPrice;
+            this.UpdateBrokerOrderIds(@event.OrderIdBroker);
+            this.Price = @event.ModifiedPrice;
         }
 
-        private void When(OrderPartiallyFilled orderEvent)
+        private void When(OrderPartiallyFilled @event)
         {
-            this.executionIds.Add(orderEvent.ExecutionId);
-            this.FilledQuantity = orderEvent.FilledQuantity;
-            this.AveragePrice = orderEvent.AveragePrice;
+            this.executionIds.Add(@event.ExecutionId);
+            this.FilledQuantity = @event.FilledQuantity;
+            this.AveragePrice = @event.AveragePrice;
             this.Slippage = this.CalculateSlippage();
         }
 
-        private void When(OrderFilled orderEvent)
+        private void When(OrderFilled @event)
         {
-            this.executionIds.Add(orderEvent.ExecutionId);
-            this.FilledQuantity = orderEvent.FilledQuantity;
-            this.AveragePrice = orderEvent.AveragePrice;
+            this.executionIds.Add(@event.ExecutionId);
+            this.FilledQuantity = @event.FilledQuantity;
+            this.AveragePrice = @event.AveragePrice;
             this.Slippage = this.CalculateSlippage();
             this.IsActive = false;
             this.IsComplete = true;
@@ -493,7 +493,7 @@ namespace Nautilus.DomainModel.Aggregates
         private void CheckClassInvariants()
         {
             Debug.True(this.orderIds[0] == this.Id, "this.orderIds[0] == this.Id");
-            Debug.True(this.Events[0] is OrderInitialized, "this.Events[0] is OrderInitialized"); // Should always contain OrderInitialized event first.
+            Debug.True(this.Events[0] is OrderInitialized, "this.Events[0] is OrderInitialized"); // Should always contain the OrderInitialized event first
         }
     }
 }
