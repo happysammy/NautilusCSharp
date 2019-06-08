@@ -8,6 +8,7 @@
 
 namespace Nautilus.Core
 {
+    using System;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
 
@@ -16,7 +17,7 @@ namespace Nautilus.Core
     /// </summary>
     /// <typeparam name="T">The identifier type.</typeparam>
     [Immutable]
-    public abstract class Identifier<T>
+    public abstract class Identifier<T> : IEquatable<object>, IEquatable<Identifier<T>>
     {
         private readonly string value;
 

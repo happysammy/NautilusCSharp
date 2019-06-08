@@ -18,8 +18,7 @@ namespace Nautilus.Core.Primitives
     /// </summary>
     [Immutable]
     public abstract class FloatingPointNumber
-        : IEquatable<FloatingPointNumber>, IComparable<FloatingPointNumber>,
-          IEquatable<double>, IComparable<double>
+        : IEquatable<object>, IEquatable<double>, IEquatable<FloatingPointNumber>, IComparable<double>, IComparable<FloatingPointNumber>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FloatingPointNumber" /> class.

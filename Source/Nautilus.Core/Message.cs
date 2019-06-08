@@ -18,7 +18,7 @@ namespace Nautilus.Core
     /// The base class for all <see cref="Message"/>s.
     /// </summary>
     [Immutable]
-    public abstract class Message
+    public abstract class Message : IEquatable<object>, IEquatable<Message>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Message"/> class.

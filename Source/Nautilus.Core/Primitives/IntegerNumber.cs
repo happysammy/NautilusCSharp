@@ -18,8 +18,7 @@ namespace Nautilus.Core.Primitives
     /// </summary>
     [Immutable]
     public abstract class IntegerNumber
-        : IEquatable<IntegerNumber>, IComparable<IntegerNumber>,
-          IEquatable<int>, IComparable<int>
+        : IEquatable<object>, IEquatable<int>, IEquatable<IntegerNumber>, IComparable<int>, IComparable<IntegerNumber>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="IntegerNumber" /> class.
@@ -306,7 +305,7 @@ namespace Nautilus.Core.Primitives
         }
 
         /// <summary>
-        /// Returns a value indicating whether the <see cref="DecimalNumber"/>s are equal.
+        /// Returns a value indicating whether the <see cref="IntegerNumber"/>s are equal.
         /// </summary>
         /// <param name="left">The left object.</param>
         /// <param name="right">The right object.</param>
@@ -327,7 +326,7 @@ namespace Nautilus.Core.Primitives
         }
 
         /// <summary>
-        /// Returns a value indicating whether the <see cref="DecimalNumber"/>s are equal.
+        /// Returns a value indicating whether the <see cref="IntegerNumber"/>s are equal.
         /// </summary>
         /// <param name="left">The left object.</param>
         /// <param name="right">The right object.</param>
@@ -338,7 +337,7 @@ namespace Nautilus.Core.Primitives
         }
 
         /// <summary>
-        /// Returns a value indicating whether the <see cref="DecimalNumber"/>s are equal.
+        /// Returns a value indicating whether the <see cref="IntegerNumber"/>s are equal.
         /// </summary>
         /// <param name="left">The left object.</param>
         /// <param name="right">The right object.</param>

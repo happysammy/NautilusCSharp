@@ -18,8 +18,7 @@ namespace Nautilus.Core.Primitives
     /// </summary>
     [Immutable]
     public abstract class DecimalNumber
-        : IEquatable<DecimalNumber>, IComparable<DecimalNumber>,
-          IEquatable<decimal>, IComparable<decimal>
+        : IEquatable<object>, IEquatable<decimal>, IEquatable<DecimalNumber>, IComparable<decimal>, IComparable<DecimalNumber>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DecimalNumber" /> class.
