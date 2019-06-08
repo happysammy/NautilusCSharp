@@ -11,7 +11,6 @@ namespace Nautilus.Common.Messaging
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection.Metadata;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
@@ -82,7 +81,7 @@ namespace Nautilus.Common.Messaging
 
             if (this.subscriptions[type].Contains(subscriber))
             {
-                this.Log.Warning($"{subscriber} is already subscribed to {type}.");
+                this.Log.Warning($"{subscriber} is already subscribed to {type} messages.");
                 return;
             }
 

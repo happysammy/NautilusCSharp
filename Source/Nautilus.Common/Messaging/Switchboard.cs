@@ -34,11 +34,6 @@ namespace Nautilus.Common.Messaging
         }
 
         /// <summary>
-        /// Gets the switchboards registered addresses.
-        /// </summary>
-        public IEnumerable<Address> Addresses => this.addresses.Keys;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="Switchboard"/> class.
         /// </summary>
         /// <returns>The empty switchboard.</returns>
@@ -99,7 +94,7 @@ namespace Nautilus.Common.Messaging
         /// <param name="message">The message.</param>
         private static void DoNothing(object message)
         {
-            // Its expected another dead letter handler method will be registered
+            // It is expected another dead letter handler method will be registered
         }
     }
 }
