@@ -8,12 +8,14 @@
 
 namespace Nautilus.Common.Messaging
 {
+    using System;
     using System.Collections.Generic;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core;
     using Nautilus.Messaging;
+    using Nautilus.Messaging.Interfaces;
 
     /// <summary>
     /// Provides a generic message bus.
@@ -23,6 +25,7 @@ namespace Nautilus.Common.Messaging
         where T : Message
     {
         private readonly List<object> deadLetters;
+        private readonly Dictionary<Type, List<IEndpoint>> subscriptions;
 
         private Switchboard switchboard;
 
@@ -34,6 +37,7 @@ namespace Nautilus.Common.Messaging
         : base(container)
         {
             this.deadLetters = new List<object>();
+            this.subscriptions = new Dictionary<Type, List<IEndpoint>>();
             this.switchboard = Switchboard.Empty();
 
             this.RegisterHandler<InitializeSwitchboard>(this.OnMessage);

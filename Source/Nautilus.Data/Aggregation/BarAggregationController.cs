@@ -13,6 +13,7 @@ namespace Nautilus.Data.Aggregation
     using System.Linq;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messages.Documents;
     using Nautilus.Common.Messages.Events;
     using Nautilus.Core.Annotations;

@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Data.Messages.Commands
+namespace Nautilus.Common.Messages.Commands
 {
     using System;
     using Nautilus.Core;
@@ -46,11 +46,5 @@ namespace Nautilus.Data.Messages.Commands
         /// Gets the type to subscribe to.
         /// </summary>
         public T SubscriptionType { get; }
-
-        /// <summary>
-        /// Returns a string representation of this object.
-        /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"Subscribe<{this.SubscriptionType}>({this.Id})";
     }
 }
