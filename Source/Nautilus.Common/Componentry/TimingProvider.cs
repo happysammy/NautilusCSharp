@@ -95,7 +95,7 @@ namespace Nautilus.Common.Componentry
                 .Date.With(DateAdjusters.NextOrSame(dayOfWeek))
                 .At(timeOfDay);
 
-            // Handle "we're already on the right day-of-week, but later in the day".
+            // Handle "we're already on the right day-of-week, but later in the day"
             if (localNext <= localNow)
             {
                 localNext = localNext.PlusWeeks(1);
