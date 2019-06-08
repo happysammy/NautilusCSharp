@@ -160,6 +160,7 @@ namespace Nautilus.Data
                     var barType = new BarType(symbol, barSpec);
                     var subscribe = new Subscribe<BarType>(
                         barType,
+                        this.Endpoint,
                         this.NewGuid(),
                         this.TimeNow());
                     this.Send(DataServiceAddress.BarAggregationController, subscribe);

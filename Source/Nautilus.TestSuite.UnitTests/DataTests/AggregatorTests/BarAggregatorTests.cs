@@ -78,6 +78,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             var barSpec = new BarSpecification(1, Resolution.SECOND, QuoteType.BID);
             var subscribe = new Subscribe<BarType>(
                 new BarType(this.symbol, barSpec),
+                this.receiver.Endpoint,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -100,6 +101,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             var barSpec = new BarSpecification(1, Resolution.SECOND, QuoteType.BID);
             var subscribe = new Subscribe<BarType>(
                 new BarType(new Symbol("AUDUSD", Venue.FXCM), barSpec),
+                this.receiver.Endpoint,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -124,6 +126,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 new BarType(
                     this.symbol,
                     new BarSpecification(1, Resolution.SECOND, QuoteType.BID)),
+                this.receiver.Endpoint,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -154,6 +157,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 new BarType(
                     this.symbol,
                     new BarSpecification(1, Resolution.SECOND, QuoteType.BID)),
+                this.receiver.Endpoint,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -191,6 +195,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 new BarType(
                     this.symbol,
                     new BarSpecification(1, Resolution.SECOND, QuoteType.BID)),
+                this.receiver.Endpoint,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -230,6 +235,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 new BarType(
                     this.symbol,
                     new BarSpecification(1, Resolution.SECOND, QuoteType.BID)),
+                this.receiver.Endpoint,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -283,6 +289,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 new BarType(
                     this.symbol,
                     new BarSpecification(1, Resolution.SECOND, QuoteType.BID)),
+                this.receiver.Endpoint,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -290,6 +297,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 new BarType(
                     this.symbol,
                     new BarSpecification(10, Resolution.SECOND, QuoteType.BID)),
+                this.receiver.Endpoint,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -352,6 +360,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 new BarType(
                     this.symbol,
                     new BarSpecification(1, Resolution.SECOND, QuoteType.MID)),
+                this.receiver.Endpoint,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 

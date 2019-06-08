@@ -12,6 +12,7 @@ namespace Nautilus.Common.Messages.Commands
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
+    using Nautilus.Messaging.Interfaces;
     using NodaTime;
 
     /// <summary>
@@ -19,16 +20,18 @@ namespace Nautilus.Common.Messages.Commands
     /// </summary>
     /// <typeparam name="T">The data type.</typeparam>
     [Immutable]
-    public sealed class Unsubscribe<T> : Command
+    public sealed class Unsubscribe<T> : Command, IUnsubscribe
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Unsubscribe{T}"/> class.
         /// </summary>
-        /// <param name="subscriptionType">The subscription type.</param>
+        /// <param name="subscription">The subscription type.</param>
+        /// <param name="subscriber">The subscriber endpoint.</param>
         /// <param name="id">The commands identifier.</param>
         /// <param name="timestamp">The commands timestamp.</param>
         public Unsubscribe(
-            T subscriptionType,
+            T subscription,
+            IEndpoint subscriber,
             Guid id,
             ZonedDateTime timestamp)
             : base(
@@ -39,12 +42,21 @@ namespace Nautilus.Common.Messages.Commands
             Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
-            this.SubscriptionType = subscriptionType;
+            this.Subscription = subscription;
+            this.Subscriber = subscriber;
         }
 
         /// <summary>
         /// Gets the type to unsubscribe from.
         /// </summary>
-        public T SubscriptionType { get; }
+        public T Subscription { get; }
+
+        /// <summary>
+        /// Gets the subscribe messages subscription type.
+        /// </summary>
+        public Type SubscriptionType => typeof(T);
+
+        /// <inheritdoc />
+        public IEndpoint Subscriber { get; }
     }
 }

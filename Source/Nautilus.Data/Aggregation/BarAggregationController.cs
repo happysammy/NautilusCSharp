@@ -110,9 +110,9 @@ namespace Nautilus.Data.Aggregation
 
         private void OnMessage(Subscribe<BarType> message)
         {
-            var symbol = message.SubscriptionType.Symbol;
-            var barSpec = message.SubscriptionType.Specification;
-            var barType = message.SubscriptionType;
+            var symbol = message.Subscription.Symbol;
+            var barSpec = message.Subscription.Specification;
+            var barType = message.Subscription;
 
             if (!this.barAggregators.ContainsKey(symbol))
             {
@@ -121,12 +121,12 @@ namespace Nautilus.Data.Aggregation
                         this.Endpoint,
                         symbol);
 
-                this.barAggregators.Add(message.SubscriptionType.Symbol, barAggregator);
+                this.barAggregators.Add(message.Subscription.Symbol, barAggregator);
 
                 this.Log.Debug($"Created BarAggregator[{symbol}].");
             }
 
-            if (this.subscriptions.ContainsKey(message.SubscriptionType))
+            if (this.subscriptions.ContainsKey(message.Subscription))
             {
                 this.Log.Error($"Already subscribed to {barType}.");
                 return;
@@ -153,7 +153,7 @@ namespace Nautilus.Data.Aggregation
                 this.subscriptions.Add(barType, null);
             }
 
-            this.Log.Information($"Subscribed to {message.SubscriptionType} bars.");
+            this.Log.Information($"Subscribed to {message.Subscription} bars.");
         }
 
         private void CreateCloseBarDelegate(BarSpecification barSpec, IEndpoint aggregator)
@@ -167,8 +167,8 @@ namespace Nautilus.Data.Aggregation
 
         private void OnMessage(Unsubscribe<BarType> message)
         {
-            var symbol = message.SubscriptionType.Symbol;
-            var barType = message.SubscriptionType;
+            var symbol = message.Subscription.Symbol;
+            var barType = message.Subscription;
 
             if (!this.barAggregators.ContainsKey(symbol) || !this.subscriptions.ContainsKey(barType))
             {
@@ -192,7 +192,7 @@ namespace Nautilus.Data.Aggregation
                 this.Log.Debug($"Removed BarAggregator[{symbol}].");
             }
 
-            this.Log.Information($"Unsubscribed from {message.SubscriptionType} bars.");
+            this.Log.Information($"Unsubscribed from {message.Subscription} bars.");
         }
 
         private void OnMessage(MarketOpened message)

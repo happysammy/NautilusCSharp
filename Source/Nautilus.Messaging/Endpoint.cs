@@ -9,6 +9,8 @@
 namespace Nautilus.Messaging
 {
     using System;
+    using System.Reflection.Emit;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Messaging.Interfaces;
 
@@ -27,10 +29,73 @@ namespace Nautilus.Messaging
             this.target = target;
         }
 
+        /// <summary>
+        /// Returns a value indicating whether the <see cref="Label"/>s are equal.
+        /// </summary>
+        /// <param name="left">The left object.</param>
+        /// <param name="right">The right object.</param>
+        /// <returns>A <see cref="bool"/>.</returns>
+        public static bool operator ==(Endpoint left, Endpoint right)
+        {
+            if (left is null && right is null)
+            {
+                return true;
+            }
+
+            if (left is null || right is null)
+            {
+                return false;
+            }
+
+            return left.Equals(right);
+        }
+
+        /// <summary>
+        /// Returns a value indicating whether the <see cref="Endpoint"/>s are not equal.
+        /// </summary>
+        /// <param name="left">The left object.</param>
+        /// <param name="right">The right object.</param>
+        /// <returns>A <see cref="bool"/>.</returns>
+        public static bool operator !=(Endpoint left,  Endpoint right) => !(left == right);
+
         /// <inheritdoc />
         public void Send(object message)
         {
             this.target.Invoke(message);
         }
+
+        /// <summary>
+        /// Returns a value indicating whether this <see cref="Endpoint"/> is equal
+        /// to the given <see cref="object"/>.
+        /// </summary>
+        /// <param name="other">The other.</param>
+        /// <returns>A <see cref="bool"/>.</returns>
+        public override bool Equals(object other) => other is Endpoint endpoint && this.Equals(endpoint);
+
+        /// <summary>
+        /// Returns a value indicating whether this <see cref="Endpoint"/> is equal
+        /// to the given <see cref="Endpoint"/>.
+        /// </summary>
+        /// <param name="other">The other object.</param>
+        /// <returns>A <see cref="bool"/>.</returns>
+        public bool Equals(Endpoint other)
+        {
+            return this.target == other.target;
+        }
+
+        /// <summary>
+        /// Returns the hash code of the <see cref="Endpoint"/>.
+        /// </summary>
+        /// <returns>An <see cref="int"/>.</returns>
+        public override int GetHashCode()
+        {
+            return Hash.GetCode(this.target);
+        }
+
+        /// <summary>
+        /// Returns a string representation of the <see cref="Endpoint"/>.
+        /// </summary>
+        /// <returns>A <see cref="string"/>.</returns>
+        public override string ToString() => this.target.ToString();
     }
 }

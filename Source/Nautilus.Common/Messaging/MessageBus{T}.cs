@@ -10,6 +10,8 @@ namespace Nautilus.Common.Messaging
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection.Metadata;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
@@ -41,6 +43,8 @@ namespace Nautilus.Common.Messaging
             this.switchboard = Switchboard.Empty();
 
             this.RegisterHandler<InitializeSwitchboard>(this.OnMessage);
+            this.RegisterHandler<ISubscribe>(this.OnMessage);
+            this.RegisterHandler<IUnsubscribe>(this.OnMessage);
             this.RegisterHandler<Envelope<T>>(this.OnEnvelope);
         }
 
@@ -66,11 +70,75 @@ namespace Nautilus.Common.Messaging
             this.Log.Information("Switchboard initialized.");
         }
 
+        private void OnMessage(ISubscribe message)
+        {
+            var type = message.SubscriptionType;
+            var subscriber = message.Subscriber;
+
+            if (!this.subscriptions.ContainsKey(type))
+            {
+                this.subscriptions[type] = new List<IEndpoint>();
+            }
+
+            if (this.subscriptions[type].Contains(subscriber))
+            {
+                this.Log.Warning($"{subscriber} is already subscribed to {type}.");
+                return;
+            }
+
+            this.subscriptions[type].Append(subscriber);
+        }
+
+        private void OnMessage(IUnsubscribe message)
+        {
+            var type = message.SubscriptionType;
+            var subscriber = message.Subscriber;
+
+            if (!this.subscriptions.ContainsKey(type))
+            {
+                this.Log.Warning($"{subscriber} is already unsubscribed from {type} messages.");
+                return;
+            }
+
+            if (!this.subscriptions[type].Contains(subscriber))
+            {
+                this.Log.Warning($"{subscriber} is already unsubscribed from {type} messages.");
+                return;
+            }
+
+            this.subscriptions[type].Remove(subscriber);
+        }
+
         private void OnEnvelope(Envelope<T> envelope)
         {
+            if (envelope.Receiver is null)
+            {
+                // Publish to subscribers
+                this.Publish(envelope);
+                return;
+            }
+
+            // Send point-to-point
             this.switchboard.SendToReceiver(envelope);
 
             this.Log.Verbose($"[{this.ProcessedCount}] {envelope.Sender} -> {envelope} -> {envelope.Receiver}");
+        }
+
+        private void Publish(Envelope<T> envelope)
+        {
+            if (!this.subscriptions.ContainsKey(envelope.MessageType))
+            {
+                // No subscribers for this message type.
+                return;
+            }
+
+            for (var i = 0; i < this.subscriptions[envelope.MessageType].Count; i++)
+            {
+                this.subscriptions[envelope.MessageType][i].Send(envelope);
+
+                this.Log.Verbose(
+                    $"[{this.ProcessedCount}] {envelope.Sender} -> {envelope} -> {envelope.Receiver}");
+            }
         }
 
         private void AddToDeadLetters(object message)

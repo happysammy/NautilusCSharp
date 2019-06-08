@@ -60,11 +60,13 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
 
             var subscribe1 = new Subscribe<BarType>(
                 barType1,
+                this.receiver.Endpoint,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             var subscribe2 = new Subscribe<BarType>(
                 barType2,
+                this.receiver.Endpoint,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -92,11 +94,13 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
 
             var subscribe1 = new Subscribe<BarType>(
                 barType1,
+                this.receiver.Endpoint,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             var subscribe2 = new Subscribe<BarType>(
                 barType2,
+                this.receiver.Endpoint,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -129,21 +133,25 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
 
             var subscribe1 = new Subscribe<BarType>(
                 barType1,
+                this.receiver.Endpoint,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             var subscribe2 = new Subscribe<BarType>(
                 barType2,
+                this.receiver.Endpoint,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             var subscribe3 = new Subscribe<BarType>(
                 barType3,
+                this.receiver.Endpoint,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             var subscribe4 = new Subscribe<BarType>(
                 barType4,
+                this.receiver.Endpoint,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -174,16 +182,19 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
 
             var subscribe1 = new Subscribe<BarType>(
                 barType1,
+                this.receiver.Endpoint,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             var subscribe2 = new Subscribe<BarType>(
                 barType2,
+                this.receiver.Endpoint,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             var unsubscribe = new Unsubscribe<BarType>(
                 barType2,
+                this.receiver.Endpoint,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -214,16 +225,19 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
 
             var subscribe1 = new Subscribe<BarType>(
                 barType1,
+                this.receiver.Endpoint,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             var subscribe2 = new Subscribe<BarType>(
                 barType2,
+                this.receiver.Endpoint,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             var unsubscribe = new Unsubscribe<BarType>(
                 barType2,
+                this.receiver.Endpoint,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -259,41 +273,49 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
 
             var subscribe1 = new Subscribe<BarType>(
                 barType1,
+                this.receiver.Endpoint,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             var subscribe2 = new Subscribe<BarType>(
                 barType2,
+                this.receiver.Endpoint,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             var subscribe3 = new Subscribe<BarType>(
                 barType3,
+                this.receiver.Endpoint,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             var subscribe4 = new Subscribe<BarType>(
                 barType4,
+                this.receiver.Endpoint,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             var unsubscribe1 = new Unsubscribe<BarType>(
                 barType1,
+                this.receiver.Endpoint,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             var unsubscribe2 = new Unsubscribe<BarType>(
                 barType2,
+                this.receiver.Endpoint,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             var unsubscribe3 = new Unsubscribe<BarType>(
                 barType3,
+                this.receiver.Endpoint,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             var unsubscribe4 = new Unsubscribe<BarType>(
                 barType4,
+                this.receiver.Endpoint,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
