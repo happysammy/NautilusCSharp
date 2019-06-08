@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="MessageBus.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="MessageBus{T}.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -73,7 +73,7 @@ namespace Nautilus.Common.Messaging
         {
             this.deadLetters.Add(message);
 
-            this.Log.Error($"Unhandled message [{message}].");
+            this.Log.Error($"Undeliverable message [{message}].");
         }
     }
 }

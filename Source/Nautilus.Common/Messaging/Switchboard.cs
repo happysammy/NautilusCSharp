@@ -69,14 +69,14 @@ namespace Nautilus.Common.Messaging
         {
             if (envelope.Receiver is null)
             {
-                // Receiver address not found.
+                // Receiver address not found
                 this.deadLetterHandler(envelope);
                 return;
             }
 
             if (!this.addresses.ContainsKey((Address)envelope.Receiver))
             {
-                // Receiver address not found.
+                // Receiver address not found
                 this.deadLetterHandler(envelope);
                 return;
             }
@@ -99,6 +99,7 @@ namespace Nautilus.Common.Messaging
         /// <param name="message">The message.</param>
         private static void DoNothing(object message)
         {
+            // Its expected another dead letter handler method will be registered
         }
     }
 }
