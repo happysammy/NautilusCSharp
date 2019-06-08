@@ -96,6 +96,6 @@ namespace Nautilus.Messaging
         /// Returns a string representation of the <see cref="Endpoint"/>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => this.target.ToString();
+        public override string ToString() => $"{nameof(Endpoint)}({this.target})";
     }
 }
