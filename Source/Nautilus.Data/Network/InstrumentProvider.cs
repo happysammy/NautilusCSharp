@@ -67,7 +67,7 @@ namespace Nautilus.Data.Network
 
             if (query.IsFailure)
             {
-                this.SendRejected(query.Message, request, envelope.Sender);
+                this.SendQueryFailure(query.Message, request.Id, envelope.Sender);
                 this.Log.Error(query.Message);
             }
 
@@ -88,8 +88,9 @@ namespace Nautilus.Data.Network
 
             if (query.IsFailure)
             {
-                this.SendRejected(query.Message, request, envelope.Sender);
+                this.SendRejected(query.Message, request.Id, envelope.Sender);
                 this.Log.Error(query.Message);
+                return;
             }
 
             var instruments = query

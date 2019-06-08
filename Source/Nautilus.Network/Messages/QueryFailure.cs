@@ -1,61 +1,52 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="TickDataResponse.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="QueryFailure.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Data.Messages.Responses
+namespace Nautilus.Network.Messages
 {
     using System;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
-    using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Network.Messages;
     using NodaTime;
 
     /// <summary>
-    /// Represents a response of historical tick data.
+    /// A response indicating rejection of a message.
     /// </summary>
     [Immutable]
-    public sealed class TickDataResponse : Response
+    public sealed class QueryFailure : Response
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="TickDataResponse"/> class.
+        /// Initializes a new instance of the <see cref="QueryFailure"/> class.
         /// </summary>
-        /// <param name="symbol">The response tick data symbol.</param>
-        /// <param name="ticks">The response ticks.</param>
+        /// <param name="failureMessage">The query failure message.</param>
         /// <param name="correlationId">The response correlation identifier.</param>
         /// <param name="id">The response identifier.</param>
         /// <param name="timestamp">The response timestamp.</param>
-        public TickDataResponse(
-            Symbol symbol,
-            byte[][] ticks,
+        public QueryFailure(
+            string failureMessage,
             Guid correlationId,
             Guid id,
             ZonedDateTime timestamp)
             : base(
-                typeof(TickDataResponse),
+                typeof(QueryFailure),
                 correlationId,
                 id,
                 timestamp)
         {
+            Debug.NotEmptyOrWhiteSpace(failureMessage, nameof(failureMessage));
             Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
-            this.Symbol = symbol;
-            this.Ticks = ticks;
+            this.Message = failureMessage;
         }
 
         /// <summary>
-        /// Gets the responses tick data symbol.
+        /// Gets the responses query failure message.
         /// </summary>
-        public Symbol Symbol { get; }
-
-        /// <summary>
-        /// Gets the tick data.
-        /// </summary>
-        public byte[][] Ticks { get; }
+        public string Message { get; }
     }
 }

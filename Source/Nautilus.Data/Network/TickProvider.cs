@@ -58,32 +58,36 @@ namespace Nautilus.Data.Network
 
         private void OnMessage(Envelope<TickDataRequest> envelope)
         {
-            var request = envelope.Message;
-
-            var query = this.repository.Find(
-                request.Symbol,
-                request.FromDateTime,
-                request.ToDateTime);
-
-            if (query.IsFailure)
+            this.Execute(() =>
             {
-                this.SendRejected(query.Message, request, envelope.Sender);
-                this.Log.Error(query.Message);
-            }
+                var request = envelope.Message;
 
-            var ticks = query
-                .Value
-                .Select(t => Encoding.UTF8.GetBytes(t.ToString()))
-                .ToArray();
+                var query = this.repository.Find(
+                    request.Symbol,
+                    request.FromDateTime,
+                    request.ToDateTime);
 
-            var response = new TickDataResponse(
-                request.Symbol,
-                ticks,
-                request.Id,
-                this.NewGuid(),
-                this.TimeNow());
+                if (query.IsFailure)
+                {
+                    this.SendQueryFailure(query.Message, request.Id, envelope.Sender);
+                    this.Log.Error(query.Message);
+                    return;
+                }
 
-            this.SendMessage(response, envelope.Sender);
+                var ticks = query
+                    .Value
+                    .Select(t => Encoding.UTF8.GetBytes(t.ToString()))
+                    .ToArray();
+
+                var response = new TickDataResponse(
+                    request.Symbol,
+                    ticks,
+                    request.Id,
+                    this.NewGuid(),
+                    this.TimeNow());
+
+                this.SendMessage(response, envelope.Sender);
+            });
         }
     }
 }

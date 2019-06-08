@@ -38,7 +38,14 @@ namespace Nautilus.Serialization
                     package.Add(nameof(res.ReceivedType), res.ReceivedType);
                     break;
                 case MessageRejected res:
-                    package.Add(nameof(res.RejectedReason), res.RejectedReason);
+                    package.Add(nameof(res.Message), res.Message);
+                    break;
+                case QueryFailure res:
+                    package.Add(nameof(res.Message), res.Message);
+                    break;
+                case TickDataResponse res:
+                    package.Add(nameof(res.Symbol), res.Symbol.ToString());
+                    package.Add(nameof(res.Ticks), MsgPackSerializer.Serialize(res.Ticks));
                     break;
                 case BarDataResponse res:
                     package.Add(nameof(res.Symbol), res.Symbol.ToString());
@@ -72,7 +79,20 @@ namespace Nautilus.Serialization
                         timestamp);
                 case nameof(MessageRejected):
                     return new MessageRejected(
-                        unpacked[nameof(MessageRejected.RejectedReason)].ToString(),
+                        unpacked[nameof(MessageRejected.Message)].ToString(),
+                        correlationId,
+                        id,
+                        timestamp);
+                case nameof(QueryFailure):
+                    return new QueryFailure(
+                        unpacked[nameof(MessageRejected.Message)].ToString(),
+                        correlationId,
+                        id,
+                        timestamp);
+                case nameof(TickDataResponse):
+                    return new TickDataResponse(
+                        ObjectExtractor.Symbol(unpacked),
+                        MsgPackSerializer.Deserialize<byte[][]>(unpacked[nameof(TickDataResponse.Ticks)].AsBinary()),
                         correlationId,
                         id,
                         timestamp);

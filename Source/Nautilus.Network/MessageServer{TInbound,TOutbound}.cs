@@ -165,7 +165,9 @@ namespace Nautilus.Network
 
             if (received is null)
             {
-                return; // This can never happen due to generic type constraints
+                // This can never happen due to generic type constraints
+                throw new InvalidOperationException(
+                    $"Design time error (message was not of type {typeof(TOutbound)}).");
             }
 
             this.SendMessage(received, receiver);
@@ -174,26 +176,55 @@ namespace Nautilus.Network
         /// <summary>
         /// Sends a MessageRejected message to the given receiver address.
         /// </summary>
-        /// <param name="rejectedReason">The rejected reason.</param>
         /// <param name="rejectedMessage">The rejected message.</param>
+        /// <param name="correlationId">The message correlation identifier.</param>
         /// <param name="receiver">The receiver address.</param>
         protected void SendRejected(
-            string rejectedReason,
-            Message rejectedMessage,
+            string rejectedMessage,
+            Guid correlationId,
             Address? receiver)
         {
             var rejected = new MessageRejected(
-                rejectedReason,
-                rejectedMessage.Id,
+                rejectedMessage,
+                correlationId,
                 Guid.NewGuid(),
                 this.TimeNow()) as TOutbound;
 
             if (rejected is null)
             {
-                return; // This can never happen due to generic type constraints
+                // This can never happen due to generic type constraints
+                throw new InvalidOperationException(
+                    $"Design time error (message was not of type {typeof(TOutbound)}).");
             }
 
             this.SendMessage(rejected, receiver);
+        }
+
+        /// <summary>
+        /// Sends a MessageRejected message to the given receiver address.
+        /// </summary>
+        /// <param name="failureMessage">The query failure message.</param>
+        /// <param name="correlationId">The message correlation identifier.</param>
+        /// <param name="receiver">The receiver address.</param>
+        protected void SendQueryFailure(
+            string failureMessage,
+            Guid correlationId,
+            Address? receiver)
+        {
+            var failure = new QueryFailure(
+                failureMessage,
+                correlationId,
+                Guid.NewGuid(),
+                this.TimeNow()) as TOutbound;
+
+            if (failure is null)
+            {
+                // This can never happen due to generic type constraints
+                throw new InvalidOperationException(
+                    $"Design time error (message was not of type {typeof(TOutbound)}).");
+            }
+
+            this.SendMessage(failure, receiver);
         }
 
         private Task StartWork()
@@ -241,7 +272,7 @@ namespace Nautilus.Network
             if (request is IEnvelope envelope)
             {
                 var errorMessage = $"Message type {envelope.MessageType.Name} not valid at this address {this.ServerAddress}.";
-                this.SendRejected(errorMessage, envelope.MessageBase, envelope.Sender);
+                this.SendRejected(errorMessage, envelope.MessageBase.Id, envelope.Sender);
 
                 this.Log.Error(errorMessage);
             }

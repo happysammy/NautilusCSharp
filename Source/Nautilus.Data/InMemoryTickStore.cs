@@ -84,7 +84,7 @@ namespace Nautilus.Data
         {
             if (!this.tickStore.ContainsKey(symbol))
             {
-                return QueryResult<List<Tick>>.Fail($"No tick data for {symbol}");
+                return QueryResult<List<Tick>>.Fail($"No tick data found for {symbol}");
             }
 
             var ticks = this.tickStore[symbol]
@@ -99,7 +99,7 @@ namespace Nautilus.Data
         public QueryResult<ZonedDateTime> LastTickTimestamp(Symbol symbol)
         {
             return !this.tickStore.ContainsKey(symbol)
-                ? QueryResult<ZonedDateTime>.Fail($"No tick data for {symbol}")
+                ? QueryResult<ZonedDateTime>.Fail($"No tick data found for {symbol}")
                 : QueryResult<ZonedDateTime>.Ok(this.tickStore[symbol].Last().Timestamp);
         }
 

@@ -9,14 +9,22 @@
 namespace Nautilus.TestSuite.UnitTests.SerializationTests
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using System.Text;
+    using Nautilus.Data.Messages.Requests;
     using Nautilus.Data.Messages.Responses;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network.Messages;
     using Nautilus.Serialization;
+    using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
+    using NetMQ;
+    using NetMQ.Sockets;
+    using NodaTime;
     using Xunit;
     using Xunit.Abstractions;
 
@@ -34,11 +42,36 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         }
 
         [Fact]
-        internal void CanSerializeAndDeserialize_BadRequestResponses()
+        internal void CanSerializeAndDeserialize_MessageReceived()
+        {
+            // Arrange
+            var messageType = nameof(MockMessage);
+            var correlationId = Guid.NewGuid();
+
+            var response = new MessageReceived(
+                messageType,
+                correlationId,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            // Act
+            var packed = this.serializer.Serialize(response);
+            var unpacked = (MessageReceived)this.serializer.Deserialize(packed);
+
+            // Assert
+            Assert.Equal(response, unpacked);
+            Assert.Equal(correlationId, unpacked.CorrelationId);
+            Assert.Equal(messageType, unpacked.ReceivedType);
+            this.output.WriteLine(Convert.ToBase64String(packed));
+            this.output.WriteLine(Encoding.UTF8.GetString(packed));
+        }
+
+        [Fact]
+        internal void CanSerializeAndDeserialize_MessageRejected()
         {
             // Arrange
             var correlationId = Guid.NewGuid();
-            var message = "data not found";
+            var message = "malformed message";
 
             var response = new MessageRejected(
                 message,
@@ -53,7 +86,75 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             // Assert
             Assert.Equal(response, unpacked);
             Assert.Equal(correlationId, unpacked.CorrelationId);
-            Assert.Equal(message, unpacked.RejectedReason);
+            Assert.Equal(message, unpacked.Message);
+            this.output.WriteLine(Convert.ToBase64String(packed));
+            this.output.WriteLine(Encoding.UTF8.GetString(packed));
+        }
+
+        [Fact]
+        internal void CanSerializeAndDeserialize_QueryFailure()
+        {
+            // Arrange
+            var correlationId = Guid.NewGuid();
+            var message = "data not found";
+
+            var response = new QueryFailure(
+                message,
+                correlationId,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            // Act
+            var packed = this.serializer.Serialize(response);
+            var unpacked = (QueryFailure)this.serializer.Deserialize(packed);
+
+            // Assert
+            Assert.Equal(response, unpacked);
+            Assert.Equal(correlationId, unpacked.CorrelationId);
+            Assert.Equal(message, unpacked.Message);
+            this.output.WriteLine(Convert.ToBase64String(packed));
+            this.output.WriteLine(Encoding.UTF8.GetString(packed));
+        }
+
+        [Fact]
+        internal void CanSerializeAndDeserialize_TickDataResponse()
+        {
+            // Arrange
+            var datetimeFrom = StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1);
+            var datetimeTo = datetimeFrom + Duration.FromMinutes(1);
+
+            var symbol = new Symbol("AUDUSD", Venue.FXCM);
+            var tick1 = new Tick(symbol, 1.00000m, 1.00000m, datetimeFrom);
+            var tick2 = new Tick(symbol, 1.00010m, 1.00020m, datetimeTo);
+
+            var ticks = new List<Tick> { tick1, tick2 }
+                .Select(t => Encoding.UTF8.GetBytes(t.ToString()))
+                .ToArray();
+
+            var correlationId = Guid.NewGuid();
+            var id = Guid.NewGuid();
+
+            var response = new TickDataResponse(
+                symbol,
+                ticks,
+                correlationId,
+                id,
+                StubZonedDateTime.UnixEpoch());
+
+            // Act
+            var packed = this.serializer.Serialize(response);
+            var unpacked = (TickDataResponse)this.serializer.Deserialize(packed);
+
+            var receivedTicks = unpacked.Ticks
+                .Select(t => TickFactory.Create(symbol, Encoding.UTF8.GetString(t)))
+                .ToList();
+
+            // Assert
+            Assert.Equal(response, unpacked);
+            Assert.Equal(symbol, response.Symbol);
+            Assert.Equal(tick1, receivedTicks[0]);
+            Assert.Equal(tick2, receivedTicks[1]);
+            Assert.Equal(correlationId, unpacked.CorrelationId);
             this.output.WriteLine(Convert.ToBase64String(packed));
             this.output.WriteLine(Encoding.UTF8.GetString(packed));
         }
