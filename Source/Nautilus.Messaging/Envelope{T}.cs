@@ -11,6 +11,7 @@ namespace Nautilus.Messaging
     using System;
     using Nautilus.Core;
     using Nautilus.Core.Correctness;
+    using Nautilus.Core.Extensions;
     using Nautilus.Messaging.Interfaces;
     using NodaTime;
 
@@ -88,6 +89,6 @@ namespace Nautilus.Messaging
         /// Returns a string representation of this <see cref="Envelope{T}"/>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"Envelope<{typeof(T).Name}>[{this.Message}]";
+        public override string ToString() => $"{typeof(Envelope<T>).ExtractFormattedName()}[{this.Message}]";
     }
 }
