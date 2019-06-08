@@ -11,22 +11,23 @@ namespace Nautilus.Messaging
     using System;
     using Nautilus.Core;
     using Nautilus.Core.Correctness;
+    using Nautilus.Messaging.Interfaces;
     using NodaTime;
 
     /// <summary>
     /// Provides a message wrapper with optional sender and receiver addresses.
     /// </summary>
     /// <typeparam name="T">The message type.</typeparam>
-    public sealed class Envelope<T>
+    public sealed class Envelope<T> : IEnvelope
         where T : Message
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Envelope{T}"/> class.
         /// </summary>
-        /// <param name="message">The message payload.</param>
+        /// <param name="message">The message to wrap.</param>
         /// <param name="receiver">The envelope receiver.</param>
         /// <param name="sender">The envelope sender.</param>
-        /// <param name="timestamp">The envelopes timestamp.</param>
+        /// <param name="timestamp">The envelope creation timestamp.</param>
         public Envelope(
             T message,
             Address? receiver,
@@ -46,6 +47,16 @@ namespace Nautilus.Messaging
         /// Gets the envelopes message.
         /// </summary>
         public T Message { get; }
+
+        /// <summary>
+        /// Gets the envelopes message as a type of <see cref="Message"/>.
+        /// </summary>
+        public Message MessageBase => this.Message;
+
+        /// <summary>
+        /// Gets the envelopes message type.
+        /// </summary>
+        public Type MessageType => this.Message.Type;
 
         /// <summary>
         /// Gets the envelopes receiver (optional).

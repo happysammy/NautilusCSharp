@@ -19,6 +19,7 @@ namespace Nautilus.Network
     using Nautilus.Core;
     using Nautilus.Core.Correctness;
     using Nautilus.Messaging;
+    using Nautilus.Messaging.Interfaces;
     using Nautilus.Network.Messages;
     using NetMQ;
     using NetMQ.Sockets;
@@ -214,7 +215,7 @@ namespace Nautilus.Network
                 var sender = new Address(zmqMessage[0]);
                 var received = this.inboundSerializer.Deserialize(zmqMessage[2]);
 
-                var envelope = new Envelope<TInbound>(
+                var envelope = EnvelopeFactory.Create(
                     received,
                     null,
                     sender,
@@ -234,18 +235,18 @@ namespace Nautilus.Network
         /// <summary>
         /// Handle the given unhandled request message.
         /// </summary>
-        /// <param name="message">The unhandled object.</param>
-        private void UnhandledRequest(object message)
+        /// <param name="request">The unhandled request object.</param>
+        private void UnhandledRequest(object request)
         {
-            if (message is Envelope<TInbound> request)
+            if (request is IEnvelope envelope)
             {
-                var errorMessage = $"Message type {request.Message.Type.Name} not valid at this address {this.ServerAddress}.";
-                this.SendRejected(errorMessage, request.Message, request.Sender);
+                var errorMessage = $"Message type {envelope.MessageType.Name} not valid at this address {this.ServerAddress}.";
+                this.SendRejected(errorMessage, envelope.MessageBase, envelope.Sender);
 
                 this.Log.Error(errorMessage);
             }
 
-            this.AddToUnhandledMessages(message);
+            this.AddToUnhandledMessages(request);
         }
     }
 }
