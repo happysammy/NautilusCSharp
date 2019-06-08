@@ -30,5 +30,11 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             this.testEndpoint.Send(message);
         }
+
+        public void SendToBus<T>(T message, Address sender, ZonedDateTime timestamp)
+            where T : Message
+        {
+            this.testEndpoint.Send(message);
+        }
     }
 }

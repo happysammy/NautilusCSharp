@@ -60,34 +60,51 @@ namespace Nautilus.Common.Messaging
             ZonedDateTime timestamp)
             where T : Message
         {
+            this.WrapAndSend(message, receiver, sender, timestamp);
+        }
+
+        /// <inheritdoc/>
+        public void SendToBus<T>(T message, Address sender, ZonedDateTime timestamp)
+            where T : Message
+        {
+            this.WrapAndSend(message, null, sender, timestamp);
+        }
+
+        private void WrapAndSend<T>(
+            T message,
+            Address? receiver,
+            Address sender,
+            ZonedDateTime timestamp)
+            where T : Message
+        {
             switch (message)
             {
-                    case Command msg:
-                        var cmdEnvelope = new Envelope<Command>(
-                            msg,
-                            receiver,
-                            sender,
-                            timestamp);
-                        this.cmdBus.Endpoint.Send(cmdEnvelope);
-                        break;
-                    case Event msg:
-                        var evtEnvelope = new Envelope<Event>(
-                            msg,
-                            receiver,
-                            sender,
-                            timestamp);
-                        this.evtBus.Endpoint.Send(evtEnvelope);
-                        break;
-                    case Document msg:
-                        var docEnvelope = new Envelope<Document>(
-                            msg,
-                            receiver,
-                            sender,
-                            timestamp);
-                        this.docBus.Endpoint.Send(docEnvelope);
-                        break;
-                    default:
-                        throw ExceptionFactory.InvalidSwitchArgument(message, nameof(message));
+                case Command msg:
+                    var cmdEnvelope = new Envelope<Command>(
+                        msg,
+                        receiver,
+                        sender,
+                        timestamp);
+                    this.cmdBus.Endpoint.Send(cmdEnvelope);
+                    break;
+                case Event msg:
+                    var evtEnvelope = new Envelope<Event>(
+                        msg,
+                        receiver,
+                        sender,
+                        timestamp);
+                    this.evtBus.Endpoint.Send(evtEnvelope);
+                    break;
+                case Document msg:
+                    var docEnvelope = new Envelope<Document>(
+                        msg,
+                        receiver,
+                        sender,
+                        timestamp);
+                    this.docBus.Endpoint.Send(docEnvelope);
+                    break;
+                default:
+                    throw ExceptionFactory.InvalidSwitchArgument(message, nameof(message));
             }
         }
     }

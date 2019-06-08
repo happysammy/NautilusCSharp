@@ -28,5 +28,15 @@ namespace Nautilus.Common.Interfaces
         /// <param name="timestamp">The send timestamp.</param>
         void Send<T>(T message, Address receiver, Address sender, ZonedDateTime timestamp)
             where T : Message;
+
+        /// <summary>
+        /// Sends the given message to the message bus to be published marked from the given sender.
+        /// </summary>
+        /// <typeparam name="T">The message type.</typeparam>
+        /// <param name="message">The message.</param>
+        /// <param name="sender">The sender address.</param>
+        /// <param name="timestamp">The send timestamp.</param>
+        void SendToBus<T>(T message, Address sender, ZonedDateTime timestamp)
+            where T : Message;
     }
 }
