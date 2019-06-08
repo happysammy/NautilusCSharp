@@ -43,11 +43,5 @@ namespace Nautilus.Common.Messages.Documents
         /// Gets the messages market data.
         /// </summary>
         public T Data { get; }
-
-        /// <summary>
-        /// Returns a string representation of this object.
-        /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"DataDelivery<{this.Data}>";
     }
 }

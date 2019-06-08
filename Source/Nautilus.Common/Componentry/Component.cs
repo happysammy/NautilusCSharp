@@ -15,6 +15,7 @@ namespace Nautilus.Common.Componentry
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core;
+    using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging;
     using NodaTime;
@@ -43,7 +44,7 @@ namespace Nautilus.Common.Componentry
             this.startedTimes = new List<ZonedDateTime>();
             this.stoppedTimes = new List<ZonedDateTime>();
 
-            this.Name = new Label(this.CreateComponentName());
+            this.Name = new Label(this.GetType().ExtractFormattedName());
             this.Address = new Address(this.Name.ToString());
             this.Log = container.LoggerFactory.Create(this.Name);
             this.State = initial;
@@ -208,15 +209,6 @@ namespace Nautilus.Common.Componentry
         {
             this.Log.Error($"Unhandled message [{message}].");
             this.AddToUnhandledMessages(message);
-        }
-
-        private string CreateComponentName()
-        {
-            var thisType = this.GetType();
-
-            return thisType.IsGenericType
-                ? $"{thisType.Name.Split('`')[0]}<{thisType.GenericTypeArguments[0].Name}>"
-                : thisType.Name;
         }
     }
 }
