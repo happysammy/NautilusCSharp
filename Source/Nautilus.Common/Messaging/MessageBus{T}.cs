@@ -86,6 +86,7 @@ namespace Nautilus.Common.Messaging
             }
 
             this.subscriptions[type].Append(subscriber);
+            this.Log.Error(message.SubscriptionName);
             this.Log.Information($"{subscriber} subscribed to {message.SubscriptionName} messages.");
         }
 
@@ -132,7 +133,14 @@ namespace Nautilus.Common.Messaging
             if (!this.subscriptions.ContainsKey(envelope.MessageType))
             {
                 // No subscribers for this message type.
-                this.Log.Error("NONE");
+                this.Log.Error(envelope.MessageType.Name);
+                this.Log.Error(envelope.MessageBase.ToString());
+
+                foreach (var item in this.subscriptions)
+                {
+                    this.Log.Error($"{item.Key.ToString()}");
+                }
+
                 return;
             }
 
