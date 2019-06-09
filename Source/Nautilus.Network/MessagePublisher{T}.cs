@@ -13,10 +13,7 @@ namespace Nautilus.Network
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
-    using Nautilus.Core;
     using Nautilus.Core.Correctness;
-    using Nautilus.Messaging;
-    using Nautilus.Messaging.Interfaces;
     using NetMQ;
     using NetMQ.Sockets;
 
@@ -59,8 +56,6 @@ namespace Nautilus.Network
 
             this.ServerAddress = new ZmqServerAddress(host, port);
             this.PublishedCount = 0;
-
-            this.RegisterHandler<IEnvelope>(this.Open);
         }
 
         /// <summary>
@@ -100,21 +95,6 @@ namespace Nautilus.Network
 
             this.PublishedCount++;
             this.Log.Debug($"Published message[{this.PublishedCount}] Topic={topic}, Message={message}");
-        }
-
-        private void Open(Envelope<Command> envelope)
-        {
-            this.SendToSelf(envelope.Message);
-        }
-
-        private void Open(Envelope<Event> envelope)
-        {
-            this.SendToSelf(envelope.Message);
-        }
-
-        private void Open(Envelope<Document> envelope)
-        {
-            this.SendToSelf(envelope.Message);
         }
     }
 }

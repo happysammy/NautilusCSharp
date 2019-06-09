@@ -33,6 +33,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
         private readonly ITestOutputHelper output;
         private readonly IComponentryContainer container;
         private readonly MockLoggingAdapter mockLoggingAdapter;
+        private readonly IMessagingAdapter mockMessagingAdapter;
         private readonly IEndpoint testReceiver;
 
         public EventPublisherTests(ITestOutputHelper output)
@@ -43,6 +44,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             var setupFactory = new StubComponentryContainerFactory();
             this.container = setupFactory.Create();
             this.mockLoggingAdapter = setupFactory.LoggingAdapter;
+            var service = new MockMessagingServiceFactory(this.container);
+            this.mockMessagingAdapter = service.MessagingAdapter;
             this.testReceiver = new MockMessagingAgent().Endpoint;
         }
 
@@ -54,6 +57,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             var publisher = new EventPublisher(
                 this.container,
+                this.mockMessagingAdapter,
                 new MsgPackEventSerializer(),
                 this.localHost,
                 new NetworkPort(56601));

@@ -24,15 +24,19 @@ namespace Nautilus.Execution.Network
         private const string ACCOUNT = "ACCOUNT";
         private const string EXECUTION = "EXECUTION";
 
+        private readonly IMessagingAdapter messagingAdapter;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="EventPublisher"/> class.
         /// </summary>
         /// <param name="container">The component setup container.</param>
+        /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="serializer">The event serializer.</param>
         /// <param name="host">The publishers host address.</param>
         /// <param name="port">The publishers port.</param>
         public EventPublisher(
             IComponentryContainer container,
+            IMessagingAdapter messagingAdapter,
             ISerializer<Event> serializer,
             NetworkAddress host,
             NetworkPort port)
@@ -43,6 +47,8 @@ namespace Nautilus.Execution.Network
                 port,
                 Guid.NewGuid())
         {
+            this.messagingAdapter = messagingAdapter;
+
             this.RegisterHandler<Event>(this.OnMessage);
         }
 

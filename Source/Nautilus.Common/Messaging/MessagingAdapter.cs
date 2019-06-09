@@ -8,12 +8,14 @@
 
 namespace Nautilus.Common.Messaging
 {
+    using System;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Messaging;
+    using Nautilus.Messaging.Interfaces;
     using NodaTime;
 
     /// <inheritdoc />
@@ -50,6 +52,56 @@ namespace Nautilus.Common.Messaging
             this.cmdBus.Endpoint.Send(message);
             this.evtBus.Endpoint.Send(message);
             this.docBus.Endpoint.Send(message);
+        }
+
+        /// <inheritdoc />
+        public void Subscribe<T>(
+            T messageType,
+            IEndpoint subscriber,
+            Guid id,
+            ZonedDateTime timestamp)
+        {
+            var message = new Subscribe<T>(messageType, subscriber, id, timestamp);
+
+            switch (message.Subscription)
+            {
+                case Command cmd:
+                    this.cmdBus.Endpoint.Send(message);
+                    break;
+                case Event evt:
+                    this.evtBus.Endpoint.Send(message);
+                    break;
+                case Document doc:
+                    this.docBus.Endpoint.Send(message);
+                    break;
+                default:
+                    throw ExceptionFactory.InvalidSwitchArgument(message, nameof(message));
+            }
+        }
+
+        /// <inheritdoc />
+        public void Unsubscribe<T>(
+            T messageType,
+            IEndpoint subscriber,
+            Guid id,
+            ZonedDateTime timestamp)
+        {
+            var message = new Subscribe<T>(messageType, subscriber, id, timestamp);
+
+            switch (message.Subscription)
+            {
+                case Command cmd:
+                    this.cmdBus.Endpoint.Send(message);
+                    break;
+                case Event evt:
+                    this.evtBus.Endpoint.Send(message);
+                    break;
+                case Document doc:
+                    this.docBus.Endpoint.Send(message);
+                    break;
+                default:
+                    throw ExceptionFactory.InvalidSwitchArgument(message, nameof(message));
+            }
         }
 
         /// <inheritdoc />

@@ -60,6 +60,7 @@ namespace NautilusExecutor
 
             var eventPublisher = new EventPublisher(
                 container,
+                messagingAdapter,
                 new MsgPackEventSerializer(),
                 config.ServerAddress,
                 config.EventsPort);

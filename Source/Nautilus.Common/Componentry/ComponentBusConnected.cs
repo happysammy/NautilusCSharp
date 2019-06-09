@@ -37,6 +37,34 @@ namespace Nautilus.Common.Componentry
         }
 
         /// <summary>
+        /// Subscribe the given subscriber to the given message type with the message bus.
+        /// </summary>
+        /// <typeparam name="T">The message type.</typeparam>
+        /// <param name="messageType">The message type to subscribe to.</param>
+        public void Subscribe<T>(T messageType)
+        {
+            this.messagingAdapter.Subscribe(
+                messageType,
+                this.Endpoint,
+                this.NewGuid(),
+                this.TimeNow());
+        }
+
+        /// <summary>
+        /// Unsubscribe the given subscriber from the given message type with the message bus.
+        /// </summary>
+        /// <typeparam name="T">The message type.</typeparam>
+        /// <param name="messageType">The message type to unsubscribe from.</param>
+        public void Unsubscribe<T>(T messageType)
+        {
+            this.messagingAdapter.Unsubscribe(
+                messageType,
+                this.Endpoint,
+                this.NewGuid(),
+                this.TimeNow());
+        }
+
+        /// <summary>
         /// Sends the given message to the given address via the message bus.
         /// </summary>
         /// <param name="message">The message to send.</param>

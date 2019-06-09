@@ -8,8 +8,10 @@
 
 namespace Nautilus.Common.Interfaces
 {
+    using System;
     using Nautilus.Core;
     using Nautilus.Messaging;
+    using Nautilus.Messaging.Interfaces;
     using NodaTime;
 
     /// <summary>
@@ -17,6 +19,26 @@ namespace Nautilus.Common.Interfaces
     /// </summary>
     public interface IMessagingAdapter
     {
+        /// <summary>
+        /// Subscribe the given subscriber to the given message type with the message bus.
+        /// </summary>
+        /// <typeparam name="T">The message type.</typeparam>
+        /// <param name="messageType">The message type to subscribe to.</param>
+        /// <param name="subscriber">The subscriber endpoint.</param>
+        /// <param name="id">The subscription identifier.</param>
+        /// <param name="timestamp">The subscription timestamp.</param>
+        void Subscribe<T>(T messageType, IEndpoint subscriber, Guid id, ZonedDateTime timestamp);
+
+        /// <summary>
+        /// Unsubscribe the given subscriber from the given message type with the message bus.
+        /// </summary>
+        /// <typeparam name="T">The message type.</typeparam>
+        /// <param name="messageType">The message type to unsubscribe from.</param>
+        /// <param name="subscriber">The subscriber endpoint.</param>
+        /// <param name="id">The subscription identifier.</param>
+        /// <param name="timestamp">The subscription timestamp.</param>
+        void Unsubscribe<T>(T messageType, IEndpoint subscriber, Guid id, ZonedDateTime timestamp);
+
         /// <summary>
         /// Sends the given message to the given receiver in an <see cref="Envelope{T}"/> marked
         /// from the given sender.

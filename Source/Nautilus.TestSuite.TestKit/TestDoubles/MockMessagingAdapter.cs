@@ -8,6 +8,7 @@
 
 namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
+    using System;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
@@ -23,6 +24,16 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public MockMessagingAdapter(IEndpoint testEndpoint)
         {
             this.testEndpoint = testEndpoint;
+        }
+
+        public void Subscribe<T>(T messageType, IEndpoint subscriber, Guid id, ZonedDateTime timestamp)
+        {
+            this.testEndpoint.Send(messageType);
+        }
+
+        public void Unsubscribe<T>(T messageType, IEndpoint subscriber, Guid id, ZonedDateTime timestamp)
+        {
+            this.testEndpoint.Send(messageType);
         }
 
         public void Send<T>(T message, Address receiver, Address sender, ZonedDateTime timestamp)
