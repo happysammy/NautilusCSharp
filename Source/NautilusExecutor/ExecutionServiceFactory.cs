@@ -58,10 +58,18 @@ namespace NautilusExecutor
                 config.FixConfiguration,
                 symbolConverter);
 
+            var eventPublisher = new EventPublisher(
+                container,
+                new MsgPackEventSerializer(),
+                config.ServerAddress,
+                config.EventsPort);
+
             var fixGateway = FixGatewayFactory.Create(
                 container,
                 messagingAdapter,
-                fixClient);
+                fixClient,
+                eventPublisher.Endpoint,    // TODO: Remove dummy endpoint
+                eventPublisher.Endpoint);  // TODO: Remove dummy endpoint
 
             var orderManager = new OrderManager(
                 container,
@@ -76,17 +84,10 @@ namespace NautilusExecutor
                 orderManager.Endpoint,
                 config);
 
-            var eventPublisher = new EventPublisher(
-                container,
-                new MsgPackEventSerializer(),
-                config.ServerAddress,
-                config.EventsPort);
-
             // Wire up service
-            fixGateway.RegisterConnectionEventReceiver(ExecutionServiceAddress.Core);
-            fixGateway.RegisterAccountEventReceiver(ExecutionServiceAddress.EventPublisher);
-            fixGateway.RegisterOrderEventReceiver(ExecutionServiceAddress.OrderManager);
-
+//            fixGateway.RegisterConnectionEventReceiver(ExecutionServiceAddress.Core);
+//            fixGateway.RegisterAccountEventReceiver(ExecutionServiceAddress.EventPublisher);
+// fixGateway.RegisterOrderEventReceiver(ExecutionServiceAddress.OrderManager);
             var addresses = new Dictionary<Address, IEndpoint>
             {
                 { ExecutionServiceAddress.Scheduler, scheduler.Endpoint },

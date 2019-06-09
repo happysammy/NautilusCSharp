@@ -81,9 +81,9 @@ namespace Nautilus.Execution
                 this.fixConnectTime,
                 this.InstantNow()))
             {
-                this.Send(ExecutionServiceAddress.FixGateway, message);
-                this.Send(ExecutionServiceAddress.CommandServer, message);
-                this.Send(ExecutionServiceAddress.EventPublisher, message);
+                this.Send(message, ExecutionServiceAddress.FixGateway);
+                this.Send(message, ExecutionServiceAddress.CommandServer);
+                this.Send(message, ExecutionServiceAddress.EventPublisher);
             }
             else
             {
@@ -95,21 +95,21 @@ namespace Nautilus.Execution
         protected override void OnStop(Stop message)
         {
             // Forward stop message.
-            this.Send(ExecutionServiceAddress.FixGateway, message);
-            this.Send(ExecutionServiceAddress.CommandServer, message);
-            this.Send(ExecutionServiceAddress.EventPublisher, message);
+            this.Send(message, ExecutionServiceAddress.FixGateway);
+            this.Send(message, ExecutionServiceAddress.CommandServer);
+            this.Send(message, ExecutionServiceAddress.EventPublisher);
         }
 
         private void OnMessage(ConnectFix message)
         {
             // Forward message.
-            this.Send(ExecutionServiceAddress.FixGateway, message);
+            this.Send(message, ExecutionServiceAddress.FixGateway);
         }
 
         private void OnMessage(DisconnectFix message)
         {
             // Forward message.
-            this.Send(ExecutionServiceAddress.FixGateway, message);
+            this.Send(message, ExecutionServiceAddress.FixGateway);
         }
 
         private void OnMessage(FixSessionConnected message)

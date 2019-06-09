@@ -14,7 +14,6 @@ namespace Nautilus.Data.Aggregation
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
-    using Nautilus.Common.Messages.Documents;
     using Nautilus.Common.Messages.Events;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Extensions;
@@ -32,7 +31,7 @@ namespace Nautilus.Data.Aggregation
     {
         private readonly IComponentryContainer storedContainer;
         private readonly IScheduler scheduler;
-        private readonly IEndpoint barPublisher;
+        private readonly IEndpoint dataBus;
         private readonly Dictionary<Symbol, BarAggregator> barAggregators;
         private readonly Dictionary<BarType, ICancelable?> subscriptions;
 
@@ -42,17 +41,17 @@ namespace Nautilus.Data.Aggregation
         /// <param name="container">The componentry container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="scheduler">The scheduler.</param>
-        /// <param name="barPublisher">The bar publisher endpoint.</param>
+        /// <param name="dataBus">The bar publisher endpoint.</param>
         public BarAggregationController(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             IScheduler scheduler,
-            IEndpoint barPublisher)
+            IEndpoint dataBus)
             : base(container, messagingAdapter)
         {
             this.storedContainer = container;
             this.scheduler = scheduler;
-            this.barPublisher = barPublisher;
+            this.dataBus = dataBus;
             this.barAggregators = new Dictionary<Symbol, BarAggregator>();
             this.subscriptions = new Dictionary<BarType, ICancelable?>();
 
@@ -97,15 +96,8 @@ namespace Nautilus.Data.Aggregation
 
         private void OnMessage((BarType, Bar) data)
         {
-            // Forward data to bar publisher.
-            this.barPublisher.Send(data);
-
-            var dataDelivery = new DataDelivery<(BarType, Bar)>(
-                data,
-                this.NewGuid(),
-                this.TimeNow());
-
-            this.Send(DataServiceAddress.DatabaseTaskManager, dataDelivery);
+            // Forward bar to data bus.
+            this.dataBus.Send(data);
         }
 
         private void OnMessage(Subscribe<BarType> message)

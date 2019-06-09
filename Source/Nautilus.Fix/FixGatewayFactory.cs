@@ -9,6 +9,7 @@
 namespace Nautilus.Fix
 {
     using Nautilus.Common.Interfaces;
+    using Nautilus.Messaging.Interfaces;
 
     /// <summary>
     /// Provides a factory for FIX gateways.
@@ -21,16 +22,22 @@ namespace Nautilus.Fix
         /// <param name="container">The componentry container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="fixClient">The FIX client.</param>
+        /// <param name="tickBus">The tick bus endpoint.</param>
+        /// <param name="dataBus">The data bus endpoint.</param>
         /// <returns>The created FIX gateway.</returns>
         public static FixGateway Create(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
-            IFixClient fixClient)
+            IFixClient fixClient,
+            IEndpoint tickBus,
+            IEndpoint dataBus)
         {
             var gateway = new FixGateway(
                 container,
                 messagingAdapter,
-                fixClient);
+                fixClient,
+                tickBus,
+                dataBus);
 
             fixClient.InitializeGateway(gateway);
 

@@ -40,10 +40,10 @@ namespace Nautilus.Common.Componentry
         /// <summary>
         /// Sends the given message to the given address via the message bus.
         /// </summary>
-        /// <param name="receiver">The message receiver.</param>
         /// <param name="message">The message to send.</param>
+        /// <param name="receiver">The message receiver.</param>
         /// <typeparam name="T">The message type.</typeparam>
-        protected void Send<T>(Address receiver, T message)
+        protected void Send<T>(T message, Address receiver)
             where T : Message
         {
             this.messagingAdapter.Send(
@@ -56,10 +56,10 @@ namespace Nautilus.Common.Componentry
         /// <summary>
         /// Sends the given message to the given address via the message bus.
         /// </summary>
-        /// <param name="receivers">The message receivers.</param>
         /// <param name="message">The message to send.</param>
+        /// <param name="receivers">The message receivers.</param>
         /// <typeparam name="T">The message type.</typeparam>
-        protected void SendAll<T>(List<Address> receivers, T message)
+        protected void SendAll<T>(T message, List<Address> receivers)
             where T : Message
         {
             for (var i = 0; i < receivers.Count; i++)
@@ -70,6 +70,17 @@ namespace Nautilus.Common.Componentry
                     this.Address,
                     this.TimeNow());
             }
+        }
+
+        /// <summary>
+        /// Sends the given message to the message bus to be published.
+        /// </summary>
+        /// <typeparam name="T">The message type.</typeparam>
+        /// <param name="message">The message.</param>
+        protected void SendToBus<T>(T message)
+            where T : Message
+        {
+            this.messagingAdapter.SendToBus(message, this.Address, this.TimeNow());
         }
 
         private void Open<T>(Envelope<T> envelope)

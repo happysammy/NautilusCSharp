@@ -19,6 +19,7 @@ namespace NautilusData
     using Nautilus.Core.Extensions;
     using Nautilus.Data;
     using Nautilus.Data.Aggregation;
+    using Nautilus.Data.Bus;
     using Nautilus.Data.Network;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Fix;
@@ -52,6 +53,9 @@ namespace NautilusData
             var messagingAdapter = MessagingServiceFactory.Create(container);
             var scheduler = new HashedWheelTimerScheduler(container);
 
+            var tickBus = new TickBus(container);
+            var dataBus = new DataBus(container);
+
             var venue = config.FixConfiguration.Broker.ToString().ToEnum<Venue>();
             var symbolConverter = new SymbolConverter(venue, config.SymbolIndex);
 
@@ -64,13 +68,26 @@ namespace NautilusData
             var fixGateway = FixGatewayFactory.Create(
                 container,
                 messagingAdapter,
-                fixClient);
+                fixClient,
+                tickBus.Endpoint,
+                dataBus.Endpoint);
 
             var redisConnection = ConnectionMultiplexer.Connect("localhost:6379,allowAdmin=true");
             var tickRepository = new InMemoryTickStore(container);
             var barRepository = new RedisBarRepository(redisConnection);
             var instrumentRepository = new RedisInstrumentRepository(redisConnection);
             instrumentRepository.CacheAll();
+
+            var barAggregationController = new BarAggregationController(
+                container,
+                messagingAdapter,
+                scheduler,
+                dataBus.Endpoint);
+
+            var databaseTaskManager = new DatabaseTaskManager(
+                container,
+                barRepository,
+                instrumentRepository);
 
             var tickProvider = new TickProvider(
                 container,
@@ -115,29 +132,19 @@ namespace NautilusData
                 config.ServerAddress,
                 config.InstrumentSubscribePort);
 
-            var databaseTaskManager = new DatabaseTaskManager(
-                container,
-                barRepository,
-                instrumentRepository);
-
-            var barAggregationController = new BarAggregationController(
-                container,
-                messagingAdapter,
-                scheduler,
-                barPublisher.Endpoint);
-
             // Wire up service.
-            fixGateway.RegisterConnectionEventReceiver(DataServiceAddress.Core);
-            fixGateway.RegisterTickReceiver(tickPublisher.Endpoint);
-            fixGateway.RegisterTickReceiver(tickRepository.Endpoint);
-            fixGateway.RegisterTickReceiver(barAggregationController.Endpoint);
-            fixGateway.RegisterInstrumentReceiver(DataServiceAddress.DatabaseTaskManager);
-            fixGateway.RegisterInstrumentReceiver(DataServiceAddress.InstrumentPublisher);
-
+//            fixGateway.RegisterConnectionEventReceiver(DataServiceAddress.Core);
+//            fixGateway.RegisterTickReceiver(tickPublisher.Endpoint);
+//            fixGateway.RegisterTickReceiver(tickRepository.Endpoint);
+//            fixGateway.RegisterTickReceiver(barAggregationController.Endpoint);
+//            fixGateway.RegisterInstrumentReceiver(DataServiceAddress.DatabaseTaskManager);
+//            fixGateway.RegisterInstrumentReceiver(DataServiceAddress.InstrumentPublisher);
             var addresses = new Dictionary<Address, IEndpoint>
             {
                 { DataServiceAddress.Scheduler, scheduler.Endpoint },
                 { DataServiceAddress.FixGateway, fixGateway.Endpoint },
+                { DataServiceAddress.TickBus, tickBus.Endpoint },
+                { DataServiceAddress.DataBus, dataBus.Endpoint },
                 { DataServiceAddress.DatabaseTaskManager, databaseTaskManager.Endpoint },
                 { DataServiceAddress.BarAggregationController, barAggregationController.Endpoint },
                 { DataServiceAddress.TickStore, tickRepository.Endpoint },

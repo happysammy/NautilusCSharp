@@ -33,6 +33,21 @@ namespace Nautilus.Data
         public static Address FixGateway { get; } = new Address(nameof(FixGateway));
 
         /// <summary>
+        /// Gets the <see cref="TickBus"/> component messaging address.
+        /// </summary>
+        public static Address TickBus { get; } = new Address(nameof(TickBus));
+
+        /// <summary>
+        /// Gets the <see cref="DataBus"/> component messaging address.
+        /// </summary>
+        public static Address DataBus { get; } = new Address(nameof(DataBus));
+
+        /// <summary>
+        /// Gets the <see cref="TickPublisher"/> component messaging address.
+        /// </summary>
+        public static Address TickStore { get; } = new Address(nameof(TickStore));
+
+        /// <summary>
         /// Gets the <see cref="DatabaseTaskManager"/> component messaging address.
         /// </summary>
         public static Address DatabaseTaskManager { get; } = new Address(nameof(DatabaseTaskManager));
@@ -61,11 +76,6 @@ namespace Nautilus.Data
         /// Gets the <see cref="TickPublisher"/> component messaging address.
         /// </summary>
         public static Address TickPublisher { get; } = new Address(nameof(TickPublisher));
-
-        /// <summary>
-        /// Gets the <see cref="TickPublisher"/> component messaging address.
-        /// </summary>
-        public static Address TickStore { get; } = new Address(nameof(TickStore));
 
         /// <summary>
         /// Gets the <see cref="InstrumentProvider"/> component messaging address.

@@ -12,7 +12,6 @@ namespace Nautilus.Fix
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
-    using Nautilus.Common.Messages.Documents;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
@@ -20,11 +19,9 @@ namespace Nautilus.Fix
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
-    using Nautilus.DomainModel.Events.Base;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
     using NodaTime;
 
@@ -35,11 +32,9 @@ namespace Nautilus.Fix
     public sealed class FixGateway : ComponentBusConnected, IFixGateway
     {
         private readonly IFixClient fixClient;
-        private readonly List<IEndpoint> tickReceivers;
-        private readonly List<Address> accountEventReceivers;
-        private readonly List<Address> executionEventReceivers;
-        private readonly List<Address> instrumentReceivers;
-        private readonly Currency accountCurrency = Currency.AUD;  // TODO
+        private readonly IEndpoint tickBus;
+        private readonly IEndpoint dataBus;
+        private readonly Currency accountCurrency = Currency.USD;  // TODO
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FixGateway"/> class.
@@ -47,17 +42,19 @@ namespace Nautilus.Fix
         /// <param name="container">The componentry container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="fixClient">The FIX client.</param>
+        /// <param name="tickBus">The tick bus endpoint.</param>
+        /// <param name="dataBus">The data bus endpoint.</param>
         public FixGateway(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
-            IFixClient fixClient)
+            IFixClient fixClient,
+            IEndpoint tickBus,
+            IEndpoint dataBus)
             : base(container, messagingAdapter)
         {
             this.fixClient = fixClient;
-            this.tickReceivers = new List<IEndpoint>();
-            this.accountEventReceivers = new List<Address>();
-            this.executionEventReceivers = new List<Address>();
-            this.instrumentReceivers = new List<Address>();
+            this.tickBus = tickBus;
+            this.dataBus = dataBus;
 
             this.RegisterHandler<ConnectFix>(this.OnMessage);
             this.RegisterHandler<DisconnectFix>(this.OnMessage);
@@ -68,59 +65,6 @@ namespace Nautilus.Fix
 
         /// <inheritdoc />
         public bool IsConnected => this.fixClient.IsConnected;
-
-        /// <summary>
-        /// Registers the receiver to receive <see cref="Tick"/>s from the gateway.
-        /// </summary>
-        /// <param name="receiver">The receiver.</param>
-        public void RegisterTickReceiver(IEndpoint receiver)
-        {
-            Debug.NotIn(receiver, this.tickReceivers, nameof(receiver), nameof(this.tickReceivers));
-
-            this.tickReceivers.Add(receiver);
-        }
-
-        /// <summary>
-        /// Registers the receiver to receive connection events from the gateway.
-        /// </summary>
-        /// <param name="receiver">The receiver.</param>
-        public void RegisterConnectionEventReceiver(Address receiver)
-        {
-            this.fixClient.RegisterConnectionEventReceiver(receiver);
-        }
-
-        /// <summary>
-        /// Registers the receiver to receive <see cref="AccountEvent"/>s from the gateway.
-        /// </summary>
-        /// <param name="receiver">The receiver.</param>
-        public void RegisterAccountEventReceiver(Address receiver)
-        {
-            Debug.NotIn(receiver, this.accountEventReceivers, nameof(receiver), nameof(this.accountEventReceivers));
-
-            this.accountEventReceivers.Add(receiver);
-        }
-
-        /// <summary>
-        /// Registers the receiver to receive <see cref="OrderEvent"/>s from the gateway.
-        /// </summary>
-        /// <param name="receiver">The receiver.</param>
-        public void RegisterOrderEventReceiver(Address receiver)
-        {
-            Debug.NotIn(receiver, this.executionEventReceivers, nameof(receiver), nameof(this.executionEventReceivers));
-
-            this.executionEventReceivers.Add(receiver);
-        }
-
-        /// <summary>
-        /// Registers the receiver to receive <see cref="Instrument"/> updates from the gateway.
-        /// </summary>
-        /// <param name="receiver">The receiver.</param>
-        public void RegisterInstrumentReceiver(Address receiver)
-        {
-            Debug.NotIn(receiver, this.instrumentReceivers, nameof(receiver), nameof(this.instrumentReceivers));
-
-            this.instrumentReceivers.Add(receiver);
-        }
 
         /// <inheritdoc />
         public void MarketDataSubscribe(Symbol symbol)
@@ -204,7 +148,7 @@ namespace Nautilus.Fix
                     Price.Create(ask),
                     timestamp);
 
-                this.SendToTickReceivers(tick);
+                this.tickBus.Send(tick);
             });
         }
 
@@ -265,12 +209,7 @@ namespace Nautilus.Fix
 
                 foreach (var instrument in instruments)
                 {
-                    var dataDelivery = new DataDelivery<Instrument>(
-                        instrument,
-                        this.NewGuid(),
-                        this.TimeNow());
-
-                    this.SendAll(this.instrumentReceivers, dataDelivery);
+                    this.dataBus.Send(instrument);
                 }
             });
         }
@@ -331,7 +270,7 @@ namespace Nautilus.Fix
                     this.NewGuid(),
                     timestamp);
 
-                this.SendAll(this.accountEventReceivers, accountEvent);
+                this.SendToBus(accountEvent);
 
                 this.Log.Debug(
                     $"AccountEvent: " +
@@ -360,7 +299,7 @@ namespace Nautilus.Fix
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.SendAll(this.executionEventReceivers, orderRejected);
+                this.SendToBus(orderRejected);
 
                 this.Log.Warning(
                     $"OrderRejected: " +
@@ -392,7 +331,7 @@ namespace Nautilus.Fix
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.SendAll(this.executionEventReceivers, orderCancelReject);
+                this.SendToBus(orderCancelReject);
 
                 this.Log.Warning(
                     $"OrderCancelReject: " +
@@ -423,7 +362,7 @@ namespace Nautilus.Fix
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.SendAll(this.executionEventReceivers, orderCancelled);
+                this.SendToBus(orderCancelled);
 
                 this.Log.Information(
                     $"OrderCancelled: {label} " +
@@ -457,7 +396,7 @@ namespace Nautilus.Fix
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.SendAll(this.executionEventReceivers, orderModified);
+                this.SendToBus(orderModified);
 
                 this.Log.Information(
                     $"OrderModified: {label} " +
@@ -507,7 +446,7 @@ namespace Nautilus.Fix
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.SendAll(this.executionEventReceivers, orderWorking);
+                this.SendToBus(orderWorking);
 
                 var expireTimeString = string.Empty;
 
@@ -546,7 +485,7 @@ namespace Nautilus.Fix
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.SendAll(this.executionEventReceivers, orderExpired);
+                this.SendToBus(orderExpired);
 
                 this.Log.Information(
                     $"OrderExpired: {label} " +
@@ -592,7 +531,7 @@ namespace Nautilus.Fix
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.SendAll(this.executionEventReceivers, orderFilled);
+                this.SendToBus(orderFilled);
 
                 this.Log.Information(
                     $"OrderFilled: " +
@@ -644,7 +583,7 @@ namespace Nautilus.Fix
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.SendAll(this.executionEventReceivers, orderPartiallyFilled);
+                this.SendToBus(orderPartiallyFilled);
 
                 this.Log.Information(
                     $"OrderPartiallyFilled: " +
@@ -677,14 +616,6 @@ namespace Nautilus.Fix
         private void OnMessage(DisconnectFix message)
         {
             this.fixClient.Disconnect();
-        }
-
-        private void SendToTickReceivers(Tick tick)
-        {
-            for (var i = 0; i < this.tickReceivers.Count; i++)
-            {
-                this.tickReceivers[i].Send(tick);
-            }
         }
     }
 }
