@@ -16,6 +16,7 @@ namespace Nautilus.Network
     using Nautilus.Core;
     using Nautilus.Core.Correctness;
     using Nautilus.Messaging;
+    using Nautilus.Messaging.Interfaces;
     using NetMQ;
     using NetMQ.Sockets;
 
@@ -59,9 +60,7 @@ namespace Nautilus.Network
             this.ServerAddress = new ZmqServerAddress(host, port);
             this.PublishedCount = 0;
 
-            this.RegisterHandler<Envelope<Command>>(this.Open);
-            this.RegisterHandler<Envelope<Event>>(this.Open);
-            this.RegisterHandler<Envelope<Document>>(this.Open);
+            this.RegisterHandler<IEnvelope>(this.Open);
         }
 
         /// <summary>

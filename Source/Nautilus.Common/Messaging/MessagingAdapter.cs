@@ -77,31 +77,18 @@ namespace Nautilus.Common.Messaging
             ZonedDateTime timestamp)
             where T : Message
         {
+            var envelope = EnvelopeFactory.Create(message, receiver, sender, timestamp);
+
             switch (message)
             {
-                case Command msg:
-                    var cmdEnvelope = new Envelope<Command>(
-                        msg,
-                        receiver,
-                        sender,
-                        timestamp);
-                    this.cmdBus.Endpoint.Send(cmdEnvelope);
+                case Command cmd:
+                    this.cmdBus.Endpoint.Send(envelope);
                     break;
-                case Event msg:
-                    var evtEnvelope = new Envelope<Event>(
-                        msg,
-                        receiver,
-                        sender,
-                        timestamp);
-                    this.evtBus.Endpoint.Send(evtEnvelope);
+                case Event evt:
+                    this.evtBus.Endpoint.Send(envelope);
                     break;
-                case Document msg:
-                    var docEnvelope = new Envelope<Document>(
-                        msg,
-                        receiver,
-                        sender,
-                        timestamp);
-                    this.docBus.Endpoint.Send(docEnvelope);
+                case Document doc:
+                    this.docBus.Endpoint.Send(envelope);
                     break;
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(message, nameof(message));

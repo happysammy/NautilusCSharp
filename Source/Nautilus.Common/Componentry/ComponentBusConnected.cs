@@ -12,6 +12,7 @@ namespace Nautilus.Common.Componentry
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
     using Nautilus.Messaging;
+    using Nautilus.Messaging.Interfaces;
 
     /// <summary>
     /// The base class for all components which are connected to the message bus.
@@ -32,9 +33,7 @@ namespace Nautilus.Common.Componentry
         {
             this.messagingAdapter = messagingAdapter;
 
-            this.RegisterHandler<Envelope<Command>>(this.Open);
-            this.RegisterHandler<Envelope<Event>>(this.Open);
-            this.RegisterHandler<Envelope<Document>>(this.Open);
+            this.RegisterHandler<IEnvelope>(this.Open);
         }
 
         /// <summary>
@@ -81,14 +80,6 @@ namespace Nautilus.Common.Componentry
             where T : Message
         {
             this.messagingAdapter.SendToBus(message, this.Address, this.TimeNow());
-        }
-
-        private void Open<T>(Envelope<T> envelope)
-            where T : Message
-        {
-            this.SendToSelf(envelope.Message);
-
-            this.Log.Verbose($"Received {envelope}.");
         }
     }
 }
