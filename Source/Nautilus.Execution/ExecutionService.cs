@@ -10,7 +10,6 @@ namespace Nautilus.Execution
 {
     using System;
     using System.Collections.Generic;
-    using Nautilus.Common;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
@@ -53,8 +52,6 @@ namespace Nautilus.Execution
             : base(container, messagingAdapter)
         {
             Condition.NotEmpty(addresses, nameof(addresses));
-
-            VersionChecker.Run(this.Log, "NautilusExecutor - Financial Market Execution Service");
 
             addresses.Add(ExecutionServiceAddress.Core, this.Endpoint);
             messagingAdapter.Send(new InitializeSwitchboard(

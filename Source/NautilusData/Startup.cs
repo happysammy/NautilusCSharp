@@ -56,6 +56,8 @@ namespace NautilusData
                 symbolIndex,
                 this.Environment.IsDevelopment());
 
+            VersionChecker.Run(loggingAdapter, "NautilusData - Financial Market Data Service");
+
             this.dataService = DataServiceFactory.Create(config);
             this.dataService.Start();
         }

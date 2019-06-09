@@ -56,6 +56,8 @@ namespace NautilusExecutor
                 symbolIndex,
                 this.Environment.IsDevelopment());
 
+            VersionChecker.Run(loggingAdapter, "NautilusExecutor - Financial Market Execution Service");
+
             this.executionService = ExecutionServiceFactory.Create(config);
             this.executionService.Start();
         }

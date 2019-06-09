@@ -62,8 +62,6 @@ namespace Nautilus.Data
         {
             Condition.NotEmpty(addresses, nameof(addresses));
 
-            VersionChecker.Run(this.Log, "NautilusData - Financial Market Data Service");
-
             this.scheduler = scheduler;
             this.fixGateway = fixGateway;
             this.subscribingSymbols = config.SubscribingSymbols;

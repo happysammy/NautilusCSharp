@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Common
+namespace Nautilus.Common.Configuration
 {
     using System;
     using System.Reflection;
@@ -23,7 +23,7 @@ namespace Nautilus.Common
         /// </summary>
         /// <param name="log">The logger.</param>
         /// <param name="serviceTitle">The service title string.</param>
-        public static void Run(ILogger log, string serviceTitle)
+        public static void Run(ILoggingAdapter log, string serviceTitle)
         {
             Condition.NotEmptyOrWhiteSpace(serviceTitle, nameof(serviceTitle));
 
