@@ -62,7 +62,7 @@ namespace Nautilus.Data.Messages.Responses
         public BarSpecification BarSpecification { get; }
 
         /// <summary>
-        /// Gets the bars data.
+        /// Gets the responses bar data.
         /// </summary>
         public byte[][] Bars { get; }
     }

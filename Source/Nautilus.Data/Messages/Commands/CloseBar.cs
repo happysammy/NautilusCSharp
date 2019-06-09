@@ -43,7 +43,7 @@ namespace Nautilus.Data.Messages.Commands
         }
 
         /// <summary>
-        /// Gets the messages bar specification to close.
+        /// Gets the commands bar specification to close.
         /// </summary>
         public BarSpecification BarSpecification { get; }
 

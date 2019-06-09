@@ -43,12 +43,12 @@ namespace Nautilus.Common.Messages.Events
         }
 
         /// <summary>
-        /// Gets the market closed symbol.
+        /// Gets the events symbol.
         /// </summary>
         public Symbol Symbol { get; }
 
         /// <summary>
-        /// Gets the market closed time.
+        /// Gets the events market closed time.
         /// </summary>
         public ZonedDateTime ClosedTime { get; }
     }

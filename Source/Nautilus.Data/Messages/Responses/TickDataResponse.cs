@@ -54,7 +54,7 @@ namespace Nautilus.Data.Messages.Responses
         public Symbol Symbol { get; }
 
         /// <summary>
-        /// Gets the tick data.
+        /// Gets the responses tick data.
         /// </summary>
         public byte[][] Ticks { get; }
     }

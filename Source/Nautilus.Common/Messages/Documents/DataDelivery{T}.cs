@@ -40,7 +40,7 @@ namespace Nautilus.Common.Messages.Documents
         }
 
         /// <summary>
-        /// Gets the messages market data.
+        /// Gets the documents market data.
         /// </summary>
         public T Data { get; }
     }

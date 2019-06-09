@@ -43,12 +43,12 @@ namespace Nautilus.Common.Messages.Events
         }
 
         /// <summary>
-        /// Gets the market opened symbol.
+        /// Gets the events symbol.
         /// </summary>
         public Symbol Symbol { get; }
 
         /// <summary>
-        /// Gets the market opened time.
+        /// Gets the events market opened time.
         /// </summary>
         public ZonedDateTime OpenedTime { get; }
     }

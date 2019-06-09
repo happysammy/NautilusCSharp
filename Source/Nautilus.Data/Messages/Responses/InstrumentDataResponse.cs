@@ -45,7 +45,7 @@ namespace Nautilus.Data.Messages.Responses
         }
 
         /// <summary>
-        /// Gets the tick data.
+        /// Gets the responses instrument data.
         /// </summary>
         public byte[][] Instruments { get; }
     }

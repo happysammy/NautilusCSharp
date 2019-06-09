@@ -57,12 +57,12 @@ namespace Nautilus.Data.Messages.Commands
         public ZonedDateTime ScheduledTime { get; }
 
         /// <summary>
-        /// Gets the number of days in the rolling window to trim to.
+        /// Gets the commands number of days in the rolling window to trim to.
         /// </summary>
         public int RollingWindowDays { get; }
 
         /// <summary>
-        /// Gets the bar resolutions to trim.
+        /// Gets the commands bar resolutions to trim.
         /// </summary>
         public IEnumerable<Resolution> Resolutions { get;  }
     }

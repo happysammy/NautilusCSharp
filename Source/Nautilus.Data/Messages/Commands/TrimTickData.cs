@@ -49,7 +49,7 @@ namespace Nautilus.Data.Messages.Commands
         public ZonedDateTime ScheduledTime { get; }
 
         /// <summary>
-        /// Gets the date time the tick data should be trimmed from.
+        /// Gets the commands date time the tick data should be trimmed from.
         /// </summary>
         public ZonedDateTime TrimFrom { get; }
     }

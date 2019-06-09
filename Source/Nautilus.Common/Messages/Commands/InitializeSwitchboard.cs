@@ -40,7 +40,7 @@ namespace Nautilus.Common.Messages.Commands
         }
 
         /// <summary>
-        /// Gets the messages switchboard.
+        /// Gets the commands switchboard.
         /// </summary>
         public Switchboard Switchboard { get; }
     }
