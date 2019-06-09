@@ -91,11 +91,5 @@ namespace Nautilus.Messaging
         {
             return Hash.GetCode(this.target);
         }
-
-        /// <summary>
-        /// Returns a string representation of the <see cref="Endpoint"/>.
-        /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{nameof(Endpoint)}({this.target})";
     }
 }
