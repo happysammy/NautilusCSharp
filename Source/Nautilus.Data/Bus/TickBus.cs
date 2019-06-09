@@ -11,6 +11,7 @@ namespace Nautilus.Data.Bus
     using System.Collections.Generic;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messages.Commands;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging.Interfaces;
 
@@ -31,20 +32,15 @@ namespace Nautilus.Data.Bus
         {
             this.subscriptions = new List<IEndpoint>();
 
-            this.RegisterHandler<ISubscribe>(this.OnMessage);
-            this.RegisterHandler<IUnsubscribe>(this.OnMessage);
+            this.RegisterHandler<Subscribe<Tick>>(this.OnMessage);
+            this.RegisterHandler<Unsubscribe<Tick>>(this.OnMessage);
             this.RegisterHandler<Tick>(this.Publish);
         }
 
-        private void OnMessage(ISubscribe message)
+        private void OnMessage(Subscribe<Tick> message)
         {
             var type = message.SubscriptionType;
             var subscriber = message.Subscriber;
-
-            if (type != typeof(Tick))
-            {
-                this.Log.Error($"Cannot subscribe to {type} data (only {typeof(Tick)} data).");
-            }
 
             if (this.subscriptions.Contains(subscriber))
             {
@@ -56,16 +52,10 @@ namespace Nautilus.Data.Bus
             this.SetHasSubscribers();
         }
 
-        private void OnMessage(IUnsubscribe message)
+        private void OnMessage(Unsubscribe<Tick> message)
         {
             var type = message.SubscriptionType;
             var subscriber = message.Subscriber;
-
-            if (type != typeof(Tick))
-            {
-                this.Log.Error($"Cannot unsubscribe from {type} data (only {typeof(Tick)} data).");
-                return; // Design time error
-            }
 
             if (!this.subscriptions.Contains(subscriber))
             {

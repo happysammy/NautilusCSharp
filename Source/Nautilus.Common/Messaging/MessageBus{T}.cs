@@ -42,8 +42,8 @@ namespace Nautilus.Common.Messaging
             this.switchboard = Switchboard.Empty();
 
             this.RegisterHandler<InitializeSwitchboard>(this.OnMessage);
-            this.RegisterHandler<ISubscribe>(this.OnMessage);
-            this.RegisterHandler<IUnsubscribe>(this.OnMessage);
+            this.RegisterHandler<Subscribe<Type>>(this.OnMessage);
+            this.RegisterHandler<Unsubscribe<Type>>(this.OnMessage);
             this.RegisterHandler<IEnvelope>(this.OnEnvelope);
         }
 
@@ -69,7 +69,7 @@ namespace Nautilus.Common.Messaging
             this.Log.Information("Switchboard initialized.");
         }
 
-        private void OnMessage(ISubscribe message)
+        private void OnMessage(Subscribe<Type> message)
         {
             var type = message.SubscriptionType;
             var subscriber = message.Subscriber;
@@ -90,7 +90,7 @@ namespace Nautilus.Common.Messaging
             this.Log.Information($"{subscriber} subscribed to {message.SubscriptionName} messages.");
         }
 
-        private void OnMessage(IUnsubscribe message)
+        private void OnMessage(Unsubscribe<Type> message)
         {
             var type = message.SubscriptionType;
             var subscriber = message.Subscriber;

@@ -20,7 +20,7 @@ namespace Nautilus.Common.Messages.Commands
     /// </summary>
     /// <typeparam name="T">The data type.</typeparam>
     [Immutable]
-    public sealed class Unsubscribe<T> : Command, IUnsubscribe
+    public sealed class Unsubscribe<T> : Command
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Unsubscribe{T}"/> class.

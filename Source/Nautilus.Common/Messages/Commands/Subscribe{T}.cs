@@ -20,7 +20,7 @@ namespace Nautilus.Common.Messages.Commands
     /// </summary>
     /// <typeparam name="T">The subscription type.</typeparam>
     [Immutable]
-    public sealed class Subscribe<T> : Command, ISubscribe
+    public sealed class Subscribe<T> : Command
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Subscribe{T}"/> class.

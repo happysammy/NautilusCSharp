@@ -12,6 +12,7 @@ namespace Nautilus.Data.Bus
     using System.Collections.Generic;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messages.Commands;
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.ValueObjects;
@@ -37,13 +38,13 @@ namespace Nautilus.Data.Bus
             this.barSubscriptions = new List<IEndpoint>();
             this.instrumentSubscriptions = new List<IEndpoint>();
 
-            this.RegisterHandler<ISubscribe>(this.OnMessage);
-            this.RegisterHandler<IUnsubscribe>(this.OnMessage);
+            this.RegisterHandler<Subscribe<Type>>(this.OnMessage);
+            this.RegisterHandler<Unsubscribe<Type>>(this.OnMessage);
             this.RegisterHandler<(BarType, Bar)>(this.Publish);
             this.RegisterHandler<Instrument>(this.Publish);
         }
 
-        private void OnMessage(ISubscribe message)
+        private void OnMessage(Subscribe<Type> message)
         {
             var type = message.SubscriptionType;
             var subscriber = message.Subscriber;
@@ -79,7 +80,7 @@ namespace Nautilus.Data.Bus
             }
         }
 
-        private void OnMessage(IUnsubscribe message)
+        private void OnMessage(Unsubscribe<Type> message)
         {
             var type = message.SubscriptionType;
             var subscriber = message.Subscriber;
