@@ -42,7 +42,9 @@ namespace Nautilus.Fix
         /// <returns>A <see cref="string"/>.</returns>
         public static string GetSecurityRequestResult(SecurityRequestResult result)
         {
-            return SecurityRequestResults.ContainsKey(result.ToString()) ? SecurityRequestResults[result.ToString()] : "security request result unknown";
+            return SecurityRequestResults.TryGetValue(result.ToString(), out var value)
+                ? value
+                : "Security request result unknown";
         }
 
         private static readonly Dictionary<string, string> CxlRejReasonStrings = new Dictionary<string, string>
@@ -64,9 +66,9 @@ namespace Nautilus.Fix
         /// <returns>A <see cref="string"/>.</returns>
         public static string GetCancelRejectReasonString(string rejectCode)
         {
-            return CxlRejReasonStrings.ContainsKey(rejectCode)
-                ? CxlRejReasonStrings[rejectCode]
-                : CxlRejReasonStrings["99"];
+            return CxlRejReasonStrings.TryGetValue(rejectCode, out var value)
+                ? value
+                : "Other";
         }
 
         private static readonly Dictionary<string, string> CxlRejResponse = new Dictionary<string, string>
@@ -82,8 +84,8 @@ namespace Nautilus.Fix
         /// <returns>A <see cref="string"/>.</returns>
         public static string GetCxlRejResponseTo(CxlRejResponseTo response)
         {
-            return CxlRejResponse.ContainsKey(response.ToString())
-                ? CxlRejResponse[response.ToString()]
+            return CxlRejResponse.TryGetValue(response.ToString(), out var value)
+                ? value
                 : string.Empty;
         }
 
@@ -117,8 +119,8 @@ namespace Nautilus.Fix
         /// <returns>A <see cref="TimeInForce"/>.</returns>
         public static QuickFix.Fields.TimeInForce? GetFixTimeInForce(TimeInForce timeInForce)
         {
-            return TimeInForceIndex.ContainsKey(timeInForce)
-                ? TimeInForceIndex[timeInForce]
+            return TimeInForceIndex.TryGetValue(timeInForce, out var value)
+                ? value
                 : null;
         }
 
@@ -129,8 +131,8 @@ namespace Nautilus.Fix
         /// <returns>A <see cref="TimeInForce"/>.</returns>
         public static TimeInForce GetTimeInForce(string timeInForce)
         {
-            return TimeInForceStringIndex.ContainsKey(timeInForce)
-                ? TimeInForceStringIndex[timeInForce]
+            return TimeInForceStringIndex.TryGetValue(timeInForce, out var value)
+                ? value
                 : TimeInForce.UNKNOWN;
         }
 

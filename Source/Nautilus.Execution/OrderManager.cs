@@ -167,7 +167,7 @@ namespace Nautilus.Execution
 
             if (this.OrderBookDoesNotContainId(message.OrderId, message.ToString()))
             {
-                if (this.modifyBuffer.ContainsKey(message.OrderId))
+                if (this.modifyBuffer.TryGetValue(message.OrderId, out var value))
                 {
                     // Remove previously buffered ModifyOrder command.
                     this.modifyBuffer.Remove(message.OrderId);

@@ -122,13 +122,12 @@ namespace Nautilus.Data.Aggregation
         {
             var barSpec = message.BarSpecification;
 
-            if (!this.barBuilders.ContainsKey(barSpec))
+            if (!this.barBuilders.TryGetValue(barSpec, out var builder))
             {
                 this.Log.Warning($"Does not contain the bar specification {message.BarSpecification}");
                 return;
             }
 
-            var builder = this.barBuilders[barSpec];
             if (builder is null)
             {
                 return; // No builder to build bar.

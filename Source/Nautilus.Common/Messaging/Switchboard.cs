@@ -66,14 +66,15 @@ namespace Nautilus.Common.Messaging
                 return;
             }
 
-            if (!this.addresses.ContainsKey((Address)envelope.Receiver))
+            if (this.addresses.TryGetValue((Address)envelope.Receiver, out var receiver))
+            {
+                receiver.Send(envelope);
+            }
+            else
             {
                 // Receiver address not found
                 this.deadLetterHandler(envelope);
-                return;
             }
-
-            this.addresses[(Address)envelope.Receiver].Send(envelope);
         }
 
         /// <summary>
@@ -85,13 +86,10 @@ namespace Nautilus.Common.Messaging
             this.deadLetterHandler = handler;
         }
 
-        /// <summary>
-        /// Do nothing with the given message.
-        /// </summary>
-        /// <param name="message">The message.</param>
         private static void DoNothing(object message)
         {
-            // It is expected another dead letter handler method will be registered
+            // Design time error
+            throw new InvalidOperationException("A dead letter handler has not been implemented.");
         }
     }
 }
