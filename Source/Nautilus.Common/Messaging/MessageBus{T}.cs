@@ -15,7 +15,7 @@ namespace Nautilus.Common.Messaging
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core;
-    using Nautilus.Messaging;
+    using Nautilus.Core.Correctness;
     using Nautilus.Messaging.Interfaces;
 
     /// <summary>
@@ -44,7 +44,7 @@ namespace Nautilus.Common.Messaging
             this.RegisterHandler<InitializeSwitchboard>(this.OnMessage);
             this.RegisterHandler<ISubscribe>(this.OnMessage);
             this.RegisterHandler<IUnsubscribe>(this.OnMessage);
-            this.RegisterHandler<Envelope<T>>(this.OnEnvelope);
+            this.RegisterHandler<IEnvelope>(this.OnEnvelope);
         }
 
         /// <summary>
@@ -108,8 +108,10 @@ namespace Nautilus.Common.Messaging
             this.subscriptions[type].Remove(subscriber);
         }
 
-        private void OnEnvelope(Envelope<T> envelope)
+        private void OnEnvelope(IEnvelope envelope)
         {
+            Debug.True(envelope.MessageBase is T, nameof(envelope.MessageBase)); // Design time error
+
             if (envelope.Receiver is null)
             {
                 // Publish to subscribers
@@ -123,7 +125,7 @@ namespace Nautilus.Common.Messaging
             this.Log.Verbose($"[{this.ProcessedCount}] {envelope.Sender} -> {envelope} -> {envelope.Receiver}");
         }
 
-        private void Publish(Envelope<T> envelope)
+        private void Publish(IEnvelope envelope)
         {
             if (!this.subscriptions.ContainsKey(envelope.MessageType))
             {

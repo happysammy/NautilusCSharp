@@ -11,7 +11,6 @@ namespace Nautilus.Common.Messaging
     using System;
     using System.Collections.Generic;
     using System.Collections.Immutable;
-    using Nautilus.Core;
     using Nautilus.Core.Correctness;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
@@ -58,9 +57,7 @@ namespace Nautilus.Common.Messaging
         /// Sends the given envelope to its receiver address.
         /// </summary>
         /// <param name="envelope">The envelope to send.</param>
-        /// <typeparam name="T">The envelope message type.</typeparam>
-        public void SendToReceiver<T>(Envelope<T> envelope)
-            where T : Message
+        public void SendToReceiver(IEnvelope envelope)
         {
             if (envelope.Receiver is null)
             {
