@@ -34,10 +34,10 @@ namespace Nautilus.Network
         where TOutbound : Response
     {
         private readonly byte[] delimiter = { };
-        private readonly IMessageSerializer<TInbound> inboundSerializer;
-        private readonly IMessageSerializer<TOutbound> outboundSerializer;
         private readonly CancellationTokenSource cts;
         private readonly RouterSocket socket;
+        private readonly IMessageSerializer<TInbound> inboundSerializer;
+        private readonly IMessageSerializer<TOutbound> outboundSerializer;
 
         private bool isReceiving;
 
@@ -61,8 +61,6 @@ namespace Nautilus.Network
         {
             Condition.NotDefault(id, nameof(id));
 
-            this.inboundSerializer = inboundSerializer;
-            this.outboundSerializer = outboundSerializer;
             this.cts = new CancellationTokenSource();
             this.socket = new RouterSocket()
             {
@@ -72,6 +70,9 @@ namespace Nautilus.Network
                     Identity = Encoding.Unicode.GetBytes(id.ToString()),
                 },
             };
+
+            this.inboundSerializer = inboundSerializer;
+            this.outboundSerializer = outboundSerializer;
 
             this.isReceiving = false;
 

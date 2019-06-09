@@ -81,11 +81,12 @@ namespace Nautilus.Common.Messaging
 
             if (this.subscriptions[type].Contains(subscriber))
             {
-                this.Log.Warning($"{subscriber} is already subscribed to {type} messages.");
+                this.Log.Warning($"{subscriber} is already subscribed to {message.SubscriptionName} messages.");
                 return;
             }
 
             this.subscriptions[type].Append(subscriber);
+            this.Log.Information($"{subscriber} subscribed to {message.SubscriptionName} messages.");
         }
 
         private void OnMessage(IUnsubscribe message)
@@ -95,17 +96,18 @@ namespace Nautilus.Common.Messaging
 
             if (!this.subscriptions.ContainsKey(type))
             {
-                this.Log.Warning($"{subscriber} is already unsubscribed from {type} messages.");
+                this.Log.Warning($"{subscriber} is already unsubscribed from {message.SubscriptionName} messages.");
                 return;
             }
 
             if (!this.subscriptions[type].Contains(subscriber))
             {
-                this.Log.Warning($"{subscriber} is already unsubscribed from {type} messages.");
+                this.Log.Warning($"{subscriber} is already unsubscribed from {message.SubscriptionName} messages.");
                 return;
             }
 
             this.subscriptions[type].Remove(subscriber);
+            this.Log.Information($"{subscriber} unsubscribed from {type.Name} messages.");
         }
 
         private void OnEnvelope(IEnvelope envelope)
@@ -130,6 +132,7 @@ namespace Nautilus.Common.Messaging
             if (!this.subscriptions.ContainsKey(envelope.MessageType))
             {
                 // No subscribers for this message type.
+                this.Log.Error("NONE");
                 return;
             }
 

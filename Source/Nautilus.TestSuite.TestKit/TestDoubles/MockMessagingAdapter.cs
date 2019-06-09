@@ -26,14 +26,20 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             this.testEndpoint = testEndpoint;
         }
 
-        public void Subscribe<T>(T messageType, IEndpoint subscriber, Guid id, ZonedDateTime timestamp)
+        public void Subscribe(Type messageType, IEndpoint subscriber, Guid id, ZonedDateTime timestamp)
         {
-            this.testEndpoint.Send(messageType);
+            if (messageType != null)
+            {
+                this.testEndpoint.Send(messageType);
+            }
         }
 
-        public void Unsubscribe<T>(T messageType, IEndpoint subscriber, Guid id, ZonedDateTime timestamp)
+        public void Unsubscribe(Type messageType, IEndpoint subscriber, Guid id, ZonedDateTime timestamp)
         {
-            this.testEndpoint.Send(messageType);
+            if (messageType != null)
+            {
+                this.testEndpoint.Send(messageType);
+            }
         }
 
         public void Send<T>(T message, Address receiver, Address sender, ZonedDateTime timestamp)

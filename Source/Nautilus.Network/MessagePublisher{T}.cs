@@ -23,8 +23,8 @@ namespace Nautilus.Network
     /// <typeparam name="T">The publishing message type.</typeparam>
     public abstract class MessagePublisher<T> : Component
     {
-        private readonly ISerializer<T> serializer;
         private readonly PublisherSocket socket;
+        private readonly ISerializer<T> serializer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MessagePublisher{T}"/> class.
@@ -44,7 +44,6 @@ namespace Nautilus.Network
         {
             Condition.NotDefault(id, nameof(id));
 
-            this.serializer = serializer;
             this.socket = new PublisherSocket()
             {
                 Options =
@@ -53,6 +52,8 @@ namespace Nautilus.Network
                     Identity = Encoding.Unicode.GetBytes(id.ToString()),
                 },
             };
+
+            this.serializer = serializer;
 
             this.ServerAddress = new ZmqServerAddress(host, port);
             this.PublishedCount = 0;

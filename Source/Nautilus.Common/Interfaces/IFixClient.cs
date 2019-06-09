@@ -47,12 +47,6 @@ namespace Nautilus.Common.Interfaces
         void InitializeGateway(IFixGateway gateway);
 
         /// <summary>
-        /// Registers the given receiver to receiver connection events from the client.
-        /// </summary>
-        /// <param name="receiver">The event receiver.</param>
-        void RegisterConnectionEventReceiver(Address receiver);
-
-        /// <summary>
         /// Request an update on the instrument corresponding to the given symbol from the brokerage.
         /// </summary>
         /// <param name="symbol">The symbol.</param>

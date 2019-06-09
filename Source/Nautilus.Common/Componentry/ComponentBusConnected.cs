@@ -8,6 +8,7 @@
 
 namespace Nautilus.Common.Componentry
 {
+    using System;
     using System.Collections.Generic;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
@@ -37,11 +38,10 @@ namespace Nautilus.Common.Componentry
         }
 
         /// <summary>
-        /// Subscribe the given subscriber to the given message type with the message bus.
+        /// Subscribe to the given message type with the message bus.
         /// </summary>
-        /// <typeparam name="T">The message type.</typeparam>
         /// <param name="messageType">The message type to subscribe to.</param>
-        public void Subscribe<T>(T messageType)
+        public void Subscribe(Type messageType)
         {
             this.messagingAdapter.Subscribe(
                 messageType,
@@ -51,11 +51,10 @@ namespace Nautilus.Common.Componentry
         }
 
         /// <summary>
-        /// Unsubscribe the given subscriber from the given message type with the message bus.
+        /// Unsubscribe from the given message type with the message bus.
         /// </summary>
-        /// <typeparam name="T">The message type.</typeparam>
         /// <param name="messageType">The message type to unsubscribe from.</param>
-        public void Unsubscribe<T>(T messageType)
+        public void Unsubscribe(Type messageType)
         {
             this.messagingAdapter.Unsubscribe(
                 messageType,
@@ -65,7 +64,7 @@ namespace Nautilus.Common.Componentry
         }
 
         /// <summary>
-        /// Sends the given message to the given address via the message bus.
+        /// Sends the given message to the given receiver via the message bus.
         /// </summary>
         /// <param name="message">The message to send.</param>
         /// <param name="receiver">The message receiver.</param>
@@ -81,7 +80,7 @@ namespace Nautilus.Common.Componentry
         }
 
         /// <summary>
-        /// Sends the given message to the given address via the message bus.
+        /// Sends the given message to all given receivers via the message bus.
         /// </summary>
         /// <param name="message">The message to send.</param>
         /// <param name="receivers">The message receivers.</param>

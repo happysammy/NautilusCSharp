@@ -16,6 +16,11 @@ namespace Nautilus.Messaging.Interfaces
     public interface ISubscribe
     {
         /// <summary>
+        /// Gets the subscriptions name.
+        /// </summary>
+        string SubscriptionName { get; }
+
+        /// <summary>
         /// Gets the subscriptions type.
         /// </summary>
         Type SubscriptionType { get; }

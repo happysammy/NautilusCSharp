@@ -9,7 +9,6 @@
 namespace Nautilus.Fix
 {
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
@@ -42,7 +41,6 @@ namespace Nautilus.Fix
         private readonly CommandHandler commandHandler;
         private readonly FixConfiguration config;
         private readonly bool sendAccountTag;
-        private readonly List<Address> connectionEventReceivers;
 
         private SocketInitiator? initiator;
         private Session? session;
@@ -74,8 +72,6 @@ namespace Nautilus.Fix
 
             this.FixMessageHandler = messageHandler;
             this.FixMessageRouter = messageRouter;
-
-            this.connectionEventReceivers = new List<Address>();
         }
 
         /// <summary>
@@ -148,17 +144,6 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// Registers the given receiver to receive connection events from the FIX client.
-        /// </summary>
-        /// <param name="receiver">The event receiver endpoint.</param>
-        public void RegisterConnectionEventReceiver(Address receiver)
-        {
-            Debug.NotIn(receiver, this.connectionEventReceivers, nameof(receiver), nameof(this.connectionEventReceivers));
-
-            this.connectionEventReceivers.Add(receiver);
-        }
-
-        /// <summary>
         /// Connects to the FIX session.
         /// </summary>
         public void ConnectFix()
@@ -211,18 +196,14 @@ namespace Nautilus.Fix
         {
             this.commandHandler.Execute(() =>
             {
-                foreach (var receiver in this.connectionEventReceivers)
-                {
-                    this.messagingAdapter.Send(
-                        new FixSessionConnected(
-                            this.Broker,
-                            sessionId.ToString(),
-                            this.NewGuid(),
-                            this.TimeNow()),
-                        receiver,
-                        new Address(nameof(FixGateway)),
-                        this.TimeNow());
-                }
+                this.messagingAdapter.SendToBus(
+                    new FixSessionConnected(
+                        this.Broker,
+                        sessionId.ToString(),
+                        this.NewGuid(),
+                        this.TimeNow()),
+                    new Address(nameof(FixGateway)),
+                    this.TimeNow());
 
                 this.Log.Debug($"Logon - {sessionId}");
             });
@@ -236,18 +217,14 @@ namespace Nautilus.Fix
         {
             this.commandHandler.Execute(() =>
             {
-                foreach (var receiver in this.connectionEventReceivers)
-                {
-                    this.messagingAdapter.Send(
-                        new FixSessionDisconnected(
-                            this.Broker,
-                            sessionId.ToString(),
-                            this.NewGuid(),
-                            this.TimeNow()),
-                        receiver,
-                        new Address(nameof(FixGateway)),
-                        this.TimeNow());
-                }
+                this.messagingAdapter.SendToBus(
+                    new FixSessionDisconnected(
+                        this.Broker,
+                        sessionId.ToString(),
+                        this.NewGuid(),
+                        this.TimeNow()),
+                    new Address(nameof(FixGateway)),
+                    this.TimeNow());
 
                 this.Log.Debug($"Logout - {sessionId}");
             });

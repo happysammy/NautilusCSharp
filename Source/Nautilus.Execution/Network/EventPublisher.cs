@@ -10,9 +10,11 @@ namespace Nautilus.Execution.Network
 {
     using System;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messages.Events;
     using Nautilus.Core;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Events.Base;
+    using Nautilus.Messaging.Interfaces;
     using Nautilus.Network;
 
     /// <summary>
@@ -49,7 +51,14 @@ namespace Nautilus.Execution.Network
         {
             this.messagingAdapter = messagingAdapter;
 
+            this.RegisterHandler<IEnvelope>(this.Open);
             this.RegisterHandler<Event>(this.OnMessage);
+
+            this.messagingAdapter.Subscribe(
+                typeof(Event),
+                this.Endpoint,
+                this.NewGuid(),
+                this.TimeNow());
         }
 
         private void OnMessage(Event message)

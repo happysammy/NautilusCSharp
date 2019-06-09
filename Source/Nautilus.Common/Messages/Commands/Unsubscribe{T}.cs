@@ -52,6 +52,11 @@ namespace Nautilus.Common.Messages.Commands
         public T Subscription { get; }
 
         /// <summary>
+        /// Gets the subscriptions name.
+        /// </summary>
+        public string SubscriptionName => this.Subscription is null ? string.Empty : this.Subscription.ToString();
+
+        /// <summary>
         /// Gets the subscribe messages subscription type.
         /// </summary>
         public Type SubscriptionType => typeof(T);

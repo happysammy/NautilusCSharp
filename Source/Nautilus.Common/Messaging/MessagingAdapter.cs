@@ -55,53 +55,43 @@ namespace Nautilus.Common.Messaging
         }
 
         /// <inheritdoc />
-        public void Subscribe<T>(
-            T messageType,
+        public void Subscribe(
+            Type type,
             IEndpoint subscriber,
             Guid id,
             ZonedDateTime timestamp)
         {
-            var message = new Subscribe<T>(messageType, subscriber, id, timestamp);
+            var message = new Subscribe<Type>(type, subscriber, id, timestamp);
 
-            switch (message.Subscription)
+            if (type == typeof(Command) || type.IsSubclassOf(typeof(Command)))
             {
-                case Command cmd:
-                    this.cmdBus.Endpoint.Send(message);
-                    break;
-                case Event evt:
-                    this.evtBus.Endpoint.Send(message);
-                    break;
-                case Document doc:
-                    this.docBus.Endpoint.Send(message);
-                    break;
-                default:
-                    throw ExceptionFactory.InvalidSwitchArgument(message, nameof(message));
+                this.cmdBus.Endpoint.Send(message);
+                return;
             }
+
+            if (type == typeof(Event) || type.IsSubclassOf(typeof(Event)))
+            {
+                this.evtBus.Endpoint.Send(message);
+                return;
+            }
+
+            if (type == typeof(Document) || type.IsSubclassOf(typeof(Document)))
+            {
+                this.docBus.Endpoint.Send(message);
+                return;
+            }
+
+            throw ExceptionFactory.InvalidSwitchArgument(type, nameof(type));
         }
 
         /// <inheritdoc />
-        public void Unsubscribe<T>(
-            T messageType,
+        public void Unsubscribe(
+            Type type,
             IEndpoint subscriber,
             Guid id,
             ZonedDateTime timestamp)
         {
-            var message = new Subscribe<T>(messageType, subscriber, id, timestamp);
-
-            switch (message.Subscription)
-            {
-                case Command cmd:
-                    this.cmdBus.Endpoint.Send(message);
-                    break;
-                case Event evt:
-                    this.evtBus.Endpoint.Send(message);
-                    break;
-                case Document doc:
-                    this.docBus.Endpoint.Send(message);
-                    break;
-                default:
-                    throw ExceptionFactory.InvalidSwitchArgument(message, nameof(message));
-            }
+            var message = new Unsubscribe<Type>(type, subscriber, id, timestamp);
         }
 
         /// <inheritdoc />
