@@ -25,7 +25,9 @@ namespace Nautilus.Common.Messaging
     public sealed class MessageBus<T> : Component
         where T : Message
     {
+        private readonly Type busType;
         private readonly List<object> deadLetters;
+        private readonly List<IEndpoint> subscriptionsAll;
         private readonly Dictionary<Type, List<IEndpoint>> subscriptions;
 
         private Switchboard switchboard;
@@ -37,8 +39,11 @@ namespace Nautilus.Common.Messaging
         public MessageBus(IComponentryContainer container)
         : base(container)
         {
+            this.busType = typeof(T);
             this.deadLetters = new List<object>();
+            this.subscriptionsAll = new List<IEndpoint>();
             this.subscriptions = new Dictionary<Type, List<IEndpoint>>();
+
             this.switchboard = Switchboard.Empty();
 
             this.RegisterHandler<InitializeSwitchboard>(this.OnMessage);
@@ -72,43 +77,58 @@ namespace Nautilus.Common.Messaging
         private void OnMessage(Subscribe<Type> message)
         {
             var type = message.SubscriptionType;
-            var subscriber = message.Subscriber;
+
+            if (message.Subscription == this.busType)
+            {
+                this.Subscribe(message, this.subscriptionsAll);
+                return;
+            }
 
             if (!this.subscriptions.ContainsKey(type))
             {
                 this.subscriptions[type] = new List<IEndpoint>();
             }
 
-            if (this.subscriptions[type].Contains(subscriber))
-            {
-                this.Log.Warning($"{subscriber} is already subscribed to {message.SubscriptionName} messages.");
-                return;
-            }
-
-            this.subscriptions[type].Append(subscriber);
-            this.Log.Error(message.SubscriptionName);
-            this.Log.Information($"{subscriber} subscribed to {message.SubscriptionName} messages.");
+            this.Subscribe(message, this.subscriptions[type]);
         }
 
         private void OnMessage(Unsubscribe<Type> message)
         {
             var type = message.SubscriptionType;
-            var subscriber = message.Subscriber;
 
-            if (!this.subscriptions.ContainsKey(type))
+            if (message.Subscription == this.busType)
             {
-                this.Log.Warning($"{subscriber} is already unsubscribed from {message.SubscriptionName} messages.");
+                this.Unsubscribe(message, this.subscriptionsAll);
                 return;
             }
 
-            if (!this.subscriptions[type].Contains(subscriber))
+            this.Unsubscribe(message, this.subscriptions[type]);
+        }
+
+        private void Subscribe(Subscribe<Type> command, List<IEndpoint> subscribers)
+        {
+            if (subscribers.Contains(command.Subscriber))
             {
-                this.Log.Warning($"{subscriber} is already unsubscribed from {message.SubscriptionName} messages.");
+                this.Log.Warning($"Subscriber is already subscribed to {command.SubscriptionName} messages.");
                 return;
             }
 
-            this.subscriptions[type].Remove(subscriber);
-            this.Log.Information($"{subscriber} unsubscribed from {type.Name} messages.");
+            subscribers.Append(command.Subscriber);
+
+            this.Log.Information($"Subscriber subscribed to {command.SubscriptionName} messages.");
+        }
+
+        private void Unsubscribe(Unsubscribe<Type> command, List<IEndpoint> subscribers)
+        {
+            if (!subscribers.Contains(command.Subscriber))
+            {
+                this.Log.Warning($"Subscriber is not subscribed to {command.SubscriptionName} messages.");
+                return;
+            }
+
+            subscribers.Remove(command.Subscriber);
+
+            this.Log.Information($"Subscriber unsubscribed from {command.SubscriptionName} messages.");
         }
 
         private void OnEnvelope(IEnvelope envelope)
@@ -130,18 +150,22 @@ namespace Nautilus.Common.Messaging
 
         private void Publish(IEnvelope envelope)
         {
-            if (!this.subscriptions.ContainsKey(envelope.MessageType))
+            if (this.subscriptionsAll.Count > 0 && envelope.MessageType == this.busType)
             {
-                // No subscribers for this message type.
-                this.Log.Error(envelope.MessageType.Name);
-                this.Log.Error(envelope.MessageBase.ToString());
-
-                foreach (var item in this.subscriptions)
+                for (var i = 0; i < this.subscriptionsAll.Count; i++)
                 {
-                    this.Log.Error($"{item.Key.ToString()}");
+                    this.subscriptionsAll[i].Send(envelope);
+
+                    this.Log.Verbose(
+                        $"[{this.ProcessedCount}] {envelope.Sender} -> {envelope} -> PUBLISHED");
                 }
 
                 return;
+            }
+
+            if (this.subscriptions[envelope.MessageType].Count == 0)
+            {
+                return; // No subscribers
             }
 
             for (var i = 0; i < this.subscriptions[envelope.MessageType].Count; i++)

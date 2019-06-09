@@ -47,21 +47,23 @@ namespace Nautilus.Common.Messages.Commands
         }
 
         /// <summary>
-        /// Gets the type to unsubscribe from.
+        /// Gets the commands type to unsubscribe from.
         /// </summary>
         public T Subscription { get; }
 
         /// <summary>
-        /// Gets the subscriptions name.
+        /// Gets the commands subscriptions name.
         /// </summary>
         public string SubscriptionName => this.Subscription is null ? string.Empty : this.Subscription.ToString();
 
         /// <summary>
-        /// Gets the subscribe messages subscription type.
+        /// Gets the commands subscription type.
         /// </summary>
         public Type SubscriptionType => typeof(T);
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets the commands subscriber endpoint.
+        /// </summary>
         public IEndpoint Subscriber { get; }
     }
 }
