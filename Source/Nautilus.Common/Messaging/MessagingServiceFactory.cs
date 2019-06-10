@@ -24,9 +24,9 @@ namespace Nautilus.Common.Messaging
         public static MessagingAdapter Create(IComponentryContainer container)
         {
             return new MessagingAdapter(
-                new MessageBus<Command>(container),
-                new MessageBus<Event>(container),
-                new MessageBus<Document>(container));
+                new MessageBus<Command>(container).Endpoint,
+                new MessageBus<Event>(container).Endpoint,
+                new MessageBus<Document>(container).Endpoint);
         }
     }
 }

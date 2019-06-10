@@ -9,6 +9,7 @@
 namespace Nautilus.Common.Messages.Commands
 {
     using System;
+    using System.Linq;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
@@ -54,7 +55,7 @@ namespace Nautilus.Common.Messages.Commands
         /// <summary>
         /// Gets the commands subscription name.
         /// </summary>
-        public string SubscriptionName => this.Subscription is null ? string.Empty : this.Subscription.ToString();
+        public string SubscriptionName => this.Subscription is null ? string.Empty : this.Subscription.ToString().Split(".").Last();
 
         /// <summary>
         /// Gets the commands subscription type.

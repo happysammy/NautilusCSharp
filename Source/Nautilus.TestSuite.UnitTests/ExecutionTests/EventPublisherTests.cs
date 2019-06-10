@@ -44,7 +44,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             var setupFactory = new StubComponentryContainerFactory();
             this.container = setupFactory.Create();
             this.mockLoggingAdapter = setupFactory.LoggingAdapter;
-            var service = new MockMessagingServiceFactory(this.container);
+            var service = new MockMessageBusFactory(this.container);
             this.mockMessagingAdapter = service.MessagingAdapter;
             this.testReceiver = new MockMessagingAgent().Endpoint;
         }

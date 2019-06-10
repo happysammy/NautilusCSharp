@@ -40,7 +40,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.logger = setupFactory.LoggingAdapter;
             this.receiver = new MockMessagingAgent();
             var container = setupFactory.Create();
-            var messagingAdapter = new MockMessagingServiceFactory(container).MessagingAdapter;
+            var messagingAdapter = new MockMessageBusFactory(container).MessagingAdapter;
             this.scheduler = new HashedWheelTimerScheduler(container);
 
             this.controller = new BarAggregationController(

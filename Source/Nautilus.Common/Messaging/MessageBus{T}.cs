@@ -12,6 +12,7 @@ namespace Nautilus.Common.Messaging
     using System.Collections.Generic;
     using System.Linq;
     using Nautilus.Common.Componentry;
+    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core;
@@ -37,7 +38,7 @@ namespace Nautilus.Common.Messaging
         /// </summary>
         /// <param name="container">The componentry container.</param>
         public MessageBus(IComponentryContainer container)
-        : base(container)
+        : base(container, State.Running)
         {
             this.busType = typeof(T);
             this.deadLetters = new List<object>();
@@ -53,9 +54,34 @@ namespace Nautilus.Common.Messaging
         }
 
         /// <summary>
+        /// Gets the message bus message type.
+        /// </summary>
+        public Type BusMessageType => this.busType;
+
+        /// <summary>
+        /// Gets the message bus subscriptions.
+        /// </summary>
+        public IReadOnlyCollection<Type> TypeSubscriptions => this.subscriptions.Keys.ToList().AsReadOnly();
+
+        /// <summary>
+        /// Gets the message bus subscriptions count to all messages of type T.
+        /// </summary>
+        public int SubscriptionsAllCount => this.subscriptionsAll.Count;
+
+        /// <summary>
+        /// Gets the message bus subscriptions count to specific type messages.
+        /// </summary>
+        public int SubscriptionsCount => this.subscriptions.Select(kvp => kvp.Value.Count).Sum();
+
+        /// <summary>
+        /// Gets a value indicating whether the message bus has any subscribers.
+        /// </summary>
+        public bool HasSubscribers => this.SubscriptionsAllCount + this.SubscriptionsCount > 0;
+
+        /// <summary>
         /// Gets the list of dead letters (unhandled messages).
         /// </summary>
-        public IEnumerable<object> DeadLetters => this.deadLetters;
+        public IReadOnlyCollection<object> DeadLetters => this.deadLetters;
 
         /// <inheritdoc />
         protected override void OnStop(Stop message)
@@ -76,11 +102,18 @@ namespace Nautilus.Common.Messaging
 
         private void OnMessage(Subscribe<Type> message)
         {
-            var type = message.SubscriptionType;
+            var type = message.Subscription;
 
-            if (message.Subscription == this.busType)
+            if (type == this.busType)
             {
                 this.Subscribe(message, this.subscriptionsAll);
+                return;
+            }
+
+            if (!type.IsSubclassOf(this.busType))
+            {
+                this.Log.Error($"Cannot subscribe to {type.Name} type messages " +
+                               $"(can only subscribe to all {this.busType.Name} or type of {this.busType.Name} messages).");
                 return;
             }
 
@@ -94,15 +127,28 @@ namespace Nautilus.Common.Messaging
 
         private void OnMessage(Unsubscribe<Type> message)
         {
-            var type = message.SubscriptionType;
+            var type = message.Subscription;
 
-            if (message.Subscription == this.busType)
+            if (type == this.busType)
             {
                 this.Unsubscribe(message, this.subscriptionsAll);
                 return;
             }
 
+            if (!type.IsSubclassOf(this.busType))
+            {
+                this.Log.Error($"Cannot unsubscribe from {type.Name} type messages " +
+                               $"(can only unsubscribe from all {this.busType.Name} or type of {this.busType.Name} messages).");
+                return;
+            }
+
             this.Unsubscribe(message, this.subscriptions[type]);
+
+            if (this.subscriptions[type].Count == 0)
+            {
+                // No longer subscribers for this type
+                this.subscriptions.Remove(type);
+            }
         }
 
         private void Subscribe(Subscribe<Type> command, List<IEndpoint> subscribers)
@@ -113,7 +159,7 @@ namespace Nautilus.Common.Messaging
                 return;
             }
 
-            subscribers.Append(command.Subscriber);
+            subscribers.Add(command.Subscriber);
 
             this.Log.Information($"Subscriber subscribed to {command.SubscriptionName} messages.");
         }

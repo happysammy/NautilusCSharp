@@ -22,9 +22,9 @@ namespace Nautilus.Common.Messaging
     [Immutable]
     public sealed class MessagingAdapter : IMessagingAdapter
     {
-        private readonly MessageBus<Command> cmdBus;
-        private readonly MessageBus<Event> evtBus;
-        private readonly MessageBus<Document> docBus;
+        private readonly IEndpoint cmdBus;
+        private readonly IEndpoint evtBus;
+        private readonly IEndpoint docBus;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MessagingAdapter"/> class.
@@ -33,9 +33,9 @@ namespace Nautilus.Common.Messaging
         /// <param name="evtBus">The event bus endpoint.</param>
         /// <param name="docBus">The document bus endpoint.</param>
         public MessagingAdapter(
-            MessageBus<Command> cmdBus,
-            MessageBus<Event> evtBus,
-            MessageBus<Document> docBus)
+            IEndpoint cmdBus,
+            IEndpoint evtBus,
+            IEndpoint docBus)
         {
             this.cmdBus = cmdBus;
             this.evtBus = evtBus;
@@ -49,9 +49,9 @@ namespace Nautilus.Common.Messaging
         /// <param name="message">The message.</param>
         public void Send(InitializeSwitchboard message)
         {
-            this.cmdBus.Endpoint.Send(message);
-            this.evtBus.Endpoint.Send(message);
-            this.docBus.Endpoint.Send(message);
+            this.cmdBus.Send(message);
+            this.evtBus.Send(message);
+            this.docBus.Send(message);
         }
 
         /// <inheritdoc />
@@ -65,19 +65,19 @@ namespace Nautilus.Common.Messaging
 
             if (type == typeof(Command) || type.IsSubclassOf(typeof(Command)))
             {
-                this.cmdBus.Endpoint.Send(message);
+                this.cmdBus.Send(message);
                 return;
             }
 
             if (type == typeof(Event) || type.IsSubclassOf(typeof(Event)))
             {
-                this.evtBus.Endpoint.Send(message);
+                this.evtBus.Send(message);
                 return;
             }
 
             if (type == typeof(Document) || type.IsSubclassOf(typeof(Document)))
             {
-                this.docBus.Endpoint.Send(message);
+                this.docBus.Send(message);
                 return;
             }
 
@@ -124,13 +124,13 @@ namespace Nautilus.Common.Messaging
             switch (message)
             {
                 case Command cmd:
-                    this.cmdBus.Endpoint.Send(envelope);
+                    this.cmdBus.Send(envelope);
                     break;
                 case Event evt:
-                    this.evtBus.Endpoint.Send(envelope);
+                    this.evtBus.Send(envelope);
                     break;
                 case Document doc:
-                    this.docBus.Endpoint.Send(envelope);
+                    this.docBus.Send(envelope);
                     break;
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(message, nameof(message));
