@@ -16,6 +16,7 @@ namespace Nautilus.Common.Messaging
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core;
+    using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Messaging.Interfaces;
 
@@ -189,37 +190,44 @@ namespace Nautilus.Common.Messaging
             }
 
             // Send point-to-point
-            this.switchboard.SendToReceiver(envelope);
-
-            this.Log.Verbose($"[{this.ProcessedCount}] {envelope.Sender} -> {envelope} -> {envelope.Receiver}");
+            if (this.switchboard.SendToReceiver(envelope))
+            {
+                this.Log.Verbose($"[{this.ProcessedCount}] {envelope.Sender} -> {envelope} -> {envelope.Receiver}");
+            }
+            else
+            {
+                this.Log.Error($"{envelope.Receiver} address unknown to switchboard.");
+                this.Log.Error($"[{this.ProcessedCount}] {envelope.Sender} -> {envelope} -> DeadLetters");
+            }
         }
 
+        [PerformanceOptimized]
         private void Publish(IEnvelope envelope)
         {
-            if (this.subscriptionsAll.Count > 0 && envelope.MessageType == this.busType)
+            try
             {
-                for (var i = 0; i < this.subscriptionsAll.Count; i++)
+                if (this.subscriptionsAll.Count > 0)
                 {
-                    this.subscriptionsAll[i].Send(envelope);
-
-                    this.Log.Verbose(
-                        $"[{this.ProcessedCount}] {envelope.Sender} -> {envelope} -> PUBLISHED");
+                    for (var i = 0; i < this.subscriptionsAll.Count; i++)
+                    {
+                        this.subscriptionsAll[i].Send(envelope);
+                    }
                 }
 
-                return;
+                if (this.subscriptions.TryGetValue(envelope.MessageType, out var subscribers) && subscribers.Count > 0)
+                {
+                    for (var i = 0; i < subscribers.Count; i++)
+                    {
+                        subscribers[i].Send(envelope);
+                    }
+                }
+
+                this.Log.Verbose($"[{this.ProcessedCount}] {envelope.Sender} -> {envelope} -> PUBLISHED");
             }
-
-            if (this.subscriptions[envelope.MessageType].Count == 0)
+            catch (Exception ex)
             {
-                return; // No subscribers
-            }
-
-            for (var i = 0; i < this.subscriptions[envelope.MessageType].Count; i++)
-            {
-                this.subscriptions[envelope.MessageType][i].Send(envelope);
-
-                this.Log.Verbose(
-                    $"[{this.ProcessedCount}] {envelope.Sender} -> {envelope} -> {envelope.Receiver}");
+                this.Log.Error(ex.Message);
+                throw;
             }
         }
 
@@ -227,7 +235,7 @@ namespace Nautilus.Common.Messaging
         {
             this.deadLetters.Add(message);
 
-            this.Log.Error($"Undeliverable message [{message}].");
+            this.Log.Error($"Undeliverable message {message}.");
         }
     }
 }

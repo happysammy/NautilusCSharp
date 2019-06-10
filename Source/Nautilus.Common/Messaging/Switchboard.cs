@@ -54,26 +54,30 @@ namespace Nautilus.Common.Messaging
         }
 
         /// <summary>
-        /// Sends the given envelope to its receiver address.
+        /// Returns a value indicating whether the given envelope was sent to its receiver address (True),
+        /// or if the given envelope was sent to the dead letters channel (False).
         /// </summary>
         /// <param name="envelope">The envelope to send.</param>
-        public void SendToReceiver(IEnvelope envelope)
+        /// <returns>True if the envelope was sent to the receiver, False if sent to Dead Letters.</returns>
+        public bool SendToReceiver(IEnvelope envelope)
         {
             if (envelope.Receiver is null)
             {
                 // Receiver address not found
                 this.deadLetterHandler(envelope);
-                return;
+                return false;
             }
 
             if (this.addresses.TryGetValue((Address)envelope.Receiver, out var receiver))
             {
                 receiver.Send(envelope);
+                return true;
             }
             else
             {
                 // Receiver address not found
                 this.deadLetterHandler(envelope);
+                return false;
             }
         }
 

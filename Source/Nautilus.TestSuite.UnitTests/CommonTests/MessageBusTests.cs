@@ -17,11 +17,12 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
     using Nautilus.Common.Messaging;
     using Nautilus.Core;
     using Nautilus.Data;
+    using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
-    using QuickFix;
     using Xunit;
     using Xunit.Abstractions;
 
@@ -46,6 +47,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
 
             var addresses = new Dictionary<Address, IEndpoint>
             {
+                { DataServiceAddress.Core, this.mockReceiver.Endpoint },
                 { DataServiceAddress.BarAggregationController, this.mockReceiver.Endpoint },
                 { DataServiceAddress.DatabaseTaskManager, this.mockReceiver.Endpoint },
             };
@@ -54,6 +56,8 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
                 Switchboard.Create(addresses),
                 Guid.NewGuid(),
                 containerFactory.Clock.TimeNow()));
+
+            this.mockReceiver.RegisterHandler<IEnvelope>(this.mockReceiver.OnMessage);
         }
 
         [Fact]
@@ -309,20 +313,147 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
         }
 
         [Fact]
-        internal void GivenEmptyStringMessage_Handles()
+        internal void GivenAddressedEnvelope_WhenAddressInSwitchboard_SendsToReceiver()
         {
             // Arrange
+            var message = new MarketOpened(
+                new Symbol("AUDUSD", Venue.FXCM),
+                StubZonedDateTime.UnixEpoch(),
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            var envelope = new Envelope<MarketOpened>(
+                message,
+                DataServiceAddress.BarAggregationController,
+                DataServiceAddress.Core,
+                StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.messageBus.Endpoint.Send(string.Empty);
+            this.messageBus.Endpoint.Send(envelope);
 
-            Task.Delay(100).Wait();
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
 
             // Assert
+            Assert.Contains(envelope, this.mockReceiver.Messages);
+        }
+
+        [Fact]
+        internal void GivenAddressedEnvelope_WhenAddressUnknown_SendsToDeadLetters()
+        {
+            // Arrange
+            var message = new MarketOpened(
+                new Symbol("AUDUSD", Venue.FXCM),
+                StubZonedDateTime.UnixEpoch(),
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            var envelope = new Envelope<MarketOpened>(
+                message,
+                DataServiceAddress.Scheduler,
+                DataServiceAddress.Core,
+                StubZonedDateTime.UnixEpoch());
+
+            // Act
+            this.messageBus.Endpoint.Send(envelope);
+
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
-            Assert.Empty(this.messageBus.DeadLetters);
-            Assert.Single(this.messageBus.UnhandledMessages);
-            Assert.Contains(string.Empty, this.messageBus.UnhandledMessages);
+
+            // Assert
+            Assert.Contains(envelope, this.messageBus.DeadLetters);
+        }
+
+        [Fact]
+        internal void GivenUnaddressedEnvelope_WhenNoSubscribers_HandlesCorrectly()
+        {
+            // Arrange
+            var message = new MarketOpened(
+                new Symbol("AUDUSD", Venue.FXCM),
+                StubZonedDateTime.UnixEpoch(),
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            var envelope = new Envelope<MarketOpened>(
+                message,
+                null,
+                DataServiceAddress.Core,
+                StubZonedDateTime.UnixEpoch());
+
+            // Act
+            this.messageBus.Endpoint.Send(envelope);
+
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+
+            // Assert
+            Assert.False(this.messageBus.HasSubscribers);
+            Assert.Equal(0, this.messageBus.TypeSubscriptions.Count);
+            Assert.Equal(0, this.messageBus.SubscriptionsAllCount);
+            Assert.Equal(0, this.messageBus.SubscriptionsCount);
+        }
+
+        [Fact]
+        internal void GivenUnaddressedEnvelope_WhenSubscriberSubscribedToBusType_PublishesToSubscriber()
+        {
+            // Arrange
+            var subscribe = new Subscribe<Type>(
+                typeof(Event),
+                this.mockReceiver.Endpoint,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            var message = new MarketOpened(
+                new Symbol("AUDUSD", Venue.FXCM),
+                StubZonedDateTime.UnixEpoch(),
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            var envelope = new Envelope<MarketOpened>(
+                message,
+                null,
+                DataServiceAddress.Core,
+                StubZonedDateTime.UnixEpoch());
+
+            this.messageBus.Endpoint.Send(subscribe);
+
+            // Act
+            this.messageBus.Endpoint.Send(envelope);
+
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+
+            // Assert
+            Assert.Contains(envelope, this.mockReceiver.Messages);
+        }
+
+        [Fact]
+        internal void GivenUnaddressedEnvelope_WhenSubscriberSubscribedToSpecificType_PublishesToSubscriber()
+        {
+            // Arrange
+            var subscribe = new Subscribe<Type>(
+                typeof(MarketOpened),
+                this.mockReceiver.Endpoint,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            var message = new MarketOpened(
+                new Symbol("AUDUSD", Venue.FXCM),
+                StubZonedDateTime.UnixEpoch(),
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            var envelope = new Envelope<MarketOpened>(
+                message,
+                null,
+                DataServiceAddress.Core,
+                StubZonedDateTime.UnixEpoch());
+
+            this.messageBus.Endpoint.Send(subscribe);
+
+            // Act
+            this.messageBus.Endpoint.Send(envelope);
+
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+
+            // Assert
+            Assert.Contains(envelope, this.mockReceiver.Messages);
         }
     }
 }
