@@ -13,6 +13,7 @@ namespace Nautilus.Data
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.CQS;
     using Nautilus.Core.Extensions;
+    using Nautilus.Data.Bus;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Messages.Commands;
     using Nautilus.DomainModel.ValueObjects;

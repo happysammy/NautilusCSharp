@@ -158,13 +158,13 @@ namespace Nautilus.Common.Messaging
             var subscriber = command.Subscriber;
             if (subscribers.Contains(subscriber))
             {
-                this.Log.Warning($"{subscriber} is already subscribed to {command.SubscriptionName} messages.");
+                this.Log.Warning($"The {subscriber} is already subscribed to {command.SubscriptionName} messages.");
                 return;
             }
 
             subscribers.Add(subscriber);
 
-            this.Log.Information($"{subscriber} subscribed to {command.SubscriptionName} messages.");
+            this.Log.Information($"Subscribed {subscriber} to {command.SubscriptionName} messages.");
         }
 
         private void Unsubscribe(Unsubscribe<Type> command, List<Mailbox> subscribers)
@@ -172,13 +172,13 @@ namespace Nautilus.Common.Messaging
             var subscriber = command.Subscriber;
             if (!subscribers.Contains(subscriber))
             {
-                this.Log.Warning($"{subscriber} is not subscribed to {command.SubscriptionName} messages.");
+                this.Log.Warning($"The {subscriber} is not subscribed to {command.SubscriptionName} messages.");
                 return;
             }
 
             subscribers.Remove(subscriber);
 
-            this.Log.Information($"{subscriber} unsubscribed from {command.SubscriptionName} messages.");
+            this.Log.Information($"Unsubscribed {subscriber} from {command.SubscriptionName} messages.");
         }
 
         private void OnEnvelope(IEnvelope envelope)

@@ -17,7 +17,7 @@ namespace Nautilus.Data.Aggregation
     using Nautilus.Common.Messages.Events;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Extensions;
-    using Nautilus.Data.Interfaces;
+    using Nautilus.Data.Bus;
     using Nautilus.Data.Messages.Commands;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging.Interfaces;

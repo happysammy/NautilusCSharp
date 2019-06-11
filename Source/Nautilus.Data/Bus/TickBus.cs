@@ -47,7 +47,7 @@ namespace Nautilus.Data.Bus
 
             if (this.subscriptions.Contains(subscriber))
             {
-                this.Log.Warning($"{subscriber} is already subscribed to tick data.");
+                this.Log.Warning($"The {subscriber} is already subscribed to tick data.");
                 return; // Design time error
             }
 
@@ -61,7 +61,7 @@ namespace Nautilus.Data.Bus
 
             if (!this.subscriptions.Contains(subscriber))
             {
-                this.Log.Warning($"{subscriber} is already unsubscribed from tick data.");
+                this.Log.Warning($"The {subscriber} is already unsubscribed from tick data.");
                 return;
             }
 

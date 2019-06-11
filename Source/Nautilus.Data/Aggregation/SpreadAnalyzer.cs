@@ -17,7 +17,7 @@ namespace Nautilus.Data.Aggregation
     using NodaTime;
 
     /// <summary>
-    /// Provides spread analysis for ticks.
+    /// Provides spread analysis for a markets <see cref="Tick"/>s.
     /// </summary>
     [PerformanceOptimized]
     public sealed class SpreadAnalyzer

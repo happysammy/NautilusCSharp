@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Data
+namespace Nautilus.Data.Bus
 {
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
