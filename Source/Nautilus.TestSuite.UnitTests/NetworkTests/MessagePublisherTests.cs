@@ -46,7 +46,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         {
             // Arrange
             // Act
-            var publisher = new MockPublisher(
+            var publisher = new MockDataPublisher(
                 this.setupContainer,
                 NetworkAddress.LocalHost,
                 new NetworkPort(55555));
@@ -61,7 +61,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         internal void GivenMessageToPublish_WhenMessageValid_PublishesToSubscriber()
         {
             // Arrange
-            var publisher = new MockPublisher(
+            var publisher = new MockDataPublisher(
                 this.setupContainer,
                 NetworkAddress.LocalHost,
                 new NetworkPort(55555));

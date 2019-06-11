@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="MockPublisher.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="MockDataPublisher.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -16,15 +16,15 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     /// <summary>
     /// Provides a mock publisher for testing.
     /// </summary>
-    public sealed class MockPublisher : MessagePublisher<string>
+    public sealed class MockDataPublisher : DataPublisher<string>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="MockPublisher"/> class.
+        /// Initializes a new instance of the <see cref="MockDataPublisher"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
         /// <param name="host">The host address.</param>
         /// <param name="port">The port.</param>
-        public MockPublisher(
+        public MockDataPublisher(
             IComponentryContainer container,
             NetworkAddress host,
             NetworkPort port)

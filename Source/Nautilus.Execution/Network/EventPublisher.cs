@@ -13,7 +13,6 @@ namespace Nautilus.Execution.Network
     using Nautilus.Core;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Events.Base;
-    using Nautilus.Messaging.Interfaces;
     using Nautilus.Network;
 
     /// <summary>
@@ -24,8 +23,6 @@ namespace Nautilus.Execution.Network
         private const string NAUTILUS = "NAUTILUS";
         private const string ACCOUNT = "ACCOUNT";
         private const string EXECUTION = "EXECUTION";
-
-        private readonly IMessagingAdapter messagingAdapter;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EventPublisher"/> class.
@@ -43,20 +40,15 @@ namespace Nautilus.Execution.Network
             NetworkPort port)
             : base(
                 container,
+                messagingAdapter,
                 serializer,
                 host,
                 port,
                 Guid.NewGuid())
         {
-            this.messagingAdapter = messagingAdapter;
-
-            this.RegisterHandler<IEnvelope>(this.Open);
             this.RegisterHandler<Event>(this.OnMessage);
 
-            this.messagingAdapter.Subscribe<Event>(
-                this.Endpoint,
-                this.NewGuid(),
-                this.TimeNow());
+            this.Subscribe<Event>();
         }
 
         private void OnMessage(Event message)
@@ -70,7 +62,7 @@ namespace Nautilus.Execution.Network
                     this.Publish($"{NAUTILUS}:{ACCOUNT}:{@event.AccountId}", message);
                     break;
                 default:
-                    this.Publish(NAUTILUS, message);
+                    this.Log.Verbose($"Filtering message {message} (not published).");
                     break;
             }
         }

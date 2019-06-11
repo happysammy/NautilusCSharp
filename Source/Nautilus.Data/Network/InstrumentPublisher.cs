@@ -17,7 +17,7 @@ namespace Nautilus.Data.Network
     /// <summary>
     /// Provides a publisher for <see cref="Instrument"/> data.
     /// </summary>
-    public sealed class InstrumentPublisher : MessagePublisher<Instrument>
+    public sealed class InstrumentPublisher : DataPublisher<Instrument>
     {
         private readonly ISerializer<Instrument> serializer;
 
