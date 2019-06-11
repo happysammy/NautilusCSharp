@@ -22,7 +22,7 @@ namespace Nautilus.Data
     /// <summary>
     /// The component manages the queue of job messages being sent to the database.
     /// </summary>
-    public sealed class DatabaseTaskManager : Component
+    public sealed class DatabaseTaskManager : DataBusConnected
     {
         private readonly IBarRepository barRepository;
         private readonly IInstrumentRepository instrumentRepository;
@@ -31,13 +31,15 @@ namespace Nautilus.Data
         /// Initializes a new instance of the <see cref="DatabaseTaskManager"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
+        /// <param name="dataBusAdapter">The data bus adapter.</param>
         /// <param name="barRepository">The bar repository.</param>
         /// <param name="instrumentRepository">The instrument repository.</param>
         public DatabaseTaskManager(
             IComponentryContainer container,
+            IDataBusAdapter dataBusAdapter,
             IBarRepository barRepository,
             IInstrumentRepository instrumentRepository)
-            : base(container)
+            : base(container, dataBusAdapter)
         {
             this.barRepository = barRepository;
             this.instrumentRepository = instrumentRepository;
@@ -46,6 +48,9 @@ namespace Nautilus.Data
             this.RegisterHandler<DataDelivery<BarDataFrame>>(this.OnMessage);
             this.RegisterHandler<DataDelivery<Instrument>>(this.OnMessage);
             this.RegisterHandler<TrimBarData>(this.OnMessage);
+
+            this.Subscribe<Bar>();
+            this.Subscribe<Instrument>();
         }
 
         /// <inheritdoc />

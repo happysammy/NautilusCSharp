@@ -99,6 +99,7 @@ namespace NautilusData
 
             var databaseTaskManager = new DatabaseTaskManager(
                 container,
+                dataBusAdapter,
                 barRepository,
                 instrumentRepository);
 
@@ -133,9 +134,6 @@ namespace NautilusData
                 config.ServerAddress,
                 config.InstrumentRequestPort);
 
-            // Wire up service.
-//            fixGateway.RegisterTickReceiver(tickRepository.Endpoint);
-//            fixGateway.RegisterInstrumentReceiver(DataServiceAddress.DatabaseTaskManager);
             var addresses = new Dictionary<Address, IEndpoint>
             {
                 { DataServiceAddress.Scheduler, scheduler.Endpoint },
@@ -144,7 +142,6 @@ namespace NautilusData
                 { DataServiceAddress.DataBus, dataBus.Endpoint },
                 { DataServiceAddress.DatabaseTaskManager, databaseTaskManager.Endpoint },
                 { DataServiceAddress.BarAggregationController, barAggregationController.Endpoint },
-                { DataServiceAddress.TickStore, tickRepository.Endpoint },
                 { DataServiceAddress.TickProvider, tickProvider.Endpoint },
                 { DataServiceAddress.TickPublisher, tickPublisher.Endpoint },
                 { DataServiceAddress.BarProvider, barProvider.Endpoint },

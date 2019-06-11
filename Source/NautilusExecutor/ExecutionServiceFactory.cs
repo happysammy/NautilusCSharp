@@ -69,7 +69,7 @@ namespace NautilusExecutor
                 container,
                 messagingAdapter,
                 fixClient,
-                eventPublisher.Endpoint,    // TODO: Remove dummy endpoint
+                eventPublisher.Endpoint,   // TODO: Remove dummy endpoint
                 eventPublisher.Endpoint);  // TODO: Remove dummy endpoint
 
             var orderManager = new OrderManager(
@@ -85,10 +85,6 @@ namespace NautilusExecutor
                 orderManager.Endpoint,
                 config);
 
-            // Wire up service
-//            fixGateway.RegisterConnectionEventReceiver(ExecutionServiceAddress.Core);
-//            fixGateway.RegisterAccountEventReceiver(ExecutionServiceAddress.EventPublisher);
-// fixGateway.RegisterOrderEventReceiver(ExecutionServiceAddress.OrderManager);
             var addresses = new Dictionary<Address, IEndpoint>
             {
                 { ExecutionServiceAddress.Scheduler, scheduler.Endpoint },

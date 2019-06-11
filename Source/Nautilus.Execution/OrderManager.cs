@@ -68,6 +68,17 @@ namespace Nautilus.Execution
             this.RegisterHandler<CancelOrder>(this.OnMessage);
             this.RegisterHandler<ModifyOrder>(this.OnMessage);
             this.RegisterHandler<Event>(this.OnMessage);
+
+            // Subscribe to all order events
+            this.Subscribe<OrderInitialized>();
+            this.Subscribe<OrderSubmitted>();
+            this.Subscribe<OrderAccepted>();
+            this.Subscribe<OrderRejected>();
+            this.Subscribe<OrderCancelReject>();
+            this.Subscribe<OrderExpired>();
+            this.Subscribe<OrderCancelled>();
+            this.Subscribe<OrderPartiallyFilled>();
+            this.Subscribe<OrderFilled>();
         }
 
         /// <summary>

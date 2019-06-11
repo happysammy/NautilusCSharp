@@ -68,6 +68,10 @@ namespace Nautilus.Execution
             this.RegisterHandler<FixSessionDisconnected>(this.OnMessage);
             this.RegisterHandler<ConnectFix>(this.OnMessage);
             this.RegisterHandler<DisconnectFix>(this.OnMessage);
+
+            // Subscribe to connection events
+            this.Subscribe<FixSessionConnected>();
+            this.Subscribe<FixSessionDisconnected>();
         }
 
         /// <inheritdoc />
