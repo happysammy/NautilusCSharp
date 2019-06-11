@@ -20,6 +20,7 @@ namespace Nautilus.Data.Bus
     /// </summary>
     public sealed class TickBus : Component
     {
+        private readonly IEndpoint tickPublisher;
         private readonly List<IEndpoint> subscriptions;
         private bool hasSubscribers;
 
@@ -27,9 +28,11 @@ namespace Nautilus.Data.Bus
         /// Initializes a new instance of the <see cref="TickBus"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
-        public TickBus(IComponentryContainer container)
+        /// <param name="tickPublisher">The tick publisher endpoint..</param>
+        public TickBus(IComponentryContainer container, IEndpoint tickPublisher)
         : base(container)
         {
+            this.tickPublisher = tickPublisher;
             this.subscriptions = new List<IEndpoint>();
 
             this.RegisterHandler<Subscribe<Tick>>(this.OnMessage);
@@ -69,6 +72,8 @@ namespace Nautilus.Data.Bus
 
         private void Publish(Tick tick)
         {
+            this.tickPublisher.Send(tick);
+
             if (!this.hasSubscribers)
             {
                 return; // No subscribers to send tick to

@@ -17,6 +17,7 @@ namespace Nautilus.Data.Aggregation
     using Nautilus.Common.Messages.Events;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Extensions;
+    using Nautilus.Data.Interfaces;
     using Nautilus.Data.Messages.Commands;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging.Interfaces;
@@ -27,7 +28,7 @@ namespace Nautilus.Data.Aggregation
     /// Provides a bar aggregation controller to manage bar aggregators for many symbols.
     /// </summary>
     [PerformanceOptimized]
-    public sealed class BarAggregationController : ComponentBusConnected
+    public sealed class BarAggregationController : DataBusConnected
     {
         private readonly IComponentryContainer storedContainer;
         private readonly IScheduler scheduler;
@@ -39,15 +40,15 @@ namespace Nautilus.Data.Aggregation
         /// Initializes a new instance of the <see cref="BarAggregationController"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
-        /// <param name="messagingAdapter">The messaging adapter.</param>
+        /// <param name="dataBusAdapter">The messaging adapter.</param>
         /// <param name="scheduler">The scheduler.</param>
         /// <param name="dataBus">The bar publisher endpoint.</param>
         public BarAggregationController(
             IComponentryContainer container,
-            IMessagingAdapter messagingAdapter,
+            IDataBusAdapter dataBusAdapter,
             IScheduler scheduler,
             IEndpoint dataBus)
-            : base(container, messagingAdapter)
+            : base(container, dataBusAdapter)
         {
             this.storedContainer = container;
             this.scheduler = scheduler;
@@ -61,6 +62,8 @@ namespace Nautilus.Data.Aggregation
             this.RegisterHandler<Unsubscribe<BarType>>(this.OnMessage);
             this.RegisterHandler<MarketOpened>(this.OnMessage);
             this.RegisterHandler<MarketClosed>(this.OnMessage);
+
+            this.Subscribe<Tick>();
         }
 
         /// <summary>

@@ -12,6 +12,7 @@ namespace Nautilus.Execution
     using System.Linq;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messaging;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
@@ -25,7 +26,7 @@ namespace Nautilus.Execution
     /// Provides an <see cref="Order"/> manager.
     /// </summary>
     [PerformanceOptimized]
-    public sealed class OrderManager : ComponentBusConnected
+    public sealed class OrderManager : MessageBusConnected
     {
         private readonly IFixGateway gateway;
         private readonly OrderRegister register;
@@ -43,13 +44,13 @@ namespace Nautilus.Execution
         /// Initializes a new instance of the <see cref="OrderManager"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
-        /// <param name="messagingAdapter">The messaging adapter.</param>
+        /// <param name="messageBusAdapter">The messaging adapter.</param>
         /// <param name="gateway">The FIX gateway.</param>
         public OrderManager(
             IComponentryContainer container,
-            IMessagingAdapter messagingAdapter,
+            IMessageBusAdapter messageBusAdapter,
             IFixGateway gateway)
-            : base(container, messagingAdapter)
+            : base(container, messageBusAdapter)
         {
             this.gateway = gateway;
             this.register = new OrderRegister(container);

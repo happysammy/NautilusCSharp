@@ -9,9 +9,9 @@
 namespace Nautilus.Fix
 {
     using System.Collections.Generic;
-    using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
+    using Nautilus.Common.Messaging;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
@@ -29,7 +29,7 @@ namespace Nautilus.Fix
     /// Provides a gateway to, and anti-corruption layer from, the FIX module of the service.
     /// </summary>
     [PerformanceOptimized]
-    public sealed class FixGateway : ComponentBusConnected, IFixGateway
+    public sealed class FixGateway : MessageBusConnected, IFixGateway
     {
         private readonly IFixClient fixClient;
         private readonly IEndpoint tickBus;
@@ -40,17 +40,17 @@ namespace Nautilus.Fix
         /// Initializes a new instance of the <see cref="FixGateway"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
-        /// <param name="messagingAdapter">The messaging adapter.</param>
+        /// <param name="messageBusAdapter">The messaging adapter.</param>
         /// <param name="fixClient">The FIX client.</param>
         /// <param name="tickBus">The tick bus endpoint.</param>
         /// <param name="dataBus">The data bus endpoint.</param>
         public FixGateway(
             IComponentryContainer container,
-            IMessagingAdapter messagingAdapter,
+            IMessageBusAdapter messageBusAdapter,
             IFixClient fixClient,
             IEndpoint tickBus,
             IEndpoint dataBus)
-            : base(container, messagingAdapter)
+            : base(container, messageBusAdapter)
         {
             this.fixClient = fixClient;
             this.tickBus = tickBus;

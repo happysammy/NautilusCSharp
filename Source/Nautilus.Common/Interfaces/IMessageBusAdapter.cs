@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="IMessagingAdapter.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="IMessageBusAdapter.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -17,7 +17,7 @@ namespace Nautilus.Common.Interfaces
     /// <summary>
     /// Provides a means for components to send messages to other components via the message bus.
     /// </summary>
-    public interface IMessagingAdapter
+    public interface IMessageBusAdapter
     {
         /// <summary>
         /// Subscribe the given subscriber to the given message type with the message bus.

@@ -23,7 +23,7 @@ namespace Nautilus.Data
     /// <summary>
     /// Provides an in memory <see cref="Tick"/> store.
     /// </summary>
-    public sealed class InMemoryTickStore : Component, ITickRepository
+    public sealed class InMemoryTickStore : DataBusConnected, ITickRepository
     {
         private readonly Dictionary<Symbol, List<Tick>> tickStore;
 
@@ -31,13 +31,16 @@ namespace Nautilus.Data
         /// Initializes a new instance of the <see cref="InMemoryTickStore"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
-        public InMemoryTickStore(IComponentryContainer container)
-        : base(container, State.Running)
+        /// <param name="dataBusAdapter">The data bus adapter.</param>
+        public InMemoryTickStore(IComponentryContainer container, IDataBusAdapter dataBusAdapter)
+        : base(container, dataBusAdapter)
         {
             this.tickStore = new Dictionary<Symbol, List<Tick>>();
 
             this.RegisterHandler<Tick>(this.OnMessage);
             this.RegisterHandler<TrimTickData>(this.OnMessage);
+
+            this.Subscribe<Tick>();
         }
 
         /// <inheritdoc />

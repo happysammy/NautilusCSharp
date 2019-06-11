@@ -23,6 +23,8 @@ namespace Nautilus.Data.Bus
     /// </summary>
     public sealed class DataBus : Component
     {
+        private readonly IEndpoint barPublisher;
+        private readonly IEndpoint instrumentPublisher;
         private readonly List<Type> dataTypes;
         private readonly List<IEndpoint> barSubscriptions;
         private readonly List<IEndpoint> instrumentSubscriptions;
@@ -31,9 +33,16 @@ namespace Nautilus.Data.Bus
         /// Initializes a new instance of the <see cref="DataBus"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
-        public DataBus(IComponentryContainer container)
+        /// <param name="barPublisher">The bar publisher endpoint.</param>
+        /// <param name="instrumentPublisher">The instrument publisher endpoint.</param>
+        public DataBus(
+            IComponentryContainer container,
+            IEndpoint barPublisher,
+            IEndpoint instrumentPublisher)
         : base(container)
         {
+            this.barPublisher = barPublisher;
+            this.instrumentPublisher = instrumentPublisher;
             this.dataTypes = new List<Type> { typeof(Bar), typeof(Instrument) };
             this.barSubscriptions = new List<IEndpoint>();
             this.instrumentSubscriptions = new List<IEndpoint>();
@@ -110,8 +119,10 @@ namespace Nautilus.Data.Bus
             }
         }
 
-        private void Publish((BarType, Bar) data)
+        private void Publish((BarType BarType, Bar Bar) data)
         {
+            this.barPublisher.Send(data);
+
             if (this.barSubscriptions.Count == 0)
             {
                 return; // No subscribers.
@@ -122,12 +133,14 @@ namespace Nautilus.Data.Bus
                 this.barSubscriptions[i].Send(data);
 
                 this.Log.Verbose(
-                    $"[{this.ProcessedCount}] {typeof((BarType, Bar)).Name} -> {this.barSubscriptions[i]}");
+                    $"[{this.ProcessedCount}] Bar({data.BarType}) -> {this.barSubscriptions[i]}");
             }
         }
 
         private void Publish(Instrument data)
         {
+            this.instrumentPublisher.Send(data);
+
             if (this.instrumentSubscriptions.Count == 0)
             {
                 return; // No subscribers.
@@ -138,7 +151,7 @@ namespace Nautilus.Data.Bus
                 this.instrumentSubscriptions[i].Send(data);
 
                 this.Log.Verbose(
-                    $"[{this.ProcessedCount}] {typeof(Instrument).Name} -> {this.instrumentSubscriptions[i]}");
+                    $"[{this.ProcessedCount}] Instrument({data}) -> {this.instrumentSubscriptions[i]}");
             }
         }
     }

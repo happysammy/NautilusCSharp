@@ -8,9 +8,9 @@
 
 namespace Nautilus.Execution
 {
-    using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
+    using Nautilus.Common.Messaging;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Execution.Messages.Commands;
@@ -24,7 +24,7 @@ namespace Nautilus.Execution
     /// Provides a <see cref="Command"/> message server using the ZeroMQ protocol.
     /// </summary>
     [PerformanceOptimized]
-    public class CommandRouter : ComponentBusConnected
+    public class CommandRouter : MessageBusConnected
     {
         private readonly CommandServer commandServer;
         private readonly Throttler commandThrottler;
@@ -34,19 +34,19 @@ namespace Nautilus.Execution
         /// Initializes a new instance of the <see cref="CommandRouter"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
-        /// <param name="messagingAdapter">The messaging adapter.</param>
+        /// <param name="messageBusAdapter">The messaging adapter.</param>
         /// <param name="inboundSerializer">The inbound message serializer.</param>
         /// <param name="outboundSerializer">The outbound message serializer.</param>
         /// <param name="orderManager">The order manager endpoint.</param>
         /// <param name="config">The service configuration.</param>
         public CommandRouter(
             IComponentryContainer container,
-            IMessagingAdapter messagingAdapter,
+            IMessageBusAdapter messageBusAdapter,
             IMessageSerializer<Command> inboundSerializer,
             IMessageSerializer<Response> outboundSerializer,
             IEndpoint orderManager,
             Configuration config)
-            : base(container, messagingAdapter)
+            : base(container, messageBusAdapter)
         {
             this.commandServer = new Network.CommandServer(
                 container,

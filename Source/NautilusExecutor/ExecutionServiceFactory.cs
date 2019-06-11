@@ -46,7 +46,7 @@ namespace NautilusExecutor
                 guidFactory,
                 new LoggerFactory(config.LoggingAdapter));
 
-            var messagingAdapter = MessagingServiceFactory.Create(container);
+            var messagingAdapter = MessageBusFactory.Create(container);
             var scheduler = new HashedWheelTimerScheduler(container);
 
             var venue = config.FixConfiguration.Broker.ToString().ToEnum<Venue>();
@@ -109,7 +109,7 @@ namespace NautilusExecutor
 
         private static IFixClient CreateFixClient(
             IComponentryContainer container,
-            IMessagingAdapter messagingAdapter,
+            IMessageBusAdapter messageBusAdapter,
             FixConfiguration configuration,
             SymbolConverter symbolConverter)
         {
@@ -118,13 +118,13 @@ namespace NautilusExecutor
                 case Brokerage.FXCM:
                     return FxcmFixClientFactory.Create(
                         container,
-                        messagingAdapter,
+                        messageBusAdapter,
                         configuration,
                         symbolConverter);
                 case Brokerage.DUKASCOPY:
                     return DukascopyFixClientFactory.Create(
                         container,
-                        messagingAdapter,
+                        messageBusAdapter,
                         configuration,
                         symbolConverter);
                 case Brokerage.Simulation:

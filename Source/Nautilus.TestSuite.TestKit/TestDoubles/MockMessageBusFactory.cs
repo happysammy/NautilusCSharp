@@ -22,12 +22,12 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     {
         public MockMessageBusFactory(IComponentryContainer container)
         {
-            var messagingAdapter = new MessagingAdapter(
+            var messagingAdapter = new MessageBusAdapter(
                 new MessageBus<Command>(container).Endpoint,
                 new MessageBus<Event>(container).Endpoint,
                 new MessageBus<Document>(container).Endpoint);
 
-            this.MessagingAdapter = messagingAdapter;
+            this.MessageBusAdapter = messagingAdapter;
 
             var initializeSwitchboard = new InitializeSwitchboard(
                 Switchboard.Empty(),
@@ -37,6 +37,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             messagingAdapter.Send(initializeSwitchboard);
         }
 
-        public IMessagingAdapter MessagingAdapter { get; }
+        public IMessageBusAdapter MessageBusAdapter { get; }
     }
 }

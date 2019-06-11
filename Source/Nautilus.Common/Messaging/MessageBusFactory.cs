@@ -1,5 +1,5 @@
 ﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="MessagingServiceFactory.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="MessageBusFactory.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -14,16 +14,16 @@ namespace Nautilus.Common.Messaging
     /// <summary>
     /// Provides a factory to create the systems messaging service.
     /// </summary>
-    public static class MessagingServiceFactory
+    public static class MessageBusFactory
     {
         /// <summary>
-        /// Creates and returns a new messaging adapter.
+        /// Creates and returns a new message bus adapter.
         /// </summary>
         /// <param name="container">The componentry container.</param>
         /// <returns>The messaging adapter.</returns>
-        public static MessagingAdapter Create(IComponentryContainer container)
+        public static MessageBusAdapter Create(IComponentryContainer container)
         {
-            return new MessagingAdapter(
+            return new MessageBusAdapter(
                 new MessageBus<Command>(container).Endpoint,
                 new MessageBus<Event>(container).Endpoint,
                 new MessageBus<Document>(container).Endpoint);

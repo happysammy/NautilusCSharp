@@ -10,9 +10,9 @@ namespace Nautilus.Network
 {
     using System;
     using System.Text;
-    using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
+    using Nautilus.Common.Messaging;
     using Nautilus.Core;
     using Nautilus.Core.Correctness;
     using NetMQ;
@@ -22,7 +22,7 @@ namespace Nautilus.Network
     /// Provides a generic message publisher.
     /// </summary>
     /// <typeparam name="T">The publishing message type.</typeparam>
-    public abstract class MessagePublisher<T> : ComponentBusConnected
+    public abstract class MessagePublisher<T> : MessageBusConnected
         where T : Message
     {
         private readonly PublisherSocket socket;
@@ -32,19 +32,19 @@ namespace Nautilus.Network
         /// Initializes a new instance of the <see cref="MessagePublisher{T}"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
-        /// <param name="messagingAdapter">The messaging adapter.</param>
+        /// <param name="messageBusAdapter">The messaging adapter.</param>
         /// <param name="serializer">The message serializer.</param>
         /// <param name="host">The publishers host address.</param>
         /// <param name="port">The publishers port.</param>
         /// <param name="id">The publishers identifier.</param>
         protected MessagePublisher(
             IComponentryContainer container,
-            IMessagingAdapter messagingAdapter,
+            IMessageBusAdapter messageBusAdapter,
             ISerializer<T> serializer,
             NetworkAddress host,
             NetworkPort port,
             Guid id)
-            : base(container, messagingAdapter)
+            : base(container, messageBusAdapter)
         {
             Condition.NotDefault(id, nameof(id));
 

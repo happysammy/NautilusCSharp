@@ -50,44 +50,63 @@ namespace NautilusData
                 guidFactory,
                 new LoggerFactory(config.LoggingAdapter));
 
-            var messagingAdapter = MessagingServiceFactory.Create(container);
+            var messageBusAdapter = MessageBusFactory.Create(container);
             var scheduler = new HashedWheelTimerScheduler(container);
 
-            var tickBus = new TickBus(container);
-            var dataBus = new DataBus(container);
+            var tickPublisher = new TickPublisher(
+                container,
+                new TickSerializer(),
+                config.ServerAddress,
+                config.TickSubscribePort);
+
+            var barPublisher = new BarPublisher(
+                container,
+                new BarSerializer(),
+                config.ServerAddress,
+                config.BarSubscribePort);
+
+            var instrumentPublisher = new InstrumentPublisher(
+                container,
+                new MsgPackInstrumentSerializer(),
+                config.ServerAddress,
+                config.InstrumentSubscribePort);
+
+            var tickBus = new TickBus(container, tickPublisher.Endpoint);
+            var dataBus = new DataBus(container, barPublisher.Endpoint, instrumentPublisher.Endpoint);
+            var dataBusAdapter = new DataBusAdapter(tickBus.Endpoint, dataBus.Endpoint);
 
             var venue = config.FixConfiguration.Broker.ToString().ToEnum<Venue>();
             var symbolConverter = new SymbolConverter(venue, config.SymbolIndex);
 
             var fixClient = CreateFixClient(
                 container,
-                messagingAdapter,
+                messageBusAdapter,
                 config.FixConfiguration,
                 symbolConverter);
 
             var fixGateway = FixGatewayFactory.Create(
                 container,
-                messagingAdapter,
+                messageBusAdapter,
                 fixClient,
                 tickBus.Endpoint,
                 dataBus.Endpoint);
 
             var redisConnection = ConnectionMultiplexer.Connect("localhost:6379,allowAdmin=true");
-            var tickRepository = new InMemoryTickStore(container);
+            var tickRepository = new InMemoryTickStore(container, dataBusAdapter);
             var barRepository = new RedisBarRepository(redisConnection);
             var instrumentRepository = new RedisInstrumentRepository(redisConnection);
             instrumentRepository.CacheAll();
-
-            var barAggregationController = new BarAggregationController(
-                container,
-                messagingAdapter,
-                scheduler,
-                dataBus.Endpoint);
 
             var databaseTaskManager = new DatabaseTaskManager(
                 container,
                 barRepository,
                 instrumentRepository);
+
+            var barAggregationController = new BarAggregationController(
+                container,
+                dataBusAdapter,
+                scheduler,
+                dataBus.Endpoint);
 
             var tickProvider = new TickProvider(
                 container,
@@ -97,12 +116,6 @@ namespace NautilusData
                 config.ServerAddress,
                 config.TickRequestPort);
 
-            var tickPublisher = new TickPublisher(
-                container,
-                new TickSerializer(),
-                config.ServerAddress,
-                config.TickSubscribePort);
-
             var barProvider = new BarProvider(
                 container,
                 barRepository,
@@ -110,12 +123,6 @@ namespace NautilusData
                 new MsgPackResponseSerializer(),
                 config.ServerAddress,
                 config.BarRequestPort);
-
-            var barPublisher = new BarPublisher(
-                container,
-                new BarSerializer(),
-                config.ServerAddress,
-                config.BarSubscribePort);
 
             var instrumentProvider = new InstrumentProvider(
                 container,
@@ -126,19 +133,9 @@ namespace NautilusData
                 config.ServerAddress,
                 config.InstrumentRequestPort);
 
-            var instrumentPublisher = new InstrumentPublisher(
-                container,
-                new MsgPackInstrumentSerializer(),
-                config.ServerAddress,
-                config.InstrumentSubscribePort);
-
             // Wire up service.
-//            fixGateway.RegisterConnectionEventReceiver(DataServiceAddress.Core);
-//            fixGateway.RegisterTickReceiver(tickPublisher.Endpoint);
 //            fixGateway.RegisterTickReceiver(tickRepository.Endpoint);
-//            fixGateway.RegisterTickReceiver(barAggregationController.Endpoint);
 //            fixGateway.RegisterInstrumentReceiver(DataServiceAddress.DatabaseTaskManager);
-//            fixGateway.RegisterInstrumentReceiver(DataServiceAddress.InstrumentPublisher);
             var addresses = new Dictionary<Address, IEndpoint>
             {
                 { DataServiceAddress.Scheduler, scheduler.Endpoint },
@@ -158,7 +155,7 @@ namespace NautilusData
 
             return new DataService(
                 container,
-                messagingAdapter,
+                messageBusAdapter,
                 addresses,
                 scheduler,
                 fixGateway,
@@ -167,7 +164,7 @@ namespace NautilusData
 
         private static IFixClient CreateFixClient(
             IComponentryContainer container,
-            IMessagingAdapter messagingAdapter,
+            IMessageBusAdapter messageBusAdapter,
             FixConfiguration configuration,
             SymbolConverter symbolConverter)
         {
@@ -176,13 +173,13 @@ namespace NautilusData
                 case Brokerage.FXCM:
                     return FxcmFixClientFactory.Create(
                         container,
-                        messagingAdapter,
+                        messageBusAdapter,
                         configuration,
                         symbolConverter);
                 case Brokerage.DUKASCOPY:
                     return DukascopyFixClientFactory.Create(
                         container,
-                        messagingAdapter,
+                        messageBusAdapter,
                         configuration,
                         symbolConverter);
                 case Brokerage.Simulation:

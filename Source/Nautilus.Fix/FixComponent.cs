@@ -37,7 +37,7 @@ namespace Nautilus.Fix
         private readonly IZonedClock clock;
         private readonly IGuidFactory guidFactory;
         private readonly ILogger logger;
-        private readonly IMessagingAdapter messagingAdapter;
+        private readonly IMessageBusAdapter messageBusAdapter;
         private readonly CommandHandler commandHandler;
         private readonly FixConfiguration config;
         private readonly bool sendAccountTag;
@@ -49,13 +49,13 @@ namespace Nautilus.Fix
         /// Initializes a new instance of the <see cref="FixComponent"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
-        /// <param name="messagingAdapter">The messaging adapter.</param>
+        /// <param name="messageBusAdapter">The messaging adapter.</param>
         /// <param name="config">The FIX configuration.</param>
         /// <param name="messageHandler">The FIX message handler.</param>
         /// <param name="messageRouter">The FIX message router.</param>
         protected FixComponent(
             IComponentryContainer container,
-            IMessagingAdapter messagingAdapter,
+            IMessageBusAdapter messageBusAdapter,
             FixConfiguration config,
             IFixMessageHandler messageHandler,
             IFixMessageRouter messageRouter)
@@ -63,7 +63,7 @@ namespace Nautilus.Fix
             this.clock = container.Clock;
             this.guidFactory = container.GuidFactory;
             this.logger = container.LoggerFactory.Create(new Label(nameof(FixClient)));
-            this.messagingAdapter = messagingAdapter;
+            this.messageBusAdapter = messageBusAdapter;
             this.commandHandler = new CommandHandler(this.logger);
             this.Broker = config.Broker;
             this.Account = config.Credentials.Account;
@@ -196,7 +196,7 @@ namespace Nautilus.Fix
         {
             this.commandHandler.Execute(() =>
             {
-                this.messagingAdapter.SendToBus(
+                this.messageBusAdapter.SendToBus(
                     new FixSessionConnected(
                         this.Broker,
                         sessionId.ToString(),
@@ -217,7 +217,7 @@ namespace Nautilus.Fix
         {
             this.commandHandler.Execute(() =>
             {
-                this.messagingAdapter.SendToBus(
+                this.messageBusAdapter.SendToBus(
                     new FixSessionDisconnected(
                         this.Broker,
                         sessionId.ToString(),

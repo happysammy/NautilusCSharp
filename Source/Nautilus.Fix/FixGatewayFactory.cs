@@ -20,21 +20,21 @@ namespace Nautilus.Fix
         /// Creates and returns a new FIX gateway.
         /// </summary>
         /// <param name="container">The componentry container.</param>
-        /// <param name="messagingAdapter">The messaging adapter.</param>
+        /// <param name="messageBusAdapter">The messaging adapter.</param>
         /// <param name="fixClient">The FIX client.</param>
         /// <param name="tickBus">The tick bus endpoint.</param>
         /// <param name="dataBus">The data bus endpoint.</param>
         /// <returns>The created FIX gateway.</returns>
         public static FixGateway Create(
             IComponentryContainer container,
-            IMessagingAdapter messagingAdapter,
+            IMessageBusAdapter messageBusAdapter,
             IFixClient fixClient,
             IEndpoint tickBus,
             IEndpoint dataBus)
         {
             var gateway = new FixGateway(
                 container,
-                messagingAdapter,
+                messageBusAdapter,
                 fixClient,
                 tickBus,
                 dataBus);

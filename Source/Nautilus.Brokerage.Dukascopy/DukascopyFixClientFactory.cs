@@ -20,19 +20,19 @@ namespace Nautilus.Brokerage.Dukascopy
         /// Creates and returns a new Dukascopy FIX client.
         /// </summary>
         /// <param name="container">The componentry container.</param>
-        /// <param name="messagingAdapter">The messaging adapter.</param>
+        /// <param name="messageBusAdapter">The messaging adapter.</param>
         /// <param name="config">The FIX configuration.</param>
         /// <param name="symbolConverter">The symbol provider.</param>
         /// <returns>The Dukascopy FIX client.</returns>
         public static IFixClient Create(
             IComponentryContainer container,
-            IMessagingAdapter messagingAdapter,
+            IMessageBusAdapter messageBusAdapter,
             FixConfiguration config,
             SymbolConverter symbolConverter)
         {
             return new FixClient(
                 container,
-                messagingAdapter,
+                messageBusAdapter,
                 config,
                 new DukascopyFixMessageHandler(container, symbolConverter),
                 new DukascopyFixMessageRouter(

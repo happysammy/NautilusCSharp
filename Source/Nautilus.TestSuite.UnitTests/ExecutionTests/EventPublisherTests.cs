@@ -33,7 +33,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
         private readonly ITestOutputHelper output;
         private readonly IComponentryContainer container;
         private readonly MockLoggingAdapter mockLoggingAdapter;
-        private readonly IMessagingAdapter mockMessagingAdapter;
+        private readonly IMessageBusAdapter mockMessageBusAdapter;
         private readonly IEndpoint testReceiver;
 
         public EventPublisherTests(ITestOutputHelper output)
@@ -45,7 +45,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             this.container = setupFactory.Create();
             this.mockLoggingAdapter = setupFactory.LoggingAdapter;
             var service = new MockMessageBusFactory(this.container);
-            this.mockMessagingAdapter = service.MessagingAdapter;
+            this.mockMessageBusAdapter = service.MessageBusAdapter;
             this.testReceiver = new MockMessagingAgent().Endpoint;
         }
 
@@ -57,7 +57,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             var publisher = new EventPublisher(
                 this.container,
-                this.mockMessagingAdapter,
+                this.mockMessageBusAdapter,
                 new MsgPackEventSerializer(),
                 this.localHost,
                 new NetworkPort(56601));

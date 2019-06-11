@@ -1,14 +1,15 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="ComponentBusConnected.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="MessageBusConnected.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Common.Componentry
+namespace Nautilus.Common.Messaging
 {
     using System.Collections.Generic;
+    using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
     using Nautilus.Messaging;
@@ -17,21 +18,21 @@ namespace Nautilus.Common.Componentry
     /// <summary>
     /// The base class for all components which are connected to the message bus.
     /// </summary>
-    public abstract class ComponentBusConnected : Component
+    public abstract class MessageBusConnected : Component
     {
-        private readonly IMessagingAdapter messagingAdapter;
+        private readonly IMessageBusAdapter messageBusAdapter;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ComponentBusConnected"/> class.
+        /// Initializes a new instance of the <see cref="MessageBusConnected"/> class.
         /// </summary>
         /// <param name="container">The container.</param>
-        /// <param name="messagingAdapter">The messaging adapter.</param>
-        protected ComponentBusConnected(
+        /// <param name="messageBusAdapter">The messaging adapter.</param>
+        protected MessageBusConnected(
             IComponentryContainer container,
-            IMessagingAdapter messagingAdapter)
+            IMessageBusAdapter messageBusAdapter)
             : base(container)
         {
-            this.messagingAdapter = messagingAdapter;
+            this.messageBusAdapter = messageBusAdapter;
 
             this.RegisterHandler<IEnvelope>(this.Open);
         }
@@ -40,10 +41,10 @@ namespace Nautilus.Common.Componentry
         /// Subscribe to the given message type with the message bus.
         /// </summary>
         /// <typeparam name="T">The message type to subscribe to.</typeparam>
-        public void Subscribe<T>()
+        protected void Subscribe<T>()
             where T : Message
         {
-            this.messagingAdapter.Subscribe<T>(
+            this.messageBusAdapter.Subscribe<T>(
                 this.Endpoint,
                 this.NewGuid(),
                 this.TimeNow());
@@ -53,10 +54,10 @@ namespace Nautilus.Common.Componentry
         /// Unsubscribe from the given message type with the message bus.
         /// </summary>
         /// <typeparam name="T">The message type to unsubscribe from.</typeparam>
-        public void Unsubscribe<T>()
+        protected void Unsubscribe<T>()
             where T : Message
         {
-            this.messagingAdapter.Unsubscribe<T>(
+            this.messageBusAdapter.Unsubscribe<T>(
                 this.Endpoint,
                 this.NewGuid(),
                 this.TimeNow());
@@ -71,7 +72,7 @@ namespace Nautilus.Common.Componentry
         protected void Send<T>(T message, Address receiver)
             where T : Message
         {
-            this.messagingAdapter.Send(
+            this.messageBusAdapter.Send(
                 message,
                 receiver,
                 this.Address,
@@ -89,7 +90,7 @@ namespace Nautilus.Common.Componentry
         {
             for (var i = 0; i < receivers.Count; i++)
             {
-                this.messagingAdapter.Send(
+                this.messageBusAdapter.Send(
                     message,
                     receivers[i],
                     this.Address,
@@ -105,7 +106,7 @@ namespace Nautilus.Common.Componentry
         protected void SendToBus<T>(T message)
             where T : Message
         {
-            this.messagingAdapter.SendToBus(message, this.Address, this.TimeNow());
+            this.messageBusAdapter.SendToBus(message, this.Address, this.TimeNow());
         }
     }
 }

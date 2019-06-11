@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="MockMessagingAdapter.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="MockMessageBusAdapter.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -17,11 +17,11 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using NodaTime;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public sealed class MockMessagingAdapter : IMessagingAdapter
+    public sealed class MockMessageBusAdapter : IMessageBusAdapter
     {
         private readonly IEndpoint testEndpoint;
 
-        public MockMessagingAdapter(IEndpoint testEndpoint)
+        public MockMessageBusAdapter(IEndpoint testEndpoint)
         {
             this.testEndpoint = testEndpoint;
         }

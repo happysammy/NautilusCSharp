@@ -25,7 +25,7 @@ namespace Nautilus.Execution
     /// <summary>
     /// Provides an execution service.
     /// </summary>
-    public sealed class ExecutionService : ComponentBusConnected
+    public sealed class ExecutionService : MessageBusConnected
     {
         private readonly IScheduler scheduler;
         private readonly IFixGateway fixGateway;
@@ -36,7 +36,7 @@ namespace Nautilus.Execution
         /// Initializes a new instance of the <see cref="ExecutionService"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
-        /// <param name="messagingAdapter">The messaging adapter.</param>
+        /// <param name="messageBusAdapter">The messaging adapter.</param>
         /// <param name="scheduler">The scheduler.</param>
         /// <param name="fixGateway">The execution gateway.</param>
         /// <param name="addresses">The execution service addresses.</param>
@@ -44,17 +44,17 @@ namespace Nautilus.Execution
         /// <exception cref="ArgumentException">If the addresses is empty.</exception>
         public ExecutionService(
             IComponentryContainer container,
-            MessagingAdapter messagingAdapter,
+            MessageBusAdapter messageBusAdapter,
             Dictionary<Address, IEndpoint> addresses,
             IScheduler scheduler,
             IFixGateway fixGateway,
             Configuration config)
-            : base(container, messagingAdapter)
+            : base(container, messageBusAdapter)
         {
             Condition.NotEmpty(addresses, nameof(addresses));
 
             addresses.Add(ExecutionServiceAddress.Core, this.Endpoint);
-            messagingAdapter.Send(new InitializeSwitchboard(
+            messageBusAdapter.Send(new InitializeSwitchboard(
                 Switchboard.Create(addresses),
                 this.NewGuid(),
                 this.TimeNow()));

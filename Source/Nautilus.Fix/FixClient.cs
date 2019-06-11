@@ -25,19 +25,19 @@ namespace Nautilus.Fix
         /// Initializes a new instance of the <see cref="FixClient"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
-        /// <param name="messagingAdapter">The messaging adapter.</param>
+        /// <param name="messageBusAdapter">The messaging adapter.</param>
         /// <param name="config">The FIX configuration.</param>
         /// <param name="messageHandler">The FIX message handler.</param>
         /// <param name="messageRouter">The FIX message router.</param>
         public FixClient(
             IComponentryContainer container,
-            IMessagingAdapter messagingAdapter,
+            IMessageBusAdapter messageBusAdapter,
             FixConfiguration config,
             IFixMessageHandler messageHandler,
             IFixMessageRouter messageRouter)
         : base(
             container,
-            messagingAdapter,
+            messageBusAdapter,
             config,
             messageHandler,
             messageRouter)

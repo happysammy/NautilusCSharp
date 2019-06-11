@@ -15,6 +15,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.NetworkTests
     using System.Threading.Tasks;
     using Nautilus.Common.Interfaces;
     using Nautilus.Data;
+    using Nautilus.Data.Bus;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Messages.Requests;
     using Nautilus.Data.Messages.Responses;
@@ -40,6 +41,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.NetworkTests
         private const string TEST_ADDRESS = "tcp://localhost:55522";
         private readonly ITestOutputHelper output;
         private readonly MockLoggingAdapter mockLoggingAdapter;
+        private readonly MockMessagingAgent mockReceiver;
         private readonly ITickRepository repository;
         private readonly IMessageSerializer<Request> requestSerializer;
         private readonly IMessageSerializer<Response> responseSerializer;
@@ -55,7 +57,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.NetworkTests
             this.mockLoggingAdapter = setupFactory.LoggingAdapter;
             this.requestSerializer = new MsgPackRequestSerializer();
             this.responseSerializer = new MsgPackResponseSerializer();
-            this.repository = new InMemoryTickStore(container);
+            this.mockReceiver = new MockMessagingAgent();
+            var dataBusAdapter = new DataBusAdapter(this.mockReceiver.Endpoint, this.mockReceiver.Endpoint);
+            this.repository = new InMemoryTickStore(container, dataBusAdapter);
             this.provider = new TickProvider(
                 container,
                 this.repository,

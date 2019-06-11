@@ -1,5 +1,5 @@
 ﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="MessagingAdapter.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="MessageBusAdapter.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -20,19 +20,19 @@ namespace Nautilus.Common.Messaging
 
     /// <inheritdoc />
     [Immutable]
-    public sealed class MessagingAdapter : IMessagingAdapter
+    public sealed class MessageBusAdapter : IMessageBusAdapter
     {
         private readonly IEndpoint cmdBus;
         private readonly IEndpoint evtBus;
         private readonly IEndpoint docBus;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MessagingAdapter"/> class.
+        /// Initializes a new instance of the <see cref="MessageBusAdapter"/> class.
         /// </summary>
         /// <param name="cmdBus">The command bus endpoint.</param>
         /// <param name="evtBus">The event bus endpoint.</param>
         /// <param name="docBus">The document bus endpoint.</param>
-        public MessagingAdapter(
+        public MessageBusAdapter(
             IEndpoint cmdBus,
             IEndpoint evtBus,
             IEndpoint docBus)
@@ -118,7 +118,7 @@ namespace Nautilus.Common.Messaging
                 return;
             }
 
-            throw ExceptionFactory.InvalidSwitchArgument(type, nameof(type));
+            throw ExceptionFactory.InvalidSwitchArgument(type, nameof(type));  // Design time error
         }
 
         private void WrapAndSend<T>(

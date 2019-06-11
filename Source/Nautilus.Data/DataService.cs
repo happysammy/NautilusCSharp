@@ -28,7 +28,7 @@ namespace Nautilus.Data
     /// <summary>
     /// Provides a data service.
     /// </summary>
-    public sealed class DataService : ComponentBusConnected
+    public sealed class DataService : MessageBusConnected
     {
         private readonly IScheduler scheduler;
         private readonly IFixGateway fixGateway;
@@ -45,7 +45,7 @@ namespace Nautilus.Data
         /// Initializes a new instance of the <see cref="DataService"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
-        /// <param name="messagingAdapter">The messaging adapter.</param>
+        /// <param name="messageBusAdapter">The messaging adapter.</param>
         /// <param name="scheduler">The scheduler.</param>
         /// <param name="fixGateway">The FIX gateway.</param>
         /// <param name="addresses">The data service address dictionary.</param>
@@ -53,12 +53,12 @@ namespace Nautilus.Data
         /// <exception cref="ArgumentException">If the addresses is empty.</exception>
         public DataService(
             IComponentryContainer container,
-            MessagingAdapter messagingAdapter,
+            MessageBusAdapter messageBusAdapter,
             Dictionary<Address, IEndpoint> addresses,
             IScheduler scheduler,
             IFixGateway fixGateway,
             Configuration config)
-            : base(container, messagingAdapter)
+            : base(container, messageBusAdapter)
         {
             Condition.NotEmpty(addresses, nameof(addresses));
 
@@ -75,7 +75,7 @@ namespace Nautilus.Data
             this.barRollingWindowDays = config.BarDataTrimWindowDays;
 
             addresses.Add(DataServiceAddress.Core, this.Endpoint);
-            messagingAdapter.Send(new InitializeSwitchboard(
+            messageBusAdapter.Send(new InitializeSwitchboard(
                 Switchboard.Create(addresses),
                 this.NewGuid(),
                 this.TimeNow()));
@@ -88,6 +88,9 @@ namespace Nautilus.Data
             this.RegisterHandler<MarketClosed>(this.OnMessage);
             this.RegisterHandler<TrimTickData>(this.OnMessage);
             this.RegisterHandler<TrimBarData>(this.OnMessage);
+
+            this.Subscribe<FixSessionConnected>();
+            this.Subscribe<FixSessionDisconnected>();
         }
 
         /// <inheritdoc />
