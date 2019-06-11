@@ -9,9 +9,9 @@
 namespace Nautilus.Fix
 {
     using System.Collections.Generic;
+    using Nautilus.Common.Data;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
-    using Nautilus.Common.Messaging;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Entities;
@@ -23,26 +23,22 @@ namespace Nautilus.Fix
     /// Provides a gateway to, and anti-corruption layer from, the FIX module of the service.
     /// </summary>
     [PerformanceOptimized]
-    public sealed class FixDataGateway : MessageBusConnected, IDataGateway
+    public sealed class FixDataGateway : DataBusConnected, IDataGateway
     {
-        private readonly IDataBusAdapter dataBusAdapter;
         private readonly IFixClient fixClient;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FixDataGateway"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
-        /// <param name="messageBusAdapter">The messaging adapter.</param>
         /// <param name="dataBusAdapter">The data bus adapter.</param>
         /// <param name="fixClient">The FIX client.</param>
         public FixDataGateway(
             IComponentryContainer container,
-            IMessageBusAdapter messageBusAdapter,
             IDataBusAdapter dataBusAdapter,
             IFixClient fixClient)
-            : base(container, messageBusAdapter)
+            : base(container, dataBusAdapter)
         {
-            this.dataBusAdapter = dataBusAdapter;
             this.fixClient = fixClient;
 
             this.RegisterHandler<ConnectFix>(this.OnMessage);
@@ -101,7 +97,7 @@ namespace Nautilus.Fix
                     Price.Create(ask),
                     timestamp);
 
-                this.dataBusAdapter.SendToBus(tick);
+                this.SendToBus(tick);
             });
         }
 
@@ -135,7 +131,7 @@ namespace Nautilus.Fix
 
                 foreach (var instrument in instruments)
                 {
-                    this.dataBusAdapter.SendToBus(instrument);
+                    this.SendToBus(instrument);
                 }
             });
         }

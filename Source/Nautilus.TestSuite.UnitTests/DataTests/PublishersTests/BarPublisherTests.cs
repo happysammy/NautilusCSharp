@@ -13,6 +13,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
     using System.Threading.Tasks;
     using Nautilus.Common.Data;
     using Nautilus.Data.Network;
+    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network;
     using Nautilus.Serialization;
     using Nautilus.TestSuite.TestKit;
@@ -62,7 +63,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
             Task.Delay(100).Wait();
 
             var bar = StubBarData.Create();
-            var data = (barType, bar);
+            var data = new BarData(barType, bar);
 
             // Act
             this.publisher.Endpoint.Send(data);

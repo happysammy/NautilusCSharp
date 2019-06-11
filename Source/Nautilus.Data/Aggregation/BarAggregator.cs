@@ -130,16 +130,17 @@ namespace Nautilus.Data.Aggregation
 
             if (builder is null)
             {
-                return; // No builder to build bar.
+                return; // No builder to build bar
             }
 
-            // Close the bar.
+            // Close the bar
             var bar = builder.Build(message.ScheduledTime);
+            var barData = new BarData(new BarType(this.symbol, barSpec), bar);
 
-            // Send to bar aggregation controller (parent).
-            this.parent.Send((new BarType(this.symbol, barSpec), bar));
+            // Send to bar aggregation controller (parent)
+            this.parent.Send(barData);
 
-            // Refresh bar builder.
+            // Refresh bar builder
             this.barBuilders[barSpec] = new BarBuilder(bar.Close);
         }
 
@@ -157,7 +158,7 @@ namespace Nautilus.Data.Aggregation
 
             if (this.barBuilders.ContainsKey(barSpec))
             {
-                return; // Already contains builder.
+                return; // Already contains builder
             }
 
             this.barBuilders.Add(barSpec, null);
@@ -183,7 +184,7 @@ namespace Nautilus.Data.Aggregation
 
         private void OnMessage(MarketClosed message)
         {
-            // Purge bar builders.
+            // Purge bar builders
             foreach (var barSpec in this.barBuilders.Keys)
             {
                 this.barBuilders[barSpec] = null;

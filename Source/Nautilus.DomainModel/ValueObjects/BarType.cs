@@ -12,8 +12,7 @@ namespace Nautilus.DomainModel.ValueObjects
     using Nautilus.Core;
 
     /// <summary>
-    /// Represents the concept of a bar type representing a <see cref="Symbol"/> and
-    /// <see cref="BarSpecification"/>.
+    /// Represents a bar type including a <see cref="Symbol"/> and <see cref="BarSpecification"/>.
     /// </summary>
     public struct BarType : IEquatable<object>, IEquatable<BarType>
     {

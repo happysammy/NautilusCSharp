@@ -41,7 +41,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             var container = setupFactory.Create();
             this.logger = setupFactory.LoggingAdapter;
             this.receiver = new MockMessagingAgent();
-            this.receiver.RegisterHandler<ValueTuple<BarType, Bar>>(this.receiver.OnMessage);
+            this.receiver.RegisterHandler<BarData>(this.receiver.OnMessage);
 
             this.barAggregator = new BarAggregator(
                 container,

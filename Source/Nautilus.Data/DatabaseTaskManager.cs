@@ -11,7 +11,6 @@ namespace Nautilus.Data
     using Nautilus.Common.Data;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
-    using Nautilus.Common.Messages.Documents;
     using Nautilus.Core.Extensions;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Messages.Commands;
@@ -44,12 +43,12 @@ namespace Nautilus.Data
             this.barRepository = barRepository;
             this.instrumentRepository = instrumentRepository;
 
-            this.RegisterHandler<DataDelivery<(BarType, Bar)>>(this.OnMessage);
-            this.RegisterHandler<DataDelivery<BarDataFrame>>(this.OnMessage);
-            this.RegisterHandler<DataDelivery<Instrument>>(this.OnMessage);
+            this.RegisterHandler<BarData>(this.OnMessage);
+            this.RegisterHandler<BarDataFrame>(this.OnMessage);
+            this.RegisterHandler<Instrument>(this.OnMessage);
             this.RegisterHandler<TrimBarData>(this.OnMessage);
 
-            this.Subscribe<Bar>();
+            this.Subscribe<BarData>();
             this.Subscribe<Instrument>();
         }
 
@@ -59,26 +58,26 @@ namespace Nautilus.Data
             this.barRepository.SnapshotDatabase();
         }
 
-        private void OnMessage(DataDelivery<(BarType BarType, Bar Bar)> message)
+        private void OnMessage(BarData data)
         {
             this.barRepository
-                .Add(message.Data.BarType, message.Data.Bar)
+                .Add(data.BarType, data.Bar)
                 .OnSuccess(result => this.Log.Verbose(result.Message))
                 .OnFailure(result => this.Log.Warning(result.Message));
         }
 
-        private void OnMessage(DataDelivery<BarDataFrame> message)
+        private void OnMessage(BarDataFrame data)
         {
             this.barRepository
-                .Add(message.Data)
+                .Add(data)
                 .OnSuccess(result => this.Log.Debug(result.Message))
                 .OnFailure(result => this.Log.Warning(result.Message));
         }
 
-        private void OnMessage(DataDelivery<Instrument> message)
+        private void OnMessage(Instrument data)
         {
             this.instrumentRepository
-                .Add(message.Data, this.TimeNow())
+                .Add(data, this.TimeNow())
                 .OnSuccess(result => this.Log.Information(result.Message))
                 .OnFailure(result => this.Log.Error(result.Message));
         }

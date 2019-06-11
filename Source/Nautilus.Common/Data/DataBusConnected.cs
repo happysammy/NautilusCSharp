@@ -12,6 +12,7 @@ namespace Nautilus.Common.Data
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.Messaging.Interfaces;
 
     /// <summary>
     /// The base class for all components which are connected to the message bus.
@@ -31,33 +32,8 @@ namespace Nautilus.Common.Data
             : base(container)
         {
             this.dataBusAdapter = dataBusAdapter;
-        }
 
-        /// <summary>
-        /// Send the given tick to the data bus.
-        /// </summary>
-        /// <param name="data">The data to send.</param>
-        public void SendToBus(Tick data)
-        {
-            this.dataBusAdapter.SendToBus(data);
-        }
-
-        /// <summary>
-        /// Send the given bar data to the data bus.
-        /// </summary>
-        /// <param name="data">The data to send.</param>
-        public void SendToBus((BarType, Bar) data)
-        {
-            this.dataBusAdapter.SendToBus(data);
-        }
-
-        /// <summary>
-        /// Send the given instrument to the data bus.
-        /// </summary>
-        /// <param name="data">The data to send.</param>
-        public void SendToBus(Instrument data)
-        {
-            this.dataBusAdapter.SendToBus(data);
+            this.RegisterHandler<IEnvelope>(this.Open);
         }
 
         /// <summary>
@@ -76,6 +52,33 @@ namespace Nautilus.Common.Data
         protected void Unsubscribe<T>()
         {
             this.dataBusAdapter.Subscribe<T>(this.Mailbox, this.NewGuid(), this.TimeNow());
+        }
+
+        /// <summary>
+        /// Send the given tick to the data bus.
+        /// </summary>
+        /// <param name="data">The data to send.</param>
+        protected void SendToBus(Tick data)
+        {
+            this.dataBusAdapter.SendToBus(data);
+        }
+
+        /// <summary>
+        /// Send the given bar data to the data bus.
+        /// </summary>
+        /// <param name="data">The data to send.</param>
+        protected void SendToBus(BarData data)
+        {
+            this.dataBusAdapter.SendToBus(data);
+        }
+
+        /// <summary>
+        /// Send the given instrument to the data bus.
+        /// </summary>
+        /// <param name="data">The data to send.</param>
+        protected void SendToBus(Instrument data)
+        {
+            this.dataBusAdapter.SendToBus(data);
         }
     }
 }

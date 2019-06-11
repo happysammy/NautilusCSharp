@@ -60,7 +60,7 @@ namespace Nautilus.Common.Data
         }
 
         /// <inheritdoc />
-        public void SendToBus((BarType, Bar) data)
+        public void SendToBus(BarData data)
         {
             this.barBus.Send(data);
         }

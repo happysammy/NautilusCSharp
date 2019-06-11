@@ -47,7 +47,7 @@ namespace Nautilus.Common.Interfaces
         /// Send the given bar data to the data bus.
         /// </summary>
         /// <param name="data">The data to send.</param>
-        void SendToBus((BarType, Bar) data);
+        void SendToBus(BarData data);
 
         /// <summary>
         /// Send the given instrument to the data bus.

@@ -40,12 +40,12 @@ namespace Nautilus.Data.Network
                 port,
                 Guid.NewGuid())
         {
-            this.RegisterHandler<(BarType, Bar)>(this.OnMessage);
+            this.RegisterHandler<BarData>(this.OnMessage);
 
-            this.Subscribe<(BarType, Bar)>();
+            this.Subscribe<BarData>();
         }
 
-        private void OnMessage((BarType BarType, Bar Bar) data)
+        private void OnMessage(BarData data)
         {
             this.Publish(data.BarType.ToString(), data.Bar);
         }

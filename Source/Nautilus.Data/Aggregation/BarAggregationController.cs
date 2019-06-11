@@ -53,7 +53,7 @@ namespace Nautilus.Data.Aggregation
             this.subscriptions = new Dictionary<BarType, ICancelable?>();
 
             this.RegisterHandler<Tick>(this.OnMessage);
-            this.RegisterHandler<(BarType, Bar)>(this.OnMessage);
+            this.RegisterHandler<BarData>(this.OnMessage);
             this.RegisterHandler<Subscribe<BarType>>(this.OnMessage);
             this.RegisterHandler<Unsubscribe<BarType>>(this.OnMessage);
             this.RegisterHandler<MarketOpened>(this.OnMessage);
@@ -93,7 +93,7 @@ namespace Nautilus.Data.Aggregation
             this.Log.Warning($"No bar aggregator for {tick.Symbol} ticks.");
         }
 
-        private void OnMessage((BarType, Bar) data)
+        private void OnMessage(BarData data)
         {
             // Forward bar to data bus.
             this.SendToBus(data);

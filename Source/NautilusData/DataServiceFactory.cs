@@ -86,7 +86,6 @@ namespace NautilusData
 
             var dataGateway = FixDataGatewayFactory.Create(
                 container,
-                messageBusAdapter,
                 dataBusAdapter,
                 fixClient);
 

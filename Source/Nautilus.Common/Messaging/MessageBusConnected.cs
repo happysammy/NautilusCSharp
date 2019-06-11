@@ -12,6 +12,7 @@ namespace Nautilus.Common.Messaging
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
+    using Nautilus.Core.Correctness;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
 
@@ -88,6 +89,8 @@ namespace Nautilus.Common.Messaging
         protected void SendAll<T>(T message, List<Address> receivers)
             where T : Message
         {
+            Debug.NotEmpty(receivers, nameof(receivers));
+
             for (var i = 0; i < receivers.Count; i++)
             {
                 this.messageBusAdapter.Send(

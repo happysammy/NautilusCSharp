@@ -56,7 +56,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         /// Add the message to the received messages list.
         /// </summary>
         /// <param name="message">The received message.</param>
-        public void OnMessage(ValueTuple<BarType, Bar> message)
+        public void OnMessage(BarData message)
         {
             this.Messages.Add(message);
         }

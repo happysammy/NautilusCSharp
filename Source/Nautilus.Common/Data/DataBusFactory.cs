@@ -29,7 +29,7 @@ namespace Nautilus.Common.Data
         {
             // TODO: Make more generic
             var tickBus = new DataBus<Tick>(container);
-            var barBus = new DataBus<(BarType, Bar)>(container);
+            var barBus = new DataBus<BarData>(container);
             var instrumentBus = new DataBus<Instrument>(container);
 
             var endpoints = new Dictionary<Type, IEndpoint>
