@@ -13,17 +13,13 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Text;
-    using Nautilus.Data.Messages.Requests;
     using Nautilus.Data.Messages.Responses;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network.Messages;
     using Nautilus.Serialization;
-    using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
-    using NetMQ;
-    using NetMQ.Sockets;
     using NodaTime;
     using Xunit;
     using Xunit.Abstractions;

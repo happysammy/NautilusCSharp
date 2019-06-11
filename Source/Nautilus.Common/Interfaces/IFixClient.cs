@@ -12,7 +12,6 @@ namespace Nautilus.Common.Interfaces
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Messaging;
 
     /// <summary>
     /// Provides an adapter for a FIX client.

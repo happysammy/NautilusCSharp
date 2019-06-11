@@ -10,8 +10,6 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.NetworkTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
     using Nautilus.Common.Interfaces;
     using Nautilus.Data;
@@ -21,7 +19,6 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.NetworkTests
     using Nautilus.Data.Messages.Responses;
     using Nautilus.Data.Network;
     using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network;
     using Nautilus.Network.Messages;

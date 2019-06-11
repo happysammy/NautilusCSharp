@@ -9,7 +9,6 @@
 namespace Nautilus.Data.Bus
 {
     using System;
-    using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;

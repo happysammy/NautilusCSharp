@@ -10,8 +10,6 @@ namespace Nautilus.Data
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Nautilus.Common.Componentry;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.CQS;
     using Nautilus.Core.Extensions;
