@@ -45,7 +45,7 @@ namespace Nautilus.Common.Messaging
             where T : Message
         {
             this.messageBusAdapter.Subscribe<T>(
-                this.Endpoint,
+                this.Mailbox,
                 this.NewGuid(),
                 this.TimeNow());
         }
@@ -58,7 +58,7 @@ namespace Nautilus.Common.Messaging
             where T : Message
         {
             this.messageBusAdapter.Unsubscribe<T>(
-                this.Endpoint,
+                this.Mailbox,
                 this.NewGuid(),
                 this.TimeNow());
         }

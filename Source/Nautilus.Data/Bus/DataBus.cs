@@ -16,6 +16,7 @@ namespace Nautilus.Data.Bus
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
 
     /// <summary>
@@ -26,8 +27,8 @@ namespace Nautilus.Data.Bus
         private readonly IEndpoint barPublisher;
         private readonly IEndpoint instrumentPublisher;
         private readonly List<Type> dataTypes;
-        private readonly List<IEndpoint> barSubscriptions;
-        private readonly List<IEndpoint> instrumentSubscriptions;
+        private readonly List<Mailbox> barSubscriptions;
+        private readonly List<Mailbox> instrumentSubscriptions;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataBus"/> class.
@@ -44,8 +45,8 @@ namespace Nautilus.Data.Bus
             this.barPublisher = barPublisher;
             this.instrumentPublisher = instrumentPublisher;
             this.dataTypes = new List<Type> { typeof(Bar), typeof(Instrument) };
-            this.barSubscriptions = new List<IEndpoint>();
-            this.instrumentSubscriptions = new List<IEndpoint>();
+            this.barSubscriptions = new List<Mailbox>();
+            this.instrumentSubscriptions = new List<Mailbox>();
 
             this.RegisterHandler<Subscribe<Type>>(this.OnMessage);
             this.RegisterHandler<Unsubscribe<Type>>(this.OnMessage);

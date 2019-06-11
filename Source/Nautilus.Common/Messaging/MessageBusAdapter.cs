@@ -56,7 +56,7 @@ namespace Nautilus.Common.Messaging
 
         /// <inheritdoc />
         public void Subscribe<T>(
-            IEndpoint subscriber,
+            Mailbox subscriber,
             Guid id,
             ZonedDateTime timestamp)
         where T : Message
@@ -69,7 +69,7 @@ namespace Nautilus.Common.Messaging
 
         /// <inheritdoc />
         public void Unsubscribe<T>(
-            IEndpoint subscriber,
+            Mailbox subscriber,
             Guid id,
             ZonedDateTime timestamp)
         where T : Message

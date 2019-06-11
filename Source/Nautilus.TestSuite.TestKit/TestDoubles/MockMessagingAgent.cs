@@ -28,13 +28,20 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         /// <param name="workDelayMilliseconds">The work delay for the receiver.</param>
         public MockMessagingAgent(int workDelayMilliseconds = 1000)
         {
+            this.Mailbox = new Mailbox(new Address(nameof(MockMessagingAgent)), this.Endpoint);
+            this.Messages = new List<object>();
             this.workDelayMilliseconds = workDelayMilliseconds;
         }
 
         /// <summary>
-        /// Gets the list of received messages.
+        /// Gets the agents mailbox.
         /// </summary>
-        public List<object> Messages { get; } = new List<object>();
+        public Mailbox Mailbox { get; }
+
+        /// <summary>
+        /// Gets the agents list of received messages.
+        /// </summary>
+        public List<object> Messages { get; }
 
         /// <summary>
         /// Add the message to the received messages list.

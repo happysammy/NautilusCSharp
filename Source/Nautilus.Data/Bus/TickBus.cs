@@ -13,6 +13,7 @@ namespace Nautilus.Data.Bus
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
 
     /// <summary>
@@ -21,7 +22,7 @@ namespace Nautilus.Data.Bus
     public sealed class TickBus : Component
     {
         private readonly IEndpoint tickPublisher;
-        private readonly List<IEndpoint> subscriptions;
+        private readonly List<Mailbox> subscriptions;
         private bool hasSubscribers;
 
         /// <summary>
@@ -33,7 +34,7 @@ namespace Nautilus.Data.Bus
         : base(container)
         {
             this.tickPublisher = tickPublisher;
-            this.subscriptions = new List<IEndpoint>();
+            this.subscriptions = new List<Mailbox>();
 
             this.RegisterHandler<Subscribe<Tick>>(this.OnMessage);
             this.RegisterHandler<Unsubscribe<Tick>>(this.OnMessage);
@@ -42,12 +43,11 @@ namespace Nautilus.Data.Bus
 
         private void OnMessage(Subscribe<Tick> message)
         {
-            var type = message.SubscriptionType;
             var subscriber = message.Subscriber;
 
             if (this.subscriptions.Contains(subscriber))
             {
-                this.Log.Warning($"{subscriber} is already subscribed to {type} data.");
+                this.Log.Warning($"{subscriber} is already subscribed to tick data.");
                 return; // Design time error
             }
 
@@ -57,12 +57,11 @@ namespace Nautilus.Data.Bus
 
         private void OnMessage(Unsubscribe<Tick> message)
         {
-            var type = message.SubscriptionType;
             var subscriber = message.Subscriber;
 
             if (!this.subscriptions.Contains(subscriber))
             {
-                this.Log.Warning($"{subscriber} is already unsubscribed from {type} data.");
+                this.Log.Warning($"{subscriber} is already unsubscribed from tick data.");
                 return;
             }
 

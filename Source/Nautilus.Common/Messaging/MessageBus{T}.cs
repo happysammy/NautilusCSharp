@@ -18,6 +18,7 @@ namespace Nautilus.Common.Messaging
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
+    using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
 
     /// <summary>
@@ -29,8 +30,8 @@ namespace Nautilus.Common.Messaging
     {
         private readonly Type busType;
         private readonly List<object> deadLetters;
-        private readonly List<IEndpoint> subscriptionsAll;
-        private readonly Dictionary<Type, List<IEndpoint>> subscriptions;
+        private readonly List<Mailbox> subscriptionsAll;
+        private readonly Dictionary<Type, List<Mailbox>> subscriptions;
 
         private Switchboard switchboard;
 
@@ -43,8 +44,8 @@ namespace Nautilus.Common.Messaging
         {
             this.busType = typeof(T);
             this.deadLetters = new List<object>();
-            this.subscriptionsAll = new List<IEndpoint>();
-            this.subscriptions = new Dictionary<Type, List<IEndpoint>>();
+            this.subscriptionsAll = new List<Mailbox>();
+            this.subscriptions = new Dictionary<Type, List<Mailbox>>();
 
             this.switchboard = Switchboard.Empty();
 
@@ -120,7 +121,7 @@ namespace Nautilus.Common.Messaging
 
             if (!this.subscriptions.ContainsKey(type))
             {
-                this.subscriptions[type] = new List<IEndpoint>();
+                this.subscriptions[type] = new List<Mailbox>();
             }
 
             this.Subscribe(message, this.subscriptions[type]);
@@ -152,7 +153,7 @@ namespace Nautilus.Common.Messaging
             }
         }
 
-        private void Subscribe(Subscribe<Type> command, List<IEndpoint> subscribers)
+        private void Subscribe(Subscribe<Type> command, List<Mailbox> subscribers)
         {
             if (subscribers.Contains(command.Subscriber))
             {
@@ -165,7 +166,7 @@ namespace Nautilus.Common.Messaging
             this.Log.Information($"Subscriber subscribed to {command.SubscriptionName} messages.");
         }
 
-        private void Unsubscribe(Unsubscribe<Type> command, List<IEndpoint> subscribers)
+        private void Unsubscribe(Unsubscribe<Type> command, List<Mailbox> subscribers)
         {
             if (!subscribers.Contains(command.Subscriber))
             {
@@ -210,7 +211,7 @@ namespace Nautilus.Common.Messaging
                 {
                     for (var i = 0; i < this.subscriptionsAll.Count; i++)
                     {
-                        this.subscriptionsAll[i].Send(envelope);
+                        this.subscriptionsAll[i].Endpoint.Send(envelope);
                     }
                 }
 
@@ -218,7 +219,7 @@ namespace Nautilus.Common.Messaging
                 {
                     for (var i = 0; i < subscribers.Count; i++)
                     {
-                        subscribers[i].Send(envelope);
+                        subscribers[i].Endpoint.Send(envelope);
                     }
                 }
 

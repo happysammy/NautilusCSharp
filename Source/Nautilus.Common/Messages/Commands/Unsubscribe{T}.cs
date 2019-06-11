@@ -12,7 +12,7 @@ namespace Nautilus.Common.Messages.Commands
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
-    using Nautilus.Messaging.Interfaces;
+    using Nautilus.Messaging;
     using NodaTime;
 
     /// <summary>
@@ -31,7 +31,7 @@ namespace Nautilus.Common.Messages.Commands
         /// <param name="timestamp">The commands timestamp.</param>
         public Unsubscribe(
             T subscription,
-            IEndpoint subscriber,
+            Mailbox subscriber,
             Guid id,
             ZonedDateTime timestamp)
             : base(
@@ -52,7 +52,7 @@ namespace Nautilus.Common.Messages.Commands
         public T Subscription { get; }
 
         /// <summary>
-        /// Gets the commands subscriptions name.
+        /// Gets the commands subscription name.
         /// </summary>
         public string SubscriptionName => this.Subscription is null ? string.Empty : this.Subscription.ToString();
 
@@ -64,6 +64,6 @@ namespace Nautilus.Common.Messages.Commands
         /// <summary>
         /// Gets the commands subscriber endpoint.
         /// </summary>
-        public IEndpoint Subscriber { get; }
+        public Mailbox Subscriber { get; }
     }
 }

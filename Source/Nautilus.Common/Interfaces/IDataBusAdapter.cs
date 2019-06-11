@@ -10,7 +10,7 @@ namespace Nautilus.Common.Interfaces
 {
     using System;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Messaging.Interfaces;
+    using Nautilus.Messaging;
     using NodaTime;
 
     /// <summary>
@@ -25,7 +25,7 @@ namespace Nautilus.Common.Interfaces
         /// <param name="subscriber">The subscriber endpoint.</param>
         /// <param name="id">The subscription identifier.</param>
         /// <param name="timestamp">The subscription timestamp.</param>
-        void Subscribe<T>(IEndpoint subscriber, Guid id, ZonedDateTime timestamp);
+        void Subscribe<T>(Mailbox subscriber, Guid id, ZonedDateTime timestamp);
 
         /// <summary>
         /// Unsubscribe the given endpoint from data of type T.
@@ -34,7 +34,7 @@ namespace Nautilus.Common.Interfaces
         /// <param name="subscriber">The subscriber endpoint.</param>
         /// <param name="id">The subscription identifier.</param>
         /// <param name="timestamp">The subscription timestamp.</param>
-        void Unsubscribe<T>(IEndpoint subscriber, Guid id, ZonedDateTime timestamp);
+        void Unsubscribe<T>(Mailbox subscriber, Guid id, ZonedDateTime timestamp);
 
         /// <summary>
         /// Send the given tick to the data bus.

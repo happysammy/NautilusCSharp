@@ -16,6 +16,7 @@ namespace Nautilus.Data.Bus
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
     using NodaTime;
 
@@ -52,7 +53,7 @@ namespace Nautilus.Data.Bus
         }
 
         /// <inheritdoc />
-        public void Subscribe<T>(IEndpoint subscriber, Guid id, ZonedDateTime timestamp)
+        public void Subscribe<T>(Mailbox subscriber, Guid id, ZonedDateTime timestamp)
         {
             var subscription = typeof(T);
             var message = new Subscribe<Type>(
@@ -65,7 +66,7 @@ namespace Nautilus.Data.Bus
         }
 
         /// <inheritdoc />
-        public void Unsubscribe<T>(IEndpoint subscriber, Guid id, ZonedDateTime timestamp)
+        public void Unsubscribe<T>(Mailbox subscriber, Guid id, ZonedDateTime timestamp)
         {
             var subscription = typeof(T);
             var message = new Unsubscribe<Type>(

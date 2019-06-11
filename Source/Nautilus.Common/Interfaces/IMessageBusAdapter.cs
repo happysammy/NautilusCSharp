@@ -11,7 +11,6 @@ namespace Nautilus.Common.Interfaces
     using System;
     using Nautilus.Core;
     using Nautilus.Messaging;
-    using Nautilus.Messaging.Interfaces;
     using NodaTime;
 
     /// <summary>
@@ -23,20 +22,20 @@ namespace Nautilus.Common.Interfaces
         /// Subscribe the given subscriber to the given message type with the message bus.
         /// </summary>
         /// <typeparam name="T">The message type to subscribe to.</typeparam>
-        /// <param name="subscriber">The subscriber endpoint.</param>
+        /// <param name="subscriber">The subscriber mailbox.</param>
         /// <param name="id">The subscription identifier.</param>
         /// <param name="timestamp">The subscription timestamp.</param>
-        void Subscribe<T>(IEndpoint subscriber, Guid id, ZonedDateTime timestamp)
+        void Subscribe<T>(Mailbox subscriber, Guid id, ZonedDateTime timestamp)
             where T : Message;
 
         /// <summary>
         /// Unsubscribe the given subscriber from the given message type with the message bus.
         /// </summary>
         /// <typeparam name="T">The message type to unsubscribe from.</typeparam>
-        /// <param name="subscriber">The subscriber endpoint.</param>
+        /// <param name="subscriber">The subscriber mailbox.</param>
         /// <param name="id">The subscription identifier.</param>
         /// <param name="timestamp">The subscription timestamp.</param>
-        void Unsubscribe<T>(IEndpoint subscriber, Guid id, ZonedDateTime timestamp)
+        void Unsubscribe<T>(Mailbox subscriber, Guid id, ZonedDateTime timestamp)
             where T : Message;
 
         /// <summary>

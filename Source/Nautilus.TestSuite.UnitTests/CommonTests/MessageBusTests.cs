@@ -80,7 +80,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             // Arrange
             var subscribe = new Subscribe<Type>(
                 typeof(Command),
-                this.mockReceiver.Endpoint,
+                this.mockReceiver.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -102,7 +102,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             // Arrange
             var subscribe = new Subscribe<Type>(
                 typeof(Event),
-                this.mockReceiver.Endpoint,
+                this.mockReceiver.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -124,7 +124,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             // Arrange
             var subscribe = new Subscribe<Type>(
                 typeof(Event),
-                this.mockReceiver.Endpoint,
+                this.mockReceiver.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -147,7 +147,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             // Arrange
             var subscribe = new Subscribe<Type>(
                 typeof(MarketOpened),
-                this.mockReceiver.Endpoint,
+                this.mockReceiver.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -170,7 +170,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             // Arrange
             var subscribe = new Subscribe<Type>(
                 typeof(MarketOpened),
-                this.mockReceiver.Endpoint,
+                this.mockReceiver.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -193,13 +193,13 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             // Arrange
             var subscribe = new Subscribe<Type>(
                 typeof(Event),
-                this.mockReceiver.Endpoint,
+                this.mockReceiver.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             var unsubscribe = new Unsubscribe<Type>(
                 typeof(Event),
-                this.mockReceiver.Endpoint,
+                this.mockReceiver.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -222,13 +222,13 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             // Arrange
             var subscribe = new Subscribe<Type>(
                 typeof(MarketOpened),
-                this.mockReceiver.Endpoint,
+                this.mockReceiver.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             var unsubscribe = new Unsubscribe<Type>(
                 typeof(MarketOpened),
-                this.mockReceiver.Endpoint,
+                this.mockReceiver.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -251,7 +251,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             // Arrange
             var unsubscribe = new Unsubscribe<Type>(
                 typeof(Command),
-                this.mockReceiver.Endpoint,
+                this.mockReceiver.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -273,7 +273,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             // Arrange
             var unsubscribe = new Unsubscribe<Type>(
                 typeof(Event),
-                this.mockReceiver.Endpoint,
+                this.mockReceiver.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -295,7 +295,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             // Arrange
             var unsubscribe = new Unsubscribe<Type>(
                 typeof(MarketOpened),
-                this.mockReceiver.Endpoint,
+                this.mockReceiver.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -395,7 +395,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             // Arrange
             var subscribe = new Subscribe<Type>(
                 typeof(Event),
-                this.mockReceiver.Endpoint,
+                this.mockReceiver.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -428,7 +428,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             // Arrange
             var subscribe = new Subscribe<Type>(
                 typeof(MarketOpened),
-                this.mockReceiver.Endpoint,
+                this.mockReceiver.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 

@@ -13,7 +13,7 @@ namespace Nautilus.Common.Messages.Commands
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
-    using Nautilus.Messaging.Interfaces;
+    using Nautilus.Messaging;
     using NodaTime;
 
     /// <summary>
@@ -32,7 +32,7 @@ namespace Nautilus.Common.Messages.Commands
         /// <param name="timestamp">The commands timestamp.</param>
         public Subscribe(
             T subscription,
-            IEndpoint subscriber,
+            Mailbox subscriber,
             Guid id,
             ZonedDateTime timestamp)
             : base(
@@ -48,7 +48,7 @@ namespace Nautilus.Common.Messages.Commands
         }
 
         /// <summary>
-        /// Gets the commands subscription.
+        /// Gets the commands type to subscribe to.
         /// </summary>
         public T Subscription { get; }
 
@@ -65,6 +65,6 @@ namespace Nautilus.Common.Messages.Commands
         /// <summary>
         /// Gets the commands subscriber endpoint.
         /// </summary>
-        public IEndpoint Subscriber { get; }
+        public Mailbox Subscriber { get; }
     }
 }

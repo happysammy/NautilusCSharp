@@ -46,6 +46,7 @@ namespace Nautilus.Common.Componentry
 
             this.Name = new Label(this.GetType().ExtractFormattedName());
             this.Address = new Address(this.Name.ToString());
+            this.Mailbox = new Mailbox(this.Address, this.Endpoint);
             this.Log = container.LoggerFactory.Create(this.Name);
             this.State = initial;
 
@@ -66,6 +67,11 @@ namespace Nautilus.Common.Componentry
         /// Gets the components messaging address.
         /// </summary>
         public Address Address { get; }
+
+        /// <summary>
+        /// Gets the components messaging mailbox.
+        /// </summary>
+        public Mailbox Mailbox { get; }
 
         /// <summary>
         /// Gets the components current state.

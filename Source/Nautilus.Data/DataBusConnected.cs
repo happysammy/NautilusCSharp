@@ -10,7 +10,6 @@ namespace Nautilus.Data
 {
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Data.Interfaces;
 
     /// <summary>
     /// The base class for all components which are connected to the message bus.
@@ -38,7 +37,7 @@ namespace Nautilus.Data
         /// <typeparam name="T">The data type to subscribe to.</typeparam>
         protected void Subscribe<T>()
         {
-            this.dataBusAdapter.Subscribe<T>(this.Endpoint, this.NewGuid(), this.TimeNow());
+            this.dataBusAdapter.Subscribe<T>(this.Mailbox, this.NewGuid(), this.TimeNow());
         }
 
         /// <summary>
@@ -47,7 +46,7 @@ namespace Nautilus.Data
         /// <typeparam name="T">The data type to unsubscribe from.</typeparam>
         protected void Unsubscribe<T>()
         {
-            this.dataBusAdapter.Subscribe<T>(this.Endpoint, this.NewGuid(), this.TimeNow());
+            this.dataBusAdapter.Subscribe<T>(this.Mailbox, this.NewGuid(), this.TimeNow());
         }
     }
 }
