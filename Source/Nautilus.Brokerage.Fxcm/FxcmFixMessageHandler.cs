@@ -10,7 +10,6 @@ namespace Nautilus.Brokerage.FXCM
 {
     using System;
     using System.Collections.Generic;
-    using System.Reflection.Metadata;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Extensions;
