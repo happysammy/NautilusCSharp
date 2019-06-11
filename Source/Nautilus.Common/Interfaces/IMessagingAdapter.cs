@@ -22,20 +22,22 @@ namespace Nautilus.Common.Interfaces
         /// <summary>
         /// Subscribe the given subscriber to the given message type with the message bus.
         /// </summary>
-        /// <param name="subscription">The subscription type.</param>
+        /// <typeparam name="T">The message type to subscribe to.</typeparam>
         /// <param name="subscriber">The subscriber endpoint.</param>
         /// <param name="id">The subscription identifier.</param>
         /// <param name="timestamp">The subscription timestamp.</param>
-        void Subscribe(Type subscription, IEndpoint subscriber, Guid id, ZonedDateTime timestamp);
+        void Subscribe<T>(IEndpoint subscriber, Guid id, ZonedDateTime timestamp)
+            where T : Message;
 
         /// <summary>
         /// Unsubscribe the given subscriber from the given message type with the message bus.
         /// </summary>
-        /// <param name="subscription">The subscription type.</param>
+        /// <typeparam name="T">The message type to unsubscribe from.</typeparam>
         /// <param name="subscriber">The subscriber endpoint.</param>
         /// <param name="id">The subscription identifier.</param>
         /// <param name="timestamp">The subscription timestamp.</param>
-        void Unsubscribe(Type subscription, IEndpoint subscriber, Guid id, ZonedDateTime timestamp);
+        void Unsubscribe<T>(IEndpoint subscriber, Guid id, ZonedDateTime timestamp)
+            where T : Message;
 
         /// <summary>
         /// Sends the given message to the given receiver in an <see cref="Envelope{T}"/> marked

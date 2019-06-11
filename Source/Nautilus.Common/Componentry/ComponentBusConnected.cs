@@ -8,7 +8,6 @@
 
 namespace Nautilus.Common.Componentry
 {
-    using System;
     using System.Collections.Generic;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
@@ -40,11 +39,11 @@ namespace Nautilus.Common.Componentry
         /// <summary>
         /// Subscribe to the given message type with the message bus.
         /// </summary>
-        /// <param name="messageType">The message type to subscribe to.</param>
-        public void Subscribe(Type messageType)
+        /// <typeparam name="T">The message type to subscribe to.</typeparam>
+        public void Subscribe<T>()
+            where T : Message
         {
-            this.messagingAdapter.Subscribe(
-                messageType,
+            this.messagingAdapter.Subscribe<T>(
                 this.Endpoint,
                 this.NewGuid(),
                 this.TimeNow());
@@ -53,11 +52,11 @@ namespace Nautilus.Common.Componentry
         /// <summary>
         /// Unsubscribe from the given message type with the message bus.
         /// </summary>
-        /// <param name="messageType">The message type to unsubscribe from.</param>
-        public void Unsubscribe(Type messageType)
+        /// <typeparam name="T">The message type to unsubscribe from.</typeparam>
+        public void Unsubscribe<T>()
+            where T : Message
         {
-            this.messagingAdapter.Unsubscribe(
-                messageType,
+            this.messagingAdapter.Unsubscribe<T>(
                 this.Endpoint,
                 this.NewGuid(),
                 this.TimeNow());

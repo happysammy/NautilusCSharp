@@ -54,8 +54,7 @@ namespace Nautilus.Execution.Network
             this.RegisterHandler<IEnvelope>(this.Open);
             this.RegisterHandler<Event>(this.OnMessage);
 
-            this.messagingAdapter.Subscribe(
-                typeof(Event),
+            this.messagingAdapter.Subscribe<Event>(
                 this.Endpoint,
                 this.NewGuid(),
                 this.TimeNow());

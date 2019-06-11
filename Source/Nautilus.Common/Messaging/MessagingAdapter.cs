@@ -55,14 +55,51 @@ namespace Nautilus.Common.Messaging
         }
 
         /// <inheritdoc />
-        public void Subscribe(
-            Type type,
+        public void Subscribe<T>(
             IEndpoint subscriber,
             Guid id,
             ZonedDateTime timestamp)
+        where T : Message
         {
+            var type = typeof(T);
             var message = new Subscribe<Type>(type, subscriber, id, timestamp);
 
+            this.SendToBus(type, message);
+        }
+
+        /// <inheritdoc />
+        public void Unsubscribe<T>(
+            IEndpoint subscriber,
+            Guid id,
+            ZonedDateTime timestamp)
+        where T : Message
+        {
+            var type = typeof(T);
+            var message = new Unsubscribe<Type>(type, subscriber, id, timestamp);
+
+            this.SendToBus(type, message);
+        }
+
+        /// <inheritdoc />
+        public void Send<T>(
+            T message,
+            Address receiver,
+            Address sender,
+            ZonedDateTime timestamp)
+            where T : Message
+        {
+            this.WrapAndSend(message, receiver, sender, timestamp);
+        }
+
+        /// <inheritdoc/>
+        public void SendToBus<T>(T message, Address sender, ZonedDateTime timestamp)
+            where T : Message
+        {
+            this.WrapAndSend(message, null, sender, timestamp);
+        }
+
+        private void SendToBus(Type type, Message message)
+        {
             if (type == typeof(Command) || type.IsSubclassOf(typeof(Command)))
             {
                 this.cmdBus.Send(message);
@@ -82,34 +119,6 @@ namespace Nautilus.Common.Messaging
             }
 
             throw ExceptionFactory.InvalidSwitchArgument(type, nameof(type));
-        }
-
-        /// <inheritdoc />
-        public void Unsubscribe(
-            Type type,
-            IEndpoint subscriber,
-            Guid id,
-            ZonedDateTime timestamp)
-        {
-            var message = new Unsubscribe<Type>(type, subscriber, id, timestamp);
-        }
-
-        /// <inheritdoc />
-        public void Send<T>(
-            T message,
-            Address receiver,
-            Address sender,
-            ZonedDateTime timestamp)
-            where T : Message
-        {
-            this.WrapAndSend(message, receiver, sender, timestamp);
-        }
-
-        /// <inheritdoc/>
-        public void SendToBus<T>(T message, Address sender, ZonedDateTime timestamp)
-            where T : Message
-        {
-            this.WrapAndSend(message, null, sender, timestamp);
         }
 
         private void WrapAndSend<T>(
