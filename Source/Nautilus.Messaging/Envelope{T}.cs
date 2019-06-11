@@ -10,16 +10,18 @@ namespace Nautilus.Messaging
 {
     using System;
     using Nautilus.Core;
+    using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.Messaging.Interfaces;
     using NodaTime;
 
     /// <summary>
-    /// Provides a message wrapper with optional sender and receiver addresses.
+    /// Represents an envelope with a wrapped message and optional sender and receiver addresses.
     /// </summary>
     /// <typeparam name="T">The message type.</typeparam>
-    public sealed class Envelope<T> : IEnvelope
+    [Immutable]
+    public sealed class Envelope<T> : IEnvelope, IEquatable<Envelope<T>>, IEquatable<IEnvelope>
         where T : Message
     {
         /// <summary>
@@ -78,6 +80,22 @@ namespace Nautilus.Messaging
         /// Gets the envelope creation timestamp.
         /// </summary>
         public ZonedDateTime Timestamp { get; }
+
+        /// <summary>
+        /// Returns a value indicating whether this <see cref="Envelope{T}"/> is equal to the given
+        /// <see cref="Envelope{T}"/>.
+        /// </summary>
+        /// <param name="other">The other object.</param>
+        /// <returns>True if the message identifier equals the other identifier, otherwise false.</returns>
+        public bool Equals(Envelope<T> other) => this.Id == other.Id;
+
+        /// <summary>
+        /// Returns a value indicating whether this <see cref="IEnvelope"/> is equal to the given
+        /// <see cref="IEnvelope"/>.
+        /// </summary>
+        /// <param name="other">The other object.</param>
+        /// <returns>True if the message identifier equals the other identifier, otherwise false.</returns>
+        public bool Equals(IEnvelope other) => this.Id == other.Id;
 
         /// <summary>
         /// Returns the hash code for this <see cref="Envelope{T}"/>.

@@ -13,7 +13,7 @@ namespace Nautilus.Messaging.Interfaces
     using NodaTime;
 
     /// <summary>
-    /// Represents a messaging envelope.
+    /// Represents a generic messaging envelope.
     /// </summary>
     public interface IEnvelope
     {
@@ -48,13 +48,21 @@ namespace Nautilus.Messaging.Interfaces
         ZonedDateTime Timestamp { get; }
 
         /// <summary>
-        /// Returns the hash code for this <see cref="Envelope{T}"/>.
+        /// Returns a value indicating whether this <see cref="IEnvelope"/> is equal to the given
+        /// <see cref="IEnvelope"/>.
+        /// </summary>
+        /// <param name="other">The other object.</param>
+        /// <returns>True if the message identifier equals the other identifier, otherwise false.</returns>
+        bool Equals(IEnvelope other);
+
+        /// <summary>
+        /// Returns the hash code for this <see cref="IEnvelope"/>.
         /// </summary>
         /// <returns>The hash code <see cref="int"/>.</returns>
         int GetHashCode();
 
         /// <summary>
-        /// Returns a string representation of this <see cref="Envelope{T}"/>.
+        /// Returns a string representation of this <see cref="IEnvelope"/>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
         string ToString();
