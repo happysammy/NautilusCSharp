@@ -17,10 +17,16 @@ namespace Nautilus.Fix.Interfaces
     public interface IFixMessageHandler
     {
         /// <summary>
-        /// Initializes the execution gateway.
+        /// Initializes the FIX data gateway.
         /// </summary>
-        /// <param name="gateway">The execution gateway.</param>
-        void InitializeGateway(IFixGateway gateway);
+        /// <param name="gateway">The data gateway.</param>
+        void InitializeGateway(IDataGateway gateway);
+
+        /// <summary>
+        /// Initializes the FIX trading gateway.
+        /// </summary>
+        /// <param name="gateway">The trading gateway.</param>
+        void InitializeGateway(ITradingGateway gateway);
 
         /// <summary>
         /// Handles business message reject messages.

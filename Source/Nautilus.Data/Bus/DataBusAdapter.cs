@@ -9,11 +9,11 @@
 namespace Nautilus.Data.Bus
 {
     using System;
+    using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
-    using Nautilus.Data.Interfaces;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging.Interfaces;
@@ -37,6 +37,18 @@ namespace Nautilus.Data.Bus
         {
             this.tickBus = tickBus;
             this.dataBus = dataBus;
+        }
+
+        /// <inheritdoc />
+        public void SendTick(Tick tick)
+        {
+            this.tickBus.Send(tick);
+        }
+
+        /// <inheritdoc />
+        public void SendData(object data)
+        {
+            this.tickBus.Send(data);
         }
 
         /// <inheritdoc />

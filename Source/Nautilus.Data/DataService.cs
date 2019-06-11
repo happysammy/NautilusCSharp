@@ -30,7 +30,7 @@ namespace Nautilus.Data
     public sealed class DataService : MessageBusConnected
     {
         private readonly IScheduler scheduler;
-        private readonly IFixGateway fixGateway;
+        private readonly IDataGateway dataGateway;
         private readonly IReadOnlyCollection<Symbol> subscribingSymbols;
         private readonly IReadOnlyCollection<BarSpecification> barSpecifications;
         private readonly (IsoDayOfWeek Day, LocalTime Time) fixConnectTime;
@@ -46,7 +46,7 @@ namespace Nautilus.Data
         /// <param name="container">The componentry container.</param>
         /// <param name="messageBusAdapter">The messaging adapter.</param>
         /// <param name="scheduler">The scheduler.</param>
-        /// <param name="fixGateway">The FIX gateway.</param>
+        /// <param name="dataGateway">The data gateway.</param>
         /// <param name="addresses">The data service address dictionary.</param>
         /// <param name="config">The service configuration.</param>
         /// <exception cref="ArgumentException">If the addresses is empty.</exception>
@@ -55,14 +55,14 @@ namespace Nautilus.Data
             MessageBusAdapter messageBusAdapter,
             Dictionary<Address, IEndpoint> addresses,
             IScheduler scheduler,
-            IFixGateway fixGateway,
+            IDataGateway dataGateway,
             Configuration config)
             : base(container, messageBusAdapter)
         {
             Condition.NotEmpty(addresses, nameof(addresses));
 
             this.scheduler = scheduler;
-            this.fixGateway = fixGateway;
+            this.dataGateway = dataGateway;
             this.subscribingSymbols = config.SubscribingSymbols;
             this.barSpecifications = config.BarSpecifications;
 
@@ -100,7 +100,7 @@ namespace Nautilus.Data
                 this.fixConnectTime,
                 this.InstantNow()))
             {
-                this.Send(start, DataServiceAddress.FixGateway);
+                this.Send(start, DataServiceAddress.DataGateway);
             }
             else
             {
@@ -124,7 +124,7 @@ namespace Nautilus.Data
         protected override void OnStop(Stop stop)
         {
             this.Send(stop, DataServiceAddress.DatabaseTaskManager);
-            this.Send(stop, DataServiceAddress.FixGateway);
+            this.Send(stop, DataServiceAddress.DataGateway);
             this.Send(stop, DataServiceAddress.TickProvider);
             this.Send(stop, DataServiceAddress.TickPublisher);
             this.Send(stop, DataServiceAddress.BarProvider);
@@ -136,24 +136,24 @@ namespace Nautilus.Data
         private void OnMessage(ConnectFix message)
         {
             // Forward message.
-            this.Send(message, DataServiceAddress.FixGateway);
+            this.Send(message, DataServiceAddress.DataGateway);
         }
 
         private void OnMessage(DisconnectFix message)
         {
             // Forward message.
-            this.Send(message, DataServiceAddress.FixGateway);
+            this.Send(message, DataServiceAddress.DataGateway);
         }
 
         private void OnMessage(FixSessionConnected message)
         {
             this.Log.Information($"{message.SessionId} session is connected.");
 
-            this.fixGateway.UpdateInstrumentsSubscribeAll();
+            this.dataGateway.UpdateInstrumentsSubscribeAll();
 
             foreach (var symbol in this.subscribingSymbols)
             {
-                this.fixGateway.MarketDataSubscribe(symbol);
+                this.dataGateway.MarketDataSubscribe(symbol);
 
                 foreach (var barSpec in this.barSpecifications)
                 {

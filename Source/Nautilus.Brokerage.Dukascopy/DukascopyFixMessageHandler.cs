@@ -34,7 +34,8 @@ namespace Nautilus.Brokerage.Dukascopy
     {
         private readonly SymbolConverter symbolConverter;
 
-        private IFixGateway? fixGateway;
+        private IDataGateway? dataGateway;
+        private ITradingGateway? tradingGateway;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DukascopyFixMessageHandler"/> class.
@@ -50,12 +51,21 @@ namespace Nautilus.Brokerage.Dukascopy
         }
 
         /// <summary>
-        /// Initializes the execution gateway.
+        /// Initializes the data gateway.
         /// </summary>
         /// <param name="gateway">The execution gateway.</param>
-        public void InitializeGateway(IFixGateway gateway)
+        public void InitializeGateway(IDataGateway gateway)
         {
-            this.fixGateway = gateway;
+            this.dataGateway = gateway;
+        }
+
+        /// <summary>
+        /// Initializes the trading gateway.
+        /// </summary>
+        /// <param name="gateway">The execution gateway.</param>
+        public void InitializeGateway(ITradingGateway gateway)
+        {
+            this.tradingGateway = gateway;
         }
 
         /// <summary>
@@ -144,7 +154,7 @@ namespace Nautilus.Brokerage.Dukascopy
                 var responseId = message.GetField(Tags.SecurityResponseID);
                 var result = FixMessageHelper.GetSecurityRequestResult(message.SecurityRequestResult);
 
-                this.fixGateway?.OnInstrumentsUpdate(instruments, responseId, result);
+                this.dataGateway?.OnInstrumentsUpdate(instruments, responseId, result);
             });
         }
 
@@ -176,7 +186,7 @@ namespace Nautilus.Brokerage.Dukascopy
                 var inquiryId = message.GetField(Tags.CollInquiryID);
                 var accountNumber = Convert.ToInt32(message.GetField(Tags.Account)).ToString();
 
-                this.fixGateway?.OnCollateralInquiryAck(inquiryId, accountNumber);
+                this.tradingGateway?.OnCollateralInquiryAck(inquiryId, accountNumber);
             });
         }
 
@@ -199,7 +209,7 @@ namespace Nautilus.Brokerage.Dukascopy
                 var marginCall = message.GetField(9045);
                 var time = this.TimeNow();
 
-                this.fixGateway?.OnAccountReport(
+                this.tradingGateway?.OnAccountReport(
                     inquiryId,
                     accountNumber,
                     cashBalance,
@@ -221,7 +231,7 @@ namespace Nautilus.Brokerage.Dukascopy
         {
             this.Execute(() =>
             {
-                this.fixGateway?.OnRequestForPositionsAck(
+                this.tradingGateway?.OnRequestForPositionsAck(
                     message.Account.ToString(),
                     message.PosReqID.ToString());
             });
@@ -289,7 +299,7 @@ namespace Nautilus.Brokerage.Dukascopy
                     }
                 }
 
-                this.fixGateway?.OnTick(
+                this.dataGateway?.OnTick(
                     symbolCode,
                     Venue.FXCM,
                     bidDecimal,
@@ -312,7 +322,7 @@ namespace Nautilus.Brokerage.Dukascopy
                 var cancelRejectReason = $"{message.CxlRejReason}, {message.Text.ToString().TrimEnd('.')}, FXCMCode={fxcmCode}";
                 var timestamp = FixMessageHelper.ConvertExecutionReportString(GetField(message, Tags.TransactTime));
 
-                this.fixGateway?.OnOrderCancelReject(
+                this.tradingGateway?.OnOrderCancelReject(
                     orderId,
                     cancelRejectResponseTo,
                     cancelRejectReason,
@@ -355,7 +365,7 @@ namespace Nautilus.Brokerage.Dukascopy
                     var rejectReasonText = GetField(message, Tags.CxlRejReason);
                     var rejectReason = $"Code({rejectReasonCode})={FixMessageHelper.GetCancelRejectReasonString(rejectReasonCode)}, FXCM({fxcmRejectCode})={rejectReasonText}";
 
-                    this.fixGateway?.OnOrderRejected(
+                    this.tradingGateway?.OnOrderRejected(
                         orderId,
                         rejectReason,
                         timestamp);
@@ -363,7 +373,7 @@ namespace Nautilus.Brokerage.Dukascopy
 
                 if (orderStatus == OrdStatus.CANCELED.ToString())
                 {
-                    this.fixGateway?.OnOrderCancelled(
+                    this.tradingGateway?.OnOrderCancelled(
                         orderId,
                         brokerOrderId,
                         orderLabel,
@@ -372,7 +382,7 @@ namespace Nautilus.Brokerage.Dukascopy
 
                 if (orderStatus == OrdStatus.REPLACED.ToString())
                 {
-                    this.fixGateway?.OnOrderModified(
+                    this.tradingGateway?.OnOrderModified(
                         orderId,
                         brokerOrderId,
                         orderLabel,
@@ -386,7 +396,7 @@ namespace Nautilus.Brokerage.Dukascopy
                         ? FixMessageHelper.ConvertExecutionReportString(message.GetField(Tags.ExpireTime))
                         : (ZonedDateTime?)null;
 
-                    this.fixGateway?.OnOrderWorking(
+                    this.tradingGateway?.OnOrderWorking(
                         orderId,
                         brokerOrderId,
                         symbol,
@@ -403,7 +413,7 @@ namespace Nautilus.Brokerage.Dukascopy
 
                 if (orderStatus == OrdStatus.EXPIRED.ToString())
                 {
-                    this.fixGateway?.OnOrderExpired(
+                    this.tradingGateway?.OnOrderExpired(
                         orderId,
                         brokerOrderId,
                         orderLabel,
@@ -417,7 +427,7 @@ namespace Nautilus.Brokerage.Dukascopy
                     var filledQuantity = Convert.ToInt32(GetField(message, Tags.CumQty));
                     var averagePrice = Convert.ToDecimal(GetField(message, Tags.AvgPx));
 
-                    this.fixGateway?.OnOrderFilled(
+                    this.tradingGateway?.OnOrderFilled(
                         orderId,
                         brokerOrderId,
                         executionId,
@@ -438,7 +448,7 @@ namespace Nautilus.Brokerage.Dukascopy
                     var leavesQuantity = Convert.ToInt32(GetField(message, Tags.LeavesQty));
                     var averagePrice = Convert.ToDecimal(GetField(message, Tags.AvgPx));
 
-                    this.fixGateway?.OnOrderPartiallyFilled(
+                    this.tradingGateway?.OnOrderPartiallyFilled(
                         orderId,
                         brokerOrderId,
                         executionId,
@@ -464,7 +474,7 @@ namespace Nautilus.Brokerage.Dukascopy
         {
             this.Execute(() =>
             {
-                this.fixGateway?.OnPositionReport(message.Account.ToString());
+                this.tradingGateway?.OnPositionReport(message.Account.ToString());
             });
         }
 

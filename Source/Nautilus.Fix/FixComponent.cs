@@ -105,10 +105,19 @@ namespace Nautilus.Fix
         public bool IsConnected => this.session != null && this.session.IsLoggedOn;
 
         /// <summary>
-        /// The initializes the execution gateway.
+        /// The initializes the FIX data gateway.
         /// </summary>
-        /// <param name="gateway">The execution gateway.</param>
-        public void InitializeGateway(IFixGateway gateway)
+        /// <param name="gateway">The data gateway.</param>
+        public void InitializeGateway(IDataGateway gateway)
+        {
+            this.FixMessageHandler.InitializeGateway(gateway);
+        }
+
+        /// <summary>
+        /// The initializes the FIX trading gateway.
+        /// </summary>
+        /// <param name="gateway">The trading gateway.</param>
+        public void InitializeGateway(ITradingGateway gateway)
         {
             this.FixMessageHandler.InitializeGateway(gateway);
         }
@@ -201,7 +210,7 @@ namespace Nautilus.Fix
                         sessionId.ToString(),
                         this.NewGuid(),
                         this.TimeNow()),
-                    new Address(nameof(FixGateway)),
+                    new Address(nameof(FixTradingGateway)),
                     this.TimeNow());
 
                 this.Log.Debug($"Logon - {sessionId}");
@@ -222,7 +231,7 @@ namespace Nautilus.Fix
                         sessionId.ToString(),
                         this.NewGuid(),
                         this.TimeNow()),
-                    new Address(nameof(FixGateway)),
+                    new Address(nameof(FixTradingGateway)),
                     this.TimeNow());
 
                 this.Log.Debug($"Logout - {sessionId}");

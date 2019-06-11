@@ -65,12 +65,10 @@ namespace NautilusExecutor
                 config.ServerAddress,
                 config.EventsPort);
 
-            var fixGateway = FixGatewayFactory.Create(
+            var fixGateway = FixTradingGatewayFactory.Create(
                 container,
                 messagingAdapter,
-                fixClient,
-                eventPublisher.Endpoint,   // TODO: Remove dummy endpoint
-                eventPublisher.Endpoint);  // TODO: Remove dummy endpoint
+                fixClient);
 
             var orderManager = new OrderManager(
                 container,

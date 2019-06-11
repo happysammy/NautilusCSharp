@@ -28,9 +28,9 @@ namespace Nautilus.Data
         public static Address Scheduler { get; } = new Address(nameof(Scheduler));
 
         /// <summary>
-        /// Gets the <see cref="FixGateway"/> component messaging address.
+        /// Gets the <see cref="DataGateway"/> component messaging address.
         /// </summary>
-        public static Address FixGateway { get; } = new Address(nameof(FixGateway));
+        public static Address DataGateway { get; } = new Address(nameof(DataGateway));
 
         /// <summary>
         /// Gets the <see cref="TickBus"/> component messaging address.

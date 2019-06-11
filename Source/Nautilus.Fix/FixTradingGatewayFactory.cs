@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="FixGatewayFactory.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="FixTradingGatewayFactory.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -9,12 +9,11 @@
 namespace Nautilus.Fix
 {
     using Nautilus.Common.Interfaces;
-    using Nautilus.Messaging.Interfaces;
 
     /// <summary>
     /// Provides a factory for FIX gateways.
     /// </summary>
-    public static class FixGatewayFactory
+    public static class FixTradingGatewayFactory
     {
         /// <summary>
         /// Creates and returns a new FIX gateway.
@@ -22,22 +21,16 @@ namespace Nautilus.Fix
         /// <param name="container">The componentry container.</param>
         /// <param name="messageBusAdapter">The messaging adapter.</param>
         /// <param name="fixClient">The FIX client.</param>
-        /// <param name="tickBus">The tick bus endpoint.</param>
-        /// <param name="dataBus">The data bus endpoint.</param>
         /// <returns>The created FIX gateway.</returns>
-        public static FixGateway Create(
+        public static FixTradingGateway Create(
             IComponentryContainer container,
             IMessageBusAdapter messageBusAdapter,
-            IFixClient fixClient,
-            IEndpoint tickBus,
-            IEndpoint dataBus)
+            IFixClient fixClient)
         {
-            var gateway = new FixGateway(
+            var gateway = new FixTradingGateway(
                 container,
                 messageBusAdapter,
-                fixClient,
-                tickBus,
-                dataBus);
+                fixClient);
 
             fixClient.InitializeGateway(gateway);
 

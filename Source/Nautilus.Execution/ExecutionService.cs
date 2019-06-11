@@ -28,7 +28,7 @@ namespace Nautilus.Execution
     public sealed class ExecutionService : MessageBusConnected
     {
         private readonly IScheduler scheduler;
-        private readonly IFixGateway fixGateway;
+        private readonly ITradingGateway tradingGateway;
         private readonly (IsoDayOfWeek Day, LocalTime Time) fixConnectTime;
         private readonly (IsoDayOfWeek Day, LocalTime Time) fixDisconnectTime;
 
@@ -38,7 +38,7 @@ namespace Nautilus.Execution
         /// <param name="container">The componentry container.</param>
         /// <param name="messageBusAdapter">The messaging adapter.</param>
         /// <param name="scheduler">The scheduler.</param>
-        /// <param name="fixGateway">The execution gateway.</param>
+        /// <param name="tradingGateway">The execution gateway.</param>
         /// <param name="addresses">The execution service addresses.</param>
         /// <param name="config">The execution service configuration.</param>
         /// <exception cref="ArgumentException">If the addresses is empty.</exception>
@@ -47,7 +47,7 @@ namespace Nautilus.Execution
             MessageBusAdapter messageBusAdapter,
             Dictionary<Address, IEndpoint> addresses,
             IScheduler scheduler,
-            IFixGateway fixGateway,
+            ITradingGateway tradingGateway,
             Configuration config)
             : base(container, messageBusAdapter)
         {
@@ -60,7 +60,7 @@ namespace Nautilus.Execution
                 this.TimeNow()));
 
             this.scheduler = scheduler;
-            this.fixGateway = fixGateway;
+            this.tradingGateway = tradingGateway;
             this.fixConnectTime = config.FixConfiguration.ConnectTime;
             this.fixDisconnectTime = config.FixConfiguration.DisconnectTime;
 
@@ -117,9 +117,8 @@ namespace Nautilus.Execution
         {
             this.Log.Information($"{message.SessionId} session is connected.");
 
-            this.fixGateway.UpdateInstrumentsSubscribeAll();
-            this.fixGateway.CollateralInquiry();
-            this.fixGateway.TradingSessionStatus();
+            this.tradingGateway.CollateralInquiry();
+            this.tradingGateway.TradingSessionStatus();
 
             this.CreateDisconnectFixJob();
             this.CreateConnectFixJob();

@@ -84,12 +84,11 @@ namespace NautilusData
                 config.FixConfiguration,
                 symbolConverter);
 
-            var fixGateway = FixGatewayFactory.Create(
+            var dataGateway = FixDataGatewayFactory.Create(
                 container,
                 messageBusAdapter,
-                fixClient,
-                tickBus.Endpoint,
-                dataBus.Endpoint);
+                dataBusAdapter,
+                fixClient);
 
             var redisConnection = ConnectionMultiplexer.Connect("localhost:6379,allowAdmin=true");
             var tickRepository = new InMemoryTickStore(container, dataBusAdapter);
@@ -137,7 +136,7 @@ namespace NautilusData
             var addresses = new Dictionary<Address, IEndpoint>
             {
                 { DataServiceAddress.Scheduler, scheduler.Endpoint },
-                { DataServiceAddress.FixGateway, fixGateway.Endpoint },
+                { DataServiceAddress.DataGateway, dataGateway.Endpoint },
                 { DataServiceAddress.TickBus, tickBus.Endpoint },
                 { DataServiceAddress.DataBus, dataBus.Endpoint },
                 { DataServiceAddress.DatabaseTaskManager, databaseTaskManager.Endpoint },
@@ -155,7 +154,7 @@ namespace NautilusData
                 messageBusAdapter,
                 addresses,
                 scheduler,
-                fixGateway,
+                dataGateway,
                 config);
         }
 

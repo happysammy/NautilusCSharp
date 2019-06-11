@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="IFixGateway.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="ITradingGateway.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -17,9 +17,9 @@ namespace Nautilus.Common.Interfaces
     using NodaTime;
 
     /// <summary>
-    /// Provides a gateway to, and anti-corruption layer from, the FIX module of the service.
+    /// Provides a gateway to, and anti-corruption layer from a trading gateway.
     /// </summary>
-    public interface IFixGateway
+    public interface ITradingGateway
     {
         /// <summary>
         /// Gets the gateways brokerage name.
@@ -30,28 +30,6 @@ namespace Nautilus.Common.Interfaces
         /// Gets a value indicating whether the gateway is connected.
         /// </summary>
         bool IsConnected { get; }
-
-        /// <summary>
-        /// Sends an update and subscribe request message for the instrument of the given symbol.
-        /// </summary>
-        /// <param name="symbol">The symbol of the instrument to update.</param>
-        void UpdateInstrumentSubscribe(Symbol symbol);
-
-        /// <summary>
-        /// Send an update and subscribe request message for all instruments.
-        /// </summary>
-        void UpdateInstrumentsSubscribeAll();
-
-        /// <summary>
-        /// Sends a market data subscribe request message for the given symbol.
-        /// </summary>
-        /// <param name="symbol">The symbol.</param>
-        void MarketDataSubscribe(Symbol symbol);
-
-        /// <summary>
-        /// Sends a market data subscribe request message for all symbols.
-        /// </summary>
-        void MarketDataSubscribeAll();
 
         /// <summary>
         /// Sends a collateral inquiry request message.
@@ -89,37 +67,10 @@ namespace Nautilus.Common.Interfaces
         void CancelOrder(Order order);
 
         /// <summary>
-        /// Creates a new <see cref="Tick"/> and sends it to the tick publisher and bar aggregation
-        /// controller.
-        /// </summary>
-        /// <param name="symbolCode">The tick symbol code.</param>
-        /// <param name="venue">The tick venue.</param>
-        /// <param name="bid">The tick bid price.</param>
-        /// <param name="ask">The tick ask price.</param>
-        /// <param name="timestamp">The tick timestamp.</param>
-        void OnTick(
-            string symbolCode,
-            Venue venue,
-            decimal bid,
-            decimal ask,
-            ZonedDateTime timestamp);
-
-        /// <summary>
         /// Event handler for receiving FIX Position Reports.
         /// </summary>
         /// <param name="account">The account.</param>
         void OnPositionReport(string account);
-
-        /// <summary>
-        /// Updates the given instruments in the instrument repository.
-        /// </summary>
-        /// <param name="instruments">The instruments collection.</param>
-        /// <param name="responseId">The response identifier.</param>
-        /// <param name="result">The result.</param>
-        void OnInstrumentsUpdate(
-            IEnumerable<Instrument> instruments,
-            string responseId,
-            string result);
 
         /// <summary>
         /// Event handler for receiving FIX business messages.

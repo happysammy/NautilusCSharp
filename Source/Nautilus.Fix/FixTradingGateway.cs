@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="FixGateway.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="FixTradingGateway.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -8,7 +8,6 @@
 
 namespace Nautilus.Fix
 {
-    using System.Collections.Generic;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messaging;
@@ -22,39 +21,30 @@ namespace Nautilus.Fix
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Messaging.Interfaces;
     using NodaTime;
 
     /// <summary>
     /// Provides a gateway to, and anti-corruption layer from, the FIX module of the service.
     /// </summary>
     [PerformanceOptimized]
-    public sealed class FixGateway : MessageBusConnected, IFixGateway
+    public sealed class FixTradingGateway : MessageBusConnected, ITradingGateway
     {
         private readonly IFixClient fixClient;
-        private readonly IEndpoint tickBus;
-        private readonly IEndpoint dataBus;
-        private readonly Currency accountCurrency = Currency.USD;  // TODO
+        private readonly Currency accountCurrency = Currency.USD;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FixGateway"/> class.
+        /// Initializes a new instance of the <see cref="FixTradingGateway"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
         /// <param name="messageBusAdapter">The messaging adapter.</param>
         /// <param name="fixClient">The FIX client.</param>
-        /// <param name="tickBus">The tick bus endpoint.</param>
-        /// <param name="dataBus">The data bus endpoint.</param>
-        public FixGateway(
+        public FixTradingGateway(
             IComponentryContainer container,
             IMessageBusAdapter messageBusAdapter,
-            IFixClient fixClient,
-            IEndpoint tickBus,
-            IEndpoint dataBus)
+            IFixClient fixClient)
             : base(container, messageBusAdapter)
         {
             this.fixClient = fixClient;
-            this.tickBus = tickBus;
-            this.dataBus = dataBus;
 
             this.RegisterHandler<ConnectFix>(this.OnMessage);
             this.RegisterHandler<DisconnectFix>(this.OnMessage);
@@ -65,30 +55,6 @@ namespace Nautilus.Fix
 
         /// <inheritdoc />
         public bool IsConnected => this.fixClient.IsConnected;
-
-        /// <inheritdoc />
-        public void MarketDataSubscribe(Symbol symbol)
-        {
-            this.fixClient.RequestMarketDataSubscribe(symbol);
-        }
-
-        /// <inheritdoc />
-        public void MarketDataSubscribeAll()
-        {
-            this.fixClient.RequestMarketDataSubscribeAll();
-        }
-
-        /// <inheritdoc />
-        public void UpdateInstrumentSubscribe(Symbol symbol)
-        {
-            this.fixClient.UpdateInstrumentSubscribe(symbol);
-        }
-
-        /// <inheritdoc />
-        public void UpdateInstrumentsSubscribeAll()
-        {
-            this.fixClient.UpdateInstrumentsSubscribeAll();
-        }
 
         /// <inheritdoc />
         public void CollateralInquiry()
@@ -128,32 +94,6 @@ namespace Nautilus.Fix
 
         /// <inheritdoc />
         [SystemBoundary]
-        [PerformanceOptimized]
-        public void OnTick(
-            string symbolCode,
-            Venue venue,
-            decimal bid,
-            decimal ask,
-            ZonedDateTime timestamp)
-        {
-            this.Execute(() =>
-            {
-                Condition.NotEmptyOrWhiteSpace(symbolCode, nameof(symbolCode));
-                Condition.PositiveDecimal(bid, nameof(bid));
-                Condition.PositiveDecimal(ask, nameof(ask));
-
-                var tick = new Tick(
-                    new Symbol(symbolCode, venue),
-                    Price.Create(bid),
-                    Price.Create(ask),
-                    timestamp);
-
-                this.tickBus.Send(tick);
-            });
-        }
-
-        /// <inheritdoc />
-        [SystemBoundary]
         public void OnPositionReport(string account)
         {
             this.Execute(() =>
@@ -188,29 +128,6 @@ namespace Nautilus.Fix
                 Condition.NotEmptyOrWhiteSpace(message, nameof(message));
 
                 this.Log.Debug($"BusinessMessageReject: {message}");
-            });
-        }
-
-        /// <inheritdoc />
-        [SystemBoundary]
-        public void OnInstrumentsUpdate(
-            IEnumerable<Instrument> instruments,
-            string responseId,
-            string result)
-        {
-            this.Execute(() =>
-            {
-                Condition.NotEmptyOrWhiteSpace(responseId, nameof(responseId));
-                Condition.NotEmptyOrWhiteSpace(result, nameof(result));
-
-                this.Log.Debug(
-                    $"SecurityListReceived: " +
-                    $"(SecurityResponseId={responseId}) result={result}");
-
-                foreach (var instrument in instruments)
-                {
-                    this.dataBus.Send(instrument);
-                }
             });
         }
 

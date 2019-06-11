@@ -6,9 +6,10 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Data.Interfaces
+namespace Nautilus.Common.Interfaces
 {
     using System;
+    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging.Interfaces;
     using NodaTime;
 
@@ -34,5 +35,17 @@ namespace Nautilus.Data.Interfaces
         /// <param name="id">The subscription identifier.</param>
         /// <param name="timestamp">The subscription timestamp.</param>
         void Unsubscribe<T>(IEndpoint subscriber, Guid id, ZonedDateTime timestamp);
+
+        /// <summary>
+        /// Send the given tick to the data bus.
+        /// </summary>
+        /// <param name="tick">The tick to send.</param>
+        void SendTick(Tick tick);
+
+        /// <summary>
+        /// Send the given data to the data bus.
+        /// </summary>
+        /// <param name="data">The data to send.</param>
+        void SendData(object data);
     }
 }

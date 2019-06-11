@@ -27,7 +27,7 @@ namespace Nautilus.Execution
     [PerformanceOptimized]
     public sealed class OrderManager : MessageBusConnected
     {
-        private readonly IFixGateway gateway;
+        private readonly ITradingGateway gateway;
         private readonly OrderRegister register;
         private readonly Dictionary<OrderId, Order> orderBook;
         private readonly Dictionary<OrderId, Order> ordersActive;
@@ -48,7 +48,7 @@ namespace Nautilus.Execution
         public OrderManager(
             IComponentryContainer container,
             IMessageBusAdapter messageBusAdapter,
-            IFixGateway gateway)
+            ITradingGateway gateway)
             : base(container, messageBusAdapter)
         {
             this.gateway = gateway;

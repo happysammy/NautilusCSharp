@@ -40,10 +40,16 @@ namespace Nautilus.Common.Interfaces
         void Disconnect();
 
         /// <summary>
-        /// Initializes the FIX gateway.
+        /// Initializes the FIX data gateway.
         /// </summary>
         /// <param name="gateway">The execution gateway.</param>
-        void InitializeGateway(IFixGateway gateway);
+        void InitializeGateway(IDataGateway gateway);
+
+        /// <summary>
+        /// Initializes the FIX trading gateway.
+        /// </summary>
+        /// <param name="gateway">The execution gateway.</param>
+        void InitializeGateway(ITradingGateway gateway);
 
         /// <summary>
         /// Request an update on the instrument corresponding to the given symbol from the brokerage.
