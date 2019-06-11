@@ -85,11 +85,11 @@ namespace NautilusExecutor
 
             var addresses = new Dictionary<Address, IEndpoint>
             {
-                { ExecutionServiceAddress.Scheduler, scheduler.Endpoint },
-                { ExecutionServiceAddress.FixGateway, fixGateway.Endpoint },
-                { ExecutionServiceAddress.OrderManager, orderManager.Endpoint },
-                { ExecutionServiceAddress.CommandServer, commandServer.Endpoint },
-                { ExecutionServiceAddress.EventPublisher, eventPublisher.Endpoint },
+                { ServiceAddress.Scheduler, scheduler.Endpoint },
+                { ServiceAddress.FixGateway, fixGateway.Endpoint },
+                { ServiceAddress.OrderManager, orderManager.Endpoint },
+                { ServiceAddress.CommandServer, commandServer.Endpoint },
+                { ServiceAddress.EventPublisher, eventPublisher.Endpoint },
             };
 
             return new ExecutionService(

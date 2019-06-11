@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="DataServiceAddress.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="ServiceAddress.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -15,7 +15,7 @@ namespace Nautilus.Data
     /// Provides data service component messaging addresses.
     /// </summary>
     [PerformanceOptimized]
-    public static class DataServiceAddress
+    public static class ServiceAddress
     {
         /// <summary>
         /// Gets the <see cref="Core"/> component messaging address.
@@ -33,19 +33,29 @@ namespace Nautilus.Data
         public static Address DataGateway { get; } = new Address(nameof(DataGateway));
 
         /// <summary>
-        /// Gets the <see cref="TickBus"/> component messaging address.
-        /// </summary>
-        public static Address TickBus { get; } = new Address(nameof(TickBus));
-
-        /// <summary>
         /// Gets the <see cref="DataBus"/> component messaging address.
         /// </summary>
         public static Address DataBus { get; } = new Address(nameof(DataBus));
 
         /// <summary>
+        /// Gets the <see cref="TickBus"/> component messaging address.
+        /// </summary>
+        public static Address TickBus { get; } = new Address(nameof(TickBus));
+
+        /// <summary>
         /// Gets the <see cref="TickPublisher"/> component messaging address.
         /// </summary>
+        public static Address TickPublisher { get; } = new Address(nameof(TickPublisher));
+
+        /// <summary>
+        /// Gets the <see cref="TickStore"/> component messaging address.
+        /// </summary>
         public static Address TickStore { get; } = new Address(nameof(TickStore));
+
+        /// <summary>
+        /// Gets the <see cref="TickProvider"/> component messaging address.
+        /// </summary>
+        public static Address TickProvider { get; } = new Address(nameof(TickProvider));
 
         /// <summary>
         /// Gets the <see cref="DatabaseTaskManager"/> component messaging address.
@@ -66,16 +76,6 @@ namespace Nautilus.Data
         /// Gets the <see cref="BarPublisher"/> component messaging address.
         /// </summary>
         public static Address BarPublisher { get; } = new Address(nameof(BarPublisher));
-
-        /// <summary>
-        /// Gets the <see cref="TickProvider"/> component messaging address.
-        /// </summary>
-        public static Address TickProvider { get; } = new Address(nameof(TickProvider));
-
-        /// <summary>
-        /// Gets the <see cref="TickPublisher"/> component messaging address.
-        /// </summary>
-        public static Address TickPublisher { get; } = new Address(nameof(TickPublisher));
 
         /// <summary>
         /// Gets the <see cref="InstrumentProvider"/> component messaging address.

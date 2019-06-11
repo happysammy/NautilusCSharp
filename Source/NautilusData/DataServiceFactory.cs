@@ -135,18 +135,18 @@ namespace NautilusData
 
             var addresses = new Dictionary<Address, IEndpoint>
             {
-                { DataServiceAddress.Scheduler, scheduler.Endpoint },
-                { DataServiceAddress.DataGateway, dataGateway.Endpoint },
-                { DataServiceAddress.TickBus, tickBus.Endpoint },
-                { DataServiceAddress.DataBus, dataBus.Endpoint },
-                { DataServiceAddress.DatabaseTaskManager, databaseTaskManager.Endpoint },
-                { DataServiceAddress.BarAggregationController, barAggregationController.Endpoint },
-                { DataServiceAddress.TickProvider, tickProvider.Endpoint },
-                { DataServiceAddress.TickPublisher, tickPublisher.Endpoint },
-                { DataServiceAddress.BarProvider, barProvider.Endpoint },
-                { DataServiceAddress.BarPublisher, barPublisher.Endpoint },
-                { DataServiceAddress.InstrumentProvider, instrumentProvider.Endpoint },
-                { DataServiceAddress.InstrumentPublisher, instrumentPublisher.Endpoint },
+                { ServiceAddress.Scheduler, scheduler.Endpoint },
+                { ServiceAddress.DataGateway, dataGateway.Endpoint },
+                { ServiceAddress.TickBus, tickBus.Endpoint },
+                { ServiceAddress.DataBus, dataBus.Endpoint },
+                { ServiceAddress.DatabaseTaskManager, databaseTaskManager.Endpoint },
+                { ServiceAddress.BarAggregationController, barAggregationController.Endpoint },
+                { ServiceAddress.TickProvider, tickProvider.Endpoint },
+                { ServiceAddress.TickPublisher, tickPublisher.Endpoint },
+                { ServiceAddress.BarProvider, barProvider.Endpoint },
+                { ServiceAddress.BarPublisher, barPublisher.Endpoint },
+                { ServiceAddress.InstrumentProvider, instrumentProvider.Endpoint },
+                { ServiceAddress.InstrumentPublisher, instrumentPublisher.Endpoint },
             };
 
             return new DataService(

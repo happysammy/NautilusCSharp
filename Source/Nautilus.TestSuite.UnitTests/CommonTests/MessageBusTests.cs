@@ -46,9 +46,9 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
 
             var addresses = new Dictionary<Address, IEndpoint>
             {
-                { DataServiceAddress.Core, this.mockReceiver.Endpoint },
-                { DataServiceAddress.BarAggregationController, this.mockReceiver.Endpoint },
-                { DataServiceAddress.DatabaseTaskManager, this.mockReceiver.Endpoint },
+                { ServiceAddress.Core, this.mockReceiver.Endpoint },
+                { ServiceAddress.BarAggregationController, this.mockReceiver.Endpoint },
+                { ServiceAddress.DatabaseTaskManager, this.mockReceiver.Endpoint },
             };
 
             this.messageBus.Endpoint.Send(new InitializeSwitchboard(
@@ -323,8 +323,8 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
 
             var envelope = new Envelope<MarketOpened>(
                 message,
-                DataServiceAddress.BarAggregationController,
-                DataServiceAddress.Core,
+                ServiceAddress.BarAggregationController,
+                ServiceAddress.Core,
                 StubZonedDateTime.UnixEpoch());
 
             // Act
@@ -348,8 +348,8 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
 
             var envelope = new Envelope<MarketOpened>(
                 message,
-                DataServiceAddress.Scheduler,
-                DataServiceAddress.Core,
+                ServiceAddress.Scheduler,
+                ServiceAddress.Core,
                 StubZonedDateTime.UnixEpoch());
 
             // Act
@@ -374,7 +374,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             var envelope = new Envelope<MarketOpened>(
                 message,
                 null,
-                DataServiceAddress.Core,
+                ServiceAddress.Core,
                 StubZonedDateTime.UnixEpoch());
 
             // Act
@@ -408,7 +408,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             var envelope = new Envelope<MarketOpened>(
                 message,
                 null,
-                DataServiceAddress.Core,
+                ServiceAddress.Core,
                 StubZonedDateTime.UnixEpoch());
 
             this.messageBus.Endpoint.Send(subscribe);
@@ -441,7 +441,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             var envelope = new Envelope<MarketOpened>(
                 message,
                 null,
-                DataServiceAddress.Core,
+                ServiceAddress.Core,
                 StubZonedDateTime.UnixEpoch());
 
             this.messageBus.Endpoint.Send(subscribe);

@@ -53,7 +53,7 @@ namespace Nautilus.Execution
         {
             Condition.NotEmpty(addresses, nameof(addresses));
 
-            addresses.Add(ExecutionServiceAddress.Core, this.Endpoint);
+            addresses.Add(ServiceAddress.Core, this.Endpoint);
             messageBusAdapter.Send(new InitializeSwitchboard(
                 Switchboard.Create(addresses),
                 this.NewGuid(),
@@ -82,9 +82,9 @@ namespace Nautilus.Execution
                 this.fixConnectTime,
                 this.InstantNow()))
             {
-                this.Send(message, ExecutionServiceAddress.FixGateway);
-                this.Send(message, ExecutionServiceAddress.CommandServer);
-                this.Send(message, ExecutionServiceAddress.EventPublisher);
+                this.Send(message, ServiceAddress.FixGateway);
+                this.Send(message, ServiceAddress.CommandServer);
+                this.Send(message, ServiceAddress.EventPublisher);
             }
             else
             {
@@ -96,21 +96,21 @@ namespace Nautilus.Execution
         protected override void OnStop(Stop message)
         {
             // Forward stop message.
-            this.Send(message, ExecutionServiceAddress.FixGateway);
-            this.Send(message, ExecutionServiceAddress.CommandServer);
-            this.Send(message, ExecutionServiceAddress.EventPublisher);
+            this.Send(message, ServiceAddress.FixGateway);
+            this.Send(message, ServiceAddress.CommandServer);
+            this.Send(message, ServiceAddress.EventPublisher);
         }
 
         private void OnMessage(ConnectFix message)
         {
             // Forward message.
-            this.Send(message, ExecutionServiceAddress.FixGateway);
+            this.Send(message, ServiceAddress.FixGateway);
         }
 
         private void OnMessage(DisconnectFix message)
         {
             // Forward message.
-            this.Send(message, ExecutionServiceAddress.FixGateway);
+            this.Send(message, ServiceAddress.FixGateway);
         }
 
         private void OnMessage(FixSessionConnected message)
