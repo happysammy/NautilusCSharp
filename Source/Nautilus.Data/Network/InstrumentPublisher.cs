@@ -10,7 +10,6 @@ namespace Nautilus.Data.Network
 {
     using System;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messages.Documents;
     using Nautilus.DomainModel.Entities;
     using Nautilus.Network;
 
@@ -19,35 +18,36 @@ namespace Nautilus.Data.Network
     /// </summary>
     public sealed class InstrumentPublisher : DataPublisher<Instrument>
     {
-        private readonly ISerializer<Instrument> serializer;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="InstrumentPublisher"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
+        /// <param name="dataBusAdapter">The data bus adapter.</param>
         /// <param name="serializer">The instrument serializer.</param>
         /// <param name="host">The host address.</param>
         /// <param name="port">The port.</param>
         public InstrumentPublisher(
             IComponentryContainer container,
+            IDataBusAdapter dataBusAdapter,
             ISerializer<Instrument> serializer,
             NetworkAddress host,
             NetworkPort port)
             : base(
                 container,
+                dataBusAdapter,
                 serializer,
                 host,
                 port,
                 Guid.NewGuid())
         {
-            this.serializer = serializer;
+            this.RegisterHandler<Instrument>(this.OnMessage);
 
-            this.RegisterHandler<DataDelivery<Instrument>>(this.OnMessage);
+            this.Subscribe<Instrument>();
         }
 
-        private void OnMessage(DataDelivery<Instrument> data)
+        private void OnMessage(Instrument instrument)
         {
-            this.Publish(data.Data.Symbol.ToString(), data.Data);
+            this.Publish(instrument.Symbol.ToString(), instrument);
         }
     }
 }

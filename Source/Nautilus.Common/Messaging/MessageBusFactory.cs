@@ -12,7 +12,7 @@ namespace Nautilus.Common.Messaging
     using Nautilus.Core;
 
     /// <summary>
-    /// Provides a factory to create the systems messaging service.
+    /// Provides a factory to create the systems message bus.
     /// </summary>
     public static class MessageBusFactory
     {

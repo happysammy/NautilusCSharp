@@ -22,14 +22,17 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         /// Initializes a new instance of the <see cref="MockDataPublisher"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
+        /// <param name="dataBusAdapter">The data bus adapter.</param>
         /// <param name="host">The host address.</param>
         /// <param name="port">The port.</param>
         public MockDataPublisher(
             IComponentryContainer container,
+            IDataBusAdapter dataBusAdapter,
             NetworkAddress host,
             NetworkPort port)
             : base(
                 container,
+                dataBusAdapter,
                 new MockSerializer(),
                 host,
                 port,

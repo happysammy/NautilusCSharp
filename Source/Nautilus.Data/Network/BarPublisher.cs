@@ -22,22 +22,27 @@ namespace Nautilus.Data.Network
         /// Initializes a new instance of the <see cref="BarPublisher"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
+        /// <param name="dataBusAdapter">The data bus adapter.</param>
         /// <param name="serializer">The bar serializer.</param>
         /// <param name="host">The host address.</param>
         /// <param name="port">The port.</param>
         public BarPublisher(
             IComponentryContainer container,
+            IDataBusAdapter dataBusAdapter,
             ISerializer<Bar> serializer,
             NetworkAddress host,
             NetworkPort port)
             : base(
                 container,
+                dataBusAdapter,
                 serializer,
                 host,
                 port,
                 Guid.NewGuid())
         {
-            this.RegisterHandler<(BarType BarType, Bar Bar)>(this.OnMessage);
+            this.RegisterHandler<(BarType, Bar)>(this.OnMessage);
+
+            this.Subscribe<(BarType, Bar)>();
         }
 
         private void OnMessage((BarType BarType, Bar Bar) data)

@@ -101,7 +101,7 @@ namespace Nautilus.Fix
                     Price.Create(ask),
                     timestamp);
 
-                this.dataBusAdapter.SendTick(tick);
+                this.dataBusAdapter.SendToBus(tick);
             });
         }
 
@@ -135,7 +135,7 @@ namespace Nautilus.Fix
 
                 foreach (var instrument in instruments)
                 {
-                    this.dataBusAdapter.SendData(instrument);
+                    this.dataBusAdapter.SendToBus(instrument);
                 }
             });
         }

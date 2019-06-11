@@ -10,7 +10,7 @@ namespace Nautilus.Network
 {
     using System;
     using System.Text;
-    using Nautilus.Common.Componentry;
+    using Nautilus.Common.Data;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core.Correctness;
@@ -21,7 +21,7 @@ namespace Nautilus.Network
     /// Provides a generic data publisher.
     /// </summary>
     /// <typeparam name="T">The publishing data type.</typeparam>
-    public abstract class DataPublisher<T> : Component
+    public abstract class DataPublisher<T> : DataBusConnected
     {
         private readonly PublisherSocket socket;
         private readonly ISerializer<T> serializer;
@@ -30,17 +30,19 @@ namespace Nautilus.Network
         /// Initializes a new instance of the <see cref="DataPublisher{T}"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
+        /// <param name="dataBusAdapter">The data bus adapter.</param>
         /// <param name="serializer">The data serializer.</param>
         /// <param name="host">The publishers host address.</param>
         /// <param name="port">The publishers port.</param>
         /// <param name="id">The publishers identifier.</param>
         protected DataPublisher(
             IComponentryContainer container,
+            IDataBusAdapter dataBusAdapter,
             ISerializer<T> serializer,
             NetworkAddress host,
             NetworkPort port,
             Guid id)
-            : base(container)
+            : base(container, dataBusAdapter)
         {
             Condition.NotDefault(id, nameof(id));
 

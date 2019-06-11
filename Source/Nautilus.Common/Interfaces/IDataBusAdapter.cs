@@ -9,6 +9,7 @@
 namespace Nautilus.Common.Interfaces
 {
     using System;
+    using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging;
     using NodaTime;
@@ -39,13 +40,19 @@ namespace Nautilus.Common.Interfaces
         /// <summary>
         /// Send the given tick to the data bus.
         /// </summary>
-        /// <param name="tick">The tick to send.</param>
-        void SendTick(Tick tick);
+        /// <param name="data">The data to send.</param>
+        void SendToBus(Tick data);
 
         /// <summary>
-        /// Send the given data to the data bus.
+        /// Send the given bar data to the data bus.
         /// </summary>
         /// <param name="data">The data to send.</param>
-        void SendData(object data);
+        void SendToBus((BarType, Bar) data);
+
+        /// <summary>
+        /// Send the given instrument to the data bus.
+        /// </summary>
+        /// <param name="data">The data to send.</param>
+        void SendToBus(Instrument data);
     }
 }

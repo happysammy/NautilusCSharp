@@ -12,6 +12,7 @@ namespace NautilusData
     using Nautilus.Brokerage.Dukascopy;
     using Nautilus.Brokerage.FXCM;
     using Nautilus.Common.Componentry;
+    using Nautilus.Common.Data;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Logging;
     using Nautilus.Common.Messaging;
@@ -19,7 +20,6 @@ namespace NautilusData
     using Nautilus.Core.Extensions;
     using Nautilus.Data;
     using Nautilus.Data.Aggregation;
-    using Nautilus.Data.Bus;
     using Nautilus.Data.Network;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Fix;
@@ -50,30 +50,30 @@ namespace NautilusData
                 guidFactory,
                 new LoggerFactory(config.LoggingAdapter));
 
-            var messageBusAdapter = MessageBusFactory.Create(container);
             var scheduler = new HashedWheelTimerScheduler(container);
+            var messageBusAdapter = MessageBusFactory.Create(container);
+            var dataBusAdapter = DataBusFactory.Create(container);
 
             var tickPublisher = new TickPublisher(
                 container,
+                dataBusAdapter,
                 new TickSerializer(),
                 config.ServerAddress,
                 config.TickSubscribePort);
 
             var barPublisher = new BarPublisher(
                 container,
+                dataBusAdapter,
                 new BarSerializer(),
                 config.ServerAddress,
                 config.BarSubscribePort);
 
             var instrumentPublisher = new InstrumentPublisher(
                 container,
+                dataBusAdapter,
                 new MsgPackInstrumentSerializer(),
                 config.ServerAddress,
                 config.InstrumentSubscribePort);
-
-            var tickBus = new TickBus(container, tickPublisher.Endpoint);
-            var dataBus = new DataBus(container, barPublisher.Endpoint, instrumentPublisher.Endpoint);
-            var dataBusAdapter = new DataBusAdapter(tickBus.Endpoint, dataBus.Endpoint);
 
             var venue = config.FixConfiguration.Broker.ToString().ToEnum<Venue>();
             var symbolConverter = new SymbolConverter(venue, config.SymbolIndex);
@@ -105,8 +105,7 @@ namespace NautilusData
             var barAggregationController = new BarAggregationController(
                 container,
                 dataBusAdapter,
-                scheduler,
-                dataBus.Endpoint);
+                scheduler);
 
             var tickProvider = new TickProvider(
                 container,
@@ -137,8 +136,6 @@ namespace NautilusData
             {
                 { ServiceAddress.Scheduler, scheduler.Endpoint },
                 { ServiceAddress.DataGateway, dataGateway.Endpoint },
-                { ServiceAddress.TickBus, tickBus.Endpoint },
-                { ServiceAddress.DataBus, dataBus.Endpoint },
                 { ServiceAddress.DatabaseTaskManager, databaseTaskManager.Endpoint },
                 { ServiceAddress.BarAggregationController, barAggregationController.Endpoint },
                 { ServiceAddress.TickProvider, tickProvider.Endpoint },

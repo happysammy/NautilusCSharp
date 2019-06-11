@@ -6,14 +6,15 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Data.Bus
+namespace Nautilus.Common.Data
 {
     using System;
+    using System.Collections.Generic;
+    using System.Collections.Immutable;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging;
@@ -26,30 +27,48 @@ namespace Nautilus.Data.Bus
     [Immutable]
     public class DataBusAdapter : IDataBusAdapter
     {
+        private readonly ImmutableDictionary<Type, IEndpoint> endpoints;
         private readonly IEndpoint tickBus;
-        private readonly IEndpoint dataBus;
+        private readonly IEndpoint barBus;
+        private readonly IEndpoint instrumentBus;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataBusAdapter"/> class.
         /// </summary>
+        /// <param name="endpoints">The data bus endpoints.</param>
         /// <param name="tickBus">The tick bus endpoint.</param>
-        /// <param name="dataBus">The data bus endpoint.</param>
-        public DataBusAdapter(IEndpoint tickBus, IEndpoint dataBus)
+        /// <param name="barBus">The bar bus endpoint.</param>
+        /// <param name="instrumentBus">The instrument bus endpoint.</param>
+        public DataBusAdapter(
+            Dictionary<Type, IEndpoint> endpoints,
+            IEndpoint tickBus,
+            IEndpoint barBus,
+            IEndpoint instrumentBus)
         {
+            this.endpoints = endpoints.ToImmutableDictionary();
+
+            // TODO: Make more generic
             this.tickBus = tickBus;
-            this.dataBus = dataBus;
+            this.barBus = barBus;
+            this.instrumentBus = instrumentBus;
         }
 
         /// <inheritdoc />
-        public void SendTick(Tick tick)
-        {
-            this.tickBus.Send(tick);
-        }
-
-        /// <inheritdoc />
-        public void SendData(object data)
+        public void SendToBus(Tick data)
         {
             this.tickBus.Send(data);
+        }
+
+        /// <inheritdoc />
+        public void SendToBus((BarType, Bar) data)
+        {
+            this.barBus.Send(data);
+        }
+
+        /// <inheritdoc />
+        public void SendToBus(Instrument data)
+        {
+            this.instrumentBus.Send(data);
         }
 
         /// <inheritdoc />
@@ -80,17 +99,14 @@ namespace Nautilus.Data.Bus
 
         private void Send(Type subscription, Message message)
         {
-            switch (subscription.Name)
+            if (this.endpoints.TryGetValue(subscription, out var endpoint))
             {
-                case nameof(Tick):
-                    this.tickBus.Send(message);
-                    break;
-                case nameof(Bar):
-                case nameof(Instrument):
-                    this.dataBus.Send(message);
-                    break;
-                default:
-                    throw ExceptionFactory.InvalidSwitchArgument(subscription, nameof(subscription));
+                endpoint.Send(message);
+            }
+            else
+            {
+                // Design time error
+                throw new InvalidOperationException($"Invalid data type to send message to ({subscription}).");
             }
         }
     }

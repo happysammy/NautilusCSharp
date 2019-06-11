@@ -33,4 +33,8 @@
         <AdditionalFiles Include="..\stylecop.json" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Bus" />
+    </ItemGroup>
+
 </Project>

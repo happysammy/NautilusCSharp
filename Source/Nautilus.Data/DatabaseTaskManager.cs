@@ -8,12 +8,11 @@
 
 namespace Nautilus.Data
 {
-    using Nautilus.Common.Componentry;
+    using Nautilus.Common.Data;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messages.Documents;
     using Nautilus.Core.Extensions;
-    using Nautilus.Data.Bus;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Messages.Commands;
     using Nautilus.Data.Types;

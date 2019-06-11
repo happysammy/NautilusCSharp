@@ -11,7 +11,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
     using System.Threading.Tasks;
-    using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Data;
     using Nautilus.Data.Network;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
@@ -27,9 +27,10 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class TickPublisherTests
     {
+        private const string TEST_ADDRESS = "tcp://localhost:55506";
         private readonly ITestOutputHelper output;
-        private readonly IComponentryContainer container;
         private readonly MockLoggingAdapter mockLoggingAdapter;
+        private readonly TickPublisher publisher;
 
         public TickPublisherTests(ITestOutputHelper output)
         {
@@ -37,34 +38,34 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
             this.output = output;
 
             var setupFactory = new StubComponentryContainerFactory();
-            this.container = setupFactory.Create();
+            var container = setupFactory.Create();
             this.mockLoggingAdapter = setupFactory.LoggingAdapter;
+            this.publisher = new TickPublisher(
+                container,
+                DataBusFactory.Create(container),
+                new TickSerializer(),
+                NetworkAddress.LocalHost,
+                new NetworkPort(55506));
         }
 
         [Fact]
         internal void GivenTickMessage_WithSubscriber_PublishesMessage()
         {
             // Arrange
-            var publisher = new TickPublisher(
-                this.container,
-                new TickSerializer(),
-                NetworkAddress.LocalHost,
-                new NetworkPort(55506));
-            publisher.Start();
+            this.publisher.Start();
             Task.Delay(100).Wait();
 
             var symbol = new Symbol("AUDUSD", Venue.FXCM);
 
-            const string testAddress = "tcp://localhost:55506";
-            var subscriber = new SubscriberSocket(testAddress);
-            subscriber.Connect(testAddress);
+            var subscriber = new SubscriberSocket(TEST_ADDRESS);
+            subscriber.Connect(TEST_ADDRESS);
             subscriber.Subscribe(symbol.ToString());
             Task.Delay(100).Wait();
 
             var tick = StubTickFactory.Create(symbol);
 
             // Act
-            publisher.Endpoint.Send(tick);
+            this.publisher.Endpoint.Send(tick);
 
             var receivedTopic = subscriber.ReceiveFrameBytes();
             var receivedMessage = subscriber.ReceiveFrameBytes();
@@ -77,9 +78,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
 
             // Tear Down
             subscriber.Unsubscribe(symbol.ToString());
-            subscriber.Disconnect(testAddress);
+            subscriber.Disconnect(TEST_ADDRESS);
             subscriber.Dispose();
-            publisher.Stop();
+            this.publisher.Stop();
             Task.Delay(100).Wait();  // Allows sockets to dispose
         }
     }

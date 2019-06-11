@@ -11,9 +11,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
+    using Nautilus.Common.Data;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Data.Aggregation;
-    using Nautilus.Data.Bus;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Scheduler;
@@ -40,14 +40,13 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.logger = setupFactory.LoggingAdapter;
             this.receiver = new MockMessagingAgent();
             var container = setupFactory.Create();
-            var dataBusAdapter = new DataBusAdapter(this.receiver.Endpoint, this.receiver.Endpoint);
+            var dataBusAdapter = DataBusFactory.Create(container);
             this.scheduler = new HashedWheelTimerScheduler(container);
 
             this.controller = new BarAggregationController(
                 container,
                 dataBusAdapter,
-                this.scheduler,
-                this.receiver.Endpoint);
+                this.scheduler);
         }
 
         [Fact]

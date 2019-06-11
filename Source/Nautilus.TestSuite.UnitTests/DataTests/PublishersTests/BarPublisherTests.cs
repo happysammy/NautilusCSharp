@@ -11,7 +11,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
     using System.Threading.Tasks;
-    using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Data;
     using Nautilus.Data.Network;
     using Nautilus.Network;
     using Nautilus.Serialization;
@@ -25,9 +25,10 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public sealed class BarPublisherTests
     {
+        private const string TEST_ADDRESS = "tcp://localhost:55511";
         private readonly ITestOutputHelper output;
-        private readonly IComponentryContainer setupContainer;
         private readonly MockLoggingAdapter mockLoggingAdapter;
+        private readonly BarPublisher publisher;
 
         public BarPublisherTests(ITestOutputHelper output)
         {
@@ -35,27 +36,28 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
             this.output = output;
 
             var setupFactory = new StubComponentryContainerFactory();
-            this.setupContainer = setupFactory.Create();
+            var container = setupFactory.Create();
             this.mockLoggingAdapter = setupFactory.LoggingAdapter;
+
+            this.publisher = new BarPublisher(
+                container,
+                DataBusFactory.Create(container),
+                new BarSerializer(),
+                NetworkAddress.LocalHost,
+                new NetworkPort(55511));
         }
 
         [Fact]
         internal void GivenBarClosedMessage_WithSubscriber_PublishesMessage()
         {
             // Arrange
-            var publisher = new BarPublisher(
-                this.setupContainer,
-                new BarSerializer(),
-                NetworkAddress.LocalHost,
-                new NetworkPort(55511));
-            publisher.Start();
+            this.publisher.Start();
             Task.Delay(100).Wait();
 
             var barType = StubBarType.AUDUSD();
 
-            const string testAddress = "tcp://localhost:55511";
-            var subscriber = new SubscriberSocket(testAddress);
-            subscriber.Connect(testAddress);
+            var subscriber = new SubscriberSocket(TEST_ADDRESS);
+            subscriber.Connect(TEST_ADDRESS);
             subscriber.Subscribe(barType.ToString());
             Task.Delay(100).Wait();
 
@@ -63,7 +65,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
             var data = (barType, bar);
 
             // Act
-            publisher.Endpoint.Send(data);
+            this.publisher.Endpoint.Send(data);
 
             var topic = subscriber.ReceiveFrameBytes();
             var message = subscriber.ReceiveFrameBytes();
@@ -76,9 +78,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
 
             // Tear Down
             subscriber.Unsubscribe(barType.ToString());
-            subscriber.Disconnect(testAddress);
+            subscriber.Disconnect(TEST_ADDRESS);
             subscriber.Dispose();
-            publisher.Stop();
+            this.publisher.Stop();
             Task.Delay(100).Wait();  // Allows sockets to dispose
         }
     }

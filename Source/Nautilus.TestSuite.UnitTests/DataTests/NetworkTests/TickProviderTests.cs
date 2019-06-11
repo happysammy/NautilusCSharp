@@ -11,9 +11,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.NetworkTests
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
+    using Nautilus.Common.Data;
     using Nautilus.Common.Interfaces;
     using Nautilus.Data;
-    using Nautilus.Data.Bus;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Messages.Requests;
     using Nautilus.Data.Messages.Responses;
@@ -55,7 +55,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.NetworkTests
             this.requestSerializer = new MsgPackRequestSerializer();
             this.responseSerializer = new MsgPackResponseSerializer();
             this.mockReceiver = new MockMessagingAgent();
-            var dataBusAdapter = new DataBusAdapter(this.mockReceiver.Endpoint, this.mockReceiver.Endpoint);
+            var dataBusAdapter = DataBusFactory.Create(container);
             this.repository = new InMemoryTickStore(container, dataBusAdapter);
             this.provider = new TickProvider(
                 container,

@@ -10,10 +10,10 @@ namespace Nautilus.Data
 {
     using System.Collections.Generic;
     using System.Linq;
+    using Nautilus.Common.Data;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.CQS;
     using Nautilus.Core.Extensions;
-    using Nautilus.Data.Bus;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Messages.Commands;
     using Nautilus.DomainModel.ValueObjects;

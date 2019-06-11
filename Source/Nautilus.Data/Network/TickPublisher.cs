@@ -22,22 +22,27 @@ namespace Nautilus.Data.Network
         /// Initializes a new instance of the <see cref="TickPublisher"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
+        /// <param name="dataBusAdapter">The data bus adapter.</param>
         /// <param name="serializer">The tick serializer.</param>
         /// <param name="host">The host address.</param>
         /// <param name="port">The port.</param>
         public TickPublisher(
             IComponentryContainer container,
+            IDataBusAdapter dataBusAdapter,
             ISerializer<Tick> serializer,
             NetworkAddress host,
             NetworkPort port)
             : base(
                 container,
+                dataBusAdapter,
                 serializer,
                 host,
                 port,
                 Guid.NewGuid())
         {
             this.RegisterHandler<Tick>(this.OnMessage);
+
+            this.Subscribe<Tick>();
         }
 
         private void OnMessage(Tick tick)

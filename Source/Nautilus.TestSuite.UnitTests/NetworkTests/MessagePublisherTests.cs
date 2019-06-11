@@ -11,6 +11,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
     using System.Threading.Tasks;
+    using Nautilus.Common.Data;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Network;
@@ -28,7 +29,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         private const string TEST_TOPIC = "TEST";
 
         private readonly ITestOutputHelper output;
-        private readonly IComponentryContainer setupContainer;
+        private readonly IComponentryContainer container;
         private readonly MockLoggingAdapter mockLoggingAdapter;
 
         public MessagePublisherTests(ITestOutputHelper output)
@@ -37,7 +38,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             this.output = output;
 
             var setupFactory = new StubComponentryContainerFactory();
-            this.setupContainer = setupFactory.Create();
+            this.container = setupFactory.Create();
             this.mockLoggingAdapter = setupFactory.LoggingAdapter;
         }
 
@@ -47,7 +48,8 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             // Arrange
             // Act
             var publisher = new MockDataPublisher(
-                this.setupContainer,
+                this.container,
+                DataBusFactory.Create(this.container),
                 NetworkAddress.LocalHost,
                 new NetworkPort(55555));
 
@@ -62,7 +64,8 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         {
             // Arrange
             var publisher = new MockDataPublisher(
-                this.setupContainer,
+                this.container,
+                DataBusFactory.Create(this.container),
                 NetworkAddress.LocalHost,
                 new NetworkPort(55555));
             publisher.Start();

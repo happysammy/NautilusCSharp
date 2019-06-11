@@ -6,10 +6,12 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Data.Bus
+namespace Nautilus.Common.Data
 {
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
+    using Nautilus.DomainModel.Entities;
+    using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
     /// The base class for all components which are connected to the message bus.
@@ -32,7 +34,34 @@ namespace Nautilus.Data.Bus
         }
 
         /// <summary>
-        /// Subscribe to the data type.
+        /// Send the given tick to the data bus.
+        /// </summary>
+        /// <param name="data">The data to send.</param>
+        public void SendToBus(Tick data)
+        {
+            this.dataBusAdapter.SendToBus(data);
+        }
+
+        /// <summary>
+        /// Send the given bar data to the data bus.
+        /// </summary>
+        /// <param name="data">The data to send.</param>
+        public void SendToBus((BarType, Bar) data)
+        {
+            this.dataBusAdapter.SendToBus(data);
+        }
+
+        /// <summary>
+        /// Send the given instrument to the data bus.
+        /// </summary>
+        /// <param name="data">The data to send.</param>
+        public void SendToBus(Instrument data)
+        {
+            this.dataBusAdapter.SendToBus(data);
+        }
+
+        /// <summary>
+        /// Subscribes to the data type with the data bus.
         /// </summary>
         /// <typeparam name="T">The data type to subscribe to.</typeparam>
         protected void Subscribe<T>()
@@ -41,7 +70,7 @@ namespace Nautilus.Data.Bus
         }
 
         /// <summary>
-        /// Unsubscribe from the data type.
+        /// Unsubscribe from the data type with the data bus.
         /// </summary>
         /// <typeparam name="T">The data type to unsubscribe from.</typeparam>
         protected void Unsubscribe<T>()

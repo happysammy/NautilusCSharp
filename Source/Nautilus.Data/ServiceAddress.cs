@@ -33,16 +33,6 @@ namespace Nautilus.Data
         public static Address DataGateway { get; } = new Address(nameof(DataGateway));
 
         /// <summary>
-        /// Gets the <see cref="DataBus"/> component messaging address.
-        /// </summary>
-        public static Address DataBus { get; } = new Address(nameof(DataBus));
-
-        /// <summary>
-        /// Gets the <see cref="TickBus"/> component messaging address.
-        /// </summary>
-        public static Address TickBus { get; } = new Address(nameof(TickBus));
-
-        /// <summary>
         /// Gets the <see cref="TickPublisher"/> component messaging address.
         /// </summary>
         public static Address TickPublisher { get; } = new Address(nameof(TickPublisher));

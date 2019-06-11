@@ -24,11 +24,10 @@ namespace Nautilus.Common.Messaging
     /// <summary>
     /// Provides a generic message bus.
     /// </summary>
-    /// <typeparam name="T">The message bus type.</typeparam>
+    /// <typeparam name="T">The bus message type.</typeparam>
     public sealed class MessageBus<T> : Component
         where T : Message
     {
-        private readonly Type busType;
         private readonly List<object> deadLetters;
         private readonly List<Mailbox> subscriptionsAll;
         private readonly Dictionary<Type, List<Mailbox>> subscriptions;
@@ -42,12 +41,13 @@ namespace Nautilus.Common.Messaging
         public MessageBus(IComponentryContainer container)
         : base(container, State.Running)
         {
-            this.busType = typeof(T);
             this.deadLetters = new List<object>();
             this.subscriptionsAll = new List<Mailbox>();
             this.subscriptions = new Dictionary<Type, List<Mailbox>>();
 
             this.switchboard = Switchboard.Empty();
+
+            this.BusType = typeof(T);
 
             this.RegisterHandler<InitializeSwitchboard>(this.OnMessage);
             this.RegisterHandler<Subscribe<Type>>(this.OnMessage);
@@ -56,9 +56,14 @@ namespace Nautilus.Common.Messaging
         }
 
         /// <summary>
+        /// Gets the bus message type.
+        /// </summary>
+        public Type BusType { get; }
+
+        /// <summary>
         /// Gets the message bus message type.
         /// </summary>
-        public Type BusMessageType => this.busType;
+        public Type BusMessageType => this.BusType;
 
         /// <summary>
         /// Gets the message bus subscriptions.
@@ -106,16 +111,16 @@ namespace Nautilus.Common.Messaging
         {
             var type = message.Subscription;
 
-            if (type == this.busType)
+            if (type == this.BusType)
             {
                 this.Subscribe(message, this.subscriptionsAll);
                 return;
             }
 
-            if (!type.IsSubclassOf(this.busType))
+            if (!type.IsSubclassOf(this.BusType))
             {
                 this.Log.Error($"Cannot subscribe to {type.Name} type messages " +
-                               $"(can only subscribe to all {this.busType.Name} or type of {this.busType.Name} messages).");
+                               $"(only all {this.BusType.Name} or type of {this.BusType.Name} messages).");
                 return;
             }
 
@@ -131,16 +136,16 @@ namespace Nautilus.Common.Messaging
         {
             var type = message.Subscription;
 
-            if (type == this.busType)
+            if (type == this.BusType)
             {
                 this.Unsubscribe(message, this.subscriptionsAll);
                 return;
             }
 
-            if (!type.IsSubclassOf(this.busType))
+            if (!type.IsSubclassOf(this.BusType))
             {
                 this.Log.Error($"Cannot unsubscribe from {type.Name} type messages " +
-                               $"(can only unsubscribe from all {this.busType.Name} or type of {this.busType.Name} messages).");
+                               $"(only all {this.BusType.Name} or type of {this.BusType.Name} messages).");
                 return;
             }
 
