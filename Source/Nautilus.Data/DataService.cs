@@ -73,7 +73,7 @@ namespace Nautilus.Data
             this.barDataTrimTime = config.BarDataTrimTime;
             this.barRollingWindowDays = config.BarDataTrimWindowDays;
 
-            addresses.Add(ServiceAddress.Core, this.Endpoint);
+            addresses.Add(ServiceAddress.DataService, this.Endpoint);
             messageBusAdapter.Send(new InitializeSwitchboard(
                 Switchboard.Create(addresses),
                 this.NewGuid(),

@@ -46,7 +46,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
 
             var addresses = new Dictionary<Address, IEndpoint>
             {
-                { ServiceAddress.Core, this.mockReceiver.Endpoint },
+                { ServiceAddress.DataService, this.mockReceiver.Endpoint },
                 { ServiceAddress.BarAggregationController, this.mockReceiver.Endpoint },
                 { ServiceAddress.DatabaseTaskManager, this.mockReceiver.Endpoint },
             };
@@ -324,7 +324,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             var envelope = new Envelope<MarketOpened>(
                 message,
                 ServiceAddress.BarAggregationController,
-                ServiceAddress.Core,
+                ServiceAddress.DataService,
                 StubZonedDateTime.UnixEpoch());
 
             // Act
@@ -349,7 +349,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             var envelope = new Envelope<MarketOpened>(
                 message,
                 ServiceAddress.Scheduler,
-                ServiceAddress.Core,
+                ServiceAddress.DataService,
                 StubZonedDateTime.UnixEpoch());
 
             // Act
@@ -374,7 +374,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             var envelope = new Envelope<MarketOpened>(
                 message,
                 null,
-                ServiceAddress.Core,
+                ServiceAddress.DataService,
                 StubZonedDateTime.UnixEpoch());
 
             // Act
@@ -408,7 +408,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             var envelope = new Envelope<MarketOpened>(
                 message,
                 null,
-                ServiceAddress.Core,
+                ServiceAddress.DataService,
                 StubZonedDateTime.UnixEpoch());
 
             this.messageBus.Endpoint.Send(subscribe);
@@ -441,7 +441,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             var envelope = new Envelope<MarketOpened>(
                 message,
                 null,
-                ServiceAddress.Core,
+                ServiceAddress.DataService,
                 StubZonedDateTime.UnixEpoch());
 
             this.messageBus.Endpoint.Send(subscribe);

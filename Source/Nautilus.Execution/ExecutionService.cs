@@ -53,7 +53,7 @@ namespace Nautilus.Execution
         {
             Condition.NotEmpty(addresses, nameof(addresses));
 
-            addresses.Add(ServiceAddress.Core, this.Endpoint);
+            addresses.Add(ServiceAddress.ExecutionService, this.Endpoint);
             messageBusAdapter.Send(new InitializeSwitchboard(
                 Switchboard.Create(addresses),
                 this.NewGuid(),

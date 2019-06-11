@@ -18,9 +18,9 @@ namespace Nautilus.Execution
     public static class ServiceAddress
     {
         /// <summary>
-        /// Gets the <see cref="Core"/> component messaging address.
+        /// Gets the <see cref="ExecutionService"/> component messaging address.
         /// </summary>
-        public static Address Core { get; } = new Address(nameof(Core));
+        public static Address ExecutionService { get; } = new Address(nameof(ExecutionService));
 
         /// <summary>
         /// Gets the <see cref="Scheduler"/> component messaging address.
