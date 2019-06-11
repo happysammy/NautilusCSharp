@@ -11,9 +11,11 @@ namespace Nautilus.Messaging
     using System;
     using System.Reflection.Emit;
     using Nautilus.Core;
+    using Nautilus.Core.Annotations;
     using Nautilus.Messaging.Interfaces;
 
     /// <inheritdoc />
+    [Immutable]
     public sealed class Endpoint : IEndpoint
     {
         private readonly Func<object, bool> target;
