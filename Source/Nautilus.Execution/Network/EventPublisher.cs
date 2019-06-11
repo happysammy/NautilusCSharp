@@ -10,7 +10,6 @@ namespace Nautilus.Execution.Network
 {
     using System;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messages.Events;
     using Nautilus.Core;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Events.Base;
