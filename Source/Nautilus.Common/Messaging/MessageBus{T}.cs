@@ -212,13 +212,14 @@ namespace Nautilus.Common.Messaging
         [PerformanceOptimized]
         private void Publish(IEnvelope envelope)
         {
-            try
+            this.Execute(() =>
             {
                 if (this.subscriptionsAll.Count > 0)
                 {
                     for (var i = 0; i < this.subscriptionsAll.Count; i++)
                     {
                         this.subscriptionsAll[i].Endpoint.Send(envelope);
+                        this.Log.Verbose($"[{this.ProcessedCount}] {envelope.Sender} -> {envelope} -> PUBLISHED");
                     }
                 }
 
@@ -227,16 +228,10 @@ namespace Nautilus.Common.Messaging
                     for (var i = 0; i < subscribers.Count; i++)
                     {
                         subscribers[i].Endpoint.Send(envelope);
+                        this.Log.Verbose($"[{this.ProcessedCount}] {envelope.Sender} -> {envelope} -> {subscribers[i].Address}");
                     }
                 }
-
-                this.Log.Verbose($"[{this.ProcessedCount}] {envelope.Sender} -> {envelope} -> PUBLISHED");
-            }
-            catch (Exception ex)
-            {
-                this.Log.Error(ex.Message);
-                throw;
-            }
+            });
         }
 
         private void AddToDeadLetters(object message)

@@ -16,7 +16,7 @@ namespace Nautilus.Common.Messages.Commands
     using NodaTime;
 
     /// <summary>
-    /// Represents a command to disconnect a FIX session at a scheduled time.
+    /// Represents a scheduled command to disconnect a FIX session.
     /// </summary>
     [Immutable]
     public sealed class DisconnectFix : Command, IScheduledJob

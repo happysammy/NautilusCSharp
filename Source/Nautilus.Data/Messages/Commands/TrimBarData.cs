@@ -20,8 +20,8 @@ namespace Nautilus.Data.Messages.Commands
     using NodaTime;
 
     /// <summary>
-    /// Represents a command to trim the bar data keys held in the database
-    /// to be equal to the size of the rolling window at a scheduled time.
+    /// Represents a scheduled command to trim the bar data keys held in the database
+    /// to be equal to the size of the rolling window.
     /// </summary>
     [Immutable]
     public sealed class TrimBarData : Command, IScheduledJob

@@ -24,7 +24,6 @@ namespace Nautilus.Brokerage.FXCM
     using QuickFix.Fields;
     using QuickFix.FIX44;
     using Currency = Nautilus.DomainModel.Enums.Currency;
-    using Exception = System.Exception;
     using Symbol = Nautilus.DomainModel.ValueObjects.Symbol;
 
     /// <summary>

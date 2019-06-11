@@ -16,7 +16,7 @@ namespace Nautilus.Data.Messages.Commands
     using NodaTime;
 
     /// <summary>
-    /// Represents a command to trim the tick data with timestamps prior to the trim from date time.
+    /// Represents a scheduled command to trim the tick data with timestamps prior to the trim from date time.
     /// </summary>
     [Immutable]
     public sealed class TrimTickData : Command, IScheduledJob

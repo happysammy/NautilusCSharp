@@ -80,6 +80,8 @@ namespace Nautilus.Network
             this.ReceivedCount = 0;
             this.SentCount = 0;
 
+            this.RegisterHandler<Envelope<Start>>(this.OnMessage);
+            this.RegisterHandler<Envelope<Stop>>(this.OnMessage);
             this.RegisterUnhandled(this.UnhandledRequest);
         }
 
@@ -262,6 +264,16 @@ namespace Nautilus.Network
             {
                 this.Log.Error("Received malformed message." + Environment.NewLine + ex);
             }
+        }
+
+        private void OnMessage(Envelope<Start> message)
+        {
+            this.Open(message);
+        }
+
+        private void OnMessage(Envelope<Stop> message)
+        {
+            this.Open(message);
         }
 
         /// <summary>

@@ -31,9 +31,9 @@ namespace Nautilus.Common.Componentry
 
         /// <summary>
         /// Executes the given action. Will catch and log all exceptions, will rethrow exceptions
-        /// other than validation exceptions.
+        /// other than <see cref="ArgumentException"/>.
         /// </summary>
-        /// <param name="action">The action.</param>
+        /// <param name="action">The action to invoke.</param>
         public void Execute(Action action)
         {
             try
@@ -57,7 +57,7 @@ namespace Nautilus.Common.Componentry
         /// other than the specified exception type or validation exceptions.
         /// </summary>
         /// <typeparam name="T">The exception type.</typeparam>
-        /// <param name="action">The action.</param>
+        /// <param name="action">The action to invoke.</param>
         public void Execute<T>(Action action)
             where T : Exception
         {

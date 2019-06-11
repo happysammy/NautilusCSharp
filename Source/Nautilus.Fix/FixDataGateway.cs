@@ -26,6 +26,7 @@ namespace Nautilus.Fix
     public sealed class FixDataGateway : DataBusConnected, IDataGateway
     {
         private readonly IFixClient fixClient;
+        private readonly Dictionary<string, Symbol> symbolCache;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FixDataGateway"/> class.
@@ -40,6 +41,7 @@ namespace Nautilus.Fix
             : base(container, dataBusAdapter)
         {
             this.fixClient = fixClient;
+            this.symbolCache = new Dictionary<string, Symbol>();
 
             this.RegisterHandler<ConnectFix>(this.OnMessage);
             this.RegisterHandler<DisconnectFix>(this.OnMessage);
@@ -91,13 +93,28 @@ namespace Nautilus.Fix
                 Condition.PositiveDecimal(bid, nameof(bid));
                 Condition.PositiveDecimal(ask, nameof(ask));
 
-                var tick = new Tick(
-                    new Symbol(symbolCode, venue),
-                    Price.Create(bid),
-                    Price.Create(ask),
-                    timestamp);
+                if (this.symbolCache.TryGetValue(symbolCode, out var symbol))
+                {
+                    var tickWithCachedSymbol = new Tick(
+                        symbol,
+                        Price.Create(bid),
+                        Price.Create(ask),
+                        timestamp);
 
-                this.SendToBus(tick);
+                    this.SendToBus(tickWithCachedSymbol);
+                }
+                else
+                {
+                    var newSymbol = new Symbol(symbolCode, venue);
+                    var tickWithNewSymbol = new Tick(
+                        symbol,
+                        Price.Create(bid),
+                        Price.Create(ask),
+                        timestamp);
+
+                    this.SendToBus(tickWithNewSymbol);
+                    this.symbolCache.Add(symbolCode, newSymbol);
+                }
             });
         }
 

@@ -95,29 +95,32 @@ namespace Nautilus.Data
         /// <inheritdoc />
         protected override void OnStart(Start start)
         {
-            if (TimingProvider.IsOutsideWeeklyInterval(
-                this.fixDisconnectTime,
-                this.fixConnectTime,
-                this.InstantNow()))
+            this.Execute(() =>
             {
-                this.Send(start, ServiceAddress.DataGateway);
-            }
-            else
-            {
-                this.CreateConnectFixJob();
-            }
+                if (TimingProvider.IsOutsideWeeklyInterval(
+                    this.fixDisconnectTime,
+                    this.fixConnectTime,
+                    this.InstantNow()))
+                {
+                    this.Send(start, ServiceAddress.DataGateway);
+                }
+                else
+                {
+                    this.CreateConnectFixJob();
+                }
 
-            this.CreateMarketOpenedJob();
-            this.CreateMarketClosedJob();
-            this.CreateTrimTickDataJob();
-            this.CreateTrimBarDataJob();
+                this.CreateMarketOpenedJob();
+                this.CreateMarketClosedJob();
+                this.CreateTrimTickDataJob();
+                this.CreateTrimBarDataJob();
 
-            this.Send(start, ServiceAddress.TickProvider);
-            this.Send(start, ServiceAddress.TickPublisher);
-            this.Send(start, ServiceAddress.BarProvider);
-            this.Send(start, ServiceAddress.BarPublisher);
-            this.Send(start, ServiceAddress.InstrumentProvider);
-            this.Send(start, ServiceAddress.InstrumentPublisher);
+                this.Send(start, ServiceAddress.TickProvider);
+                this.Send(start, ServiceAddress.TickPublisher);
+                this.Send(start, ServiceAddress.BarProvider);
+                this.Send(start, ServiceAddress.BarPublisher);
+                this.Send(start, ServiceAddress.InstrumentProvider);
+                this.Send(start, ServiceAddress.InstrumentPublisher);
+            });
         }
 
         /// <inheritdoc />
@@ -285,7 +288,7 @@ namespace Nautilus.Data
                     marketOpened,
                     this.Endpoint);
 
-                this.Log.Information($"Created scheduled event {marketOpened}Event[{symbol}] for {nextTime.ToIsoString()}");
+                this.Log.Information($"Created scheduled event {marketOpened}-{symbol} for {nextTime.ToIsoString()}");
             }
         }
 
@@ -312,7 +315,7 @@ namespace Nautilus.Data
                     marketClosed,
                     this.Endpoint);
 
-                this.Log.Information($"Created scheduled event {marketClosed}Event[{symbol}] for {nextTime.ToIsoString()}");
+                this.Log.Information($"Created scheduled event {marketClosed}-{symbol} for {nextTime.ToIsoString()}");
             }
         }
 
