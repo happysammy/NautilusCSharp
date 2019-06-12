@@ -66,7 +66,7 @@ namespace Nautilus.Common.Messaging
         public IReadOnlyCollection<object> DeadLetters => this.deadLetters;
 
         /// <summary>
-        /// Gets the message bus subscriber addresses by type.
+        /// Gets the message bus subscriptions.
         /// </summary>
         /// <returns>The subscribers by type dictionary.</returns>
         public IReadOnlyDictionary<Type, IReadOnlyCollection<Address>> Subscriptions => this.BuildSubscribers();

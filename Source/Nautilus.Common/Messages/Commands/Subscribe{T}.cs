@@ -9,7 +9,6 @@
 namespace Nautilus.Common.Messages.Commands
 {
     using System;
-    using System.Linq;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;

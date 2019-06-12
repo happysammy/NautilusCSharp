@@ -82,8 +82,77 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
 
             // Assert
+            Assert.Equal(0, this.dataBus.Subscriptions.Count);
+        }
+
+        [Fact]
+        internal void GivenSubscribe_WhenTypeIsValid_SubscribesCorrectly()
+        {
+            // Arrange
+            var subscribe = new Subscribe<Type>(
+                typeof(Tick),
+                this.mockReceiver.Mailbox,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            // Act
+            this.dataBus.Endpoint.Send(subscribe);
+
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+
+            // Assert
             Assert.Contains(this.mockReceiver.Mailbox.Address, this.dataBus.Subscriptions);
             Assert.Equal(1, this.dataBus.Subscriptions.Count);
+        }
+
+        [Fact]
+        internal void GivenSubscribe_WhenAlreadySubscribed_DoesNotDuplicateSubscription()
+        {
+            // Arrange
+            var subscribe = new Subscribe<Type>(
+                typeof(Tick),
+                this.mockReceiver.Mailbox,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            // Act
+            this.dataBus.Endpoint.Send(subscribe);
+            this.dataBus.Endpoint.Send(subscribe);
+
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+
+            // Assert
+            Assert.Equal(1, this.dataBus.Subscriptions.Count);
+        }
+
+        [Fact]
+        internal void GivenSubscribe_WithMultipleSubscribers_SubscribesCorrectly()
+        {
+            // Arrange
+            var receiver2 = new MockMessagingAgent("TickReceiver2");
+
+            var subscribe1 = new Subscribe<Type>(
+                typeof(Tick),
+                this.mockReceiver.Mailbox,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            var subscribe2 = new Subscribe<Type>(
+                typeof(Tick),
+                receiver2.Mailbox,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            // Act
+            this.dataBus.Endpoint.Send(subscribe1);
+            this.dataBus.Endpoint.Send(subscribe2);
+
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+
+            // Assert
+            Assert.Contains(this.mockReceiver.Mailbox.Address, this.dataBus.Subscriptions);
+            Assert.Contains(receiver2.Mailbox.Address, this.dataBus.Subscriptions);
+            Assert.Equal(2, this.dataBus.Subscriptions.Count);
         }
     }
 }

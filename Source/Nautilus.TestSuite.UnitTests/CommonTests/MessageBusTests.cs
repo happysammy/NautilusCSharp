@@ -112,7 +112,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
         }
 
         [Fact]
-        internal void GivenSubscribe_WhenAlreadySubscribedToBusType_DoesNotResubscribe()
+        internal void GivenSubscribe_WhenAlreadySubscribedToBusType_DoesNotDuplicateSubscription()
         {
             // Arrange
             var subscribe = new Subscribe<Type>(
@@ -154,7 +154,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
         }
 
         [Fact]
-        internal void GivenSubscribe_WhenAlreadySubscribedToSpecificType_DoesNotResubscribe()
+        internal void GivenSubscribe_WhenAlreadySubscribedToSpecificType_DoesNotDuplicateSubscription()
         {
             // Arrange
             var subscribe = new Subscribe<Type>(
