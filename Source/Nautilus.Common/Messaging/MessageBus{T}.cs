@@ -200,12 +200,12 @@ namespace Nautilus.Common.Messaging
             // Send point-to-point
             if (this.switchboard.SendToReceiver(envelope))
             {
-                this.Log.Verbose($"[{this.ProcessedCount}] {envelope.Sender} -> {envelope} -> {envelope.Receiver}");
+                this.Log.Verbose($"Sent[{this.ProcessedCount}] {envelope.Sender} -> {envelope} -> {envelope.Receiver}");
             }
             else
             {
                 this.Log.Error($"{envelope.Receiver} address unknown to switchboard.");
-                this.Log.Error($"[{this.ProcessedCount}] {envelope.Sender} -> {envelope} -> DeadLetters");
+                this.Log.Error($"Sent[{this.ProcessedCount}] {envelope.Sender} -> {envelope} -> DeadLetters");
             }
         }
 
@@ -219,7 +219,7 @@ namespace Nautilus.Common.Messaging
                     for (var i = 0; i < this.subscriptionsAll.Count; i++)
                     {
                         this.subscriptionsAll[i].Endpoint.Send(envelope);
-                        this.Log.Verbose($"[{this.ProcessedCount}] {envelope.Sender} -> {envelope} -> PUBLISHED");
+                        this.Log.Verbose($"Published[{this.ProcessedCount}] {envelope.Sender} -> {envelope} -> {this.subscriptionsAll[i].Address}");
                     }
                 }
 
@@ -228,7 +228,7 @@ namespace Nautilus.Common.Messaging
                     for (var i = 0; i < subscribers.Count; i++)
                     {
                         subscribers[i].Endpoint.Send(envelope);
-                        this.Log.Verbose($"[{this.ProcessedCount}] {envelope.Sender} -> {envelope} -> {subscribers[i].Address}");
+                        this.Log.Verbose($"Published[{this.ProcessedCount}] {envelope.Sender} -> {envelope} -> {subscribers[i].Address}");
                     }
                 }
             });

@@ -8,6 +8,7 @@
 
 namespace NautilusData
 {
+    using System;
     using System.IO;
     using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;
@@ -24,12 +25,15 @@ namespace NautilusData
         /// <param name="args">The program arguments.</param>
         public static void Main(string[] args)
         {
+            System.AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionTrapper;
+
             var config = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("hosting.json", optional: true, reloadOnChange: true)
+                .AddJsonFile("hosting.json", true, true)
                 .Build();
 
-            BuildWebHost(config, args).Run();
+            // BuildWebHost(config, args).Run();
+            throw new Exception("Kaboom");
         }
 
         private static IWebHost BuildWebHost(IConfiguration config, string[] args) =>
@@ -39,5 +43,13 @@ namespace NautilusData
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseStartup<Startup>()
                 .Build();
+
+        private static void UnhandledExceptionTrapper(object sender, UnhandledExceptionEventArgs ex)
+        {
+            Console.WriteLine(ex.ExceptionObject.ToString());
+            Console.WriteLine("Press Enter to continue");
+            Console.ReadLine();
+            Environment.Exit(1);
+        }
     }
 }

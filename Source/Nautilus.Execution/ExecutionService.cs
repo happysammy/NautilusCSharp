@@ -75,16 +75,21 @@ namespace Nautilus.Execution
         }
 
         /// <inheritdoc />
-        protected override void OnStart(Start message)
+        protected override void OnStart(Start start)
         {
             if (TimingProvider.IsOutsideWeeklyInterval(
                 this.fixDisconnectTime,
                 this.fixConnectTime,
                 this.InstantNow()))
             {
-                this.Send(message, ServiceAddress.FixGateway);
-                this.Send(message, ServiceAddress.CommandServer);
-                this.Send(message, ServiceAddress.EventPublisher);
+                var receivers = new List<Address>
+                {
+                    ServiceAddress.FixGateway,
+                    ServiceAddress.CommandServer,
+                    ServiceAddress.EventPublisher,
+                };
+
+                this.SendAll(start, receivers);
             }
             else
             {
@@ -93,23 +98,28 @@ namespace Nautilus.Execution
         }
 
         /// <inheritdoc />
-        protected override void OnStop(Stop message)
+        protected override void OnStop(Stop stop)
         {
-            // Forward stop message.
-            this.Send(message, ServiceAddress.FixGateway);
-            this.Send(message, ServiceAddress.CommandServer);
-            this.Send(message, ServiceAddress.EventPublisher);
+            // Forward stop message
+            var receivers = new List<Address>
+            {
+                ServiceAddress.FixGateway,
+                ServiceAddress.CommandServer,
+                ServiceAddress.EventPublisher,
+            };
+
+            this.SendAll(stop, receivers);
         }
 
         private void OnMessage(ConnectFix message)
         {
-            // Forward message.
+            // Forward message
             this.Send(message, ServiceAddress.FixGateway);
         }
 
         private void OnMessage(DisconnectFix message)
         {
-            // Forward message.
+            // Forward message
             this.Send(message, ServiceAddress.FixGateway);
         }
 

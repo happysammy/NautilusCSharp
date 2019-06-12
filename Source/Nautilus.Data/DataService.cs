@@ -114,37 +114,45 @@ namespace Nautilus.Data
                 this.CreateTrimTickDataJob();
                 this.CreateTrimBarDataJob();
 
-                this.Send(start, ServiceAddress.TickProvider);
-                this.Send(start, ServiceAddress.TickPublisher);
-                this.Send(start, ServiceAddress.BarProvider);
-                this.Send(start, ServiceAddress.BarPublisher);
-                this.Send(start, ServiceAddress.InstrumentProvider);
-                this.Send(start, ServiceAddress.InstrumentPublisher);
+                var receivers = new List<Address>
+                {
+                    ServiceAddress.TickProvider,
+                    ServiceAddress.TickPublisher,
+                    ServiceAddress.BarProvider,
+                    ServiceAddress.BarPublisher,
+                    ServiceAddress.InstrumentProvider,
+                    ServiceAddress.InstrumentPublisher,
+                };
+
+                this.SendAll(start, receivers);
             });
         }
 
         /// <inheritdoc />
         protected override void OnStop(Stop stop)
         {
-            this.Send(stop, ServiceAddress.DatabaseTaskManager);
-            this.Send(stop, ServiceAddress.DataGateway);
-            this.Send(stop, ServiceAddress.TickProvider);
-            this.Send(stop, ServiceAddress.TickPublisher);
-            this.Send(stop, ServiceAddress.BarProvider);
-            this.Send(stop, ServiceAddress.BarPublisher);
-            this.Send(stop, ServiceAddress.InstrumentProvider);
-            this.Send(stop, ServiceAddress.InstrumentPublisher);
+            var receivers = new List<Address>
+            {
+                ServiceAddress.TickProvider,
+                ServiceAddress.TickPublisher,
+                ServiceAddress.BarProvider,
+                ServiceAddress.BarPublisher,
+                ServiceAddress.InstrumentProvider,
+                ServiceAddress.InstrumentPublisher,
+            };
+
+            this.SendAll(stop, receivers);
         }
 
         private void OnMessage(ConnectFix message)
         {
-            // Forward message.
+            // Forward message
             this.Send(message, ServiceAddress.DataGateway);
         }
 
         private void OnMessage(DisconnectFix message)
         {
-            // Forward message.
+            // Forward message
             this.Send(message, ServiceAddress.DataGateway);
         }
 
@@ -183,7 +191,7 @@ namespace Nautilus.Data
         {
             this.Log.Information($"Received {message}.");
 
-            // Forward message.
+            // Forward message
             this.Send(message, ServiceAddress.BarAggregationController);
 
             this.CreateMarketClosedJob();
@@ -193,7 +201,7 @@ namespace Nautilus.Data
         {
             this.Log.Information($"Received {message}.");
 
-            // Forward message.
+            // Forward message
             this.Send(message, ServiceAddress.BarAggregationController);
 
             this.CreateMarketOpenedJob();
@@ -203,7 +211,7 @@ namespace Nautilus.Data
         {
             this.Log.Information($"Received {message}.");
 
-            // Forward message.
+            // Forward message
             this.Send(message, ServiceAddress.TickStore);
 
             this.CreateTrimTickDataJob();
@@ -213,7 +221,7 @@ namespace Nautilus.Data
         {
             this.Log.Information($"Received {message}.");
 
-            // Forward message.
+            // Forward message
             this.Send(message, ServiceAddress.DatabaseTaskManager);
 
             this.CreateTrimBarDataJob();
