@@ -32,8 +32,7 @@ namespace NautilusData
                 .AddJsonFile("hosting.json", true, true)
                 .Build();
 
-            // BuildWebHost(config, args).Run();
-            throw new Exception("Kaboom");
+            BuildWebHost(config, args).Run();
         }
 
         private static IWebHost BuildWebHost(IConfiguration config, string[] args) =>
