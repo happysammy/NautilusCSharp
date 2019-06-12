@@ -18,6 +18,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
     using Nautilus.Core;
     using Nautilus.Data;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
@@ -145,6 +146,140 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             Assert.Contains(this.receiver.Mailbox.Address, this.dataBus.Subscriptions);
             Assert.Contains(receiver2.Mailbox.Address, this.dataBus.Subscriptions);
             Assert.Equal(2, this.dataBus.Subscriptions.Count);
+        }
+
+        [Fact]
+        internal void GivenUnsubscribe_WhenNoSubscribers_HandlesCorrectly()
+        {
+            // Arrange
+            var unsubscribe = new Unsubscribe<Type>(
+                typeof(Tick),
+                this.receiver.Mailbox,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            // Act
+            this.dataBus.Endpoint.Send(unsubscribe);
+
+            LogDumper.Dump(this.loggingAdapter, this.output);
+
+            // Assert
+            Assert.Equal(0, this.dataBus.Subscriptions.Count);
+        }
+
+        [Fact]
+        internal void GivenUnsubscribe_WhenSubscribed_RemovesSubscription()
+        {
+            // Arrange
+            var subscribe = new Subscribe<Type>(
+                typeof(Tick),
+                this.receiver.Mailbox,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            var unsubscribe = new Unsubscribe<Type>(
+                typeof(Tick),
+                this.receiver.Mailbox,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            // Act
+            this.dataBus.Endpoint.Send(subscribe);
+            this.dataBus.Endpoint.Send(unsubscribe);
+
+            LogDumper.Dump(this.loggingAdapter, this.output);
+
+            // Assert
+            Assert.Equal(0, this.dataBus.Subscriptions.Count);
+        }
+
+        [Fact]
+        internal void GivenMultipleSubscribeAndUnsubscribe_HandlesCorrectly()
+        {
+            // Arrange
+            var receiver2 = new MockMessagingAgent("TickReceiver2");
+
+            var subscribe1 = new Subscribe<Type>(
+                typeof(Tick),
+                this.receiver.Mailbox,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            var subscribe2 = new Subscribe<Type>(
+                typeof(Tick),
+                receiver2.Mailbox,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            var unsubscribe = new Unsubscribe<Type>(
+                typeof(Tick),
+                receiver2.Mailbox,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            // Act
+            this.dataBus.Endpoint.Send(subscribe1);
+            this.dataBus.Endpoint.Send(subscribe2);
+            this.dataBus.Endpoint.Send(unsubscribe);
+
+            LogDumper.Dump(this.loggingAdapter, this.output);
+
+            // Assert
+            Assert.Equal(1, this.dataBus.Subscriptions.Count);
+        }
+
+        [Fact]
+        internal void GivenData_WhenNoSubscribers_DoesNothing()
+        {
+            // Arrange
+            var tick = StubTickFactory.Create(new Symbol("AUDUSD", Venue.FXCM));
+
+            // Act
+            this.dataBus.Endpoint.Send(tick);
+            this.dataBus.Endpoint.Send(tick);
+            this.dataBus.Endpoint.Send(tick);
+
+            LogDumper.Dump(this.loggingAdapter, this.output);
+
+            // Assert
+            Assert.Equal(0, this.dataBus.Subscriptions.Count);
+        }
+
+        [Fact]
+        internal void GivenData_WhenSubscribers_SendsDataToSubscriber()
+        {
+            // Arrange
+            var receiver2 = new MockMessagingAgent("TickReceiver2");
+            receiver2.RegisterHandler<Tick>(receiver2.OnMessage);
+
+            var subscribe1 = new Subscribe<Type>(
+                typeof(Tick),
+                this.receiver.Mailbox,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            var subscribe2 = new Subscribe<Type>(
+                typeof(Tick),
+                receiver2.Mailbox,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            var tick = StubTickFactory.Create(new Symbol("AUDUSD", Venue.FXCM));
+
+            // Act
+            this.dataBus.Endpoint.Send(subscribe1);
+            this.dataBus.Endpoint.Send(subscribe2);
+            this.dataBus.Endpoint.Send(tick);
+            this.dataBus.Endpoint.Send(tick);
+            this.dataBus.Endpoint.Send(tick);
+
+            LogDumper.Dump(this.loggingAdapter, this.output);
+
+            // Assert
+            Assert.Contains(tick, this.receiver.Messages);
+            Assert.Contains(tick, receiver2.Messages);
+            Assert.Equal(3, this.receiver.Messages.Count);
+            Assert.Equal(3, receiver2.Messages.Count);
         }
     }
 }
