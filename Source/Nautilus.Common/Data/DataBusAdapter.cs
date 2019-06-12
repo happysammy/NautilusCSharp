@@ -106,7 +106,7 @@ namespace Nautilus.Common.Data
             else
             {
                 // Design time error
-                throw new InvalidOperationException($"Invalid data type to send message to ({subscription}).");
+                throw new InvalidOperationException($"Invalid data type for subscription ({subscription}).");
             }
         }
     }
