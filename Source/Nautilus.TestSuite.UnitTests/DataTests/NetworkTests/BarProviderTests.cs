@@ -18,7 +18,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.NetworkTests
     public sealed class BarProviderTests
     {
         private readonly ITestOutputHelper output;
-        private readonly IComponentryContainer setupContainer;
+        private readonly IComponentryContainer container;
         private readonly MockLoggingAdapter loggingAdapter;
         private readonly BarProvider provider;
 
@@ -27,9 +27,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.NetworkTests
             // Fixture Setup
             this.output = output;
 
-            var setupFactory = new StubComponentryContainerFactory();
-            this.setupContainer = setupFactory.Create();
-            this.loggingAdapter = setupFactory.LoggingAdapter;
+            var containerFactory = new StubComponentryContainerFactory();
+            this.container = containerFactory.Create();
+            this.loggingAdapter = containerFactory.LoggingAdapter;
         }
     }
 }

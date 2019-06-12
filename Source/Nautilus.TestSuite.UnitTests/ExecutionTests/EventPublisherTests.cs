@@ -41,9 +41,9 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             // Fixture Setup
             this.output = output;
 
-            var setupFactory = new StubComponentryContainerFactory();
-            this.container = setupFactory.Create();
-            this.loggingAdapter = setupFactory.LoggingAdapter;
+            var containerFactory = new StubComponentryContainerFactory();
+            this.container = containerFactory.Create();
+            this.loggingAdapter = containerFactory.LoggingAdapter;
             var service = new MockMessageBusFactory(this.container);
             this.messageBusAdapter = service.MessageBusAdapter;
             this.receiver = new MockMessagingAgent().Endpoint;

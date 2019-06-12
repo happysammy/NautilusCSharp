@@ -37,9 +37,11 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
             // Fixture Setup
             this.output = output;
 
-            var setupFactory = new StubComponentryContainerFactory();
-            var container = setupFactory.Create();
-            this.loggingAdapter = setupFactory.LoggingAdapter;
+            var containerFactory = new StubComponentryContainerFactory();
+            var container = containerFactory
+            .Create();
+            this.loggingAdapter = containerFactory
+            .LoggingAdapter;
             this.publisher = new TickPublisher(
                 container,
                 DataBusFactory.Create(container),

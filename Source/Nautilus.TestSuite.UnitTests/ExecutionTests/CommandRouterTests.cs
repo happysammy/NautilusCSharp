@@ -25,7 +25,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
     {
         private readonly NetworkAddress localHost = new NetworkAddress("127.0.0.1");
         private readonly ITestOutputHelper output;
-        private readonly IComponentryContainer setupContainer;
+        private readonly IComponentryContainer container;
         private readonly MockLoggingAdapter loggingAdapter;
         private readonly IEndpoint receiver;
 
@@ -34,9 +34,9 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             // Fixture Setup
             this.output = output;
 
-            var setupFactory = new StubComponentryContainerFactory();
-            this.setupContainer = setupFactory.Create();
-            this.loggingAdapter = setupFactory.LoggingAdapter;
+            var containerFactory = new StubComponentryContainerFactory();
+            this.container = containerFactory.Create();
+            this.loggingAdapter = containerFactory.LoggingAdapter;
             this.receiver = new MockMessagingAgent().Endpoint;
         }
 
@@ -49,7 +49,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             requester.Connect(TestAddress);
 
             var commandConsumer = new CommandServer(
-                this.setupContainer,
+                this.container,
                 new MsgPackCommandSerializer(),
                 new MsgPackResponseSerializer(),
                 this.receiver,

@@ -36,10 +36,10 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             // Fixture Setup
             this.output = output;
 
-            var setupFactory = new StubComponentryContainerFactory();
-            this.logger = setupFactory.LoggingAdapter;
+            var containerFactory = new StubComponentryContainerFactory();
+            this.logger = containerFactory.LoggingAdapter;
             this.receiver = new MockMessagingAgent();
-            var container = setupFactory.Create();
+            var container = containerFactory.Create();
             var dataBusAdapter = DataBusFactory.Create(container);
             this.scheduler = new HashedWheelTimerScheduler(container);
 

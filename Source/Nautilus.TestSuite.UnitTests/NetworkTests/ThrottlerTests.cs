@@ -22,7 +22,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
     public class ThrottlerTests
     {
         private readonly ITestOutputHelper output;
-        private readonly IComponentryContainer setupContainer;
+        private readonly IComponentryContainer container;
         private readonly MockLoggingAdapter loggingAdapter;
         private readonly MockMessagingAgent receiver;
 
@@ -31,9 +31,9 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             // Fixture Setup
             this.output = output;
 
-            var setupFactory = new StubComponentryContainerFactory();
-            this.setupContainer = setupFactory.Create();
-            this.loggingAdapter = setupFactory.LoggingAdapter;
+            var containerFactory = new StubComponentryContainerFactory();
+            this.container = containerFactory.Create();
+            this.loggingAdapter = containerFactory.LoggingAdapter;
             this.receiver = new MockMessagingAgent();
             this.receiver.RegisterHandler<string>(this.receiver.OnMessage);
         }
@@ -43,7 +43,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         {
             // Arrange
             var throttler = new Throttler(
-                this.setupContainer,
+                this.container,
                 this.receiver.Endpoint,
                 Duration.FromMilliseconds(100),
                 10);
@@ -83,7 +83,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         {
             // Arrange
             var throttler = new Throttler(
-                this.setupContainer,
+                this.container,
                 this.receiver.Endpoint,
                 Duration.FromMilliseconds(100),
                 10);
