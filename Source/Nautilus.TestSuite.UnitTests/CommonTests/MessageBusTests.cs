@@ -67,10 +67,8 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             // Assert
             Assert.Equal("MessageBus<Event>", this.messageBus.Name.ToString());
             Assert.Equal(typeof(Event), this.messageBus.BusType);
-            Assert.False(this.messageBus.HasSubscribers);
-            Assert.Equal(0, this.messageBus.TypeSubscriptions.Count);
-            Assert.Equal(0, this.messageBus.SubscriptionsAllCount);
-            Assert.Equal(0, this.messageBus.SubscriptionsCount);
+            Assert.Equal(0, this.messageBus.Subscriptions.Count);
+            Assert.Equal(0, this.messageBus.SubscriptionCount);
             Assert.Equal(0, this.messageBus.DeadLetters.Count);
         }
 
@@ -90,10 +88,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
 
             // Assert
-            Assert.False(this.messageBus.HasSubscribers);
-            Assert.Equal(0, this.messageBus.TypeSubscriptions.Count);
-            Assert.Equal(0, this.messageBus.SubscriptionsAllCount);
-            Assert.Equal(0, this.messageBus.SubscriptionsCount);
+            Assert.Equal(0, this.messageBus.SubscriptionCount);
         }
 
         [Fact]
@@ -112,10 +107,8 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
 
             // Assert
-            Assert.True(this.messageBus.HasSubscribers);
-            Assert.Equal(0, this.messageBus.TypeSubscriptions.Count);
-            Assert.Equal(1, this.messageBus.SubscriptionsAllCount);
-            Assert.Equal(0, this.messageBus.SubscriptionsCount);
+            Assert.Contains(typeof(Event), this.messageBus.Subscriptions);
+            Assert.Equal(1, this.messageBus.SubscriptionCount);
         }
 
         [Fact]
@@ -135,10 +128,8 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
 
             // Assert
-            Assert.True(this.messageBus.HasSubscribers);
-            Assert.Equal(0, this.messageBus.TypeSubscriptions.Count);
-            Assert.Equal(1, this.messageBus.SubscriptionsAllCount);
-            Assert.Equal(0, this.messageBus.SubscriptionsCount);
+            Assert.Equal(1, this.messageBus.Subscriptions[typeof(Event)].Count);
+            Assert.Equal(1, this.messageBus.SubscriptionCount);
         }
 
         [Fact]
@@ -157,11 +148,9 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
 
             // Assert
-            Assert.True(this.messageBus.HasSubscribers);
-            Assert.Contains(typeof(MarketOpened), this.messageBus.TypeSubscriptions);
-            Assert.Equal(1, this.messageBus.TypeSubscriptions.Count);
-            Assert.Equal(0, this.messageBus.SubscriptionsAllCount);
-            Assert.Equal(1, this.messageBus.SubscriptionsCount);
+            Assert.Contains(typeof(MarketOpened), this.messageBus.Subscriptions);
+            Assert.Equal(1, this.messageBus.Subscriptions[typeof(MarketOpened)].Count);
+            Assert.Equal(1, this.messageBus.Subscriptions.Count);
         }
 
         [Fact]
@@ -181,10 +170,65 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
 
             // Assert
-            Assert.True(this.messageBus.HasSubscribers);
-            Assert.Equal(1, this.messageBus.TypeSubscriptions.Count);
-            Assert.Equal(0, this.messageBus.SubscriptionsAllCount);
-            Assert.Equal(1, this.messageBus.SubscriptionsCount);
+            Assert.Contains(typeof(MarketOpened), this.messageBus.Subscriptions);
+            Assert.Equal(1, this.messageBus.Subscriptions[typeof(MarketOpened)].Count);
+            Assert.Equal(1, this.messageBus.Subscriptions.Count);
+        }
+
+        [Fact]
+        internal void GivenMultipleSubscribe_HandlesCorrectly()
+        {
+            // Arrange
+            var mockReceiver2 = new MockMessagingAgent("MockMessagingAgent2");
+
+            var subscribe1 = new Subscribe<Type>(
+                typeof(Event),
+                this.mockReceiver.Mailbox,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            var subscribe2 = new Subscribe<Type>(
+                typeof(Event),
+                mockReceiver2.Mailbox,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            var subscribe3 = new Subscribe<Type>(
+                typeof(MarketOpened),
+                this.mockReceiver.Mailbox,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            var subscribe4 = new Subscribe<Type>(
+                typeof(FixSessionConnected),
+                this.mockReceiver.Mailbox,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            var subscribe5 = new Subscribe<Type>(
+                typeof(FixSessionConnected),
+                mockReceiver2.Mailbox,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            // Act
+            this.messageBus.Endpoint.Send(subscribe1);
+            this.messageBus.Endpoint.Send(subscribe2);
+            this.messageBus.Endpoint.Send(subscribe3);
+            this.messageBus.Endpoint.Send(subscribe4);
+            this.messageBus.Endpoint.Send(subscribe5);
+
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+
+            // Assert
+            Assert.Contains(typeof(Event), this.messageBus.Subscriptions);
+            Assert.Contains(typeof(MarketOpened), this.messageBus.Subscriptions);
+            Assert.Contains(typeof(FixSessionConnected), this.messageBus.Subscriptions);
+            Assert.Equal(2, this.messageBus.Subscriptions[typeof(Event)].Count);
+            Assert.Equal(1, this.messageBus.Subscriptions[typeof(MarketOpened)].Count);
+            Assert.Equal(2, this.messageBus.Subscriptions[typeof(FixSessionConnected)].Count);
+            Assert.Equal(1, this.messageBus.Subscriptions[typeof(MarketOpened)].Count);
+            Assert.Equal(5, this.messageBus.SubscriptionCount);
         }
 
         [Fact]
@@ -210,10 +254,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
 
             // Assert
-            Assert.False(this.messageBus.HasSubscribers);
-            Assert.Equal(0, this.messageBus.TypeSubscriptions.Count);
-            Assert.Equal(0, this.messageBus.SubscriptionsAllCount);
-            Assert.Equal(0, this.messageBus.SubscriptionsCount);
+            Assert.Equal(0, this.messageBus.SubscriptionCount);
         }
 
         [Fact]
@@ -239,10 +280,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
 
             // Assert
-            Assert.False(this.messageBus.HasSubscribers);
-            Assert.Equal(0, this.messageBus.TypeSubscriptions.Count);
-            Assert.Equal(0, this.messageBus.SubscriptionsAllCount);
-            Assert.Equal(0, this.messageBus.SubscriptionsCount);
+            Assert.Equal(0, this.messageBus.SubscriptionCount);
         }
 
         [Fact]
@@ -261,10 +299,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
 
             // Assert
-            Assert.False(this.messageBus.HasSubscribers);
-            Assert.Equal(0, this.messageBus.TypeSubscriptions.Count);
-            Assert.Equal(0, this.messageBus.SubscriptionsAllCount);
-            Assert.Equal(0, this.messageBus.SubscriptionsCount);
+            Assert.Equal(0, this.messageBus.SubscriptionCount);
         }
 
         [Fact]
@@ -283,10 +318,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
 
             // Assert
-            Assert.False(this.messageBus.HasSubscribers);
-            Assert.Equal(0, this.messageBus.TypeSubscriptions.Count);
-            Assert.Equal(0, this.messageBus.SubscriptionsAllCount);
-            Assert.Equal(0, this.messageBus.SubscriptionsCount);
+            Assert.Equal(0, this.messageBus.SubscriptionCount);
         }
 
         [Fact]
@@ -305,10 +337,83 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
 
             // Assert
-            Assert.False(this.messageBus.HasSubscribers);
-            Assert.Equal(0, this.messageBus.TypeSubscriptions.Count);
-            Assert.Equal(0, this.messageBus.SubscriptionsAllCount);
-            Assert.Equal(0, this.messageBus.SubscriptionsCount);
+            Assert.Equal(0, this.messageBus.SubscriptionCount);
+        }
+
+        [Fact]
+        internal void GivenMultipleSubscribe_ThenUnsubscribe_HandlesCorrectly()
+        {
+            // Arrange
+            var mockReceiver2 = new MockMessagingAgent("MockMessagingAgent2");
+
+            var subscribe1 = new Subscribe<Type>(
+                typeof(Event),
+                this.mockReceiver.Mailbox,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            var subscribe2 = new Subscribe<Type>(
+                typeof(Event),
+                mockReceiver2.Mailbox,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            var subscribe3 = new Subscribe<Type>(
+                typeof(MarketOpened),
+                this.mockReceiver.Mailbox,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            var subscribe4 = new Subscribe<Type>(
+                typeof(FixSessionConnected),
+                this.mockReceiver.Mailbox,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            var subscribe5 = new Subscribe<Type>(
+                typeof(FixSessionConnected),
+                mockReceiver2.Mailbox,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            var unsubscribe1 = new Unsubscribe<Type>(
+                typeof(Event),
+                mockReceiver2.Mailbox,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            var unsubscribe2 = new Unsubscribe<Type>(
+                typeof(MarketOpened),
+                this.mockReceiver.Mailbox,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            var unsubscribe3 = new Unsubscribe<Type>(
+                typeof(FixSessionConnected),
+                this.mockReceiver.Mailbox,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            // Act
+            this.messageBus.Endpoint.Send(subscribe1);
+            this.messageBus.Endpoint.Send(subscribe2);
+            this.messageBus.Endpoint.Send(subscribe3);
+            this.messageBus.Endpoint.Send(subscribe4);
+            this.messageBus.Endpoint.Send(subscribe5);
+            this.messageBus.Endpoint.Send(subscribe5); // Test duplicate subscriptions do not occur
+            this.messageBus.Endpoint.Send(unsubscribe1);
+            this.messageBus.Endpoint.Send(unsubscribe2);
+            this.messageBus.Endpoint.Send(unsubscribe3);
+
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+
+            // Assert
+            Assert.Contains(typeof(Event), this.messageBus.Subscriptions);
+            Assert.Contains(typeof(FixSessionConnected), this.messageBus.Subscriptions);
+            Assert.DoesNotContain(typeof(MarketOpened), this.messageBus.Subscriptions);
+            Assert.Equal(1, this.messageBus.Subscriptions[typeof(Event)].Count);
+            Assert.Equal(1, this.messageBus.Subscriptions[typeof(FixSessionConnected)].Count);
+            Assert.Equal(2, this.messageBus.SubscriptionCount);
         }
 
         [Fact]
@@ -383,10 +488,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
 
             // Assert
-            Assert.False(this.messageBus.HasSubscribers);
-            Assert.Equal(0, this.messageBus.TypeSubscriptions.Count);
-            Assert.Equal(0, this.messageBus.SubscriptionsAllCount);
-            Assert.Equal(0, this.messageBus.SubscriptionsCount);
+            Assert.Equal(0, this.messageBus.SubscriptionCount);
         }
 
         [Fact]

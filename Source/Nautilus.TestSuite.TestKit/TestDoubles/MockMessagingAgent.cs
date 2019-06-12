@@ -24,10 +24,13 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         /// <summary>
         /// Initializes a new instance of the <see cref="MockMessagingAgent"/> class.
         /// </summary>
+        /// <param name="name">The name of the mock messaging agent.</param>
         /// <param name="workDelayMilliseconds">The work delay for the receiver.</param>
-        public MockMessagingAgent(int workDelayMilliseconds = 1000)
+        public MockMessagingAgent(
+            string name = nameof(MockMessagingAgent),
+            int workDelayMilliseconds = 1000)
         {
-            this.Mailbox = new Mailbox(new Address(nameof(MockMessagingAgent)), this.Endpoint);
+            this.Mailbox = new Mailbox(new Address(name), this.Endpoint);
             this.Messages = new List<object>();
             this.workDelayMilliseconds = workDelayMilliseconds;
         }

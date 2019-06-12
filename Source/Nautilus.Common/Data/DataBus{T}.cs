@@ -52,11 +52,6 @@ namespace Nautilus.Common.Data
         /// </summary>
         public IReadOnlyCollection<Address> Subscriptions => this.subscriptions.Select(m => m.Address).ToList().AsReadOnly();
 
-        /// <summary>
-        /// Gets the data bus subscriptions count.
-        /// </summary>
-        public int SubscriptionsCount => this.subscriptions.Count;
-
         private void OnMessage(Subscribe<Type> message)
         {
             var type = message.Subscription;

@@ -64,7 +64,26 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             Assert.Equal("DataBus<Tick>", this.dataBus.Name.ToString());
             Assert.Equal(typeof(Tick), this.dataBus.BusType);
             Assert.Equal(0, this.dataBus.Subscriptions.Count);
-            Assert.Equal(0, this.dataBus.SubscriptionsCount);
+        }
+
+        [Fact]
+        internal void GivenSubscribe_WhenTypeIsInvalid_DoesNotSubscribe()
+        {
+            // Arrange
+            var subscribe = new Subscribe<Type>(
+                typeof(Command),
+                this.mockReceiver.Mailbox,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            // Act
+            this.dataBus.Endpoint.Send(subscribe);
+
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+
+            // Assert
+            Assert.Contains(this.mockReceiver.Mailbox.Address, this.dataBus.Subscriptions);
+            Assert.Equal(1, this.dataBus.Subscriptions.Count);
         }
     }
 }

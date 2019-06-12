@@ -56,34 +56,25 @@ namespace Nautilus.Common.Messaging
         }
 
         /// <summary>
-        /// Gets the bus message type.
+        /// Gets the message bus type.
         /// </summary>
         public Type BusType { get; }
 
         /// <summary>
-        /// Gets the message bus subscriptions.
-        /// </summary>
-        public IReadOnlyCollection<Type> TypeSubscriptions => this.subscriptions.Keys.ToList().AsReadOnly();
-
-        /// <summary>
-        /// Gets the message bus subscriptions count to all messages of type T.
-        /// </summary>
-        public int SubscriptionsAllCount => this.subscriptionsAll.Count;
-
-        /// <summary>
-        /// Gets the message bus subscriptions count to specific type messages.
-        /// </summary>
-        public int SubscriptionsCount => this.subscriptions.Select(kvp => kvp.Value.Count).Sum();
-
-        /// <summary>
-        /// Gets a value indicating whether the message bus has any subscribers.
-        /// </summary>
-        public bool HasSubscribers => this.SubscriptionsAllCount + this.SubscriptionsCount > 0;
-
-        /// <summary>
-        /// Gets the list of dead letters (unhandled messages).
+        /// Gets the list of dead letters (undelivered messages).
         /// </summary>
         public IReadOnlyCollection<object> DeadLetters => this.deadLetters;
+
+        /// <summary>
+        /// Gets the message bus subscriber addresses by type.
+        /// </summary>
+        /// <returns>The subscribers by type dictionary.</returns>
+        public IReadOnlyDictionary<Type, IReadOnlyCollection<Address>> Subscriptions => this.BuildSubscribers();
+
+        /// <summary>
+        /// Gets the message bus total subscriptions count.
+        /// </summary>
+        public int SubscriptionCount => this.BuildSubscribers().Select(kvp => kvp.Value.Count).Sum();
 
         /// <inheritdoc />
         protected override void OnStop(Stop message)
@@ -158,13 +149,13 @@ namespace Nautilus.Common.Messaging
             var subscriber = command.Subscriber;
             if (subscribers.Contains(subscriber))
             {
-                this.Log.Warning($"The {subscriber} is already subscribed to {command.SubscriptionName} messages.");
+                this.Log.Warning($"The {subscriber} is already subscribed to {command.Subscription.Name} messages.");
                 return;
             }
 
             subscribers.Add(subscriber);
 
-            this.Log.Information($"Subscribed {subscriber} to {command.SubscriptionName} messages.");
+            this.Log.Information($"Subscribed {subscriber} to {command.Subscription.Name} messages.");
         }
 
         private void Unsubscribe(Unsubscribe<Type> command, List<Mailbox> subscribers)
@@ -172,13 +163,13 @@ namespace Nautilus.Common.Messaging
             var subscriber = command.Subscriber;
             if (!subscribers.Contains(subscriber))
             {
-                this.Log.Warning($"The {subscriber} is not subscribed to {command.SubscriptionName} messages.");
+                this.Log.Warning($"The {subscriber} is not subscribed to {command.Subscription.Name} messages.");
                 return;
             }
 
             subscribers.Remove(subscriber);
 
-            this.Log.Information($"Unsubscribed {subscriber} from {command.SubscriptionName} messages.");
+            this.Log.Information($"Unsubscribed {subscriber} from {command.Subscription.Name} messages.");
         }
 
         private void OnEnvelope(IEnvelope envelope)
@@ -234,6 +225,30 @@ namespace Nautilus.Common.Messaging
             this.deadLetters.Add(message);
 
             this.Log.Error($"Undeliverable message {message}.");
+        }
+
+        private IReadOnlyDictionary<Type, IReadOnlyCollection<Address>> BuildSubscribers()
+        {
+            var dict = new Dictionary<Type, IReadOnlyCollection<Address>>();
+
+            if (this.subscriptionsAll.Count > 0)
+            {
+                dict.Add(this.BusType, this.subscriptionsAll
+                    .Select(s => s.Address)
+                    .ToList()
+                    .AsReadOnly());
+            }
+
+            // Deconstruction causes nullability warning CS8619
+            foreach (var kvp in this.subscriptions)
+            {
+                dict.Add(kvp.Key, kvp.Value
+                    .Select(m => m.Address)
+                    .ToList()
+                    .AsReadOnly());
+            }
+
+            return dict;
         }
     }
 }
