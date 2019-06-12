@@ -23,8 +23,8 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
     {
         private readonly ITestOutputHelper output;
         private readonly IComponentryContainer setupContainer;
-        private readonly MockLoggingAdapter mockLoggingAdapter;
-        private readonly MockMessagingAgent testReceiver;
+        private readonly MockLoggingAdapter loggingAdapter;
+        private readonly MockMessagingAgent receiver;
 
         public ThrottlerTests(ITestOutputHelper output)
         {
@@ -33,9 +33,9 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
 
             var setupFactory = new StubComponentryContainerFactory();
             this.setupContainer = setupFactory.Create();
-            this.mockLoggingAdapter = setupFactory.LoggingAdapter;
-            this.testReceiver = new MockMessagingAgent();
-            this.testReceiver.RegisterHandler<string>(this.testReceiver.OnMessage);
+            this.loggingAdapter = setupFactory.LoggingAdapter;
+            this.receiver = new MockMessagingAgent();
+            this.receiver.RegisterHandler<string>(this.receiver.OnMessage);
         }
 
         [Fact]
@@ -44,7 +44,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             // Arrange
             var throttler = new Throttler(
                 this.setupContainer,
-                this.testReceiver.Endpoint,
+                this.receiver.Endpoint,
                 Duration.FromMilliseconds(100),
                 10);
 
@@ -57,20 +57,20 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             Task.Delay(50).Wait();
 
             // Should receives only the first 10 messages.
-            var count1 = this.testReceiver.Messages.Count;
+            var count1 = this.receiver.Messages.Count;
 
             // Wait for the throttle duration interval.
             Task.Delay(100).Wait();
 
             // Should receive the next 10 messages.
-            var count2 = this.testReceiver.Messages.Count;
+            var count2 = this.receiver.Messages.Count;
 
             // Should receive the final message.
             Task.Delay(100).Wait();
-            var count3 = this.testReceiver.Messages.Count;
+            var count3 = this.receiver.Messages.Count;
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+            LogDumper.Dump(this.loggingAdapter, this.output);
             Assert.Equal(10, count1);
             Assert.Equal(20, count2);
             Assert.Equal(21, count3);
@@ -84,7 +84,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             // Arrange
             var throttler = new Throttler(
                 this.setupContainer,
-                this.testReceiver.Endpoint,
+                this.receiver.Endpoint,
                 Duration.FromMilliseconds(100),
                 10);
 
@@ -97,7 +97,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             Task.Delay(50).Wait();
 
             // Should receive only the first 10 messages.
-            var count1 = this.testReceiver.Messages.Count;
+            var count1 = this.receiver.Messages.Count;
 
             for (var i = 0; i < 20; i++)
             {
@@ -108,10 +108,10 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             Task.Delay(400).Wait();
 
             // Receives the next 100 messages.
-            var count2 = this.testReceiver.Messages.Count;
+            var count2 = this.receiver.Messages.Count;
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+            LogDumper.Dump(this.loggingAdapter, this.output);
             Assert.Equal(10, count1);
             Assert.Equal(31, count2);
             Assert.Equal(0, throttler.QueueCount);

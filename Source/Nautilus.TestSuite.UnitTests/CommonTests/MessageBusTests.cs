@@ -29,8 +29,8 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
     public class MessageBusTests
     {
         private readonly ITestOutputHelper output;
-        private readonly MockLoggingAdapter mockLoggingAdapter;
-        private readonly MockMessagingAgent mockReceiver;
+        private readonly MockLoggingAdapter loggingAdapter;
+        private readonly MockMessagingAgent receiver;
         private readonly MessageBus<Event> messageBus;
 
         public MessageBusTests(ITestOutputHelper output)
@@ -40,15 +40,15 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
 
             var containerFactory = new StubComponentryContainerFactory();
             var container = containerFactory.Create();
-            this.mockLoggingAdapter = containerFactory.LoggingAdapter;
-            this.mockReceiver = new MockMessagingAgent();
+            this.loggingAdapter = containerFactory.LoggingAdapter;
+            this.receiver = new MockMessagingAgent();
             this.messageBus = new MessageBus<Event>(container);
 
             var addresses = new Dictionary<Address, IEndpoint>
             {
-                { ServiceAddress.DataService, this.mockReceiver.Endpoint },
-                { ServiceAddress.BarAggregationController, this.mockReceiver.Endpoint },
-                { ServiceAddress.DatabaseTaskManager, this.mockReceiver.Endpoint },
+                { ServiceAddress.DataService, this.receiver.Endpoint },
+                { ServiceAddress.BarAggregationController, this.receiver.Endpoint },
+                { ServiceAddress.DatabaseTaskManager, this.receiver.Endpoint },
             };
 
             this.messageBus.Endpoint.Send(new InitializeSwitchboard(
@@ -56,7 +56,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
                 Guid.NewGuid(),
                 containerFactory.Clock.TimeNow()));
 
-            this.mockReceiver.RegisterHandler<IEnvelope>(this.mockReceiver.OnMessage);
+            this.receiver.RegisterHandler<IEnvelope>(this.receiver.OnMessage);
         }
 
         [Fact]
@@ -78,14 +78,14 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             // Arrange
             var subscribe = new Subscribe<Type>(
                 typeof(Command),
-                this.mockReceiver.Mailbox,
+                this.receiver.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             // Act
             this.messageBus.Endpoint.Send(subscribe);
 
-            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+            LogDumper.Dump(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Equal(0, this.messageBus.SubscriptionCount);
@@ -97,14 +97,14 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             // Arrange
             var subscribe = new Subscribe<Type>(
                 typeof(Event),
-                this.mockReceiver.Mailbox,
+                this.receiver.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             // Act
             this.messageBus.Endpoint.Send(subscribe);
 
-            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+            LogDumper.Dump(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Contains(typeof(Event), this.messageBus.Subscriptions);
@@ -117,7 +117,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             // Arrange
             var subscribe = new Subscribe<Type>(
                 typeof(Event),
-                this.mockReceiver.Mailbox,
+                this.receiver.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -125,7 +125,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             this.messageBus.Endpoint.Send(subscribe);
             this.messageBus.Endpoint.Send(subscribe);
 
-            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+            LogDumper.Dump(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Equal(1, this.messageBus.Subscriptions[typeof(Event)].Count);
@@ -138,14 +138,14 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             // Arrange
             var subscribe = new Subscribe<Type>(
                 typeof(MarketOpened),
-                this.mockReceiver.Mailbox,
+                this.receiver.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             // Act
             this.messageBus.Endpoint.Send(subscribe);
 
-            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+            LogDumper.Dump(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Contains(typeof(MarketOpened), this.messageBus.Subscriptions);
@@ -159,7 +159,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             // Arrange
             var subscribe = new Subscribe<Type>(
                 typeof(MarketOpened),
-                this.mockReceiver.Mailbox,
+                this.receiver.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -167,7 +167,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             this.messageBus.Endpoint.Send(subscribe);
             this.messageBus.Endpoint.Send(subscribe);
 
-            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+            LogDumper.Dump(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Contains(typeof(MarketOpened), this.messageBus.Subscriptions);
@@ -179,35 +179,35 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
         internal void GivenMultipleSubscribe_HandlesCorrectly()
         {
             // Arrange
-            var mockReceiver2 = new MockMessagingAgent("MockMessagingAgent2");
+            var receiver2 = new MockMessagingAgent("MockMessagingAgent2");
 
             var subscribe1 = new Subscribe<Type>(
                 typeof(Event),
-                this.mockReceiver.Mailbox,
+                this.receiver.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             var subscribe2 = new Subscribe<Type>(
                 typeof(Event),
-                mockReceiver2.Mailbox,
+                receiver2.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             var subscribe3 = new Subscribe<Type>(
                 typeof(MarketOpened),
-                this.mockReceiver.Mailbox,
+                this.receiver.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             var subscribe4 = new Subscribe<Type>(
                 typeof(FixSessionConnected),
-                this.mockReceiver.Mailbox,
+                this.receiver.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             var subscribe5 = new Subscribe<Type>(
                 typeof(FixSessionConnected),
-                mockReceiver2.Mailbox,
+                receiver2.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -218,7 +218,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             this.messageBus.Endpoint.Send(subscribe4);
             this.messageBus.Endpoint.Send(subscribe5);
 
-            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+            LogDumper.Dump(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Contains(typeof(Event), this.messageBus.Subscriptions);
@@ -237,13 +237,13 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             // Arrange
             var subscribe = new Subscribe<Type>(
                 typeof(Event),
-                this.mockReceiver.Mailbox,
+                this.receiver.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             var unsubscribe = new Unsubscribe<Type>(
                 typeof(Event),
-                this.mockReceiver.Mailbox,
+                this.receiver.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -251,7 +251,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             this.messageBus.Endpoint.Send(subscribe);
             this.messageBus.Endpoint.Send(unsubscribe);
 
-            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+            LogDumper.Dump(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Equal(0, this.messageBus.SubscriptionCount);
@@ -263,13 +263,13 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             // Arrange
             var subscribe = new Subscribe<Type>(
                 typeof(MarketOpened),
-                this.mockReceiver.Mailbox,
+                this.receiver.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             var unsubscribe = new Unsubscribe<Type>(
                 typeof(MarketOpened),
-                this.mockReceiver.Mailbox,
+                this.receiver.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -277,7 +277,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             this.messageBus.Endpoint.Send(subscribe);
             this.messageBus.Endpoint.Send(unsubscribe);
 
-            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+            LogDumper.Dump(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Equal(0, this.messageBus.SubscriptionCount);
@@ -289,14 +289,14 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             // Arrange
             var unsubscribe = new Unsubscribe<Type>(
                 typeof(Command),
-                this.mockReceiver.Mailbox,
+                this.receiver.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             // Act
             this.messageBus.Endpoint.Send(unsubscribe);
 
-            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+            LogDumper.Dump(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Equal(0, this.messageBus.SubscriptionCount);
@@ -308,14 +308,14 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             // Arrange
             var unsubscribe = new Unsubscribe<Type>(
                 typeof(Event),
-                this.mockReceiver.Mailbox,
+                this.receiver.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             // Act
             this.messageBus.Endpoint.Send(unsubscribe);
 
-            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+            LogDumper.Dump(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Equal(0, this.messageBus.SubscriptionCount);
@@ -327,14 +327,14 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             // Arrange
             var unsubscribe = new Unsubscribe<Type>(
                 typeof(MarketOpened),
-                this.mockReceiver.Mailbox,
+                this.receiver.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             // Act
             this.messageBus.Endpoint.Send(unsubscribe);
 
-            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+            LogDumper.Dump(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Equal(0, this.messageBus.SubscriptionCount);
@@ -344,53 +344,53 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
         internal void GivenMultipleSubscribe_ThenUnsubscribe_HandlesCorrectly()
         {
             // Arrange
-            var mockReceiver2 = new MockMessagingAgent("MockMessagingAgent2");
+            var receiver2 = new MockMessagingAgent("MockMessagingAgent2");
 
             var subscribe1 = new Subscribe<Type>(
                 typeof(Event),
-                this.mockReceiver.Mailbox,
+                this.receiver.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             var subscribe2 = new Subscribe<Type>(
                 typeof(Event),
-                mockReceiver2.Mailbox,
+                receiver2.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             var subscribe3 = new Subscribe<Type>(
                 typeof(MarketOpened),
-                this.mockReceiver.Mailbox,
+                this.receiver.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             var subscribe4 = new Subscribe<Type>(
                 typeof(FixSessionConnected),
-                this.mockReceiver.Mailbox,
+                this.receiver.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             var subscribe5 = new Subscribe<Type>(
                 typeof(FixSessionConnected),
-                mockReceiver2.Mailbox,
+                receiver2.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             var unsubscribe1 = new Unsubscribe<Type>(
                 typeof(Event),
-                mockReceiver2.Mailbox,
+                receiver2.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             var unsubscribe2 = new Unsubscribe<Type>(
                 typeof(MarketOpened),
-                this.mockReceiver.Mailbox,
+                this.receiver.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             var unsubscribe3 = new Unsubscribe<Type>(
                 typeof(FixSessionConnected),
-                this.mockReceiver.Mailbox,
+                this.receiver.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -405,7 +405,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             this.messageBus.Endpoint.Send(unsubscribe2);
             this.messageBus.Endpoint.Send(unsubscribe3);
 
-            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+            LogDumper.Dump(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Contains(typeof(Event), this.messageBus.Subscriptions);
@@ -435,10 +435,10 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             // Act
             this.messageBus.Endpoint.Send(envelope);
 
-            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+            LogDumper.Dump(this.loggingAdapter, this.output);
 
             // Assert
-            Assert.Contains(envelope, this.mockReceiver.Messages);
+            Assert.Contains(envelope, this.receiver.Messages);
         }
 
         [Fact]
@@ -460,7 +460,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             // Act
             this.messageBus.Endpoint.Send(envelope);
 
-            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+            LogDumper.Dump(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Contains(envelope, this.messageBus.DeadLetters);
@@ -485,7 +485,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             // Act
             this.messageBus.Endpoint.Send(envelope);
 
-            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+            LogDumper.Dump(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Equal(0, this.messageBus.SubscriptionCount);
@@ -497,7 +497,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             // Arrange
             var subscribe = new Subscribe<Type>(
                 typeof(Event),
-                this.mockReceiver.Mailbox,
+                this.receiver.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -518,10 +518,10 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             // Act
             this.messageBus.Endpoint.Send(envelope);
 
-            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+            LogDumper.Dump(this.loggingAdapter, this.output);
 
             // Assert
-            Assert.Contains(envelope, this.mockReceiver.Messages);
+            Assert.Contains(envelope, this.receiver.Messages);
         }
 
         [Fact]
@@ -530,7 +530,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             // Arrange
             var subscribe = new Subscribe<Type>(
                 typeof(MarketOpened),
-                this.mockReceiver.Mailbox,
+                this.receiver.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -551,10 +551,10 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             // Act
             this.messageBus.Endpoint.Send(envelope);
 
-            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+            LogDumper.Dump(this.loggingAdapter, this.output);
 
             // Assert
-            Assert.Contains(envelope, this.mockReceiver.Messages);
+            Assert.Contains(envelope, this.receiver.Messages);
         }
     }
 }

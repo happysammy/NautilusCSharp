@@ -26,8 +26,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
         private readonly NetworkAddress localHost = new NetworkAddress("127.0.0.1");
         private readonly ITestOutputHelper output;
         private readonly IComponentryContainer setupContainer;
-        private readonly MockLoggingAdapter mockLoggingAdapter;
-        private readonly IEndpoint testReceiver;
+        private readonly MockLoggingAdapter loggingAdapter;
+        private readonly IEndpoint receiver;
 
         public CommandRouterTests(ITestOutputHelper output)
         {
@@ -36,8 +36,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             var setupFactory = new StubComponentryContainerFactory();
             this.setupContainer = setupFactory.Create();
-            this.mockLoggingAdapter = setupFactory.LoggingAdapter;
-            this.testReceiver = new MockMessagingAgent().Endpoint;
+            this.loggingAdapter = setupFactory.LoggingAdapter;
+            this.receiver = new MockMessagingAgent().Endpoint;
         }
 
         [Fact]
@@ -52,7 +52,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 this.setupContainer,
                 new MsgPackCommandSerializer(),
                 new MsgPackResponseSerializer(),
-                this.testReceiver,
+                this.receiver,
                 this.localHost,
                 new NetworkPort(5553));
 
@@ -80,7 +80,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             Task.Delay(300).Wait();
 
             // Assert
-//            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+//            LogDumper.Dump(this.loggingAdapter, this.output);
 //            this.ExpectMsg<Command>();
 //            commandConsumer.GracefulStop(TimeSpan.FromMilliseconds(1000));
 //            requester.Disconnect(TestAddress);

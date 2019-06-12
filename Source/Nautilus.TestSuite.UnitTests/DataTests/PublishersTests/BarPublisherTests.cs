@@ -28,7 +28,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
     {
         private const string TEST_ADDRESS = "tcp://localhost:55511";
         private readonly ITestOutputHelper output;
-        private readonly MockLoggingAdapter mockLoggingAdapter;
+        private readonly MockLoggingAdapter loggingAdapter;
         private readonly BarPublisher publisher;
 
         public BarPublisherTests(ITestOutputHelper output)
@@ -38,7 +38,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
 
             var setupFactory = new StubComponentryContainerFactory();
             var container = setupFactory.Create();
-            this.mockLoggingAdapter = setupFactory.LoggingAdapter;
+            this.loggingAdapter = setupFactory.LoggingAdapter;
 
             this.publisher = new BarPublisher(
                 container,
@@ -71,7 +71,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
             var topic = subscriber.ReceiveFrameBytes();
             var message = subscriber.ReceiveFrameBytes();
 
-            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+            LogDumper.Dump(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Equal(barType.ToString(), Encoding.UTF8.GetString(topic));

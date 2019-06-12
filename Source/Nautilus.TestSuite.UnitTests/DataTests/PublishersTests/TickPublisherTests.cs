@@ -29,7 +29,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
     {
         private const string TEST_ADDRESS = "tcp://localhost:55506";
         private readonly ITestOutputHelper output;
-        private readonly MockLoggingAdapter mockLoggingAdapter;
+        private readonly MockLoggingAdapter loggingAdapter;
         private readonly TickPublisher publisher;
 
         public TickPublisherTests(ITestOutputHelper output)
@@ -39,7 +39,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
 
             var setupFactory = new StubComponentryContainerFactory();
             var container = setupFactory.Create();
-            this.mockLoggingAdapter = setupFactory.LoggingAdapter;
+            this.loggingAdapter = setupFactory.LoggingAdapter;
             this.publisher = new TickPublisher(
                 container,
                 DataBusFactory.Create(container),
@@ -70,7 +70,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
             var receivedTopic = subscriber.ReceiveFrameBytes();
             var receivedMessage = subscriber.ReceiveFrameBytes();
 
-            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+            LogDumper.Dump(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Equal(tick.Symbol.ToString(), Encoding.UTF8.GetString(receivedTopic));

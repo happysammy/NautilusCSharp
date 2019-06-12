@@ -37,8 +37,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.NetworkTests
     {
         private const string TEST_ADDRESS = "tcp://localhost:55522";
         private readonly ITestOutputHelper output;
-        private readonly MockLoggingAdapter mockLoggingAdapter;
-        private readonly MockMessagingAgent mockReceiver;
+        private readonly MockLoggingAdapter loggingAdapter;
+        private readonly MockMessagingAgent receiver;
         private readonly ITickRepository repository;
         private readonly IMessageSerializer<Request> requestSerializer;
         private readonly IMessageSerializer<Response> responseSerializer;
@@ -51,10 +51,10 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.NetworkTests
 
             var setupFactory = new StubComponentryContainerFactory();
             var container = setupFactory.Create();
-            this.mockLoggingAdapter = setupFactory.LoggingAdapter;
+            this.loggingAdapter = setupFactory.LoggingAdapter;
             this.requestSerializer = new MsgPackRequestSerializer();
             this.responseSerializer = new MsgPackResponseSerializer();
-            this.mockReceiver = new MockMessagingAgent();
+            this.receiver = new MockMessagingAgent();
             var dataBusAdapter = DataBusFactory.Create(container);
             this.repository = new InMemoryTickStore(container, dataBusAdapter);
             this.provider = new TickProvider(
@@ -93,7 +93,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.NetworkTests
             requester.SendFrame(this.requestSerializer.Serialize(dataRequest));
             var response = (QueryFailure)this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
 
-            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+            LogDumper.Dump(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Equal(typeof(QueryFailure), response.Type);
@@ -137,7 +137,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.NetworkTests
             requester.SendFrame(this.requestSerializer.Serialize(dataRequest));
             var response = (TickDataResponse)this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
 
-            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+            LogDumper.Dump(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Equal(typeof(TickDataResponse), response.Type);

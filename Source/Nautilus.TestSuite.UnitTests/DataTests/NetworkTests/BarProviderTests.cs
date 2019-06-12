@@ -19,7 +19,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.NetworkTests
     {
         private readonly ITestOutputHelper output;
         private readonly IComponentryContainer setupContainer;
-        private readonly MockLoggingAdapter mockLoggingAdapter;
+        private readonly MockLoggingAdapter loggingAdapter;
         private readonly BarProvider provider;
 
         public BarProviderTests(ITestOutputHelper output)
@@ -29,7 +29,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.NetworkTests
 
             var setupFactory = new StubComponentryContainerFactory();
             this.setupContainer = setupFactory.Create();
-            this.mockLoggingAdapter = setupFactory.LoggingAdapter;
+            this.loggingAdapter = setupFactory.LoggingAdapter;
         }
     }
 }

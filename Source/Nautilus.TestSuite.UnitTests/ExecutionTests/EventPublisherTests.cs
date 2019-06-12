@@ -32,9 +32,9 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
         private readonly NetworkAddress localHost = new NetworkAddress("127.0.0.1");
         private readonly ITestOutputHelper output;
         private readonly IComponentryContainer container;
-        private readonly MockLoggingAdapter mockLoggingAdapter;
-        private readonly IMessageBusAdapter mockMessageBusAdapter;
-        private readonly IEndpoint testReceiver;
+        private readonly MockLoggingAdapter loggingAdapter;
+        private readonly IMessageBusAdapter messageBusAdapter;
+        private readonly IEndpoint receiver;
 
         public EventPublisherTests(ITestOutputHelper output)
         {
@@ -43,10 +43,10 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             var setupFactory = new StubComponentryContainerFactory();
             this.container = setupFactory.Create();
-            this.mockLoggingAdapter = setupFactory.LoggingAdapter;
+            this.loggingAdapter = setupFactory.LoggingAdapter;
             var service = new MockMessageBusFactory(this.container);
-            this.mockMessageBusAdapter = service.MessageBusAdapter;
-            this.testReceiver = new MockMessagingAgent().Endpoint;
+            this.messageBusAdapter = service.MessageBusAdapter;
+            this.receiver = new MockMessagingAgent().Endpoint;
         }
 
         [Fact]
@@ -57,7 +57,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             var publisher = new EventPublisher(
                 this.container,
-                this.mockMessageBusAdapter,
+                this.messageBusAdapter,
                 new MsgPackEventSerializer(),
                 this.localHost,
                 new NetworkPort(56601));
@@ -83,7 +83,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             var @event = serializer.Deserialize(message);
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+            LogDumper.Dump(this.loggingAdapter, this.output);
 
             Assert.Equal("NAUTILUS:EXECUTION:O-123456", Encoding.UTF8.GetString(topic));
             Assert.Equal(rejected, @event);

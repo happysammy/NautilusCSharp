@@ -30,7 +30,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
 
         private readonly ITestOutputHelper output;
         private readonly IComponentryContainer container;
-        private readonly MockLoggingAdapter mockLoggingAdapter;
+        private readonly MockLoggingAdapter loggingAdapter;
 
         public MessagePublisherTests(ITestOutputHelper output)
         {
@@ -39,7 +39,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
 
             var setupFactory = new StubComponentryContainerFactory();
             this.container = setupFactory.Create();
-            this.mockLoggingAdapter = setupFactory.LoggingAdapter;
+            this.loggingAdapter = setupFactory.LoggingAdapter;
         }
 
         [Fact]
@@ -84,7 +84,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             var receivedTopic = subscriber.ReceiveFrameBytes();
             var receivedMessage = subscriber.ReceiveFrameBytes();
 
-            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+            LogDumper.Dump(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Equal(TEST_TOPIC, Encoding.UTF8.GetString(receivedTopic));
