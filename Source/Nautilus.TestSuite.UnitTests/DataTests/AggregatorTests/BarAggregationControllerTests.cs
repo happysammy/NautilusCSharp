@@ -73,10 +73,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.controller.Endpoint.Send(subscribe1);
             this.controller.Endpoint.Send(subscribe2);
 
-            Task.Delay(100).Wait();
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
-            LogDumper.DumpWithDelay(this.logger, this.output);
             Assert.Equal(1, this.controller.BarAggregators.Count);
             Assert.Equal(2, this.controller.Subscriptions.Count);
             Assert.Equal(2, this.controller.BarAggregators[symbol].Specifications.Count);
@@ -108,10 +107,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.controller.Endpoint.Send(subscribe2);
             this.controller.Endpoint.Send(subscribe2);
 
-            Task.Delay(100).Wait();
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
-            LogDumper.DumpWithDelay(this.logger, this.output);
             Assert.Equal(1, this.controller.BarAggregators.Count);
             Assert.Equal(2, this.controller.Subscriptions.Count);
             Assert.Equal(2, this.controller.BarAggregators[symbol].Specifications.Count);
@@ -160,10 +158,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.controller.Endpoint.Send(subscribe3);
             this.controller.Endpoint.Send(subscribe4);
 
-            Task.Delay(100).Wait();
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
-            LogDumper.DumpWithDelay(this.logger, this.output);
             Assert.Equal(2, this.controller.BarAggregators.Count);
             Assert.Equal(4, this.controller.Subscriptions.Count);
             Assert.Equal(2, this.controller.BarAggregators[symbol1].Specifications.Count);
@@ -205,10 +202,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
 
             this.controller.Endpoint.Send(unsubscribe);
 
-            Task.Delay(100).Wait();
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
-            LogDumper.DumpWithDelay(this.logger, this.output);
             Assert.Equal(1, this.controller.Subscriptions.Count);
             Assert.Equal(1, this.controller.BarAggregators[symbol].Specifications.Count);
             Assert.Empty(this.controller.UnhandledMessages);
@@ -249,10 +245,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.controller.Endpoint.Send(unsubscribe);
             this.controller.Endpoint.Send(unsubscribe);
 
-            Task.Delay(100).Wait();
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
-            LogDumper.DumpWithDelay(this.logger, this.output);
             Assert.Equal(1, this.controller.Subscriptions.Count);
             Assert.Equal(1, this.controller.BarAggregators[symbol].Specifications.Count);
             Assert.Empty(this.controller.UnhandledMessages);
@@ -330,8 +325,6 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.controller.Endpoint.Send(unsubscribe2);
             this.controller.Endpoint.Send(unsubscribe3);
             this.controller.Endpoint.Send(unsubscribe4);
-
-            Task.Delay(100).Wait();
 
             // Assert
             LogDumper.DumpWithDelay(this.logger, this.output);

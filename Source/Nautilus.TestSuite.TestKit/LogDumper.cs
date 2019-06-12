@@ -37,9 +37,7 @@ namespace Nautilus.TestSuite.TestKit
         /// </summary>
         /// <param name="loggingAdapter">The mock logging adapter.</param>
         /// <param name="output">The test output.</param>
-        public static void Dump(
-            MockLoggingAdapter loggingAdapter,
-            ITestOutputHelper output)
+        public static void Dump(MockLoggingAdapter loggingAdapter, ITestOutputHelper output)
         {
             loggingAdapter.WriteStashToOutput(output);
         }

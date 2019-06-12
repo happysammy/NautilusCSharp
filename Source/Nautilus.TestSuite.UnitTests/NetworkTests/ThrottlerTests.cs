@@ -69,8 +69,9 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             Task.Delay(100).Wait();
             var count3 = this.receiver.Messages.Count;
 
-            // Assert
             LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+
+            // Assert
             Assert.Equal(10, count1);
             Assert.Equal(20, count2);
             Assert.Equal(21, count3);
@@ -110,8 +111,9 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             // Receives the next 100 messages.
             var count2 = this.receiver.Messages.Count;
 
-            // Assert
             LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+
+            // Assert
             Assert.Equal(10, count1);
             Assert.Equal(31, count2);
             Assert.Equal(0, throttler.QueueCount);
