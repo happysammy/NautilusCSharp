@@ -273,14 +273,12 @@ namespace Nautilus.Brokerage.FXCM
                     return;
                 }
 
-                var symbolQuery = this.symbolConverter.GetNautilusSymbol(message.GetField(Tags.Symbol));
-                if (symbolQuery.IsFailure)
+                var symbolCodeQuery = this.symbolConverter.GetNautilusSymbol(message.GetField(Tags.Symbol));
+                if (symbolCodeQuery.IsFailure)
                 {
-                    this.Log.Error(symbolQuery.Message);
+                    this.Log.Error(symbolCodeQuery.Message);
                     return; // Cannot get Nautilus symbol for broker symbol.
                 }
-
-                var symbolCode = symbolQuery.Value;
 
                 var group = new MarketDataSnapshotFullRefresh.NoMDEntriesGroup();
 
@@ -310,7 +308,7 @@ namespace Nautilus.Brokerage.FXCM
                 }
 
                 this.dataGateway.OnTick(
-                    symbolCode,
+                    symbolCodeQuery.Value,
                     Venue.FXCM,
                     bidDecimal,
                     askDecimal,

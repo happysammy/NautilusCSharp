@@ -390,6 +390,11 @@ namespace Nautilus.Fix
             return limitPrice;
         }
 
+        private static readonly ZonedDateTimePattern MarketDataParsePattern =
+            ZonedDateTimePattern.CreateWithInvariantCulture(
+                "yyyyMMddHH:mm:ss.fff",
+                DateTimeZoneProviders.Tzdb);
+
         /// <summary>
         /// The get date time from market data string.
         /// </summary>
@@ -398,6 +403,11 @@ namespace Nautilus.Fix
         public static ZonedDateTime ConvertMarketDataString(string dateTime) =>
             MarketDataParsePattern.Parse(dateTime).Value;
 
+        private static readonly ZonedDateTimePattern ExecutionReportParsePattern =
+            ZonedDateTimePattern.CreateWithInvariantCulture(
+                "yyyyMMdd-HH:mm:ss.fff",
+                DateTimeZoneProviders.Tzdb);
+
         /// <summary>
         /// The get date time from execution string.
         /// </summary>
@@ -405,15 +415,5 @@ namespace Nautilus.Fix
         /// <returns>The converted <see cref="ZonedDateTime"/>.</returns>
         public static ZonedDateTime ConvertExecutionReportString(string dateTime) =>
             ExecutionReportParsePattern.Parse(dateTime).Value;
-
-        private static readonly ZonedDateTimePattern MarketDataParsePattern =
-            ZonedDateTimePattern.CreateWithInvariantCulture(
-                "yyyyMMddHH:mm:ss.fff",
-                DateTimeZoneProviders.Tzdb);
-
-        private static readonly ZonedDateTimePattern ExecutionReportParsePattern =
-            ZonedDateTimePattern.CreateWithInvariantCulture(
-                "yyyyMMdd-HH:mm:ss.fff",
-                DateTimeZoneProviders.Tzdb);
     }
 }
