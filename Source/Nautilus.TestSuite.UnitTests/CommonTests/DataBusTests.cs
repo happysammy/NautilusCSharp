@@ -9,19 +9,12 @@
 namespace Nautilus.TestSuite.UnitTests.CommonTests
 {
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Common.Data;
     using Nautilus.Common.Messages.Commands;
-    using Nautilus.Common.Messages.Events;
-    using Nautilus.Common.Messaging;
     using Nautilus.Core;
-    using Nautilus.Data;
     using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Messaging;
-    using Nautilus.Messaging.Interfaces;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;
@@ -72,7 +65,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             // Act
             this.dataBus.Endpoint.Send(subscribe);
 
-            LogDumper.Dump(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Equal(0, this.dataBus.Subscriptions.Count);
@@ -91,7 +84,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             // Act
             this.dataBus.Endpoint.Send(subscribe);
 
-            LogDumper.Dump(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Contains(this.receiver.Mailbox.Address, this.dataBus.Subscriptions);
@@ -112,7 +105,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             this.dataBus.Endpoint.Send(subscribe);
             this.dataBus.Endpoint.Send(subscribe);
 
-            LogDumper.Dump(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Equal(1, this.dataBus.Subscriptions.Count);
@@ -140,7 +133,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             this.dataBus.Endpoint.Send(subscribe1);
             this.dataBus.Endpoint.Send(subscribe2);
 
-            LogDumper.Dump(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Contains(this.receiver.Mailbox.Address, this.dataBus.Subscriptions);
@@ -161,7 +154,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             // Act
             this.dataBus.Endpoint.Send(unsubscribe);
 
-            LogDumper.Dump(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Equal(0, this.dataBus.Subscriptions.Count);
@@ -187,7 +180,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             this.dataBus.Endpoint.Send(subscribe);
             this.dataBus.Endpoint.Send(unsubscribe);
 
-            LogDumper.Dump(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Equal(0, this.dataBus.Subscriptions.Count);
@@ -222,7 +215,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             this.dataBus.Endpoint.Send(subscribe2);
             this.dataBus.Endpoint.Send(unsubscribe);
 
-            LogDumper.Dump(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Equal(1, this.dataBus.Subscriptions.Count);
@@ -239,7 +232,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             this.dataBus.Endpoint.Send(tick);
             this.dataBus.Endpoint.Send(tick);
 
-            LogDumper.Dump(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Equal(0, this.dataBus.Subscriptions.Count);
@@ -273,7 +266,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             this.dataBus.Endpoint.Send(tick);
             this.dataBus.Endpoint.Send(tick);
 
-            LogDumper.Dump(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Contains(tick, this.receiver.Messages);

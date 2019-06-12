@@ -18,18 +18,30 @@ namespace Nautilus.TestSuite.TestKit
     public static class LogDumper
     {
         /// <summary>
-        /// Writes the contents of the log to the output.
+        /// Writes the contents of the log to the output after the given delay.
         /// </summary>
-        /// <param name="mockLoggingAdapter">The mock logging adapter.</param>
+        /// <param name="loggingAdapter">The mock logging adapter.</param>
         /// <param name="output">The test output.</param>
         /// <param name="delayMilliseconds">The delay (milliseconds).</param>
-        public static void Dump(
-            MockLoggingAdapter mockLoggingAdapter,
+        public static void DumpWithDelay(
+            MockLoggingAdapter loggingAdapter,
             ITestOutputHelper output,
-            int delayMilliseconds = 300)
+            int delayMilliseconds = 100)
         {
             Task.Delay(delayMilliseconds).Wait();
-            mockLoggingAdapter.WriteStashToOutput(output);
+            loggingAdapter.WriteStashToOutput(output);
+        }
+
+        /// <summary>
+        /// Writes the contents of the log to the output.
+        /// </summary>
+        /// <param name="loggingAdapter">The mock logging adapter.</param>
+        /// <param name="output">The test output.</param>
+        public static void Dump(
+            MockLoggingAdapter loggingAdapter,
+            ITestOutputHelper output)
+        {
+            loggingAdapter.WriteStashToOutput(output);
         }
     }
 }

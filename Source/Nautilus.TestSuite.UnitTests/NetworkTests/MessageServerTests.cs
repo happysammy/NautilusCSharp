@@ -56,7 +56,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 new NetworkPort(5555),
                 Guid.NewGuid());
 
-            LogDumper.Dump(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Equal("tcp://127.0.0.1:5555", server.ServerAddress.ToString());
@@ -83,7 +83,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
 
             Task.Delay(100).Wait(); // Allow server to start
 
-            LogDumper.Dump(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Equal("tcp://127.0.0.1:5555", server.ServerAddress.ToString());
@@ -127,7 +127,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             requester2.SendFrame(this.serializer.Serialize(message));
             var response = this.responseSerializer.Deserialize(requester2.ReceiveFrameBytes());
 
-            LogDumper.Dump(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Equal(typeof(MessageReceived), response.Type);
@@ -169,7 +169,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             requester.SendFrame(this.serializer.Serialize(message));
             var response = this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
 
-            LogDumper.Dump(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Equal(typeof(MessageReceived), response.Type);
@@ -218,7 +218,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             requester.SendFrame(this.serializer.Serialize(message2));
             var response2 = this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
 
-            LogDumper.Dump(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Contains(message1, server.ReceivedMessages);
@@ -270,7 +270,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 StubZonedDateTime.UnixEpoch());
             requester.SendFrame(this.serializer.Serialize(message2));
 
-            LogDumper.Dump(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Equal(typeof(MessageReceived), response1.Type);
@@ -312,7 +312,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
             }
 
-            LogDumper.Dump(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Equal(1000, server.ReceivedMessages.Count);
@@ -366,7 +366,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 this.responseSerializer.Deserialize(requester2.ReceiveFrameBytes());
             }
 
-            LogDumper.Dump(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.loggingAdapter, this.output, 200);
 
             // Assert
             Assert.Equal(2000, server.ReceivedMessages.Count);

@@ -84,7 +84,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             var receivedTopic = subscriber.ReceiveFrameBytes();
             var receivedMessage = subscriber.ReceiveFrameBytes();
 
-            LogDumper.Dump(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Equal(TEST_TOPIC, Encoding.UTF8.GetString(receivedTopic));

@@ -83,7 +83,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             var @event = serializer.Deserialize(message);
 
             // Assert
-            LogDumper.Dump(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             Assert.Equal("NAUTILUS:EXECUTION:O-123456", Encoding.UTF8.GetString(topic));
             Assert.Equal(rejected, @event);

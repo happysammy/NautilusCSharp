@@ -62,10 +62,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             // Act
             this.barAggregator.Endpoint.Send(closeBar);
 
-            Task.Delay(100).Wait();  // Wait for potential message(s) to arrive.
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
-            LogDumper.Dump(this.logger, this.output);
             Assert.Empty(this.barAggregator.Specifications);
             Assert.Empty(this.receiver.Messages);
             Assert.Empty(this.barAggregator.UnhandledMessages);
@@ -85,10 +84,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             // Act
             this.barAggregator.Endpoint.Send(subscribe);
 
-            Task.Delay(100).Wait();  // Wait for potential message(s) to arrive.
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
-            LogDumper.Dump(this.logger, this.output);
             Assert.Single(this.barAggregator.Specifications);
             Assert.Contains(barSpec, this.barAggregator.Specifications);
             Assert.Empty(this.barAggregator.UnhandledMessages);
@@ -109,10 +107,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.barAggregator.Endpoint.Send(subscribe);
             this.barAggregator.Endpoint.Send(subscribe);
 
-            Task.Delay(100).Wait();  // Wait for potential message(s) to arrive.
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
-            LogDumper.Dump(this.logger, this.output);
             Assert.Single(this.barAggregator.Specifications);
             Assert.Contains(barSpec, this.barAggregator.Specifications);
             Assert.Empty(this.barAggregator.UnhandledMessages);
@@ -141,10 +138,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             // Act
             this.barAggregator.Endpoint.Send(closeBar);
 
-            Task.Delay(100).Wait();  // Wait for potential message(s) to arrive.
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
-            LogDumper.Dump(this.logger, this.output);
             Assert.Empty(this.receiver.Messages);
             Assert.Empty(this.barAggregator.UnhandledMessages);
         }
@@ -179,10 +175,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             // Act
             this.barAggregator.Endpoint.Send(closeBar);
 
-            Task.Delay(300).Wait();  // Wait for potential message(s) to arrive.
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
-            LogDumper.Dump(this.logger, this.output);
             Assert.Empty(this.receiver.Messages);
             Assert.Empty(this.barAggregator.UnhandledMessages);
         }
@@ -217,10 +212,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             // Act
             this.barAggregator.Endpoint.Send(closeBar);
 
-            Task.Delay(100).Wait();  // Wait for potential message(s) to arrive.
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
-            LogDumper.Dump(this.logger, this.output);
             Assert.Single(this.receiver.Messages);
             Assert.Equal("(AUDUSD.FXCM-1-SECOND[BID], 0.80000,0.80000,0.80000,0.80000,1,1970-01-01T00:00:00.000Z)", this.receiver.Messages[0].ToString());
             Assert.Empty(this.receiver.UnhandledMessages);
@@ -271,10 +265,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             // Act
             this.barAggregator.Endpoint.Send(closeBar2);
 
-            Task.Delay(100).Wait();  // Wait for potential message(s) to arrive.
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
-            LogDumper.Dump(this.logger, this.output);
             Assert.Equal(2, this.receiver.Messages.Count);
             Assert.Equal("(AUDUSD.FXCM-1-SECOND[BID], 0.80000,0.80000,0.80000,0.80000,1,1970-01-01T00:00:00.000Z)", this.receiver.Messages[0].ToString());
             Assert.Empty(this.receiver.UnhandledMessages);
@@ -341,10 +334,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             // Act
             this.barAggregator.Endpoint.Send(closeBar2);
 
-            Task.Delay(100).Wait();  // Wait for potential message(s) to arrive.
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
-            LogDumper.Dump(this.logger, this.output);
             Assert.Equal(2, this.receiver.Messages.Count);
             Assert.Equal("(AUDUSD.FXCM-1-SECOND[BID], 0.80000,0.80100,0.80000,0.80100,2,1970-01-01T00:00:00.000Z)", this.receiver.Messages[0].ToString());
             Assert.Equal("(AUDUSD.FXCM-10-SECOND[BID], 0.80000,0.80200,0.80000,0.80200,3,1970-01-01T00:00:00.000Z)", this.receiver.Messages[1].ToString());
@@ -386,15 +378,12 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.barAggregator.Endpoint.Send(tick1);
             this.barAggregator.Endpoint.Send(tick2);
 
-            LogDumper.Dump(this.logger, this.output);
-
             // Act
             this.barAggregator.Endpoint.Send(closeBar);
 
-            Task.Delay(100).Wait();  // Wait for potential message(s) to arrive.
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
-            LogDumper.Dump(this.logger, this.output);
             Assert.Single(this.receiver.Messages);
             Assert.Equal("(AUDUSD.FXCM-1-SECOND[MID], 0.800050,0.800350,0.800050,0.800350,2,1970-01-01T00:00:00.000Z)", this.receiver.Messages[0].ToString());
             Assert.Empty(this.receiver.UnhandledMessages);

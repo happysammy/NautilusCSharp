@@ -93,7 +93,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.NetworkTests
             requester.SendFrame(this.requestSerializer.Serialize(dataRequest));
             var response = (QueryFailure)this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
 
-            LogDumper.Dump(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Equal(typeof(QueryFailure), response.Type);
@@ -137,7 +137,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.NetworkTests
             requester.SendFrame(this.requestSerializer.Serialize(dataRequest));
             var response = (TickDataResponse)this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
 
-            LogDumper.Dump(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Equal(typeof(TickDataResponse), response.Type);

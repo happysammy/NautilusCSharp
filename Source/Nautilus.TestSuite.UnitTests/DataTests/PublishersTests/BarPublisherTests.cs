@@ -71,7 +71,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
             var topic = subscriber.ReceiveFrameBytes();
             var message = subscriber.ReceiveFrameBytes();
 
-            LogDumper.Dump(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Equal(barType.ToString(), Encoding.UTF8.GetString(topic));
