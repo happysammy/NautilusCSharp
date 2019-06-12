@@ -61,11 +61,6 @@ namespace Nautilus.Common.Messaging
         public Type BusType { get; }
 
         /// <summary>
-        /// Gets the message bus message type.
-        /// </summary>
-        public Type BusMessageType => this.BusType;
-
-        /// <summary>
         /// Gets the message bus subscriptions.
         /// </summary>
         public IReadOnlyCollection<Type> TypeSubscriptions => this.subscriptions.Keys.ToList().AsReadOnly();

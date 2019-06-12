@@ -10,6 +10,7 @@ namespace Nautilus.Common.Data
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -45,6 +46,16 @@ namespace Nautilus.Common.Data
         /// Gets the bus data type.
         /// </summary>
         public Type BusType { get; }
+
+        /// <summary>
+        /// Gets the data bus subscriptions.
+        /// </summary>
+        public IReadOnlyCollection<Address> Subscriptions => this.subscriptions.Select(m => m.Address).ToList().AsReadOnly();
+
+        /// <summary>
+        /// Gets the data bus subscriptions count.
+        /// </summary>
+        public int SubscriptionsCount => this.subscriptions.Count;
 
         private void OnMessage(Subscribe<Type> message)
         {

@@ -66,7 +66,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             // Act
             // Assert
             Assert.Equal("MessageBus<Event>", this.messageBus.Name.ToString());
-            Assert.Equal(typeof(Event), this.messageBus.BusMessageType);
+            Assert.Equal(typeof(Event), this.messageBus.BusType);
             Assert.False(this.messageBus.HasSubscribers);
             Assert.Equal(0, this.messageBus.TypeSubscriptions.Count);
             Assert.Equal(0, this.messageBus.SubscriptionsAllCount);
