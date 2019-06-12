@@ -72,22 +72,9 @@ namespace Nautilus.Fix
         /// Gets all Nautilus symbols contained in the index.
         /// </summary>
         /// <returns>The collection of Nautilus symbols.</returns>
-        public IReadOnlyCollection<Symbol> GetAllSymbols()
+        public IEnumerable<Symbol> GetAllSymbols()
         {
             return this.symbols;
-        }
-
-        /// <summary>
-        /// Gets all Nautilus symbols from the given collection of symbol strings and venue.
-        /// </summary>
-        /// <param name="nautilusSymbols">The Nautilus symbols.</param>
-        /// <param name="venue">The venue.</param>
-        /// <returns>The collection of Nautilus symbols.</returns>
-        public IReadOnlyCollection<Symbol> GetAllSymbols(IEnumerable<string> nautilusSymbols, Venue venue)
-        {
-            return nautilusSymbols
-                .Select(code => new Symbol(code, venue))
-                .ToImmutableList();
         }
 
         /// <summary>
