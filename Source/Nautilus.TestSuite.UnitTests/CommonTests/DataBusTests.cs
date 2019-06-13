@@ -35,6 +35,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
 
             var containerFactory = new StubComponentryContainerFactory();
             var container = containerFactory.Create();
+
             this.loggingAdapter = containerFactory.LoggingAdapter;
             this.receiver = new MockMessagingAgent();
             this.dataBus = new DataBus<Tick>(container);

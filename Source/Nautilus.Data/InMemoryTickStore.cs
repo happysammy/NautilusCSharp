@@ -12,6 +12,7 @@ namespace Nautilus.Data
     using System.Linq;
     using Nautilus.Common.Data;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Correctness;
     using Nautilus.Core.CQS;
     using Nautilus.Core.Extensions;
     using Nautilus.Data.Interfaces;
@@ -57,22 +58,36 @@ namespace Nautilus.Data
         /// <inheritdoc />
         public CommandResult Add(Tick tick)
         {
-            if (!this.tickStore.ContainsKey(tick.Symbol))
+            if (this.tickStore.TryGetValue(tick.Symbol, out var tickList))
             {
-                this.tickStore[tick.Symbol] = new List<Tick>();
+                tickList.Add(tick);
             }
-
-            this.tickStore[tick.Symbol].Add(tick);
+            else
+            {
+                this.tickStore[tick.Symbol] = new List<Tick> { tick };
+            }
 
             return CommandResult.Ok();
         }
 
         /// <inheritdoc />
-        public CommandResult Add(IEnumerable<Tick> ticks)
+        public CommandResult Add(List<Tick> ticks)
         {
-            foreach (var tick in ticks)
+            Debug.NotEmpty(ticks, nameof(ticks));
+
+            if (ticks.Count == 0)
             {
-                this.Add(tick);
+                return CommandResult.Fail("No ticks to add.");
+            }
+
+            var symbol = ticks[0].Symbol;
+            if (this.tickStore.TryGetValue(symbol, out var tickList))
+            {
+                tickList.AddRange(ticks);
+            }
+            else
+            {
+                this.tickStore[symbol] = ticks;
             }
 
             return CommandResult.Ok();
@@ -84,25 +99,24 @@ namespace Nautilus.Data
             ZonedDateTime fromDateTime,
             ZonedDateTime toDateTime)
         {
-            if (!this.tickStore.ContainsKey(symbol))
+            if (this.tickStore.TryGetValue(symbol, out var tickList))
             {
-                return QueryResult<List<Tick>>.Fail($"No tick data found for {symbol}");
+                return QueryResult<List<Tick>>.Ok(
+                    tickList
+                        .Where(t => t.Timestamp.IsGreaterThanOrEqualTo(fromDateTime) &&
+                                    t.Timestamp.IsLessThanOrEqualTo(toDateTime))
+                        .ToList());
             }
 
-            var ticks = this.tickStore[symbol]
-                .Where(t => t.Timestamp.IsGreaterThanOrEqualTo(fromDateTime)
-                            && t.Timestamp.IsLessThanOrEqualTo(toDateTime))
-                .ToList();
-
-            return QueryResult<List<Tick>>.Ok(ticks);
+            return QueryResult<List<Tick>>.Fail($"No tick data found for {symbol}");
         }
 
         /// <inheritdoc />
         public QueryResult<ZonedDateTime> LastTickTimestamp(Symbol symbol)
         {
-            return !this.tickStore.ContainsKey(symbol)
-                ? QueryResult<ZonedDateTime>.Fail($"No tick data found for {symbol}")
-                : QueryResult<ZonedDateTime>.Ok(this.tickStore[symbol].Last().Timestamp);
+            return this.tickStore.TryGetValue(symbol, out var tickList)
+                ? QueryResult<ZonedDateTime>.Ok(tickList.Last().Timestamp)
+                : QueryResult<ZonedDateTime>.Fail($"No tick data found for {symbol}");
         }
 
         /// <inheritdoc />
@@ -122,9 +136,7 @@ namespace Nautilus.Data
 
         private void OnMessage(Tick tick)
         {
-            this.Add(tick)
-                .OnSuccess(result => this.Log.Information(result.Message))
-                .OnFailure(result => this.Log.Error(result.Message));
+            this.Add(tick).OnFailure(result => this.Log.Error(result.Message));
         }
 
         private void OnMessage(TrimTickData message)

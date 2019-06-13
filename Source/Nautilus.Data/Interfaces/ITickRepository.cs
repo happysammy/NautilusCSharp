@@ -43,7 +43,7 @@ namespace Nautilus.Data.Interfaces
         /// </summary>
         /// <param name="ticks">The ticks to add.</param>
         /// <returns>The result of the operation.</returns>
-        CommandResult Add(IEnumerable<Tick> ticks);
+        CommandResult Add(List<Tick> ticks);
 
         /// <summary>
         /// Returns the result of the find ticks query.
