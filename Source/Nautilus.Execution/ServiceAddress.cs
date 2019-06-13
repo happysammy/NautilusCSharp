@@ -28,9 +28,9 @@ namespace Nautilus.Execution
         public static Address Scheduler { get; } = new Address(nameof(Scheduler));
 
         /// <summary>
-        /// Gets the <see cref="FixGateway"/> component messaging address.
+        /// Gets the <see cref="TradingGateway"/> component messaging address.
         /// </summary>
-        public static Address FixGateway { get; } = new Address(nameof(FixGateway));
+        public static Address TradingGateway { get; } = new Address(nameof(TradingGateway));
 
         /// <summary>
         /// Gets the <see cref="CommandServer"/> component messaging address.

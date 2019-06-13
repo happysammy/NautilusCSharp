@@ -32,6 +32,7 @@ namespace Nautilus.Data.Aggregation
         private readonly List<BarSpecification> specifications;
         private readonly Dictionary<BarSpecification, BarBuilder?> barBuilders;
         private readonly Dictionary<BarSpecification, BarBuilder> pendingBuilders;
+        private readonly Dictionary<BarSpecification, BarType> barTypeCache;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BarAggregator"/> class.
@@ -50,6 +51,7 @@ namespace Nautilus.Data.Aggregation
             this.specifications = new List<BarSpecification>();
             this.barBuilders = new Dictionary<BarSpecification, BarBuilder?>();
             this.pendingBuilders = new Dictionary<BarSpecification, BarBuilder>();
+            this.barTypeCache = new Dictionary<BarSpecification, BarType>();
 
             this.RegisterHandler<Tick>(this.OnMessage);
             this.RegisterHandler<CloseBar>(this.OnMessage);
@@ -85,19 +87,20 @@ namespace Nautilus.Data.Aggregation
 
         private void OnMessage(Tick tick)
         {
-            Debug.EqualTo(tick.Symbol, this.symbol, nameof(tick.Symbol));
+            Debug.EqualTo(tick.Symbol, this.symbol, nameof(tick.Symbol));  // Design time error
 
             foreach (var barSpec in this.barBuilders.Keys)
             {
                 var quote = GetUpdateQuote(barSpec.QuoteType, tick);
 
-                var builder = this.barBuilders[barSpec];
-                if (builder is null)
+                if (this.barBuilders.TryGetValue(barSpec, out var builder))
                 {
-                    this.pendingBuilders.Add(barSpec, new BarBuilder(quote));
-                }
-                else
-                {
+                    if (builder is null)
+                    {
+                        this.pendingBuilders.Add(barSpec, new BarBuilder(quote));
+                        continue;
+                    }
+
                     builder.Update(quote);
                 }
             }
@@ -121,33 +124,32 @@ namespace Nautilus.Data.Aggregation
         private void OnMessage(CloseBar message)
         {
             var barSpec = message.BarSpecification;
+            if (this.barBuilders.TryGetValue(barSpec, out var builder))
+            {
+                if (builder is null)
+                {
+                    return;  // No bar to build
+                }
 
-            if (!this.barBuilders.TryGetValue(barSpec, out var builder))
+                // Close the bar
+                var bar = builder.Build(message.ScheduledTime);
+                var barData = new BarData(new BarType(this.symbol, barSpec), bar);
+
+                // Send to bar aggregation controller (parent)
+                this.parent.Send(barData);
+
+                // Refresh bar builder
+                this.barBuilders[barSpec] = new BarBuilder(bar.Close);
+            }
+            else
             {
                 this.Log.Warning($"Does not contain the bar specification {message.BarSpecification}");
-                return;
             }
-
-            if (builder is null)
-            {
-                return; // No builder to build bar
-            }
-
-            // Close the bar
-            var bar = builder.Build(message.ScheduledTime);
-            var barData = new BarData(new BarType(this.symbol, barSpec), bar);
-
-            // Send to bar aggregation controller (parent)
-            this.parent.Send(barData);
-
-            // Refresh bar builder
-            this.barBuilders[barSpec] = new BarBuilder(bar.Close);
         }
 
         private void OnMessage(Subscribe<BarType> message)
         {
             var barSpec = message.Subscription.Specification;
-
             if (this.specifications.Contains(barSpec))
             {
                 this.Log.Warning($"Already subscribed to {message.Subscription} bars.");
@@ -167,7 +169,6 @@ namespace Nautilus.Data.Aggregation
         private void OnMessage(Unsubscribe<BarType> message)
         {
             var barSpec = message.Subscription.Specification;
-
             if (!this.specifications.Contains(barSpec))
             {
                 this.Log.Warning($"Already unsubscribed from {message.Subscription} bars.");

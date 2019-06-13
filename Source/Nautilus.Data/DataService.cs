@@ -111,9 +111,10 @@ namespace Nautilus.Data
 
                 this.CreateMarketOpenedJob();
                 this.CreateMarketClosedJob();
-                this.CreateTrimTickDataJob();
-                this.CreateTrimBarDataJob();
 
+                // TODO: Below is crashing the service
+                // this.CreateTrimTickDataJob();
+                // this.CreateTrimBarDataJob();
                 var receivers = new List<Address>
                 {
                     ServiceAddress.TickProvider,
@@ -133,6 +134,7 @@ namespace Nautilus.Data
         {
             var receivers = new List<Address>
             {
+                ServiceAddress.DataGateway,
                 ServiceAddress.TickProvider,
                 ServiceAddress.TickPublisher,
                 ServiceAddress.BarProvider,
@@ -229,90 +231,129 @@ namespace Nautilus.Data
 
         private void CreateConnectFixJob()
         {
-            var now = this.InstantNow();
-            var nextTime = TimingProvider.GetNextUtc(
-                this.fixConnectTime.Day,
-                this.fixConnectTime.Time,
-                now);
-            var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, now);
+            this.Execute(() =>
+            {
+                var now = this.InstantNow();
+                var nextTime = TimingProvider.GetNextUtc(
+                    this.fixConnectTime.Day,
+                    this.fixConnectTime.Time,
+                    now);
+                var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, now);
 
-            var job = new ConnectFix(
-                nextTime,
-                this.NewGuid(),
-                this.TimeNow());
+                var job = new ConnectFix(
+                    nextTime,
+                    this.NewGuid(),
+                    this.TimeNow());
 
-            this.scheduler.ScheduleSendOnceCancelable(
-                durationToNext,
-                this.Endpoint,
-                job,
-                this.Endpoint);
+                this.scheduler.ScheduleSendOnceCancelable(
+                    durationToNext,
+                    this.Endpoint,
+                    job,
+                    this.Endpoint);
 
-            this.Log.Information($"Created scheduled job {job} for {nextTime.ToIsoString()}");
+                this.Log.Information($"Created scheduled job {job} for {nextTime.ToIsoString()}");
+            });
         }
 
         private void CreateDisconnectFixJob()
         {
-            var now = this.InstantNow();
-            var nextTime = TimingProvider.GetNextUtc(
-                this.fixDisconnectTime.Day,
-                this.fixDisconnectTime.Time,
-                now);
-            var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, now);
+            this.Execute(() =>
+            {
+                var now = this.InstantNow();
+                var nextTime = TimingProvider.GetNextUtc(
+                    this.fixDisconnectTime.Day,
+                    this.fixDisconnectTime.Time,
+                    now);
+                var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, now);
 
-            var job = new DisconnectFix(
-                nextTime,
-                this.NewGuid(),
-                this.TimeNow());
+                var job = new DisconnectFix(
+                    nextTime,
+                    this.NewGuid(),
+                    this.TimeNow());
 
-            this.scheduler.ScheduleSendOnceCancelable(
-                durationToNext,
-                this.Endpoint,
-                job,
-                this.Endpoint);
+                this.scheduler.ScheduleSendOnceCancelable(
+                    durationToNext,
+                    this.Endpoint,
+                    job,
+                    this.Endpoint);
 
-            this.Log.Information($"Created scheduled job {job} for {nextTime.ToIsoString()}");
+                this.Log.Information($"Created scheduled job {job} for {nextTime.ToIsoString()}");
+            });
         }
 
         private void CreateMarketOpenedJob()
         {
-            var jobDay = IsoDayOfWeek.Sunday;
-            var jobTime = new LocalTime(21, 00);
-            var now = this.InstantNow();
-
-            foreach (var symbol in this.subscribingSymbols)
+            this.Execute(() =>
             {
-                var nextTime = TimingProvider.GetNextUtc(jobDay, jobTime, now);
-                var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, this.InstantNow());
+                var jobDay = IsoDayOfWeek.Sunday;
+                var jobTime = new LocalTime(21, 00);
+                var now = this.InstantNow();
 
-                var marketOpened = new MarketOpened(
-                    symbol,
-                    nextTime,
-                    this.NewGuid(),
-                    this.TimeNow());
+                foreach (var symbol in this.subscribingSymbols)
+                {
+                    var nextTime = TimingProvider.GetNextUtc(jobDay, jobTime, now);
+                    var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, this.InstantNow());
 
-                this.scheduler.ScheduleSendOnceCancelable(
-                    durationToNext,
-                    this.Endpoint,
-                    marketOpened,
-                    this.Endpoint);
+                    var marketOpened = new MarketOpened(
+                        symbol,
+                        nextTime,
+                        this.NewGuid(),
+                        this.TimeNow());
 
-                this.Log.Information($"Created scheduled event {marketOpened}-{symbol} for {nextTime.ToIsoString()}");
-            }
+                    this.scheduler.ScheduleSendOnceCancelable(
+                        durationToNext,
+                        this.Endpoint,
+                        marketOpened,
+                        this.Endpoint);
+
+                    this.Log.Information($"Created scheduled event {marketOpened}-{symbol} for {nextTime.ToIsoString()}");
+                }
+            });
         }
 
         private void CreateMarketClosedJob()
         {
-            var jobDay = IsoDayOfWeek.Saturday;
-            var jobTime = new LocalTime(20, 00);
-            var now = this.InstantNow();
-
-            foreach (var symbol in this.subscribingSymbols)
+            this.Execute(() =>
             {
-                var nextTime = TimingProvider.GetNextUtc(jobDay, jobTime, now);
-                var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, this.InstantNow());
+                var jobDay = IsoDayOfWeek.Saturday;
+                var jobTime = new LocalTime(20, 00);
+                var now = this.InstantNow();
 
-                var marketClosed = new MarketClosed(
-                    symbol,
+                foreach (var symbol in this.subscribingSymbols)
+                {
+                    var nextTime = TimingProvider.GetNextUtc(jobDay, jobTime, now);
+                    var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, this.InstantNow());
+
+                    var marketClosed = new MarketClosed(
+                        symbol,
+                        nextTime,
+                        this.NewGuid(),
+                        this.TimeNow());
+
+                    this.scheduler.ScheduleSendOnceCancelable(
+                        durationToNext,
+                        this.Endpoint,
+                        marketClosed,
+                        this.Endpoint);
+
+                    this.Log.Information($"Created scheduled event {marketClosed}-{symbol} for {nextTime.ToIsoString()}");
+                }
+            });
+        }
+
+        private void CreateTrimTickDataJob()
+        {
+            this.Execute(() =>
+            {
+                var now = this.InstantNow();
+                var nextTime = TimingProvider.GetNextUtc(
+                    this.tickDataTrimTime.Day,
+                    this.tickDataTrimTime.Time,
+                    now);
+                var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, now);
+
+                var job = new TrimTickData(
+                    nextTime - Duration.FromDays(this.tickRollingWindowDays),
                     nextTime,
                     this.NewGuid(),
                     this.TimeNow());
@@ -320,60 +361,39 @@ namespace Nautilus.Data
                 this.scheduler.ScheduleSendOnceCancelable(
                     durationToNext,
                     this.Endpoint,
-                    marketClosed,
+                    job,
                     this.Endpoint);
 
-                this.Log.Information($"Created scheduled event {marketClosed}-{symbol} for {nextTime.ToIsoString()}");
-            }
-        }
-
-        private void CreateTrimTickDataJob()
-        {
-            var now = this.InstantNow();
-            var nextTime = TimingProvider.GetNextUtc(
-                this.tickDataTrimTime.Day,
-                this.tickDataTrimTime.Time,
-                now);
-            var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, now);
-
-            var job = new TrimTickData(
-                nextTime - Duration.FromDays(this.tickRollingWindowDays),
-                nextTime,
-                this.NewGuid(),
-                this.TimeNow());
-
-            this.scheduler.ScheduleSendOnceCancelable(
-                durationToNext,
-                this.Endpoint,
-                job,
-                this.Endpoint);
-
-            this.Log.Information($"Created scheduled job {job} for {nextTime.ToIsoString()}");
+                this.Log.Information($"Created scheduled job {job} for {nextTime.ToIsoString()}");
+            });
         }
 
         private void CreateTrimBarDataJob()
         {
-            var now = this.InstantNow();
-            var nextTime = TimingProvider.GetNextUtc(
-                this.barDataTrimTime.Day,
-                this.barDataTrimTime.Time,
-                now);
-            var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, now);
+            this.Execute(() =>
+            {
+                var now = this.InstantNow();
+                var nextTime = TimingProvider.GetNextUtc(
+                    this.barDataTrimTime.Day,
+                    this.barDataTrimTime.Time,
+                    now);
+                var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, now);
 
-            var job = new TrimBarData(
-                this.barSpecifications,
-                this.barRollingWindowDays,
-                nextTime,
-                this.NewGuid(),
-                this.TimeNow());
+                var job = new TrimBarData(
+                    this.barSpecifications,
+                    this.barRollingWindowDays,
+                    nextTime,
+                    this.NewGuid(),
+                    this.TimeNow());
 
-            this.scheduler.ScheduleSendOnceCancelable(
-                durationToNext,
-                this.Endpoint,
-                job,
-                this.Endpoint);
+                this.scheduler.ScheduleSendOnceCancelable(
+                    durationToNext,
+                    this.Endpoint,
+                    job,
+                    this.Endpoint);
 
-            this.Log.Information($"Created scheduled job {job} for {nextTime.ToIsoString()}");
+                this.Log.Information($"Created scheduled job {job} for {nextTime.ToIsoString()}");
+            });
         }
     }
 }

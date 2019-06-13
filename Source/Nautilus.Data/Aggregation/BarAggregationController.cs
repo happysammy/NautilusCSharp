@@ -82,20 +82,20 @@ namespace Nautilus.Data.Aggregation
 
         private void OnMessage(Tick tick)
         {
-            if (this.barAggregators.ContainsKey(tick.Symbol))
+            if (this.barAggregators.TryGetValue(tick.Symbol, out var aggregator))
             {
-                this.barAggregators[tick.Symbol].Endpoint.Send(tick);
+                aggregator.Endpoint.Send(tick);
 
                 return;
             }
 
-            // Log for debugging purposes.
+            // Log for debugging purposes
             this.Log.Warning($"No bar aggregator for {tick.Symbol} ticks.");
         }
 
         private void OnMessage(BarData data)
         {
-            // Forward bar to data bus.
+            // Forward bar to data bus
             this.SendToBus(data);
         }
 
@@ -127,7 +127,7 @@ namespace Nautilus.Data.Aggregation
 
             if (IsMarketOpen(this.InstantNow()))
             {
-                // Create close bar job schedule.
+                // Create close bar job schedule
                 var initialDelay = (this.TimeNow().Floor(barSpec.Duration) + barSpec.Duration) - this.TimeNow();
                 var cancellable = this.scheduler.ScheduleRepeatedlyCancelable(
                     initialDelay,
@@ -171,7 +171,7 @@ namespace Nautilus.Data.Aggregation
 
             if (this.subscriptions[barType] != null)
             {
-                // Cancel close bar job schedule.
+                // Cancel close bar job schedule
                 this.subscriptions[barType]?.Cancel();
             }
 
@@ -188,10 +188,10 @@ namespace Nautilus.Data.Aggregation
 
         private void OnMessage(MarketOpened message)
         {
-            // ReSharper disable once UseDeconstruction (causes nullability problem).
+            // ReSharper disable once UseDeconstruction (causes nullability problem)
             foreach (var subscription in this.SubscriptionsForSymbol(message.Symbol))
             {
-                // Cancel old scheduled job if it still exists (this shouldn't need to happen).
+                // Cancel old scheduled job if it still exists (this shouldn't need to happen)
                 if (subscription.Value != null)
                 {
                     this.subscriptions[subscription.Key]?.Cancel();
@@ -217,7 +217,7 @@ namespace Nautilus.Data.Aggregation
 
         private void OnMessage(MarketClosed message)
         {
-            // ReSharper disable once UseDeconstruction (causes nullability problem).
+            // ReSharper disable once UseDeconstruction (causes nullability problem)
             foreach (var subscription in this.SubscriptionsForSymbol(message.Symbol))
             {
                 subscription.Value?.Cancel();

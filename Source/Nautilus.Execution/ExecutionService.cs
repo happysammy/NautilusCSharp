@@ -84,7 +84,7 @@ namespace Nautilus.Execution
             {
                 var receivers = new List<Address>
                 {
-                    ServiceAddress.FixGateway,
+                    ServiceAddress.TradingGateway,
                     ServiceAddress.CommandServer,
                     ServiceAddress.EventPublisher,
                 };
@@ -103,7 +103,7 @@ namespace Nautilus.Execution
             // Forward stop message
             var receivers = new List<Address>
             {
-                ServiceAddress.FixGateway,
+                ServiceAddress.TradingGateway,
                 ServiceAddress.CommandServer,
                 ServiceAddress.EventPublisher,
             };
@@ -114,13 +114,13 @@ namespace Nautilus.Execution
         private void OnMessage(ConnectFix message)
         {
             // Forward message
-            this.Send(message, ServiceAddress.FixGateway);
+            this.Send(message, ServiceAddress.TradingGateway);
         }
 
         private void OnMessage(DisconnectFix message)
         {
             // Forward message
-            this.Send(message, ServiceAddress.FixGateway);
+            this.Send(message, ServiceAddress.TradingGateway);
         }
 
         private void OnMessage(FixSessionConnected message)

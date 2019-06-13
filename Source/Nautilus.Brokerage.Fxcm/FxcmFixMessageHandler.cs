@@ -282,6 +282,8 @@ namespace Nautilus.Brokerage.FXCM
 
                 var group = new MarketDataSnapshotFullRefresh.NoMDEntriesGroup();
 
+                // Commented out code below is to capture the brokers tick timestamp although this has a lower
+                // resolution than .TimeNow().
                 // var dateTimeString = group.GetField(Tags.MDEntryDate) + group.GetField(Tags.MDEntryTime);
                 // var timestamp = FixMessageHelper.GetZonedDateTimeUtcFromMarketDataString(dateTimeString);
                 message.GetGroup(1, group);
