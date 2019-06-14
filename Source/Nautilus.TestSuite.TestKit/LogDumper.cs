@@ -13,7 +13,7 @@ namespace Nautilus.TestSuite.TestKit
     using Xunit.Abstractions;
 
     /// <summary>
-    /// Provides a convenient way of viewing the contents of the mock logging adapter.
+    /// Provides a convenient way of viewing the contents of a <see cref="MockLoggingAdapter"/>.
     /// </summary>
     public static class LogDumper
     {

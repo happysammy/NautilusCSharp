@@ -9,22 +9,13 @@
 namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core;
-    using Nautilus.Core.Annotations;
     using NodaTime;
 
-    /// <summary>
-    /// Represents a mock message for testing.
-    /// </summary>
-    [Immutable]
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class MockMessage : Message
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MockMessage"/> class.
-        /// </summary>
-        /// <param name="payload">The message payload.</param>
-        /// <param name="id">The message identifier.</param>
-        /// <param name="timestamp">The message timestamp.</param>
         public MockMessage(
             string payload,
             Guid id,
@@ -34,9 +25,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             this.Payload = payload;
         }
 
-        /// <summary>
-        /// Gets the messages payload.
-        /// </summary>
         public string Payload { get; }
     }
 }

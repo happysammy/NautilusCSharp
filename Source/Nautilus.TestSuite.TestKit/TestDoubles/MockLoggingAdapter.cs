@@ -10,7 +10,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
     using System;
     using System.Collections.Concurrent;
-    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Nautilus.Common.Interfaces;
@@ -19,61 +18,51 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public sealed class MockLoggingAdapter : ILoggingAdapter
     {
-        private readonly ConcurrentQueue<string> stash = new ConcurrentQueue<string>();
+        private readonly ConcurrentQueue<string> log = new ConcurrentQueue<string>();
 
         public string AssemblyVersion => "1.0.0";
 
         public void WriteStashToOutput(ITestOutputHelper output)
         {
-            foreach (var message in this.GetLogStashTextAsStringList())
+            foreach (var message in this.log.ToList())
             {
                 output.WriteLine(message);
             }
         }
 
-        public bool Contains(string text)
-        {
-            return this.GetLogStashTextAsStringList().Any(logEntry => logEntry.StartsWith(text));
-        }
-
         public void Verbose(string message)
         {
-            this.stash.Enqueue(message);
+            this.log.Enqueue("[VRB] " + message);
         }
 
         public void Debug(string message)
         {
-            this.stash.Enqueue(message);
+            this.log.Enqueue("[DBG] " + message);
         }
 
         public void Information(string message)
         {
-            this.stash.Enqueue(message);
+            this.log.Enqueue("[INF] " + message);
         }
 
         public void Warning(string message)
         {
-            this.stash.Enqueue(message);
+            this.log.Enqueue("[WRN] " + message);
         }
 
         public void Error(string message)
         {
-            this.stash.Enqueue(message);
+            this.log.Enqueue("[ERR] " + message);
         }
 
         public void Error(string message, Exception ex)
         {
-            this.stash.Enqueue(message);
+            this.log.Enqueue("[ERR] " + message + Environment.NewLine + ex.Message);
         }
 
         public void Fatal(string message, Exception ex)
         {
-            this.stash.Enqueue(message);
-        }
-
-        private IEnumerable<string> GetLogStashTextAsStringList()
-        {
-            return this.stash.ToList().AsReadOnly();
+            this.log.Enqueue("[FTL] " + message + Environment.NewLine + ex.Message);
         }
     }
 }

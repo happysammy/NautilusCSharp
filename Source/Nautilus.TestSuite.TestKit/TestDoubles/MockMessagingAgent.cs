@@ -9,23 +9,17 @@
 namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Text;
     using System.Threading.Tasks;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging;
 
-    /// <summary>
-    /// Provides a mock messaging agent for testing.
-    /// </summary>
-    public sealed class MockMessagingAgent : MessagingAgent
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    public class MockMessagingAgent : MessagingAgent
     {
         private readonly int workDelayMilliseconds;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MockMessagingAgent"/> class.
-        /// </summary>
-        /// <param name="name">The name of the mock messaging agent.</param>
-        /// <param name="workDelayMilliseconds">The work delay for the receiver.</param>
         public MockMessagingAgent(
             string name = nameof(MockMessagingAgent),
             int workDelayMilliseconds = 1000)
@@ -35,65 +29,35 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             this.workDelayMilliseconds = workDelayMilliseconds;
         }
 
-        /// <summary>
-        /// Gets the agents mailbox.
-        /// </summary>
         public Mailbox Mailbox { get; }
 
-        /// <summary>
-        /// Gets the agents list of received messages.
-        /// </summary>
         public List<object> Messages { get; }
 
-        /// <summary>
-        /// Add the message to the received messages list.
-        /// </summary>
-        /// <param name="message">The received message.</param>
         public void OnMessage(object message)
         {
             this.Messages.Add(message);
         }
 
-        /// <summary>
-        /// Add the message to the received messages list.
-        /// </summary>
-        /// <param name="message">The received message.</param>
         public void OnMessage(Tick message)
         {
             this.Messages.Add(message);
         }
 
-        /// <summary>
-        /// Add the message to the received messages list.
-        /// </summary>
-        /// <param name="message">The received message.</param>
         public void OnMessage(BarData message)
         {
             this.Messages.Add(message);
         }
 
-        /// <summary>
-        /// Add the message to the received messages list.
-        /// </summary>
-        /// <param name="message">The received message.</param>
         public void OnMessage(int message)
         {
             this.Messages.Add(message);
         }
 
-        /// <summary>
-        /// Add the message to the received messages list.
-        /// </summary>
-        /// <param name="message">The received message.</param>
         public void OnMessage(byte[] message)
         {
             this.Messages.Add(Encoding.UTF8.GetString(message));
         }
 
-        /// <summary>
-        /// Add the message to the received messages list.
-        /// </summary>
-        /// <param name="message">The received message.</param>
         public void OnMessageWithWorkDelay(object message)
         {
             this.Messages.Add(message);

@@ -8,18 +8,15 @@
 
 namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
+    using System.Diagnostics.CodeAnalysis;
     using MsgPack;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core;
     using Nautilus.Core.Extensions;
     using Nautilus.Serialization.Internal;
 
-    /// <summary>
-    /// Provides a <see cref="Command"/> message binary serializer for the MessagePack specification.
-    /// </summary>
-    public sealed class MockSerializer : IMessageSerializer<MockMessage>
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    public class MockSerializer : IMessageSerializer<MockMessage>
     {
-        /// <inheritdoc />
         public byte[] Serialize(MockMessage message)
         {
             var package = new MessagePackObjectDictionary
@@ -33,7 +30,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             return MsgPackSerializer.Serialize(package);
         }
 
-        /// <inheritdoc />
         public MockMessage Deserialize(byte[] commandBytes)
         {
             var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(commandBytes);

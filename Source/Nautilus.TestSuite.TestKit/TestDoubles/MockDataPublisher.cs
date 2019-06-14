@@ -9,22 +9,14 @@
 namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Text;
     using Nautilus.Common.Interfaces;
     using Nautilus.Network;
 
-    /// <summary>
-    /// Provides a mock publisher for testing.
-    /// </summary>
-    public sealed class MockDataPublisher : DataPublisher<string>
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    public class MockDataPublisher : DataPublisher<string>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MockDataPublisher"/> class.
-        /// </summary>
-        /// <param name="container">The componentry container.</param>
-        /// <param name="dataBusAdapter">The data bus adapter.</param>
-        /// <param name="host">The host address.</param>
-        /// <param name="port">The port.</param>
         public MockDataPublisher(
             IComponentryContainer container,
             IDataBusAdapter dataBusAdapter,

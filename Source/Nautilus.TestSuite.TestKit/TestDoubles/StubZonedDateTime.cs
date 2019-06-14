@@ -11,14 +11,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using System.Diagnostics.CodeAnalysis;
     using NodaTime;
 
-    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public static class StubZonedDateTime
     {
-        // Unix time (also known as POSIX time or epoch time) is a system for describing instants in time,
-        // defined as the number of seconds that have elapsed since 00:00:00 Coordinated Universal Time (UTC),
-        // Thursday, 1 January 1970, minus the number of leap seconds that have taken place since then.
         private static readonly ZonedDateTime UnixEpochZonedDateTime = new ZonedDateTime(Instant.FromUnixTimeSeconds(0), DateTimeZone.Utc);
 
         public static ZonedDateTime UnixEpoch()

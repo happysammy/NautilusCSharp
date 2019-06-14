@@ -10,24 +10,16 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using Nautilus.Common.Interfaces;
     using Nautilus.Messaging;
     using Nautilus.Network;
     using Nautilus.Network.Messages;
     using Nautilus.Serialization;
 
-    /// <summary>
-    /// Provides a mock server for testing.
-    /// </summary>
-    public sealed class MockMessageServer : MessageServer<MockMessage, Response>
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    public class MockMessageServer : MessageServer<MockMessage, Response>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MockMessageServer"/> class.
-        /// </summary>
-        /// <param name="container">The container.</param>
-        /// <param name="host">The host.</param>
-        /// <param name="port">The port.</param>
-        /// <param name="id">The identifier.</param>
         public MockMessageServer(
             IComponentryContainer container,
             NetworkAddress host,
@@ -46,9 +38,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             this.RegisterHandler<Envelope<MockMessage>>(this.OnMessage);
         }
 
-        /// <summary>
-        /// Gets the list of received messages.
-        /// </summary>
         public List<MockMessage> ReceivedMessages { get; }
 
         private void OnMessage(Envelope<MockMessage> envelope)
