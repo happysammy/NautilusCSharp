@@ -69,7 +69,7 @@ namespace Nautilus.Data.Network
             if (query.IsFailure)
             {
                 this.SendQueryFailure(query.Message, request.Id, envelope.Sender);
-                this.Log.Error(query.Message);
+                this.Log.Warning($"{envelope.Message} query failed ({query.Message}).");
                 return;
             }
 

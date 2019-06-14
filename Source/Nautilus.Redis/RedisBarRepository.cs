@@ -38,7 +38,7 @@ namespace Nautilus.Redis
         /// Returns the total count of bars persisted within the database.
         /// </summary>
         /// <returns>A <see cref="int"/>.</returns>
-        public long AllBarsCount()
+        public int AllBarsCount()
         {
             return this.barClient.AllBarsCount();
         }
@@ -49,7 +49,7 @@ namespace Nautilus.Redis
         /// </summary>
         /// <param name="barType">The bar specification.</param>
         /// <returns>A <see cref="int"/>.</returns>
-        public long BarsCount(BarType barType)
+        public int BarsCount(BarType barType)
         {
             return this.barClient.BarsCount(barType);
         }

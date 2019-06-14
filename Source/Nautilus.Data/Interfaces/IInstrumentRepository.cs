@@ -67,6 +67,6 @@ namespace Nautilus.Data.Interfaces
         /// Returns the instrument symbol collection.
         /// </summary>
         /// <returns>The collection of symbols held by the repository.</returns>
-        IReadOnlyCollection<Symbol> GetSymbols();
+        IReadOnlyCollection<Symbol> GetInstrumentSymbols();
     }
 }

@@ -128,11 +128,11 @@ namespace Nautilus.Network
         /// <param name="receiver">The receiver address.</param>
         protected void SendMessage(TOutbound outbound, Address? receiver)
         {
-            try
-            {
-                Debug.NotNull(receiver, nameof(receiver));
-                Debug.True(receiver.HasValue, nameof(receiver));
+            Debug.NotNull(receiver, nameof(receiver));
+            Debug.True(receiver.HasValue, nameof(receiver));
 
+            this.Execute(() =>
+            {
                 if (receiver is null || !receiver.Value.HasBytesValue)
                 {
                     this.Log.Error($"Cannot send message {outbound} (no receiver address).");
@@ -146,11 +146,7 @@ namespace Nautilus.Network
 
                 this.SentCount++;
                 this.Log.Debug($"Sent message[{this.SentCount}] {outbound} to Address({receiver}).");
-            }
-            catch (Exception ex)
-            {
-                this.Log.Error(ex.Message);
-            }
+            });
         }
 
         /// <summary>
@@ -160,20 +156,23 @@ namespace Nautilus.Network
         /// <param name="receiver">The receiver address.</param>
         protected void SendReceived(Message receivedMessage, Address? receiver)
         {
-            var received = new MessageReceived(
-                receivedMessage.Type.Name,
-                receivedMessage.Id,
-                Guid.NewGuid(),
-                this.TimeNow()) as TOutbound;
-
-            if (received is null)
+            this.Execute(() =>
             {
-                // This can never happen due to generic type constraints
-                throw new InvalidOperationException(
-                    $"Design time error (message was not of type {typeof(TOutbound)}).");
-            }
+                var received = new MessageReceived(
+                    receivedMessage.Type.Name,
+                    receivedMessage.Id,
+                    Guid.NewGuid(),
+                    this.TimeNow()) as TOutbound;
 
-            this.SendMessage(received, receiver);
+                if (received is null)
+                {
+                    // This can never happen due to generic type constraints
+                    throw new InvalidOperationException(
+                        $"Design time error (message was not of type {typeof(TOutbound)}).");
+                }
+
+                this.SendMessage(received, receiver);
+            });
         }
 
         /// <summary>
@@ -187,20 +186,23 @@ namespace Nautilus.Network
             Guid correlationId,
             Address? receiver)
         {
-            var rejected = new MessageRejected(
-                rejectedMessage,
-                correlationId,
-                Guid.NewGuid(),
-                this.TimeNow()) as TOutbound;
-
-            if (rejected is null)
+            this.Execute(() =>
             {
-                // This can never happen due to generic type constraints
-                throw new InvalidOperationException(
-                    $"Design time error (message was not of type {typeof(TOutbound)}).");
-            }
+                var rejected = new MessageRejected(
+                    rejectedMessage,
+                    correlationId,
+                    Guid.NewGuid(),
+                    this.TimeNow()) as TOutbound;
 
-            this.SendMessage(rejected, receiver);
+                if (rejected is null)
+                {
+                    // This can never happen due to generic type constraints
+                    throw new InvalidOperationException(
+                        $"Design time error (message was not of type {typeof(TOutbound)}).");
+                }
+
+                this.SendMessage(rejected, receiver);
+            });
         }
 
         /// <summary>
@@ -214,20 +216,23 @@ namespace Nautilus.Network
             Guid correlationId,
             Address? receiver)
         {
-            var failure = new QueryFailure(
-                failureMessage,
-                correlationId,
-                Guid.NewGuid(),
-                this.TimeNow()) as TOutbound;
-
-            if (failure is null)
+            this.Execute(() =>
             {
-                // This can never happen due to generic type constraints
-                throw new InvalidOperationException(
-                    $"Design time error (message was not of type {typeof(TOutbound)}).");
-            }
+                var failure = new QueryFailure(
+                    failureMessage,
+                    correlationId,
+                    Guid.NewGuid(),
+                    this.TimeNow()) as TOutbound;
 
-            this.SendMessage(failure, receiver);
+                if (failure is null)
+                {
+                    // This can never happen due to generic type constraints
+                    throw new InvalidOperationException(
+                        $"Design time error (message was not of type {typeof(TOutbound)}).");
+                }
+
+                this.SendMessage(failure, receiver);
+            });
         }
 
         private Task StartWork()

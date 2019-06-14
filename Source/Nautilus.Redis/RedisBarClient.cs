@@ -77,7 +77,7 @@ namespace Nautilus.Redis
         /// </summary>
         /// <param name="barType">The bar type.</param>
         /// <returns>A <see cref="long"/>.</returns>
-        public long BarsCount(BarType barType)
+        public int BarsCount(BarType barType)
         {
             var allKeys = this.redisServer.Keys(pattern: KeyProvider.GetBarWildcardKey(barType)).ToArray();
 
@@ -95,7 +95,7 @@ namespace Nautilus.Redis
         /// Returns a count of all bar strings held within the <see cref="Redis"/> namespace 'MarketData'.
         /// </summary>
         /// <returns>A <see cref="long"/>.</returns>
-        public long AllBarsCount()
+        public int AllBarsCount()
         {
             var allKeys = this.redisServer.Keys(pattern: KeyProvider.GetBarWildcardKey()).ToArray();
 

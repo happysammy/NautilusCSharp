@@ -25,13 +25,13 @@ namespace Nautilus.Data.Interfaces
         /// </summary>
         /// <param name="barType">The bar type to count.</param>
         /// <returns>A <see cref="int"/>.</returns>
-        long BarsCount(BarType barType);
+        int BarsCount(BarType barType);
 
         /// <summary>
         /// Returns the total count of bars held within the repository.
         /// </summary>
         /// <returns>A <see cref="int"/>.</returns>
-        long AllBarsCount();
+        int AllBarsCount();
 
         /// <summary>
         /// Adds the given bar to the repository.

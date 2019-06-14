@@ -10,6 +10,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.NetworkTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+    using System.Text;
     using System.Threading.Tasks;
     using Nautilus.Common.Data;
     using Nautilus.Common.Interfaces;
@@ -19,6 +20,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.NetworkTests
     using Nautilus.Data.Messages.Responses;
     using Nautilus.Data.Network;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network;
     using Nautilus.Network.Messages;
@@ -36,9 +38,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.NetworkTests
     public sealed class TickProviderTests
     {
         private const string TEST_ADDRESS = "tcp://localhost:55522";
+
         private readonly ITestOutputHelper output;
         private readonly MockLoggingAdapter loggingAdapter;
-        private readonly MockMessagingAgent receiver;
         private readonly ITickRepository repository;
         private readonly IMessageSerializer<Request> requestSerializer;
         private readonly IMessageSerializer<Response> responseSerializer;
@@ -54,7 +56,6 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.NetworkTests
             this.loggingAdapter = containerFactory.LoggingAdapter;
             this.requestSerializer = new MsgPackRequestSerializer();
             this.responseSerializer = new MsgPackResponseSerializer();
-            this.receiver = new MockMessagingAgent();
             var dataBusAdapter = DataBusFactory.Create(container);
             this.repository = new InMemoryTickStore(container, dataBusAdapter);
             this.provider = new TickProvider(
@@ -71,7 +72,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.NetworkTests
         {
             // Arrange
             this.provider.Start();
-            Task.Delay(100).Wait();
+            Task.Delay(100).Wait();  // Allow provider to start
 
             var datetimeFrom = StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1);
             var datetimeTo = datetimeFrom + Duration.FromMinutes(1);
@@ -110,7 +111,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.NetworkTests
         {
             // Arrange
             this.provider.Start();
-            Task.Delay(100).Wait();
+            Task.Delay(100).Wait();  // Allow provider to start
 
             var datetimeFrom = StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1);
             var datetimeTo = datetimeFrom + Duration.FromMinutes(1);
@@ -141,6 +142,10 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.NetworkTests
 
             // Assert
             Assert.Equal(typeof(TickDataResponse), response.Type);
+            Assert.Equal(symbol, response.Symbol);
+            Assert.Equal(2, response.Ticks.Length);
+            Assert.Equal(tick1, TickFactory.Create(response.Symbol, Encoding.UTF8.GetString(response.Ticks[0])));
+            Assert.Equal(tick2, TickFactory.Create(response.Symbol, Encoding.UTF8.GetString(response.Ticks[1])));
 
             // Tear Down;
             requester.Disconnect(TEST_ADDRESS);
