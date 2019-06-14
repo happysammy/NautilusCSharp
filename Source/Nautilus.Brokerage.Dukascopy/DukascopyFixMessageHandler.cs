@@ -12,6 +12,7 @@ namespace Nautilus.Brokerage.Dukascopy
     using System.Collections.Generic;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
@@ -32,6 +33,10 @@ namespace Nautilus.Brokerage.Dukascopy
     /// </summary>
     public sealed class DukascopyFixMessageHandler : Component, IFixMessageHandler
     {
+        private const Venue VENUE = Venue.DUKASCOPY;
+
+        private readonly Dictionary<string, string> symbolIndex;
+        private readonly Dictionary<string, Symbol> symbolCache;
         private readonly SymbolConverter symbolConverter;
 
         private IDataGateway? dataGateway;
@@ -47,6 +52,8 @@ namespace Nautilus.Brokerage.Dukascopy
             SymbolConverter symbolConverter)
             : base(container)
         {
+            this.symbolIndex = new Dictionary<string, string>();
+            this.symbolCache = new Dictionary<string, Symbol>();
             this.symbolConverter = symbolConverter;
         }
 
@@ -96,22 +103,15 @@ namespace Nautilus.Brokerage.Dukascopy
                 {
                     message.GetGroup(i, group);
 
-                    if (!group.IsSetField(Tags.Symbol))
+                    var brokerSymbolCode = GetField(group, Tags.Symbol);
+                    var symbolCode = this.ConvertRawSymbolCode(brokerSymbolCode);
+                    if (symbolCode == string.Empty)
                     {
-                        // Symbol is not set so continue to next item.
-                        continue;
+                        continue; // Symbol not set or convertible (error already logged)
                     }
 
-                    var brokerSymbol = new BrokerSymbol(group.GetField(Tags.Symbol));
-
-                    var symbolQuery = this.symbolConverter.GetNautilusSymbol(brokerSymbol.ToString());
-                    if (symbolQuery.IsFailure)
-                    {
-                        this.Log.Warning(symbolQuery.Message);
-                        continue;
-                    }
-
-                    var symbol = new Symbol(symbolQuery.Value, Venue.DUKASCOPY);
+                    var symbol = this.GetCachedSymbol(symbolCode);
+                    var brokerSymbol = new BrokerSymbol(brokerSymbolCode);
                     var instrumentId = new InstrumentId(symbol.ToString());
                     var quoteCurrency = message.GetField(Tags.Currency).ToEnum<Currency>();
                     var securityType = FixMessageHelper.GetSecurityType(group.GetField(9080));
@@ -166,10 +166,8 @@ namespace Nautilus.Brokerage.Dukascopy
         {
             this.Execute(() =>
             {
-                var brokerSymbolString = message.GetField(Tags.Symbol);
-
-                // var brokerSymbol = new BrokerSymbol(brokerSymbolString);
-                var symbol = new Symbol(brokerSymbolString.Replace("/", string.Empty), Venue.DUKASCOPY);
+                var rawSymbol = message.GetField(Tags.Symbol);
+                var symbol = new Symbol(rawSymbol.Replace("/", string.Empty), VENUE);
 
                 this.Log.Information($"QuoteStatusReport({symbol})");
             });
@@ -257,23 +255,17 @@ namespace Nautilus.Brokerage.Dukascopy
         {
             this.Execute(() =>
             {
-                if (!message.IsSetField(Tags.Symbol))
+                var symbolCode = this.ConvertRawSymbolCode(GetField(message, Tags.Symbol));
+                if (symbolCode == string.Empty)
                 {
-                    // Symbol is not set so return.
-                    return;
+                    return; // Symbol not set or convertible (error already logged)
                 }
 
-                var symbolQuery = this.symbolConverter.GetNautilusSymbol(message.GetField(Tags.Symbol));
-                if (symbolQuery.IsFailure)
-                {
-                    this.Log.Error(symbolQuery.Message);
-                    return; // Cannot get Nautilus symbol for broker symbol.
-                }
-
-                var symbolCode = symbolQuery.Value;
-
+                var symbol = this.GetCachedSymbol(symbolCode);
                 var group = new MarketDataSnapshotFullRefresh.NoMDEntriesGroup();
 
+                // Commented out code below is to capture the brokers tick timestamp although this has a lower
+                // resolution than .TimeNow().
                 // var dateTimeString = group.GetField(Tags.MDEntryDate) + group.GetField(Tags.MDEntryTime);
                 // var timestamp = FixMessageHelper.GetZonedDateTimeUtcFromMarketDataString(dateTimeString);
                 message.GetGroup(1, group);
@@ -299,9 +291,11 @@ namespace Nautilus.Brokerage.Dukascopy
                     }
                 }
 
+                Condition.PositiveDecimal(bidDecimal, nameof(bidDecimal));
+                Condition.PositiveDecimal(askDecimal, nameof(askDecimal));
+
                 this.dataGateway?.OnTick(
-                    symbolCode,
-                    Venue.FXCM,
+                    symbol,
                     bidDecimal,
                     askDecimal,
                     this.TimeNow());
@@ -400,7 +394,7 @@ namespace Nautilus.Brokerage.Dukascopy
                         orderId,
                         brokerOrderId,
                         symbol,
-                        Venue.DUKASCOPY,
+                        VENUE,
                         orderLabel,
                         orderSide,
                         orderType,
@@ -433,7 +427,7 @@ namespace Nautilus.Brokerage.Dukascopy
                         executionId,
                         executionTicket,
                         symbol,
-                        Venue.DUKASCOPY,
+                        VENUE,
                         orderSide,
                         filledQuantity,
                         averagePrice,
@@ -454,7 +448,7 @@ namespace Nautilus.Brokerage.Dukascopy
                         executionId,
                         executionTicket,
                         symbol,
-                        Venue.DUKASCOPY,
+                        VENUE,
                         orderSide,
                         filledQuantity,
                         leavesQuantity,
@@ -483,6 +477,47 @@ namespace Nautilus.Brokerage.Dukascopy
             return report.IsSetField(tag)
                 ? report.GetField(tag)
                 : string.Empty;
+        }
+
+        private string ConvertRawSymbolCode(string rawSymbolCode)
+        {
+            if (rawSymbolCode == string.Empty)
+            {
+                this.Log.Error("The symbol tag did not contain a string.");
+                return rawSymbolCode;
+            }
+
+            if (this.symbolIndex.TryGetValue(rawSymbolCode, out var value))
+            {
+                return value;
+            }
+
+            var symbolConversion = this.symbolConverter.GetNautilusSymbol(rawSymbolCode);
+            if (symbolConversion.IsFailure)
+            {
+                this.Log.Error(symbolConversion.Message);
+                return string.Empty; // Cannot get Nautilus symbol for broker symbol
+            }
+
+            this.symbolIndex.Add(rawSymbolCode, symbolConversion.Value);
+            return symbolConversion.Value;
+        }
+
+        private Symbol GetCachedSymbol(string symbolCode)
+        {
+            Debug.NotEmptyOrWhiteSpace(symbolCode, nameof(symbolCode));
+
+            if (this.symbolCache.TryGetValue(symbolCode, out var value))
+            {
+                return value;
+            }
+            else
+            {
+                var symbol = new Symbol(symbolCode, VENUE);
+                this.symbolCache.Add(symbolCode, symbol);
+
+                return symbol;
+            }
         }
     }
 }

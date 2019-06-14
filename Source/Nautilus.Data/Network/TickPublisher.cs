@@ -48,8 +48,6 @@ namespace Nautilus.Data.Network
         private void OnMessage(Tick tick)
         {
             this.Publish(tick.Symbol.ToString(), tick);
-
-            this.Log.Warning(tick.ToString());
         }
     }
 }

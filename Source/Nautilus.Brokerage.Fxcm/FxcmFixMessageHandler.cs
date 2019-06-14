@@ -12,6 +12,7 @@ namespace Nautilus.Brokerage.FXCM
     using System.Collections.Generic;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
@@ -31,6 +32,10 @@ namespace Nautilus.Brokerage.FXCM
     /// </summary>
     public sealed class FxcmFixMessageHandler : Component, IFixMessageHandler
     {
+        private const Venue VENUE = Venue.FXCM;
+
+        private readonly Dictionary<string, string> symbolIndex;
+        private readonly Dictionary<string, Symbol> symbolCache;
         private readonly SymbolConverter symbolConverter;
 
         private IDataGateway? dataGateway;
@@ -46,6 +51,8 @@ namespace Nautilus.Brokerage.FXCM
             SymbolConverter symbolConverter)
             : base(container)
         {
+            this.symbolIndex = new Dictionary<string, string>();
+            this.symbolCache = new Dictionary<string, Symbol>();
             this.symbolConverter = symbolConverter;
         }
 
@@ -85,14 +92,10 @@ namespace Nautilus.Brokerage.FXCM
         /// <param name="message">The message.</param>
         public void OnMessage(SecurityList message)
         {
+            Debug.NotNull(this.dataGateway, nameof(this.dataGateway));
+
             this.Execute(() =>
             {
-                if (this.dataGateway is null)
-                {
-                    this.Log.Error("No data gateway to handle instruments.");
-                    return;
-                }
-
                 var instruments = new List<Instrument>();
                 var groupCount = Convert.ToInt32(message.NoRelatedSym.ToString());
                 var group = new SecurityList.NoRelatedSymGroup();
@@ -101,23 +104,15 @@ namespace Nautilus.Brokerage.FXCM
                 {
                     message.GetGroup(i, group);
 
-                    if (!group.IsSetField(Tags.Symbol))
+                    var brokerSymbolCode = GetField(group, Tags.Symbol);
+                    var symbolCode = this.ConvertRawSymbolCode(brokerSymbolCode);
+                    if (symbolCode == string.Empty)
                     {
-                        // Symbol is not set so continue to next item.
-                        continue;
+                        continue; // Symbol not set or convertible (error already logged)
                     }
 
-                    var brokerSymbol = new BrokerSymbol(group.GetField(Tags.Symbol));
-
-                    var symbolQuery = this.symbolConverter.GetNautilusSymbol(brokerSymbol.ToString());
-                    if (symbolQuery.IsFailure)
-                    {
-                        this.Log.Error(symbolQuery.Message);
-                        continue; // Cannot get Nautilus symbol for broker symbol.
-                    }
-
-                    var symbol = new Symbol(symbolQuery.Value, Venue.FXCM);
-
+                    var symbol = this.GetCachedSymbol(symbolCode);
+                    var brokerSymbol = new BrokerSymbol(brokerSymbolCode);
                     var instrumentId = new InstrumentId(symbol.ToString());
                     var quoteCurrency = group.GetField(15).ToEnum<Currency>();
                     var securityType = FixMessageHelper.GetSecurityType(group.GetField(9080));
@@ -161,7 +156,7 @@ namespace Nautilus.Brokerage.FXCM
                 var responseId = message.GetField(Tags.SecurityResponseID);
                 var result = FixMessageHelper.GetSecurityRequestResult(message.SecurityRequestResult);
 
-                this.dataGateway.OnInstrumentsUpdate(instruments, responseId, result);
+                this.dataGateway?.OnInstrumentsUpdate(instruments, responseId, result);
             });
         }
 
@@ -171,6 +166,8 @@ namespace Nautilus.Brokerage.FXCM
         /// <param name="message">The message.</param>
         public void OnMessage(CollateralInquiryAck message)
         {
+            Debug.NotNull(this.tradingGateway, nameof(this.tradingGateway));
+
             this.Execute(() =>
             {
                 var inquiryId = message.GetField(Tags.CollInquiryID);
@@ -186,6 +183,8 @@ namespace Nautilus.Brokerage.FXCM
         /// <param name="message">The message.</param>
         public void OnMessage(CollateralReport message)
         {
+            Debug.NotNull(this.tradingGateway, nameof(this.tradingGateway));
+
             this.Execute(() =>
             {
                 var inquiryId = message.GetField(Tags.CollRptID);
@@ -221,6 +220,8 @@ namespace Nautilus.Brokerage.FXCM
         /// </param>
         public void OnMessage(RequestForPositionsAck message)
         {
+            Debug.NotNull(this.tradingGateway, nameof(this.tradingGateway));
+
             this.Execute(() =>
             {
                 this.tradingGateway?.OnRequestForPositionsAck(
@@ -259,27 +260,17 @@ namespace Nautilus.Brokerage.FXCM
         /// <param name="message">The message.</param>
         public void OnMessage(MarketDataSnapshotFullRefresh message)
         {
+            Debug.NotNull(this.dataGateway, nameof(this.dataGateway));
+
             this.Execute(() =>
             {
-                if (this.dataGateway is null)
+                var symbolCode = this.ConvertRawSymbolCode(GetField(message, Tags.Symbol));
+                if (symbolCode == string.Empty)
                 {
-                    this.Log.Error("No data gateway to handle tick.");  // Design time error
-                    return;
+                    return; // Symbol not set or convertible (error already logged)
                 }
 
-                if (!message.IsSetField(Tags.Symbol))
-                {
-                    // Symbol is not set so return.
-                    return;
-                }
-
-                var symbolCodeQuery = this.symbolConverter.GetNautilusSymbol(message.GetField(Tags.Symbol));
-                if (symbolCodeQuery.IsFailure)
-                {
-                    this.Log.Error(symbolCodeQuery.Message);
-                    return; // Cannot get Nautilus symbol for broker symbol.
-                }
-
+                var symbol = this.GetCachedSymbol(symbolCode);
                 var group = new MarketDataSnapshotFullRefresh.NoMDEntriesGroup();
 
                 // Commented out code below is to capture the brokers tick timestamp although this has a lower
@@ -309,9 +300,11 @@ namespace Nautilus.Brokerage.FXCM
                     }
                 }
 
-                this.dataGateway.OnTick(
-                    symbolCodeQuery.Value,
-                    Venue.FXCM,
+                Condition.PositiveDecimal(bidDecimal, nameof(bidDecimal));
+                Condition.PositiveDecimal(askDecimal, nameof(askDecimal));
+
+                this.dataGateway?.OnTick(
+                    symbol,
                     bidDecimal,
                     askDecimal,
                     this.TimeNow());
@@ -324,6 +317,8 @@ namespace Nautilus.Brokerage.FXCM
         /// <param name="message">The message.</param>
         public void OnMessage(OrderCancelReject message)
         {
+            Debug.NotNull(this.tradingGateway, nameof(this.tradingGateway));
+
             this.Execute(() =>
             {
                 var orderId = message.ClOrdID.ToString();
@@ -346,6 +341,8 @@ namespace Nautilus.Brokerage.FXCM
         /// <param name="message">The message.</param>
         public void OnMessage(ExecutionReport message)
         {
+            Debug.NotNull(this.tradingGateway, nameof(this.tradingGateway));
+
             this.Execute(() =>
             {
                 var brokerSymbol = message.GetField(Tags.Symbol);
@@ -410,7 +407,7 @@ namespace Nautilus.Brokerage.FXCM
                         orderId,
                         brokerOrderId,
                         symbol,
-                        Venue.FXCM,
+                        VENUE,
                         orderLabel,
                         orderSide,
                         orderType,
@@ -443,7 +440,7 @@ namespace Nautilus.Brokerage.FXCM
                         executionId,
                         executionTicket,
                         symbol,
-                        Venue.FXCM,
+                        VENUE,
                         orderSide,
                         filledQuantity,
                         averagePrice,
@@ -464,7 +461,7 @@ namespace Nautilus.Brokerage.FXCM
                         executionId,
                         executionTicket,
                         symbol,
-                        Venue.FXCM,
+                        VENUE,
                         orderSide,
                         filledQuantity,
                         leavesQuantity,
@@ -482,6 +479,8 @@ namespace Nautilus.Brokerage.FXCM
         /// <param name="message">The message.</param>
         public void OnMessage(PositionReport message)
         {
+            Debug.NotNull(this.tradingGateway, nameof(this.tradingGateway));
+
             this.Execute(() =>
             {
                 this.tradingGateway?.OnPositionReport(message.Account.ToString());
@@ -493,6 +492,47 @@ namespace Nautilus.Brokerage.FXCM
             return report.IsSetField(tag)
                 ? report.GetField(tag)
                 : string.Empty;
+        }
+
+        private string ConvertRawSymbolCode(string rawSymbolCode)
+        {
+            if (rawSymbolCode == string.Empty)
+            {
+                this.Log.Error("The symbol tag did not contain a string.");
+                return rawSymbolCode;
+            }
+
+            if (this.symbolIndex.TryGetValue(rawSymbolCode, out var value))
+            {
+                return value;
+            }
+
+            var symbolConversion = this.symbolConverter.GetNautilusSymbol(rawSymbolCode);
+            if (symbolConversion.IsFailure)
+            {
+                this.Log.Error(symbolConversion.Message);
+                return string.Empty; // Cannot get Nautilus symbol for broker symbol
+            }
+
+            this.symbolIndex.Add(rawSymbolCode, symbolConversion.Value);
+            return symbolConversion.Value;
+        }
+
+        private Symbol GetCachedSymbol(string symbolCode)
+        {
+            Debug.NotEmptyOrWhiteSpace(symbolCode, nameof(symbolCode));
+
+            if (this.symbolCache.TryGetValue(symbolCode, out var value))
+            {
+                return value;
+            }
+            else
+            {
+                var symbol = new Symbol(symbolCode, VENUE);
+                this.symbolCache.Add(symbolCode, symbol);
+
+                return symbol;
+            }
         }
     }
 }

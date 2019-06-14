@@ -57,7 +57,7 @@ namespace Nautilus.Common.Interfaces
         /// <param name="message">The message.</param>
         /// <param name="sender">The sender address.</param>
         /// <param name="timestamp">The send timestamp.</param>
-        void SendToBus<T>(T message, Address sender, ZonedDateTime timestamp)
+        void SendToBus<T>(T message, Address? sender, ZonedDateTime timestamp)
             where T : Message;
     }
 }

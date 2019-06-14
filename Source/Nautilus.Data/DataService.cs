@@ -40,6 +40,8 @@ namespace Nautilus.Data
         private readonly int tickRollingWindowDays;
         private readonly int barRollingWindowDays;
 
+        private bool hasSentBarSubscriptions;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DataService"/> class.
         /// </summary>
@@ -163,21 +165,25 @@ namespace Nautilus.Data
             this.Log.Information($"{message.SessionId} session is connected.");
 
             this.dataGateway.UpdateInstrumentsSubscribeAll();
-
-            foreach (var symbol in this.subscribingSymbols)
+            if (!this.hasSentBarSubscriptions)
             {
-                this.dataGateway.MarketDataSubscribe(symbol);
-
-                foreach (var barSpec in this.barSpecifications)
+                foreach (var symbol in this.subscribingSymbols)
                 {
-                    var barType = new BarType(symbol, barSpec);
-                    var subscribe = new Subscribe<BarType>(
-                        barType,
-                        this.Mailbox,
-                        this.NewGuid(),
-                        this.TimeNow());
-                    this.Send(subscribe, ServiceAddress.BarAggregationController);
+                    this.dataGateway.MarketDataSubscribe(symbol);
+
+                    foreach (var barSpec in this.barSpecifications)
+                    {
+                        var barType = new BarType(symbol, barSpec);
+                        var subscribe = new Subscribe<BarType>(
+                            barType,
+                            this.Mailbox,
+                            this.NewGuid(),
+                            this.TimeNow());
+                        this.Send(subscribe, ServiceAddress.BarAggregationController);
+                    }
                 }
+
+                this.hasSentBarSubscriptions = true;
             }
 
             this.CreateDisconnectFixJob();

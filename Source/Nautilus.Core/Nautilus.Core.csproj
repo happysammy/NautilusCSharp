@@ -21,6 +21,7 @@
     <ItemGroup>
         <PackageReference Include="NodaTime" Version="2.4.5" />
         <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" />
+        <PackageReference Include="System.Runtime.Caching" Version="4.5.0" />
     </ItemGroup>
 
     <ItemGroup>

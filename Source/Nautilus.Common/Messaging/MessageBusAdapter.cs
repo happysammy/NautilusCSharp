@@ -92,7 +92,7 @@ namespace Nautilus.Common.Messaging
         }
 
         /// <inheritdoc/>
-        public void SendToBus<T>(T message, Address sender, ZonedDateTime timestamp)
+        public void SendToBus<T>(T message, Address? sender, ZonedDateTime timestamp)
             where T : Message
         {
             this.WrapAndSend(message, null, sender, timestamp);
@@ -124,7 +124,7 @@ namespace Nautilus.Common.Messaging
         private void WrapAndSend<T>(
             T message,
             Address? receiver,
-            Address sender,
+            Address? sender,
             ZonedDateTime timestamp)
             where T : Message
         {

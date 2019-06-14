@@ -10,6 +10,7 @@ namespace Nautilus.Data.Aggregation
 {
     using System;
     using System.Collections.Generic;
+    using System.Runtime.Caching;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
@@ -32,7 +33,6 @@ namespace Nautilus.Data.Aggregation
         private readonly List<BarSpecification> specifications;
         private readonly Dictionary<BarSpecification, BarBuilder?> barBuilders;
         private readonly Dictionary<BarSpecification, BarBuilder> pendingBuilders;
-        private readonly Dictionary<BarSpecification, BarType> barTypeCache;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BarAggregator"/> class.
@@ -51,7 +51,6 @@ namespace Nautilus.Data.Aggregation
             this.specifications = new List<BarSpecification>();
             this.barBuilders = new Dictionary<BarSpecification, BarBuilder?>();
             this.pendingBuilders = new Dictionary<BarSpecification, BarBuilder>();
-            this.barTypeCache = new Dictionary<BarSpecification, BarType>();
 
             this.RegisterHandler<Tick>(this.OnMessage);
             this.RegisterHandler<CloseBar>(this.OnMessage);
@@ -133,7 +132,8 @@ namespace Nautilus.Data.Aggregation
 
                 // Close the bar
                 var bar = builder.Build(message.ScheduledTime);
-                var barData = new BarData(new BarType(this.symbol, barSpec), bar);
+                var barType = new BarType(this.symbol, barSpec);
+                var barData = new BarData(barType, bar);
 
                 // Send to bar aggregation controller (parent)
                 this.parent.Send(barData);

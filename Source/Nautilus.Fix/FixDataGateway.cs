@@ -81,40 +81,20 @@ namespace Nautilus.Fix
         [SystemBoundary]
         [PerformanceOptimized]
         public void OnTick(
-            string symbolCode,
-            Venue venue,
+            Symbol symbol,
             decimal bid,
             decimal ask,
             ZonedDateTime timestamp)
         {
             this.Execute(() =>
             {
-                Condition.NotEmptyOrWhiteSpace(symbolCode, nameof(symbolCode));
-                Condition.PositiveDecimal(bid, nameof(bid));
-                Condition.PositiveDecimal(ask, nameof(ask));
+                var tick = new Tick(
+                    symbol,
+                    Price.Create(bid),
+                    Price.Create(ask),
+                    timestamp);
 
-                if (this.symbolCache.TryGetValue(symbolCode, out var symbol))
-                {
-                    var tickWithCachedSymbol = new Tick(
-                        symbol,
-                        Price.Create(bid),
-                        Price.Create(ask),
-                        timestamp);
-
-                    this.SendToBus(tickWithCachedSymbol);
-                }
-                else
-                {
-                    var newSymbol = new Symbol(symbolCode, venue);
-                    var tickWithNewSymbol = new Tick(
-                        symbol,
-                        Price.Create(bid),
-                        Price.Create(ask),
-                        timestamp);
-
-                    this.SendToBus(tickWithNewSymbol);
-                    this.symbolCache.Add(symbolCode, newSymbol);
-                }
+                this.SendToBus(tick);
             });
         }
 

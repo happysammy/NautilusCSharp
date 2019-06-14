@@ -61,7 +61,7 @@ namespace Nautilus.Fix
         {
             this.clock = container.Clock;
             this.guidFactory = container.GuidFactory;
-            this.logger = container.LoggerFactory.Create(new Label(nameof(FixClient)));
+            this.logger = container.LoggerFactory.Create(new Label(this.GetType().Name));
             this.messageBusAdapter = messageBusAdapter;
             this.commandHandler = new CommandHandler(this.logger);
             this.Broker = config.Broker;
@@ -204,14 +204,13 @@ namespace Nautilus.Fix
         {
             this.commandHandler.Execute(() =>
             {
-                this.messageBusAdapter.SendToBus(
-                    new FixSessionConnected(
-                        this.Broker,
-                        sessionId.ToString(),
-                        this.NewGuid(),
-                        this.TimeNow()),
-                    new Address(nameof(FixTradingGateway)),
+                var connected = new FixSessionConnected(
+                    this.Broker,
+                    sessionId.ToString(),
+                    this.NewGuid(),
                     this.TimeNow());
+
+                this.messageBusAdapter.SendToBus(connected, null, this.TimeNow());
 
                 this.Log.Debug($"Logon - {sessionId}");
             });
@@ -225,14 +224,13 @@ namespace Nautilus.Fix
         {
             this.commandHandler.Execute(() =>
             {
-                this.messageBusAdapter.SendToBus(
-                    new FixSessionDisconnected(
-                        this.Broker,
-                        sessionId.ToString(),
-                        this.NewGuid(),
-                        this.TimeNow()),
-                    new Address(nameof(FixTradingGateway)),
+                var disconnected = new FixSessionDisconnected(
+                    this.Broker,
+                    sessionId.ToString(),
+                    this.NewGuid(),
                     this.TimeNow());
+
+                this.messageBusAdapter.SendToBus(disconnected, null, this.TimeNow());
 
                 this.Log.Debug($"Logout - {sessionId}");
             });
@@ -280,6 +278,18 @@ namespace Nautilus.Fix
         {
             this.commandHandler.Execute(() =>
             {
+                if (message is null)
+                {
+                    this.Log.Error("The message was null");
+                    return;
+                }
+
+                if (sessionId is null)
+                {
+                    this.Log.Error("The session id was null");
+                    return;
+                }
+
                 try
                 {
                     this.Crack(message, sessionId);

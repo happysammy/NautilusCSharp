@@ -55,14 +55,12 @@ namespace Nautilus.Common.Interfaces
         /// Creates a new <see cref="Tick"/> and sends it to the tick publisher and bar aggregation
         /// controller.
         /// </summary>
-        /// <param name="symbolCode">The tick symbol code.</param>
-        /// <param name="venue">The tick venue.</param>
+        /// <param name="symbol">The tick symbol.</param>
         /// <param name="bid">The tick bid price.</param>
         /// <param name="ask">The tick ask price.</param>
         /// <param name="timestamp">The tick timestamp.</param>
         void OnTick(
-            string symbolCode,
-            Venue venue,
+            Symbol symbol,
             decimal bid,
             decimal ask,
             ZonedDateTime timestamp);
