@@ -10,6 +10,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using Nautilus.Core.CQS;
     using Nautilus.Data.Interfaces;
     using Nautilus.DomainModel.Entities;
@@ -56,12 +57,21 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
         public QueryResult<Instrument> FindInCache(Symbol symbol)
         {
-            return QueryResult<Instrument>.Ok(this.instruments[symbol]);
+            return this.instruments.ContainsKey(symbol)
+                ? QueryResult<Instrument>.Ok(this.instruments[symbol])
+                : QueryResult<Instrument>.Fail($"no instrument found for symbol {symbol}");
         }
 
         public QueryResult<IEnumerable<Instrument>> FindInCache(Venue venue)
         {
-            throw new System.NotImplementedException();
+            var query = this.instruments
+                .Where(kvp => kvp.Key.Venue.Equals(venue))
+                .Select(kvp => kvp.Value)
+                .ToList();
+
+            return query.Count > 0
+                ? QueryResult<IEnumerable<Instrument>>.Ok(query)
+                : QueryResult<IEnumerable<Instrument>>.Fail($"no instruments found for venue {venue}");
         }
 
         public IReadOnlyCollection<Symbol> GetInstrumentSymbols()

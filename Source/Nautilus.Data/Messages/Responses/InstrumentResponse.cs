@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="InstrumentDataResponse.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="InstrumentResponse.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -18,16 +18,16 @@ namespace Nautilus.Data.Messages.Responses
     /// Represents a response of instrument data.
     /// </summary>
     [Immutable]
-    public sealed class InstrumentDataResponse : Response
+    public sealed class InstrumentResponse : Response
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="InstrumentDataResponse"/> class.
+        /// Initializes a new instance of the <see cref="InstrumentResponse"/> class.
         /// </summary>
         /// <param name="instruments">The response instruments.</param>
         /// <param name="correlationId">The response correlation identifier.</param>
         /// <param name="id">The response identifier.</param>
         /// <param name="timestamp">The response timestamp.</param>
-        public InstrumentDataResponse(
+        public InstrumentResponse(
             byte[][] instruments,
             Guid correlationId,
             Guid id,
@@ -45,7 +45,7 @@ namespace Nautilus.Data.Messages.Responses
         }
 
         /// <summary>
-        /// Gets the responses instrument data.
+        /// Gets the responses instruments data.
         /// </summary>
         public byte[][] Instruments { get; }
     }

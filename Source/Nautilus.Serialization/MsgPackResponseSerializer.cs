@@ -52,6 +52,9 @@ namespace Nautilus.Serialization
                     package.Add(nameof(res.BarSpecification), res.BarSpecification.ToString());
                     package.Add(nameof(res.Bars), MsgPackSerializer.Serialize(res.Bars));
                     break;
+                case InstrumentResponse res:
+                    package.Add(nameof(res.Instruments), MsgPackSerializer.Serialize(res.Instruments));
+                    break;
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(response, nameof(response));
             }
@@ -101,6 +104,12 @@ namespace Nautilus.Serialization
                         ObjectExtractor.Symbol(unpacked),
                         ObjectExtractor.BarSpecification(unpacked),
                         MsgPackSerializer.Deserialize<byte[][]>(unpacked[nameof(BarDataResponse.Bars)].AsBinary()),
+                        correlationId,
+                        id,
+                        timestamp);
+                case nameof(InstrumentResponse):
+                    return new InstrumentResponse(
+                        MsgPackSerializer.Deserialize<byte[][]>(unpacked[nameof(InstrumentResponse.Instruments)].AsBinary()),
                         correlationId,
                         id,
                         timestamp);

@@ -36,7 +36,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
 
         private readonly ITestOutputHelper output;
         private readonly MockLoggingAdapter loggingAdapter;
-        private readonly IBarRepository barRepository;
+        private readonly IBarRepository repository;
         private readonly IMessageSerializer<Request> requestSerializer;
         private readonly IMessageSerializer<Response> responseSerializer;
         private readonly BarProvider provider;
@@ -51,10 +51,10 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             this.loggingAdapter = containerFactory.LoggingAdapter;
             this.requestSerializer = new MsgPackRequestSerializer();
             this.responseSerializer = new MsgPackResponseSerializer();
-            this.barRepository = new MockBarRepository();
+            this.repository = new MockBarRepository();
             this.provider = new BarProvider(
                 container,
-                this.barRepository,
+                this.repository,
                 this.requestSerializer,
                 this.responseSerializer,
                 NetworkAddress.LocalHost,
@@ -77,7 +77,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             requester.Connect(TEST_ADDRESS);
             Task.Delay(100).Wait();  // Allow socket to connect
 
-            var dataRequest = new BarDataRequest(
+            var request = new BarDataRequest(
                 barType.Symbol,
                 barType.Specification,
                 datetimeFrom,
@@ -86,7 +86,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            requester.SendFrame(this.requestSerializer.Serialize(dataRequest));
+            requester.SendFrame(this.requestSerializer.Serialize(request));
             var response = (QueryFailure)this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
 
             LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
@@ -102,7 +102,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
         }
 
         [Fact]
-        internal void GivenBarDataRequest_WithBars_BarDataResponse()
+        internal void GivenBarDataRequest_WithBars_ReturnsValidBarDataResponse()
         {
             // Arrange
             this.provider.Start();  // Allow provider to start
@@ -115,14 +115,14 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             var bar1 = StubBarBuilder.BuildWithTimestamp(datetimeFrom);
             var bar2 = StubBarBuilder.BuildWithTimestamp(datetimeTo);
 
-            this.barRepository.Add(barType, bar1);
-            this.barRepository.Add(barType, bar2);
+            this.repository.Add(barType, bar1);
+            this.repository.Add(barType, bar2);
 
             var requester = new RequestSocket();
             requester.Connect(TEST_ADDRESS);
             Task.Delay(100).Wait();  // Allow socket to connect
 
-            var dataRequest = new BarDataRequest(
+            var request = new BarDataRequest(
                 barType.Symbol,
                 barType.Specification,
                 datetimeFrom,
@@ -131,7 +131,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            requester.SendFrame(this.requestSerializer.Serialize(dataRequest));
+            requester.SendFrame(this.requestSerializer.Serialize(request));
             var response = (BarDataResponse)this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
 
             LogDumper.DumpWithDelay(this.loggingAdapter, this.output);

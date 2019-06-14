@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="TickProviderTests.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="InstrumentProviderTests.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
@@ -10,18 +10,16 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
-    using Nautilus.Common.Data;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Data;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Messages.Requests;
     using Nautilus.Data.Messages.Responses;
     using Nautilus.Data.Providers;
+    using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Factories;
-    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network;
     using Nautilus.Network.Messages;
     using Nautilus.Serialization;
@@ -29,24 +27,23 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NetMQ;
     using NetMQ.Sockets;
-    using NodaTime;
     using Xunit;
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    [SuppressMessage("ReSharper", "SA1310", Justification = "Easier to read.")]
-    public sealed class TickProviderTests
+    public sealed class InstrumentProviderTests
     {
-        private const string TEST_ADDRESS = "tcp://localhost:55522";
+        private const string TEST_ADDRESS = "tcp://localhost:55524";
 
         private readonly ITestOutputHelper output;
         private readonly MockLoggingAdapter loggingAdapter;
-        private readonly ITickRepository repository;
+        private readonly IInstrumentRepository repository;
+        private readonly ISerializer<Instrument> serializer;
         private readonly IMessageSerializer<Request> requestSerializer;
         private readonly IMessageSerializer<Response> responseSerializer;
-        private readonly TickProvider provider;
+        private readonly InstrumentProvider provider;
 
-        public TickProviderTests(ITestOutputHelper output)
+        public InstrumentProviderTests(ITestOutputHelper output)
         {
             // Fixture Setup
             this.output = output;
@@ -54,44 +51,40 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             var containerFactory = new StubComponentryContainerFactory();
             var container = containerFactory.Create();
             this.loggingAdapter = containerFactory.LoggingAdapter;
+            this.serializer = new MsgPackInstrumentSerializer();
             this.requestSerializer = new MsgPackRequestSerializer();
             this.responseSerializer = new MsgPackResponseSerializer();
-            var dataBusAdapter = DataBusFactory.Create(container);
-            this.repository = new InMemoryTickStore(container, dataBusAdapter);
-            this.provider = new TickProvider(
+            this.repository = new MockInstrumentRepository();
+            this.provider = new InstrumentProvider(
                 container,
                 this.repository,
+                this.serializer,
                 this.requestSerializer,
                 this.responseSerializer,
                 NetworkAddress.LocalHost,
-                new NetworkPort(55522));
+                new NetworkPort(55524));
         }
 
         [Fact]
-        internal void GivenTickDataRequest_WithNoTicks_ReturnsQueryFailedMessage()
+        internal void GivenInstrumentRequest_WithNoInstruments_ReturnsQueryFailedMessage()
         {
             // Arrange
             this.provider.Start();
             Task.Delay(100).Wait();  // Allow provider to start
 
-            var datetimeFrom = StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1);
-            var datetimeTo = datetimeFrom + Duration.FromMinutes(1);
-
-            var symbol = new Symbol("AUDUSD", Venue.FXCM);
-
             var requester = new RequestSocket();
             requester.Connect(TEST_ADDRESS);
             Task.Delay(100).Wait();  // Allow socket to connect
 
-            var dataRequest = new TickDataRequest(
-                symbol,
-                datetimeFrom,
-                datetimeTo,
+            var instrument = StubInstrumentFactory.AUDUSD();
+
+            var request = new InstrumentRequest(
+                instrument.Symbol,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            requester.SendFrame(this.requestSerializer.Serialize(dataRequest));
+            requester.SendFrame(this.requestSerializer.Serialize(request));
             var response = (QueryFailure)this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
 
             LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
@@ -107,45 +100,70 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
         }
 
         [Fact]
-        internal void GivenTickDataRequest_WithTicks_ReturnsValidTickDataResponse()
+        internal void GivenInstrumentsRequest_WithNoInstruments_ReturnsQueryFailedMessage()
         {
             // Arrange
             this.provider.Start();
             Task.Delay(100).Wait();  // Allow provider to start
 
-            var datetimeFrom = StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1);
-            var datetimeTo = datetimeFrom + Duration.FromMinutes(1);
+            var requester = new RequestSocket();
+            requester.Connect(TEST_ADDRESS);
+            Task.Delay(100).Wait();  // Allow socket to connect
 
-            var symbol = new Symbol("AUDUSD", Venue.FXCM);
-            var tick1 = new Tick(symbol, 1.00000m, 1.00000m, datetimeFrom);
-            var tick2 = new Tick(symbol, 1.00010m, 1.00020m, datetimeTo);
+            var request = new InstrumentsRequest(
+                Venue.FXCM,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
 
-            this.repository.Add(tick1);
-            this.repository.Add(tick2);
+            // Act
+            requester.SendFrame(this.requestSerializer.Serialize(request));
+            var response = (QueryFailure)this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
+
+            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+
+            // Assert
+            Assert.Equal(typeof(QueryFailure), response.Type);
+
+            // Tear Down;
+            requester.Disconnect(TEST_ADDRESS);
+            requester.Dispose();
+            this.provider.Stop();
+            Task.Delay(100).Wait();  // Allows sockets to dispose
+        }
+
+        [Fact]
+        internal void GivenInstrumentRequest_WithInstrument_ReturnsValidInstrumentResponse()
+        {
+            // Arrange
+            this.provider.Start();  // Allow provider to start
+            Task.Delay(100).Wait();
 
             var requester = new RequestSocket();
             requester.Connect(TEST_ADDRESS);
             Task.Delay(100).Wait();  // Allow socket to connect
 
-            var dataRequest = new TickDataRequest(
-                symbol,
-                datetimeFrom,
-                datetimeTo,
+            var instrument = StubInstrumentFactory.AUDUSD();
+            this.repository.Add(instrument, StubZonedDateTime.UnixEpoch());
+
+            var request = new InstrumentRequest(
+                instrument.Symbol,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            requester.SendFrame(this.requestSerializer.Serialize(dataRequest));
-            var response = (TickDataResponse)this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
+            requester.SendFrame(this.requestSerializer.Serialize(request));
+            var response = (InstrumentResponse)this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
 
             LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
-            Assert.Equal(typeof(TickDataResponse), response.Type);
-            Assert.Equal(symbol, response.Symbol);
-            Assert.Equal(2, response.Ticks.Length);
-            Assert.Equal(tick1, TickFactory.Create(response.Symbol, Encoding.UTF8.GetString(response.Ticks[0])));
-            Assert.Equal(tick2, TickFactory.Create(response.Symbol, Encoding.UTF8.GetString(response.Ticks[1])));
+            // Assert.Equal(typeof(InstrumentResponse), response.Type);
+
+//            Assert.Equal(barType.Symbol, response.Symbol);
+//            Assert.Equal(barType.Specification, response.BarSpecification);
+//            Assert.Equal(2, response.Bars.Length);
+//            Assert.Equal(bar1, BarFactory.Create(Encoding.UTF8.GetString(response.Bars[0])));
+//            Assert.Equal(bar2, BarFactory.Create(Encoding.UTF8.GetString(response.Bars[1])));
 
             // Tear Down;
             requester.Disconnect(TEST_ADDRESS);

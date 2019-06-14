@@ -73,7 +73,7 @@ namespace Nautilus.Data.Providers
             }
 
             var instrument = new[] { this.instrumentSerializer.Serialize(query.Value) };
-            var response = new InstrumentDataResponse(
+            var response = new InstrumentResponse(
                 instrument,
                 request.Id,
                 Guid.NewGuid(),
@@ -89,8 +89,8 @@ namespace Nautilus.Data.Providers
 
             if (query.IsFailure)
             {
-                this.SendRejected(query.Message, request.Id, envelope.Sender);
-                this.Log.Error(query.Message);
+                this.SendQueryFailure(query.Message, request.Id, envelope.Sender);
+                this.Log.Warning($"{envelope.Message} query failed ({query.Message}).");
                 return;
             }
 
@@ -99,7 +99,7 @@ namespace Nautilus.Data.Providers
                 .Select(i => this.instrumentSerializer.Serialize(i))
                 .ToArray();
 
-            var response = new InstrumentDataResponse(
+            var response = new InstrumentResponse(
                 instruments,
                 request.Id,
                 Guid.NewGuid(),
