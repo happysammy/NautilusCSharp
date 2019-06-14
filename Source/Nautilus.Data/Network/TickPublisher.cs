@@ -48,6 +48,9 @@ namespace Nautilus.Data.Network
         private void OnMessage(Tick tick)
         {
             this.Publish(tick.Symbol.ToString(), tick);
+
+            // Temporary logging for debug purposes
+            // this.Log.Information($"{tick.Symbol.ToString()} {tick}");
         }
     }
 }

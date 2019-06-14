@@ -17,7 +17,6 @@ namespace Nautilus.Fix
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
-    using NodaTime;
 
     /// <summary>
     /// Provides a gateway to, and anti-corruption layer from, the FIX module of the service.
@@ -26,7 +25,6 @@ namespace Nautilus.Fix
     public sealed class FixDataGateway : DataBusConnected, IDataGateway
     {
         private readonly IFixClient fixClient;
-        private readonly Dictionary<string, Symbol> symbolCache;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FixDataGateway"/> class.
@@ -41,7 +39,6 @@ namespace Nautilus.Fix
             : base(container, dataBusAdapter)
         {
             this.fixClient = fixClient;
-            this.symbolCache = new Dictionary<string, Symbol>();
 
             this.RegisterHandler<ConnectFix>(this.OnMessage);
             this.RegisterHandler<DisconnectFix>(this.OnMessage);
@@ -78,24 +75,9 @@ namespace Nautilus.Fix
         }
 
         /// <inheritdoc />
-        [SystemBoundary]
-        [PerformanceOptimized]
-        public void OnTick(
-            Symbol symbol,
-            decimal bid,
-            decimal ask,
-            ZonedDateTime timestamp)
+        public void OnTick(Tick tick)
         {
-            this.Execute(() =>
-            {
-                var tick = new Tick(
-                    symbol,
-                    Price.Create(bid),
-                    Price.Create(ask),
-                    timestamp);
-
-                this.SendToBus(tick);
-            });
+            this.SendToBus(tick);
         }
 
         /// <inheritdoc />

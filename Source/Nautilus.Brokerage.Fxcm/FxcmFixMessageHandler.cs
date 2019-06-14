@@ -12,6 +12,7 @@ namespace Nautilus.Brokerage.FXCM
     using System.Collections.Generic;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Entities;
@@ -24,7 +25,7 @@ namespace Nautilus.Brokerage.FXCM
     using QuickFix;
     using QuickFix.Fields;
     using QuickFix.FIX44;
-    using Currency = Nautilus.DomainModel.Enums.Currency;
+    using Price = Nautilus.DomainModel.ValueObjects.Price;
     using Symbol = Nautilus.DomainModel.ValueObjects.Symbol;
 
     /// <summary>
@@ -90,6 +91,8 @@ namespace Nautilus.Brokerage.FXCM
         /// Handles security list messages.
         /// </summary>
         /// <param name="message">The message.</param>
+        [SystemBoundary]
+        [PerformanceOptimized]
         public void OnMessage(SecurityList message)
         {
             Debug.NotNull(this.dataGateway, nameof(this.dataGateway));
@@ -105,7 +108,7 @@ namespace Nautilus.Brokerage.FXCM
                     message.GetGroup(i, group);
 
                     var brokerSymbolCode = GetField(group, Tags.Symbol);
-                    var symbolCode = this.ConvertRawSymbolCode(brokerSymbolCode);
+                    var symbolCode = this.ConvertBrokerSymbolCode(brokerSymbolCode);
                     if (symbolCode == string.Empty)
                     {
                         continue; // Symbol not set or convertible (error already logged)
@@ -114,7 +117,7 @@ namespace Nautilus.Brokerage.FXCM
                     var symbol = this.GetCachedSymbol(symbolCode);
                     var brokerSymbol = new BrokerSymbol(brokerSymbolCode);
                     var instrumentId = new InstrumentId(symbol.ToString());
-                    var quoteCurrency = group.GetField(15).ToEnum<Currency>();
+                    var quoteCurrency = group.GetField(15).ToEnum<Nautilus.DomainModel.Enums.Currency>();
                     var securityType = FixMessageHelper.GetSecurityType(group.GetField(9080));
                     var roundLot = Convert.ToInt32(group.GetField(561));
                     var tickPrecision = Convert.ToInt32(group.GetField(9001));
@@ -258,19 +261,20 @@ namespace Nautilus.Brokerage.FXCM
         /// Handles market data snapshot full refresh messages.
         /// </summary>
         /// <param name="message">The message.</param>
+        [SystemBoundary]
+        [PerformanceOptimized]
         public void OnMessage(MarketDataSnapshotFullRefresh message)
         {
             Debug.NotNull(this.dataGateway, nameof(this.dataGateway));
 
             this.Execute(() =>
             {
-                var symbolCode = this.ConvertRawSymbolCode(GetField(message, Tags.Symbol));
+                var symbolCode = this.ConvertBrokerSymbolCode(GetField(message, Tags.Symbol));
                 if (symbolCode == string.Empty)
                 {
                     return; // Symbol not set or convertible (error already logged)
                 }
 
-                var symbol = this.GetCachedSymbol(symbolCode);
                 var group = new MarketDataSnapshotFullRefresh.NoMDEntriesGroup();
 
                 // Commented out code below is to capture the brokers tick timestamp although this has a lower
@@ -300,14 +304,12 @@ namespace Nautilus.Brokerage.FXCM
                     }
                 }
 
-                Condition.PositiveDecimal(bidDecimal, nameof(bidDecimal));
-                Condition.PositiveDecimal(askDecimal, nameof(askDecimal));
-
                 this.dataGateway?.OnTick(
-                    symbol,
-                    bidDecimal,
-                    askDecimal,
-                    this.TimeNow());
+                    new Tick(
+                        this.GetCachedSymbol(symbolCode),
+                        Price.Create(bidDecimal),
+                        Price.Create(askDecimal),
+                        this.TimeNow()));
             });
         }
 
@@ -494,7 +496,7 @@ namespace Nautilus.Brokerage.FXCM
                 : string.Empty;
         }
 
-        private string ConvertRawSymbolCode(string rawSymbolCode)
+        private string ConvertBrokerSymbolCode(string rawSymbolCode)
         {
             if (rawSymbolCode == string.Empty)
             {

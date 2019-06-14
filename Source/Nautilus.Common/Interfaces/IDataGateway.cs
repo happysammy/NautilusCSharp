@@ -55,15 +55,8 @@ namespace Nautilus.Common.Interfaces
         /// Creates a new <see cref="Tick"/> and sends it to the tick publisher and bar aggregation
         /// controller.
         /// </summary>
-        /// <param name="symbol">The tick symbol.</param>
-        /// <param name="bid">The tick bid price.</param>
-        /// <param name="ask">The tick ask price.</param>
-        /// <param name="timestamp">The tick timestamp.</param>
-        void OnTick(
-            Symbol symbol,
-            decimal bid,
-            decimal ask,
-            ZonedDateTime timestamp);
+        /// <param name="tick">The tick.</param>
+        void OnTick(Tick tick);
 
         /// <summary>
         /// Updates the given instruments in the instrument repository.
