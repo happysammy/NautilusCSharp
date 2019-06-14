@@ -312,7 +312,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
             }
 
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.loggingAdapter, this.output, 300);
 
             // Assert
             Assert.Equal(1000, server.ReceivedMessages.Count);
@@ -366,7 +366,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 this.responseSerializer.Deserialize(requester2.ReceiveFrameBytes());
             }
 
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output, 200);
+            LogDumper.DumpWithDelay(this.loggingAdapter, this.output, 300);
 
             // Assert
             Assert.Equal(2000, server.ReceivedMessages.Count);
