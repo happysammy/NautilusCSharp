@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.UnitTests.DataTests.NetworkTests
+namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
@@ -16,7 +16,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.NetworkTests
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Messages.Requests;
     using Nautilus.Data.Messages.Responses;
-    using Nautilus.Data.Network;
+    using Nautilus.Data.Providers;
     using Nautilus.DomainModel.Factories;
     using Nautilus.Network;
     using Nautilus.Network.Messages;

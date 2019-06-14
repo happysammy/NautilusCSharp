@@ -1,12 +1,12 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="TickProvider.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="BarProvider.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Data.Network
+namespace Nautilus.Data.Providers
 {
     using System;
     using System.Linq;
@@ -16,6 +16,7 @@ namespace Nautilus.Data.Network
     using Nautilus.Data.Messages.Requests;
     using Nautilus.Data.Messages.Responses;
     using Nautilus.DomainModel.Entities;
+    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging;
     using Nautilus.Network;
     using Nautilus.Network.Messages;
@@ -23,22 +24,22 @@ namespace Nautilus.Data.Network
     /// <summary>
     /// Provides a responder for <see cref="Instrument"/> data requests.
     /// </summary>
-    public sealed class TickProvider : MessageServer<Request, Response>
+    public sealed class BarProvider : MessageServer<Request, Response>
     {
-        private readonly ITickRepository repository;
+        private readonly IBarRepository repository;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TickProvider"/> class.
+        /// Initializes a new instance of the <see cref="BarProvider"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
-        /// <param name="repository">The tick repository.</param>
+        /// <param name="repository">The instrument repository.</param>
         /// <param name="inboundSerializer">The inbound message serializer.</param>
         /// <param name="outboundSerializer">The outbound message serializer.</param>
         /// <param name="host">The host address.</param>
         /// <param name="port">The port.</param>
-        public TickProvider(
+        public BarProvider(
             IComponentryContainer container,
-            ITickRepository repository,
+            IBarRepository repository,
             IMessageSerializer<Request> inboundSerializer,
             IMessageSerializer<Response> outboundSerializer,
             NetworkAddress host,
@@ -53,41 +54,40 @@ namespace Nautilus.Data.Network
         {
             this.repository = repository;
 
-            this.RegisterHandler<Envelope<TickDataRequest>>(this.OnMessage);
+            this.RegisterHandler<Envelope<BarDataRequest>>(this.OnMessage);
         }
 
-        private void OnMessage(Envelope<TickDataRequest> envelope)
+        private void OnMessage(Envelope<BarDataRequest> envelope)
         {
-            this.Execute(() =>
+            var request = envelope.Message;
+            var barType = new BarType(request.Symbol, request.BarSpecification);
+            var query = this.repository.Find(
+                barType,
+                request.FromDateTime,
+                request.ToDateTime);
+
+            if (query.IsFailure)
             {
-                var request = envelope.Message;
+                this.SendQueryFailure(query.Message, request.Id, envelope.Sender);
+                this.Log.Warning($"{envelope.Message} query failed ({query.Message}).");
+                return;
+            }
 
-                var query = this.repository.Find(
-                    request.Symbol,
-                    request.FromDateTime,
-                    request.ToDateTime);
+            var bars = query
+                .Value
+                .Bars
+                .Select(b => Encoding.UTF8.GetBytes(b.ToString()))
+                .ToArray();
 
-                if (query.IsFailure)
-                {
-                    this.SendQueryFailure(query.Message, request.Id, envelope.Sender);
-                    this.Log.Warning($"{envelope.Message} query failed ({query.Message}).");
-                    return;
-                }
+            var response = new BarDataResponse(
+                request.Symbol,
+                request.BarSpecification,
+                bars,
+                request.Id,
+                this.NewGuid(),
+                this.TimeNow());
 
-                var ticks = query
-                    .Value
-                    .Select(t => Encoding.UTF8.GetBytes(t.ToString()))
-                    .ToArray();
-
-                var response = new TickDataResponse(
-                    request.Symbol,
-                    ticks,
-                    request.Id,
-                    this.NewGuid(),
-                    this.TimeNow());
-
-                this.SendMessage(response, envelope.Sender);
-            });
+            this.SendMessage(response, envelope.Sender);
         }
     }
 }

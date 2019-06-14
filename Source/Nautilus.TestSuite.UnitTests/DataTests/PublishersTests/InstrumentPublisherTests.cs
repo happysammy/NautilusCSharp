@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="BarPublisherTests.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="InstrumentPublisherTests.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
@@ -13,7 +13,6 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
     using System.Threading.Tasks;
     using Nautilus.Common.Data;
     using Nautilus.Data.Publishers;
-    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network;
     using Nautilus.Serialization;
     using Nautilus.TestSuite.TestKit;
@@ -24,15 +23,16 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public sealed class BarPublisherTests
+    public sealed class InstrumentPublisherTests
     {
-        private const string TEST_ADDRESS = "tcp://localhost:55511";
+        private const string TEST_ADDRESS = "tcp://localhost:55512";
         private readonly ITestOutputHelper output;
         private readonly MockLoggingAdapter loggingAdapter;
-        private readonly Utf8BarSerializer serializer;
-        private readonly BarPublisher publisher;
+        private readonly MsgPackInstrumentSerializer serializer;
+        private readonly InstrumentPublisher publisher;
 
-        public BarPublisherTests(ITestOutputHelper output)
+
+        public InstrumentPublisherTests(ITestOutputHelper output)
         {
             // Fixture Setup
             this.output = output;
@@ -40,35 +40,32 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
             var containerFactory = new StubComponentryContainerFactory();
             var container = containerFactory.Create();
             this.loggingAdapter = containerFactory.LoggingAdapter;
-            this.serializer = new Utf8BarSerializer();
+            this.serializer = new MsgPackInstrumentSerializer();
 
-            this.publisher = new BarPublisher(
+            this.publisher = new InstrumentPublisher(
                 container,
                 DataBusFactory.Create(container),
                 this.serializer,
                 NetworkAddress.LocalHost,
-                new NetworkPort(55511));
+                new NetworkPort(55512));
         }
 
         [Fact]
-        internal void GivenBarData_WithSubscriber_PublishesMessage()
+        internal void GivenInstrument_WithSubscriber_PublishesMessage()
         {
             // Arrange
             this.publisher.Start();
-            Task.Delay(100).Wait();  // Allow publisher to start
+            Task.Delay(100).Wait();
 
-            var barType = StubBarType.AUDUSD();
+            var instrument = StubInstrumentFactory.AUDUSD();
 
             var subscriber = new SubscriberSocket(TEST_ADDRESS);
             subscriber.Connect(TEST_ADDRESS);
-            subscriber.Subscribe(barType.ToString());
+            subscriber.Subscribe(instrument.Symbol.ToString());
             Task.Delay(100).Wait();
 
-            var bar = StubBarData.Create();
-            var data = new BarData(barType, bar);
-
             // Act
-            this.publisher.Endpoint.Send(data);
+            this.publisher.Endpoint.Send(instrument);
 
             var topic = subscriber.ReceiveFrameBytes();
             var message = subscriber.ReceiveFrameBytes();
@@ -76,12 +73,11 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
             LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
-            Assert.Equal(barType.ToString(), Encoding.UTF8.GetString(topic));
-            Assert.Equal(bar.ToString(), Encoding.UTF8.GetString(message));
-            Assert.Equal(bar, this.serializer.Deserialize(message));
+            Assert.Equal(instrument.Symbol.ToString(), Encoding.UTF8.GetString(topic));
+            Assert.Equal(instrument, this.serializer.Deserialize(message));
 
             // Tear Down
-            subscriber.Unsubscribe(barType.ToString());
+            subscriber.Unsubscribe(instrument.Symbol.ToString());
             subscriber.Disconnect(TEST_ADDRESS);
             subscriber.Dispose();
             this.publisher.Stop();

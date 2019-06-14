@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="BarSerializer.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="Utf8TickSerializer.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
@@ -10,24 +10,23 @@ namespace Nautilus.Serialization
 {
     using System.Text;
     using Nautilus.Common.Interfaces;
-    using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
     /// Provides a binary serializer for <see cref="Bar"/>s.
     /// </summary>
-    public class BarSerializer : ISerializer<Bar>
+    public class Utf8TickSerializer : ISerializer<Tick>
     {
         /// <inheritdoc />
-        public byte[] Serialize(Bar bar)
+        public byte[] Serialize(Tick tick)
         {
-            return Encoding.UTF8.GetBytes(bar.ToString());
+            return Encoding.UTF8.GetBytes(tick.ToString());
         }
 
         /// <inheritdoc />
-        public Bar Deserialize(byte[] bytes)
+        public Tick Deserialize(byte[] bytes)
         {
-            return BarFactory.Create(Encoding.UTF8.GetString(bytes));
+            throw new System.NotImplementedException();
         }
     }
 }

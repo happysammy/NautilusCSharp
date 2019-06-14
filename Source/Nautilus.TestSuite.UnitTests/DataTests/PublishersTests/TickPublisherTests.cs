@@ -12,7 +12,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
     using System.Text;
     using System.Threading.Tasks;
     using Nautilus.Common.Data;
-    using Nautilus.Data.Network;
+    using Nautilus.Data.Publishers;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network;
@@ -45,7 +45,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
             this.publisher = new TickPublisher(
                 container,
                 DataBusFactory.Create(container),
-                new TickSerializer(),
+                new Utf8TickSerializer(),
                 NetworkAddress.LocalHost,
                 new NetworkPort(55506));
         }

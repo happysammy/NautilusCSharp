@@ -20,7 +20,8 @@ namespace NautilusData
     using Nautilus.Core.Extensions;
     using Nautilus.Data;
     using Nautilus.Data.Aggregation;
-    using Nautilus.Data.Network;
+    using Nautilus.Data.Providers;
+    using Nautilus.Data.Publishers;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Fix;
     using Nautilus.Messaging;
@@ -57,14 +58,14 @@ namespace NautilusData
             var tickPublisher = new TickPublisher(
                 container,
                 dataBusAdapter,
-                new TickSerializer(),
+                new Utf8TickSerializer(),
                 config.ServerAddress,
                 config.TickSubscribePort);
 
             var barPublisher = new BarPublisher(
                 container,
                 dataBusAdapter,
-                new BarSerializer(),
+                new Utf8BarSerializer(),
                 config.ServerAddress,
                 config.BarSubscribePort);
 
