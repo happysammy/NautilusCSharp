@@ -31,6 +31,7 @@ namespace Nautilus.Brokerage.FXCM
     /// <summary>
     /// Provides an implementation for handling FXCM FIX messages.
     /// </summary>
+    [PerformanceOptimized]
     public sealed class FxcmFixMessageHandler : Component, IFixMessageHandler
     {
         private const Venue VENUE = Venue.FXCM;
@@ -79,11 +80,12 @@ namespace Nautilus.Brokerage.FXCM
         /// Handles business message reject messages.
         /// </summary>
         /// <param name="message">The message.</param>
+        [SystemBoundary]
         public void OnMessage(BusinessMessageReject message)
         {
             this.Execute(() =>
             {
-                this.Log.Debug($"BusinessMessageReject: {message}");
+                this.Log.Verbose($"Received {message}");
             });
         }
 
@@ -159,7 +161,8 @@ namespace Nautilus.Brokerage.FXCM
                 var responseId = message.GetField(Tags.SecurityResponseID);
                 var result = FixMessageHelper.GetSecurityRequestResult(message.SecurityRequestResult);
 
-                this.dataGateway?.OnInstrumentsUpdate(instruments, responseId, result);
+                this.Log.Verbose($"Received {message} (ResponseID={responseId}, Result={result})");
+                this.dataGateway?.OnInstrumentsUpdate(instruments);
             });
         }
 
@@ -167,6 +170,7 @@ namespace Nautilus.Brokerage.FXCM
         /// Handles collateral inquiry acknowledgement messages.
         /// </summary>
         /// <param name="message">The message.</param>
+        [SystemBoundary]
         public void OnMessage(CollateralInquiryAck message)
         {
             Debug.NotNull(this.tradingGateway, nameof(this.tradingGateway));
@@ -176,6 +180,7 @@ namespace Nautilus.Brokerage.FXCM
                 var inquiryId = message.GetField(Tags.CollInquiryID);
                 var accountNumber = Convert.ToInt32(message.GetField(Tags.Account)).ToString();
 
+                this.Log.Verbose($"Received {message}");
                 this.tradingGateway?.OnCollateralInquiryAck(inquiryId, accountNumber);
             });
         }
@@ -184,6 +189,7 @@ namespace Nautilus.Brokerage.FXCM
         /// Handles collateral report messages.
         /// </summary>
         /// <param name="message">The message.</param>
+        [SystemBoundary]
         public void OnMessage(CollateralReport message)
         {
             Debug.NotNull(this.tradingGateway, nameof(this.tradingGateway));
@@ -201,6 +207,7 @@ namespace Nautilus.Brokerage.FXCM
                 var marginCall = message.GetField(9045);
                 var time = this.TimeNow();
 
+                this.Log.Verbose($"Received {message}");
                 this.tradingGateway?.OnAccountReport(
                     inquiryId,
                     accountNumber,
@@ -221,12 +228,14 @@ namespace Nautilus.Brokerage.FXCM
         /// <param name="message">
         /// The message.
         /// </param>
+        [SystemBoundary]
         public void OnMessage(RequestForPositionsAck message)
         {
             Debug.NotNull(this.tradingGateway, nameof(this.tradingGateway));
 
             this.Execute(() =>
             {
+                this.Log.Verbose($"Received {message}");
                 this.tradingGateway?.OnRequestForPositionsAck(
                     message.Account.ToString(),
                     message.PosReqID.ToString());
@@ -237,10 +246,12 @@ namespace Nautilus.Brokerage.FXCM
         /// Handles quote status report messages.
         /// </summary>
         /// <param name="message">The message.</param>
+        [SystemBoundary]
         public void OnMessage(QuoteStatusReport message)
         {
             this.Execute(() =>
             {
+                this.Log.Verbose($"Received {message}");
                 this.Log.Information(message.Product.ToString());
             });
         }
@@ -249,6 +260,7 @@ namespace Nautilus.Brokerage.FXCM
         /// Handles market data request reject messages.
         /// </summary>
         /// <param name="message">The message.</param>
+        [SystemBoundary]
         public void OnMessage(MarketDataRequestReject message)
         {
             this.Execute(() =>
@@ -317,6 +329,7 @@ namespace Nautilus.Brokerage.FXCM
         /// Handles order cancel reject messages.
         /// </summary>
         /// <param name="message">The message.</param>
+        [SystemBoundary]
         public void OnMessage(OrderCancelReject message)
         {
             Debug.NotNull(this.tradingGateway, nameof(this.tradingGateway));
@@ -329,6 +342,7 @@ namespace Nautilus.Brokerage.FXCM
                 var cancelRejectReason = $"{message.CxlRejReason}, {message.Text.ToString().TrimEnd('.')}, FXCMCode={fxcmCode}";
                 var timestamp = FixMessageHelper.ConvertExecutionReportString(GetField(message, Tags.TransactTime));
 
+                this.Log.Verbose($"Received {message}");
                 this.tradingGateway?.OnOrderCancelReject(
                     orderId,
                     cancelRejectResponseTo,
@@ -341,6 +355,7 @@ namespace Nautilus.Brokerage.FXCM
         /// Handles execution report messages.
         /// </summary>
         /// <param name="message">The message.</param>
+        [SystemBoundary]
         public void OnMessage(ExecutionReport message)
         {
             Debug.NotNull(this.tradingGateway, nameof(this.tradingGateway));
@@ -471,7 +486,7 @@ namespace Nautilus.Brokerage.FXCM
                         timestamp);
                 }
 
-                this.Log.Debug($"ExecutionReport(order_id={orderId}, status={message.GetField(Tags.OrdStatus)}).");
+                this.Log.Debug($"Received ExecutionReport(ClOrdID={orderId}, Status={message.GetField(Tags.OrdStatus)}).");
             });
         }
 
@@ -479,6 +494,7 @@ namespace Nautilus.Brokerage.FXCM
         /// Handles position report messages.
         /// </summary>
         /// <param name="message">The message.</param>
+        [SystemBoundary]
         public void OnMessage(PositionReport message)
         {
             Debug.NotNull(this.tradingGateway, nameof(this.tradingGateway));

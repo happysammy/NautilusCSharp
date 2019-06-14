@@ -12,7 +12,6 @@ namespace Nautilus.Common.Interfaces
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
-    using NodaTime;
 
     /// <summary>
     /// Provides a gateway to, and anti-corruption layer from a data gateway.
@@ -20,7 +19,7 @@ namespace Nautilus.Common.Interfaces
     public interface IDataGateway
     {
         /// <summary>
-        /// Gets the gateways brokerage name.
+        /// Gets the data gateways brokerage name.
         /// </summary>
         Brokerage Broker { get; }
 
@@ -30,49 +29,43 @@ namespace Nautilus.Common.Interfaces
         bool IsConnected { get; }
 
         /// <summary>
-        /// Sends an update and subscribe request message for the instrument of the given symbol.
+        /// Sends a request to receive the instrument for the given symbol and subscribe to updates.
         /// </summary>
-        /// <param name="symbol">The symbol of the instrument to update.</param>
+        /// <param name="symbol">The symbol for the instrument.</param>
         void UpdateInstrumentSubscribe(Symbol symbol);
 
         /// <summary>
-        /// Send an update and subscribe request message for all instruments.
+        /// Sends a request to receive all instruments and subscribe to updates.
         /// </summary>
         void UpdateInstrumentsSubscribeAll();
 
         /// <summary>
-        /// Sends a market data subscribe request message for the given symbol.
+        /// Sends a request to subscribe to market data for the given symbol.
         /// </summary>
-        /// <param name="symbol">The symbol.</param>
+        /// <param name="symbol">The symbol for the market data.</param>
         void MarketDataSubscribe(Symbol symbol);
 
         /// <summary>
-        /// Sends a market data subscribe request message for all symbols.
+        /// Sends a request to subscribe to market data for all symbols.
         /// </summary>
         void MarketDataSubscribeAll();
 
         /// <summary>
-        /// Creates a new <see cref="Tick"/> and sends it to the tick publisher and bar aggregation
-        /// controller.
+        /// Handles received ticks.
         /// </summary>
         /// <param name="tick">The tick.</param>
         void OnTick(Tick tick);
 
         /// <summary>
-        /// Updates the given instruments in the instrument repository.
+        /// Handles the collection of received instruments.
         /// </summary>
         /// <param name="instruments">The instruments collection.</param>
-        /// <param name="responseId">The response identifier.</param>
-        /// <param name="result">The result.</param>
-        void OnInstrumentsUpdate(
-            IEnumerable<Instrument> instruments,
-            string responseId,
-            string result);
+        void OnInstrumentsUpdate(IEnumerable<Instrument> instruments);
 
         /// <summary>
-        /// Event handler for receiving FIX business messages.
+        /// Handles received general messages.
         /// </summary>
         /// <param name="message">The message.</param>
-        void OnBusinessMessage(string message);
+        void OnMessage(string message);
     }
 }

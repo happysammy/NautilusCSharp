@@ -155,7 +155,7 @@ namespace Nautilus.Brokerage.Dukascopy
                 var responseId = message.GetField(Tags.SecurityResponseID);
                 var result = FixMessageHelper.GetSecurityRequestResult(message.SecurityRequestResult);
 
-                this.dataGateway?.OnInstrumentsUpdate(instruments, responseId, result);
+                this.dataGateway?.OnInstrumentsUpdate(instruments);
             });
         }
 

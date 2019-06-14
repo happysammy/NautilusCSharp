@@ -12,8 +12,6 @@ namespace Nautilus.Fix
     using Nautilus.Common.Data;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
@@ -21,7 +19,6 @@ namespace Nautilus.Fix
     /// <summary>
     /// Provides a gateway to, and anti-corruption layer from, the FIX module of the service.
     /// </summary>
-    [PerformanceOptimized]
     public sealed class FixDataGateway : DataBusConnected, IDataGateway
     {
         private readonly IFixClient fixClient;
@@ -81,38 +78,18 @@ namespace Nautilus.Fix
         }
 
         /// <inheritdoc />
-        [SystemBoundary]
-        public void OnBusinessMessage(string message)
+        public void OnInstrumentsUpdate(IEnumerable<Instrument> instruments)
         {
-            this.Execute(() =>
+            foreach (var instrument in instruments)
             {
-                Condition.NotEmptyOrWhiteSpace(message, nameof(message));
-
-                this.Log.Debug($"BusinessMessageReject: {message}");
-            });
+                this.SendToBus(instrument);
+            }
         }
 
         /// <inheritdoc />
-        [SystemBoundary]
-        public void OnInstrumentsUpdate(
-            IEnumerable<Instrument> instruments,
-            string responseId,
-            string result)
+        public void OnMessage(string message)
         {
-            this.Execute(() =>
-            {
-                Condition.NotEmptyOrWhiteSpace(responseId, nameof(responseId));
-                Condition.NotEmptyOrWhiteSpace(result, nameof(result));
-
-                this.Log.Debug(
-                    $"SecurityListReceived: " +
-                    $"(SecurityResponseId={responseId}) result={result}");
-
-                foreach (var instrument in instruments)
-                {
-                    this.SendToBus(instrument);
-                }
-            });
+            // No implemented
         }
 
         /// <inheritdoc />
