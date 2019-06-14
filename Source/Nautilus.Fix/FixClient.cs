@@ -73,19 +73,13 @@ namespace Nautilus.Fix
         /// <inheritdoc />
         public void SubmitOrder(Order order)
         {
-            this.Execute(() =>
-            {
-                this.FixMessageRouter.SubmitOrder(order);
-            });
+            this.FixMessageRouter.SubmitOrder(order);
         }
 
         /// <inheritdoc />
         public void SubmitOrder(AtomicOrder atomicOrder)
         {
-            this.Execute(() =>
-            {
-                this.FixMessageRouter.SubmitOrder(atomicOrder);
-            });
+            this.FixMessageRouter.SubmitOrder(atomicOrder);
         }
 
         /// <inheritdoc />

@@ -10,7 +10,6 @@ namespace Nautilus.Data.Aggregation
 {
     using System;
     using System.Collections.Generic;
-    using System.Runtime.Caching;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;

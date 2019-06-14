@@ -34,7 +34,9 @@ namespace Nautilus.Brokerage.FXCM
                 container,
                 messageBusAdapter,
                 config,
-                new FxcmFixMessageHandler(container, symbolConverter),
+                new FxcmFixMessageHandler(
+                    container,
+                    symbolConverter),
                 new FxcmFixMessageRouter(
                     container,
                     symbolConverter,
