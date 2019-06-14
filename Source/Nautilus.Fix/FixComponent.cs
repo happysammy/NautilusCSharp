@@ -9,7 +9,6 @@
 namespace Nautilus.Fix
 {
     using System;
-    using System.Diagnostics.CodeAnalysis;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Events;
@@ -25,10 +24,8 @@ namespace Nautilus.Fix
     using Message = QuickFix.Message;
 
     /// <summary>
-    /// The base class for all FIX protocol components.
+    /// The base class for all FIX components.
     /// </summary>
-    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Reviewed. Access OK.")]
-    [SuppressMessage("ReSharper", "MemberCanBeProtected.Global", Justification = "Reviewed. Access OK.")]
     [PerformanceOptimized]
     public class FixComponent : MessageCracker, IApplication
     {
