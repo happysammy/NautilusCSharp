@@ -187,5 +187,32 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             this.output.WriteLine(Convert.ToBase64String(packed));
             this.output.WriteLine(Encoding.UTF8.GetString(packed));
         }
+
+        [Fact]
+        internal void CanSerializeAndDeserialize_InstrumentResponses()
+        {
+            // Arrange
+            var instrument = StubInstrumentFactory.AUDUSD();
+            var correlationId = Guid.NewGuid();
+
+            var instSerializer = new MsgPackInstrumentSerializer();
+            var instrumentBytes = new[] { instSerializer.Serialize(instrument) };
+
+            var response = new InstrumentResponse(
+                instrumentBytes,
+                correlationId,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            // Act
+            var packed = this.serializer.Serialize(response);
+            var unpacked = (InstrumentResponse)this.serializer.Deserialize(packed);
+
+            // Assert
+            Assert.Equal(response, unpacked);
+            Assert.Equal(correlationId, unpacked.CorrelationId);
+            this.output.WriteLine(Convert.ToBase64String(packed));
+            this.output.WriteLine(Encoding.UTF8.GetString(packed));
+        }
     }
 }

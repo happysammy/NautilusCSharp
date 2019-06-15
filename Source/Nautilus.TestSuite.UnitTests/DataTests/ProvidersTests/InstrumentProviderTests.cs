@@ -10,8 +10,6 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
     using Nautilus.Common.Interfaces;
     using Nautilus.Data.Interfaces;
@@ -157,13 +155,47 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
-            // Assert.Equal(typeof(InstrumentResponse), response.Type);
+            Assert.Equal(typeof(InstrumentResponse), response.Type);
+            Assert.Equal(instrument, this.serializer.Deserialize(response.Instruments[0]));
 
-//            Assert.Equal(barType.Symbol, response.Symbol);
-//            Assert.Equal(barType.Specification, response.BarSpecification);
-//            Assert.Equal(2, response.Bars.Length);
-//            Assert.Equal(bar1, BarFactory.Create(Encoding.UTF8.GetString(response.Bars[0])));
-//            Assert.Equal(bar2, BarFactory.Create(Encoding.UTF8.GetString(response.Bars[1])));
+            // Tear Down;
+            requester.Disconnect(TEST_ADDRESS);
+            requester.Dispose();
+            this.provider.Stop();
+            Task.Delay(100).Wait();  // Allows sockets to dispose
+        }
+
+        [Fact]
+        internal void GivenInstrumentsRequest_WithInstruments_ReturnsValidInstrumentResponse()
+        {
+            // Arrange
+            this.provider.Start();
+            Task.Delay(100).Wait();  // Allow provider to start
+
+            var requester = new RequestSocket();
+            requester.Connect(TEST_ADDRESS);
+            Task.Delay(100).Wait();  // Allow socket to connect
+
+            var instrument1 = StubInstrumentFactory.AUDUSD();
+            var instrument2 = StubInstrumentFactory.EURUSD();
+            this.repository.Add(instrument1, StubZonedDateTime.UnixEpoch());
+            this.repository.Add(instrument2, StubZonedDateTime.UnixEpoch());
+
+            var request = new InstrumentsRequest(
+                Venue.FXCM,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            // Act
+            requester.SendFrame(this.requestSerializer.Serialize(request));
+            var response = (InstrumentResponse)this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
+
+            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+
+            // Assert
+            Assert.Equal(typeof(InstrumentResponse), response.Type);
+            Assert.Equal(instrument1, this.serializer.Deserialize(response.Instruments[0]));
+            Assert.Equal(instrument2, this.serializer.Deserialize(response.Instruments[1]));
 
             // Tear Down;
             requester.Disconnect(TEST_ADDRESS);
