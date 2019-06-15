@@ -56,16 +56,16 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
 
             Task.Delay(50).Wait();
 
-            // Should receives only the first 10 messages.
+            // Should receives only the first 10 messages
             var count1 = this.receiver.Messages.Count;
 
-            // Wait for the throttle duration interval.
+            // Wait for the throttle duration interval
             Task.Delay(100).Wait();
 
-            // Should receive the next 10 messages.
+            // Should receive the next 10 messages
             var count2 = this.receiver.Messages.Count;
 
-            // Should receive the final message.
+            // Should receive the final message
             Task.Delay(100).Wait();
             var count3 = this.receiver.Messages.Count;
 
@@ -97,7 +97,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
 
             Task.Delay(50).Wait();
 
-            // Should receive only the first 10 messages.
+            // Should receive only the first 10 messages
             var count1 = this.receiver.Messages.Count;
 
             for (var i = 0; i < 20; i++)
@@ -105,10 +105,10 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 throttler.Endpoint.Send($"Message2-{i + 1}");
             }
 
-            // Wait for all messages to send.
+            // Wait for all messages to send
             Task.Delay(400).Wait();
 
-            // Receives the next 100 messages.
+            // Receives the next 100 messages
             var count2 = this.receiver.Messages.Count;
 
             LogDumper.DumpWithDelay(this.loggingAdapter, this.output);

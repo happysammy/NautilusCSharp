@@ -11,7 +11,7 @@ namespace Nautilus.DomainModel.ValueObjects
     using Nautilus.Core.Annotations;
 
     /// <summary>
-    /// Represents a financial market trade bar.
+    /// Represents financial market trade bar data including <see cref="BarType"/>.
     /// </summary>
     [Immutable]
     public struct BarData

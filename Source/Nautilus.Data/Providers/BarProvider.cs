@@ -15,14 +15,13 @@ namespace Nautilus.Data.Providers
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Messages.Requests;
     using Nautilus.Data.Messages.Responses;
-    using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging;
     using Nautilus.Network;
     using Nautilus.Network.Messages;
 
     /// <summary>
-    /// Provides a responder for <see cref="Instrument"/> data requests.
+    /// Provides <see cref="Bar"/> data to requests.
     /// </summary>
     public sealed class BarProvider : MessageServer<Request, Response>
     {

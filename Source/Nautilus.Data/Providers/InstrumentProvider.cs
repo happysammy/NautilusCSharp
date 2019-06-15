@@ -20,7 +20,7 @@ namespace Nautilus.Data.Providers
     using Nautilus.Network.Messages;
 
     /// <summary>
-    /// Provides a responder for <see cref="Instrument"/> data requests.
+    /// Provides <see cref="Instrument"/> data to requests.
     /// </summary>
     public sealed class InstrumentProvider : MessageServer<Request, Response>
     {
