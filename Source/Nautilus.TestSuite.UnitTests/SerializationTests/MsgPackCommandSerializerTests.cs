@@ -176,7 +176,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             this.output.WriteLine(Encoding.UTF8.GetString(packed));
         }
 
-//        [Fact]
+// [Fact]
 //        internal void Deserialize_CollateralInquiry_FromPythonMsgPack_ReturnsExpectedCommand()
 //        {
 //            // Arrange

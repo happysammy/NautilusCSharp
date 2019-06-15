@@ -23,6 +23,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
     using Xunit;
     using Xunit.Abstractions;
 
+    [SuppressMessage("ReSharper", "SA1310", Justification = "Easier to read.")]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public sealed class BarPublisherTests
     {

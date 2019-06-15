@@ -133,6 +133,12 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var unpacked = OrderSerializer.DeserializeNullable(packed);
 
             // Assert
+            if (unpacked is null)
+            {
+                Assert.True(false);
+                return; // Avoid potential null dereference warning
+            }
+
             Assert.Equal(order, unpacked);
             Assert.Equal(order.Symbol, unpacked.Symbol);
             Assert.Equal(order.Type, unpacked.Type);
@@ -159,7 +165,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             this.output.WriteLine(Encoding.UTF8.GetString(packed));
         }
 
-//        [Fact]
+// [Fact]
 //        internal void Deserialize_GivenMarketOrder_FromPythonMsgPack_ReturnsExpectedOrder()
 //        {
 //            // Arrange
