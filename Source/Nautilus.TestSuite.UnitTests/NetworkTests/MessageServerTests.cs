@@ -53,13 +53,13 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             var server = new MockMessageServer(
                 this.container,
                 NetworkAddress.LocalHost,
-                new NetworkPort(5555),
+                new NetworkPort(55556),
                 Guid.NewGuid());
 
             LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
-            Assert.Equal("tcp://127.0.0.1:5555", server.ServerAddress.ToString());
+            Assert.Equal("tcp://127.0.0.1:55556", server.ServerAddress.ToString());
             Assert.Equal(State.Init, server.State);
             Assert.Equal(0, server.ReceivedCount);
             Assert.Equal(0, server.SentCount);
@@ -77,7 +77,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             var server = new MockMessageServer(
                 this.container,
                 NetworkAddress.LocalHost,
-                new NetworkPort(5555),
+                new NetworkPort(55557),
                 Guid.NewGuid());
             server.Start();
 
@@ -86,7 +86,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
-            Assert.Equal("tcp://127.0.0.1:5555", server.ServerAddress.ToString());
+            Assert.Equal("tcp://127.0.0.1:55557", server.ServerAddress.ToString());
             Assert.Equal(State.Running, server.State);
             Assert.Equal(0, server.ReceivedCount);
             Assert.Equal(0, server.SentCount);
@@ -103,17 +103,17 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             var server = new MockMessageServer(
                 this.container,
                 NetworkAddress.LocalHost,
-                new NetworkPort(5555),
+                new NetworkPort(55558),
                 Guid.NewGuid());
             server.Start();
 
             Task.Delay(100).Wait(); // Allow server to start
 
-            const string testAddress1 = "tcp://127.0.0.1:5555";
+            const string testAddress1 = "tcp://127.0.0.1:55558";
             var requester1 = new RequestSocket(testAddress1);
             requester1.Connect(testAddress1);
 
-            const string testAddress2 = "tcp://127.0.0.1:5555";
+            const string testAddress2 = "tcp://127.0.0.1:55558";
             var requester2 = new RequestSocket(testAddress2);
             requester2.Connect(testAddress2);
 
@@ -150,13 +150,13 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             var server = new MockMessageServer(
                 this.container,
                 NetworkAddress.LocalHost,
-                new NetworkPort(5555),
+                new NetworkPort(55559),
                 Guid.NewGuid());
             server.Start();
 
             Task.Delay(100).Wait(); // Allow server to start
 
-            const string testAddress = "tcp://127.0.0.1:5555";
+            const string testAddress = "tcp://127.0.0.1:55559";
             var requester = new RequestSocket(testAddress);
             requester.Connect(testAddress);
 
@@ -191,13 +191,13 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             var server = new MockMessageServer(
                 this.container,
                 NetworkAddress.LocalHost,
-                new NetworkPort(5555),
+                new NetworkPort(55560),
                 Guid.NewGuid());
             server.Start();
 
             Task.Delay(100).Wait(); // Allow server to start
 
-            const string testAddress = "tcp://127.0.0.1:5555";
+            const string testAddress = "tcp://127.0.0.1:55560";
             var requester = new RequestSocket(testAddress);
             requester.Connect(testAddress);
 
@@ -242,13 +242,13 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             var server = new MockMessageServer(
                 this.container,
                 NetworkAddress.LocalHost,
-                new NetworkPort(5555),
+                new NetworkPort(55561),
                 Guid.NewGuid());
             server.Start();
 
             Task.Delay(100).Wait(); // Allow server to start
 
-            const string testAddress = "tcp://127.0.0.1:5555";
+            const string testAddress = "tcp://127.0.0.1:55561";
             var requester = new RequestSocket(testAddress);
             requester.Connect(testAddress);
 
@@ -290,13 +290,13 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             var server = new MockMessageServer(
                 this.container,
                 NetworkAddress.LocalHost,
-                new NetworkPort(5555),
+                new NetworkPort(55562),
                 Guid.NewGuid());
             server.Start();
 
             Task.Delay(100).Wait(); // Allow server to start
 
-            const string testAddress = "tcp://127.0.0.1:5555";
+            const string testAddress = "tcp://127.0.0.1:55562";
             var requester = new RequestSocket(testAddress);
             requester.Connect(testAddress);
 
@@ -312,7 +312,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
             }
 
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output, 300);
+            LogDumper.DumpWithDelay(this.loggingAdapter, this.output, 500);
 
             // Assert
             Assert.Equal(1000, server.ReceivedMessages.Count);
@@ -335,13 +335,13 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             var server = new MockMessageServer(
                 this.container,
                 NetworkAddress.LocalHost,
-                new NetworkPort(5555),
+                new NetworkPort(55563),
                 Guid.NewGuid());
             server.Start();
 
             Task.Delay(100).Wait(); // Allow server to start
 
-            const string testAddress = "tcp://127.0.0.1:5555";
+            const string testAddress = "tcp://127.0.0.1:55563";
             var requester1 = new RequestSocket(testAddress);
             var requester2 = new RequestSocket(testAddress);
             requester1.Connect(testAddress);
