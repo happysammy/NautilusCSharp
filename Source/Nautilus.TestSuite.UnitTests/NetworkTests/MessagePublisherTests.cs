@@ -70,12 +70,12 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 new NetworkPort(55555));
             publisher.Start();
 
-            Task.Delay(100).Wait();
             const string testAddress = "tcp://localhost:55555";
             var subscriber = new SubscriberSocket(testAddress);
             subscriber.Connect(testAddress);
             subscriber.Subscribe(TEST_TOPIC);
-            Task.Delay(100).Wait();
+
+            Task.Delay(100).Wait(); // Allow sockets to initiate
 
             // Act
             const string message = "1234,1234";

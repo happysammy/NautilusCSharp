@@ -107,8 +107,6 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 Guid.NewGuid());
             server.Start();
 
-            Task.Delay(100).Wait(); // Allow server to start
-
             const string testAddress1 = "tcp://127.0.0.1:55558";
             var requester1 = new RequestSocket(testAddress1);
             requester1.Connect(testAddress1);
@@ -116,6 +114,8 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             const string testAddress2 = "tcp://127.0.0.1:55558";
             var requester2 = new RequestSocket(testAddress2);
             requester2.Connect(testAddress2);
+
+            Task.Delay(100).Wait(); // Allow sockets to initiate
 
             // Act
             requester1.SendFrame(Encoding.UTF8.GetBytes("WOW"));
@@ -154,11 +154,11 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 Guid.NewGuid());
             server.Start();
 
-            Task.Delay(100).Wait(); // Allow server to start
-
             const string testAddress = "tcp://127.0.0.1:55559";
             var requester = new RequestSocket(testAddress);
             requester.Connect(testAddress);
+
+            Task.Delay(100).Wait(); // Allow sockets to initiate
 
             // Act
             var message = new MockMessage(
@@ -195,11 +195,11 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 Guid.NewGuid());
             server.Start();
 
-            Task.Delay(100).Wait(); // Allow server to start
-
             const string testAddress = "tcp://127.0.0.1:55560";
             var requester = new RequestSocket(testAddress);
             requester.Connect(testAddress);
+
+            Task.Delay(100).Wait(); // Allow sockets to initiate
 
             // Act
             var message1 = new MockMessage(
@@ -246,11 +246,11 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 Guid.NewGuid());
             server.Start();
 
-            Task.Delay(100).Wait(); // Allow server to start
-
             const string testAddress = "tcp://127.0.0.1:55561";
             var requester = new RequestSocket(testAddress);
             requester.Connect(testAddress);
+
+            Task.Delay(100).Wait(); // Allow sockets to initiate
 
             var message1 = new MockMessage(
                 "TEST1",
@@ -294,11 +294,11 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 Guid.NewGuid());
             server.Start();
 
-            Task.Delay(100).Wait(); // Allow server to start
-
             const string testAddress = "tcp://127.0.0.1:55562";
             var requester = new RequestSocket(testAddress);
             requester.Connect(testAddress);
+
+            Task.Delay(100).Wait(); // Allow sockets to initiate
 
             // Act
             for (var i = 0; i < 1000; i++)
@@ -312,7 +312,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
             }
 
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output, 500);
+            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Equal(1000, server.ReceivedMessages.Count);
@@ -339,13 +339,13 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 Guid.NewGuid());
             server.Start();
 
-            Task.Delay(100).Wait(); // Allow server to start
-
             const string testAddress = "tcp://127.0.0.1:55563";
             var requester1 = new RequestSocket(testAddress);
             var requester2 = new RequestSocket(testAddress);
             requester1.Connect(testAddress);
             requester2.Connect(testAddress);
+
+            Task.Delay(100).Wait(); // Allow sockets to initiate
 
             // Act
             for (var i = 0; i < 1000; i++)
@@ -366,7 +366,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 this.responseSerializer.Deserialize(requester2.ReceiveFrameBytes());
             }
 
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output, 300);
+            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Equal(2000, server.ReceivedMessages.Count);
