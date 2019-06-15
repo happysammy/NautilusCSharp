@@ -9,6 +9,7 @@
 namespace Nautilus.Network
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Runtime.Serialization;
     using System.Text;
     using System.Threading;
@@ -29,10 +30,13 @@ namespace Nautilus.Network
     /// </summary>
     /// <typeparam name="TInbound">The inbound message type.</typeparam>
     /// <typeparam name="TOutbound">The outbound response type.</typeparam>
+    [SuppressMessage("ReSharper", "SA1310", Justification = "Easier to read.")]
     public abstract class MessageServer<TInbound, TOutbound> : Component
         where TInbound : Message
         where TOutbound : Response
     {
+        private const int EXPECTED_FRAMES = 3;
+
         private readonly byte[] delimiter = { };
         private readonly CancellationTokenSource cts;
         private readonly RouterSocket socket;
@@ -166,42 +170,12 @@ namespace Nautilus.Network
 
                 if (received is null)
                 {
-                    // This can never happen due to generic type constraints
+                    // This should never happen due to generic type constraints
                     throw new InvalidOperationException(
                         $"Design time error (message was not of type {typeof(TOutbound)}).");
                 }
 
                 this.SendMessage(received, receiver);
-            });
-        }
-
-        /// <summary>
-        /// Sends a MessageRejected message to the given receiver address.
-        /// </summary>
-        /// <param name="rejectedMessage">The rejected message.</param>
-        /// <param name="correlationId">The message correlation identifier.</param>
-        /// <param name="receiver">The receiver address.</param>
-        protected void SendRejected(
-            string rejectedMessage,
-            Guid correlationId,
-            Address? receiver)
-        {
-            this.Execute(() =>
-            {
-                var rejected = new MessageRejected(
-                    rejectedMessage,
-                    correlationId,
-                    Guid.NewGuid(),
-                    this.TimeNow()) as TOutbound;
-
-                if (rejected is null)
-                {
-                    // This can never happen due to generic type constraints
-                    throw new InvalidOperationException(
-                        $"Design time error (message was not of type {typeof(TOutbound)}).");
-                }
-
-                this.SendMessage(rejected, receiver);
             });
         }
 
@@ -226,12 +200,42 @@ namespace Nautilus.Network
 
                 if (failure is null)
                 {
-                    // This can never happen due to generic type constraints
+                    // This should never happen due to generic type constraints
                     throw new InvalidOperationException(
                         $"Design time error (message was not of type {typeof(TOutbound)}).");
                 }
 
                 this.SendMessage(failure, receiver);
+            });
+        }
+
+        /// <summary>
+        /// Sends a MessageRejected message to the given receiver address.
+        /// </summary>
+        /// <param name="rejectedMessage">The rejected message.</param>
+        /// <param name="correlationId">The message correlation identifier.</param>
+        /// <param name="receiver">The receiver address.</param>
+        private void SendRejected(
+            string rejectedMessage,
+            Guid correlationId,
+            Address? receiver)
+        {
+            this.Execute(() =>
+            {
+                var rejected = new MessageRejected(
+                    rejectedMessage,
+                    correlationId,
+                    Guid.NewGuid(),
+                    this.TimeNow()) as TOutbound;
+
+                if (rejected is null)
+                {
+                    // This should never happen due to generic type constraints
+                    throw new InvalidOperationException(
+                        $"Design time error (message was not of type {typeof(TOutbound)}).");
+                }
+
+                this.SendMessage(rejected, receiver);
             });
         }
 
@@ -248,12 +252,32 @@ namespace Nautilus.Network
 
         private void ReceiveMessage()
         {
+            this.Execute(() =>
+            {
+                var msg = this.socket.ReceiveMultipartBytes(3);  // msg[1] should be empty byte array delimiter
+
+                if (msg.Count != EXPECTED_FRAMES)
+                {
+                    var error = $"Message was malformed (expected {EXPECTED_FRAMES} frames, received {msg.Count}).";
+                    if (msg.Count >= 1)
+                    {
+                        this.SendRejected(error, Guid.Empty, new Address(msg[0]));
+                    }
+
+                    this.Log.Error(error);
+                }
+                else
+                {
+                    this.DeserializeMessage(new Address(msg[0]), msg[2]);
+                }
+            });
+        }
+
+        private void DeserializeMessage(Address sender, byte[] payload)
+        {
             try
             {
-                var zmqMessage = this.socket.ReceiveMultipartBytes(3);
-                var sender = new Address(zmqMessage[0]);
-                var received = this.inboundSerializer.Deserialize(zmqMessage[2]);
-
+                var received = this.inboundSerializer.Deserialize(payload);
                 var envelope = EnvelopeFactory.Create(
                     received,
                     null,
@@ -267,7 +291,9 @@ namespace Nautilus.Network
             }
             catch (SerializationException ex)
             {
-                this.Log.Error("Received malformed message." + Environment.NewLine + ex);
+                var message = "Unable to deserialize message.";
+                this.Log.Error(message + Environment.NewLine + ex);
+                this.SendRejected(message, Guid.Empty, sender);
             }
         }
 
