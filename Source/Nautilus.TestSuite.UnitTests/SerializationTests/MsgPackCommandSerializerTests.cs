@@ -219,6 +219,20 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         }
 
         [Fact]
+        internal void Deserialize_GivenSubmitAtomicOrderWithTakeProfit_FromPythonMsgPack_ReturnsExpectedCommand()
+        {
+            // Arrange
+            var base64 = "iaRUeXBlsVN1Ym1pdEF0b21pY09yZGVyoklk2gAkMzU2OGM1MjMtNGM5OS00ZmQ1LWFkZmItNWMxY2Y2ZGVlMGY3qVRpbWVzdGFtcLgxOTcwLTAxLTAxVDAwOjAwOjAwLjAwMFqoVHJhZGVySWSqVHJhZGVyLTAwMapTdHJhdGVneUlkqVNDQUxQRVIwMapQb3NpdGlvbklkpjEyMzQ1NqVFbnRyedoA6YuiSWS7Ty0xOTcwMDEwMS0wMDAwMDAtMDAxLTAwMS0xplN5bWJvbKtBVURVU0QuRlhDTalPcmRlclNpZGWjQlVZqU9yZGVyVHlwZaVMSU1JVKhRdWFudGl0ec4AAYagpVByaWNlpzAuOTk5MDClTGFiZWykTk9ORatUaW1lSW5Gb3JjZaNEQVmqRXhwaXJlVGltZaROT05FqVRpbWVzdGFtcLgxOTcwLTAxLTAxVDAwOjAwOjAwLjAwMFqmSW5pdElk2gAkZDZhZDQ2ZDEtODY0Yy00NDc3LTg4OGMtNzIyZTNhOWNkMmJhqFN0b3BMb3Nz2gDwi6JJZLtPLTE5NzAwMTAxLTAwMDAwMC0wMDEtMDAxLTKmU3ltYm9sq0FVRFVTRC5GWENNqU9yZGVyU2lkZaRTRUxMqU9yZGVyVHlwZatTVE9QX01BUktFVKhRdWFudGl0ec4AAYagpVByaWNlpzEuMDAwMDClTGFiZWykTk9ORatUaW1lSW5Gb3JjZaNHVEOqRXhwaXJlVGltZaROT05FqVRpbWVzdGFtcLgxOTcwLTAxLTAxVDAwOjAwOjAwLjAwMFqmSW5pdElk2gAkYTUxZjZmZDctZWQ3Yy00NzIxLWI5M2QtNGM1MDQyNmEyY2RkqlRha2VQcm9maXTaAOqLoklku08tMTk3MDAxMDEtMDAwMDAwLTAwMS0wMDEtM6ZTeW1ib2yrQVVEVVNELkZYQ02pT3JkZXJTaWRlpFNFTEypT3JkZXJUeXBlpUxJTUlUqFF1YW50aXR5zgABhqClUHJpY2WnMS4wMDAxMKVMYWJlbKROT05Fq1RpbWVJbkZvcmNlo0dUQ6pFeHBpcmVUaW1lpE5PTkWpVGltZXN0YW1wuDE5NzAtMDEtMDFUMDA6MDA6MDAuMDAwWqZJbml0SWTaACRmNzEwMjgwMC02NjRjLTQ0YmUtOGQwZS01M2NiNjkwMjRhNTQ=";
+            var commandBytes = Convert.FromBase64String(base64);
+
+            // Act
+            var command = this.serializer.Deserialize(commandBytes) as SubmitAtomicOrder;
+
+            // Assert
+            Assert.Equal(typeof(SubmitAtomicOrder), command?.GetType());
+        }
+
+        [Fact]
         internal void Deserialize_GivenModifyOrder_FromPythonMsgPack_ReturnsExpectedCommand()
         {
             // Arrange

@@ -35,8 +35,8 @@ namespace Nautilus.Serialization.Internal
                 { nameof(Order.Id), order.Id.ToString() },
                 { nameof(Order.Symbol), order.Symbol.ToString() },
                 { nameof(Order.Label), order.Label.ToString() },
-                { nameof(Order.Side), order.Side.ToString() },
-                { nameof(Order.Type), order.Type.ToString() },
+                { nameof(OrderSide), order.Side.ToString() },
+                { nameof(OrderType), order.Type.ToString() },
                 { nameof(Order.Quantity), order.Quantity.Value },
                 { nameof(Order.Price), ObjectPacker.Pack(order.Price) },
                 { nameof(Order.TimeInForce), order.TimeInForce.ToString() },
@@ -88,11 +88,11 @@ namespace Nautilus.Serialization.Internal
         /// <exception cref="InvalidEnumArgumentException">If the order type is unknown.</exception>
         private static Order Deserialize(MessagePackObjectDictionary unpacked)
         {
-            var type = ObjectExtractor.Enum<OrderType>(unpacked[nameof(Order.Type)]);
+            var type = ObjectExtractor.Enum<OrderType>(unpacked[nameof(OrderType)]);
             var id = ObjectExtractor.OrderId(unpacked[nameof(Order.Id)]);
             var symbol = ObjectExtractor.Symbol(unpacked);
             var label = ObjectExtractor.Label(unpacked);
-            var side = ObjectExtractor.Enum<OrderSide>(unpacked[nameof(Order.Side)]);
+            var side = ObjectExtractor.Enum<OrderSide>(unpacked[nameof(OrderSide)]);
             var quantity = ObjectExtractor.Quantity(unpacked[nameof(Order.Quantity)]);
             var timestamp = ObjectExtractor.ZonedDateTime(unpacked[nameof(Order.Timestamp)]);
             var initId = ObjectExtractor.Guid(unpacked[nameof(Order.InitId)]);
