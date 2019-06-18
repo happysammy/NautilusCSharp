@@ -30,7 +30,7 @@ namespace Nautilus.DomainModel.Events
         /// <param name="executionId">The event order execution identifier.</param>
         /// <param name="executionTicket">The event order execution ticket.</param>
         /// <param name="symbol">The event order symbol.</param>
-        /// <param name="side">The event order side.</param>
+        /// <param name="orderSide">The event order side.</param>
         /// <param name="filledQuantity">The event order filled quantity.</param>
         /// <param name="averagePrice">The event order average price.</param>
         /// <param name="executionTime">The event order execution time.</param>
@@ -41,7 +41,7 @@ namespace Nautilus.DomainModel.Events
             ExecutionId executionId,
             ExecutionTicket executionTicket,
             Symbol symbol,
-            OrderSide side,
+            OrderSide orderSide,
             Quantity filledQuantity,
             Price averagePrice,
             ZonedDateTime executionTime,
@@ -53,7 +53,7 @@ namespace Nautilus.DomainModel.Events
                 eventId,
                 eventTimestamp)
         {
-            Debug.NotDefault(side, nameof(side));
+            Debug.NotDefault(orderSide, nameof(orderSide));
             Debug.NotDefault(executionTime, nameof(executionTime));
             Debug.NotDefault(eventId, nameof(eventId));
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
@@ -61,7 +61,7 @@ namespace Nautilus.DomainModel.Events
             this.ExecutionId = executionId;
             this.ExecutionTicket = executionTicket;
             this.Symbol = symbol;
-            this.Side = side;
+            this.OrderSide = orderSide;
             this.FilledQuantity = filledQuantity;
             this.AveragePrice = averagePrice;
             this.ExecutionTime = executionTime;
@@ -85,7 +85,7 @@ namespace Nautilus.DomainModel.Events
         /// <summary>
         /// Gets the events order side.
         /// </summary>
-        public OrderSide Side { get; }
+        public OrderSide OrderSide { get; }
 
         /// <summary>
         /// Gets the events order filled quantity.

@@ -122,7 +122,7 @@ namespace Nautilus.Serialization
                     package.Add(nameof(evt.ExecutionId), evt.ExecutionId.ToString());
                     package.Add(nameof(evt.ExecutionTicket), evt.ExecutionTicket.ToString());
                     package.Add(nameof(evt.Symbol), evt.Symbol.ToString());
-                    package.Add(nameof(evt.Side), evt.Side.ToString());
+                    package.Add(nameof(evt.OrderSide), evt.OrderSide.ToString());
                     package.Add(nameof(evt.FilledQuantity), evt.FilledQuantity.Value);
                     package.Add(nameof(evt.AveragePrice), evt.AveragePrice.ToString());
                     package.Add(nameof(evt.ExecutionTime), evt.ExecutionTime.ToIsoString());
@@ -255,7 +255,7 @@ namespace Nautilus.Serialization
                         ObjectExtractor.ExecutionId(unpacked),
                         ObjectExtractor.ExecutionTicket(unpacked),
                         ObjectExtractor.Symbol(unpacked),
-                        ObjectExtractor.Enum<OrderSide>(unpacked[nameof(OrderFilled.Side)]),
+                        ObjectExtractor.Enum<OrderSide>(unpacked[nameof(OrderFilled.OrderSide)]),
                         ObjectExtractor.Quantity(unpacked[nameof(OrderFilled.FilledQuantity)]),
                         ObjectExtractor.Price(unpacked[nameof(OrderFilled.AveragePrice)]),
                         ObjectExtractor.ZonedDateTime(unpacked[nameof(OrderFilled.ExecutionTime)]),

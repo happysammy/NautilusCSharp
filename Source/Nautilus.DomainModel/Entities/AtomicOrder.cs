@@ -54,7 +54,7 @@ namespace Nautilus.DomainModel.Entities
         public Order StopLoss { get; }
 
         /// <summary>
-        /// Gets the atomic orders profit target order (optional).
+        /// Gets the atomic orders take-profit order (optional).
         /// </summary>
         public Order? TakeProfit { get; }
     }
