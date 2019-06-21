@@ -25,8 +25,8 @@ namespace Nautilus.DomainModel.Events
         /// Initializes a new instance of the <see cref="MarketClosed" /> class.
         /// </summary>
         /// <param name="symbol">The symbol of the market.</param>
-        /// <param name="eventId">The account event identifier.</param>
-        /// <param name="eventTimestamp">The account event timestamp.</param>
+        /// <param name="eventId">The event identifier.</param>
+        /// <param name="eventTimestamp">The event timestamp.</param>
         public MarketClosed(
             Symbol symbol,
             Guid eventId,

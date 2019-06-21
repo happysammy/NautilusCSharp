@@ -29,8 +29,8 @@ namespace Nautilus.Execution.Messages.Commands
         /// <param name="strategyId">The strategy identifier.</param>
         /// <param name="orderId">The order identifier.</param>
         /// <param name="cancelReason">The cancel reason.</param>
-        /// <param name="commandId">The commands identifier.</param>
-        /// <param name="commandTimestamp">The commands timestamp.</param>
+        /// <param name="commandId">The command identifier.</param>
+        /// <param name="commandTimestamp">The command timestamp.</param>
         public CancelOrder(
             TraderId traderId,
             StrategyId strategyId,

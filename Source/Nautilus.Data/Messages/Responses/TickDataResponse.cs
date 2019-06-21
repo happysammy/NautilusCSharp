@@ -27,22 +27,22 @@ namespace Nautilus.Data.Messages.Responses
         /// <param name="symbol">The response tick data symbol.</param>
         /// <param name="ticks">The response ticks.</param>
         /// <param name="correlationId">The response correlation identifier.</param>
-        /// <param name="id">The response identifier.</param>
-        /// <param name="timestamp">The response timestamp.</param>
+        /// <param name="responseId">The response identifier.</param>
+        /// <param name="responseTimestamp">The response timestamp.</param>
         public TickDataResponse(
             Symbol symbol,
             byte[][] ticks,
             Guid correlationId,
-            Guid id,
-            ZonedDateTime timestamp)
+            Guid responseId,
+            ZonedDateTime responseTimestamp)
             : base(
                 typeof(TickDataResponse),
                 correlationId,
-                id,
-                timestamp)
+                responseId,
+                responseTimestamp)
         {
-            Debug.NotDefault(id, nameof(id));
-            Debug.NotDefault(timestamp, nameof(timestamp));
+            Debug.NotDefault(responseId, nameof(responseId));
+            Debug.NotDefault(responseTimestamp, nameof(responseTimestamp));
 
             this.Symbol = symbol;
             this.Ticks = ticks;

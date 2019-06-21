@@ -29,23 +29,23 @@ namespace Nautilus.Data.Messages.Requests
         /// <param name="barSpec">The request bar specification.</param>
         /// <param name="fromDateTime">The request from date time.</param>
         /// <param name="toDateTime">The request to date time.</param>
-        /// <param name="id">The requests identifier.</param>
-        /// <param name="timestamp">The requests timestamp.</param>
+        /// <param name="requestId">The request identifier.</param>
+        /// <param name="requestTimestamp">The request timestamp.</param>
         public BarDataRequest(
             Symbol barSymbol,
             BarSpecification barSpec,
             ZonedDateTime fromDateTime,
             ZonedDateTime toDateTime,
-            Guid id,
-            ZonedDateTime timestamp)
+            Guid requestId,
+            ZonedDateTime requestTimestamp)
             : base(
                 typeof(BarDataRequest),
-                id,
-                timestamp)
+                requestId,
+                requestTimestamp)
         {
             Condition.True(fromDateTime.IsLessThanOrEqualTo(toDateTime), "fromDateTime <= toDateTime");
-            Debug.NotDefault(id, nameof(id));
-            Debug.NotDefault(timestamp, nameof(timestamp));
+            Debug.NotDefault(requestId, nameof(requestId));
+            Debug.NotDefault(requestTimestamp, nameof(requestTimestamp));
 
             this.Symbol = barSymbol;
             this.BarSpecification = barSpec;

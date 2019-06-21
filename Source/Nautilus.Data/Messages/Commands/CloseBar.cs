@@ -26,17 +26,17 @@ namespace Nautilus.Data.Messages.Commands
         /// </summary>
         /// <param name="barSpec">The bar specification.</param>
         /// <param name="scheduledTime">The scheduled job time.</param>
-        /// <param name="id">The close identifier.</param>
-        /// <param name="timestamp">The close timestamp.</param>
+        /// <param name="commandId">The command identifier.</param>
+        /// <param name="commandTimestamp">The command timestamp.</param>
         public CloseBar(
             BarSpecification barSpec,
             ZonedDateTime scheduledTime,
-            Guid id,
-            ZonedDateTime timestamp)
+            Guid commandId,
+            ZonedDateTime commandTimestamp)
             : base(
                 typeof(CloseBar),
-                id,
-                timestamp)
+                commandId,
+                commandTimestamp)
         {
             this.ScheduledTime = scheduledTime;
             this.BarSpecification = barSpec;

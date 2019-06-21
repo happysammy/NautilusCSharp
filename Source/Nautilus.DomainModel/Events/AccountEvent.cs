@@ -37,8 +37,8 @@ namespace Nautilus.DomainModel.Events
         /// <param name="marginUsedMaintenance">The account margin used maintenance.</param>
         /// <param name="marginRatio">The account margin ratio.</param>
         /// <param name="marginCallStatus">The account margin call status.</param>
-        /// <param name="eventId">The account event identifier.</param>
-        /// <param name="eventTimestamp">The account event timestamp.</param>
+        /// <param name="eventId">The event identifier.</param>
+        /// <param name="eventTimestamp">The event timestamp.</param>
         public AccountEvent(
             AccountId accountId,
             Brokerage broker,

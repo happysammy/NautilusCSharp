@@ -25,19 +25,19 @@ namespace Nautilus.Data.Messages.Requests
         /// Initializes a new instance of the <see cref="InstrumentsRequest"/> class.
         /// </summary>
         /// <param name="venue">The request venue.</param>
-        /// <param name="id">The requests identifier.</param>
-        /// <param name="timestamp">The requests timestamp.</param>
+        /// <param name="requestId">The request identifier.</param>
+        /// <param name="requestTimestamp">The request timestamp.</param>
         public InstrumentsRequest(
             Venue venue,
-            Guid id,
-            ZonedDateTime timestamp)
+            Guid requestId,
+            ZonedDateTime requestTimestamp)
             : base(
                 typeof(InstrumentsRequest),
-                id,
-                timestamp)
+                requestId,
+                requestTimestamp)
         {
-            Debug.NotDefault(id, nameof(id));
-            Debug.NotDefault(timestamp, nameof(timestamp));
+            Debug.NotDefault(requestId, nameof(requestId));
+            Debug.NotDefault(requestTimestamp, nameof(requestTimestamp));
 
             this.Venue = venue;
         }

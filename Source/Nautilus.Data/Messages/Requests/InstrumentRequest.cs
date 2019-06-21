@@ -16,7 +16,7 @@ namespace Nautilus.Data.Messages.Requests
     using NodaTime;
 
     /// <summary>
-    /// Represents a request for an instruments.
+    /// Represents a request for an instrument.
     /// </summary>
     [Immutable]
     public sealed class InstrumentRequest : Request
@@ -25,19 +25,19 @@ namespace Nautilus.Data.Messages.Requests
         /// Initializes a new instance of the <see cref="InstrumentRequest"/> class.
         /// </summary>
         /// <param name="symbol">The request symbol.</param>
-        /// <param name="id">The requests identifier.</param>
-        /// <param name="timestamp">The requests timestamp.</param>
+        /// <param name="requestId">The request identifier.</param>
+        /// <param name="requestTimestamp">The request timestamp.</param>
         public InstrumentRequest(
             Symbol symbol,
-            Guid id,
-            ZonedDateTime timestamp)
+            Guid requestId,
+            ZonedDateTime requestTimestamp)
             : base(
                 typeof(InstrumentRequest),
-                id,
-                timestamp)
+                requestId,
+                requestTimestamp)
         {
-            Debug.NotDefault(id, nameof(id));
-            Debug.NotDefault(timestamp, nameof(timestamp));
+            Debug.NotDefault(requestId, nameof(requestId));
+            Debug.NotDefault(requestTimestamp, nameof(requestTimestamp));
 
             this.Symbol = symbol;
         }

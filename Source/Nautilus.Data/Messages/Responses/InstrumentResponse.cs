@@ -25,21 +25,21 @@ namespace Nautilus.Data.Messages.Responses
         /// </summary>
         /// <param name="instruments">The response instruments.</param>
         /// <param name="correlationId">The response correlation identifier.</param>
-        /// <param name="id">The response identifier.</param>
-        /// <param name="timestamp">The response timestamp.</param>
+        /// <param name="responseId">The response identifier.</param>
+        /// <param name="responseTimestamp">The response timestamp.</param>
         public InstrumentResponse(
             byte[][] instruments,
             Guid correlationId,
-            Guid id,
-            ZonedDateTime timestamp)
+            Guid responseId,
+            ZonedDateTime responseTimestamp)
             : base(
                 typeof(InstrumentResponse),
                 correlationId,
-                id,
-                timestamp)
+                responseId,
+                responseTimestamp)
         {
-            Debug.NotDefault(id, nameof(id));
-            Debug.NotDefault(timestamp, nameof(timestamp));
+            Debug.NotDefault(responseId, nameof(responseId));
+            Debug.NotDefault(responseTimestamp, nameof(responseTimestamp));
 
             this.Instruments = instruments;
         }

@@ -25,18 +25,18 @@ namespace Nautilus.Data.Messages.Commands
         /// Initializes a new instance of the <see cref="TrimTickData"/> class.
         /// </summary>
         /// <param name="trimFrom">The date time the tick data should be trimmed from.</param>
-        /// <param name="scheduledTime">The commands scheduled time.</param>
-        /// <param name="id">The commands identifier.</param>
-        /// <param name="timestamp">The commands creation timestamp.</param>
+        /// <param name="scheduledTime">The command scheduled time.</param>
+        /// <param name="commandId">The command identifier.</param>
+        /// <param name="commandTimestamp">The command timestamp.</param>
         public TrimTickData(
             ZonedDateTime trimFrom,
             ZonedDateTime scheduledTime,
-            Guid id,
-            ZonedDateTime timestamp)
+            Guid commandId,
+            ZonedDateTime commandTimestamp)
             : base(
                 typeof(TrimBarData),
-                id,
-                timestamp)
+                commandId,
+                commandTimestamp)
         {
             Debug.NotDefault(trimFrom, nameof(trimFrom));
             Debug.NotDefault(scheduledTime, nameof(scheduledTime));
