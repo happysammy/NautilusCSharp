@@ -29,22 +29,22 @@ namespace Nautilus.Data.Messages.Responses
         /// <param name="bars">The response bars count.</param>
         /// <param name="correlationId">The response correlation identifier.</param>
         /// <param name="responseId">The response identifier.</param>
-        /// <param name="timestamp">The response timestamp.</param>
+        /// <param name="responseTimestamp">The response timestamp.</param>
         public BarDataResponse(
             Symbol symbol,
             BarSpecification barSpec,
             byte[][] bars,
             Guid correlationId,
             Guid responseId,
-            ZonedDateTime timestamp)
+            ZonedDateTime responseTimestamp)
             : base(
                 typeof(BarDataResponse),
                 correlationId,
                 responseId,
-                timestamp)
+                responseTimestamp)
         {
             Debug.NotDefault(responseId, nameof(responseId));
-            Debug.NotDefault(timestamp, nameof(timestamp));
+            Debug.NotDefault(responseTimestamp, nameof(responseTimestamp));
 
             this.Symbol = symbol;
             this.BarSpecification = barSpec;
