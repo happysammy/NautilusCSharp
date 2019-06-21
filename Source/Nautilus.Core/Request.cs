@@ -6,10 +6,9 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Network.Messages
+namespace Nautilus.Core
 {
     using System;
-    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using NodaTime;

@@ -11,13 +11,13 @@ namespace Nautilus.Data.Providers
     using System;
     using System.Linq;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Messages.Requests;
     using Nautilus.Data.Messages.Responses;
     using Nautilus.DomainModel.Entities;
     using Nautilus.Messaging;
     using Nautilus.Network;
-    using Nautilus.Network.Messages;
 
     /// <summary>
     /// Provides <see cref="Instrument"/> data to requests.

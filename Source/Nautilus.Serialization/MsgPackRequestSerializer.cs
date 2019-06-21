@@ -10,11 +10,11 @@ namespace Nautilus.Serialization
 {
     using MsgPack;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.Data.Messages.Requests;
     using Nautilus.DomainModel.Enums;
-    using Nautilus.Network.Messages;
     using Nautilus.Serialization.Internal;
 
     /// <summary>

@@ -9,6 +9,7 @@
 namespace Nautilus.Network.Messages
 {
     using System;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using NodaTime;

@@ -14,6 +14,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
     using System.Threading.Tasks;
     using Nautilus.Common.Data;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core;
     using Nautilus.Data;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Messages.Requests;

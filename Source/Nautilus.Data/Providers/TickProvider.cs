@@ -12,13 +12,13 @@ namespace Nautilus.Data.Providers
     using System.Linq;
     using System.Text;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Messages.Requests;
     using Nautilus.Data.Messages.Responses;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging;
     using Nautilus.Network;
-    using Nautilus.Network.Messages;
 
     /// <summary>
     /// Provides <see cref="Tick"/> data to requests.

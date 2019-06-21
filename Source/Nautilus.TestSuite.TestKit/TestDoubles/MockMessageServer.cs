@@ -12,9 +12,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core;
     using Nautilus.Messaging;
     using Nautilus.Network;
-    using Nautilus.Network.Messages;
     using Nautilus.Serialization;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
