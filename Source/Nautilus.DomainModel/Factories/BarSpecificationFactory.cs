@@ -28,10 +28,11 @@ namespace Nautilus.DomainModel.Factories
         {
             Debug.NotEmptyOrWhiteSpace(barSpecString, nameof(barSpecString));
 
-            // 1-Minute[Bid]
-            var period = Convert.ToInt32(barSpecString.Split('-')[0]);
-            var resolution = barSpecString.Split('-')[1].Split('[')[0].ToUpper();
-            var quoteType = barSpecString.Split('[')[1].Trim(']').ToUpper();
+            var split1 = barSpecString.Split('-');
+            var split2 = split1[1].Split('[');
+            var period = Convert.ToInt32(split1[0]);
+            var resolution = split2[0].ToUpper();
+            var quoteType = split2[1].Trim(']').ToUpper();
 
             return new BarSpecification(
                 period,
