@@ -24,6 +24,7 @@ namespace Nautilus.Redis
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.Redis.Builders;
     using NodaTime;
     using StackExchange.Redis;
 

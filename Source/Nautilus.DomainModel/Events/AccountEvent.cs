@@ -26,7 +26,6 @@ namespace Nautilus.DomainModel.Events
         /// <summary>
         /// Initializes a new instance of the <see cref="AccountEvent" /> class.
         /// </summary>
-        /// <param name="accountId">The account identifier.</param>
         /// <param name="broker">The account broker.</param>
         /// <param name="accountNumber">The account number.</param>
         /// <param name="currency">The currency of the account.</param>
@@ -40,7 +39,6 @@ namespace Nautilus.DomainModel.Events
         /// <param name="eventId">The event identifier.</param>
         /// <param name="eventTimestamp">The event timestamp.</param>
         public AccountEvent(
-            AccountId accountId,
             Brokerage broker,
             string accountNumber,
             Currency currency,
@@ -59,7 +57,7 @@ namespace Nautilus.DomainModel.Events
             Debug.NotDefault(eventId, nameof(eventId));
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
 
-            this.AccountId = accountId;
+            this.AccountId = new AccountId($"{broker}-{accountNumber}");
             this.Broker = broker;
             this.AccountNumber = accountNumber;
             this.Currency = currency;

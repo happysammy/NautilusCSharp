@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.DomainModel.Factories
+namespace Nautilus.Redis.Builders
 {
     using System.Collections.Generic;
     using System.Globalization;
@@ -63,8 +63,6 @@ namespace Nautilus.DomainModel.Factories
         private int TickPrecision { get; }
 
         private decimal TickSize { get; }
-
-        private decimal TickValue { get; set; }
 
         private int RoundLotSize { get; }
 

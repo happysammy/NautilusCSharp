@@ -25,7 +25,6 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Initializes a new instance of the <see cref="Account"/> class.
         /// </summary>
-        /// <param name="accountId">The account identifier.</param>
         /// <param name="broker">The broker name.</param>
         /// <param name="accountNumber">The account number.</param>
         /// <param name="username">The account username.</param>
@@ -35,7 +34,6 @@ namespace Nautilus.DomainModel.Aggregates
         /// <exception cref="ArgumentException">If any string is empty or whitespace.</exception>
         /// <exception cref="ArgumentException">If any struct is the default value.</exception>
         public Account(
-            AccountId accountId,
             Brokerage broker,
             string accountNumber,
             string username,
@@ -43,7 +41,7 @@ namespace Nautilus.DomainModel.Aggregates
             Currency currency,
             ZonedDateTime timestamp)
             : base(
-                accountId,
+                new AccountId($"{broker}-{accountNumber}"),
                 timestamp)
         {
             Condition.NotEmptyOrWhiteSpace(username, nameof(username));

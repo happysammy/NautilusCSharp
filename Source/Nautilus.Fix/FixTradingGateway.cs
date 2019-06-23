@@ -173,7 +173,6 @@ namespace Nautilus.Fix
                 Condition.NotDefault(timestamp, nameof(timestamp));
 
                 var accountEvent = new AccountEvent(
-                    EntityIdFactory.Account(this.fixClient.Broker, accountNumber),
                     this.fixClient.Broker,
                     accountNumber,
                     this.accountCurrency,

@@ -37,7 +37,6 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Arrange
             // Act
             var account = new Account(
-                EntityIdFactory.Account(Brokerage.FXCM, "123456789"),
                 Brokerage.FXCM,
                 "123456789",
                 "some username",
@@ -57,7 +56,6 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var account = new Account(
-                EntityIdFactory.Account(Brokerage.FXCM, "123456789"),
                 Brokerage.FXCM,
                 "123456789",
                 "some username",
@@ -66,7 +64,6 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 this.clock.TimeNow());
 
             var message = new AccountEvent(
-                EntityIdFactory.Account(Brokerage.FXCM, "123456789"),
                 Brokerage.FXCM,
                 "123456789",
                 this.currency,
@@ -98,7 +95,6 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var account = new Account(
-                EntityIdFactory.Account(Brokerage.FXCM, "123456789"),
                 Brokerage.FXCM,
                 "123456789",
                 "some username",
@@ -107,7 +103,6 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 this.clock.TimeNow());
 
             var message = new AccountEvent(
-                EntityIdFactory.Account(Brokerage.FXCM, "123456789"),
                 Brokerage.FXCM,
                 "123456789",
                 Currency.USD,

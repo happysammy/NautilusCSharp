@@ -22,7 +22,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public static Account Create()
         {
             var account = new Account(
-                EntityIdFactory.Account(Brokerage.IB, "123456789"),
                 Brokerage.IB,
                 "123456789",
                 "my_username",
@@ -31,7 +30,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 StubZonedDateTime.UnixEpoch());
 
             var accountEventMessage = new AccountEvent(
-                EntityIdFactory.Account(Brokerage.IB, "123456789"),
                 Brokerage.IB,
                 "123456789",
                 Currency.USD,
@@ -53,7 +51,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public static Account ZeroCash()
         {
             var account = new Account(
-                EntityIdFactory.Account(Brokerage.IB, "123456789"),
                 Brokerage.IB,
                 "123456789",
                 "my_username",
@@ -62,7 +59,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 StubZonedDateTime.UnixEpoch());
 
             var accountEventMessage = new AccountEvent(
-                EntityIdFactory.Account(Brokerage.IB, "123456789"),
                 Brokerage.IB,
                 "123456789",
                 Currency.USD,

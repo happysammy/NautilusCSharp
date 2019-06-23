@@ -40,4 +40,8 @@
         <AdditionalFiles Include="..\stylecop.json" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="DomainModelTests\FactoriesTests" />
+    </ItemGroup>
+
 </Project>

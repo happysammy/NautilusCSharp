@@ -39,7 +39,6 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         {
             // Arrange
             var accountEvent = new AccountEvent(
-                EntityIdFactory.Account(Brokerage.FXCM, "123456"),
                 Brokerage.FXCM,
                 "123456",
                 Currency.USD,
