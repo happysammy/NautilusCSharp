@@ -8,13 +8,12 @@
 
 namespace Nautilus.Serialization
 {
+    using System;
     using System.Text;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
 
-    /// <summary>
-    /// Provides a binary serializer for <see cref="Bar"/>s.
-    /// </summary>
+    /// <inheritdoc />
     public class Utf8TickSerializer : ISerializer<Tick>
     {
         /// <inheritdoc />
@@ -26,7 +25,7 @@ namespace Nautilus.Serialization
         /// <inheritdoc />
         public Tick Deserialize(byte[] bytes)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }
