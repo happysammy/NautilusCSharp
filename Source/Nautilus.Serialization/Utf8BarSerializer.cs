@@ -10,7 +10,7 @@ namespace Nautilus.Serialization
 {
     using System.Text;
     using Nautilus.Common.Interfaces;
-    using Nautilus.DomainModel.Factories;
+    using Nautilus.DomainModel;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
@@ -27,7 +27,7 @@ namespace Nautilus.Serialization
         /// <inheritdoc />
         public Bar Deserialize(byte[] bytes)
         {
-            return BarFactory.Create(Encoding.UTF8.GetString(bytes));
+            return DomainObjectParser.ParseBar(Encoding.UTF8.GetString(bytes));
         }
     }
 }

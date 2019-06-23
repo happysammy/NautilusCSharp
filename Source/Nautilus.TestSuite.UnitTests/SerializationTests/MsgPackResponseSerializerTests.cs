@@ -14,6 +14,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
     using System.Linq;
     using System.Text;
     using Nautilus.Data.Messages.Responses;
+    using Nautilus.DomainModel;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
@@ -142,7 +143,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var unpacked = (TickDataResponse)this.serializer.Deserialize(packed);
 
             var receivedTicks = unpacked.Ticks
-                .Select(t => TickFactory.Create(symbol, Encoding.UTF8.GetString(t)))
+                .Select(t => DomainObjectParser.ParseTick(symbol, Encoding.UTF8.GetString(t)))
                 .ToList();
 
             // Assert

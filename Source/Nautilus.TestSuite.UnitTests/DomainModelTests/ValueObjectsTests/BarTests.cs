@@ -123,25 +123,5 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
             // Assert
             Assert.Equal("0.80000,0.80010,0.79990,0.80001,1000000,1970-01-01T00:00:00.000Z", result);
         }
-
-        [Fact]
-        internal void Create_WithValidString_ReturnsExpectedBar()
-        {
-            // Arrange
-            var bar = new Bar(
-                Price.Create(0.80000m, 5),
-                Price.Create(0.80010m, 5),
-                Price.Create(0.79990m, 5),
-                Price.Create(0.80001m, 5),
-                Quantity.Create(1000000),
-                StubZonedDateTime.UnixEpoch());
-
-            // Act
-            var barString = bar.ToString();
-            var result = BarFactory.Create(barString);
-
-            // Assert
-            Assert.Equal(bar, result);
-        }
     }
 }

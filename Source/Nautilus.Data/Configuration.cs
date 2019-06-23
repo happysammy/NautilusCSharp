@@ -16,6 +16,7 @@ namespace Nautilus.Data
     using Nautilus.Common.Configuration;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Extensions;
+    using Nautilus.DomainModel;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
@@ -100,7 +101,7 @@ namespace Nautilus.Data
             this.BarSpecifications = barSpecs
                 .Select(bs => bs.ToString())
                 .Distinct()
-                .Select(BarSpecificationFactory.Create)
+                .Select(DomainObjectParser.ParseBarSpecification)
                 .ToImmutableList();
 
             var tickTrimDay = configJson[ConfigSection.Data]["tickDataTrimDay"].ToString().ToEnum<IsoDayOfWeek>();

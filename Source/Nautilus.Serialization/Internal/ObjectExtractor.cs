@@ -11,9 +11,9 @@ namespace Nautilus.Serialization.Internal
     using System;
     using MsgPack;
     using Nautilus.Core.Extensions;
+    using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Execution.Identifiers;
@@ -53,7 +53,7 @@ namespace Nautilus.Serialization.Internal
         /// <returns>The extracted Symbol.</returns>
         internal static Symbol Symbol(MessagePackObjectDictionary unpacked)
         {
-            return SymbolFactory.Create(unpacked[nameof(Symbol)].ToString());
+            return DomainObjectParser.ParseSymbol(unpacked[nameof(Symbol)].ToString());
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace Nautilus.Serialization.Internal
         /// <returns>The extracted BarSpecification.</returns>
         internal static BarSpecification BarSpecification(MessagePackObjectDictionary unpacked)
         {
-            return BarSpecificationFactory.Create(unpacked[nameof(BarSpecification)].ToString());
+            return DomainObjectParser.ParseBarSpecification(unpacked[nameof(BarSpecification)].ToString());
         }
 
         /// <summary>

@@ -83,24 +83,5 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
             // Assert
             Assert.Equal("1-MINUTE[BID]", result);
         }
-
-        [Fact]
-        internal void Create_WithValidString_ReturnsExpectedBarSpec()
-        {
-            // Arrange
-            var barSpec1 = new BarSpecification(1, Resolution.MINUTE, QuoteType.BID);
-            var barSpec2 = new BarSpecification(1, Resolution.HOUR, QuoteType.MID);
-
-            var string1 = barSpec1.ToString();
-            var string2 = barSpec2.ToString();
-
-            // Act
-            var result1 = BarSpecificationFactory.Create(string1);
-            var result2 = BarSpecificationFactory.Create(string2);
-
-            // Assert
-            Assert.Equal(barSpec1, result1);
-            Assert.Equal(barSpec2, result2);
-        }
     }
 }

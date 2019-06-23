@@ -18,6 +18,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
     using Nautilus.Data.Messages.Requests;
     using Nautilus.Data.Messages.Responses;
     using Nautilus.Data.Providers;
+    using Nautilus.DomainModel;
     using Nautilus.DomainModel.Factories;
     using Nautilus.Network;
     using Nautilus.Network.Messages;
@@ -143,8 +144,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             Assert.Equal(barType.Symbol, response.Symbol);
             Assert.Equal(barType.Specification, response.BarSpecification);
             Assert.Equal(2, response.Bars.Length);
-            Assert.Equal(bar1, BarFactory.Create(Encoding.UTF8.GetString(response.Bars[0])));
-            Assert.Equal(bar2, BarFactory.Create(Encoding.UTF8.GetString(response.Bars[1])));
+            Assert.Equal(bar1, DomainObjectParser.ParseBar(Encoding.UTF8.GetString(response.Bars[0])));
+            Assert.Equal(bar2, DomainObjectParser.ParseBar(Encoding.UTF8.GetString(response.Bars[1])));
 
             // Tear Down;
             requester.Disconnect(TEST_ADDRESS);

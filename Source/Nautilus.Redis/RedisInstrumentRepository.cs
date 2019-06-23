@@ -19,6 +19,7 @@ namespace Nautilus.Redis
     using Nautilus.Core.Extensions;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Keys;
+    using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
@@ -179,7 +180,7 @@ namespace Nautilus.Redis
 
             var instrument = new Instrument(
                 new InstrumentId(instrumentDict[nameof(Instrument.Id)]),
-                SymbolFactory.Create(instrumentDict[nameof(Instrument.Symbol)]),
+                DomainObjectParser.ParseSymbol(instrumentDict[nameof(Instrument.Symbol)]),
                 new BrokerSymbol(instrumentDict[nameof(Instrument.BrokerSymbol)]),
                 instrumentDict[nameof(Instrument.QuoteCurrency)].ToEnum<Currency>(),
                 instrumentDict[nameof(Instrument.SecurityType)].ToEnum<SecurityType>(),

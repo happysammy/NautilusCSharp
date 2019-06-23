@@ -87,19 +87,5 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
             Assert.Equal(expected, result1);
             Assert.Equal(expected, result2);
         }
-
-        [Fact]
-        internal void Create_WithValidString_ReturnsExpectedTick()
-        {
-            // Arrange
-            var tick = new Tick(this.symbol, 1.00000m, 1.00000m, StubZonedDateTime.UnixEpoch());
-
-            // Act
-            var tickString = tick.ToString();
-            var result = TickFactory.Create(this.symbol, tickString);
-
-            // Assert
-            Assert.Equal(tick, result);
-        }
     }
 }
