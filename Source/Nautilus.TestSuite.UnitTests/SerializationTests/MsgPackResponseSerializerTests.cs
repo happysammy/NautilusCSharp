@@ -165,7 +165,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var correlationId = Guid.NewGuid();
 
             var bar = Encoding.UTF8.GetBytes(StubBarBuilder.Build().ToString());
-            var bars = new byte[][] { bar, bar };
+            var bars = new[] { bar, bar };
 
             var response = new BarDataResponse(
                 symbol,
