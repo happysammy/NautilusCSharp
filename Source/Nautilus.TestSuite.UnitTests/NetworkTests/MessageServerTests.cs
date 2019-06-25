@@ -2,7 +2,7 @@
 // <copyright file="MessageServerTests.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
-//  http://www.nautechsystems.net
+//  http://www.nautechsystems.io
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
@@ -77,7 +77,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             var server = new MockMessageServer(
                 this.container,
                 NetworkAddress.LocalHost,
-                new NetworkPort(55555),
+                new NetworkPort(55556),
                 Guid.NewGuid());
             server.Start();
 
@@ -97,7 +97,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         internal void GivenMessage_WhichIsEmptyBytes_RespondsWithMessageRejected()
         {
             // Arrange
-            const int testPort = 55590;
+            const int testPort = 55557;
             var testAddress = "tcp://127.0.0.1:" + testPort;
 
             var server = new MockMessageServer(

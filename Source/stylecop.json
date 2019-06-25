@@ -3,7 +3,7 @@
   "settings": {
     "documentationRules": {
       "companyName": "Nautech Systems Pty Ltd",
-      "copyrightText": "  Copyright (C) 2015-2019 {companyName}. All rights reserved.\n  The use of this source code is governed by the license as found in the LICENSE.txt file.\n  http://www.nautechsystems.net",
+      "copyrightText": "  Copyright (C) 2015-2019 {companyName}. All rights reserved.\n  The use of this source code is governed by the license as found in the LICENSE.txt file.\n  http://www.nautechsystems.io",
       "xmlHeader": true,
       "fileNamingConvention": "stylecop"
     },

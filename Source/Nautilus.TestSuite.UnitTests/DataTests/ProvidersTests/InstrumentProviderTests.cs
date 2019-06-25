@@ -2,7 +2,7 @@
 // <copyright file="InstrumentProviderTests.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
-//   http://www.nautechsystems.net
+//   http://www.nautechsystems.io
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
@@ -38,7 +38,6 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
         private readonly ITestOutputHelper output;
         private readonly MockLoggingAdapter loggingAdapter;
         private readonly IInstrumentRepository repository;
-        private readonly ISerializer<Instrument> serializer;
         private readonly IMessageSerializer<Request> requestSerializer;
         private readonly IMessageSerializer<Response> responseSerializer;
         private readonly InstrumentProvider provider;
