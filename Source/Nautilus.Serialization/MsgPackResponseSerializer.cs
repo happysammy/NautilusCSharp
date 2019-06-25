@@ -14,6 +14,8 @@ namespace Nautilus.Serialization
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.Data.Messages.Responses;
+    using Nautilus.DomainModel;
+    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network.Messages;
     using Nautilus.Serialization.Internal;
 
@@ -60,12 +62,12 @@ namespace Nautilus.Serialization
                     break;
                 case TickDataResponse res:
                     package.Add(nameof(res.Symbol), res.Symbol.ToString());
-                    package.Add(nameof(res.Ticks), MsgPackSerializer.Serialize(this.tickSerializer.Serialize(res.Ticks)));
+                    package.Add(nameof(res.Ticks), MsgPackSerializer.Serialize(ByteArrayUtf8Serializer<Tick>.Serialize(res.Ticks)));
                     break;
                 case BarDataResponse res:
                     package.Add(nameof(res.Symbol), res.Symbol.ToString());
                     package.Add(nameof(res.BarSpecification), res.BarSpecification.ToString());
-                    package.Add(nameof(res.Bars), MsgPackSerializer.Serialize(this.barSerializer.Serialize(res.Bars)));
+                    package.Add(nameof(res.Bars), MsgPackSerializer.Serialize(ByteArrayUtf8Serializer<Bar>.Serialize(res.Bars)));
                     break;
                 case InstrumentResponse res:
                     package.Add(nameof(res.Instruments), MsgPackSerializer.Serialize(this.instrumentSerializer.Serialize(res.Instruments)));
@@ -111,7 +113,10 @@ namespace Nautilus.Serialization
                     var symbol = ObjectExtractor.Symbol(unpacked);
                     return new TickDataResponse(
                         symbol,
-                        this.tickSerializer.Deserialize(symbol, MsgPackSerializer.Deserialize<byte[][]>(unpacked[nameof(TickDataResponse.Ticks)].AsBinary())),
+                        ByteArrayUtf8Serializer<Tick>.Deserialize(
+                            MsgPackSerializer.Deserialize<byte[][]>(unpacked[nameof(TickDataResponse.Ticks)].AsBinary()),
+                            symbol,
+                            DomainObjectParser.ParseTick),
                         correlationId,
                         id,
                         timestamp);
@@ -119,7 +124,9 @@ namespace Nautilus.Serialization
                     return new BarDataResponse(
                         ObjectExtractor.Symbol(unpacked),
                         ObjectExtractor.BarSpecification(unpacked),
-                        this.barSerializer.Deserialize(MsgPackSerializer.Deserialize<byte[][]>(unpacked[nameof(BarDataResponse.Bars)].AsBinary())),
+                        ByteArrayUtf8Serializer<Bar>.Deserialize(
+                            MsgPackSerializer.Deserialize<byte[][]>(unpacked[nameof(BarDataResponse.Bars)].AsBinary()),
+                            DomainObjectParser.ParseBar),
                         correlationId,
                         id,
                         timestamp);

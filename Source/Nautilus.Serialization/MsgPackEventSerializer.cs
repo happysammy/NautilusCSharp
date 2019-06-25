@@ -16,7 +16,6 @@ namespace Nautilus.Serialization
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
-    using Nautilus.DomainModel.Identifiers;
     using Nautilus.Serialization.Internal;
 
     /// <summary>

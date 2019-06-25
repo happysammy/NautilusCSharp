@@ -11,10 +11,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit.TestDoubles;
-    using NodaTime;
     using Xunit;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]

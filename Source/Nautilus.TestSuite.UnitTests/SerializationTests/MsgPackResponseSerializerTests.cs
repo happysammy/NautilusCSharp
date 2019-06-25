@@ -9,14 +9,10 @@
 namespace Nautilus.TestSuite.UnitTests.SerializationTests
 {
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
     using System.Text;
     using Nautilus.Data.Messages.Responses;
-    using Nautilus.DomainModel;
     using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network.Messages;
     using Nautilus.Serialization;

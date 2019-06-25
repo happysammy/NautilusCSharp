@@ -10,7 +10,6 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
-    using System.Text;
     using System.Threading.Tasks;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
@@ -18,8 +17,6 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
     using Nautilus.Data.Messages.Requests;
     using Nautilus.Data.Messages.Responses;
     using Nautilus.Data.Providers;
-    using Nautilus.DomainModel;
-    using Nautilus.DomainModel.Factories;
     using Nautilus.Network;
     using Nautilus.Network.Messages;
     using Nautilus.Serialization;

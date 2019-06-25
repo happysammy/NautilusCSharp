@@ -13,7 +13,6 @@ namespace Nautilus.DomainModel
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
-    using NodaTime;
 
     /// <summary>
     /// Provides a parser for creating domain objects from <see cref="string"/>(s).
@@ -32,23 +31,6 @@ namespace Nautilus.DomainModel
             var symbolSplit = symbolString.Split('.');
 
             return new Symbol(symbolSplit[0], symbolSplit[1].ToEnum<Venue>());
-        }
-
-        /// <summary>
-        /// Returns a new <see cref="Tick"/> from the given <see cref="string"/>.
-        /// </summary>
-        /// <param name="tickString">The string containing tick values.</param>
-        /// <returns>The created <see cref="Tick"/>.</returns>
-        public static (Price, Price, ZonedDateTime) ParseTickValues(string tickString)
-        {
-            Debug.NotEmptyOrWhiteSpace(tickString, nameof(tickString));
-
-            var values = tickString.Split(',');
-
-            return new ValueTuple<Price, Price, ZonedDateTime>(
-                Price.Create(Convert.ToDecimal(values[0])),
-                Price.Create(Convert.ToDecimal(values[1])),
-                values[2].ToZonedDateTimeFromIso());
         }
 
         /// <summary>
