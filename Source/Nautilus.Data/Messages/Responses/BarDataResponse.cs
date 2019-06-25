@@ -33,7 +33,7 @@ namespace Nautilus.Data.Messages.Responses
         public BarDataResponse(
             Symbol symbol,
             BarSpecification barSpec,
-            byte[][] bars,
+            Bar[] bars,
             Guid correlationId,
             Guid responseId,
             ZonedDateTime responseTimestamp)
@@ -64,6 +64,6 @@ namespace Nautilus.Data.Messages.Responses
         /// <summary>
         /// Gets the responses bar data.
         /// </summary>
-        public byte[][] Bars { get; }
+        public Bar[] Bars { get; }
     }
 }

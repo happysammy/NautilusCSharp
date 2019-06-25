@@ -75,7 +75,6 @@ namespace Nautilus.Data.Providers
             var bars = query
                 .Value
                 .Bars
-                .Select(b => Encoding.UTF8.GetBytes(b.ToString()))
                 .ToArray();
 
             var response = new BarDataResponse(

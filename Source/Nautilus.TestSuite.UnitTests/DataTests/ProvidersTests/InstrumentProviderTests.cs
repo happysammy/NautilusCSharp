@@ -51,14 +51,12 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             var containerFactory = new StubComponentryContainerFactory();
             var container = containerFactory.Create();
             this.loggingAdapter = containerFactory.LoggingAdapter;
-            this.serializer = new MsgPackInstrumentSerializer();
             this.requestSerializer = new MsgPackRequestSerializer();
             this.responseSerializer = new MsgPackResponseSerializer();
             this.repository = new MockInstrumentRepository();
             this.provider = new InstrumentProvider(
                 container,
                 this.repository,
-                this.serializer,
                 this.requestSerializer,
                 this.responseSerializer,
                 NetworkAddress.LocalHost,
@@ -158,7 +156,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
 
             // Assert
             Assert.Equal(typeof(InstrumentResponse), response.Type);
-            Assert.Equal(instrument, this.serializer.Deserialize(response.Instruments[0]));
+            Assert.Equal(instrument, response.Instruments[0]);
 
             // Tear Down;
             requester.Disconnect(TEST_ADDRESS);
@@ -196,8 +194,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
 
             // Assert
             Assert.Equal(typeof(InstrumentResponse), response.Type);
-            Assert.Equal(instrument1, this.serializer.Deserialize(response.Instruments[0]));
-            Assert.Equal(instrument2, this.serializer.Deserialize(response.Instruments[1]));
+            Assert.Equal(instrument1, response.Instruments[0]);
+            Assert.Equal(instrument2, response.Instruments[1]);
 
             // Tear Down;
             requester.Disconnect(TEST_ADDRESS);

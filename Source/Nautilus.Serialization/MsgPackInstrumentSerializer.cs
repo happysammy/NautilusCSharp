@@ -21,6 +21,40 @@ namespace Nautilus.Serialization
     /// </summary>
     public sealed class MsgPackInstrumentSerializer : ISerializer<Instrument>
     {
+        /// <summary>
+        /// Return the serialized array of byte arrays.
+        /// </summary>
+        /// <param name="instruments">The instruments to serialize.</param>
+        /// <returns>The serialized byte array array.</returns>
+        public byte[][] Serialize(Instrument[] instruments)
+        {
+            var instrumentsLength = instruments.Length;
+            var instrumentsBytes = new byte[instrumentsLength][];
+            for (var i = 0; i < instrumentsLength; i++)
+            {
+                instrumentsBytes[i] = this.Serialize(instruments[i]);
+            }
+
+            return instrumentsBytes;
+        }
+
+        /// <summary>
+        /// Return the deserialized array of instruments.
+        /// </summary>
+        /// <param name="instrumentsBytes">The instruments bytes to deserialize.</param>
+        /// <returns>The deserialized instrument array.</returns>
+        public Instrument[] Deserialize(byte[][] instrumentsBytes)
+        {
+            var instrumentsLength = instrumentsBytes.Length;
+            var instruments = new Instrument[instrumentsLength];
+            for (var i = 0; i < instrumentsLength; i++)
+            {
+                instruments[i] = this.Deserialize(instrumentsBytes[i]);
+            }
+
+            return instruments;
+        }
+
         /// <inheritdoc />
         public byte[] Serialize(Instrument instrument)
         {

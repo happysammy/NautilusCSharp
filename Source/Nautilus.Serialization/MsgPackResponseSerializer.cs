@@ -22,6 +22,20 @@ namespace Nautilus.Serialization
     /// </summary>
     public sealed class MsgPackResponseSerializer : IMessageSerializer<Response>
     {
+        private readonly Utf8TickSerializer tickSerializer;
+        private readonly Utf8BarSerializer barSerializer;
+        private readonly MsgPackInstrumentSerializer instrumentSerializer;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MsgPackResponseSerializer"/> class.
+        /// </summary>
+        public MsgPackResponseSerializer()
+        {
+            this.tickSerializer = new Utf8TickSerializer();
+            this.barSerializer = new Utf8BarSerializer();
+            this.instrumentSerializer = new MsgPackInstrumentSerializer();
+        }
+
         /// <inheritdoc />
         public byte[] Serialize(Response response)
         {
@@ -46,15 +60,15 @@ namespace Nautilus.Serialization
                     break;
                 case TickDataResponse res:
                     package.Add(nameof(res.Symbol), res.Symbol.ToString());
-                    package.Add(nameof(res.Ticks), MsgPackSerializer.Serialize(res.Ticks));
+                    package.Add(nameof(res.Ticks), MsgPackSerializer.Serialize(this.tickSerializer.Serialize(res.Ticks)));
                     break;
                 case BarDataResponse res:
                     package.Add(nameof(res.Symbol), res.Symbol.ToString());
                     package.Add(nameof(res.BarSpecification), res.BarSpecification.ToString());
-                    package.Add(nameof(res.Bars), MsgPackSerializer.Serialize(res.Bars));
+                    package.Add(nameof(res.Bars), MsgPackSerializer.Serialize(this.barSerializer.Serialize(res.Bars)));
                     break;
                 case InstrumentResponse res:
-                    package.Add(nameof(res.Instruments), MsgPackSerializer.Serialize(res.Instruments));
+                    package.Add(nameof(res.Instruments), MsgPackSerializer.Serialize(this.instrumentSerializer.Serialize(res.Instruments)));
                     break;
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(response, nameof(response));
@@ -94,9 +108,10 @@ namespace Nautilus.Serialization
                         id,
                         timestamp);
                 case nameof(TickDataResponse):
+                    var symbol = ObjectExtractor.Symbol(unpacked);
                     return new TickDataResponse(
-                        ObjectExtractor.Symbol(unpacked),
-                        MsgPackSerializer.Deserialize<byte[][]>(unpacked[nameof(TickDataResponse.Ticks)].AsBinary()),
+                        symbol,
+                        this.tickSerializer.Deserialize(symbol, MsgPackSerializer.Deserialize<byte[][]>(unpacked[nameof(TickDataResponse.Ticks)].AsBinary())),
                         correlationId,
                         id,
                         timestamp);
@@ -104,13 +119,13 @@ namespace Nautilus.Serialization
                     return new BarDataResponse(
                         ObjectExtractor.Symbol(unpacked),
                         ObjectExtractor.BarSpecification(unpacked),
-                        MsgPackSerializer.Deserialize<byte[][]>(unpacked[nameof(BarDataResponse.Bars)].AsBinary()),
+                        this.barSerializer.Deserialize(MsgPackSerializer.Deserialize<byte[][]>(unpacked[nameof(BarDataResponse.Bars)].AsBinary())),
                         correlationId,
                         id,
                         timestamp);
                 case nameof(InstrumentResponse):
                     return new InstrumentResponse(
-                        MsgPackSerializer.Deserialize<byte[][]>(unpacked[nameof(InstrumentResponse.Instruments)].AsBinary()),
+                        this.instrumentSerializer.Deserialize(MsgPackSerializer.Deserialize<byte[][]>(unpacked[nameof(InstrumentResponse.Instruments)].AsBinary())),
                         correlationId,
                         id,
                         timestamp);

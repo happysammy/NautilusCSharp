@@ -31,7 +31,7 @@ namespace Nautilus.Data.Messages.Responses
         /// <param name="responseTimestamp">The response timestamp.</param>
         public TickDataResponse(
             Symbol symbol,
-            byte[][] ticks,
+            Tick[] ticks,
             Guid correlationId,
             Guid responseId,
             ZonedDateTime responseTimestamp)
@@ -56,6 +56,6 @@ namespace Nautilus.Data.Messages.Responses
         /// <summary>
         /// Gets the responses tick data.
         /// </summary>
-        public byte[][] Ticks { get; }
+        public Tick[] Ticks { get; }
     }
 }

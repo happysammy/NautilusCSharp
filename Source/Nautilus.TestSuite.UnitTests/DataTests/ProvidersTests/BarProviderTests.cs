@@ -144,8 +144,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             Assert.Equal(barType.Symbol, response.Symbol);
             Assert.Equal(barType.Specification, response.BarSpecification);
             Assert.Equal(2, response.Bars.Length);
-            Assert.Equal(bar1, DomainObjectParser.ParseBar(Encoding.UTF8.GetString(response.Bars[0])));
-            Assert.Equal(bar2, DomainObjectParser.ParseBar(Encoding.UTF8.GetString(response.Bars[1])));
+            Assert.Equal(bar1, response.Bars[0]);
+            Assert.Equal(bar2, response.Bars[1]);
 
             // Tear Down;
             requester.Disconnect(TEST_ADDRESS);

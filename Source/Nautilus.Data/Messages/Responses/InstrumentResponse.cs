@@ -12,6 +12,7 @@ namespace Nautilus.Data.Messages.Responses
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
+    using Nautilus.DomainModel.Entities;
     using NodaTime;
 
     /// <summary>
@@ -28,7 +29,7 @@ namespace Nautilus.Data.Messages.Responses
         /// <param name="responseId">The response identifier.</param>
         /// <param name="responseTimestamp">The response timestamp.</param>
         public InstrumentResponse(
-            byte[][] instruments,
+            Instrument[] instruments,
             Guid correlationId,
             Guid responseId,
             ZonedDateTime responseTimestamp)
@@ -47,6 +48,6 @@ namespace Nautilus.Data.Messages.Responses
         /// <summary>
         /// Gets the responses instruments data.
         /// </summary>
-        public byte[][] Instruments { get; }
+        public Instrument[] Instruments { get; }
     }
 }

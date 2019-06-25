@@ -25,14 +25,12 @@ namespace Nautilus.Data.Providers
     public sealed class InstrumentProvider : MessageServer<Request, Response>
     {
         private readonly IInstrumentRepository repository;
-        private readonly ISerializer<Instrument> instrumentSerializer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InstrumentProvider"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
         /// <param name="repository">The instrument repository.</param>
-        /// <param name="instrumentSerializer">The instrument serializer.</param>
         /// <param name="inboundSerializer">The inbound message serializer.</param>
         /// <param name="outboundSerializer">The outbound message serializer.</param>
         /// <param name="host">The host address.</param>
@@ -40,7 +38,6 @@ namespace Nautilus.Data.Providers
         public InstrumentProvider(
             IComponentryContainer container,
             IInstrumentRepository repository,
-            ISerializer<Instrument> instrumentSerializer,
             IMessageSerializer<Request> inboundSerializer,
             IMessageSerializer<Response> outboundSerializer,
             NetworkAddress host,
@@ -54,7 +51,6 @@ namespace Nautilus.Data.Providers
                 Guid.NewGuid())
         {
             this.repository = repository;
-            this.instrumentSerializer = instrumentSerializer;
 
             this.RegisterHandler<Envelope<InstrumentRequest>>(this.OnMessage);
             this.RegisterHandler<Envelope<InstrumentsRequest>>(this.OnMessage);
@@ -72,7 +68,7 @@ namespace Nautilus.Data.Providers
                 return;
             }
 
-            var instrument = new[] { this.instrumentSerializer.Serialize(query.Value) };
+            var instrument = new[] { query.Value };
             var response = new InstrumentResponse(
                 instrument,
                 request.Id,
@@ -96,7 +92,6 @@ namespace Nautilus.Data.Providers
 
             var instruments = query
                 .Value
-                .Select(i => this.instrumentSerializer.Serialize(i))
                 .ToArray();
 
             var response = new InstrumentResponse(

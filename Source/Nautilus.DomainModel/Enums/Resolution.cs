@@ -14,27 +14,27 @@ namespace Nautilus.DomainModel.Enums
     public enum Resolution
     {
         /// <summary>
-        /// The tick resolution.
+        /// The tick resolution value.
         /// </summary>
         TICK = 0,
 
         /// <summary>
-        /// The second resolution.
+        /// The second resolution value.
         /// </summary>
         SECOND = 1,
 
         /// <summary>
-        /// The minute resolution.
+        /// The minute resolution value.
         /// </summary>
         MINUTE = 2,
 
         /// <summary>
-        /// The hourly resolution.
+        /// The hourly resolution value.
         /// </summary>
         HOUR = 3,
 
         /// <summary>
-        /// The daily resolution.
+        /// The daily resolution value.
         /// </summary>
         DAY = 4,
     }

@@ -124,9 +124,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var tick1 = new Tick(symbol, 1.00000m, 1.00000m, datetimeFrom);
             var tick2 = new Tick(symbol, 1.00010m, 1.00020m, datetimeTo);
 
-            var ticks = new List<Tick> { tick1, tick2 }
-                .Select(t => Encoding.UTF8.GetBytes(t.ToString()))
-                .ToArray();
+            var ticks = new[] { tick1, tick2 };
 
             var correlationId = Guid.NewGuid();
             var id = Guid.NewGuid();
@@ -142,15 +140,11 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var packed = this.serializer.Serialize(response);
             var unpacked = (TickDataResponse)this.serializer.Deserialize(packed);
 
-            var receivedTicks = unpacked.Ticks
-                .Select(t => DomainObjectParser.ParseTick(symbol, Encoding.UTF8.GetString(t)))
-                .ToList();
-
             // Assert
             Assert.Equal(response, unpacked);
             Assert.Equal(symbol, response.Symbol);
-            Assert.Equal(tick1, receivedTicks[0]);
-            Assert.Equal(tick2, receivedTicks[1]);
+            Assert.Equal(tick1, unpacked.Ticks[0]);
+            Assert.Equal(tick2, unpacked.Ticks[1]);
             Assert.Equal(correlationId, unpacked.CorrelationId);
             this.output.WriteLine(Convert.ToBase64String(packed));
             this.output.WriteLine(Encoding.UTF8.GetString(packed));
@@ -164,8 +158,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var barSpec = new BarSpecification(1, Resolution.MINUTE, QuoteType.BID);
             var correlationId = Guid.NewGuid();
 
-            var bar = Encoding.UTF8.GetBytes(StubBarBuilder.Build().ToString());
-            var bars = new[] { bar, bar };
+            var bars = new[] { StubBarBuilder.Build(), StubBarBuilder.Build() };
 
             var response = new BarDataResponse(
                 symbol,
@@ -195,9 +188,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             // Arrange
             var instrument = StubInstrumentFactory.AUDUSD();
             var correlationId = Guid.NewGuid();
-
-            var instSerializer = new MsgPackInstrumentSerializer();
-            var instrumentBytes = new[] { instSerializer.Serialize(instrument) };
+            var instrumentBytes = new[] { instrument };
 
             var response = new InstrumentResponse(
                 instrumentBytes,

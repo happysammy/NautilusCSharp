@@ -126,7 +126,6 @@ namespace NautilusData
             var instrumentProvider = new InstrumentProvider(
                 container,
                 instrumentRepository,
-                new MsgPackInstrumentSerializer(),
                 new MsgPackRequestSerializer(),
                 new MsgPackResponseSerializer(),
                 config.ServerAddress,

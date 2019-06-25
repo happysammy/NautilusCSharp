@@ -9,8 +9,6 @@
 namespace Nautilus.Data.Providers
 {
     using System;
-    using System.Linq;
-    using System.Text;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
     using Nautilus.Data.Interfaces;
@@ -76,7 +74,6 @@ namespace Nautilus.Data.Providers
 
                 var ticks = query
                     .Value
-                    .Select(t => Encoding.UTF8.GetBytes(t.ToString()))
                     .ToArray();
 
                 var response = new TickDataResponse(

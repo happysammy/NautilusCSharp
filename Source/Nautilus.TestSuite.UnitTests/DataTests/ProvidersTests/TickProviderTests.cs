@@ -146,8 +146,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             Assert.Equal(typeof(TickDataResponse), response.Type);
             Assert.Equal(symbol, response.Symbol);
             Assert.Equal(2, response.Ticks.Length);
-            Assert.Equal(tick1, DomainObjectParser.ParseTick(response.Symbol, Encoding.UTF8.GetString(response.Ticks[0])));
-            Assert.Equal(tick2, DomainObjectParser.ParseTick(response.Symbol, Encoding.UTF8.GetString(response.Ticks[1])));
+            Assert.Equal(tick1, response.Ticks[0]);
+            Assert.Equal(tick2, response.Ticks[1]);
 
             // Tear Down;
             requester.Disconnect(TEST_ADDRESS);
