@@ -89,7 +89,7 @@ namespace Nautilus.Scheduler
                 return;
             }
 
-            // Execute all outstanding work items.
+            // Execute all outstanding work items
             foreach (var task in stoppedTask.Result)
             {
                 try
@@ -102,7 +102,7 @@ namespace Nautilus.Scheduler
                 }
                 finally
                 {
-                    // Free the object from bucket.
+                    // Free the object from bucket
                     task.Reset();
                 }
             }
@@ -271,7 +271,7 @@ namespace Nautilus.Scheduler
             switch (this.workerState)
             {
                 case WORKER_STATE_STARTED:
-                    break; // Do nothing.
+                    break; // Do nothing
                 case WORKER_STATE_INIT:
                 {
                     this.worker = new Thread(this.Run) { IsBackground = true };
@@ -306,7 +306,7 @@ namespace Nautilus.Scheduler
             this.startTime = MonotonicClock.Elapsed.BclCompatibleTicks;
             if (this.startTime == 0)
             {
-                // Uninitialized value, so bump to 1 to indicate it's started.
+                // Uninitialized value, so bump to 1 to indicate it's started
                 this.startTime = 1;
             }
 
@@ -324,19 +324,19 @@ namespace Nautilus.Scheduler
                 var bucket = this.wheel[idx];
                 this.TransferRegistrationsToBuckets();
                 bucket.Execute(deadline);
-                this.tick++; // It will take 2^64 * 10ms for this to overflow (a long time).
+                this.tick++; // It will take 2^64 * 10ms for this to overflow (a long time)
 
                 bucket.ClearReschedule(this.rescheduleRegistrations);
                 this.ProcessReschedule();
             }
 
-            // Empty all of the buckets.
+            // Empty all of the buckets
             for (var i = 0; i < this.wheel.Length; i++)
             {
                 this.wheel[i].ClearRegistrations(this.unprocessedRegistrations);
             }
 
-            // Empty tasks that haven't been placed into a bucket yet.
+            // Empty tasks that haven't been placed into a bucket yet
             foreach (var reg in this.registrations)
             {
                 if (!reg.Cancelled)
@@ -345,7 +345,7 @@ namespace Nautilus.Scheduler
                 }
             }
 
-            // Return the list of unprocessedRegistrations and signal that we're finished.
+            // Return the list of unprocessedRegistrations and signal that we're finished
             this.stopped.Value?.TrySetResult(this.unprocessedRegistrations);
         }
 
@@ -365,7 +365,7 @@ namespace Nautilus.Scheduler
         {
             var deadline = this.tickDuration * (this.tick + 1);
 
-            // Unchecked avoids System.OutOfMemoryException for long-running applications.
+            // Unchecked avoids System.OutOfMemoryException for long-running applications
             unchecked
             {
                 while (true)
@@ -392,7 +392,7 @@ namespace Nautilus.Scheduler
 
         private void TransferRegistrationsToBuckets()
         {
-            // Transfer only max prevents a stale thread where its just adding new timeouts in a loop.
+            // Transfer only max prevents a stale thread where its just adding new timeouts in a loop
             for (var i = 0; i < MAX_REGISTRATIONS_PER_TICK; i++)
             {
                 if (!this.registrations.TryDequeue(out var registration))
@@ -402,7 +402,7 @@ namespace Nautilus.Scheduler
 
                 if (registration.Cancelled)
                 {
-                    continue;  // Cancelled before processing.
+                    continue;  // Cancelled before processing
                 }
 
                 this.PlaceInBucket(registration);
@@ -414,7 +414,7 @@ namespace Nautilus.Scheduler
             var calculated = reg.Deadline / this.tickDuration;
             reg.RemainingRounds = (calculated - this.tick) / this.wheel.Length;
 
-            var ticks = Math.Max(calculated, this.tick); // Ensures not scheduled for the past.
+            var ticks = Math.Max(calculated, this.tick); // Ensures not scheduled for the past
             var stopIndex = (int)(ticks & this.mask);
 
             var bucket = this.wheel[stopIndex];
