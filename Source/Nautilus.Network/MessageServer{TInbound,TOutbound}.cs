@@ -43,8 +43,6 @@ namespace Nautilus.Network
         private readonly IMessageSerializer<TInbound> inboundSerializer;
         private readonly IMessageSerializer<TOutbound> outboundSerializer;
 
-        private bool isReceiving;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageServer{TInbound, TOutbound}"/> class.
         /// </summary>
@@ -78,8 +76,6 @@ namespace Nautilus.Network
             this.inboundSerializer = inboundSerializer;
             this.outboundSerializer = outboundSerializer;
 
-            this.isReceiving = false;
-
             this.ServerAddress = new ZmqServerAddress(host, port);
             this.ReceivedCount = 0;
             this.SentCount = 0;
@@ -110,14 +106,12 @@ namespace Nautilus.Network
             this.socket.Bind(this.ServerAddress.Value);
             this.Log.Debug($"Bound {this.socket.GetType().Name} to {this.ServerAddress}");
 
-            this.isReceiving = true;
             Task.Run(this.StartWork, this.cts.Token);
         }
 
         /// <inheritdoc />
         protected override void OnStop(Stop stop)
         {
-            this.isReceiving = false;
             this.cts.Cancel();
             this.socket.Unbind(this.ServerAddress.Value);
             this.Log.Debug($"Unbound {this.socket.GetType().Name} from {this.ServerAddress}");
@@ -241,7 +235,7 @@ namespace Nautilus.Network
 
         private Task StartWork()
         {
-            while (this.isReceiving)
+            while (!this.cts.IsCancellationRequested)
             {
                 this.ReceiveMessage();
             }
