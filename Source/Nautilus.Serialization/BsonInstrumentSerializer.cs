@@ -27,9 +27,6 @@ namespace Nautilus.Serialization
     [SuppressMessage("ReSharper", "SA1310", Justification = "Easier to read.")]
     public class BsonInstrumentSerializer : IDataSerializer<Instrument>
     {
-        private const string DATA_TYPE = "DataType";
-        private const string VALUES = "Values";
-
         /// <inheritdoc />
         public DataEncoding DataEncoding => DataEncoding.Bson;
 
