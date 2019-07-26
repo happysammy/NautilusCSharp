@@ -86,12 +86,12 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
 
             // Act
             requester.SendFrame(this.requestSerializer.Serialize(request));
-            // var response = (QueryFailure)this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
+            var response = (QueryFailure)this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
 
             LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
-            // Assert.Equal(typeof(QueryFailure), response.Type);
+            Assert.Equal(typeof(QueryFailure), response.Type);
 
             // Tear Down;
             requester.Disconnect(TEST_ADDRESS);
