@@ -10,8 +10,8 @@ namespace Nautilus.Data.Interfaces
 {
     using System.Collections.Generic;
     using Nautilus.Core.CQS;
-    using Nautilus.Data.Types;
-    using Nautilus.DomainModel.Entities;
+    using Nautilus.DomainModel.Frames;
+    using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
     /// <summary>

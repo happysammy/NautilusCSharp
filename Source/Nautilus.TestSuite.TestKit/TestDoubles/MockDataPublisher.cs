@@ -11,6 +11,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
+    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Network;
 
@@ -38,8 +39,10 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             this.Publish(toPublish.Topic, toPublish.Message);
         }
 
-        private sealed class MockSerializer : ISerializer<string>
+        private sealed class MockSerializer : ISerializer<string>, IDataSerializer<string>
         {
+            public DataEncoding DataEncoding => DataEncoding.Unknown;
+
             public byte[] Serialize(string message)
             {
                 return Encoding.UTF8.GetBytes(message);

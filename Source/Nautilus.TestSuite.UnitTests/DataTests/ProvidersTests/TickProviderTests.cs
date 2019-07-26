@@ -41,6 +41,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
         private readonly ITestOutputHelper output;
         private readonly MockLoggingAdapter loggingAdapter;
         private readonly ITickRepository repository;
+        private readonly IDataSerializer<Tick[]> dataSerializer;
         private readonly IMessageSerializer<Request> requestSerializer;
         private readonly IMessageSerializer<Response> responseSerializer;
         private readonly TickProvider provider;
@@ -53,13 +54,15 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             var containerFactory = new StubComponentryContainerFactory();
             var container = containerFactory.Create();
             this.loggingAdapter = containerFactory.LoggingAdapter;
+            this.repository = new InMemoryTickStore(container, DataBusFactory.Create(container));
+            this.dataSerializer = new BsonTickArraySerializer();
             this.requestSerializer = new MsgPackRequestSerializer();
             this.responseSerializer = new MsgPackResponseSerializer();
-            var dataBusAdapter = DataBusFactory.Create(container);
-            this.repository = new InMemoryTickStore(container, dataBusAdapter);
+
             this.provider = new TickProvider(
                 container,
                 this.repository,
+                this.dataSerializer,
                 this.requestSerializer,
                 this.responseSerializer,
                 NetworkAddress.LocalHost,
@@ -135,16 +138,17 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
 
             // Act
             requester.SendFrame(this.requestSerializer.Serialize(dataRequest));
-            var response = (TickDataResponse)this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
+            var response = (DataResponse)this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
+            var data = this.dataSerializer.Deserialize(response.Data);
 
             LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
-            Assert.Equal(typeof(TickDataResponse), response.Type);
-            Assert.Equal(symbol, response.Symbol);
-            Assert.Equal(2, response.Ticks.Length);
-            Assert.Equal(tick1, response.Ticks[0]);
-            Assert.Equal(tick2, response.Ticks[1]);
+            Assert.Equal(typeof(DataResponse), response.Type);
+            Assert.Equal(symbol, data[0].Symbol);
+            Assert.Equal(2, data.Length);
+            Assert.Equal(tick1, data[0]);
+            Assert.Equal(tick2, data[1]);
 
             // Tear Down;
             requester.Disconnect(TEST_ADDRESS);

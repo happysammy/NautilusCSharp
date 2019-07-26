@@ -16,9 +16,9 @@ namespace Nautilus.Redis
     using Nautilus.Core.CQS;
     using Nautilus.Core.Extensions;
     using Nautilus.Data.Keys;
-    using Nautilus.Data.Types;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Frames;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
     using StackExchange.Redis;

@@ -14,8 +14,8 @@ namespace Nautilus.Data
     using Nautilus.Core.Extensions;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Messages.Commands;
-    using Nautilus.Data.Types;
     using Nautilus.DomainModel.Entities;
+    using Nautilus.DomainModel.Frames;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>

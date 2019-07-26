@@ -10,8 +10,8 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
-    using Nautilus.Data.Types;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Frames;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Redis;
     using Nautilus.TestSuite.TestKit.TestDoubles;

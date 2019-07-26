@@ -1,5 +1,5 @@
-﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="State.cs" company="Nautech Systems Pty Ltd">
+//--------------------------------------------------------------------------------------------------
+// <copyright file="DataEncoding.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.io
@@ -11,34 +11,29 @@ namespace Nautilus.Common.Enums
     using Nautilus.Core.Annotations;
 
     /// <summary>
-    /// Represents the status of a service component.
+    /// Represents a data encoding specification.
     /// </summary>
-    public enum State
+    public enum DataEncoding
     {
         /// <summary>
-        /// The component state is unknown (this is an invalid value).
+        /// The encoding is unknown (this is an invalid value).
         /// </summary>
         [InvalidValue]
         Unknown = 0,
 
         /// <summary>
-        /// The component is initialized.
+        /// The UTF8 encoding specification.
         /// </summary>
-        Init = 1,
+        Utf8 = 1,
 
         /// <summary>
-        /// The component is running normally.
+        /// The BSON encoding specification.
         /// </summary>
-        Running = 2,
+        Bson = 2,
 
         /// <summary>
-        /// The component has gracefully stopped.
+        /// The MsgPack encoding specification.
         /// </summary>
-        Stopped = 1,
-
-        /// <summary>
-        /// The component has failed and will not process further work.
-        /// </summary>
-        Failed = 3,
+        MsgPack = 3,
     }
 }

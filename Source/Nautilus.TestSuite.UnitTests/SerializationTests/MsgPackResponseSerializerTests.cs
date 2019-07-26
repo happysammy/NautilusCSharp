@@ -13,6 +13,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
     using System.Text;
     using Nautilus.Data.Messages.Responses;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Frames;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network.Messages;
     using Nautilus.Serialization;
@@ -113,6 +114,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         internal void CanSerializeAndDeserialize_TickDataResponse()
         {
             // Arrange
+            var dataSerializer = new BsonTickArraySerializer();
             var datetimeFrom = StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1);
             var datetimeTo = datetimeFrom + Duration.FromMinutes(1);
 
@@ -125,76 +127,86 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var correlationId = Guid.NewGuid();
             var id = Guid.NewGuid();
 
-            var response = new TickDataResponse(
-                symbol,
-                ticks,
+            var data = dataSerializer.Serialize(ticks);
+
+            var response = new DataResponse(
+                data,
+                dataSerializer.DataEncoding,
                 correlationId,
                 id,
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            var packed = this.serializer.Serialize(response);
-            var unpacked = (TickDataResponse)this.serializer.Deserialize(packed);
+            var serialized = this.serializer.Serialize(response);
+            var deserialized = (DataResponse)this.serializer.Deserialize(serialized);
+            var deserializedData = dataSerializer.Deserialize(deserialized.Data);
 
             // Assert
-            Assert.Equal(response, unpacked);
-            Assert.Equal(symbol, response.Symbol);
-            Assert.Equal(tick1, unpacked.Ticks[0]);
-            Assert.Equal(tick2, unpacked.Ticks[1]);
-            Assert.Equal(correlationId, unpacked.CorrelationId);
-            this.output.WriteLine(Convert.ToBase64String(packed));
-            this.output.WriteLine(Encoding.UTF8.GetString(packed));
+            Assert.Equal(response, deserialized);
+            Assert.Equal(symbol, deserializedData[0].Symbol);
+            Assert.Equal(tick1, deserializedData[0]);
+            Assert.Equal(tick2, deserializedData[1]);
+            Assert.Equal(correlationId, deserialized.CorrelationId);
+            this.output.WriteLine(Convert.ToBase64String(serialized));
+            this.output.WriteLine(Encoding.UTF8.GetString(serialized));
         }
 
         [Fact]
         internal void CanSerializeAndDeserialize_BarDataResponses()
         {
             // Arrange
+            var dataSerializer = new BsonBarDataFrameSerializer();
             var symbol = new Symbol("AUDUSD", Venue.FXCM);
             var barSpec = new BarSpecification(1, Resolution.MINUTE, QuoteType.BID);
             var correlationId = Guid.NewGuid();
 
             var bars = new[] { StubBarBuilder.Build(), StubBarBuilder.Build() };
+            var dataFrame = new BarDataFrame(new BarType(symbol, barSpec), bars);
+            var data = dataSerializer.Serialize(dataFrame);
 
-            var response = new BarDataResponse(
-                symbol,
-                barSpec,
-                bars,
+            var response = new DataResponse(
+                data,
+                dataSerializer.DataEncoding,
                 correlationId,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            var packed = this.serializer.Serialize(response);
-            var unpacked = (BarDataResponse)this.serializer.Deserialize(packed);
+            var serialized = this.serializer.Serialize(response);
+            var deserialized = (DataResponse)this.serializer.Deserialize(serialized);
+            var deserializedData = dataSerializer.Deserialize(deserialized.Data);
 
             // Assert
-            Assert.Equal(response, unpacked);
-            Assert.Equal(symbol, unpacked.Symbol);
-            Assert.Equal(barSpec, unpacked.BarSpecification);
-            Assert.Equal(bars, unpacked.Bars);
-            Assert.Equal(correlationId, unpacked.CorrelationId);
-            this.output.WriteLine(Convert.ToBase64String(packed));
-            this.output.WriteLine(Encoding.UTF8.GetString(packed));
+            Assert.Equal(response, deserialized);
+            Assert.Equal(symbol, deserializedData.BarType.Symbol);
+            Assert.Equal(barSpec, deserializedData.BarType.Specification);
+            Assert.Equal(bars, deserializedData.Bars);
+            Assert.Equal(correlationId, deserialized.CorrelationId);
+            this.output.WriteLine(Convert.ToBase64String(serialized));
+            this.output.WriteLine(Encoding.UTF8.GetString(serialized));
         }
 
         [Fact]
         internal void CanSerializeAndDeserialize_InstrumentResponses()
         {
             // Arrange
+            var dataSerializer = new BsonInstrumentArraySerializer();
             var instrument = StubInstrumentFactory.AUDUSD();
             var correlationId = Guid.NewGuid();
-            var instrumentBytes = new[] { instrument };
 
-            var response = new InstrumentResponse(
-                instrumentBytes,
+            var instruments = new[] { instrument };
+            var data = dataSerializer.Serialize(instruments);
+
+            var response = new DataResponse(
+                data,
+                dataSerializer.DataEncoding,
                 correlationId,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             // Act
             var packed = this.serializer.Serialize(response);
-            var unpacked = (InstrumentResponse)this.serializer.Deserialize(packed);
+            var unpacked = (DataResponse)this.serializer.Deserialize(packed);
 
             // Assert
             Assert.Equal(response, unpacked);

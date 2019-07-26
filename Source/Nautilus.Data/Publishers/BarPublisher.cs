@@ -29,7 +29,7 @@ namespace Nautilus.Data.Publishers
         public BarPublisher(
             IComponentryContainer container,
             IDataBusAdapter dataBusAdapter,
-            ISerializer<Bar> serializer,
+            IDataSerializer<Bar> serializer,
             NetworkAddress host,
             NetworkPort port)
             : base(

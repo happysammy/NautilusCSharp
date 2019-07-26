@@ -31,7 +31,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         internal void CanSerializeAndDeserializeInstrument()
         {
             // Arrange
-            var serializer = new MsgPackInstrumentSerializer();
+            var serializer = new BsonInstrumentSerializer();
             var instrument = StubInstrumentFactory.AUDUSD();
 
             // Act

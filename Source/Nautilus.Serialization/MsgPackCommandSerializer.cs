@@ -9,6 +9,7 @@
 namespace Nautilus.Serialization
 {
     using MsgPack;
+    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
     using Nautilus.Core.Correctness;

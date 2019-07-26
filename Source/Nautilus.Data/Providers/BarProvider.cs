@@ -15,6 +15,7 @@ namespace Nautilus.Data.Providers
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Messages.Requests;
     using Nautilus.Data.Messages.Responses;
+    using Nautilus.DomainModel.Frames;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging;
     using Nautilus.Network;
@@ -25,6 +26,7 @@ namespace Nautilus.Data.Providers
     public sealed class BarProvider : MessageServer<Request, Response>
     {
         private readonly IBarRepository repository;
+        private readonly IDataSerializer<BarDataFrame> dataSerializer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BarProvider"/> class.
@@ -33,11 +35,13 @@ namespace Nautilus.Data.Providers
         /// <param name="repository">The instrument repository.</param>
         /// <param name="inboundSerializer">The inbound message serializer.</param>
         /// <param name="outboundSerializer">The outbound message serializer.</param>
+        /// <param name="dataSerializer">The data serializer.</param>
         /// <param name="host">The host address.</param>
         /// <param name="port">The port.</param>
         public BarProvider(
             IComponentryContainer container,
             IBarRepository repository,
+            IDataSerializer<BarDataFrame> dataSerializer,
             IMessageSerializer<Request> inboundSerializer,
             IMessageSerializer<Response> outboundSerializer,
             NetworkAddress host,
@@ -51,6 +55,7 @@ namespace Nautilus.Data.Providers
                 Guid.NewGuid())
         {
             this.repository = repository;
+            this.dataSerializer = dataSerializer;
 
             this.RegisterHandler<Envelope<BarDataRequest>>(this.OnMessage);
         }
@@ -76,10 +81,11 @@ namespace Nautilus.Data.Providers
                 .Bars
                 .ToArray();
 
-            var response = new BarDataResponse(
-                request.Symbol,
-                request.BarSpecification,
-                bars,
+            var data = this.dataSerializer.Serialize(new BarDataFrame(barType, bars));
+
+            var response = new DataResponse(
+                data,
+                this.dataSerializer.DataEncoding,
                 request.Id,
                 this.NewGuid(),
                 this.TimeNow());

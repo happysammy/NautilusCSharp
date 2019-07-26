@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="ISerializer{T}.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="IDataSerializer{T}.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.io
@@ -11,23 +11,28 @@ namespace Nautilus.Common.Interfaces
     using Nautilus.Common.Enums;
 
     /// <summary>
-    /// Provides a binary serializer for objects of type T.
+    /// Provides a binary serializer for data objects.
     /// </summary>
-    /// <typeparam name="T">The serializable type.</typeparam>
-    public interface ISerializer<T>
+    /// <typeparam name="T">The serializable data type.</typeparam>
+    public interface IDataSerializer<T>
     {
         /// <summary>
-        /// Returns the serialized object bytes.
+        /// Gets the serializers encoding.
         /// </summary>
-        /// <param name="obj">The object to serialize.</param>
-        /// <returns>The serialized object bytes.</returns>
-        byte[] Serialize(T obj);
+        DataEncoding DataEncoding { get;  }
 
         /// <summary>
-        /// Returns the deserialize object of type T.
+        /// Returns the serialized data object bytes.
+        /// </summary>
+        /// <param name="data">The data object to serialize.</param>
+        /// <returns>The serialized data object bytes.</returns>
+        byte[] Serialize(T data);
+
+        /// <summary>
+        /// Returns the deserialize data object of type T.
         /// </summary>
         /// <param name="bytes">The bytes to deserialize.</param>
-        /// <returns>The deserialized object.</returns>
+        /// <returns>The deserialized data object.</returns>
         T Deserialize(byte[] bytes);
     }
 }

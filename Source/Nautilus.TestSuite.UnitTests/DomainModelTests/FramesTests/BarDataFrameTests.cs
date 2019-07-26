@@ -6,10 +6,10 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.UnitTests.DataTests.TypesTests
+namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FramesTests
 {
     using System.Diagnostics.CodeAnalysis;
-    using Nautilus.Data.Types;
+    using Nautilus.DomainModel.Frames;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Newtonsoft.Json;

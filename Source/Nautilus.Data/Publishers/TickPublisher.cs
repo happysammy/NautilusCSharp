@@ -29,7 +29,7 @@ namespace Nautilus.Data.Publishers
         public TickPublisher(
             IComponentryContainer container,
             IDataBusAdapter dataBusAdapter,
-            ISerializer<Tick> serializer,
+            IDataSerializer<Tick> serializer,
             NetworkAddress host,
             NetworkPort port)
             : base(

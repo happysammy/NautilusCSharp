@@ -17,6 +17,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
     using Nautilus.Data.Messages.Requests;
     using Nautilus.Data.Messages.Responses;
     using Nautilus.Data.Providers;
+    using Nautilus.DomainModel.Frames;
     using Nautilus.Network;
     using Nautilus.Network.Messages;
     using Nautilus.Serialization;
@@ -39,6 +40,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
         private readonly IBarRepository repository;
         private readonly IMessageSerializer<Request> requestSerializer;
         private readonly IMessageSerializer<Response> responseSerializer;
+        private readonly IDataSerializer<BarDataFrame> dataSerializer;
         private readonly BarProvider provider;
 
         public BarProviderTests(ITestOutputHelper output)
@@ -49,12 +51,15 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             var containerFactory = new StubComponentryContainerFactory();
             var container = containerFactory.Create();
             this.loggingAdapter = containerFactory.LoggingAdapter;
+            this.repository = new MockBarRepository();
+            this.dataSerializer = new BsonBarDataFrameSerializer();
             this.requestSerializer = new MsgPackRequestSerializer();
             this.responseSerializer = new MsgPackResponseSerializer();
-            this.repository = new MockBarRepository();
+
             this.provider = new BarProvider(
                 container,
                 this.repository,
+                this.dataSerializer,
                 this.requestSerializer,
                 this.responseSerializer,
                 NetworkAddress.LocalHost,
@@ -132,17 +137,18 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
 
             // Act
             requester.SendFrame(this.requestSerializer.Serialize(request));
-            var response = (BarDataResponse)this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
+            var response = (DataResponse)this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
+            var data = this.dataSerializer.Deserialize(response.Data);
 
             LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
-            Assert.Equal(typeof(BarDataResponse), response.Type);
-            Assert.Equal(barType.Symbol, response.Symbol);
-            Assert.Equal(barType.Specification, response.BarSpecification);
-            Assert.Equal(2, response.Bars.Length);
-            Assert.Equal(bar1, response.Bars[0]);
-            Assert.Equal(bar2, response.Bars[1]);
+            Assert.Equal(typeof(DataResponse), response.Type);
+            Assert.Equal(barType.Symbol, data.BarType.Symbol);
+            Assert.Equal(barType.Specification, data.BarType.Specification);
+            Assert.Equal(2, data.Bars.Length);
+            Assert.Equal(bar1, data.Bars[0]);
+            Assert.Equal(bar2, data.Bars[1]);
 
             // Tear Down;
             requester.Disconnect(TEST_ADDRESS);

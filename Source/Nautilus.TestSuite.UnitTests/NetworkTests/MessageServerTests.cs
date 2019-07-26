@@ -23,6 +23,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
     using NetMQ.Sockets;
     using Xunit;
     using Xunit.Abstractions;
+    using Encoding = System.Text.Encoding;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class MessageServerTests

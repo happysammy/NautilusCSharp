@@ -10,12 +10,16 @@ namespace Nautilus.Serialization
 {
     using System;
     using System.Text;
+    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <inheritdoc />
-    public class Utf8TickSerializer : ISerializer<Tick>
+    public class Utf8TickSerializer : IDataSerializer<Tick>
     {
+        /// <inheritdoc />
+        public DataEncoding DataEncoding => DataEncoding.Utf8;
+
         /// <inheritdoc />
         public byte[] Serialize(Tick tick)
         {

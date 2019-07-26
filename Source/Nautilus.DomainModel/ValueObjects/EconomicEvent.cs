@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.DomainModel.Entities
+namespace Nautilus.DomainModel.ValueObjects
 {
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;

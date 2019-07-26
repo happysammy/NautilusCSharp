@@ -6,13 +6,13 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Data.Types
+namespace Nautilus.DomainModel.Frames
 {
     using System.Collections.Generic;
     using System.Linq;
     using Nautilus.Core.Annotations;
-    using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
     /// <summary>

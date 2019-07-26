@@ -9,13 +9,12 @@
 namespace Nautilus.Serialization
 {
     using MsgPack;
+    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.Data.Messages.Responses;
-    using Nautilus.DomainModel;
-    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network.Messages;
     using Nautilus.Serialization.Internal;
 
@@ -24,20 +23,6 @@ namespace Nautilus.Serialization
     /// </summary>
     public sealed class MsgPackResponseSerializer : IMessageSerializer<Response>
     {
-        private readonly Utf8TickSerializer tickSerializer;
-        private readonly Utf8BarSerializer barSerializer;
-        private readonly MsgPackInstrumentSerializer instrumentSerializer;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MsgPackResponseSerializer"/> class.
-        /// </summary>
-        public MsgPackResponseSerializer()
-        {
-            this.tickSerializer = new Utf8TickSerializer();
-            this.barSerializer = new Utf8BarSerializer();
-            this.instrumentSerializer = new MsgPackInstrumentSerializer();
-        }
-
         /// <inheritdoc />
         public byte[] Serialize(Response response)
         {
@@ -60,17 +45,9 @@ namespace Nautilus.Serialization
                 case QueryFailure res:
                     package.Add(nameof(res.Message), res.Message);
                     break;
-                case TickDataResponse res:
-                    package.Add(nameof(res.Symbol), res.Symbol.ToString());
-                    package.Add(nameof(res.Ticks), MsgPackSerializer.Serialize(ByteArrayUtf8Serializer<Tick>.Serialize(res.Ticks)));
-                    break;
-                case BarDataResponse res:
-                    package.Add(nameof(res.Symbol), res.Symbol.ToString());
-                    package.Add(nameof(res.BarSpecification), res.BarSpecification.ToString());
-                    package.Add(nameof(res.Bars), MsgPackSerializer.Serialize(ByteArrayUtf8Serializer<Bar>.Serialize(res.Bars)));
-                    break;
-                case InstrumentResponse res:
-                    package.Add(nameof(res.Instruments), MsgPackSerializer.Serialize(this.instrumentSerializer.Serialize(res.Instruments)));
+                case DataResponse res:
+                    package.Add(nameof(res.Data), res.Data);
+                    package.Add(nameof(res.DataEncoding), res.DataEncoding.ToString());
                     break;
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(response, nameof(response));
@@ -109,30 +86,10 @@ namespace Nautilus.Serialization
                         correlationId,
                         id,
                         timestamp);
-                case nameof(TickDataResponse):
-                    var symbol = ObjectExtractor.Symbol(unpacked);
-                    return new TickDataResponse(
-                        symbol,
-                        ByteArrayUtf8Serializer<Tick>.Deserialize(
-                            MsgPackSerializer.Deserialize<byte[][]>(unpacked[nameof(TickDataResponse.Ticks)].AsBinary()),
-                            symbol,
-                            DomainObjectParser.ParseTick),
-                        correlationId,
-                        id,
-                        timestamp);
-                case nameof(BarDataResponse):
-                    return new BarDataResponse(
-                        ObjectExtractor.Symbol(unpacked),
-                        ObjectExtractor.BarSpecification(unpacked),
-                        ByteArrayUtf8Serializer<Bar>.Deserialize(
-                            MsgPackSerializer.Deserialize<byte[][]>(unpacked[nameof(BarDataResponse.Bars)].AsBinary()),
-                            DomainObjectParser.ParseBar),
-                        correlationId,
-                        id,
-                        timestamp);
-                case nameof(InstrumentResponse):
-                    return new InstrumentResponse(
-                        this.instrumentSerializer.Deserialize(MsgPackSerializer.Deserialize<byte[][]>(unpacked[nameof(InstrumentResponse.Instruments)].AsBinary())),
+                case nameof(DataResponse):
+                    return new DataResponse(
+                        unpacked[nameof(DataResponse.Data)].AsBinary(),
+                        unpacked[nameof(DataResponse.DataEncoding)].ToString().ToEnum<DataEncoding>(),
                         correlationId,
                         id,
                         timestamp);

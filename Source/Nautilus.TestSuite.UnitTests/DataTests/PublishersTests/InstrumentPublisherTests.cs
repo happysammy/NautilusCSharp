@@ -12,7 +12,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
     using System.Text;
     using System.Threading.Tasks;
     using Nautilus.Common.Data;
+    using Nautilus.Common.Interfaces;
     using Nautilus.Data.Publishers;
+    using Nautilus.DomainModel.Entities;
     using Nautilus.Network;
     using Nautilus.Serialization;
     using Nautilus.TestSuite.TestKit;
@@ -29,7 +31,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
         private const string TEST_ADDRESS = "tcp://localhost:55512";
         private readonly ITestOutputHelper output;
         private readonly MockLoggingAdapter loggingAdapter;
-        private readonly MsgPackInstrumentSerializer serializer;
+        private readonly IDataSerializer<Instrument> serializer;
         private readonly InstrumentPublisher publisher;
 
         public InstrumentPublisherTests(ITestOutputHelper output)
@@ -40,7 +42,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
             var containerFactory = new StubComponentryContainerFactory();
             var container = containerFactory.Create();
             this.loggingAdapter = containerFactory.LoggingAdapter;
-            this.serializer = new MsgPackInstrumentSerializer();
+            this.serializer = new BsonInstrumentSerializer();
 
             this.publisher = new InstrumentPublisher(
                 container,

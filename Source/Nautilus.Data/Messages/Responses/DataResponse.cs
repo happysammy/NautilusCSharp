@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="BarDataResponse.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="DataResponse.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.io
@@ -9,36 +9,34 @@
 namespace Nautilus.Data.Messages.Responses
 {
     using System;
+    using Nautilus.Common.Enums;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
-    using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
     /// <summary>
-    /// Represents a response of historical bar data.
+    /// Represents a data response.
     /// </summary>
     [Immutable]
-    public sealed class BarDataResponse : Response
+    public sealed class DataResponse : Response
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="BarDataResponse"/> class.
+        /// Initializes a new instance of the <see cref="DataResponse"/> class.
         /// </summary>
-        /// <param name="symbol">The response bar data symbol.</param>
-        /// <param name="barSpec">The response bar data specification.</param>
-        /// <param name="bars">The response bars count.</param>
+        /// <param name="data">The response data.</param>
+        /// <param name="dataEncoding">The response data encoding.</param>
         /// <param name="correlationId">The response correlation identifier.</param>
         /// <param name="responseId">The response identifier.</param>
         /// <param name="responseTimestamp">The response timestamp.</param>
-        public BarDataResponse(
-            Symbol symbol,
-            BarSpecification barSpec,
-            Bar[] bars,
+        public DataResponse(
+            byte[] data,
+            DataEncoding dataEncoding,
             Guid correlationId,
             Guid responseId,
             ZonedDateTime responseTimestamp)
             : base(
-                typeof(BarDataResponse),
+                typeof(DataResponse),
                 correlationId,
                 responseId,
                 responseTimestamp)
@@ -46,24 +44,18 @@ namespace Nautilus.Data.Messages.Responses
             Debug.NotDefault(responseId, nameof(responseId));
             Debug.NotDefault(responseTimestamp, nameof(responseTimestamp));
 
-            this.Symbol = symbol;
-            this.BarSpecification = barSpec;
-            this.Bars = bars;
+            this.Data = data;
+            this.DataEncoding = dataEncoding;
         }
 
         /// <summary>
-        /// Gets the responses bar data symbol.
+        /// Gets the responses data.
         /// </summary>
-        public Symbol Symbol { get; }
+        public byte[] Data { get; }
 
         /// <summary>
-        /// Gets the responses bar data specification.
+        /// Gets the responses data encoding.
         /// </summary>
-        public BarSpecification BarSpecification { get; }
-
-        /// <summary>
-        /// Gets the responses bar data.
-        /// </summary>
-        public Bar[] Bars { get; }
+        public DataEncoding DataEncoding { get; }
     }
 }

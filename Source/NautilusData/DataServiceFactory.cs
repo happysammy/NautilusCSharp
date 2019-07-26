@@ -72,7 +72,7 @@ namespace NautilusData
             var instrumentPublisher = new InstrumentPublisher(
                 container,
                 dataBusAdapter,
-                new MsgPackInstrumentSerializer(),
+                new BsonInstrumentSerializer(),
                 config.ServerAddress,
                 config.InstrumentSubscribePort);
 
@@ -110,6 +110,7 @@ namespace NautilusData
             var tickProvider = new TickProvider(
                 container,
                 tickRepository,
+                new BsonTickArraySerializer(),
                 new MsgPackRequestSerializer(),
                 new MsgPackResponseSerializer(),
                 config.ServerAddress,
@@ -118,6 +119,7 @@ namespace NautilusData
             var barProvider = new BarProvider(
                 container,
                 barRepository,
+                new BsonBarDataFrameSerializer(),
                 new MsgPackRequestSerializer(),
                 new MsgPackResponseSerializer(),
                 config.ServerAddress,
@@ -126,6 +128,7 @@ namespace NautilusData
             var instrumentProvider = new InstrumentProvider(
                 container,
                 instrumentRepository,
+                new BsonInstrumentArraySerializer(),
                 new MsgPackRequestSerializer(),
                 new MsgPackResponseSerializer(),
                 config.ServerAddress,

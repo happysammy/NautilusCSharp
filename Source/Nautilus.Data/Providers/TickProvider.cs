@@ -24,12 +24,14 @@ namespace Nautilus.Data.Providers
     public sealed class TickProvider : MessageServer<Request, Response>
     {
         private readonly ITickRepository repository;
+        private readonly IDataSerializer<Tick[]> dataSerializer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TickProvider"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
         /// <param name="repository">The tick repository.</param>
+        /// <param name="dataSerializer">The data serializer.</param>
         /// <param name="inboundSerializer">The inbound message serializer.</param>
         /// <param name="outboundSerializer">The outbound message serializer.</param>
         /// <param name="host">The host address.</param>
@@ -37,6 +39,7 @@ namespace Nautilus.Data.Providers
         public TickProvider(
             IComponentryContainer container,
             ITickRepository repository,
+            IDataSerializer<Tick[]> dataSerializer,
             IMessageSerializer<Request> inboundSerializer,
             IMessageSerializer<Response> outboundSerializer,
             NetworkAddress host,
@@ -50,6 +53,7 @@ namespace Nautilus.Data.Providers
                 Guid.NewGuid())
         {
             this.repository = repository;
+            this.dataSerializer = dataSerializer;
 
             this.RegisterHandler<Envelope<TickDataRequest>>(this.OnMessage);
         }
@@ -75,10 +79,11 @@ namespace Nautilus.Data.Providers
                 var ticks = query
                     .Value
                     .ToArray();
+                var data = this.dataSerializer.Serialize(ticks);
 
-                var response = new TickDataResponse(
-                    request.Symbol,
-                    ticks,
+                var response = new DataResponse(
+                    data,
+                    this.dataSerializer.DataEncoding,
                     request.Id,
                     this.NewGuid(),
                     this.TimeNow());

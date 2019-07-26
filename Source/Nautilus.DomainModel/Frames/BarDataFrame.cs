@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Data.Types
+namespace Nautilus.DomainModel.Frames
 {
     using System.Linq;
     using Nautilus.Core.Annotations;

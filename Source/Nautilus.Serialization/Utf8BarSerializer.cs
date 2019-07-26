@@ -9,13 +9,17 @@
 namespace Nautilus.Serialization
 {
     using System.Text;
+    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <inheritdoc />
-    public class Utf8BarSerializer : ISerializer<Bar>
+    public class Utf8BarSerializer : IDataSerializer<Bar>
     {
+        /// <inheritdoc />
+        public DataEncoding DataEncoding => DataEncoding.Utf8;
+
         /// <inheritdoc />
         public byte[] Serialize(Bar bar)
         {

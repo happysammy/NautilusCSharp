@@ -29,7 +29,7 @@ namespace Nautilus.Data.Publishers
         public InstrumentPublisher(
             IComponentryContainer container,
             IDataBusAdapter dataBusAdapter,
-            ISerializer<Instrument> serializer,
+            IDataSerializer<Instrument> serializer,
             NetworkAddress host,
             NetworkPort port)
             : base(

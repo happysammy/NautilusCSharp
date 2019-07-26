@@ -9,8 +9,8 @@
 namespace Nautilus.Data.Interfaces
 {
     using Nautilus.Core.CQS;
-    using Nautilus.Data.Types;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Frames;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 

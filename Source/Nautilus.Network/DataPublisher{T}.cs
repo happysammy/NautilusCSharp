@@ -24,21 +24,21 @@ namespace Nautilus.Network
     public abstract class DataPublisher<T> : DataBusConnected
     {
         private readonly PublisherSocket socket;
-        private readonly ISerializer<T> serializer;
+        private readonly IDataSerializer<T> dataSerializer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataPublisher{T}"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
         /// <param name="dataBusAdapter">The data bus adapter.</param>
-        /// <param name="serializer">The data serializer.</param>
+        /// <param name="dataSerializer">The data serializer.</param>
         /// <param name="host">The publishers host address.</param>
         /// <param name="port">The publishers port.</param>
         /// <param name="id">The publishers identifier.</param>
         protected DataPublisher(
             IComponentryContainer container,
             IDataBusAdapter dataBusAdapter,
-            ISerializer<T> serializer,
+            IDataSerializer<T> dataSerializer,
             NetworkAddress host,
             NetworkPort port,
             Guid id)
@@ -55,7 +55,7 @@ namespace Nautilus.Network
                 },
             };
 
-            this.serializer = serializer;
+            this.dataSerializer = dataSerializer;
 
             this.ServerAddress = new ZmqServerAddress(host, port);
             this.PublishedCount = 0;
@@ -94,7 +94,7 @@ namespace Nautilus.Network
         /// <param name="message">The message to publish.</param>
         protected void Publish(string topic, T message)
         {
-            this.socket.SendMultipartBytes(Encoding.UTF8.GetBytes(topic), this.serializer.Serialize(message));
+            this.socket.SendMultipartBytes(Encoding.UTF8.GetBytes(topic), this.dataSerializer.Serialize(message));
 
             this.PublishedCount++;
             this.Log.Debug($"Published[{this.PublishedCount}] Topic={topic}, Message={message}");
