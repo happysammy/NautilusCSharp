@@ -12,7 +12,6 @@ namespace Nautilus.Serialization.Internal
     using MsgPack;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel;
-    using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
@@ -67,16 +66,6 @@ namespace Nautilus.Serialization.Internal
         }
 
         /// <summary>
-        /// Returns a BrokerSymbol extracted from the given <see cref="MessagePackObject"/>.
-        /// </summary>
-        /// <param name="unpacked">The MessagePack object to extract from.</param>
-        /// <returns>The extracted BrokerSymbol.</returns>
-        internal static BrokerSymbol BrokerSymbol(MessagePackObjectDictionary unpacked)
-        {
-            return new BrokerSymbol(unpacked[nameof(BrokerSymbol)].ToString());
-        }
-
-        /// <summary>
         /// Returns a TraderId extracted from the given <see cref="MessagePackObjectDictionary"/>.
         /// </summary>
         /// <param name="unpacked">The dictionary to extract from.</param>
@@ -124,16 +113,6 @@ namespace Nautilus.Serialization.Internal
         internal static ExecutionId ExecutionId(MessagePackObjectDictionary unpacked)
         {
             return new ExecutionId(unpacked[nameof(ExecutionId)].ToString());
-        }
-
-        /// <summary>
-        /// Returns an InstrumentId extracted from the given <see cref="MessagePackObject"/>.
-        /// </summary>
-        /// <param name="unpacked">The MessagePack object to extract from.</param>
-        /// <returns>The extracted InstrumentId.</returns>
-        internal static InstrumentId InstrumentId(MessagePackObjectDictionary unpacked)
-        {
-            return new InstrumentId(unpacked[nameof(Instrument.Id)].ToString());
         }
 
         /// <summary>
