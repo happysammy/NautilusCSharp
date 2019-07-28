@@ -1,7 +1,7 @@
 # Nautilus
 The trading services for the Nautilus stack.
 
-![Alt text](Documentation/Assets/nautechsystems_logo_small.png?raw=true "logo")
+![Alt text](Documentation/Assets/nautechsystems_logo_small.png)
 
 Nautech Systems Pty Ltd.
 
