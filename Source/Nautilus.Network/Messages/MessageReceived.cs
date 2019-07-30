@@ -15,7 +15,7 @@ namespace Nautilus.Network.Messages
     using NodaTime;
 
     /// <summary>
-    /// A response acknowledging receipt of a message.
+    /// Represents a response acknowledging receipt of a message.
     /// </summary>
     [Immutable]
     public sealed class MessageReceived : Response
