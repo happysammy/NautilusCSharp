@@ -8,13 +8,13 @@
 
 namespace Nautilus.Serialization
 {
+    using System.Collections.Generic;
     using MsgPack;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.Data.Messages.Requests;
-    using Nautilus.DomainModel.Enums;
     using Nautilus.Serialization.Internal;
 
     /// <summary>
@@ -22,6 +22,17 @@ namespace Nautilus.Serialization
     /// </summary>
     public sealed class MsgPackRequestSerializer : IMessageSerializer<Request>
     {
+        private readonly ISerializer<Dictionary<string, string>> querySerializer;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MsgPackRequestSerializer"/> class.
+        /// </summary>
+        /// <param name="querySerializer">The query serializer.</param>
+        public MsgPackRequestSerializer(ISerializer<Dictionary<string, string>> querySerializer)
+        {
+            this.querySerializer = querySerializer;
+        }
+
         /// <inheritdoc />
         public byte[] Serialize(Request request)
         {
@@ -34,22 +45,8 @@ namespace Nautilus.Serialization
 
             switch (request)
             {
-                case TickDataRequest req:
-                    package.Add(nameof(req.Symbol), req.Symbol.ToString());
-                    package.Add(nameof(req.FromDateTime), req.FromDateTime.ToIsoString());
-                    package.Add(nameof(req.ToDateTime), req.ToDateTime.ToIsoString());
-                    break;
-                case BarDataRequest req:
-                    package.Add(nameof(req.Symbol), req.Symbol.ToString());
-                    package.Add(nameof(req.BarSpecification), req.BarSpecification.ToString());
-                    package.Add(nameof(req.FromDateTime), req.FromDateTime.ToIsoString());
-                    package.Add(nameof(req.ToDateTime), req.ToDateTime.ToIsoString());
-                    break;
-                case InstrumentRequest req:
-                    package.Add(nameof(req.Symbol), req.Symbol.ToString());
-                    break;
-                case InstrumentsRequest req:
-                    package.Add(nameof(req.Venue), req.Venue.ToString());
+                case DataRequest req:
+                    package.Add(nameof(req.Query), this.querySerializer.Serialize(req.Query));
                     break;
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(request, nameof(request));
@@ -69,29 +66,9 @@ namespace Nautilus.Serialization
 
             switch (request)
             {
-                case nameof(TickDataRequest):
-                    return new TickDataRequest(
-                        ObjectExtractor.Symbol(unpacked),
-                        ObjectExtractor.ZonedDateTime(unpacked[nameof(TickDataRequest.FromDateTime)]),
-                        ObjectExtractor.ZonedDateTime(unpacked[nameof(TickDataRequest.ToDateTime)]),
-                        id,
-                        timestamp);
-                case nameof(BarDataRequest):
-                    return new BarDataRequest(
-                        ObjectExtractor.Symbol(unpacked),
-                        ObjectExtractor.BarSpecification(unpacked),
-                        ObjectExtractor.ZonedDateTime(unpacked[nameof(BarDataRequest.FromDateTime)]),
-                        ObjectExtractor.ZonedDateTime(unpacked[nameof(BarDataRequest.ToDateTime)]),
-                        id,
-                        timestamp);
-                case nameof(InstrumentRequest):
-                    return new InstrumentRequest(
-                        ObjectExtractor.Symbol(unpacked),
-                        id,
-                        timestamp);
-                case nameof(InstrumentsRequest):
-                    return new InstrumentsRequest(
-                        ObjectExtractor.Enum<Venue>(unpacked[nameof(InstrumentsRequest.Venue)]),
+                case nameof(DataRequest):
+                    return new DataRequest(
+                        this.querySerializer.Deserialize(unpacked[nameof(DataRequest.Query)].AsBinary()),
                         id,
                         timestamp);
                 default:

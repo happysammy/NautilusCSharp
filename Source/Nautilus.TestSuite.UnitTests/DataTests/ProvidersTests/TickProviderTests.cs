@@ -9,11 +9,13 @@
 namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
     using Nautilus.Common.Data;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
+    using Nautilus.Core.Extensions;
     using Nautilus.Data;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Messages.Requests;
@@ -56,7 +58,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             this.loggingAdapter = containerFactory.LoggingAdapter;
             this.repository = new InMemoryTickStore(container, DataBusFactory.Create(container));
             this.dataSerializer = new BsonTickArraySerializer();
-            this.requestSerializer = new MsgPackRequestSerializer();
+            this.requestSerializer = new MsgPackRequestSerializer(new MsgPackQuerySerializer());
             this.responseSerializer = new MsgPackResponseSerializer();
 
             this.provider = new TickProvider(
@@ -85,10 +87,16 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             requester.Connect(TEST_ADDRESS);
             Task.Delay(100).Wait();  // Allow socket to connect
 
-            var dataRequest = new TickDataRequest(
-                symbol,
-                datetimeFrom,
-                datetimeTo,
+            var query = new Dictionary<string, string>
+            {
+                { "DataType", "Tick[]" },
+                { "Symbol", symbol.ToString() },
+                { "FromDateTime", datetimeFrom.ToIsoString() },
+                { "ToDateTime", datetimeTo.ToIsoString() },
+            };
+
+            var dataRequest = new DataRequest(
+                query,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -129,10 +137,16 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             requester.Connect(TEST_ADDRESS);
             Task.Delay(100).Wait();  // Allow socket to connect
 
-            var dataRequest = new TickDataRequest(
-                symbol,
-                datetimeFrom,
-                datetimeTo,
+            var query = new Dictionary<string, string>
+            {
+                { "DataType", "Tick[]" },
+                { "Symbol", symbol.ToString() },
+                { "FromDateTime", datetimeFrom.ToIsoString() },
+                { "ToDateTime", datetimeTo.ToIsoString() },
+            };
+
+            var dataRequest = new DataRequest(
+                query,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 

@@ -9,6 +9,7 @@
 namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
     using Nautilus.Common.Interfaces;
@@ -53,7 +54,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             this.loggingAdapter = containerFactory.LoggingAdapter;
             this.repository = new MockInstrumentRepository();
             this.dataSerializer = new BsonInstrumentArraySerializer();
-            this.requestSerializer = new MsgPackRequestSerializer();
+            this.requestSerializer = new MsgPackRequestSerializer(new MsgPackQuerySerializer());
             this.responseSerializer = new MsgPackResponseSerializer();
 
             this.provider = new InstrumentProvider(
@@ -79,8 +80,14 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
 
             var instrument = StubInstrumentFactory.AUDUSD();
 
-            var request = new InstrumentRequest(
-                instrument.Symbol,
+            var query = new Dictionary<string, string>
+            {
+                { "DataType", "Instrument" },
+                { "Symbol", instrument.Symbol.ToString() },
+            };
+
+            var request = new DataRequest(
+                query,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -111,8 +118,14 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             requester.Connect(TEST_ADDRESS);
             Task.Delay(100).Wait();  // Allow socket to connect
 
-            var request = new InstrumentsRequest(
-                Venue.FXCM,
+            var query = new Dictionary<string, string>
+            {
+                { "DataType", "Instrument[]" },
+                { "Venue", Venue.FXCM.ToString() },
+            };
+
+            var request = new DataRequest(
+                query,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -146,8 +159,14 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             var instrument = StubInstrumentFactory.AUDUSD();
             this.repository.Add(instrument, StubZonedDateTime.UnixEpoch());
 
-            var request = new InstrumentRequest(
-                instrument.Symbol,
+            var query = new Dictionary<string, string>
+            {
+                { "DataType", "Instrument" },
+                { "Symbol", instrument.Symbol.ToString() },
+            };
+
+            var request = new DataRequest(
+                query,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -185,8 +204,14 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             this.repository.Add(instrument1, StubZonedDateTime.UnixEpoch());
             this.repository.Add(instrument2, StubZonedDateTime.UnixEpoch());
 
-            var request = new InstrumentsRequest(
-                Venue.FXCM,
+            var query = new Dictionary<string, string>
+            {
+                { "DataType", "Instrument[]" },
+                { "Venue", Venue.FXCM.ToString() },
+            };
+
+            var request = new DataRequest(
+                query,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 

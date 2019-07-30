@@ -9,10 +9,12 @@
 namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
+    using Nautilus.Core.Extensions;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Messages.Requests;
     using Nautilus.Data.Messages.Responses;
@@ -53,7 +55,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             this.loggingAdapter = containerFactory.LoggingAdapter;
             this.repository = new MockBarRepository();
             this.dataSerializer = new BsonBarDataFrameSerializer();
-            this.requestSerializer = new MsgPackRequestSerializer();
+            this.requestSerializer = new MsgPackRequestSerializer(new MsgPackQuerySerializer());
             this.responseSerializer = new MsgPackResponseSerializer();
 
             this.provider = new BarProvider(
@@ -82,11 +84,17 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             requester.Connect(TEST_ADDRESS);
             Task.Delay(100).Wait();  // Allow socket to connect
 
-            var request = new BarDataRequest(
-                barType.Symbol,
-                barType.Specification,
-                datetimeFrom,
-                datetimeTo,
+            var query = new Dictionary<string, string>
+            {
+                { "DataType", "Bar[]" },
+                { "Symbol", barType.Symbol.ToString() },
+                { "BarSpecification", barType.Specification.ToString() },
+                { "FromDateTime", datetimeFrom.ToIsoString() },
+                { "ToDateTime", datetimeTo.ToIsoString() },
+            };
+
+            var request = new DataRequest(
+                query,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -127,11 +135,17 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             requester.Connect(TEST_ADDRESS);
             Task.Delay(100).Wait();  // Allow socket to connect
 
-            var request = new BarDataRequest(
-                barType.Symbol,
-                barType.Specification,
-                datetimeFrom,
-                datetimeTo,
+            var query = new Dictionary<string, string>
+            {
+                { "DataType", "Bar[]" },
+                { "Symbol", barType.Symbol.ToString() },
+                { "BarSpecification", barType.Specification.ToString() },
+                { "FromDateTime", datetimeFrom.ToIsoString() },
+                { "ToDateTime", datetimeTo.ToIsoString() },
+            };
+
+            var request = new DataRequest(
+                query,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 

@@ -12,10 +12,13 @@ namespace Nautilus.Data.Providers
     using System.Linq;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
+    using Nautilus.Core.Extensions;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Messages.Requests;
     using Nautilus.Data.Messages.Responses;
+    using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;
+    using Nautilus.DomainModel.Enums;
     using Nautilus.Messaging;
     using Nautilus.Network;
 
@@ -56,52 +59,73 @@ namespace Nautilus.Data.Providers
             this.repository = repository;
             this.dataSerializer = dataSerializer;
 
-            this.RegisterHandler<Envelope<InstrumentRequest>>(this.OnMessage);
-            this.RegisterHandler<Envelope<InstrumentsRequest>>(this.OnMessage);
+            this.RegisterHandler<Envelope<DataRequest>>(this.OnMessage);
         }
 
-        private void OnMessage(Envelope<InstrumentRequest> envelope)
+        private void OnMessage(Envelope<DataRequest> envelope)
         {
             var request = envelope.Message;
-            var query = this.repository.FindInCache(request.Symbol);
 
-            if (query.IsFailure)
+            try
             {
-                this.SendQueryFailure(query.Message, request.Id, envelope.Sender);
-                this.Log.Warning($"{envelope.Message} query failed ({query.Message}).");
-                return;
+                var dataType = request.Query["DataType"];
+                switch (dataType)
+                {
+                    case "Instrument":
+                    {
+                        var symbol = DomainObjectParser.ParseSymbol(request.Query["Symbol"]);
+                        var query = this.repository.FindInCache(symbol);
+
+                        if (query.IsFailure)
+                        {
+                            this.SendQueryFailure(query.Message, request.Id, envelope.Sender);
+                            this.Log.Warning($"{envelope.Message} query failed ({query.Message}).");
+                            return;
+                        }
+
+                        var response = new DataResponse(
+                            this.dataSerializer.Serialize(new[] { query.Value }),
+                            this.dataSerializer.DataEncoding,
+                            request.Id,
+                            Guid.NewGuid(),
+                            this.TimeNow());
+
+                        this.SendMessage(response, envelope.Sender);
+                        break;
+                    }
+
+                    case "Instrument[]":
+                    {
+                        var venue = request.Query["Venue"].ToEnum<Venue>();
+                        var query = this.repository.FindInCache(venue);
+
+                        if (query.IsFailure)
+                        {
+                            this.SendQueryFailure(query.Message, request.Id, envelope.Sender);
+                            this.Log.Warning($"{envelope.Message} query failed ({query.Message}).");
+                            return;
+                        }
+
+                        var response = new DataResponse(
+                            this.dataSerializer.Serialize(query.Value.ToArray()),
+                            this.dataSerializer.DataEncoding,
+                            request.Id,
+                            Guid.NewGuid(),
+                            this.TimeNow());
+
+                        this.SendMessage(response, envelope.Sender);
+                        break;
+                    }
+
+                    default:
+                        this.SendQueryFailure($"Incorrect DataType requested (was {dataType})", request.Id, envelope.Sender);
+                        return;
+                }
             }
-
-            var response = new DataResponse(
-                this.dataSerializer.Serialize(new[] { query.Value }),
-                this.dataSerializer.DataEncoding,
-                request.Id,
-                Guid.NewGuid(),
-                this.TimeNow());
-
-            this.SendMessage(response, envelope.Sender);
-        }
-
-        private void OnMessage(Envelope<InstrumentsRequest> envelope)
-        {
-            var request = envelope.Message;
-            var query = this.repository.FindInCache(request.Venue);
-
-            if (query.IsFailure)
+            catch (Exception ex)
             {
-                this.SendQueryFailure(query.Message, request.Id, envelope.Sender);
-                this.Log.Warning($"{envelope.Message} query failed ({query.Message}).");
-                return;
+                this.SendQueryFailure(ex.Message, request.Id, envelope.Sender);
             }
-
-            var response = new DataResponse(
-                this.dataSerializer.Serialize(query.Value.ToArray()),
-                this.dataSerializer.DataEncoding,
-                request.Id,
-                Guid.NewGuid(),
-                this.TimeNow());
-
-            this.SendMessage(response, envelope.Sender);
         }
     }
 }

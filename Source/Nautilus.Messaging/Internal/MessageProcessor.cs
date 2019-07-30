@@ -90,7 +90,7 @@ namespace Nautilus.Messaging.Internal
 
             if (this.registeredHandlers.Any(h => h.Key == typeof(object)))
             {
-                // Move handle object to the end of the handlers.
+                // Move handle object to the end of the handlers
                 var handleObject = this.registeredHandlers.FirstOrDefault(h => h.Key == typeof(object));
                 this.registeredHandlers.Remove(handleObject);
                 this.registeredHandlers.Add(handleObject);

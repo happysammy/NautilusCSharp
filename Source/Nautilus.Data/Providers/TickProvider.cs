@@ -11,9 +11,11 @@ namespace Nautilus.Data.Providers
     using System;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
+    using Nautilus.Core.Extensions;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Messages.Requests;
     using Nautilus.Data.Messages.Responses;
+    using Nautilus.DomainModel;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging;
     using Nautilus.Network;
@@ -55,40 +57,58 @@ namespace Nautilus.Data.Providers
             this.repository = repository;
             this.dataSerializer = dataSerializer;
 
-            this.RegisterHandler<Envelope<TickDataRequest>>(this.OnMessage);
+            this.RegisterHandler<Envelope<DataRequest>>(this.OnMessage);
         }
 
-        private void OnMessage(Envelope<TickDataRequest> envelope)
+        private void OnMessage(Envelope<DataRequest> envelope)
         {
             this.Execute(() =>
             {
                 var request = envelope.Message;
 
-                var query = this.repository.Find(
-                    request.Symbol,
-                    request.FromDateTime,
-                    request.ToDateTime);
-
-                if (query.IsFailure)
+                try
                 {
-                    this.SendQueryFailure(query.Message, request.Id, envelope.Sender);
-                    this.Log.Warning($"{envelope.Message} query failed ({query.Message}).");
-                    return;
+                    var dataType = request.Query["DataType"];
+                    if (dataType != "Tick[]")
+                    {
+                        this.SendQueryFailure($"Incorrect DataType requested (was {dataType})", request.Id, envelope.Sender);
+                        return;
+                    }
+
+                    var symbol = DomainObjectParser.ParseSymbol(request.Query["Symbol"]);
+                    var fromDateTime = request.Query["FromDateTime"].ToZonedDateTimeFromIso();
+                    var toDateTime = request.Query["ToDateTime"].ToZonedDateTimeFromIso();
+
+                    var query = this.repository.Find(
+                        symbol,
+                        fromDateTime,
+                        toDateTime);
+
+                    if (query.IsFailure)
+                    {
+                        this.SendQueryFailure(query.Message, request.Id, envelope.Sender);
+                        this.Log.Warning($"{envelope.Message} query failed ({query.Message}).");
+                        return;
+                    }
+
+                    var ticks = query
+                        .Value
+                        .ToArray();
+                    var data = this.dataSerializer.Serialize(ticks);
+
+                    var response = new DataResponse(
+                        data,
+                        this.dataSerializer.DataEncoding,
+                        request.Id,
+                        this.NewGuid(),
+                        this.TimeNow());
+
+                    this.SendMessage(response, envelope.Sender);
                 }
-
-                var ticks = query
-                    .Value
-                    .ToArray();
-                var data = this.dataSerializer.Serialize(ticks);
-
-                var response = new DataResponse(
-                    data,
-                    this.dataSerializer.DataEncoding,
-                    request.Id,
-                    this.NewGuid(),
-                    this.TimeNow());
-
-                this.SendMessage(response, envelope.Sender);
+                catch (Exception ex)
+                {
+                    this.SendQueryFailure(ex.Message, request.Id, envelope.Sender);
+                }
             });
         }
     }

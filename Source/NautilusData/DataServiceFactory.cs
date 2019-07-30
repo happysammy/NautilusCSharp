@@ -111,7 +111,7 @@ namespace NautilusData
                 container,
                 tickRepository,
                 new BsonTickArraySerializer(),
-                new MsgPackRequestSerializer(),
+                new MsgPackRequestSerializer(new MsgPackQuerySerializer()),
                 new MsgPackResponseSerializer(),
                 config.ServerAddress,
                 config.TickRequestPort);
@@ -120,7 +120,7 @@ namespace NautilusData
                 container,
                 barRepository,
                 new BsonBarDataFrameSerializer(),
-                new MsgPackRequestSerializer(),
+                new MsgPackRequestSerializer(new MsgPackQuerySerializer()),
                 new MsgPackResponseSerializer(),
                 config.ServerAddress,
                 config.BarRequestPort);
@@ -129,7 +129,7 @@ namespace NautilusData
                 container,
                 instrumentRepository,
                 new BsonInstrumentArraySerializer(),
-                new MsgPackRequestSerializer(),
+                new MsgPackRequestSerializer(new MsgPackQuerySerializer()),
                 new MsgPackResponseSerializer(),
                 config.ServerAddress,
                 config.InstrumentRequestPort);

@@ -9,8 +9,10 @@
 namespace Nautilus.TestSuite.UnitTests.SerializationTests
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
+    using Nautilus.Core.Extensions;
     using Nautilus.Data.Messages.Requests;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
@@ -31,97 +33,36 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         }
 
         [Fact]
-        internal void CanSerializeAndDeserialize_TickDataRequests()
+        internal void CanSerializeAndDeserialize_DataRequests()
         {
             // Arrange
-            var serializer = new MsgPackRequestSerializer();
+            var serializer = new MsgPackRequestSerializer(new MsgPackQuerySerializer());
 
-            var request = new TickDataRequest(
-                new Symbol("AUDUSD", Venue.FXCM),
-                StubZonedDateTime.UnixEpoch(),
-                StubZonedDateTime.UnixEpoch(),
+            var symbol = new Symbol("AUDUSD", Venue.FXCM);
+            var dateTime = StubZonedDateTime.UnixEpoch();
+            var query = new Dictionary<string, string>
+            {
+                { "DataType", "Tick[]" },
+                { "Symbol", symbol.ToString() },
+                { "FromDateTime", dateTime.ToIsoString() },
+                { "ToDateTime", dateTime.ToIsoString() },
+            };
+
+            var request = new DataRequest(
+                query,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             // Act
             var packed = serializer.Serialize(request);
-            var unpacked = (TickDataRequest)serializer.Deserialize(packed);
+            var unpacked = (DataRequest)serializer.Deserialize(packed);
 
             // Assert
             Assert.Equal(request, unpacked);
-            Assert.Equal(request.FromDateTime, unpacked.FromDateTime);
-            Assert.Equal(request.ToDateTime, unpacked.ToDateTime);
-            this.output.WriteLine(Convert.ToBase64String(packed));
-            this.output.WriteLine(Encoding.UTF8.GetString(packed));
-        }
-
-        [Fact]
-        internal void CanSerializeAndDeserialize_BarDataRequests()
-        {
-            // Arrange
-            var serializer = new MsgPackRequestSerializer();
-
-            var request = new BarDataRequest(
-                new Symbol("AUDUSD", Venue.FXCM),
-                new BarSpecification(1, Resolution.MINUTE, QuoteType.BID),
-                StubZonedDateTime.UnixEpoch(),
-                StubZonedDateTime.UnixEpoch(),
-                Guid.NewGuid(),
-                StubZonedDateTime.UnixEpoch());
-
-            // Act
-            var packed = serializer.Serialize(request);
-            var unpacked = (BarDataRequest)serializer.Deserialize(packed);
-
-            // Assert
-            Assert.Equal(request, unpacked);
-            Assert.Equal(request.Symbol, unpacked.Symbol);
-            Assert.Equal(request.BarSpecification, unpacked.BarSpecification);
-            Assert.Equal(request.ToDateTime, unpacked.ToDateTime);
-            this.output.WriteLine(Convert.ToBase64String(packed));
-            this.output.WriteLine(Encoding.UTF8.GetString(packed));
-        }
-
-        [Fact]
-        internal void CanSerializeAndDeserialize_InstrumentRequests()
-        {
-            // Arrange
-            var serializer = new MsgPackRequestSerializer();
-
-            var request = new InstrumentRequest(
-                new Symbol("AUDUSD", Venue.FXCM),
-                Guid.NewGuid(),
-                StubZonedDateTime.UnixEpoch());
-
-            // Act
-            var packed = serializer.Serialize(request);
-            var unpacked = (InstrumentRequest)serializer.Deserialize(packed);
-
-            // Assert
-            Assert.Equal(request, unpacked);
-            Assert.Equal(request.Symbol, unpacked.Symbol);
-            this.output.WriteLine(Convert.ToBase64String(packed));
-            this.output.WriteLine(Encoding.UTF8.GetString(packed));
-        }
-
-        [Fact]
-        internal void CanSerializeAndDeserialize_InstrumentsRequests()
-        {
-            // Arrange
-            var serializer = new MsgPackRequestSerializer();
-
-            var request = new InstrumentsRequest(
-                Venue.FXCM,
-                Guid.NewGuid(),
-                StubZonedDateTime.UnixEpoch());
-
-            // Act
-            var packed = serializer.Serialize(request);
-            var unpacked = (InstrumentsRequest)serializer.Deserialize(packed);
-
-            // Assert
-            Assert.Equal(request, unpacked);
-            Assert.Equal(request.Venue, unpacked.Venue);
+            Assert.Equal("Tick[]", unpacked.Query["DataType"]);
+            Assert.Equal(symbol.ToString(), unpacked.Query["Symbol"]);
+            Assert.Equal(dateTime.ToIsoString(), unpacked.Query["FromDateTime"]);
+            Assert.Equal(dateTime.ToIsoString(), unpacked.Query["ToDateTime"]);
             this.output.WriteLine(Convert.ToBase64String(packed));
             this.output.WriteLine(Encoding.UTF8.GetString(packed));
         }
