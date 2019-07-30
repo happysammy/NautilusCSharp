@@ -15,7 +15,7 @@ namespace Nautilus.Network.Messages
     using NodaTime;
 
     /// <summary>
-    /// A response indicating rejection of a message.
+    /// Represents a response indicating a query failure.
     /// </summary>
     [Immutable]
     public sealed class QueryFailure : Response

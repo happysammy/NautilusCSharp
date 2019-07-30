@@ -15,7 +15,7 @@ namespace Nautilus.Network.Messages
     using NodaTime;
 
     /// <summary>
-    /// A response indicating rejection of a message.
+    /// Represents a response indicating rejection of a message.
     /// </summary>
     [Immutable]
     public sealed class MessageRejected : Response
