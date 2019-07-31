@@ -76,7 +76,7 @@ namespace Nautilus.Data.Providers
                 }
 
                 var symbol = DomainObjectParser.ParseSymbol(request.Query["Symbol"]);
-                var barSpec = DomainObjectParser.ParseBarSpecification(request.Query["BarSpecification"]);
+                var barSpec = DomainObjectParser.ParseBarSpecification(request.Query["Specification"]);
                 var barType = new BarType(symbol, barSpec);
                 var fromDateTime = request.Query["FromDateTime"].ToZonedDateTimeFromIso();
                 var toDateTime = request.Query["ToDateTime"].ToZonedDateTimeFromIso();

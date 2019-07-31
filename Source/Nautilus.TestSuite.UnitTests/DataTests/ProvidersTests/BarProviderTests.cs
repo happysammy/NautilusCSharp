@@ -88,7 +88,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             {
                 { "DataType", "Bar[]" },
                 { "Symbol", barType.Symbol.ToString() },
-                { "BarSpecification", barType.Specification.ToString() },
+                { "Specification", barType.Specification.ToString() },
                 { "FromDateTime", datetimeFrom.ToIsoString() },
                 { "ToDateTime", datetimeTo.ToIsoString() },
             };
@@ -139,7 +139,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             {
                 { "DataType", "Bar[]" },
                 { "Symbol", barType.Symbol.ToString() },
-                { "BarSpecification", barType.Specification.ToString() },
+                { "Specification", barType.Specification.ToString() },
                 { "FromDateTime", datetimeFrom.ToIsoString() },
                 { "ToDateTime", datetimeTo.ToIsoString() },
             };
