@@ -27,7 +27,6 @@
 
     <ItemGroup>
         <PackageReference Include="MongoDB.Bson" Version="2.8.1" />
-        <PackageReference Include="MongoDb.Bson.NodaTime" Version="2.0.0" />
         <PackageReference Include="MsgPack.Cli" Version="1.0.1" />
     </ItemGroup>
 
