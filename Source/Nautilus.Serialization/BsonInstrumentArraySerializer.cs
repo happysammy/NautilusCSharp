@@ -23,7 +23,7 @@ namespace Nautilus.Serialization
     public class BsonInstrumentArraySerializer : IDataSerializer<Instrument[]>
     {
         private const string DATA_TYPE = "DataType";
-        private const string VALUES = "Values";
+        private const string DATA = "Data";
 
         private readonly BsonInstrumentSerializer instrumentSerializer;
 
@@ -57,7 +57,7 @@ namespace Nautilus.Serialization
             return new BsonDocument
             {
                 { DATA_TYPE, nameof(Instrument) },
-                { VALUES, new BsonArray(instrumentsBytes) },
+                { DATA, new BsonArray(instrumentsBytes) },
             }.ToBson();
         }
 
@@ -71,7 +71,7 @@ namespace Nautilus.Serialization
             Debug.NotEmpty(dataBytes, nameof(dataBytes));
 
             var data = BsonSerializer.Deserialize<BsonDocument>(dataBytes);
-            var valueArray = data[VALUES].AsBsonArray;
+            var valueArray = data[DATA].AsBsonArray;
 
             var instruments = new Instrument[valueArray.Count];
             for (var i = 0; i < valueArray.Count; i++)

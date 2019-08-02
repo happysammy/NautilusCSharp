@@ -8,12 +8,12 @@
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-        <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.TestSuite.UnitTests.xml</DocumentationFile>
+        <DocumentationFile>bin\Debug\netcoreapp2.2\Nautilus.TestSuite.UnitTests.xml</DocumentationFile>
         <NoWarn>1591</NoWarn>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-        <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.TestSuite.UnitTests.xml</DocumentationFile>
+        <DocumentationFile>bin\Debug\netcoreapp2.2\Nautilus.TestSuite.UnitTests.xml</DocumentationFile>
         <NoWarn>1591</NoWarn>
     </PropertyGroup>
 

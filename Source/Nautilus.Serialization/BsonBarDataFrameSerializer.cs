@@ -25,7 +25,7 @@ namespace Nautilus.Serialization
     public class BsonBarDataFrameSerializer : IDataSerializer<BarDataFrame>
     {
         private const string DATA_TYPE = "DataType";
-        private const string VALUES = "Values";
+        private const string DATA = "Data";
 
         /// <inheritdoc />
         public DataEncoding DataEncoding => DataEncoding.Bson;
@@ -35,10 +35,10 @@ namespace Nautilus.Serialization
         {
             Debug.NotEmpty(data.Bars, nameof(data.Bars));
 
-            var utf8Array = new byte[data.Bars.Length][];
+            var dataArray = new byte[data.Bars.Length][];
             for (var i = 0; i < data.Bars.Length; i++)
             {
-                utf8Array[i] = System.Text.Encoding.UTF8.GetBytes(data.Bars[i].ToString());
+                dataArray[i] = System.Text.Encoding.UTF8.GetBytes(data.Bars[i].ToString());
             }
 
             return new BsonDocument
@@ -46,7 +46,7 @@ namespace Nautilus.Serialization
                 { DATA_TYPE, nameof(Bar) },
                 { nameof(data.BarType.Symbol), data.BarType.Symbol.ToString() },
                 { nameof(data.BarType.Specification), data.BarType.Specification.ToString() },
-                { VALUES, new BsonArray(utf8Array) },
+                { DATA, new BsonArray(dataArray) },
             }.ToBson();
         }
 
@@ -60,7 +60,7 @@ namespace Nautilus.Serialization
             var symbol = DomainObjectParser.ParseSymbol(data[nameof(BarType.Symbol)].AsString);
             var barSpec = DomainObjectParser.ParseBarSpecification(data[nameof(BarType.Specification)].AsString);
             var barType = new BarType(symbol, barSpec);
-            var valuesArray = data[VALUES].AsBsonArray;
+            var valuesArray = data[DATA].AsBsonArray;
 
             var bars = new Bar[valuesArray.Count];
             for (var i = 0; i < valuesArray.Count; i++)

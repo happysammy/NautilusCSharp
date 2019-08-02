@@ -10,13 +10,13 @@
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <WarningsAsErrors />
-        <DocumentationFile>bin\Debug\netcoreapp2.1\NautilusExecutor.xml</DocumentationFile>
+        <DocumentationFile>bin\Debug\netcoreapp2.2\NautilusExecutor.xml</DocumentationFile>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <WarningsAsErrors />
-        <DocumentationFile>bin\Debug\netcoreapp2.1\NautilusExecutor.xml</DocumentationFile>
+        <DocumentationFile>bin\Debug\netcoreapp2.2\NautilusExecutor.xml</DocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>

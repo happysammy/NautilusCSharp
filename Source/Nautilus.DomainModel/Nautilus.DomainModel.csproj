@@ -9,13 +9,13 @@
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <WarningsAsErrors />
-        <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.DomainModel.xml</DocumentationFile>
+        <DocumentationFile>bin\Debug\netcoreapp2.2\Nautilus.DomainModel.xml</DocumentationFile>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <WarningsAsErrors />
-        <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.DomainModel.xml</DocumentationFile>
+        <DocumentationFile>bin\Debug\netcoreapp2.2\Nautilus.DomainModel.xml</DocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>

@@ -24,7 +24,7 @@ namespace Nautilus.Serialization
     public class BsonTickArraySerializer : IDataSerializer<Tick[]>
     {
         private const string DATA_TYPE = "DataType";
-        private const string VALUES = "Values";
+        private const string DATA = "Data";
 
         /// <inheritdoc />
         public DataEncoding DataEncoding => DataEncoding.Bson;
@@ -44,7 +44,7 @@ namespace Nautilus.Serialization
             {
                 { DATA_TYPE, nameof(Tick) },
                 { nameof(Tick.Symbol), ticks[0].Symbol.ToString() },
-                { VALUES, new BsonArray(dataArray) },
+                { DATA, new BsonArray(dataArray) },
             }.ToBson();
         }
 
@@ -56,7 +56,7 @@ namespace Nautilus.Serialization
             var data = BsonSerializer.Deserialize<BsonDocument>(dataBytes);
 
             var symbol = DomainObjectParser.ParseSymbol(data[nameof(Tick.Symbol)].AsString);
-            var valueArray = data[VALUES].AsBsonArray;
+            var valueArray = data[DATA].AsBsonArray;
 
             var ticks = new Tick[valueArray.Count];
             for (var i = 0; i < valueArray.Count; i++)
