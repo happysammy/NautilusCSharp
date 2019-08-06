@@ -63,6 +63,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             var message = new AccountEvent(
                 AccountId.Create(Brokerage.FXCM, "D123456"),
+                Brokerage.FXCM,
+                "D123456",
                 Currency.AUD,
                 Money.Create(150000m, Currency.AUD),
                 Money.Create(150000m, Currency.AUD),
@@ -101,6 +103,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             var message = new AccountEvent(
                 AccountId.Create(Brokerage.FXCM, "D123456"),
+                Brokerage.FXCM,
+                "D123456",
                 Currency.USD,
                 Money.Create(150000m, Currency.AUD),
                 Money.Create(150000m, Currency.AUD),

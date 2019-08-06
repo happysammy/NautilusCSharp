@@ -176,6 +176,8 @@ namespace Nautilus.Fix
 
                 var accountEvent = new AccountEvent(
                     this.fixClient.AccountId,
+                    this.fixClient.Brokerage,
+                    this.fixClient.AccountNumber,
                     this.accountCurrency,
                     Money.Create(cashBalance, this.accountCurrency),
                     Money.Create(cashStartDay, this.accountCurrency),

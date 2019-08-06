@@ -31,6 +31,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
             var accountEventMessage = new AccountEvent(
                 AccountId.Create(Brokerage.FXCM, "D1234565"),
+                Brokerage.FXCM,
+                "D1234565",
                 Currency.USD,
                 Money.Create(100000, Currency.USD),
                 Money.Create(100000, Currency.USD),
@@ -59,6 +61,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
             var accountEventMessage = new AccountEvent(
                 AccountId.Create(Brokerage.FXCM, "D1234565"),
+                Brokerage.FXCM,
+                "D1234565",
                 Currency.USD,
                 Money.Zero(Currency.USD),
                 Money.Zero(Currency.USD),

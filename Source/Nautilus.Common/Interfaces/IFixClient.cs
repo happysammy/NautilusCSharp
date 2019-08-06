@@ -20,14 +20,19 @@ namespace Nautilus.Common.Interfaces
     public interface IFixClient
     {
         /// <summary>
-        /// Gets the name of the FIX brokerage.
+        /// Gets the account identifier.
+        /// </summary>
+        AccountId AccountId { get; }
+
+        /// <summary>
+        /// Gets the FIX brokerage.
         /// </summary>
         Brokerage Brokerage { get; }
 
         /// <summary>
-        /// Gets the account identifier.
+        /// Gets the FIX account number.
         /// </summary>
-        AccountId AccountId { get; }
+        string AccountNumber { get; }
 
         /// <summary>
         /// Gets a value indicating whether the FIX client is connected to a session.
