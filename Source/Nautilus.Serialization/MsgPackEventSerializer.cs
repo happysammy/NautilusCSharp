@@ -16,6 +16,7 @@ namespace Nautilus.Serialization
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.Serialization.Internal;
 
     /// <summary>
@@ -37,8 +38,6 @@ namespace Nautilus.Serialization
             {
                 case AccountEvent evt:
                     package.Add(nameof(evt.AccountId), evt.AccountId.ToString());
-                    package.Add(nameof(evt.Broker), evt.Broker.ToString());
-                    package.Add(nameof(evt.AccountNumber), evt.AccountNumber);
                     package.Add(nameof(evt.Currency), evt.Currency.ToString());
                     package.Add(nameof(evt.CashBalance), evt.CashBalance.Value.ToString(CultureInfo.InvariantCulture));
                     package.Add(nameof(evt.CashStartDay), evt.CashStartDay.Value.ToString(CultureInfo.InvariantCulture));
@@ -147,8 +146,7 @@ namespace Nautilus.Serialization
                 case nameof(AccountEvent):
                     var currency = ObjectExtractor.Enum<Currency>(unpacked[nameof(AccountEvent.Currency)]);
                     return new AccountEvent(
-                        ObjectExtractor.Enum<Brokerage>(unpacked[nameof(AccountEvent.Broker)]),
-                        unpacked[nameof(AccountEvent.AccountNumber)].ToString(),
+                        new AccountId(unpacked[nameof(AccountEvent.AccountId)].AsString()),
                         currency,
                         ObjectExtractor.Money(unpacked[nameof(AccountEvent.CashBalance)], currency),
                         ObjectExtractor.Money(unpacked[nameof(AccountEvent.CashStartDay)], currency),
@@ -156,7 +154,7 @@ namespace Nautilus.Serialization
                         ObjectExtractor.Money(unpacked[nameof(AccountEvent.MarginUsedLiquidation)], currency),
                         ObjectExtractor.Money(unpacked[nameof(AccountEvent.MarginUsedMaintenance)], currency),
                         ObjectExtractor.Decimal(unpacked[nameof(AccountEvent.MarginRatio)].ToString()),
-                        unpacked[nameof(AccountEvent.MarginCallStatus)].ToString(),
+                        unpacked[nameof(AccountEvent.MarginCallStatus)].AsString(),
                         id,
                         timestamp);
                 case nameof(OrderInitialized):

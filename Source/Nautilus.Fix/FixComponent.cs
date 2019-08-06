@@ -14,6 +14,7 @@ namespace Nautilus.Fix
     using Nautilus.Common.Messages.Events;
     using Nautilus.Core.Annotations;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Fix.Interfaces;
     using NodaTime;
@@ -60,8 +61,10 @@ namespace Nautilus.Fix
             this.logger = container.LoggerFactory.Create(new Label(this.GetType().Name));
             this.messageBusAdapter = messageBusAdapter;
             this.commandHandler = new CommandHandler(this.logger);
-            this.Broker = config.Broker;
-            this.Account = config.Credentials.Account;
+
+            this.Brokerage = config.Broker;
+            this.AccountNumber = config.Credentials.Account;
+            this.AccountId = AccountId.Create(this.Brokerage, this.AccountNumber);
             this.config = config;
             this.sendAccountTag = config.SendAccountTag;
 
@@ -77,12 +80,17 @@ namespace Nautilus.Fix
         /// <summary>
         /// Gets the name of the brokerage.
         /// </summary>
-        public Brokerage Broker { get; }
+        public Brokerage Brokerage { get; }
 
         /// <summary>
         /// Gets the account number for FIX component.
         /// </summary>
-        public string Account { get; }
+        public string AccountNumber { get; }
+
+        /// <summary>
+        /// Gets the account identifier.
+        /// </summary>
+        public AccountId AccountId { get; }
 
         /// <summary>
         /// Gets the components FIX message handler.
@@ -201,7 +209,7 @@ namespace Nautilus.Fix
             this.commandHandler.Execute(() =>
             {
                 var connected = new FixSessionConnected(
-                    this.Broker,
+                    this.Brokerage,
                     sessionId.ToString(),
                     this.NewGuid(),
                     this.TimeNow());
@@ -221,7 +229,7 @@ namespace Nautilus.Fix
             this.commandHandler.Execute(() =>
             {
                 var disconnected = new FixSessionDisconnected(
-                    this.Broker,
+                    this.Brokerage,
                     sessionId.ToString(),
                     this.NewGuid(),
                     this.TimeNow());

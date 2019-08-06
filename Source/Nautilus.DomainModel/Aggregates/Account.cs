@@ -25,7 +25,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Initializes a new instance of the <see cref="Account"/> class.
         /// </summary>
-        /// <param name="broker">The broker name.</param>
+        /// <param name="brokerage">The broker name.</param>
         /// <param name="accountNumber">The account number.</param>
         /// <param name="username">The account username.</param>
         /// <param name="password">The account password.</param>
@@ -34,14 +34,14 @@ namespace Nautilus.DomainModel.Aggregates
         /// <exception cref="ArgumentException">If any string is empty or whitespace.</exception>
         /// <exception cref="ArgumentException">If any struct is the default value.</exception>
         public Account(
-            Brokerage broker,
+            Brokerage brokerage,
             string accountNumber,
             string username,
             string password,
             Currency currency,
             ZonedDateTime timestamp)
             : base(
-                new AccountId($"{broker}-{accountNumber}"),
+                AccountId.Create(brokerage, accountNumber),
                 timestamp)
         {
             Condition.NotEmptyOrWhiteSpace(username, nameof(username));
@@ -49,10 +49,8 @@ namespace Nautilus.DomainModel.Aggregates
             Condition.NotDefault(currency, nameof(currency));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
-            this.Broker = broker;
+            this.Brokerage = brokerage;
             this.AccountNumber = accountNumber;
-            this.Username = username;
-            this.Password = password;
             this.Currency = currency;
             this.CashBalance = Money.Zero(this.Currency);
             this.CashStartDay = Money.Zero(this.Currency);
@@ -69,24 +67,14 @@ namespace Nautilus.DomainModel.Aggregates
         public new AccountId Id => (AccountId)base.Id;
 
         /// <summary>
-        /// Gets the accounts broker name.
+        /// Gets the accounts brokerage name.
         /// </summary>
-        public Brokerage Broker { get; }
+        public Brokerage Brokerage { get; }
 
         /// <summary>
         /// Gets the accounts number.
         /// </summary>
         public string AccountNumber { get; }
-
-        /// <summary>
-        /// Gets the accounts username.
-        /// </summary>
-        public string Username { get; }
-
-        /// <summary>
-        /// Gets the accounts password.
-        /// </summary>
-        public string Password { get; }
 
         /// <summary>
         /// Gets the accounts base currency.

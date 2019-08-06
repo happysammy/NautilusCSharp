@@ -26,8 +26,7 @@ namespace Nautilus.DomainModel.Events
         /// <summary>
         /// Initializes a new instance of the <see cref="AccountEvent" /> class.
         /// </summary>
-        /// <param name="broker">The account broker.</param>
-        /// <param name="accountNumber">The account number.</param>
+        /// <param name="accountId">The account identifier.</param>
         /// <param name="currency">The currency of the account.</param>
         /// <param name="cashBalance">The account cash balance.</param>
         /// <param name="cashStartDay">The account cash start day.</param>
@@ -39,8 +38,7 @@ namespace Nautilus.DomainModel.Events
         /// <param name="eventId">The event identifier.</param>
         /// <param name="eventTimestamp">The event timestamp.</param>
         public AccountEvent(
-            Brokerage broker,
-            string accountNumber,
+            AccountId accountId,
             Currency currency,
             Money cashBalance,
             Money cashStartDay,
@@ -53,13 +51,10 @@ namespace Nautilus.DomainModel.Events
             ZonedDateTime eventTimestamp)
             : base(typeof(AccountEvent), eventId, eventTimestamp)
         {
-            Debug.NotEmptyOrWhiteSpace(accountNumber, nameof(accountNumber));
             Debug.NotDefault(eventId, nameof(eventId));
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
 
-            this.AccountId = new AccountId($"{broker}-{accountNumber}");
-            this.Broker = broker;
-            this.AccountNumber = accountNumber;
+            this.AccountId = accountId;
             this.Currency = currency;
             this.CashBalance = cashBalance;
             this.CashStartDay = cashStartDay;
@@ -74,16 +69,6 @@ namespace Nautilus.DomainModel.Events
         /// Gets the events account identifier.
         /// </summary>
         public AccountId AccountId { get; }
-
-        /// <summary>
-        /// Gets the events broker name.
-        /// </summary>
-        public Brokerage Broker { get; }
-
-        /// <summary>
-        /// Gets the events account number.
-        /// </summary>
-        public string AccountNumber { get; }
 
         /// <summary>
         /// Gets the events account currency.

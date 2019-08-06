@@ -21,7 +21,7 @@ namespace Nautilus.Common.Interfaces
         /// <summary>
         /// Gets the data gateways brokerage name.
         /// </summary>
-        Brokerage Broker { get; }
+        Brokerage Brokerage { get; }
 
         /// <summary>
         /// Gets a value indicating whether the gateway is connected.

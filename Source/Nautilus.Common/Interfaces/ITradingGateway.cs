@@ -12,6 +12,7 @@ namespace Nautilus.Common.Interfaces
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -23,7 +24,12 @@ namespace Nautilus.Common.Interfaces
         /// <summary>
         /// Gets the gateways brokerage name.
         /// </summary>
-        Brokerage Broker { get; }
+        Brokerage Brokerage { get; }
+
+        /// <summary>
+        /// Gets the account identifier.
+        /// </summary>
+        AccountId AccountId { get; }
 
         /// <summary>
         /// Gets a value indicating whether the gateway is connected.
@@ -33,7 +39,7 @@ namespace Nautilus.Common.Interfaces
         /// <summary>
         /// Sends a collateral inquiry request message.
         /// </summary>
-        void CollateralInquiry();
+        void AccountInquiry();
 
         /// <summary>
         /// Sends a trading session status request message.

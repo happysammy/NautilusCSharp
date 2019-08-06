@@ -38,8 +38,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         {
             // Arrange
             var accountEvent = new AccountEvent(
-                Brokerage.FXCM,
-                "123456",
+                AccountId.Create(Brokerage.FXCM, "D123456"),
                 Currency.USD,
                 Money.Create(100000, Currency.USD),
                 Money.Create(100000, Currency.USD),

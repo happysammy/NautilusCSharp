@@ -50,13 +50,16 @@ namespace Nautilus.Fix
         }
 
         /// <inheritdoc />
-        public Brokerage Broker => this.fixClient.Broker;
+        public Brokerage Brokerage => this.fixClient.Brokerage;
+
+        /// <inheritdoc />
+        public AccountId AccountId => this.fixClient.AccountId;
 
         /// <inheritdoc />
         public bool IsConnected => this.fixClient.IsConnected;
 
         /// <inheritdoc />
-        public void CollateralInquiry()
+        public void AccountInquiry()
         {
             this.fixClient.CollateralInquiry();
         }
@@ -113,7 +116,7 @@ namespace Nautilus.Fix
                 Condition.NotEmptyOrWhiteSpace(accountNumber, nameof(accountNumber));
 
                 this.Log.Debug(
-                    $"CollateralInquiryAck: ({this.Broker}-{accountNumber}, " +
+                    $"CollateralInquiryAck: ({this.AccountId}, " +
                     $"InquiryId={inquiryId})");
             });
         }
@@ -172,8 +175,7 @@ namespace Nautilus.Fix
                 Condition.NotDefault(timestamp, nameof(timestamp));
 
                 var accountEvent = new AccountEvent(
-                    this.fixClient.Broker,
-                    accountNumber,
+                    this.fixClient.AccountId,
                     this.accountCurrency,
                     Money.Create(cashBalance, this.accountCurrency),
                     Money.Create(cashStartDay, this.accountCurrency),
@@ -189,7 +191,7 @@ namespace Nautilus.Fix
 
                 this.Log.Debug(
                     $"AccountEvent: " +
-                    $"({this.fixClient.Broker}-{accountNumber}, " +
+                    $"({this.fixClient.AccountId}, " +
                     $"InquiryId={inquiryId})");
             });
         }

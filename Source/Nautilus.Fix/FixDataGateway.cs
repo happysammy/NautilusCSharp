@@ -42,7 +42,7 @@ namespace Nautilus.Fix
         }
 
         /// <inheritdoc />
-        public Brokerage Broker => this.fixClient.Broker;
+        public Brokerage Brokerage => this.fixClient.Brokerage;
 
         /// <inheritdoc />
         public bool IsConnected => this.fixClient.IsConnected;

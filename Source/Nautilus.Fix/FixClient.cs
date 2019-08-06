@@ -49,11 +49,11 @@ namespace Nautilus.Fix
         {
             if (this.IsConnected)
             {
-                this.Log.Warning($"Already connected to FIX session {this.Broker}-{this.Account}...");
+                this.Log.Warning($"Already connected to FIX session {this.Brokerage}-{this.AccountNumber}...");
                 return;
             }
 
-            this.Log.Information($"Connecting to FIX session {this.Broker}-{this.Account}...");
+            this.Log.Information($"Connecting to FIX session {this.Brokerage}-{this.AccountNumber}...");
             this.ConnectFix();
         }
 
@@ -62,11 +62,11 @@ namespace Nautilus.Fix
         {
             if (!this.IsConnected)
             {
-                this.Log.Warning($"Already disconnected from FIX session {this.Broker}-{this.Account}...");
+                this.Log.Warning($"Already disconnected from FIX session {this.Brokerage}-{this.AccountNumber}...");
                 return;
             }
 
-            this.Log.Information($"Disconnecting from FIX session {this.Broker}-{this.Account}...");
+            this.Log.Information($"Disconnecting from FIX session {this.Brokerage}-{this.AccountNumber}...");
             this.DisconnectFix();
         }
 

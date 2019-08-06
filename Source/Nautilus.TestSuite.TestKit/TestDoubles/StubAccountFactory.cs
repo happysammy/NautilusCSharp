@@ -13,6 +13,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
@@ -29,8 +30,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 StubZonedDateTime.UnixEpoch());
 
             var accountEventMessage = new AccountEvent(
-                Brokerage.IB,
-                "123456789",
+                AccountId.Create(Brokerage.FXCM, "D1234565"),
                 Currency.USD,
                 Money.Create(100000, Currency.USD),
                 Money.Create(100000, Currency.USD),
@@ -58,8 +58,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 StubZonedDateTime.UnixEpoch());
 
             var accountEventMessage = new AccountEvent(
-                Brokerage.IB,
-                "123456789",
+                AccountId.Create(Brokerage.FXCM, "D1234565"),
                 Currency.USD,
                 Money.Zero(Currency.USD),
                 Money.Zero(Currency.USD),

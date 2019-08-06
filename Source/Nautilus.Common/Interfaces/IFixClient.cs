@@ -11,6 +11,7 @@ namespace Nautilus.Common.Interfaces
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
@@ -21,7 +22,12 @@ namespace Nautilus.Common.Interfaces
         /// <summary>
         /// Gets the name of the FIX brokerage.
         /// </summary>
-        Brokerage Broker { get; }
+        Brokerage Brokerage { get; }
+
+        /// <summary>
+        /// Gets the account identifier.
+        /// </summary>
+        AccountId AccountId { get; }
 
         /// <summary>
         /// Gets a value indicating whether the FIX client is connected to a session.

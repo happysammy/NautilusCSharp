@@ -14,6 +14,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;
@@ -22,12 +23,10 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
     public class AccountTests
     {
         private readonly IZonedClock clock;
-        private readonly Currency currency;
 
         public AccountTests()
         {
             this.clock = new StubClock();
-            this.currency = Currency.AUD;
         }
 
         [Fact]
@@ -40,13 +39,13 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 "123456789",
                 "some username",
                 "some password",
-                this.currency,
+                Currency.AUD,
                 this.clock.TimeNow());
 
             // Assert
-            Assert.Equal(Brokerage.FXCM, account.Broker);
+            Assert.Equal(Brokerage.FXCM, account.Brokerage);
             Assert.Equal("FXCM-123456789", account.Id.ToString());
-            Assert.Equal(this.currency, account.Currency);
+            Assert.Equal(Currency.AUD, account.Currency);
             Assert.Equal(decimal.Zero, account.CashBalance.Value);
         }
 
@@ -59,18 +58,17 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 "123456789",
                 "some username",
                 "some password",
-                this.currency,
+                Currency.AUD,
                 this.clock.TimeNow());
 
             var message = new AccountEvent(
-                Brokerage.FXCM,
-                "123456789",
-                this.currency,
-                Money.Create(150000m, this.currency),
-                Money.Create(150000m, this.currency),
-                Money.Zero(this.currency),
-                Money.Zero(this.currency),
-                Money.Zero(this.currency),
+                AccountId.Create(Brokerage.FXCM, "D123456"),
+                Currency.AUD,
+                Money.Create(150000m, Currency.AUD),
+                Money.Create(150000m, Currency.AUD),
+                Money.Zero(Currency.AUD),
+                Money.Zero(Currency.AUD),
+                Money.Zero(Currency.AUD),
                 decimal.Zero,
                 string.Empty,
                 Guid.NewGuid(),
@@ -102,14 +100,13 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 this.clock.TimeNow());
 
             var message = new AccountEvent(
-                Brokerage.FXCM,
-                "123456789",
+                AccountId.Create(Brokerage.FXCM, "D123456"),
                 Currency.USD,
-                Money.Create(150000m, this.currency),
-                Money.Create(150000m, this.currency),
-                Money.Zero(this.currency),
-                Money.Zero(this.currency),
-                Money.Create(2000m, this.currency),
+                Money.Create(150000m, Currency.AUD),
+                Money.Create(150000m, Currency.AUD),
+                Money.Zero(Currency.AUD),
+                Money.Zero(Currency.AUD),
+                Money.Create(2000m, Currency.AUD),
                 decimal.Zero,
                 string.Empty,
                 Guid.NewGuid(),

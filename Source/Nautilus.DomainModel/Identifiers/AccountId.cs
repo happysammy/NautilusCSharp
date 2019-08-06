@@ -12,9 +12,10 @@ namespace Nautilus.DomainModel.Identifiers
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Aggregates;
+    using Nautilus.DomainModel.Enums;
 
     /// <summary>
-    /// Represents a valid and unique identifier for accounts.
+    /// Represents an identifier for accounts.
     /// </summary>
     [Immutable]
     public sealed class AccountId : Identifier<Account>
@@ -27,6 +28,17 @@ namespace Nautilus.DomainModel.Identifiers
             : base(value)
         {
             Debug.NotEmptyOrWhiteSpace(value, nameof(value));
+        }
+
+        /// <summary>
+        /// Creates a new account identifier from the given arguments.
+        /// </summary>
+        /// <param name="brokerage">The brokerage for the identifier.</param>
+        /// <param name="accountNumber">The account number for the identifier.</param>
+        /// <returns>The created identifier.</returns>
+        public static AccountId Create(Brokerage brokerage, string accountNumber)
+        {
+            return new AccountId($"{brokerage}-{accountNumber}");
         }
     }
 }
