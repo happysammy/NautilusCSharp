@@ -34,10 +34,10 @@ namespace Nautilus.Serialization
         {
             Debug.NotEmpty(ticks, nameof(ticks));
 
-            var dataArray = new byte[ticks.Length][];
+            var dataArray = new string[ticks.Length];
             for (var i = 0; i < ticks.Length; i++)
             {
-                dataArray[i] = System.Text.Encoding.UTF8.GetBytes(ticks[i].ToString());
+                dataArray[i] = ticks[i].ToString();
             }
 
             return new BsonDocument
@@ -61,8 +61,7 @@ namespace Nautilus.Serialization
             var ticks = new Tick[valueArray.Count];
             for (var i = 0; i < valueArray.Count; i++)
             {
-                var values = System.Text.Encoding.UTF8.GetString(valueArray[i].AsByteArray);
-                ticks[i] = DomainObjectParser.ParseTick(symbol, values);
+                ticks[i] = DomainObjectParser.ParseTick(symbol, valueArray[i].AsString);
             }
 
             return ticks;

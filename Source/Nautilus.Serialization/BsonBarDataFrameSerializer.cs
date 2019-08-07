@@ -35,10 +35,10 @@ namespace Nautilus.Serialization
         {
             Debug.NotEmpty(data.Bars, nameof(data.Bars));
 
-            var dataArray = new byte[data.Bars.Length][];
+            var dataArray = new string[data.Bars.Length];
             for (var i = 0; i < data.Bars.Length; i++)
             {
-                dataArray[i] = System.Text.Encoding.UTF8.GetBytes(data.Bars[i].ToString());
+                dataArray[i] = data.Bars[i].ToString();
             }
 
             return new BsonDocument
@@ -65,8 +65,7 @@ namespace Nautilus.Serialization
             var bars = new Bar[valuesArray.Count];
             for (var i = 0; i < valuesArray.Count; i++)
             {
-                var values = System.Text.Encoding.UTF8.GetString(valuesArray[i].AsByteArray);
-                bars[i] = DomainObjectParser.ParseBar(values);
+                bars[i] = DomainObjectParser.ParseBar(valuesArray[i].AsString);
             }
 
             return new BarDataFrame(barType, bars);
