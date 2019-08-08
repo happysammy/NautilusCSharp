@@ -99,7 +99,7 @@ namespace Nautilus.Network
             this.socket.SendMultipartBytes(Encoding.UTF8.GetBytes(topic), this.serializer.Serialize(message));
 
             this.PublishedCount++;
-            this.Log.Verbose($"Published-Message[{this.PublishedCount}] Topic={topic}, Message={message}");
+            this.Log.Verbose($"[{this.PublishedCount}]--> Topic={topic}, Message={message}");
         }
     }
 }

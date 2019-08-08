@@ -143,7 +143,7 @@ namespace Nautilus.Network
                     this.outboundSerializer.Serialize(outbound));
 
                 this.SentCount++;
-                this.Log.Debug($"Sent message[{this.SentCount}] {outbound} to Address({receiver}).");
+                this.Log.Debug($"[{this.SentCount}]--> {outbound} to Address({receiver}).");
             });
         }
 
@@ -282,7 +282,7 @@ namespace Nautilus.Network
                 this.SendToSelf(envelope);
 
                 this.ReceivedCount++;
-                this.Log.Debug($"Received message[{this.ReceivedCount}] {received} from Address({sender}).");
+                this.Log.Debug($"[{this.ReceivedCount}]<-- {received} from Address({sender}).");
             }
             catch (SerializationException ex)
             {

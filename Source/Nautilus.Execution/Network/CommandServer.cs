@@ -11,6 +11,7 @@ namespace Nautilus.Execution.Network
     using System;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
+    using Nautilus.Execution.Messages.Commands;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Network;
@@ -48,15 +49,42 @@ namespace Nautilus.Execution.Network
         {
             this.receiver = receiver;
 
-            this.RegisterHandler<Envelope<Command>>(this.OnMessage);
+            this.RegisterHandler<Envelope<SubmitOrder>>(this.OnMessage);
+            this.RegisterHandler<Envelope<SubmitAtomicOrder>>(this.OnMessage);
+            this.RegisterHandler<Envelope<CancelOrder>>(this.OnMessage);
+            this.RegisterHandler<Envelope<ModifyOrder>>(this.OnMessage);
+            this.RegisterHandler<Envelope<AccountInquiry>>(this.OnMessage);
         }
 
-        private void OnMessage(Envelope<Command> envelope)
+        private void OnMessage(Envelope<SubmitOrder> envelope)
         {
-            var command = envelope.Message;
-            this.receiver.Send(command);
+            this.OnCommand(envelope.Message, envelope.Sender);
+        }
 
-            this.SendReceived(command, envelope.Receiver);
+        private void OnMessage(Envelope<SubmitAtomicOrder> envelope)
+        {
+            this.OnCommand(envelope.Message, envelope.Sender);
+        }
+
+        private void OnMessage(Envelope<CancelOrder> envelope)
+        {
+            this.OnCommand(envelope.Message, envelope.Sender);
+        }
+
+        private void OnMessage(Envelope<ModifyOrder> envelope)
+        {
+            this.OnCommand(envelope.Message, envelope.Sender);
+        }
+
+        private void OnMessage(Envelope<AccountInquiry> envelope)
+        {
+            this.OnCommand(envelope.Message, envelope.Sender);
+        }
+
+        private void OnCommand(Command command, Address? sender)
+        {
+            this.receiver.Send(command);
+            this.SendReceived(command, sender);
         }
     }
 }

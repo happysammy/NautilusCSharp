@@ -21,6 +21,7 @@ namespace Nautilus.Execution.Network
     public sealed class EventPublisher : MessagePublisher<Event>
     {
         private const string NAUTILUS = "NAUTILUS";
+        private const string EVENTS = "EVENTS";
         private const string ACCOUNT = "ACCOUNT";
         private const string EXECUTION = "EXECUTION";
 
@@ -56,10 +57,10 @@ namespace Nautilus.Execution.Network
             switch (message)
             {
                 case OrderEvent @event:
-                    this.Publish($"{NAUTILUS}:{EXECUTION}:{@event.OrderId}", message);
+                    this.Publish($"{NAUTILUS}:{EVENTS}:{EXECUTION}:{@event.OrderId}", message);
                     break;
                 case AccountEvent @event:
-                    this.Publish($"{NAUTILUS}:{ACCOUNT}:{@event.AccountId}", message);
+                    this.Publish($"{NAUTILUS}:{EVENTS}:{ACCOUNT}:{@event.AccountId}", message);
                     break;
                 default:
                     this.Log.Verbose($"Filtering message {message} (not published).");

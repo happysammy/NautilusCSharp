@@ -67,6 +67,7 @@ namespace Nautilus.Execution
             this.RegisterHandler<SubmitAtomicOrder>(this.OnMessage);
             this.RegisterHandler<CancelOrder>(this.OnMessage);
             this.RegisterHandler<ModifyOrder>(this.OnMessage);
+            this.RegisterHandler<AccountInquiry>(this.OnMessage);
             this.RegisterHandler<Event>(this.OnMessage);
 
             // Subscribe to all order events
@@ -197,6 +198,13 @@ namespace Nautilus.Execution
             }
 
             this.AddToModifyCache(message);
+        }
+
+        private void OnMessage(AccountInquiry message)
+        {
+            this.commandCount++;
+
+            this.gateway.AccountInquiry();
         }
 
         private void OnMessage(Event @event)
