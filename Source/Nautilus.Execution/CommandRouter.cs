@@ -71,7 +71,7 @@ namespace Nautilus.Execution
             this.RegisterHandler<SubmitAtomicOrder>(this.OnMessage);
             this.RegisterHandler<CancelOrder>(this.OnMessage);
             this.RegisterHandler<ModifyOrder>(this.OnMessage);
-            this.RegisterHandler<CollateralInquiry>(this.OnMessage);
+            this.RegisterHandler<AccountInquiry>(this.OnMessage);
         }
 
         /// <inheritdoc />
@@ -108,7 +108,7 @@ namespace Nautilus.Execution
             this.commandThrottler.Endpoint.Send(message);
         }
 
-        private void OnMessage(CollateralInquiry message)
+        private void OnMessage(AccountInquiry message)
         {
             this.commandThrottler.Endpoint.Send(message);
         }

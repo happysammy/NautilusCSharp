@@ -37,7 +37,7 @@ namespace Nautilus.Common.Interfaces
         bool IsConnected { get; }
 
         /// <summary>
-        /// Sends a collateral inquiry request message.
+        /// Sends a account inquiry request message.
         /// </summary>
         void AccountInquiry();
 

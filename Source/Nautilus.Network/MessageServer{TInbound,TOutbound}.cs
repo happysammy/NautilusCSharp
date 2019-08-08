@@ -35,7 +35,7 @@ namespace Nautilus.Network
         where TInbound : Message
         where TOutbound : Response
     {
-        private const int EXPECTED_FRAMES = 3;
+        private const int EXPECTED_FRAMES_COUNT = 3;
 
         private readonly byte[] delimiter = { };
         private readonly CancellationTokenSource cts;
@@ -248,11 +248,12 @@ namespace Nautilus.Network
         {
             this.Execute(() =>
             {
-                var msg = this.socket.ReceiveMultipartBytes(3);  // msg[1] should be empty byte array delimiter
+                var msg = this.socket.ReceiveMultipartBytes(EXPECTED_FRAMES_COUNT);  // msg[1] should be empty byte array delimiter
+                this.Log.Debug($"Received {msg}");
 
-                if (msg.Count != EXPECTED_FRAMES)
+                if (msg.Count != EXPECTED_FRAMES_COUNT)
                 {
-                    var error = $"Message was malformed (expected {EXPECTED_FRAMES} frames, received {msg.Count}).";
+                    var error = $"Message was malformed (expected {EXPECTED_FRAMES_COUNT} frames, received {msg.Count}).";
                     if (msg.Count >= 1)
                     {
                         this.SendRejected(error, Guid.Empty, new Address(msg[0]));
@@ -272,6 +273,7 @@ namespace Nautilus.Network
             try
             {
                 var received = this.inboundSerializer.Deserialize(payload);
+
                 var envelope = EnvelopeFactory.Create(
                     received,
                     null,

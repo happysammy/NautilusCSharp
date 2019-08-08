@@ -164,11 +164,11 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         internal void CanSerializeAndDeserialize_CollateralInquiryCommands()
         {
             // Arrange
-            var command = new CollateralInquiry(Guid.NewGuid(), StubZonedDateTime.UnixEpoch());
+            var command = new AccountInquiry(Guid.NewGuid(), StubZonedDateTime.UnixEpoch());
 
             // Act
             var packed = this.serializer.Serialize(command);
-            var unpacked = (CollateralInquiry)this.serializer.Deserialize(packed);
+            var unpacked = (AccountInquiry)this.serializer.Deserialize(packed);
 
             // Assert
             Assert.Equal(command, unpacked);
@@ -177,17 +177,17 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         }
 
         [Fact]
-        internal void Deserialize_CollateralInquiry_FromPythonMsgPack_ReturnsExpectedCommand()
+        internal void Deserialize_AccountInquiry_FromPythonMsgPack_ReturnsExpectedCommand()
         {
             // Arrange
-            var hexString = "g6RUeXBlsUNvbGxhdGVyYWxJbnF1aXJ5oklk2gAkZDg4ODRjNGEtYTdjNi00NWI2LThjZmQtZjhlNjRiOGM4OTRlqVRpbWVzdGFtcLgxOTcwLTAxLTAxVDAwOjAwOjAwLjAwMFo=";
+            var hexString = "g6RUeXBlrkFjY291bnRJbnF1aXJ5oklk2gAkNjJlNGNkZDktOThiOC00MGQ2LThmODctNjIyMjQxNjg2MGIxqVRpbWVzdGFtcLgxOTcwLTAxLTAxVDAwOjAwOjAwLjAwMFo=";
             var commandBytes = Convert.FromBase64String(hexString);
 
             // Act
-            var command = this.serializer.Deserialize(commandBytes) as CollateralInquiry;
+            var command = this.serializer.Deserialize(commandBytes) as AccountInquiry;
 
             // Assert
-            Assert.Equal(typeof(CollateralInquiry), command?.GetType());
+            Assert.Equal(typeof(AccountInquiry), command?.GetType());
         }
 
         [Fact]

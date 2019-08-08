@@ -35,7 +35,7 @@ namespace Nautilus.Serialization
 
             switch (command)
             {
-                case CollateralInquiry cmd:
+                case AccountInquiry cmd:
                     break;
                 case SubmitOrder cmd:
                     package.Add(nameof(cmd.TraderId), cmd.TraderId.ToString());
@@ -81,8 +81,8 @@ namespace Nautilus.Serialization
 
             switch (command)
             {
-                case nameof(CollateralInquiry):
-                    return new CollateralInquiry(id, timestamp);
+                case nameof(AccountInquiry):
+                    return new AccountInquiry(id, timestamp);
                 case nameof(SubmitOrder):
                     return new SubmitOrder(
                         ObjectExtractor.TraderId(unpacked),

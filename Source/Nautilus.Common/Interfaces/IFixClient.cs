@@ -85,7 +85,7 @@ namespace Nautilus.Common.Interfaces
         void RequestMarketDataSubscribeAll();
 
         /// <summary>
-        /// Requests a collateral report.
+        /// Requests a collateral inquiry.
         /// </summary>
         void CollateralInquiry();
 

@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="CollateralInquiry.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="AccountInquiry.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  https://nautechsystems.io
@@ -15,21 +15,21 @@ namespace Nautilus.Execution.Messages.Commands
     using NodaTime;
 
     /// <summary>
-    /// Represents a command to invoke a collateral inquiry request.
+    /// Represents a command for an account inquiry.
     /// </summary>
     [Immutable]
-    public sealed class CollateralInquiry : Command
+    public sealed class AccountInquiry : Command
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CollateralInquiry"/> class.
+        /// Initializes a new instance of the <see cref="AccountInquiry"/> class.
         /// </summary>
         /// <param name="commandId">The command identifier.</param>
         /// <param name="commandTimestamp">The command timestamp.</param>
-        public CollateralInquiry(
+        public AccountInquiry(
             Guid commandId,
             ZonedDateTime commandTimestamp)
             : base(
-                typeof(CollateralInquiry),
+                typeof(AccountInquiry),
                 commandId,
                 commandTimestamp)
         {
