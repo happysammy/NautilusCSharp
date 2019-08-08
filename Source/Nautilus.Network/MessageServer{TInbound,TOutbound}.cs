@@ -273,7 +273,6 @@ namespace Nautilus.Network
             try
             {
                 var received = this.inboundSerializer.Deserialize(payload);
-
                 var envelope = EnvelopeFactory.Create(
                     received,
                     null,
