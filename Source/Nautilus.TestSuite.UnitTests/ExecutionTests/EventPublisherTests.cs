@@ -27,8 +27,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
     [SuppressMessage("ReSharper", "SA1310", Justification = "Easier to read.")]
     public class EventPublisherTests
     {
-        private const string EXECUTION_EVENTS = "nautilus_execution_events";
-
         private readonly NetworkAddress localHost = new NetworkAddress("127.0.0.1");
         private readonly ITestOutputHelper output;
         private readonly IComponentryContainer container;
@@ -85,7 +83,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
-            Assert.Equal("NAUTILUS:EXECUTION:O-123456", Encoding.UTF8.GetString(topic));
+            Assert.Equal("NAUTILUS:EVENTS:EXECUTION:O-123456", Encoding.UTF8.GetString(topic));
             Assert.Equal(rejected, @event);
 
             // Tear Down
