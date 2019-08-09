@@ -45,10 +45,13 @@ namespace Nautilus.Execution
         /// <param name="command">The command to register.</param>
         public void Register(SubmitOrder command)
         {
-            this.Register(
-                command.TraderId,
-                command.StrategyId,
-                command.Order.Id);
+            this.Execute(() =>
+            {
+                this.Register(
+                    command.TraderId,
+                    command.StrategyId,
+                    command.Order.Id);
+            });
         }
 
         /// <summary>
@@ -58,23 +61,26 @@ namespace Nautilus.Execution
         /// <param name="command">The command to register.</param>
         public void Register(SubmitAtomicOrder command)
         {
-            this.Register(
-                command.TraderId,
-                command.StrategyId,
-                command.AtomicOrder.Entry.Id);
-
-            this.Register(
-                command.TraderId,
-                command.StrategyId,
-                command.AtomicOrder.StopLoss.Id);
-
-            if (command.AtomicOrder.TakeProfit != null)
+            this.Execute(() =>
             {
                 this.Register(
                     command.TraderId,
                     command.StrategyId,
-                    command.AtomicOrder.TakeProfit.Id);
-            }
+                    command.AtomicOrder.Entry.Id);
+
+                this.Register(
+                    command.TraderId,
+                    command.StrategyId,
+                    command.AtomicOrder.StopLoss.Id);
+
+                if (command.AtomicOrder.TakeProfit != null)
+                {
+                    this.Register(
+                        command.TraderId,
+                        command.StrategyId,
+                        command.AtomicOrder.TakeProfit.Id);
+                }
+            });
         }
 
         private void Register(
@@ -82,22 +88,27 @@ namespace Nautilus.Execution
             StrategyId strategyId,
             OrderId orderId)
         {
-            if (!this.orderIndex.ContainsKey(traderId))
+            this.Execute(() =>
             {
-                this.orderIndex[traderId] = new Dictionary<StrategyId, List<OrderId>>();
-            }
+                if (!this.orderIndex.ContainsKey(traderId))
+                {
+                    this.orderIndex[traderId] = new Dictionary<StrategyId, List<OrderId>>();
+                }
 
-            if (this.orderIndex[traderId].ContainsKey(strategyId))
-            {
-                this.orderIndex[traderId][strategyId] = new List<OrderId>();
-            }
+                if (!this.orderIndex[traderId].ContainsKey(strategyId))
+                {
+                    this.orderIndex[traderId][strategyId] = new List<OrderId>();
+                }
 
-            if (this.orderIndex[traderId][strategyId].Contains(orderId))
-            {
-                this.Log.Error($"Cannot register order id {orderId} (duplicate order identifier).");
-            }
+                if (this.orderIndex[traderId][strategyId].Contains(orderId))
+                {
+                    this.Log.Error($"Cannot register order id {orderId} (duplicate order identifier).");
+                    return;
+                }
 
-            this.orderIndex[traderId][strategyId].Add(orderId);
+                this.orderIndex[traderId][strategyId].Add(orderId);
+                this.Log.Debug($"Registered TraderId={traderId}, StrategyId={strategyId}, OrderId={orderId}");
+            });
         }
     }
 }

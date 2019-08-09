@@ -94,6 +94,7 @@ namespace Nautilus.Execution
 
         private void OnMessage(SubmitOrder message)
         {
+            this.Log.Debug($"Received {message}");
             this.commandCount++;
 
             var order = message.Order;
@@ -118,49 +119,54 @@ namespace Nautilus.Execution
 
         private void OnMessage(SubmitAtomicOrder message)
         {
-            this.commandCount++;
-
-            var atomicOrder = message.AtomicOrder;
-            var entryOrderId = atomicOrder.Entry.Id;
-
-            if (this.CancelOrderInBuffer(entryOrderId, message.ToString()))
+            this.Execute(() =>
             {
-                return; // Warning logged.
-            }
+                this.Log.Debug($"Received {message}");
+                this.commandCount++;
 
-            if (this.OrderBookContainsId(atomicOrder.Entry.Id, message.ToString()))
-            {
-                return; // Error logged.
-            }
+                var atomicOrder = message.AtomicOrder;
+                var entryOrderId = atomicOrder.Entry.Id;
 
-            if (this.OrderBookContainsId(atomicOrder.StopLoss.Id, message.ToString()))
-            {
-                return; // Error logged.
-            }
+                if (this.CancelOrderInBuffer(entryOrderId, message.ToString()))
+                {
+                    return; // Warning logged.
+                }
 
-            if (atomicOrder.TakeProfit != null &&
-                this.OrderBookContainsId(atomicOrder.TakeProfit.Id, message.ToString()))
-            {
-                return; // Error logged.
-            }
+                if (this.OrderBookContainsId(atomicOrder.Entry.Id, message.ToString()))
+                {
+                    return; // Error logged.
+                }
 
-            this.register.Register(message);
-            this.orderBook.Add(atomicOrder.Entry.Id, atomicOrder.Entry);
-            this.orderBook.Add(atomicOrder.StopLoss.Id, atomicOrder.Entry);
-            this.CreateModifyCache(atomicOrder.Entry);
-            this.CreateModifyCache(atomicOrder.StopLoss);
-            if (atomicOrder.TakeProfit != null)
-            {
+                if (this.OrderBookContainsId(atomicOrder.StopLoss.Id, message.ToString()))
+                {
+                    return; // Error logged.
+                }
+
+                if (atomicOrder.TakeProfit != null &&
+                    this.OrderBookContainsId(atomicOrder.TakeProfit.Id, message.ToString()))
+                {
+                    return; // Error logged.
+                }
+
+                this.register.Register(message);
                 this.orderBook.Add(atomicOrder.Entry.Id, atomicOrder.Entry);
-                this.CreateModifyCache(atomicOrder.TakeProfit);
-            }
+                this.orderBook.Add(atomicOrder.StopLoss.Id, atomicOrder.Entry);
+                this.CreateModifyCache(atomicOrder.Entry);
+                this.CreateModifyCache(atomicOrder.StopLoss);
+                if (atomicOrder.TakeProfit != null)
+                {
+                    this.orderBook.Add(atomicOrder.TakeProfit.Id, atomicOrder.TakeProfit);
+                    this.CreateModifyCache(atomicOrder.TakeProfit);
+                }
 
-            this.gateway.SubmitOrder(message.AtomicOrder);
-            this.Log.Debug($"Sent cached {message} to FixGateway.");
+                this.gateway.SubmitOrder(message.AtomicOrder);
+                this.Log.Debug($"Sent cached {message} to FixGateway.");
+            });
         }
 
         private void OnMessage(CancelOrder message)
         {
+            this.Log.Debug($"Received {message}");
             this.commandCount++;
 
             if (this.OrderBookDoesNotContainId(message.OrderId, message.ToString()))
@@ -175,6 +181,7 @@ namespace Nautilus.Execution
 
         private void OnMessage(ModifyOrder message)
         {
+            this.Log.Debug($"Received {message}");
             this.commandCount++;
 
             if (this.OrderBookDoesNotContainId(message.OrderId, message.ToString()))
@@ -202,6 +209,7 @@ namespace Nautilus.Execution
 
         private void OnMessage(AccountInquiry message)
         {
+            this.Log.Debug($"Received {message}");
             this.commandCount++;
 
             this.gateway.AccountInquiry();
@@ -209,6 +217,7 @@ namespace Nautilus.Execution
 
         private void OnMessage(Event @event)
         {
+            this.Log.Debug($"Received {@event}");
             this.eventCount++;
 
             if (@event is OrderEvent orderEvent)

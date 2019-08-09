@@ -81,7 +81,7 @@ namespace Nautilus.Network
             if (this.queue.Count <= 0)
             {
                 this.IsIdle = true;
-                this.Log.Debug("Idle.");
+                this.Log.Verbose("Idle.");
 
                 return;
             }
@@ -91,7 +91,7 @@ namespace Nautilus.Network
             if (this.IsIdle)
             {
                 this.IsIdle = false;
-                this.Log.Debug("Active.");
+                this.Log.Verbose("Active.");
             }
 
             this.ProcessQueue();
@@ -111,7 +111,7 @@ namespace Nautilus.Network
             {
                 Task.Run(this.RunTimer);
                 this.IsIdle = false;
-                this.Log.Debug("Active.");
+                this.Log.Verbose("Active.");
             }
 
             while (this.vouchers > 0 && this.queue.Count > 0)
@@ -126,13 +126,13 @@ namespace Nautilus.Network
                 this.receiver.Send(message);
                 this.vouchers--;
 
-                this.Log.Debug($"Sent message {message} (total_count={this.totalCount}).");
+                this.Log.Verbose($"Sent message {message} (total_count={this.totalCount}).");
             }
 
             if (this.vouchers <= 0 && this.queue.Count > 0)
             {
                 // At message limit.
-                this.Log.Debug($"At message limit of {this.limit} per {this.interval} (queued_count={this.queue.Count}).");
+                this.Log.Verbose($"At message limit of {this.limit} per {this.interval} (queued_count={this.queue.Count}).");
             }
         }
 

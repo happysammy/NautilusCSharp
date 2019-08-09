@@ -28,6 +28,7 @@ namespace Nautilus.Execution
         private readonly CommandServer commandServer;
         private readonly Throttler commandThrottler;
         private readonly Throttler newOrderThrottler;
+        private readonly IEndpoint orderManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandRouter"/> class.
@@ -66,6 +67,8 @@ namespace Nautilus.Execution
                 this.commandThrottler.Endpoint,
                 Duration.FromSeconds(1),
                 config.NewOrdersPerSecond);
+
+            this.orderManager = orderManager;
 
             this.RegisterHandler<SubmitOrder>(this.OnMessage);
             this.RegisterHandler<SubmitAtomicOrder>(this.OnMessage);

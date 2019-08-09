@@ -231,7 +231,7 @@ namespace Nautilus.Brokerage.Dukascopy
             }
 
             this.fixSession.Send(message);
-            this.Log.Information($"Sent => {message}");
+            this.Log.Verbose($"Sent => {message}");
         }
     }
 }

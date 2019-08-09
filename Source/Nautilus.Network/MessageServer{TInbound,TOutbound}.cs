@@ -249,7 +249,6 @@ namespace Nautilus.Network
             this.Execute(() =>
             {
                 var msg = this.socket.ReceiveMultipartBytes(EXPECTED_FRAMES_COUNT);  // msg[1] should be empty byte array delimiter
-                this.Log.Debug($"Received {msg}");
 
                 if (msg.Count != EXPECTED_FRAMES_COUNT)
                 {

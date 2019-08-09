@@ -260,7 +260,7 @@ namespace Nautilus.Brokerage.FXCM
             }
 
             this.fixSession.Send(message);
-            this.Log.Debug($"Sent => {message}");
+            this.Log.Verbose($"Sent => {message}");
         }
     }
 }
