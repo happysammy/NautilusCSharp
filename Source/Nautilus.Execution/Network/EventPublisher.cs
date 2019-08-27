@@ -59,7 +59,7 @@ namespace Nautilus.Execution.Network
                 case OrderEvent @event:
                     this.Publish($"{NAUTILUS}:{EVENTS}:{EXECUTION}:{@event.OrderId}", message);
                     break;
-                case AccountEvent @event:
+                case AccountStateEvent @event:
                     this.Publish($"{NAUTILUS}:{EVENTS}:{ACCOUNT}:{@event.AccountId}", message);
                     break;
                 default:

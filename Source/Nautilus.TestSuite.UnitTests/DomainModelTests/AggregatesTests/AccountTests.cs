@@ -61,7 +61,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 Currency.AUD,
                 this.clock.TimeNow());
 
-            var message = new AccountEvent(
+            var message = new AccountStateEvent(
                 AccountId.Create(Brokerage.FXCM, "D123456"),
                 Brokerage.FXCM,
                 "D123456",
@@ -101,7 +101,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 Currency.USD,
                 this.clock.TimeNow());
 
-            var message = new AccountEvent(
+            var message = new AccountStateEvent(
                 AccountId.Create(Brokerage.FXCM, "D123456"),
                 Brokerage.FXCM,
                 "D123456",

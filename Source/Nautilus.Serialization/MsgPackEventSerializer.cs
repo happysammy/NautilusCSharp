@@ -36,7 +36,7 @@ namespace Nautilus.Serialization
 
             switch (@event)
             {
-                case AccountEvent evt:
+                case AccountStateEvent evt:
                     package.Add(nameof(evt.AccountId), evt.AccountId.ToString());
                     package.Add(nameof(evt.Brokerage), evt.Brokerage.ToString());
                     package.Add(nameof(evt.AccountNumber), evt.AccountNumber);
@@ -145,20 +145,20 @@ namespace Nautilus.Serialization
 
             switch (@event)
             {
-                case nameof(AccountEvent):
-                    var currency = ObjectExtractor.Enum<Currency>(unpacked[nameof(AccountEvent.Currency)]);
-                    return new AccountEvent(
-                        new AccountId(unpacked[nameof(AccountEvent.AccountId)].AsString()),
-                        ObjectExtractor.Enum<Brokerage>(unpacked[nameof(AccountEvent.Brokerage)]),
-                        unpacked[nameof(AccountEvent.AccountNumber)].AsString(),
+                case nameof(AccountStateEvent):
+                    var currency = ObjectExtractor.Enum<Currency>(unpacked[nameof(AccountStateEvent.Currency)]);
+                    return new AccountStateEvent(
+                        new AccountId(unpacked[nameof(AccountStateEvent.AccountId)].AsString()),
+                        ObjectExtractor.Enum<Brokerage>(unpacked[nameof(AccountStateEvent.Brokerage)]),
+                        unpacked[nameof(AccountStateEvent.AccountNumber)].AsString(),
                         currency,
-                        ObjectExtractor.Money(unpacked[nameof(AccountEvent.CashBalance)], currency),
-                        ObjectExtractor.Money(unpacked[nameof(AccountEvent.CashStartDay)], currency),
-                        ObjectExtractor.Money(unpacked[nameof(AccountEvent.CashActivityDay)], currency),
-                        ObjectExtractor.Money(unpacked[nameof(AccountEvent.MarginUsedLiquidation)], currency),
-                        ObjectExtractor.Money(unpacked[nameof(AccountEvent.MarginUsedMaintenance)], currency),
-                        ObjectExtractor.Decimal(unpacked[nameof(AccountEvent.MarginRatio)].ToString()),
-                        unpacked[nameof(AccountEvent.MarginCallStatus)].AsString(),
+                        ObjectExtractor.Money(unpacked[nameof(AccountStateEvent.CashBalance)], currency),
+                        ObjectExtractor.Money(unpacked[nameof(AccountStateEvent.CashStartDay)], currency),
+                        ObjectExtractor.Money(unpacked[nameof(AccountStateEvent.CashActivityDay)], currency),
+                        ObjectExtractor.Money(unpacked[nameof(AccountStateEvent.MarginUsedLiquidation)], currency),
+                        ObjectExtractor.Money(unpacked[nameof(AccountStateEvent.MarginUsedMaintenance)], currency),
+                        ObjectExtractor.Decimal(unpacked[nameof(AccountStateEvent.MarginRatio)].ToString()),
+                        unpacked[nameof(AccountStateEvent.MarginCallStatus)].AsString(),
                         id,
                         timestamp);
                 case nameof(OrderInitialized):

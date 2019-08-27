@@ -37,7 +37,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         internal void CanSerializeAndDeserialize_AccountEvent()
         {
             // Arrange
-            var accountEvent = new AccountEvent(
+            var accountEvent = new AccountStateEvent(
                 AccountId.Create(Brokerage.FXCM, "D123456"),
                 Brokerage.FXCM,
                 "D123456",
@@ -54,7 +54,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             // Act
             var packed = this.serializer.Serialize(accountEvent);
-            var unpacked = (AccountEvent)this.serializer.Deserialize(packed);
+            var unpacked = (AccountStateEvent)this.serializer.Deserialize(packed);
 
             // Assert
             Assert.Equal(accountEvent, unpacked);

@@ -98,7 +98,7 @@ namespace Nautilus.Common.Interfaces
         void OnRequestForPositionsAck(string accountNumber, string positionRequestId);
 
         /// <summary>
-        /// Creates an <see cref="AccountEvent"/> event and sends it to the registered event receivers.
+        /// Creates an <see cref="AccountStateEvent"/> event and sends it to the registered event receivers.
         /// </summary>
         /// <param name="inquiryId">The inquiry identifier.</param>
         /// <param name="accountNumber">The account.</param>

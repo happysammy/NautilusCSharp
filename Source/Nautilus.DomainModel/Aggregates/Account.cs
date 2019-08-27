@@ -130,7 +130,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// Applies the given event to the brokerage account.
         /// </summary>
         /// <param name="event">The event.</param>
-        public void Apply(AccountEvent @event)
+        public void Apply(AccountStateEvent @event)
         {
             this.Events.Add(@event);
             this.CashBalance = @event.CashBalance;

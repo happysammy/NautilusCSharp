@@ -174,7 +174,7 @@ namespace Nautilus.Fix
                 Condition.NotEmptyOrWhiteSpace(marginCallStatus, nameof(marginCallStatus));
                 Condition.NotDefault(timestamp, nameof(timestamp));
 
-                var accountEvent = new AccountEvent(
+                var accountEvent = new AccountStateEvent(
                     this.fixClient.AccountId,
                     this.fixClient.Brokerage,
                     this.fixClient.AccountNumber,

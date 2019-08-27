@@ -29,7 +29,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 Currency.USD,
                 StubZonedDateTime.UnixEpoch());
 
-            var accountEventMessage = new AccountEvent(
+            var accountEventMessage = new AccountStateEvent(
                 AccountId.Create(Brokerage.FXCM, "D1234565"),
                 Brokerage.FXCM,
                 "D1234565",
@@ -59,7 +59,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 Currency.USD,
                 StubZonedDateTime.UnixEpoch());
 
-            var accountEventMessage = new AccountEvent(
+            var accountEventMessage = new AccountStateEvent(
                 AccountId.Create(Brokerage.FXCM, "D1234565"),
                 Brokerage.FXCM,
                 "D1234565",

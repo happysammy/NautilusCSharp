@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="AccountEvent.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="AccountStateEvent.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  https://nautechsystems.io
@@ -21,10 +21,10 @@ namespace Nautilus.DomainModel.Events
     /// Represents an account change event.
     /// </summary>
     [Immutable]
-    public sealed class AccountEvent : Event
+    public sealed class AccountStateEvent : Event
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AccountEvent" /> class.
+        /// Initializes a new instance of the <see cref="AccountStateEvent" /> class.
         /// </summary>
         /// <param name="accountId">The account identifier.</param>
         /// <param name="brokerage">The account brokerage.</param>
@@ -39,7 +39,7 @@ namespace Nautilus.DomainModel.Events
         /// <param name="marginCallStatus">The account margin call status.</param>
         /// <param name="eventId">The event identifier.</param>
         /// <param name="eventTimestamp">The event timestamp.</param>
-        public AccountEvent(
+        public AccountStateEvent(
             AccountId accountId,
             Brokerage brokerage,
             string accountNumber,
@@ -53,7 +53,7 @@ namespace Nautilus.DomainModel.Events
             string marginCallStatus,
             Guid eventId,
             ZonedDateTime eventTimestamp)
-            : base(typeof(AccountEvent), eventId, eventTimestamp)
+            : base(typeof(AccountStateEvent), eventId, eventTimestamp)
         {
             Debug.NotDefault(eventId, nameof(eventId));
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
@@ -127,7 +127,7 @@ namespace Nautilus.DomainModel.Events
         public string MarginCallStatus { get; }
 
         /// <summary>
-        /// Returns a string representation of this <see cref="AccountEvent"/>.
+        /// Returns a string representation of this <see cref="AccountStateEvent"/>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
         public override string ToString() => $"{this.Type.Name}({this.AccountId})";
