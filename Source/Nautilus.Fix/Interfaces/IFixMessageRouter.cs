@@ -10,6 +10,7 @@ namespace Nautilus.Fix.Interfaces
 {
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using QuickFix;
 

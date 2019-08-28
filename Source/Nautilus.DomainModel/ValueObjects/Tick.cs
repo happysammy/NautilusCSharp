@@ -12,6 +12,7 @@ namespace Nautilus.DomainModel.ValueObjects
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Extensions;
+    using Nautilus.DomainModel.Identifiers;
     using NodaTime;
 
     /// <summary>

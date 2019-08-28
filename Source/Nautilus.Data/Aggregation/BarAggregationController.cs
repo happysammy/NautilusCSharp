@@ -19,6 +19,7 @@ namespace Nautilus.Data.Aggregation
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Extensions;
     using Nautilus.Data.Messages.Commands;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Scheduler;

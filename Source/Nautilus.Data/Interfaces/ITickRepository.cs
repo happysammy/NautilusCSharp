@@ -10,6 +10,7 @@ namespace Nautilus.Data.Interfaces
 {
     using System.Collections.Generic;
     using Nautilus.Core.CQS;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 

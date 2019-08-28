@@ -26,7 +26,7 @@ namespace Nautilus.Brokerage.Dukascopy
     using QuickFix.Fields;
     using QuickFix.FIX44;
     using Price = Nautilus.DomainModel.ValueObjects.Price;
-    using Symbol = Nautilus.DomainModel.ValueObjects.Symbol;
+    using Symbol = Nautilus.DomainModel.Identifiers.Symbol;
 
     /// <summary>
     /// Provides an implementation for handling Dukascopy FIX messages.

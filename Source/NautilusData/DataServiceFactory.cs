@@ -10,7 +10,7 @@ namespace NautilusData
 {
     using System.Collections.Generic;
     using Nautilus.Brokerage.Dukascopy;
-    using Nautilus.Brokerage.FXCM;
+    using Nautilus.Brokerage.Fxcm;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Data;
     using Nautilus.Common.Interfaces;

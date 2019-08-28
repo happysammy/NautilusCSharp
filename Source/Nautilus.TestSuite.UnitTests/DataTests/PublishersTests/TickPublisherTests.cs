@@ -14,7 +14,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
     using Nautilus.Common.Data;
     using Nautilus.Data.Publishers;
     using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.Network;
     using Nautilus.Serialization;
     using Nautilus.TestSuite.TestKit;

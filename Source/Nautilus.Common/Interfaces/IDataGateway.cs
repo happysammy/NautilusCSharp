@@ -11,6 +11,7 @@ namespace Nautilus.Common.Interfaces
     using System.Collections.Generic;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>

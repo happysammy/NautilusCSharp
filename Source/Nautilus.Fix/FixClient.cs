@@ -12,6 +12,7 @@ namespace Nautilus.Fix
     using Nautilus.Core.Annotations;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Fix.Interfaces;
 

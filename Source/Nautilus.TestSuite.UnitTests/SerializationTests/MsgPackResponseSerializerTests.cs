@@ -14,6 +14,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
     using Nautilus.Data.Messages.Responses;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Frames;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network.Messages;
     using Nautilus.Serialization;

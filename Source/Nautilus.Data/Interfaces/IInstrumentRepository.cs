@@ -12,7 +12,7 @@ namespace Nautilus.Data.Interfaces
     using Nautilus.Core.CQS;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.DomainModel.Identifiers;
     using NodaTime;
 
     /// <summary>

@@ -11,6 +11,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;

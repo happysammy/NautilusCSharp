@@ -15,6 +15,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Data.Aggregation;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Scheduler;
     using Nautilus.TestSuite.TestKit;

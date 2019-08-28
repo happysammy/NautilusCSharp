@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Brokerage.FXCM
+namespace Nautilus.Brokerage.Fxcm
 {
     using System;
     using Nautilus.Common.Componentry;
@@ -15,6 +15,7 @@ namespace Nautilus.Brokerage.FXCM
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Fix;
     using Nautilus.Fix.Interfaces;

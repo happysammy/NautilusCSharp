@@ -14,7 +14,7 @@ namespace Nautilus.Fix
     using Nautilus.Core.Correctness;
     using Nautilus.Core.CQS;
     using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.DomainModel.Identifiers;
 
     /// <summary>
     /// Provides a converter between Nautilus symbols and broker symbols.

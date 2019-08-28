@@ -12,7 +12,6 @@ namespace Nautilus.DomainModel.Entities
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities.Base;
     using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
     /// Represents a collection of orders being an entry, stop-loss and optional take-profit to

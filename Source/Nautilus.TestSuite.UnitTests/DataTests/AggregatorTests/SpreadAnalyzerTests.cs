@@ -11,6 +11,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Data.Aggregation;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;

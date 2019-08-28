@@ -14,6 +14,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core.Message;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;

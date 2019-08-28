@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Brokerage.FXCM
+namespace Nautilus.Brokerage.Fxcm
 {
     using System;
     using System.Collections.Generic;
@@ -26,7 +26,7 @@ namespace Nautilus.Brokerage.FXCM
     using QuickFix.Fields;
     using QuickFix.FIX44;
     using Price = Nautilus.DomainModel.ValueObjects.Price;
-    using Symbol = Nautilus.DomainModel.ValueObjects.Symbol;
+    using Symbol = Nautilus.DomainModel.Identifiers.Symbol;
 
     /// <summary>
     /// Provides an implementation for handling FXCM FIX messages.

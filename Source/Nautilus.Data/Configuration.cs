@@ -18,6 +18,7 @@ namespace Nautilus.Data
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Fix;
     using Nautilus.Network;
