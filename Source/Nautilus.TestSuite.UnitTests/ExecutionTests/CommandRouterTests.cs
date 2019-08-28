@@ -44,9 +44,9 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
         internal void Test_can_deserialize_received_command_bytes()
         {
             // Arrange
-            const string TestAddress = "tcp://127.0.0.1:5553";
-            var requester = new RequestSocket(TestAddress);
-            requester.Connect(TestAddress);
+            const string testAddress = "tcp://127.0.0.1:5553";
+            var requester = new RequestSocket(testAddress);
+            requester.Connect(testAddress);
 
             var commandConsumer = new CommandServer(
                 this.container,

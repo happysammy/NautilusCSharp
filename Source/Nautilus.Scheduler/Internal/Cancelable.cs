@@ -196,9 +196,10 @@ namespace Nautilus.Scheduler.Internal
 
                 this.isDisposed = true;
             }
+
+            // ReSharper disable once RedundantEmptyFinallyBlock (generates warning if removed).
             finally
             {
-                // Generates warning if removed.
             }
         }
 

@@ -70,7 +70,7 @@ namespace Nautilus.Core
         /// </summary>
         /// <param name="other">The other object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public bool Equals(Identifier<T> other) => this.value == other.value;
+        public bool Equals(Identifier<T> other) => !(other is null) && this.value == other.value;
 
         /// <summary>
         /// Returns the hash code of the wrapped object.

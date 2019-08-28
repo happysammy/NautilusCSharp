@@ -8,8 +8,6 @@
 
 namespace Nautilus.Common.Interfaces
 {
-    using Nautilus.Common.Enums;
-
     /// <summary>
     /// Provides a binary serializer for objects of type T.
     /// </summary>

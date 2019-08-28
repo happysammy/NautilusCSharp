@@ -25,7 +25,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
         private readonly MockMessagingAgent testReceiver;
         private readonly HashedWheelTimerScheduler scheduler;
 
-        private int testActionCount = 0;
+        private int testActionCount;
 
         public HashedTimerWheelTests(ITestOutputHelper output)
         {
