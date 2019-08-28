@@ -8,7 +8,7 @@
 
 namespace Nautilus.Execution.Identifiers
 {
-    using Nautilus.Core;
+    using Nautilus.Core.Types;
     using Nautilus.Execution.Types;
 
     /// <summary>

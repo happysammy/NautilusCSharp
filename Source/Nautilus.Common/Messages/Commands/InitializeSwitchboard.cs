@@ -10,9 +10,9 @@ namespace Nautilus.Common.Messages.Commands
 {
     using System;
     using Nautilus.Common.Messaging;
-    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
+    using Nautilus.Core.Messages;
     using NodaTime;
 
     /// <summary>

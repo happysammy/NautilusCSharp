@@ -13,8 +13,8 @@ namespace Nautilus.Network
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messaging;
-    using Nautilus.Core;
     using Nautilus.Core.Correctness;
+    using Nautilus.Core.Types;
     using NetMQ;
     using NetMQ.Sockets;
 

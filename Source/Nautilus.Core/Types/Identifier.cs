@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Core
+namespace Nautilus.Core.Types
 {
     using System;
     using Nautilus.Core.Annotations;

@@ -13,8 +13,8 @@ namespace Nautilus.Common.Data
     using System.Collections.Immutable;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
-    using Nautilus.Core;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Types;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging;

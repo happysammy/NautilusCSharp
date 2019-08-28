@@ -13,6 +13,7 @@ namespace Nautilus.Messaging
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
+    using Nautilus.Core.Types;
     using Nautilus.Messaging.Interfaces;
     using NodaTime;
 

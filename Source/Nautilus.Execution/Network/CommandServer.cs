@@ -10,7 +10,7 @@ namespace Nautilus.Execution.Network
 {
     using System;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core;
+    using Nautilus.Core.Messages;
     using Nautilus.Execution.Messages.Commands;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;

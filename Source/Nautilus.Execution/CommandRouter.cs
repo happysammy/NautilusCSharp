@@ -11,8 +11,8 @@ namespace Nautilus.Execution
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messaging;
-    using Nautilus.Core;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Messages;
     using Nautilus.Execution.Messages.Commands;
     using Nautilus.Execution.Network;
     using Nautilus.Messaging.Interfaces;

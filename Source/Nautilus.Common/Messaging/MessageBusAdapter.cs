@@ -11,9 +11,10 @@ namespace Nautilus.Common.Messaging
     using System;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
-    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
+    using Nautilus.Core.Messages;
+    using Nautilus.Core.Types;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
     using NodaTime;
@@ -59,7 +60,7 @@ namespace Nautilus.Common.Messaging
             Mailbox subscriber,
             Guid id,
             ZonedDateTime timestamp)
-        where T : Message
+            where T : Message
         {
             var type = typeof(T);
             var message = new Subscribe<Type>(type, subscriber, id, timestamp);

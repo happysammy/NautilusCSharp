@@ -12,9 +12,9 @@ namespace Nautilus.Data.Messages.Commands
     using System.Collections.Generic;
     using System.Linq;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
+    using Nautilus.Core.Messages;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;

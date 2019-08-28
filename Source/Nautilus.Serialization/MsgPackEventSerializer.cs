@@ -11,9 +11,9 @@ namespace Nautilus.Serialization
     using System.Globalization;
     using MsgPack;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
+    using Nautilus.Core.Messages;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Identifiers;

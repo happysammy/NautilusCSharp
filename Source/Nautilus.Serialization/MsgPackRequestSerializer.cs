@@ -11,9 +11,9 @@ namespace Nautilus.Serialization
     using System.Collections.Generic;
     using MsgPack;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
+    using Nautilus.Core.Messages;
     using Nautilus.Data.Messages.Requests;
     using Nautilus.Serialization.Internal;
 

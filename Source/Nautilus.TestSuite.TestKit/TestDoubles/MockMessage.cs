@@ -10,7 +10,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
-    using Nautilus.Core;
+    using Nautilus.Core.Types;
     using NodaTime;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]

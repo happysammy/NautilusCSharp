@@ -9,9 +9,9 @@
 namespace Nautilus.DomainModel.Events.Base
 {
     using System;
-    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
+    using Nautilus.Core.Messages;
     using Nautilus.DomainModel.Identifiers;
     using NodaTime;
 

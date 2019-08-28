@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Core
+namespace Nautilus.Core.Types
 {
     using System;
     using Nautilus.Core.Annotations;
@@ -98,7 +98,7 @@ namespace Nautilus.Core
         /// </summary>
         /// <param name="other">The other object.</param>
         /// <returns>True if the message identifier equals the other identifier, otherwise false.</returns>
-        public bool Equals(Message other) => this.Id == other.Id;
+        public bool Equals(Message other) => !(other is null) && this.Id == other.Id;
 
         /// <summary>
         /// Returns the hash code for this <see cref="Message"/>.

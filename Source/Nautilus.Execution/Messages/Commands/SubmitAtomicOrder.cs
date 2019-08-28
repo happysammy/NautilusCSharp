@@ -9,8 +9,8 @@
 namespace Nautilus.Execution.Messages.Commands
 {
     using System;
-    using Nautilus.Core;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Messages;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.Execution.Identifiers;

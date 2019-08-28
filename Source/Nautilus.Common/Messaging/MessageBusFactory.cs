@@ -9,7 +9,7 @@
 namespace Nautilus.Common.Messaging
 {
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core;
+    using Nautilus.Core.Messages;
 
     /// <summary>
     /// Provides a factory to create the systems message bus.

@@ -8,7 +8,7 @@
 
 namespace Nautilus.Common.Interfaces
 {
-    using Nautilus.Core;
+    using Nautilus.Core.Types;
 
     /// <summary>
     /// Provides a binary serializer for <see cref="Message"/>s of type T.

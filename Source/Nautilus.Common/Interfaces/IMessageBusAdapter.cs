@@ -9,7 +9,7 @@
 namespace Nautilus.Common.Interfaces
 {
     using System;
-    using Nautilus.Core;
+    using Nautilus.Core.Types;
     using Nautilus.Messaging;
     using NodaTime;
 

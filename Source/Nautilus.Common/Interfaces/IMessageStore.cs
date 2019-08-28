@@ -9,7 +9,7 @@
 namespace Nautilus.Common.Interfaces
 {
     using System.Collections.Generic;
-    using Nautilus.Core;
+    using Nautilus.Core.Messages;
     using Nautilus.Messaging;
 
     /// <summary>

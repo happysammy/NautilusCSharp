@@ -10,9 +10,9 @@ namespace Nautilus.Serialization
 {
     using MsgPack;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
+    using Nautilus.Core.Messages;
     using Nautilus.DomainModel.Entities;
     using Nautilus.Execution.Messages.Commands;
     using Nautilus.Serialization.Internal;

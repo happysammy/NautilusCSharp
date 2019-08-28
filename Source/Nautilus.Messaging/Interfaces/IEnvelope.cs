@@ -9,7 +9,7 @@
 namespace Nautilus.Messaging.Interfaces
 {
     using System;
-    using Nautilus.Core;
+    using Nautilus.Core.Types;
     using NodaTime;
 
     /// <summary>

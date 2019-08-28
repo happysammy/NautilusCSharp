@@ -9,9 +9,9 @@
 namespace Nautilus.DomainModel.FiniteStateMachine
 {
     using System;
-    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
+    using Nautilus.Core.Messages;
 
     /// <summary>
     /// Represents a possible trigger within the <see cref="FiniteStateMachine"/>.
