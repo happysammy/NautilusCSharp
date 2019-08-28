@@ -10,6 +10,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+    using Nautilus.Core.Types;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Identifiers;
@@ -38,8 +39,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         {
             // Arrange
             var accountEvent = new AccountStateEvent(
-                AccountId.Create(Brokerage.FXCM, "D123456"),
-                Brokerage.FXCM,
+                AccountId.Create(new Brokerage("FXCM"), "D123456"),
+                new Brokerage("FXCM"),
                 "D123456",
                 Currency.USD,
                 Money.Create(100000, Currency.USD),

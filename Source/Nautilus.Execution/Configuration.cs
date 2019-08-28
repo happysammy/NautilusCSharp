@@ -15,6 +15,7 @@ namespace Nautilus.Execution
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.Fix;
     using Nautilus.Network;
     using Newtonsoft.Json;
@@ -56,7 +57,7 @@ namespace Nautilus.Execution
             var configPath = Path.GetFullPath(Path.Combine(assemblyDirectory, fixConfigFile));
 
             var fixSettings = ConfigReader.LoadConfig(configPath);
-            var broker = fixSettings["Brokerage"].ToEnum<Brokerage>();
+            var broker = new Brokerage(fixSettings["Brokerage"]);
             var credentials = new FixCredentials(
                 fixSettings["Account"],
                 fixSettings["Username"],

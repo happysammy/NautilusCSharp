@@ -15,6 +15,7 @@ namespace Nautilus.Common.Componentry
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core.Extensions;
+    using Nautilus.Core.Types;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;

@@ -149,7 +149,7 @@ namespace Nautilus.Serialization
                     var currency = ObjectExtractor.Enum<Currency>(unpacked[nameof(AccountStateEvent.Currency)]);
                     return new AccountStateEvent(
                         new AccountId(unpacked[nameof(AccountStateEvent.AccountId)].AsString()),
-                        ObjectExtractor.Enum<Brokerage>(unpacked[nameof(AccountStateEvent.Brokerage)]),
+                        new Brokerage(unpacked[nameof(AccountStateEvent.Brokerage)].AsString()),
                         unpacked[nameof(AccountStateEvent.AccountNumber)].AsString(),
                         currency,
                         ObjectExtractor.Money(unpacked[nameof(AccountStateEvent.CashBalance)], currency),

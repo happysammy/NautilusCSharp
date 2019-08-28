@@ -10,6 +10,7 @@ namespace Nautilus.Common.Logging
 {
     using System;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Types;
     using Nautilus.DomainModel.Identifiers;
 
     /// <summary>

@@ -9,7 +9,7 @@
 namespace Nautilus.Fix.MessageFactories
 {
     using Nautilus.Core.Correctness;
-    using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Identifiers;
     using NodaTime;
     using QuickFix.Fields;
     using QuickFix.FIX44;

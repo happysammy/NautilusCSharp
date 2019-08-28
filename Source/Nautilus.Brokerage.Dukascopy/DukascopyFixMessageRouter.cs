@@ -65,7 +65,7 @@ namespace Nautilus.Brokerage.Dukascopy
         /// </summary>
         public void CollateralInquiry()
         {
-            var message = CollateralInquiryFactory.Create(this.TimeNow(), Brokerage.FXCM);
+            var message = CollateralInquiryFactory.Create(this.TimeNow(), new Brokerage("FXCM"));
 
             this.SendFixMessage(message);
         }

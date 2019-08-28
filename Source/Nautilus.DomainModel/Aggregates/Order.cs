@@ -15,6 +15,7 @@ namespace Nautilus.DomainModel.Aggregates
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Message;
+    using Nautilus.Core.Types;
     using Nautilus.DomainModel.Aggregates.Base;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;

@@ -62,7 +62,7 @@ namespace Nautilus.Data
             var configPath = Path.GetFullPath(Path.Combine(assemblyDirectory, fixConfigFile));
 
             var fixSettings = ConfigReader.LoadConfig(configPath);
-            var broker = fixSettings["Brokerage"].ToEnum<Brokerage>();
+            var broker = new Brokerage(fixSettings["Brokerage"]);
             var credentials = new FixCredentials(
                 fixSettings["Account"],
                 fixSettings["Username"],

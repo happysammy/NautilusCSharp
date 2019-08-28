@@ -13,7 +13,7 @@ namespace Nautilus.Fix
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Events;
     using Nautilus.Core.Annotations;
-    using Nautilus.DomainModel.Enums;
+    using Nautilus.Core.Types;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.Fix.Interfaces;
     using NodaTime;

@@ -35,7 +35,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Arrange
             // Act
             var account = new Account(
-                Brokerage.FXCM,
+                new Brokerage("FXCM"),
                 "123456789",
                 "some username",
                 "some password",
@@ -43,7 +43,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 this.clock.TimeNow());
 
             // Assert
-            Assert.Equal(Brokerage.FXCM, account.Brokerage);
+            Assert.Equal(new Brokerage("FXCM"), account.Brokerage);
             Assert.Equal("FXCM-123456789", account.Id.ToString());
             Assert.Equal(Currency.AUD, account.Currency);
             Assert.Equal(decimal.Zero, account.CashBalance.Value);
@@ -54,7 +54,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var account = new Account(
-                Brokerage.FXCM,
+                new Brokerage("FXCM"),
                 "123456789",
                 "some username",
                 "some password",
@@ -62,8 +62,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 this.clock.TimeNow());
 
             var message = new AccountStateEvent(
-                AccountId.Create(Brokerage.FXCM, "D123456"),
-                Brokerage.FXCM,
+                AccountId.Create(new Brokerage("FXCM"), "D123456"),
+                new Brokerage("FXCM"),
                 "D123456",
                 Currency.AUD,
                 Money.Create(150000m, Currency.AUD),
@@ -94,7 +94,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var account = new Account(
-                Brokerage.FXCM,
+                new Brokerage("FXCM"),
                 "123456789",
                 "some username",
                 "some password",
@@ -102,8 +102,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 this.clock.TimeNow());
 
             var message = new AccountStateEvent(
-                AccountId.Create(Brokerage.FXCM, "D123456"),
-                Brokerage.FXCM,
+                AccountId.Create(new Brokerage("FXCM"), "D123456"),
+                new Brokerage("FXCM"),
                 "D123456",
                 Currency.USD,
                 Money.Create(150000m, Currency.AUD),

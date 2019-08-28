@@ -163,25 +163,25 @@ namespace NautilusData
             FixConfiguration configuration,
             SymbolConverter symbolConverter)
         {
-            switch (configuration.Broker)
+            switch (configuration.Broker.ToString())
             {
-                case Brokerage.FXCM:
+                case "FXCM":
                     return FxcmFixClientFactory.Create(
                         container,
                         messageBusAdapter,
                         configuration,
                         symbolConverter);
-                case Brokerage.DUKASCOPY:
+                case "DUKASCOPY":
                     return DukascopyFixClientFactory.Create(
                         container,
                         messageBusAdapter,
                         configuration,
                         symbolConverter);
-                case Brokerage.Simulation:
+                case "SIMULATION":
                     goto default;
-                case Brokerage.IB:
+                case "IB":
                     goto default;
-                case Brokerage.LMAX:
+                case "LMAX":
                     goto default;
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(

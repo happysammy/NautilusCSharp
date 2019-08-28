@@ -8,6 +8,7 @@
 
 namespace Nautilus.Common.Interfaces
 {
+    using Nautilus.Core.Types;
     using Nautilus.DomainModel.Identifiers;
 
     /// <summary>

@@ -10,7 +10,7 @@ namespace Nautilus.Fix
 {
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
-    using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Identifiers;
     using NodaTime;
 
     /// <summary>

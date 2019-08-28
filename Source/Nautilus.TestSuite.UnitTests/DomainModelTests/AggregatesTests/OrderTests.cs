@@ -12,6 +12,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
     using System.Collections.Generic;
     using System.Collections.Immutable;
     using System.Diagnostics.CodeAnalysis;
+    using Nautilus.Core.Types;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Factories;

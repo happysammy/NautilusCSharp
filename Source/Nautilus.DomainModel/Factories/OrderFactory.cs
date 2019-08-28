@@ -10,6 +10,7 @@ namespace Nautilus.DomainModel.Factories
 {
     using System;
     using Nautilus.Core.Correctness;
+    using Nautilus.Core.Types;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;

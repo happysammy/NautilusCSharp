@@ -11,6 +11,7 @@ namespace Nautilus.Serialization.Internal
     using System;
     using MsgPack;
     using Nautilus.Core.Extensions;
+    using Nautilus.Core.Types;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;

@@ -65,7 +65,7 @@ namespace Nautilus.Brokerage.Fxcm
         /// </summary>
         public void CollateralInquiry()
         {
-            this.SendFixMessage(CollateralInquiryFactory.Create(this.TimeNow(), Brokerage.FXCM));
+            this.SendFixMessage(CollateralInquiryFactory.Create(this.TimeNow(), new Brokerage("FXCM")));
         }
 
         /// <summary>

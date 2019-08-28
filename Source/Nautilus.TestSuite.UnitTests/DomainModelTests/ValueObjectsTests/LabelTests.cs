@@ -9,6 +9,7 @@
 namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
 {
     using System.Diagnostics.CodeAnalysis;
+    using Nautilus.Core.Types;
     using Nautilus.DomainModel.Identifiers;
     using Xunit;
 

@@ -12,7 +12,7 @@ namespace Nautilus.Common.Messages.Events
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Message;
-    using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Identifiers;
     using NodaTime;
 
     /// <summary>
