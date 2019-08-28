@@ -12,7 +12,7 @@ namespace Nautilus.Common.Messages.Commands
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
-    using Nautilus.Core.Messages;
+    using Nautilus.Core.Message;
     using NodaTime;
 
     /// <summary>

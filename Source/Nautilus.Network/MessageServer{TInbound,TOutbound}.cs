@@ -18,7 +18,7 @@ namespace Nautilus.Network
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core.Correctness;
-    using Nautilus.Core.Messages;
+    using Nautilus.Core.Message;
     using Nautilus.Core.Types;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;

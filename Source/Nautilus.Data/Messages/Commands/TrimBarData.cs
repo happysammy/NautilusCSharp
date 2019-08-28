@@ -14,7 +14,7 @@ namespace Nautilus.Data.Messages.Commands
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
-    using Nautilus.Core.Messages;
+    using Nautilus.Core.Message;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;

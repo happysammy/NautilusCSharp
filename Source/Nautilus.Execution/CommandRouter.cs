@@ -12,7 +12,7 @@ namespace Nautilus.Execution
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Messages;
+    using Nautilus.Core.Message;
     using Nautilus.Execution.Messages.Commands;
     using Nautilus.Execution.Network;
     using Nautilus.Messaging.Interfaces;

@@ -11,7 +11,7 @@ namespace Nautilus.DomainModel.Events
     using System;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
-    using Nautilus.Core.Messages;
+    using Nautilus.Core.Message;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;

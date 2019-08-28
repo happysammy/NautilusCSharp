@@ -12,7 +12,7 @@ namespace Nautilus.Data.Messages.Requests
     using System.Collections.Generic;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
-    using Nautilus.Core.Messages;
+    using Nautilus.Core.Message;
     using NodaTime;
 
     /// <summary>

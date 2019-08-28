@@ -11,7 +11,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
     using System;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core.Extensions;
-    using Nautilus.Core.Messages;
+    using Nautilus.Core.Message;
     using Nautilus.Core.Types;
     using Nautilus.Messaging;
     using Nautilus.Network;

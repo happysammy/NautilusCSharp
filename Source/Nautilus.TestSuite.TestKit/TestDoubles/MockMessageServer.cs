@@ -12,7 +12,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Messages;
+    using Nautilus.Core.Message;
     using Nautilus.Messaging;
     using Nautilus.Network;
     using Nautilus.Serialization;

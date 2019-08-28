@@ -11,7 +11,7 @@ namespace Nautilus.Common.Messages.Commands
     using System;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
-    using Nautilus.Core.Messages;
+    using Nautilus.Core.Message;
     using Nautilus.Messaging;
     using NodaTime;
 

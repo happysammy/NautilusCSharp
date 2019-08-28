@@ -385,7 +385,7 @@ namespace Nautilus.Core.Primitives
         /// </summary>
         /// <param name="other">The other number.</param>
         /// <returns>The result of the equality check.</returns>
-        public bool Equals(IntegerNumber other) => this.Value.Equals(other.Value);
+        public bool Equals(IntegerNumber other) => !(other is null) && this.Value.Equals(other.Value);
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="IntegerNumber"/> is equal to the

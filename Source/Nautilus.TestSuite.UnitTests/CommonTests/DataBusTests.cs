@@ -12,7 +12,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Common.Data;
     using Nautilus.Common.Messages.Commands;
-    using Nautilus.Core.Messages;
+    using Nautilus.Core.Message;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit;

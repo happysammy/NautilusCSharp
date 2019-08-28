@@ -14,7 +14,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messages.Events;
     using Nautilus.Common.Messaging;
-    using Nautilus.Core.Messages;
+    using Nautilus.Core.Message;
     using Nautilus.Data;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
