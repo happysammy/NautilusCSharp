@@ -39,9 +39,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         {
             // Arrange
             var accountEvent = new AccountStateEvent(
-                AccountId.Create(new Brokerage("FXCM"), "D123456"),
-                new Brokerage("FXCM"),
-                "D123456",
+                new AccountId("FXCM", "D123456"),
                 Currency.USD,
                 Money.Create(100000, Currency.USD),
                 Money.Create(100000, Currency.USD),
@@ -58,6 +56,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var unpacked = (AccountStateEvent)this.serializer.Deserialize(packed);
 
             // Assert
+            Assert.Equal("FXCM-D123456", accountEvent.AccountId.ToString());
             Assert.Equal(accountEvent, unpacked);
             this.output.WriteLine(Convert.ToBase64String(packed));
         }

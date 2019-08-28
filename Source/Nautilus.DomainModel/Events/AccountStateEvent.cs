@@ -27,8 +27,6 @@ namespace Nautilus.DomainModel.Events
         /// Initializes a new instance of the <see cref="AccountStateEvent" /> class.
         /// </summary>
         /// <param name="accountId">The account identifier.</param>
-        /// <param name="brokerage">The account brokerage.</param>
-        /// <param name="accountNumber">The account number.</param>
         /// <param name="currency">The currency of the account.</param>
         /// <param name="cashBalance">The account cash balance.</param>
         /// <param name="cashStartDay">The account cash start day.</param>
@@ -41,8 +39,6 @@ namespace Nautilus.DomainModel.Events
         /// <param name="eventTimestamp">The event timestamp.</param>
         public AccountStateEvent(
             AccountId accountId,
-            Brokerage brokerage,
-            string accountNumber,
             Currency currency,
             Money cashBalance,
             Money cashStartDay,
@@ -59,8 +55,6 @@ namespace Nautilus.DomainModel.Events
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
 
             this.AccountId = accountId;
-            this.Brokerage = brokerage;
-            this.AccountNumber = accountNumber;
             this.Currency = currency;
             this.CashBalance = cashBalance;
             this.CashStartDay = cashStartDay;
@@ -75,16 +69,6 @@ namespace Nautilus.DomainModel.Events
         /// Gets the events account identifier.
         /// </summary>
         public AccountId AccountId { get; }
-
-        /// <summary>
-        /// Gets the events account brokerage.
-        /// </summary>
-        public Brokerage Brokerage { get; }
-
-        /// <summary>
-        /// Gets the events account number.
-        /// </summary>
-        public string AccountNumber { get; }
 
         /// <summary>
         /// Gets the events account currency.

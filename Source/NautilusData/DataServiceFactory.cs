@@ -21,7 +21,6 @@ namespace NautilusData
     using Nautilus.Data.Aggregation;
     using Nautilus.Data.Providers;
     using Nautilus.Data.Publishers;
-    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.Fix;
     using Nautilus.Messaging;

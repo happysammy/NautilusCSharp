@@ -10,7 +10,6 @@ namespace Nautilus.Common.Logging
 {
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Types;
-    using Nautilus.DomainModel.Identifiers;
 
     /// <summary>
     /// Provides a factory for creating <see cref="Logger"/>s.

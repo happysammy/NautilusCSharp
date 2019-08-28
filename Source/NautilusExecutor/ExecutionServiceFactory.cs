@@ -16,7 +16,6 @@ namespace NautilusExecutor
     using Nautilus.Common.Logging;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Correctness;
-    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.Execution;
     using Nautilus.Execution.Network;

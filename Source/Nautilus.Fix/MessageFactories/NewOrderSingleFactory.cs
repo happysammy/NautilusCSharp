@@ -11,10 +11,12 @@ namespace Nautilus.Fix.MessageFactories
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Identifiers;
     using NodaTime;
     using QuickFix.Fields;
     using QuickFix.FIX44;
     using Account = QuickFix.Fields.Account;
+    using Symbol = QuickFix.Fields.Symbol;
 
     /// <summary>
     /// Provides new order single FIX messages.
@@ -31,19 +33,18 @@ namespace Nautilus.Fix.MessageFactories
         /// <returns>The FIX message.</returns>
         public static QuickFix.FIX44.NewOrderSingle Create(
             string brokerSymbol,
-            string accountNumber,
+            AccountNumber accountNumber,
             Order order,
             ZonedDateTime timeNow)
         {
             Debug.NotEmptyOrWhiteSpace(brokerSymbol, nameof(brokerSymbol));
-            Debug.NotEmptyOrWhiteSpace(accountNumber, nameof(accountNumber));
             Debug.NotDefault(timeNow, nameof(timeNow));
 
             var message = new NewOrderSingle();
 
             message.SetField(new ClOrdID(order.Id.ToString()));
             message.SetField(new SecondaryClOrdID(order.Label.ToString()));
-            message.SetField(new Account(accountNumber));
+            message.SetField(new Account(accountNumber.ToString()));
             message.SetField(new Symbol(brokerSymbol));
             message.SetField(FixMessageHelper.GetFixOrderSide(order.Side));
             message.SetField(new TransactTime(timeNow.ToDateTimeUtc()));

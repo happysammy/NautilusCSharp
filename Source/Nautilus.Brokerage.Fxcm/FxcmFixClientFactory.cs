@@ -40,7 +40,7 @@ namespace Nautilus.Brokerage.Fxcm
                 new FxcmFixMessageRouter(
                     container,
                     symbolConverter,
-                    config.Credentials.Account));
+                    config.Credentials.AccountNumber));
         }
     }
 }

@@ -38,7 +38,7 @@ namespace Nautilus.Brokerage.Dukascopy
                 new DukascopyFixMessageRouter(
                     container,
                     symbolConverter,
-                    config.Credentials.Account));
+                    config.Credentials.AccountNumber));
         }
     }
 }

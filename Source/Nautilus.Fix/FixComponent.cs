@@ -36,6 +36,7 @@ namespace Nautilus.Fix
         private readonly CommandHandler commandHandler;
         private readonly FixConfiguration config;
         private readonly bool sendAccountTag;
+        private readonly Account accountField;
 
         private SocketInitiator? initiator;
         private Session? session;
@@ -62,10 +63,11 @@ namespace Nautilus.Fix
             this.commandHandler = new CommandHandler(this.logger);
 
             this.Brokerage = config.Broker;
-            this.AccountNumber = config.Credentials.Account;
-            this.AccountId = AccountId.Create(this.Brokerage, this.AccountNumber);
+            this.AccountNumber = config.Credentials.AccountNumber;
+            this.AccountId = new AccountId(this.Brokerage, this.AccountNumber);
             this.config = config;
             this.sendAccountTag = config.SendAccountTag;
+            this.accountField = new Account(this.AccountNumber.ToString());
 
             this.FixMessageHandler = messageHandler;
             this.FixMessageRouter = messageRouter;
@@ -84,7 +86,7 @@ namespace Nautilus.Fix
         /// <summary>
         /// Gets the account number for FIX component.
         /// </summary>
-        public string AccountNumber { get; }
+        public AccountNumber AccountNumber { get; }
 
         /// <summary>
         /// Gets the account identifier.
@@ -267,7 +269,7 @@ namespace Nautilus.Fix
 
                 if (this.sendAccountTag)
                 {
-                    message.SetField(new Account(this.config.Credentials.Account));
+                    message.SetField(this.accountField);
                 }
             });
         }
@@ -316,7 +318,7 @@ namespace Nautilus.Fix
             {
                 if (this.sendAccountTag)
                 {
-                    message.SetField(new Account(this.config.Credentials.Account));
+                    message.SetField(this.accountField);
                 }
 
                 var possDupFlag = false;

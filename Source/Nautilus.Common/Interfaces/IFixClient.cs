@@ -10,7 +10,6 @@ namespace Nautilus.Common.Interfaces
 {
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
 
@@ -32,7 +31,7 @@ namespace Nautilus.Common.Interfaces
         /// <summary>
         /// Gets the FIX account number.
         /// </summary>
-        string AccountNumber { get; }
+        AccountNumber AccountNumber { get; }
 
         /// <summary>
         /// Gets a value indicating whether the FIX client is connected to a session.

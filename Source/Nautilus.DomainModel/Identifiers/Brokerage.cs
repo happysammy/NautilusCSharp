@@ -21,7 +21,7 @@ namespace Nautilus.DomainModel.Identifiers
         /// <summary>
         /// Initializes a new instance of the <see cref="Brokerage"/> class.
         /// </summary>
-        /// <param name="value">The entity id value.</param>
+        /// <param name="value">The identifier value.</param>
         public Brokerage(string value)
             : base(value)
         {

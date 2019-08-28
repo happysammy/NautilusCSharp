@@ -10,6 +10,7 @@ namespace Nautilus.Fix
 {
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
+    using Nautilus.DomainModel.Identifiers;
 
     /// <summary>
     /// Represents the credentials for a FIX session.
@@ -20,19 +21,19 @@ namespace Nautilus.Fix
         /// <summary>
         /// Initializes a new instance of the <see cref="FixCredentials"/> class.
         /// </summary>
-        /// <param name="account">The FIX account number.</param>
+        /// <param name="accountNumber">The FIX account number.</param>
         /// <param name="username">The FIX account username.</param>
         /// <param name="password">The FIX account password.</param>
         public FixCredentials(
-            string account,
+            string accountNumber,
             string username,
             string password)
         {
-            Condition.NotEmptyOrWhiteSpace(account, nameof(account));
+            Condition.NotEmptyOrWhiteSpace(accountNumber, nameof(accountNumber));
             Condition.NotEmptyOrWhiteSpace(username, nameof(username));
             Condition.NotEmptyOrWhiteSpace(password, nameof(password));
 
-            this.Account = account;
+            this.AccountNumber = new AccountNumber(accountNumber);
             this.Username = username;
             this.Password = password;
         }
@@ -40,7 +41,7 @@ namespace Nautilus.Fix
         /// <summary>
         /// Gets the FIX account.
         /// </summary>
-        public string Account { get; }
+        public AccountNumber AccountNumber { get; }
 
         /// <summary>
         /// Gets the FIX account username.

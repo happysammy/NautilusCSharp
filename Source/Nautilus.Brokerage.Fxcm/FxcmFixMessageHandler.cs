@@ -363,7 +363,7 @@ namespace Nautilus.Brokerage.Fxcm
                 var brokerSymbol = message.GetField(Tags.Symbol);
 
                 var symbol = message.IsSetField(Tags.Symbol)
-                    ? this.symbolConverter.GetNautilusSymbol(brokerSymbol).Value
+                    ? this.symbolConverter.GetNautilusSymbolCode(brokerSymbol).Value
                     : string.Empty;
 
                 var orderId = GetField(message, Tags.ClOrdID);
@@ -523,7 +523,7 @@ namespace Nautilus.Brokerage.Fxcm
                 return value;
             }
 
-            var symbolConversion = this.symbolConverter.GetNautilusSymbol(rawSymbolCode);
+            var symbolConversion = this.symbolConverter.GetNautilusSymbolCode(rawSymbolCode);
             if (symbolConversion.IsFailure)
             {
                 this.Log.Error(symbolConversion.Message);

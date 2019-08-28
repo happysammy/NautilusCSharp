@@ -35,13 +35,13 @@ namespace Nautilus.DomainModel.Aggregates
         /// <exception cref="ArgumentException">If any struct is the default value.</exception>
         public Account(
             Brokerage brokerage,
-            string accountNumber,
+            AccountNumber accountNumber,
             string username,
             string password,
             Currency currency,
             ZonedDateTime timestamp)
             : base(
-                AccountId.Create(brokerage, accountNumber),
+                new AccountId(brokerage, accountNumber),
                 timestamp)
         {
             Condition.NotEmptyOrWhiteSpace(username, nameof(username));
@@ -74,7 +74,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the accounts number.
         /// </summary>
-        public string AccountNumber { get; }
+        public AccountNumber AccountNumber { get; }
 
         /// <summary>
         /// Gets the accounts base currency.

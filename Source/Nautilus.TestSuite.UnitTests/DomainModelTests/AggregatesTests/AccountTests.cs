@@ -36,7 +36,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Act
             var account = new Account(
                 new Brokerage("FXCM"),
-                "123456789",
+                new AccountNumber("123456789"),
                 "some username",
                 "some password",
                 Currency.AUD,
@@ -55,16 +55,14 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Arrange
             var account = new Account(
                 new Brokerage("FXCM"),
-                "123456789",
+                new AccountNumber("123456789"),
                 "some username",
                 "some password",
                 Currency.AUD,
                 this.clock.TimeNow());
 
             var message = new AccountStateEvent(
-                AccountId.Create(new Brokerage("FXCM"), "D123456"),
-                new Brokerage("FXCM"),
-                "D123456",
+                new AccountId("FXCM", "D123456"),
                 Currency.AUD,
                 Money.Create(150000m, Currency.AUD),
                 Money.Create(150000m, Currency.AUD),
@@ -95,16 +93,14 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Arrange
             var account = new Account(
                 new Brokerage("FXCM"),
-                "123456789",
+                new AccountNumber("123456789"),
                 "some username",
                 "some password",
                 Currency.USD,
                 this.clock.TimeNow());
 
             var message = new AccountStateEvent(
-                AccountId.Create(new Brokerage("FXCM"), "D123456"),
-                new Brokerage("FXCM"),
-                "D123456",
+                new AccountId("FXCM", "D123456"),
                 Currency.USD,
                 Money.Create(150000m, Currency.AUD),
                 Money.Create(150000m, Currency.AUD),

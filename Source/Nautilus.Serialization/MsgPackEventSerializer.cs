@@ -38,8 +38,6 @@ namespace Nautilus.Serialization
             {
                 case AccountStateEvent evt:
                     package.Add(nameof(evt.AccountId), evt.AccountId.ToString());
-                    package.Add(nameof(evt.Brokerage), evt.Brokerage.ToString());
-                    package.Add(nameof(evt.AccountNumber), evt.AccountNumber);
                     package.Add(nameof(evt.Currency), evt.Currency.ToString());
                     package.Add(nameof(evt.CashBalance), evt.CashBalance.Value.ToString(CultureInfo.InvariantCulture));
                     package.Add(nameof(evt.CashStartDay), evt.CashStartDay.Value.ToString(CultureInfo.InvariantCulture));
@@ -148,9 +146,7 @@ namespace Nautilus.Serialization
                 case nameof(AccountStateEvent):
                     var currency = ObjectExtractor.Enum<Currency>(unpacked[nameof(AccountStateEvent.Currency)]);
                     return new AccountStateEvent(
-                        new AccountId(unpacked[nameof(AccountStateEvent.AccountId)].AsString()),
-                        new Brokerage(unpacked[nameof(AccountStateEvent.Brokerage)].AsString()),
-                        unpacked[nameof(AccountStateEvent.AccountNumber)].AsString(),
+                        AccountId.FromString(unpacked[nameof(AccountStateEvent.AccountId)].AsString()),
                         currency,
                         ObjectExtractor.Money(unpacked[nameof(AccountStateEvent.CashBalance)], currency),
                         ObjectExtractor.Money(unpacked[nameof(AccountStateEvent.CashStartDay)], currency),

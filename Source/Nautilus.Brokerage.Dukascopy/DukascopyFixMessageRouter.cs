@@ -11,10 +11,8 @@ namespace Nautilus.Brokerage.Dukascopy
     using System;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Fix;
@@ -28,7 +26,7 @@ namespace Nautilus.Brokerage.Dukascopy
     public sealed class DukascopyFixMessageRouter : Component, IFixMessageRouter
     {
         private readonly SymbolConverter symbolConverter;
-        private readonly string accountNumber;
+        private readonly AccountNumber accountNumber;
 
         private Session? fixSession;
 
@@ -42,11 +40,9 @@ namespace Nautilus.Brokerage.Dukascopy
         public DukascopyFixMessageRouter(
             IComponentryContainer container,
             SymbolConverter symbolConverter,
-            string accountNumber)
+            AccountNumber accountNumber)
         : base(container)
         {
-            Condition.NotEmptyOrWhiteSpace(accountNumber, nameof(accountNumber));
-
             this.symbolConverter = symbolConverter;
             this.accountNumber = accountNumber;
         }
@@ -98,7 +94,7 @@ namespace Nautilus.Brokerage.Dukascopy
         /// </param>
         public void UpdateInstrumentSubscribe(Symbol symbol)
         {
-            var fxcmSymbol = this.symbolConverter.GetBrokerSymbol(symbol.Code);
+            var fxcmSymbol = this.symbolConverter.GetBrokerSymbolCode(symbol.Code);
             var message = SecurityListRequestFactory.Create(
                 fxcmSymbol.Value,
                 this.TimeNow());
@@ -122,7 +118,7 @@ namespace Nautilus.Brokerage.Dukascopy
         /// <param name="symbol">The symbol.</param>
         public void MarketDataRequestSubscribe(Symbol symbol)
         {
-            var brokerSymbol = this.symbolConverter.GetBrokerSymbol(symbol.Code).Value;
+            var brokerSymbol = this.symbolConverter.GetBrokerSymbolCode(symbol.Code).Value;
 
             var message = MarketDataRequestFactory.Create(
                 brokerSymbol,
@@ -155,7 +151,7 @@ namespace Nautilus.Brokerage.Dukascopy
         public void SubmitOrder(Order order)
         {
             var message = NewOrderSingleFactory.Create(
-                this.symbolConverter.GetBrokerSymbol(order.Symbol.Code).Value,
+                this.symbolConverter.GetBrokerSymbolCode(order.Symbol.Code).Value,
                 this.accountNumber,
                 order,
                 this.TimeNow());
@@ -169,7 +165,7 @@ namespace Nautilus.Brokerage.Dukascopy
         /// <param name="atomicOrder">The atomic order to submit.</param>
         public void SubmitOrder(AtomicOrder atomicOrder)
         {
-            var brokerSymbol = this.symbolConverter.GetBrokerSymbol(atomicOrder.Symbol.Code).Value;
+            var brokerSymbol = this.symbolConverter.GetBrokerSymbolCode(atomicOrder.Symbol.Code).Value;
 
             if (atomicOrder.TakeProfit != null)
             {
@@ -201,7 +197,7 @@ namespace Nautilus.Brokerage.Dukascopy
         public void ModifyOrder(Order order, Price modifiedPrice)
         {
             var message = OrderCancelReplaceRequestFactory.Create(
-                this.symbolConverter.GetBrokerSymbol(order.Symbol.Code).Value,
+                this.symbolConverter.GetBrokerSymbolCode(order.Symbol.Code).Value,
                 order,
                 modifiedPrice.Value,
                 this.TimeNow());
@@ -216,7 +212,7 @@ namespace Nautilus.Brokerage.Dukascopy
         public void CancelOrder(Order order)
         {
             var message = OrderCancelRequestFactory.Create(
-                this.symbolConverter.GetBrokerSymbol(order.Symbol.Code).Value,
+                this.symbolConverter.GetBrokerSymbolCode(order.Symbol.Code).Value,
                 order,
                 this.TimeNow());
 

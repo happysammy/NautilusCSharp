@@ -14,7 +14,6 @@ namespace Nautilus.Execution
     using Nautilus.Common.Configuration;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Extensions;
-    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.Fix;
     using Nautilus.Network;

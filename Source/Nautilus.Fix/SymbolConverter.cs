@@ -42,7 +42,7 @@ namespace Nautilus.Fix
         /// </summary>
         /// <param name="brokerSymbol">The broker symbol.</param>
         /// <returns>If successful returns the result, otherwise returns failure result.</returns>
-        public QueryResult<string> GetNautilusSymbol(string brokerSymbol)
+        public QueryResult<string> GetNautilusSymbolCode(string brokerSymbol)
         {
             Debug.NotEmptyOrWhiteSpace(brokerSymbol, nameof(brokerSymbol));
 
@@ -57,7 +57,7 @@ namespace Nautilus.Fix
         /// </summary>
         /// <param name="nautilusSymbol">The Nautilus symbol.</param>
         /// <returns>If successful returns the result, otherwise returns failure result.</returns>
-        public QueryResult<string> GetBrokerSymbol(string nautilusSymbol)
+        public QueryResult<string> GetBrokerSymbolCode(string nautilusSymbol)
         {
             Debug.NotEmptyOrWhiteSpace(nautilusSymbol, nameof(nautilusSymbol));
 

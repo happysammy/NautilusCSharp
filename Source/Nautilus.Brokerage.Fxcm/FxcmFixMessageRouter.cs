@@ -11,10 +11,8 @@ namespace Nautilus.Brokerage.Fxcm
     using System;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Fix;
@@ -28,7 +26,7 @@ namespace Nautilus.Brokerage.Fxcm
     public sealed class FxcmFixMessageRouter : Component, IFixMessageRouter
     {
         private readonly SymbolConverter symbolConverter;
-        private readonly string accountNumber;
+        private readonly AccountNumber accountNumber;
 
         private Session? fixSession;
 
@@ -42,11 +40,9 @@ namespace Nautilus.Brokerage.Fxcm
         public FxcmFixMessageRouter(
             IComponentryContainer container,
             SymbolConverter symbolConverter,
-            string accountNumber)
+            AccountNumber accountNumber)
         : base(container)
         {
-            Condition.NotEmptyOrWhiteSpace(accountNumber, nameof(accountNumber));
-
             this.symbolConverter = symbolConverter;
             this.accountNumber = accountNumber;
         }
@@ -92,7 +88,7 @@ namespace Nautilus.Brokerage.Fxcm
         /// </param>
         public void UpdateInstrumentSubscribe(Symbol symbol)
         {
-            var brokerSymbolQuery = this.symbolConverter.GetBrokerSymbol(symbol.Code);
+            var brokerSymbolQuery = this.symbolConverter.GetBrokerSymbolCode(symbol.Code);
 
             if (brokerSymbolQuery.IsFailure)
             {
@@ -123,7 +119,7 @@ namespace Nautilus.Brokerage.Fxcm
         /// <param name="symbol">The symbol.</param>
         public void MarketDataRequestSubscribe(Symbol symbol)
         {
-            var brokerSymbolQuery = this.symbolConverter.GetBrokerSymbol(symbol.Code);
+            var brokerSymbolQuery = this.symbolConverter.GetBrokerSymbolCode(symbol.Code);
 
             if (brokerSymbolQuery.IsFailure)
             {
@@ -162,7 +158,7 @@ namespace Nautilus.Brokerage.Fxcm
         public void SubmitOrder(Order order)
         {
             var message = NewOrderSingleFactory.Create(
-                this.symbolConverter.GetBrokerSymbol(order.Symbol.Code).Value,
+                this.symbolConverter.GetBrokerSymbolCode(order.Symbol.Code).Value,
                 this.accountNumber,
                 order,
                 this.TimeNow());
@@ -176,7 +172,7 @@ namespace Nautilus.Brokerage.Fxcm
         /// <param name="atomicOrder">The atomic order to submit.</param>
         public void SubmitOrder(AtomicOrder atomicOrder)
         {
-            var brokerSymbolQuery = this.symbolConverter.GetBrokerSymbol(atomicOrder.Symbol.Code);
+            var brokerSymbolQuery = this.symbolConverter.GetBrokerSymbolCode(atomicOrder.Symbol.Code);
 
             if (brokerSymbolQuery.IsFailure)
             {
@@ -213,7 +209,7 @@ namespace Nautilus.Brokerage.Fxcm
         /// <param name="modifiedPrice">The modified order price.</param>
         public void ModifyOrder(Order order, Price modifiedPrice)
         {
-            var brokerSymbolQuery = this.symbolConverter.GetBrokerSymbol(order.Symbol.Code);
+            var brokerSymbolQuery = this.symbolConverter.GetBrokerSymbolCode(order.Symbol.Code);
 
             if (brokerSymbolQuery.IsFailure)
             {
@@ -236,7 +232,7 @@ namespace Nautilus.Brokerage.Fxcm
         /// <param name="order">The order to cancel.</param>
         public void CancelOrder(Order order)
         {
-            var brokerSymbolQuery = this.symbolConverter.GetBrokerSymbol(order.Symbol.Code);
+            var brokerSymbolQuery = this.symbolConverter.GetBrokerSymbolCode(order.Symbol.Code);
 
             if (brokerSymbolQuery.IsFailure)
             {

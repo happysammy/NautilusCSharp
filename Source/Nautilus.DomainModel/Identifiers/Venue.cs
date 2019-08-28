@@ -22,7 +22,7 @@ namespace Nautilus.DomainModel.Identifiers
         /// <summary>
         /// Initializes a new instance of the <see cref="Venue"/> class.
         /// </summary>
-        /// <param name="value">The entity id value.</param>
+        /// <param name="value">The identifier value.</param>
         public Venue(string value)
             : base(value.ToUpperInvariant())
         {

@@ -9,10 +9,8 @@
 namespace Nautilus.DomainModel.Identifiers
 {
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
     using Nautilus.Core.Types;
     using Nautilus.DomainModel.Aggregates;
-    using Nautilus.DomainModel.Enums;
 
     /// <summary>
     /// Represents an identifier for accounts.
@@ -23,22 +21,45 @@ namespace Nautilus.DomainModel.Identifiers
         /// <summary>
         /// Initializes a new instance of the <see cref="AccountId"/> class.
         /// </summary>
-        /// <param name="value">The entity id value.</param>
-        public AccountId(string value)
-            : base(value)
+        /// <param name="brokerage">The brokerage identifier.</param>
+        /// <param name="accountNumber">The account number identifier.</param>
+        public AccountId(Brokerage brokerage, AccountNumber accountNumber)
+            : base($"{brokerage}-{accountNumber}")
         {
-            Debug.NotEmptyOrWhiteSpace(value, nameof(value));
+            this.Brokerage = brokerage;
+            this.AccountNumber = accountNumber;
         }
 
         /// <summary>
-        /// Creates a new account identifier from the given arguments.
+        /// Initializes a new instance of the <see cref="AccountId"/> class.
         /// </summary>
-        /// <param name="brokerage">The brokerage for the identifier.</param>
-        /// <param name="accountNumber">The account number for the identifier.</param>
-        /// <returns>The created identifier.</returns>
-        public static AccountId Create(Brokerage brokerage, string accountNumber)
+        /// <param name="brokerage">The brokerage identifier.</param>
+        /// <param name="accountNumber">The account number identifier.</param>
+        public AccountId(string brokerage, string accountNumber)
+            : this(new Brokerage(brokerage), new AccountNumber(accountNumber))
         {
-            return new AccountId($"{brokerage}-{accountNumber}");
+        }
+
+        /// <summary>
+        /// Gets the account identifiers brokerage.
+        /// </summary>
+        public Brokerage Brokerage { get; }
+
+        /// <summary>
+        /// Gets the account identifiers account number.
+        /// </summary>
+        public AccountNumber AccountNumber { get; }
+
+        /// <summary>
+        /// Return a new <see cref="AccountId"/> from the given string.
+        /// </summary>
+        /// <param name="value">The account identifier value.</param>
+        /// <returns>The account identifier.</returns>
+        public static AccountId FromString(string value)
+        {
+            var splitString = value.Split("-", 2);
+
+            return new AccountId(splitString[0], splitString[1]);
         }
     }
 }
