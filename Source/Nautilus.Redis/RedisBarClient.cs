@@ -16,7 +16,6 @@ namespace Nautilus.Redis
     using Nautilus.Core.CQS;
     using Nautilus.Core.Extensions;
     using Nautilus.Data.Keys;
-    using Nautilus.DomainModel;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Frames;
     using Nautilus.DomainModel.ValueObjects;
@@ -249,8 +248,7 @@ namespace Nautilus.Redis
             var barsArray = barKeysQuery
                 .Value
                 .SelectMany(key => this.redisDatabase.ListRange(key))
-                .Select(value => value.ToString())
-                .Select(DomainObjectParser.ParseBar)
+                .Select(value => Bar.FromString(value))
                 .ToArray();
 
             return QueryResult<BarDataFrame>.Ok(new BarDataFrame(barType, barsArray));
@@ -281,8 +279,7 @@ namespace Nautilus.Redis
 
             var barsArray = barKeys
                 .SelectMany(key => this.redisDatabase.ListRange(key))
-                .Select(value => value.ToString())
-                .Select(DomainObjectParser.ParseBar)
+                .Select(value => Bar.FromString(value))
                 .Where(bar => bar.Timestamp.IsGreaterThanOrEqualTo(fromDateTime)
                            && bar.Timestamp.IsLessThanOrEqualTo(toDateTime))
                 .ToArray();
@@ -346,7 +343,7 @@ namespace Nautilus.Redis
 
             var values = this.redisDatabase.ListRange(key);
 
-            return QueryResult<Bar[]>.Ok(Array.ConvertAll(values, b => DomainObjectParser.ParseBar(b)));
+            return QueryResult<Bar[]>.Ok(Array.ConvertAll(values, b => Bar.FromString(b)));
         }
 
         /// <summary>

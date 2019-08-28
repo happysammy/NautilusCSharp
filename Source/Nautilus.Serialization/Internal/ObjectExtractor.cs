@@ -11,7 +11,6 @@ namespace Nautilus.Serialization.Internal
     using System;
     using MsgPack;
     using Nautilus.Core.Extensions;
-    using Nautilus.DomainModel;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
@@ -62,7 +61,7 @@ namespace Nautilus.Serialization.Internal
         /// <returns>The extracted BarSpecification.</returns>
         internal static BarSpecification BarSpecification(MessagePackObjectDictionary unpacked)
         {
-            return DomainObjectParser.ParseBarSpecification(unpacked[nameof(BarSpecification)].ToString());
+            return DomainModel.ValueObjects.BarSpecification.FromString(unpacked[nameof(BarSpecification)].ToString());
         }
 
         /// <summary>

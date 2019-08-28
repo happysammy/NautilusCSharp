@@ -12,6 +12,7 @@ namespace Nautilus.DomainModel.ValueObjects
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
+    using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Enums;
     using NodaTime;
 
@@ -79,6 +80,27 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <param name="right">The right object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
         public static bool operator !=(BarSpecification left,  BarSpecification right) => !(left == right);
+
+        /// <summary>
+        /// Returns a new <see cref="BarSpecification"/> from the given <see cref="string"/>.
+        /// </summary>
+        /// <param name="barSpecString">The bar specification string.</param>
+        /// <returns>The created <see cref="BarSpecification"/>.</returns>
+        public static BarSpecification FromString(string barSpecString)
+        {
+            Debug.NotEmptyOrWhiteSpace(barSpecString, nameof(barSpecString));
+
+            var split1 = barSpecString.Split('-');
+            var split2 = split1[1].Split('[');
+            var period = Convert.ToInt32(split1[0]);
+            var resolution = split2[0].ToUpper();
+            var quoteType = split2[1].Trim(']').ToUpper();
+
+            return new BarSpecification(
+                period,
+                resolution.ToEnum<Resolution>(),
+                quoteType.ToEnum<QuoteType>());
+        }
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="BarSpecification"/> is equal

@@ -14,7 +14,6 @@ namespace Nautilus.Serialization
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Correctness;
-    using Nautilus.DomainModel;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
 
@@ -62,7 +61,7 @@ namespace Nautilus.Serialization
             var ticks = new Tick[valueArray.Count];
             for (var i = 0; i < valueArray.Count; i++)
             {
-                ticks[i] = DomainObjectParser.ParseTick(symbol, valueArray[i].AsString);
+                ticks[i] = Tick.FromString(symbol, valueArray[i].AsString);
             }
 
             return ticks;

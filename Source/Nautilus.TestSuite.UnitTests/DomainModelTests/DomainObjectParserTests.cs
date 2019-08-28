@@ -9,7 +9,6 @@
 namespace Nautilus.TestSuite.UnitTests.DomainModelTests
 {
     using System.Diagnostics.CodeAnalysis;
-    using Nautilus.DomainModel;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
@@ -35,7 +34,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests
 
             // Act
             var tickString = tick.ToString();
-            var result = DomainObjectParser.ParseTick(this.symbol, tickString);
+            var result = Tick.FromString(this.symbol, tickString);
 
             // Assert
             Assert.Equal(tick, result);
@@ -55,7 +54,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests
 
             // Act
             var barString = bar.ToString();
-            var result = DomainObjectParser.ParseBar(barString);
+            var result = Bar.FromString(barString);
 
             // Assert
             Assert.Equal(bar, result);
@@ -72,8 +71,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests
             var string2 = barSpec2.ToString();
 
             // Act
-            var result1 = DomainObjectParser.ParseBarSpecification(string1);
-            var result2 = DomainObjectParser.ParseBarSpecification(string2);
+            var result1 = BarSpecification.FromString(string1);
+            var result2 = BarSpecification.FromString(string2);
 
             // Assert
             Assert.Equal(barSpec1, result1);

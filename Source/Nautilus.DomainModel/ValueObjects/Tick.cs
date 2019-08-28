@@ -11,6 +11,7 @@ namespace Nautilus.DomainModel.ValueObjects
     using System;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Identifiers;
     using NodaTime;
@@ -97,6 +98,38 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <param name="right">The right object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
         public static bool operator !=(Tick left,  Tick right) => !(left == right);
+
+        /// <summary>
+        /// Returns a new <see cref="Tick"/> from the given <see cref="string"/>.
+        /// </summary>
+        /// <param name="tickString">The tick string which includes the symbol.</param>
+        /// <returns>The created <see cref="Tick"/>.</returns>
+        public static Tick FromStringWithSymbol(string tickString)
+        {
+            Debug.NotEmptyOrWhiteSpace(tickString, nameof(tickString));
+
+            var values = tickString.Split(',', 1);
+            return FromString(Symbol.FromString(values[0]), values[1]);
+        }
+
+        /// <summary>
+        /// Returns a new <see cref="Tick"/> from the given <see cref="string"/>.
+        /// </summary>
+        /// <param name="symbol">The symbol to create the tick with.</param>
+        /// <param name="tickString">The string containing tick values.</param>
+        /// <returns>The created <see cref="Tick"/>.</returns>
+        public static Tick FromString(Symbol symbol, string tickString)
+        {
+            Debug.NotEmptyOrWhiteSpace(tickString, nameof(tickString));
+
+            var values = tickString.Split(',');
+
+            return new Tick(
+                symbol,
+                Convert.ToDecimal(values[0]),
+                Convert.ToDecimal(values[1]),
+                values[2].ToZonedDateTimeFromIso());
+        }
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="Tick"/> is equal

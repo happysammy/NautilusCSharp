@@ -11,7 +11,6 @@ namespace Nautilus.Serialization
     using System.Text;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.DomainModel;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <inheritdoc />
@@ -29,7 +28,7 @@ namespace Nautilus.Serialization
         /// <inheritdoc />
         public Bar Deserialize(byte[] bytes)
         {
-            return DomainObjectParser.ParseBar(Encoding.UTF8.GetString(bytes));
+            return Bar.FromString(Encoding.UTF8.GetString(bytes));
         }
     }
 }

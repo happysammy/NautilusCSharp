@@ -125,6 +125,26 @@ namespace Nautilus.DomainModel.ValueObjects
         public static bool operator !=(Bar left,  Bar right) => !(left == right);
 
         /// <summary>
+        /// Returns a new <see cref="Bar"/> from the given <see cref="string"/>.
+        /// </summary>
+        /// <param name="barString">The bar string.</param>
+        /// <returns>The created <see cref="Bar"/>.</returns>
+        public static Bar FromString(string barString)
+        {
+            Debug.NotEmptyOrWhiteSpace(barString, nameof(barString));
+
+            var values = barString.Split(',');
+
+            return new Bar(
+                Price.Create(Convert.ToDecimal(values[0])),
+                Price.Create(Convert.ToDecimal(values[1])),
+                Price.Create(Convert.ToDecimal(values[2])),
+                Price.Create(Convert.ToDecimal(values[3])),
+                Quantity.Create(Convert.ToInt32(Convert.ToDecimal(values[4]))),
+                values[5].ToZonedDateTimeFromIso());
+        }
+
+        /// <summary>
         /// Returns a value indicating whether this <see cref="Bar"/> is equal
         /// to the given <see cref="object"/>.
         /// </summary>
