@@ -11,14 +11,12 @@ namespace Nautilus.Data.Providers
     using System;
     using System.Linq;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Extensions;
     using Nautilus.Core.Message;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Messages.Requests;
     using Nautilus.Data.Messages.Responses;
-    using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.Messaging;
     using Nautilus.Network;
 
@@ -73,7 +71,7 @@ namespace Nautilus.Data.Providers
                 {
                     case "Instrument":
                     {
-                        var symbol = DomainObjectParser.ParseSymbol(request.Query["Symbol"]);
+                        var symbol = Symbol.FromString(request.Query["Symbol"]);
                         var query = this.repository.FindInCache(symbol);
 
                         if (query.IsFailure)
@@ -96,7 +94,7 @@ namespace Nautilus.Data.Providers
 
                     case "Instrument[]":
                     {
-                        var venue = request.Query["Venue"].ToEnum<Venue>();
+                        var venue = new Venue(request.Query["Venue"]);
                         var query = this.repository.FindInCache(venue);
 
                         if (query.IsFailure)

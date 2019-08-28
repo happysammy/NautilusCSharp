@@ -21,20 +21,6 @@ namespace Nautilus.DomainModel
     public static class DomainObjectParser
     {
         /// <summary>
-        /// Returns a new <see cref="Symbol"/> from the given <see cref="string"/>.
-        /// </summary>
-        /// <param name="symbolString">The symbol string.</param>
-        /// <returns>The created <see cref="Symbol"/>.</returns>
-        public static Symbol ParseSymbol(string symbolString)
-        {
-            Debug.NotEmptyOrWhiteSpace(symbolString, nameof(symbolString));
-
-            var symbolSplit = symbolString.Split('.');
-
-            return new Symbol(symbolSplit[0], symbolSplit[1].ToEnum<Venue>());
-        }
-
-        /// <summary>
         /// Returns a new <see cref="Tick"/> from the given <see cref="string"/>.
         /// </summary>
         /// <param name="symbol">The symbol to create the tick with.</param>

@@ -15,6 +15,7 @@ namespace Nautilus.Common.Interfaces
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
+    using Venue = Nautilus.DomainModel.Identifiers.Venue;
 
     /// <summary>
     /// Provides a gateway to, and anti-corruption layer from a trading gateway.

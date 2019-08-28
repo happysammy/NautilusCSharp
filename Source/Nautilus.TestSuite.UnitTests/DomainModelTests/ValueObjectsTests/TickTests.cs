@@ -9,7 +9,6 @@
 namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
 {
     using System.Diagnostics.CodeAnalysis;
-    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit.TestDoubles;
@@ -24,7 +23,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         public TickTests()
         {
             // Fixture Setup
-            this.symbol = new Symbol("AUDUSD", Venue.FXCM);
+            this.symbol = new Symbol("AUDUSD", new Venue("FXCM"));
         }
 
         [Fact]

@@ -19,14 +19,13 @@ namespace Nautilus.Redis
     using Nautilus.Core.Extensions;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Keys;
-    using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Redis.Builders;
     using NodaTime;
     using StackExchange.Redis;
+    using Venue = Nautilus.DomainModel.Identifiers.Venue;
 
     /// <summary>
     /// Provides a Redis implementation for an instrument repository.
@@ -179,7 +178,7 @@ namespace Nautilus.Redis
 
             var instrument = new Instrument(
                 new InstrumentId(instrumentDict[nameof(Instrument.Id)]),
-                DomainObjectParser.ParseSymbol(instrumentDict[nameof(Instrument.Symbol)]),
+                Symbol.FromString(instrumentDict[nameof(Instrument.Symbol)]),
                 new BrokerSymbol(instrumentDict[nameof(Instrument.BrokerSymbol)]),
                 instrumentDict[nameof(Instrument.QuoteCurrency)].ToEnum<Currency>(),
                 instrumentDict[nameof(Instrument.SecurityType)].ToEnum<SecurityType>(),

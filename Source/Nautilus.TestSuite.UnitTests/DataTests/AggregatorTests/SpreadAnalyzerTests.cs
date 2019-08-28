@@ -10,7 +10,6 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
 {
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Data.Aggregation;
-    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit.TestDoubles;
@@ -31,7 +30,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
         {
             // Arrange
             var tick = new Tick(
-                new Symbol("AUDUSD", Venue.FXCM),
+                new Symbol("AUDUSD", new Venue("FXCM")),
                 Price.Create(0.80000m, 5),
                 Price.Create(0.80005m, 5),
                 StubZonedDateTime.UnixEpoch());
@@ -53,19 +52,19 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
         {
             // Arrange
             var tick1 = new Tick(
-                new Symbol("AUDUSD", Venue.FXCM),
+                new Symbol("AUDUSD", new Venue("FXCM")),
                 Price.Create(0.80000m, 5),
                 Price.Create(0.80005m, 5),
                 StubZonedDateTime.UnixEpoch());
 
             var tick2 = new Tick(
-                new Symbol("AUDUSD", Venue.FXCM),
+                new Symbol("AUDUSD", new Venue("FXCM")),
                 Price.Create(0.80001m, 5),
                 Price.Create(0.80006m, 5),
                 StubZonedDateTime.UnixEpoch());
 
             var tick3 = new Tick(
-                new Symbol("AUDUSD", Venue.FXCM),
+                new Symbol("AUDUSD", new Venue("FXCM")),
                 Price.Create(0.80001m, 5),
                 Price.Create(0.80004m, 5),
                 StubZonedDateTime.UnixEpoch());
@@ -84,7 +83,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
         {
             // Arrange
             var tick1 = new Tick(
-                new Symbol("AUDUSD", Venue.FXCM),
+                new Symbol("AUDUSD", new Venue("FXCM")),
                 Price.Create(0.80000m, 5),
                 Price.Create(0.80005m, 5),
                 StubZonedDateTime.UnixEpoch());
@@ -93,13 +92,13 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.spreadAnalyzer.OnBarUpdate(tick1.Timestamp);
 
             var tick2 = new Tick(
-                new Symbol("AUDUSD", Venue.FXCM),
+                new Symbol("AUDUSD", new Venue("FXCM")),
                 Price.Create(0.80001m, 5),
                 Price.Create(0.80006m, 5),
                 StubZonedDateTime.UnixEpoch());
 
             var tick3 = new Tick(
-                new Symbol("AUDUSD", Venue.FXCM),
+                new Symbol("AUDUSD", new Venue("FXCM")),
                 Price.Create(0.80001m, 5),
                 Price.Create(0.80004m, 5),
                 StubZonedDateTime.UnixEpoch());

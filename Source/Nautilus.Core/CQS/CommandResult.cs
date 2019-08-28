@@ -82,8 +82,6 @@ namespace Nautilus.Core.CQS
         /// <returns>A <see cref="CommandResult"/>.</returns>
         public static CommandResult Combine(params CommandResult[] results)
         {
-            Debug.NotEmpty(results, nameof(results));
-
             var failedResults = results
                 .Where(x => x.IsFailure)
                 .ToArray();

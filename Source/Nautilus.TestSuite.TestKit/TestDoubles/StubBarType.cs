@@ -20,7 +20,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public static BarType AUDUSD()
         {
             return new BarType(
-                new Symbol("AUDUSD", Venue.DUKASCOPY),
+                new Symbol("AUDUSD", new Venue("FXCM")),
                 new BarSpecification(
                     1,
                     Resolution.MINUTE,
@@ -30,7 +30,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public static BarType GBPUSD()
         {
             return new BarType(
-                new Symbol("GBPUSD", Venue.DUKASCOPY),
+                new Symbol("GBPUSD", new Venue("FXCM")),
                 new BarSpecification(
                     1,
                     Resolution.MINUTE,
@@ -40,7 +40,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public static BarType GBPUSD_Second()
         {
             return new BarType(
-                new Symbol("GBPUSD", Venue.DUKASCOPY),
+                new Symbol("GBPUSD", new Venue("FXCM")),
                 new BarSpecification(
                     1,
                     Resolution.SECOND,
@@ -50,7 +50,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public static BarType USDJPY()
         {
             return new BarType(
-                new Symbol("USDJPY", Venue.DUKASCOPY),
+                new Symbol("USDJPY", new Venue("FXCM")),
                 new BarSpecification(
                     1,
                     Resolution.MINUTE,
@@ -60,7 +60,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public static BarType CADHKD()
         {
             return new BarType(
-                new Symbol("CADHKD", Venue.DUKASCOPY),
+                new Symbol("CADHKD", new Venue("FXCM")),
                 new BarSpecification(
                     1,
                     Resolution.MINUTE,

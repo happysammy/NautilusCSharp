@@ -52,7 +52,7 @@ namespace Nautilus.Serialization.Internal
         /// <returns>The extracted Symbol.</returns>
         internal static Symbol Symbol(MessagePackObjectDictionary unpacked)
         {
-            return DomainObjectParser.ParseSymbol(unpacked[nameof(Symbol)].ToString());
+            return Nautilus.DomainModel.Identifiers.Symbol.FromString(unpacked[nameof(Symbol)].ToString());
         }
 
         /// <summary>

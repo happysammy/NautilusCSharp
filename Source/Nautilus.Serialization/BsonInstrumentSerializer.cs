@@ -15,11 +15,9 @@ namespace Nautilus.Serialization
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
-    using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
     /// Provides a data serializer for the BSON specification.
@@ -64,7 +62,7 @@ namespace Nautilus.Serialization
 
             return new Instrument(
                 new InstrumentId(unpacked[nameof(Instrument.Id)].AsString),
-                DomainObjectParser.ParseSymbol(unpacked[nameof(Instrument.Symbol)].AsString),
+                Symbol.FromString(unpacked[nameof(Instrument.Symbol)].AsString),
                 new BrokerSymbol(unpacked[nameof(Instrument.BrokerSymbol)].AsString),
                 unpacked[nameof(Instrument.QuoteCurrency)].AsString.ToEnum<Currency>(),
                 unpacked[nameof(Instrument.SecurityType)].AsString.ToEnum<SecurityType>(),

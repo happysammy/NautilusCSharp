@@ -12,7 +12,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Redis.Builders;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;
@@ -68,7 +67,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             var instrument = new Instrument(
                 new InstrumentId("NONE"),
-                new Symbol("SPX500", Venue.FXCM),
+                new Symbol("SPX500", new Venue("FXCM")),
                 new BrokerSymbol("NONE"),
                 Currency.CAD,
                 SecurityType.BOND,

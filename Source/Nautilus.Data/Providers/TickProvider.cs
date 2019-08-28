@@ -15,7 +15,7 @@ namespace Nautilus.Data.Providers
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Messages.Requests;
     using Nautilus.Data.Messages.Responses;
-    using Nautilus.DomainModel;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging;
     using Nautilus.Network;
@@ -75,7 +75,7 @@ namespace Nautilus.Data.Providers
                         return;
                     }
 
-                    var symbol = DomainObjectParser.ParseSymbol(request.Query["Symbol"]);
+                    var symbol = Symbol.FromString(request.Query["Symbol"]);
                     var fromDateTime = request.Query["FromDateTime"].ToZonedDateTimeFromIso();
                     var toDateTime = request.Query["ToDateTime"].ToZonedDateTimeFromIso();
 

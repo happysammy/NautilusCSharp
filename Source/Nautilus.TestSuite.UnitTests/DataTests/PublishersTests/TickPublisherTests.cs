@@ -13,7 +13,6 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
     using System.Threading.Tasks;
     using Nautilus.Common.Data;
     using Nautilus.Data.Publishers;
-    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.Network;
     using Nautilus.Serialization;
@@ -58,7 +57,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
             this.publisher.Start();
             Task.Delay(100).Wait();
 
-            var symbol = new Symbol("AUDUSD", Venue.FXCM);
+            var symbol = new Symbol("AUDUSD", new Venue("FXCM"));
 
             var subscriber = new SubscriberSocket(TEST_ADDRESS);
             subscriber.Connect(TEST_ADDRESS);

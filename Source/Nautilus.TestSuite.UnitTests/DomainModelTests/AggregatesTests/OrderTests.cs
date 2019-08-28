@@ -39,14 +39,14 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Act
             var order = OrderFactory.Market(
                 new OrderId("some_orderId"),
-                new Symbol("SYMBOL", Venue.LMAX),
+                new Symbol("SYMBOL", "LMAX"),
                 new Label("some_label"),
                 OrderSide.BUY,
                 Quantity.Create(10),
                 StubZonedDateTime.UnixEpoch());
 
             // Assert
-            Assert.Equal(new Symbol("SYMBOL", Venue.LMAX), order.Symbol);
+            Assert.Equal(new Symbol("SYMBOL", "LMAX"), order.Symbol);
             Assert.Equal("some_orderId", order.Id.ToString());
             Assert.Equal("some_label", order.Label.ToString());
             Assert.Equal(OrderSide.BUY, order.Side);
@@ -65,7 +65,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Act
             var order = OrderFactory.StopMarket(
                 new OrderId("some_orderId"),
-                new Symbol("SYMBOL", Venue.LMAX),
+                new Symbol("SYMBOL", "LMAX"),
                 new Label("some_label"),
                 OrderSide.BUY,
                 Quantity.Create(10),
@@ -75,7 +75,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 StubZonedDateTime.UnixEpoch());
 
             // Assert
-            Assert.Equal(new Symbol("SYMBOL", Venue.LMAX), order.Symbol);
+            Assert.Equal(new Symbol("SYMBOL", "LMAX"), order.Symbol);
             Assert.Equal("some_orderId", order.Id.ToString());
             Assert.Equal("some_label", order.Label.ToString());
             Assert.Equal(OrderSide.BUY, order.Side);
@@ -277,7 +277,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var event3 = new OrderWorking(
                 order.Id,
                 new OrderId("B" + order.Id),
-                new Symbol("AUDUSD", Venue.LMAX),
+                new Symbol("AUDUSD", "LMAX"),
                 order.Label,
                 order.Side,
                 order.Type,

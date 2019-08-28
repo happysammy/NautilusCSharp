@@ -11,7 +11,6 @@ namespace Nautilus.Data.Interfaces
     using System.Collections.Generic;
     using Nautilus.Core.CQS;
     using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
     using NodaTime;
 

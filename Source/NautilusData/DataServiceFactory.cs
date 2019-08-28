@@ -17,12 +17,12 @@ namespace NautilusData
     using Nautilus.Common.Logging;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Correctness;
-    using Nautilus.Core.Extensions;
     using Nautilus.Data;
     using Nautilus.Data.Aggregation;
     using Nautilus.Data.Providers;
     using Nautilus.Data.Publishers;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.Fix;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
@@ -76,7 +76,7 @@ namespace NautilusData
                 config.ServerAddress,
                 config.InstrumentSubscribePort);
 
-            var venue = config.FixConfiguration.Broker.ToString().ToEnum<Venue>();
+            var venue = new Venue(config.FixConfiguration.Broker.ToString());
             var symbolConverter = new SymbolConverter(venue, config.SymbolIndex);
 
             var fixClient = CreateFixClient(

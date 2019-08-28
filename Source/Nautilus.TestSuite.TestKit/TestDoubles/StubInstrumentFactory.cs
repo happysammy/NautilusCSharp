@@ -12,7 +12,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
 
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
@@ -20,7 +19,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     {
         public static Instrument AUDUSD()
         {
-            var symbol = new Symbol($"AUDUSD", Venue.FXCM);
+            var symbol = new Symbol($"AUDUSD", new Venue("FXCM"));
 
             var instrument = new Instrument(
                     new InstrumentId(symbol.ToString()),
@@ -46,7 +45,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
         public static Instrument EURUSD()
         {
-            var symbol = new Symbol($"EURUSD", Venue.FXCM);
+            var symbol = new Symbol($"EURUSD", new Venue("FXCM"));
 
             var instrument = new Instrument(
                     new InstrumentId(symbol.ToString()),
@@ -72,7 +71,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
         public static Instrument USDJPY()
         {
-            var symbol = new Symbol("USDJPY", Venue.FXCM);
+            var symbol = new Symbol("USDJPY", new Venue("FXCM"));
 
             var instrument = new Instrument(
                     new InstrumentId(symbol.ToString()),

@@ -19,7 +19,6 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
     using Nautilus.Data.Messages.Responses;
     using Nautilus.Data.Providers;
     using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.Enums;
     using Nautilus.Network;
     using Nautilus.Network.Messages;
     using Nautilus.Serialization;
@@ -121,7 +120,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             var query = new Dictionary<string, string>
             {
                 { "DataType", "Instrument[]" },
-                { "Venue", Venue.FXCM.ToString() },
+                { "Venue", "FXCM" },
             };
 
             var request = new DataRequest(
@@ -207,7 +206,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             var query = new Dictionary<string, string>
             {
                 { "DataType", "Instrument[]" },
-                { "Venue", Venue.FXCM.ToString() },
+                { "Venue", "FXCM" },
             };
 
             var request = new DataRequest(

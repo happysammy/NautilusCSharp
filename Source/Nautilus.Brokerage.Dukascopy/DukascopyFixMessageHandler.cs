@@ -16,7 +16,6 @@ namespace Nautilus.Brokerage.Dukascopy
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Fix;
@@ -33,8 +32,7 @@ namespace Nautilus.Brokerage.Dukascopy
     /// </summary>
     public sealed class DukascopyFixMessageHandler : Component, IFixMessageHandler
     {
-        private const Venue VENUE = Venue.DUKASCOPY;
-
+        private readonly Venue venue = new Venue("DUKASCOPY");
         private readonly Dictionary<string, string> symbolIndex;
         private readonly Dictionary<string, Symbol> symbolCache;
         private readonly SymbolConverter symbolConverter;
@@ -168,7 +166,7 @@ namespace Nautilus.Brokerage.Dukascopy
             this.Execute(() =>
             {
                 var rawSymbol = message.GetField(Tags.Symbol);
-                var symbol = new Symbol(rawSymbol.Replace("/", string.Empty), VENUE);
+                var symbol = new Symbol(rawSymbol.Replace("/", string.Empty), this.venue);
 
                 this.Log.Information($"QuoteStatusReport({symbol})");
             });
@@ -393,7 +391,7 @@ namespace Nautilus.Brokerage.Dukascopy
                         orderId,
                         brokerOrderId,
                         symbol,
-                        VENUE,
+                        this.venue,
                         orderLabel,
                         orderSide,
                         orderType,
@@ -426,7 +424,7 @@ namespace Nautilus.Brokerage.Dukascopy
                         executionId,
                         executionTicket,
                         symbol,
-                        VENUE,
+                        this.venue,
                         orderSide,
                         filledQuantity,
                         averagePrice,
@@ -447,7 +445,7 @@ namespace Nautilus.Brokerage.Dukascopy
                         executionId,
                         executionTicket,
                         symbol,
-                        VENUE,
+                        this.venue,
                         orderSide,
                         filledQuantity,
                         leavesQuantity,
@@ -512,7 +510,7 @@ namespace Nautilus.Brokerage.Dukascopy
             }
             else
             {
-                var symbol = new Symbol(symbolCode, VENUE);
+                var symbol = new Symbol(symbolCode, this.venue);
                 this.symbolCache.Add(symbolCode, symbol);
 
                 return symbol;

@@ -13,7 +13,6 @@ namespace Nautilus.DomainModel.Entities
     using Nautilus.DomainModel.Entities.Base;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
     /// <summary>

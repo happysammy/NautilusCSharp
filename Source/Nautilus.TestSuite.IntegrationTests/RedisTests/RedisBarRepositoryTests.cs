@@ -60,7 +60,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             Assert.True(result.IsSuccess);
             Assert.Equal(1, this.repository.AllBarsCount());
             Assert.Equal(1, this.repository.BarsCount(barType));
-            Assert.Equal("Added 1 bars to AUDUSD.DUKASCOPY-1-MINUTE[ASK] (TotalCount=1).", result.Message);
+            Assert.Equal("Added 1 bars to AUDUSD.FXCM-1-MINUTE[ASK] (TotalCount=1).", result.Message);
         }
 
         [Fact]
@@ -84,7 +84,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             Assert.True(result.IsSuccess);
             Assert.Equal(5, this.repository.AllBarsCount());
             Assert.Equal(5, this.repository.BarsCount(barType));
-            Assert.Equal("Added 5 bars to AUDUSD.DUKASCOPY-1-MINUTE[ASK] (TotalCount=5).", result.Message);
+            Assert.Equal("Added 5 bars to AUDUSD.FXCM-1-MINUTE[ASK] (TotalCount=5).", result.Message);
         }
 
         [Fact]
@@ -115,7 +115,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             Assert.True(result.IsSuccess);
             Assert.Equal(8, this.repository.BarsCount(barType));
             Assert.Equal(8, this.repository.AllBarsCount());
-            Assert.Equal("Added 3 bars to AUDUSD.DUKASCOPY-1-MINUTE[ASK] (TotalCount=8).", result.Message);
+            Assert.Equal("Added 3 bars to AUDUSD.FXCM-1-MINUTE[ASK] (TotalCount=8).", result.Message);
         }
 
         [Fact]
@@ -146,7 +146,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             Assert.True(result.IsSuccess);
             Assert.Equal(8, this.repository.BarsCount(barType));
             Assert.Equal(8, this.repository.AllBarsCount());
-            Assert.Equal("Added 3 bars to AUDUSD.DUKASCOPY-1-MINUTE[ASK] (TotalCount=8).", result.Message);
+            Assert.Equal("Added 3 bars to AUDUSD.FXCM-1-MINUTE[ASK] (TotalCount=8).", result.Message);
         }
 
         [Fact]
@@ -164,7 +164,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             Assert.True(result.IsFailure);
             Assert.Equal(0, this.repository.AllBarsCount());
             Assert.Equal(0, this.repository.BarsCount(barType));
-            Assert.Equal("No market data found for AUDUSD.DUKASCOPY-1-MINUTE[ASK].", result.Message);
+            Assert.Equal("No market data found for AUDUSD.FXCM-1-MINUTE[ASK].", result.Message);
         }
 
         [Fact]
@@ -186,7 +186,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             Assert.Equal(1, this.repository.AllBarsCount());
             Assert.Equal(1, this.repository.BarsCount(barType1));
             Assert.Equal(0, this.repository.BarsCount(barType2));
-            Assert.Equal("No market data found for GBPUSD.DUKASCOPY-1-MINUTE[BID].", result.Message);
+            Assert.Equal("No market data found for GBPUSD.FXCM-1-MINUTE[BID].", result.Message);
         }
 
         [Fact]

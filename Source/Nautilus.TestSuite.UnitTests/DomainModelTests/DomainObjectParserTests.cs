@@ -24,7 +24,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests
         public DomainObjectParserTests()
         {
             // Fixture Setup
-            this.symbol = new Symbol("AUDUSD", Venue.FXCM);
+            this.symbol = new Symbol("AUDUSD", new Venue("FXCM"));
         }
 
         [Fact]

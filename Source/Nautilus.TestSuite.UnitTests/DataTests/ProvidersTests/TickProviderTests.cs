@@ -21,7 +21,6 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
     using Nautilus.Data.Messages.Requests;
     using Nautilus.Data.Messages.Responses;
     using Nautilus.Data.Providers;
-    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network;
@@ -82,7 +81,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             var datetimeFrom = StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1);
             var datetimeTo = datetimeFrom + Duration.FromMinutes(1);
 
-            var symbol = new Symbol("AUDUSD", Venue.FXCM);
+            var symbol = new Symbol("AUDUSD", new Venue("FXCM"));
 
             var requester = new RequestSocket();
             requester.Connect(TEST_ADDRESS);
@@ -127,7 +126,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             var datetimeFrom = StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1);
             var datetimeTo = datetimeFrom + Duration.FromMinutes(1);
 
-            var symbol = new Symbol("AUDUSD", Venue.FXCM);
+            var symbol = new Symbol("AUDUSD", new Venue("FXCM"));
             var tick1 = new Tick(symbol, 1.00000m, 1.00000m, datetimeFrom);
             var tick2 = new Tick(symbol, 1.00010m, 1.00020m, datetimeTo);
 

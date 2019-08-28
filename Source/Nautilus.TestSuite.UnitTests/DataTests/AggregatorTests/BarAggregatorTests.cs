@@ -36,7 +36,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             // Fixture Setup
             this.output = output;
 
-            this.symbol = new Symbol("AUDUSD", Venue.FXCM);
+            this.symbol = new Symbol("AUDUSD", new Venue("FXCM"));
             var containerFactory = new StubComponentryContainerFactory();
             var container = containerFactory.Create();
             this.logger = containerFactory.LoggingAdapter;
@@ -98,7 +98,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             // Arrange
             var barSpec = new BarSpecification(1, Resolution.SECOND, QuoteType.BID);
             var subscribe = new Subscribe<BarType>(
-                new BarType(new Symbol("AUDUSD", Venue.FXCM), barSpec),
+                new BarType(new Symbol("AUDUSD", new Venue("FXCM")), barSpec),
                 this.receiver.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());

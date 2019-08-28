@@ -16,8 +16,8 @@ namespace NautilusExecutor
     using Nautilus.Common.Logging;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Correctness;
-    using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.Execution;
     using Nautilus.Execution.Network;
     using Nautilus.Fix;
@@ -49,7 +49,7 @@ namespace NautilusExecutor
             var messagingAdapter = MessageBusFactory.Create(container);
             var scheduler = new HashedWheelTimerScheduler(container);
 
-            var venue = config.FixConfiguration.Broker.ToString().ToEnum<Venue>();
+            var venue = new Venue(config.FixConfiguration.Broker.ToString());
             var symbolConverter = new SymbolConverter(venue, config.SymbolIndex);
 
             var fixClient = CreateFixClient(

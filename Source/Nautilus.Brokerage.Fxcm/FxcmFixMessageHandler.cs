@@ -16,7 +16,6 @@ namespace Nautilus.Brokerage.Fxcm
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Fix;
@@ -34,8 +33,7 @@ namespace Nautilus.Brokerage.Fxcm
     [PerformanceOptimized]
     public sealed class FxcmFixMessageHandler : Component, IFixMessageHandler
     {
-        private const Venue VENUE = Venue.FXCM;
-
+        private readonly Venue venue = new Venue("FXCM");
         private readonly Dictionary<string, string> symbolIndex;
         private readonly Dictionary<string, Symbol> symbolCache;
         private readonly SymbolConverter symbolConverter;
@@ -424,7 +422,7 @@ namespace Nautilus.Brokerage.Fxcm
                         orderId,
                         brokerOrderId,
                         symbol,
-                        VENUE,
+                        this.venue,
                         orderLabel,
                         orderSide,
                         orderType,
@@ -457,7 +455,7 @@ namespace Nautilus.Brokerage.Fxcm
                         executionId,
                         executionTicket,
                         symbol,
-                        VENUE,
+                        this.venue,
                         orderSide,
                         filledQuantity,
                         averagePrice,
@@ -478,7 +476,7 @@ namespace Nautilus.Brokerage.Fxcm
                         executionId,
                         executionTicket,
                         symbol,
-                        VENUE,
+                        this.venue,
                         orderSide,
                         filledQuantity,
                         leavesQuantity,
@@ -546,7 +544,7 @@ namespace Nautilus.Brokerage.Fxcm
             }
             else
             {
-                var symbol = new Symbol(symbolCode, VENUE);
+                var symbol = new Symbol(symbolCode, this.venue);
                 this.symbolCache.Add(symbolCode, symbol);
 
                 return symbol;

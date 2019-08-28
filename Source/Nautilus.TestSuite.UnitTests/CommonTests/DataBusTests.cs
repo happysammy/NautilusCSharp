@@ -13,7 +13,6 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
     using Nautilus.Common.Data;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core.Message;
-    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit;
@@ -227,7 +226,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
         internal void GivenData_WhenNoSubscribers_DoesNothing()
         {
             // Arrange
-            var tick = StubTickFactory.Create(new Symbol("AUDUSD", Venue.FXCM));
+            var tick = StubTickFactory.Create(new Symbol("AUDUSD", new Venue("FXCM")));
 
             // Act
             this.dataBus.Endpoint.Send(tick);
@@ -259,7 +258,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            var tick = StubTickFactory.Create(new Symbol("AUDUSD", Venue.FXCM));
+            var tick = StubTickFactory.Create(new Symbol("AUDUSD", new Venue("FXCM")));
 
             // Act
             this.dataBus.Endpoint.Send(subscribe1);

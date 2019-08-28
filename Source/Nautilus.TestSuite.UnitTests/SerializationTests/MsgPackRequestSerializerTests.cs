@@ -14,7 +14,6 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
     using System.Text;
     using Nautilus.Core.Extensions;
     using Nautilus.Data.Messages.Requests;
-    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.Serialization;
     using Nautilus.TestSuite.TestKit.TestDoubles;
@@ -38,7 +37,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             // Arrange
             var serializer = new MsgPackRequestSerializer(new MsgPackQuerySerializer());
 
-            var symbol = new Symbol("AUDUSD", Venue.FXCM);
+            var symbol = new Symbol("AUDUSD", new Venue("FXCM"));
             var dateTime = StubZonedDateTime.UnixEpoch();
             var query = new Dictionary<string, string>
             {

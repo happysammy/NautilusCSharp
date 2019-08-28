@@ -27,7 +27,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Arrange
             var position = new Position(
                 new PositionId("P-123456"),
-                new Symbol("SYMBOL", Venue.GLOBEX),
+                new Symbol("SYMBOL", "GLOBEX"),
                 StubZonedDateTime.UnixEpoch());
 
             var message = new OrderFilled(
@@ -46,7 +46,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             position.Apply(message);
 
             // Assert
-            Assert.Equal(new Symbol("SYMBOL", Venue.GLOBEX), position.Symbol);
+            Assert.Equal(new Symbol("SYMBOL", "GLOBEX"), position.Symbol);
             Assert.Equal(new OrderId("O-123456"), position.FromOrderId);
             Assert.Equal(new OrderId("O-123456"), position.LastOrderId);
             Assert.Equal(Quantity.Create(1000), position.Quantity);
@@ -71,7 +71,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Arrange
             var position = new Position(
                 new PositionId("P-123456"),
-                new Symbol("SYMBOL", Venue.GLOBEX),
+                new Symbol("SYMBOL", "GLOBEX"),
                 StubZonedDateTime.UnixEpoch());
 
             var message1 = new OrderFilled(
@@ -131,7 +131,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Arrange
             var position = new Position(
                 new PositionId("P-123456"),
-                new Symbol("SYMBOL", Venue.GLOBEX),
+                new Symbol("SYMBOL", "GLOBEX"),
                 StubZonedDateTime.UnixEpoch());
 
             var message1 = new OrderFilled(
@@ -206,7 +206,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Arrange
             var position = new Position(
                 new PositionId("P-123456"),
-                new Symbol("SYMBOL", Venue.GLOBEX),
+                new Symbol("SYMBOL", "GLOBEX"),
                 StubZonedDateTime.UnixEpoch());
 
             var message1 = new OrderFilled(

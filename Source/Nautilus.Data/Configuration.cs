@@ -93,7 +93,7 @@ namespace Nautilus.Data
 
             var symbols = (JArray)configJson[ConfigSection.Data]["symbols"];
             this.SubscribingSymbols = symbols
-                .Select(s => new Symbol(s.ToString(), fixSettings["Brokerage"].ToEnum<Venue>()))
+                .Select(s => new Symbol(s.ToString(), fixSettings["Brokerage"]))
                 .Distinct()
                 .ToImmutableList();
 

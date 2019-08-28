@@ -15,6 +15,7 @@ namespace Nautilus.Serialization
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
@@ -55,7 +56,7 @@ namespace Nautilus.Serialization
 
             var data = BsonSerializer.Deserialize<BsonDocument>(dataBytes);
 
-            var symbol = DomainObjectParser.ParseSymbol(data[nameof(Tick.Symbol)].AsString);
+            var symbol = Symbol.FromString(data[nameof(Tick.Symbol)].AsString);
             var valueArray = data[DATA].AsBsonArray;
 
             var ticks = new Tick[valueArray.Count];

@@ -13,7 +13,6 @@ namespace Nautilus.Fix
     using System.Linq;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.CQS;
-    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
 
     /// <summary>

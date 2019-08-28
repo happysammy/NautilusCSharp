@@ -16,7 +16,6 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Message;
     using Nautilus.Data;
-    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
@@ -421,7 +420,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
         {
             // Arrange
             var message = new MarketOpened(
-                new Symbol("AUDUSD", Venue.FXCM),
+                new Symbol("AUDUSD", new Venue("FXCM")),
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -446,7 +445,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
         {
             // Arrange
             var message = new MarketOpened(
-                new Symbol("AUDUSD", Venue.FXCM),
+                new Symbol("AUDUSD", new Venue("FXCM")),
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -471,7 +470,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
         {
             // Arrange
             var message = new MarketOpened(
-                new Symbol("AUDUSD", Venue.FXCM),
+                new Symbol("AUDUSD", new Venue("FXCM")),
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -502,7 +501,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
                 StubZonedDateTime.UnixEpoch());
 
             var message = new MarketOpened(
-                new Symbol("AUDUSD", Venue.FXCM),
+                new Symbol("AUDUSD", new Venue("FXCM")),
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -535,7 +534,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
                 StubZonedDateTime.UnixEpoch());
 
             var message = new MarketOpened(
-                new Symbol("AUDUSD", Venue.FXCM),
+                new Symbol("AUDUSD", new Venue("FXCM")),
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());

@@ -119,7 +119,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var datetimeFrom = StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1);
             var datetimeTo = datetimeFrom + Duration.FromMinutes(1);
 
-            var symbol = new Symbol("AUDUSD", Venue.FXCM);
+            var symbol = new Symbol("AUDUSD", new Venue("FXCM"));
             var tick1 = new Tick(symbol, 1.00000m, 1.00000m, datetimeFrom);
             var tick2 = new Tick(symbol, 1.00010m, 1.00020m, datetimeTo);
 
@@ -157,7 +157,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         {
             // Arrange
             var dataSerializer = new BsonBarDataFrameSerializer();
-            var symbol = new Symbol("AUDUSD", Venue.FXCM);
+            var symbol = new Symbol("AUDUSD", new Venue("FXCM"));
             var barSpec = new BarSpecification(1, Resolution.MINUTE, QuoteType.BID);
             var correlationId = Guid.NewGuid();
 

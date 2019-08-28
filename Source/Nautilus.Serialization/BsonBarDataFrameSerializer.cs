@@ -16,6 +16,7 @@ namespace Nautilus.Serialization
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Frames;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
@@ -57,7 +58,7 @@ namespace Nautilus.Serialization
 
             var data = BsonSerializer.Deserialize<BsonDocument>(dataBytes);
 
-            var symbol = DomainObjectParser.ParseSymbol(data[nameof(BarType.Symbol)].AsString);
+            var symbol = Symbol.FromString(data[nameof(BarType.Symbol)].AsString);
             var barSpec = DomainObjectParser.ParseBarSpecification(data[nameof(BarType.Specification)].AsString);
             var barType = new BarType(symbol, barSpec);
             var valuesArray = data[DATA].AsBsonArray;
