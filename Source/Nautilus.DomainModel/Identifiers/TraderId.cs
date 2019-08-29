@@ -14,7 +14,11 @@ namespace Nautilus.DomainModel.Identifiers
     using Nautilus.DomainModel.Entities;
 
     /// <summary>
-    /// Represents a valid trader identifier. This identifier value must be unique at fund level.
+    /// Represents a valid trader identifier. This name and order identifier tag combination must be
+    /// unique at the fund level.
+    ///
+    /// The string representation is the abbreviated name of the trader with an order identifier tag
+    /// separated by a hyphen '-'.
     /// </summary>
     [Immutable]
     public sealed class TraderId : Identifier<Execution>
@@ -45,7 +49,9 @@ namespace Nautilus.DomainModel.Identifiers
         public IdTag OrderIdTag { get; }
 
         /// <summary>
-        /// Return a new <see cref="TraderId"/> from the given string.
+        /// Return a new <see cref="TraderId"/> parsed from the given string value.
+        /// It is expected a trader identifier is the abbreviated name of the trader with
+        /// an order identifier tag separated by a hyphen '-'.
         /// </summary>
         /// <param name="value">The trader identifier value.</param>
         /// <returns>The trader identifier.</returns>

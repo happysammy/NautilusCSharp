@@ -14,7 +14,11 @@ namespace Nautilus.DomainModel.Identifiers
     using Nautilus.DomainModel.Entities;
 
     /// <summary>
-    /// Represents a valid strategy identifier. This identifier value must be unique at trader level.
+    /// Represents a valid strategy identifier. The name and order identifier tag combination must
+    /// be unique at the trader level.
+    ///
+    /// The string representation is the name of the strategy class with an order identifier tag
+    /// separated by a hyphen '-'.
     /// </summary>
     [Immutable]
     public sealed class StrategyId : Identifier<Execution>
@@ -45,7 +49,9 @@ namespace Nautilus.DomainModel.Identifiers
         public IdTag OrderIdTag { get; }
 
         /// <summary>
-        /// Return a new <see cref="StrategyId"/> from the given string.
+        /// Return a new <see cref="StrategyId"/> parsed from the given string value.
+        /// It is expected a strategy identifier is the class name of the strategy with
+        /// an order identifier tag separated by a hyphen '-'.
         /// </summary>
         /// <param name="value">The strategy identifier value.</param>
         /// <returns>The strategy identifier.</returns>
