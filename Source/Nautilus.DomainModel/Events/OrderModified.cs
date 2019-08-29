@@ -27,6 +27,7 @@ namespace Nautilus.DomainModel.Events
         /// </summary>
         /// <param name="orderId">The event order identifier.</param>
         /// <param name="orderIdBroker">The event broker order identifier.</param>
+        /// <param name="accountId">The event account identifier.</param>
         /// <param name="modifiedPrice">The event order modified price.</param>
         /// <param name="modifiedTime">The event order modification accepted time.</param>
         /// <param name="eventId">The event identifier.</param>
@@ -34,6 +35,7 @@ namespace Nautilus.DomainModel.Events
         public OrderModified(
             OrderId orderId,
             OrderId orderIdBroker,
+            AccountId accountId,
             Price modifiedPrice,
             ZonedDateTime modifiedTime,
             Guid eventId,
@@ -49,6 +51,7 @@ namespace Nautilus.DomainModel.Events
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
 
             this.OrderIdBroker = orderIdBroker;
+            this.AccountId = accountId;
             this.ModifiedPrice = modifiedPrice;
             this.ModifiedTime = modifiedTime;
         }
@@ -57,6 +60,11 @@ namespace Nautilus.DomainModel.Events
         /// Gets the events broker order identifier.
         /// </summary>
         public OrderId OrderIdBroker { get; }
+
+        /// <summary>
+        /// Gets the events account identifier.
+        /// </summary>
+        public AccountId AccountId { get; }
 
         /// <summary>
         /// Gets the events order modified price.

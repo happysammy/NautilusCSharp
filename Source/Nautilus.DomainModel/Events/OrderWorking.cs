@@ -28,8 +28,9 @@ namespace Nautilus.DomainModel.Events
         /// Initializes a new instance of the <see cref="OrderWorking"/> class.
         /// </summary>
         /// <param name="orderId">The event order identifier.</param>
-        /// <param name="symbol">The event symbol.</param>
         /// <param name="orderIdBroker">The event order identifier from the broker.</param>
+        /// <param name="accountId">The event account identifier.</param>
+        /// <param name="symbol">The event symbol.</param>
         /// <param name="label">The event order label. </param>
         /// <param name="orderSide">The event order side.</param>
         /// <param name="orderType">The event order type.</param>
@@ -43,6 +44,7 @@ namespace Nautilus.DomainModel.Events
         public OrderWorking(
             OrderId orderId,
             OrderId orderIdBroker,
+            AccountId accountId,
             Symbol symbol,
             Label label,
             OrderSide orderSide,
@@ -68,6 +70,7 @@ namespace Nautilus.DomainModel.Events
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
 
             this.OrderIdBroker = orderIdBroker;
+            this.AccountId = accountId;
             this.Symbol = symbol;
             this.Label = label;
             this.OrderSide = orderSide;
@@ -83,6 +86,11 @@ namespace Nautilus.DomainModel.Events
         /// Gets the events order identifier from the broker.
         /// </summary>
         public OrderId OrderIdBroker { get; }
+
+        /// <summary>
+        /// Gets the events account identifier.
+        /// </summary>
+        public AccountId AccountId { get; }
 
         /// <summary>
         /// Gets the events order symbol.

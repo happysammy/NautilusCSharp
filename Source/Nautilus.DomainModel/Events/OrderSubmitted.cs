@@ -25,11 +25,13 @@ namespace Nautilus.DomainModel.Events
         /// Initializes a new instance of the <see cref="OrderSubmitted"/> class.
         /// </summary>
         /// <param name="orderId">The event order identifier.</param>
+        /// <param name="accountId">The event account identifier.</param>
         /// <param name="submittedTime">The event submitted time.</param>
         /// <param name="eventId">The event identifier.</param>
         /// <param name="eventTimestamp">The event timestamp.</param>
         public OrderSubmitted(
             OrderId orderId,
+            AccountId accountId,
             ZonedDateTime submittedTime,
             Guid eventId,
             ZonedDateTime eventTimestamp)
@@ -43,8 +45,14 @@ namespace Nautilus.DomainModel.Events
             Debug.NotDefault(eventId, nameof(eventId));
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
 
+            this.AccountId = accountId;
             this.SubmittedTime = submittedTime;
         }
+
+        /// <summary>
+        /// Gets the events account identifier.
+        /// </summary>
+        public AccountId AccountId { get; }
 
         /// <summary>
         /// Gets the events order submitted time.

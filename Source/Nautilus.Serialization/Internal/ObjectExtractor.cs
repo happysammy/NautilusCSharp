@@ -96,6 +96,16 @@ namespace Nautilus.Serialization.Internal
         }
 
         /// <summary>
+        /// Returns an AccountId extracted from the given <see cref="MessagePackObject"/>.
+        /// </summary>
+        /// <param name="unpacked">The MessagePack object to extract from.</param>
+        /// <returns>The extracted AccountId.</returns>
+        internal static AccountId AccountId(MessagePackObject unpacked)
+        {
+            return Nautilus.DomainModel.Identifiers.AccountId.FromString(unpacked.ToString());
+        }
+
+        /// <summary>
         /// Returns an OrderId extracted from the given <see cref="MessagePackObject"/>.
         /// </summary>
         /// <param name="unpacked">The MessagePack object to extract from.</param>

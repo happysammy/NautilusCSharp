@@ -278,7 +278,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var event3 = new OrderWorking(
                 order.Id,
                 new OrderId("B" + order.Id),
-                new Symbol("AUDUSD", "LMAX"),
+                AccountId.FromString("FXCM-02851908"),
+                new Symbol("AUDUSD", "FXCM"),
                 order.Label,
                 order.Side,
                 order.Type,
@@ -319,6 +320,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var event3 = StubEventMessages.OrderWorkingEvent(order, order.Price);
             var event4 = new OrderPartiallyFilled(
                 order.Id,
+                AccountId.FromString("FXCM-02851908"),
                 new ExecutionId("some_execution_id"),
                 new ExecutionTicket("some_execution_ticket"),
                 order.Symbol,
@@ -358,6 +360,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var event3 = StubEventMessages.OrderWorkingEvent(order, order.Price);
             var event4 = new OrderFilled(
                 order.Id,
+                AccountId.FromString("FXCM-02851908"),
                 new ExecutionId("some_execution_id"),
                 new ExecutionTicket("some_execution_ticket"),
                 order.Symbol,
@@ -424,6 +427,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var event3 = StubEventMessages.OrderWorkingEvent(order, order.Price);
             var event4 = new OrderFilled(
                 order.Id,
+                AccountId.FromString("FXCM-02851908"),
                 new ExecutionId("some_execution_id"),
                 new ExecutionTicket("some_execution_ticket"),
                 order.Symbol,
@@ -464,6 +468,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var event3 = StubEventMessages.OrderWorkingEvent(order, order.Price);
             var event4 = new OrderFilled(
                 order.Id,
+                AccountId.FromString("FXCM-02851908"),
                 new ExecutionId("some_execution_id"),
                 new ExecutionTicket("some_execution_ticket"),
                 order.Symbol,

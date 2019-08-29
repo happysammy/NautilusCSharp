@@ -25,12 +25,14 @@ namespace Nautilus.DomainModel.Events
         /// Initializes a new instance of the <see cref="OrderRejected"/> class.
         /// </summary>
         /// <param name="orderId">The event order identifier.</param>
+        /// <param name="accountId">The event account identifier.</param>
         /// <param name="rejectedTime">The event order rejected time.</param>
         /// <param name="rejectedReason">The event order rejected reason.</param>
         /// <param name="eventId">The event identifier.</param>
         /// <param name="eventTimestamp">The event timestamp.</param>
         public OrderRejected(
             OrderId orderId,
+            AccountId accountId,
             ZonedDateTime rejectedTime,
             string rejectedReason,
             Guid eventId,
@@ -46,9 +48,15 @@ namespace Nautilus.DomainModel.Events
             Debug.NotDefault(eventId, nameof(eventId));
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
 
+            this.AccountId = accountId;
             this.RejectedTime = rejectedTime;
             this.RejectedReason = rejectedReason;
         }
+
+        /// <summary>
+        /// Gets the events account identifier.
+        /// </summary>
+        public AccountId AccountId { get; }
 
         /// <summary>
         /// Gets the events order rejected time.

@@ -32,6 +32,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             var message = new OrderFilled(
                 new OrderId("O-123456"),
+                AccountId.FromString("FXCM-02851908"),
                 new ExecutionId("E-123456"),
                 new ExecutionTicket("ET-123456"),
                 position.Symbol,
@@ -76,6 +77,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             var message1 = new OrderFilled(
                 new OrderId("O-123456"),
+                AccountId.FromString("FXCM-02851908"),
                 new ExecutionId("E-123456"),
                 new ExecutionTicket("ET-123456"),
                 position.Symbol,
@@ -88,6 +90,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             var message2 = new OrderFilled(
                 new OrderId("O-123456"),
+                AccountId.FromString("FXCM-02851908"),
                 new ExecutionId("E-123456"),
                 new ExecutionTicket("ET-123456"),
                 position.Symbol,
@@ -100,6 +103,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             var message3 = new OrderFilled(
                 new OrderId("O-123456"),
+                AccountId.FromString("FXCM-02851908"),
                 new ExecutionId("E-123456"),
                 new ExecutionTicket("ET-123456"),
                 position.Symbol,
@@ -136,6 +140,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             var message1 = new OrderFilled(
                 new OrderId("O-123456"),
+                AccountId.FromString("FXCM-02851908"),
                 new ExecutionId("E-123456"),
                 new ExecutionTicket("ET-123456"),
                 position.Symbol,
@@ -148,6 +153,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             var message2 = new OrderFilled(
                 new OrderId("O-123456"),
+                AccountId.FromString("FXCM-02851908"),
                 new ExecutionId("E-123456"),
                 new ExecutionTicket("ET-123456"),
                 position.Symbol,
@@ -160,6 +166,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             var message3 = new OrderFilled(
                 new OrderId("O-123457"),
+                AccountId.FromString("FXCM-02851908"),
                 new ExecutionId("E-123456"),
                 new ExecutionTicket("ET-123456"),
                 position.Symbol,
@@ -172,6 +179,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             var message4 = new OrderFilled(
                 new OrderId("O-123458"),
+                AccountId.FromString("FXCM-02851908"),
                 new ExecutionId("E-123456"),
                 new ExecutionTicket("ET-123456"),
                 position.Symbol,
@@ -211,6 +219,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             var message1 = new OrderFilled(
                 new OrderId("O-123456"),
+                AccountId.FromString("FXCM-02851908"),
                 new ExecutionId("E-123456"),
                 new ExecutionTicket("ET-123456"),
                 position.Symbol,
@@ -223,6 +232,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             var message2 = new OrderFilled(
                 new OrderId("O-123457"),
+                AccountId.FromString("FXCM-02851908"),
                 new ExecutionId("E-123456"),
                 new ExecutionTicket("ET-123456"),
                 position.Symbol,
@@ -235,6 +245,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             var message3 = new OrderFilled(
                 new OrderId("O-123458"),
+                AccountId.FromString("FXCM-02851908"),
                 new ExecutionId("E-123456"),
                 new ExecutionTicket("ET-123456"),
                 position.Symbol,

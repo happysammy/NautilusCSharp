@@ -26,6 +26,7 @@ namespace Nautilus.DomainModel.Events.Base
         /// Initializes a new instance of the <see cref="OrderFillEvent"/> class.
         /// </summary>
         /// <param name="orderId">The event order identifier.</param>
+        /// <param name="accountId">The event account identifier.</param>
         /// <param name="executionId">The event order execution identifier.</param>
         /// <param name="executionTicket">The event order execution ticket.</param>
         /// <param name="symbol">The event order symbol.</param>
@@ -38,6 +39,7 @@ namespace Nautilus.DomainModel.Events.Base
         /// <param name="eventTimestamp">The event timestamp.</param>
         protected OrderFillEvent(
             OrderId orderId,
+            AccountId accountId,
             ExecutionId executionId,
             ExecutionTicket executionTicket,
             Symbol symbol,
@@ -59,6 +61,7 @@ namespace Nautilus.DomainModel.Events.Base
             Debug.NotDefault(eventId, nameof(eventId));
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
 
+            this.AccountId = accountId;
             this.ExecutionId = executionId;
             this.ExecutionTicket = executionTicket;
             this.Symbol = symbol;
@@ -67,6 +70,11 @@ namespace Nautilus.DomainModel.Events.Base
             this.AveragePrice = averagePrice;
             this.ExecutionTime = executionTime;
         }
+
+        /// <summary>
+        /// Gets the events account identifier.
+        /// </summary>
+        public AccountId AccountId { get; }
 
         /// <summary>
         /// Gets the events order execution identifier.

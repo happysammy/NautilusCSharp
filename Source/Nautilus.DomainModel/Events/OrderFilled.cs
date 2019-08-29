@@ -26,6 +26,7 @@ namespace Nautilus.DomainModel.Events
         /// Initializes a new instance of the <see cref="OrderFilled"/> class.
         /// </summary>
         /// <param name="orderId">The event order identifier.</param>
+        /// <param name="accountId">The event account identifier.</param>
         /// <param name="executionId">The event order execution identifier.</param>
         /// <param name="executionTicket">The event order execution ticket.</param>
         /// <param name="symbol">The event order symbol.</param>
@@ -37,6 +38,7 @@ namespace Nautilus.DomainModel.Events
         /// <param name="eventTimestamp">The event timestamp.</param>
         public OrderFilled(
             OrderId orderId,
+            AccountId accountId,
             ExecutionId executionId,
             ExecutionTicket executionTicket,
             Symbol symbol,
@@ -48,6 +50,7 @@ namespace Nautilus.DomainModel.Events
             ZonedDateTime eventTimestamp)
             : base(
                 orderId,
+                accountId,
                 executionId,
                 executionTicket,
                 symbol,
