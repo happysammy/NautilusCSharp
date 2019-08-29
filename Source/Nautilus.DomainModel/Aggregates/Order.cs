@@ -74,6 +74,7 @@ namespace Nautilus.DomainModel.Aggregates
             this.orderIdsBroker = new List<OrderId>();
             this.executionIds = new List<ExecutionId>();
 
+            this.AccountId = null;
             this.Symbol = symbol;
             this.Label = label;
             this.Side = side;
@@ -87,8 +88,8 @@ namespace Nautilus.DomainModel.Aggregates
             this.ExpireTime = this.ValidateExpireTime(expireTime);
             this.IsBuy = this.Side == OrderSide.BUY;
             this.IsSell = this.Side == OrderSide.SELL;
-            this.IsActive = false;
-            this.IsComplete = false;
+            this.IsWorking = false;
+            this.IsCompleted = false;
 
             var initialized = new OrderInitialized(
                 orderId,
@@ -134,8 +135,8 @@ namespace Nautilus.DomainModel.Aggregates
             this.InitId = initialized.Id;
             this.IsBuy = this.Side == OrderSide.BUY;
             this.IsSell = this.Side == OrderSide.SELL;
-            this.IsActive = false;
-            this.IsComplete = false;
+            this.IsWorking = false;
+            this.IsCompleted = false;
 
             this.Apply(initialized);
             this.CheckClassInvariants();
@@ -149,12 +150,17 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the orders last identifier.
         /// </summary>
-        public OrderId IdLast => this.orderIds.Last();  // Should always contain an initial OrderId
+        public OrderId IdLast => this.orderIds.Last(); // Should always contain an initial OrderId
 
         /// <summary>
         /// Gets the orders last identifier for the broker.
         /// </summary>
         public OrderId? IdBroker => this.orderIdsBroker.LastOrDefault();
+
+        /// <summary>
+        /// Gets the orders account identifier.
+        /// </summary>
+        public AccountId? AccountId { get; private set; }
 
         /// <summary>
         /// Gets the orders last execution identifier.
@@ -249,12 +255,12 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets a value indicating whether the order is active.
         /// </summary>
-        public bool IsActive { get; private set; }
+        public bool IsWorking { get; private set; }
 
         /// <summary>
         /// Gets a value indicating whether the order is complete.
         /// </summary>
-        public bool IsComplete { get; private set; }
+        public bool IsCompleted { get; private set; }
 
         /// <summary>
         /// Adds the modified order identifier to the order identifiers.
@@ -402,12 +408,12 @@ namespace Nautilus.DomainModel.Aggregates
 
         private void When(OrderSubmitted @event)
         {
-            // Do nothing
+            this.AccountId = @event.AccountId;
         }
 
         private void When(OrderRejected @event)
         {
-            this.IsComplete = true;
+            this.SetStateToCompleted();
         }
 
         private void When(OrderAccepted @event)
@@ -418,7 +424,7 @@ namespace Nautilus.DomainModel.Aggregates
         private void When(OrderWorking @event)
         {
             this.UpdateBrokerOrderIds(@event.OrderIdBroker);
-            this.IsActive = true;
+            this.SetStateToWorking();
         }
 
         private void When(OrderCancelReject @event)
@@ -428,14 +434,12 @@ namespace Nautilus.DomainModel.Aggregates
 
         private void When(OrderCancelled @event)
         {
-            this.IsActive = false;
-            this.IsComplete = true;
+            this.SetStateToCompleted();
         }
 
         private void When(OrderExpired @event)
         {
-            this.IsActive = false;
-            this.IsComplete = true;
+            this.SetStateToCompleted();
         }
 
         private void When(OrderModified @event)
@@ -458,8 +462,7 @@ namespace Nautilus.DomainModel.Aggregates
             this.FilledQuantity = @event.FilledQuantity;
             this.AveragePrice = @event.AveragePrice;
             this.Slippage = this.CalculateSlippage();
-            this.IsActive = false;
-            this.IsComplete = true;
+            this.SetStateToCompleted();
         }
 
         private ZonedDateTime? ValidateExpireTime(ZonedDateTime? expireTime)
@@ -476,6 +479,18 @@ namespace Nautilus.DomainModel.Aggregates
             }
 
             return expireTime;
+        }
+
+        private void SetStateToWorking()
+        {
+            this.IsWorking = true;
+            this.IsCompleted = false;
+        }
+
+        private void SetStateToCompleted()
+        {
+            this.IsWorking = false;
+            this.IsCompleted = true;
         }
 
         private decimal CalculateSlippage()

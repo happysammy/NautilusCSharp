@@ -243,7 +243,7 @@ namespace Nautilus.Execution
                     }
                 }
 
-                if (order.IsActive)
+                if (order.IsWorking)
                 {
                     if (!this.ordersActive.ContainsKey(order.Id))
                     {
@@ -251,7 +251,7 @@ namespace Nautilus.Execution
                     }
                 }
 
-                if (order.IsComplete)
+                if (order.IsCompleted)
                 {
                     if (!this.ordersCompleted.ContainsKey(order.Id))
                     {

@@ -256,7 +256,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var order = new StubOrderBuilder().BuildStopMarketOrder();
 
             // Act
-            var result = order.IsComplete;
+            var result = order.IsCompleted;
 
             // Assert
             Assert.False(result);
@@ -296,7 +296,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             order.Apply(event2);
             order.Apply(event3);
 
-            var result = order.IsComplete;
+            var result = order.IsCompleted;
 
             // Assert
             Assert.False(result);
@@ -338,7 +338,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             order.Apply(event4);
 
             // Act
-            var result = order.IsComplete;
+            var result = order.IsCompleted;
 
             // Assert
             Assert.True(order.Status == OrderStatus.PartiallyFilled);
@@ -379,7 +379,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             // Assert
             Assert.Equal(OrderStatus.Filled, order.Status);
-            Assert.True(order.IsComplete);
+            Assert.True(order.IsCompleted);
         }
 
         [Fact]
