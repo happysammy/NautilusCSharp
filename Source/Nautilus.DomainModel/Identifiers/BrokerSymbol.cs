@@ -13,7 +13,8 @@ namespace Nautilus.DomainModel.Identifiers
     using Nautilus.Core.Types;
 
     /// <summary>
-    /// Represents a broker symbol.
+    /// Represents a valid broker symbol identifier. This is the symbol the broker assigns to an
+    /// instrument.
     /// </summary>
     [Immutable]
     public sealed class BrokerSymbol : Identifier<BrokerSymbol>

@@ -14,7 +14,7 @@ namespace Nautilus.DomainModel.Identifiers
     using Nautilus.DomainModel.Aggregates;
 
     /// <summary>
-    /// Represents a valid and unique identifier for positions.
+    /// Represents a valid position identifier. This identifier value must be unique at fund level.
     /// </summary>
     [Immutable]
     public sealed class PositionId : Identifier<Position>

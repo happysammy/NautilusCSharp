@@ -40,8 +40,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var order = new StubOrderBuilder().BuildMarketOrder();
 
             var command = new SubmitOrder(
-                new TraderId("000"),
-                new StrategyId("001"),
+                new TraderId("TESTER", "000"),
+                new StrategyId("EMACross", "001"),
                 new AccountId("FXCM", "028999999"),
                 new PositionId("001"),
                 order,
@@ -68,8 +68,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var atomicOrder = new AtomicOrder(entry, stopLoss);
 
             var command = new SubmitAtomicOrder(
-                new TraderId("000"),
-                new StrategyId("001"),
+                new TraderId("TESTER", "000"),
+                new StrategyId("EMACross", "001"),
                 new AccountId("FXCM", "028999999"),
                 new PositionId("001"),
                 atomicOrder,
@@ -97,8 +97,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var atomicOrder = new AtomicOrder(entry, stopLoss, takeProfit);
 
             var command = new SubmitAtomicOrder(
-                new TraderId("000"),
-                new StrategyId("001"),
+                new TraderId("TESTER", "000"),
+                new StrategyId("EMACross", "001"),
                 new AccountId("FXCM", "028999999"),
                 new PositionId("001"),
                 atomicOrder,
@@ -122,8 +122,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             // Arrange
             var order = new StubOrderBuilder().BuildMarketOrder();
             var command = new CancelOrder(
-                new TraderId("000"),
-                new StrategyId("001"),
+                new TraderId("TESTER", "000"),
+                new StrategyId("EMACross", "001"),
                 new AccountId("FXCM", "028999999"),
                 new OrderId("123456"),
                 "EXPIRED",
@@ -146,8 +146,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             // Arrange
             var order = new StubOrderBuilder().BuildMarketOrder();
             var command = new ModifyOrder(
-                new TraderId("000"),
-                new StrategyId("001"),
+                new TraderId("TESTER", "000"),
+                new StrategyId("EMACross", "001"),
                 new AccountId("FXCM", "028999999"),
                 new OrderId("123456"),
                 Price.Create(1.50000m, 5),

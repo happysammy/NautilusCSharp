@@ -13,7 +13,7 @@ namespace Nautilus.DomainModel.Identifiers
     using Nautilus.Core.Types;
 
     /// <summary>
-    /// Represents a valid and unique identifier for positions.
+    /// Represents a valid brokerage identifier.
     /// </summary>
     [Immutable]
     public sealed class Brokerage : Identifier<Brokerage>

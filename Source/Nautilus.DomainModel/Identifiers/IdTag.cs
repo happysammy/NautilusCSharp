@@ -14,7 +14,7 @@ namespace Nautilus.DomainModel.Identifiers
     using Nautilus.DomainModel.Entities;
 
     /// <summary>
-    /// Represents a valid identifier tag.
+    /// Represents a component of a valid identifier.
     /// </summary>
     [Immutable]
     public sealed class IdTag : Identifier<Execution>

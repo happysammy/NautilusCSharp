@@ -14,7 +14,7 @@ namespace Nautilus.DomainModel.Identifiers
     using Nautilus.DomainModel.Aggregates;
 
     /// <summary>
-    /// Represents a valid and unique identifier for orders.
+    /// Represents a valid order identifier. This identifier value must be unique at fund level.
     /// </summary>
     [Immutable]
     public sealed class OrderId : Identifier<Order>

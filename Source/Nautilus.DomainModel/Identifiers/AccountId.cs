@@ -14,7 +14,7 @@ namespace Nautilus.DomainModel.Identifiers
     using Nautilus.DomainModel.Aggregates;
 
     /// <summary>
-    /// Represents an identifier for accounts.
+    /// Represents a valid account identifier.
     /// </summary>
     [Immutable]
     public sealed class AccountId : Identifier<Account>

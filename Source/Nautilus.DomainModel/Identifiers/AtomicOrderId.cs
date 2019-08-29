@@ -14,7 +14,7 @@ namespace Nautilus.DomainModel.Identifiers
     using Nautilus.DomainModel.Entities;
 
     /// <summary>
-    /// Represents a valid and unique identifier for atomic orders.
+    /// Represents a valid atomic order identifier.
     /// </summary>
     [Immutable]
     public sealed class AtomicOrderId : Identifier<AtomicOrder>

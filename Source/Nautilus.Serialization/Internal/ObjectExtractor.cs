@@ -41,7 +41,7 @@ namespace Nautilus.Serialization.Internal
         /// <returns>The extracted Guid.</returns>
         internal static Guid Guid(MessagePackObject unpacked)
         {
-            return System.Guid.Parse(unpacked.ToString());
+            return System.Guid.Parse(unpacked.AsString());
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace Nautilus.Serialization.Internal
         /// <returns>The extracted Symbol.</returns>
         internal static Symbol Symbol(MessagePackObjectDictionary unpacked)
         {
-            return Nautilus.DomainModel.Identifiers.Symbol.FromString(unpacked[nameof(Symbol)].ToString());
+            return Nautilus.DomainModel.Identifiers.Symbol.FromString(unpacked[nameof(Symbol)].AsString());
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace Nautilus.Serialization.Internal
         /// <returns>The extracted BarSpecification.</returns>
         internal static BarSpecification BarSpecification(MessagePackObjectDictionary unpacked)
         {
-            return DomainModel.ValueObjects.BarSpecification.FromString(unpacked[nameof(BarSpecification)].ToString());
+            return DomainModel.ValueObjects.BarSpecification.FromString(unpacked[nameof(BarSpecification)].AsString());
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace Nautilus.Serialization.Internal
         /// <returns>The extracted TraderId.</returns>
         internal static TraderId TraderId(MessagePackObjectDictionary unpacked)
         {
-            return new TraderId(unpacked[nameof(TraderId)].ToString());
+            return Nautilus.DomainModel.Identifiers.TraderId.FromString(unpacked[nameof(TraderId)].AsString());
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace Nautilus.Serialization.Internal
         /// <returns>The extracted StrategyId.</returns>
         internal static StrategyId StrategyId(MessagePackObjectDictionary unpacked)
         {
-            return new StrategyId(unpacked[nameof(StrategyId)].ToString());
+            return Nautilus.DomainModel.Identifiers.StrategyId.FromString(unpacked[nameof(StrategyId)].AsString());
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace Nautilus.Serialization.Internal
         /// <returns>The extracted AccountId.</returns>
         internal static AccountId AccountId(MessagePackObjectDictionary unpacked)
         {
-            return Nautilus.DomainModel.Identifiers.AccountId.FromString(unpacked[nameof(AccountId)].ToString());
+            return Nautilus.DomainModel.Identifiers.AccountId.FromString(unpacked[nameof(AccountId)].AsString());
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace Nautilus.Serialization.Internal
         /// <returns>The extracted PositionId.</returns>
         internal static PositionId PositionId(MessagePackObjectDictionary unpacked)
         {
-            return new PositionId(unpacked[nameof(PositionId)].ToString());
+            return new PositionId(unpacked[nameof(PositionId)].AsString());
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace Nautilus.Serialization.Internal
         /// <returns>The extracted OrderId.</returns>
         internal static OrderId OrderId(MessagePackObjectDictionary unpacked, string orderField = nameof(OrderId))
         {
-            return new OrderId(unpacked[orderField].ToString());
+            return new OrderId(unpacked[orderField].AsString());
         }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace Nautilus.Serialization.Internal
         /// <returns>The extracted OrderIdBroker.</returns>
         internal static OrderId OrderIdBroker(MessagePackObjectDictionary unpacked)
         {
-            return new OrderId(unpacked[nameof(OrderIdBroker)].ToString());
+            return new OrderId(unpacked[nameof(OrderIdBroker)].AsString());
         }
 
         /// <summary>
@@ -132,7 +132,7 @@ namespace Nautilus.Serialization.Internal
         /// <returns>The extracted ExecutionId.</returns>
         internal static ExecutionId ExecutionId(MessagePackObjectDictionary unpacked)
         {
-            return new ExecutionId(unpacked[nameof(ExecutionId)].ToString());
+            return new ExecutionId(unpacked[nameof(ExecutionId)].AsString());
         }
 
         /// <summary>
@@ -142,7 +142,7 @@ namespace Nautilus.Serialization.Internal
         /// <returns>The extracted ExecutionTicket.</returns>
         internal static ExecutionTicket ExecutionTicket(MessagePackObjectDictionary unpacked)
         {
-            return new ExecutionTicket(unpacked[nameof(ExecutionTicket)].ToString());
+            return new ExecutionTicket(unpacked[nameof(ExecutionTicket)].AsString());
         }
 
         /// <summary>
@@ -152,7 +152,7 @@ namespace Nautilus.Serialization.Internal
         /// <returns>The extracted Label.</returns>
         internal static Label Label(MessagePackObjectDictionary unpacked)
         {
-            return new Label(unpacked[nameof(Label)].ToString());
+            return new Label(unpacked[nameof(Label)].AsString());
         }
 
         /// <summary>
@@ -185,7 +185,7 @@ namespace Nautilus.Serialization.Internal
         /// <returns>The extracted Money.</returns>
         internal static Money Money(MessagePackObject unpacked, Currency currency)
         {
-            return DomainModel.ValueObjects.Money.Create(Convert.ToDecimal(unpacked.ToString()), currency);
+            return DomainModel.ValueObjects.Money.Create(Convert.ToDecimal(unpacked.AsString()), currency);
         }
 
         /// <summary>
@@ -195,7 +195,7 @@ namespace Nautilus.Serialization.Internal
         /// <returns>The extracted Price.</returns>
         internal static Price Price(MessagePackObject unpacked)
         {
-            return DomainModel.ValueObjects.Price.Create(Convert.ToDecimal(unpacked.ToString()));
+            return DomainModel.ValueObjects.Price.Create(Convert.ToDecimal(unpacked.AsString()));
         }
 
         /// <summary>
@@ -205,7 +205,7 @@ namespace Nautilus.Serialization.Internal
         /// <returns>The extracted Price?.</returns>
         internal static Price? NullablePrice(MessagePackObject unpacked)
         {
-            var unpackedString = unpacked.ToString();
+            var unpackedString = unpacked.AsString();
             return unpackedString == NONE
                 ? null
                 : DomainModel.ValueObjects.Price.Create(Convert.ToDecimal(unpackedString));
@@ -218,7 +218,7 @@ namespace Nautilus.Serialization.Internal
         /// <returns>The extracted <see cref="decimal"/>.</returns>
         internal static ZonedDateTime ZonedDateTime(MessagePackObject unpacked)
         {
-            return unpacked.ToString().ToZonedDateTimeFromIso();
+            return unpacked.AsString().ToZonedDateTimeFromIso();
         }
 
         /// <summary>
@@ -228,7 +228,7 @@ namespace Nautilus.Serialization.Internal
         /// <returns>The extracted <see cref="NodaTime.ZonedDateTime"/>?.</returns>
         internal static ZonedDateTime? NullableZonedDateTime(MessagePackObject unpacked)
         {
-            var unpackedString = unpacked.ToString();
+            var unpackedString = unpacked.AsString();
             return unpackedString == NONE
                 ? null
                 : unpackedString.ToNullableZonedDateTimeFromIso();

@@ -14,10 +14,11 @@ namespace Nautilus.DomainModel.Identifiers
     using Nautilus.Core.Types;
 
     /// <summary>
-    /// Represents a financial market instruments tradeable venue.
+    /// Represents valid venue identifier. A venue is the tradeable location for financial market
+    /// instruments.
     /// </summary>
     [Immutable]
-    public sealed class Venue : Identifier<Venue>
+    public class Venue : Identifier<Venue>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Venue"/> class.

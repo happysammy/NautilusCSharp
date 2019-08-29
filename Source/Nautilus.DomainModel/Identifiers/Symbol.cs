@@ -14,7 +14,7 @@ namespace Nautilus.DomainModel.Identifiers
     using Nautilus.Core.Types;
 
     /// <summary>
-    /// Represents a financial market instruments symbol.
+    /// Represents a valid symbol identifier. A symbol is the unique identity of a tradeable instrument.
     /// </summary>
     [Immutable]
     public sealed class Symbol : Identifier<Symbol>

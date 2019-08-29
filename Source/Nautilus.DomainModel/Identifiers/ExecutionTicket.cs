@@ -14,7 +14,7 @@ namespace Nautilus.DomainModel.Identifiers
     using Nautilus.DomainModel.Entities;
 
     /// <summary>
-    /// Represents a valid and unique identifier for executions.
+    /// Represents a valid execution ticket.
     /// </summary>
     [Immutable]
     public sealed class ExecutionTicket : Identifier<Execution>

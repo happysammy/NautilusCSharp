@@ -14,7 +14,7 @@ namespace Nautilus.DomainModel.Identifiers
     using Nautilus.DomainModel.Entities;
 
     /// <summary>
-    /// Represents a valid strategy identifier.
+    /// Represents a valid strategy identifier. This identifier value must be unique at trader level.
     /// </summary>
     [Immutable]
     public sealed class StrategyId : Identifier<Execution>
@@ -22,11 +22,38 @@ namespace Nautilus.DomainModel.Identifiers
         /// <summary>
         /// Initializes a new instance of the <see cref="StrategyId"/> class.
         /// </summary>
-        /// <param name="value">The identifier value.</param>
-        public StrategyId(string value)
-            : base(value)
+        /// <param name="name">The strategies name (not set to broker).</param>
+        /// <param name="orderIdTag">The strategies order identifier tag.</param>
+        public StrategyId(string name, string orderIdTag)
+            : base($"{name}-{orderIdTag}")
         {
-            Debug.NotEmptyOrWhiteSpace(value, nameof(value));
+            Debug.NotEmptyOrWhiteSpace(name, nameof(name));
+            Debug.NotEmptyOrWhiteSpace(orderIdTag, nameof(orderIdTag));
+
+            this.Name = new Label(name);
+            this.OrderIdTag = new IdTag(orderIdTag);
+        }
+
+        /// <summary>
+        /// Gets the strategy identifiers name label.
+        /// </summary>
+        public Label Name { get; }
+
+        /// <summary>
+        /// Gets the strategy identifiers order identifier tag.
+        /// </summary>
+        public IdTag OrderIdTag { get; }
+
+        /// <summary>
+        /// Return a new <see cref="StrategyId"/> from the given string.
+        /// </summary>
+        /// <param name="value">The strategy identifier value.</param>
+        /// <returns>The strategy identifier.</returns>
+        public static StrategyId FromString(string value)
+        {
+            var splitString = value.Split("-", 2);
+
+            return new StrategyId(splitString[0], splitString[1]);
         }
     }
 }
