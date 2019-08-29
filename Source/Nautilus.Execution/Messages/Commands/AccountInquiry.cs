@@ -12,6 +12,7 @@ namespace Nautilus.Execution.Messages.Commands
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Message;
+    using Nautilus.DomainModel.Identifiers;
     using NodaTime;
 
     /// <summary>
@@ -23,9 +24,11 @@ namespace Nautilus.Execution.Messages.Commands
         /// <summary>
         /// Initializes a new instance of the <see cref="AccountInquiry"/> class.
         /// </summary>
+        /// <param name="accountId">The account identifier.</param>
         /// <param name="commandId">The command identifier.</param>
         /// <param name="commandTimestamp">The command timestamp.</param>
         public AccountInquiry(
+            AccountId accountId,
             Guid commandId,
             ZonedDateTime commandTimestamp)
             : base(
@@ -35,6 +38,13 @@ namespace Nautilus.Execution.Messages.Commands
         {
             Debug.NotDefault(commandId, nameof(commandId));
             Debug.NotDefault(commandTimestamp, nameof(commandTimestamp));
+
+            this.AccountId = accountId;
         }
+
+        /// <summary>
+        /// Gets the commands account identifier.
+        /// </summary>
+        public AccountId AccountId { get; }
     }
 }

@@ -43,6 +43,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var command = new SubmitOrder(
                 new TraderId("000"),
                 new StrategyId("001"),
+                new AccountId("FXCM", "028999999"),
                 new PositionId("001"),
                 order,
                 Guid.NewGuid(),
@@ -70,6 +71,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var command = new SubmitAtomicOrder(
                 new TraderId("000"),
                 new StrategyId("001"),
+                new AccountId("FXCM", "028999999"),
                 new PositionId("001"),
                 atomicOrder,
                 Guid.NewGuid(),
@@ -98,6 +100,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var command = new SubmitAtomicOrder(
                 new TraderId("000"),
                 new StrategyId("001"),
+                new AccountId("FXCM", "028999999"),
                 new PositionId("001"),
                 atomicOrder,
                 Guid.NewGuid(),
@@ -122,6 +125,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var command = new CancelOrder(
                 new TraderId("000"),
                 new StrategyId("001"),
+                new AccountId("FXCM", "028999999"),
                 new OrderId("123456"),
                 "EXPIRED",
                 Guid.NewGuid(),
@@ -145,6 +149,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var command = new ModifyOrder(
                 new TraderId("000"),
                 new StrategyId("001"),
+                new AccountId("FXCM", "028999999"),
                 new OrderId("123456"),
                 Price.Create(1.50000m, 5),
                 Guid.NewGuid(),
@@ -164,7 +169,10 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         internal void CanSerializeAndDeserialize_CollateralInquiryCommands()
         {
             // Arrange
-            var command = new AccountInquiry(Guid.NewGuid(), StubZonedDateTime.UnixEpoch());
+            var command = new AccountInquiry(
+                new AccountId("FXCM", "028999999"),
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             var packed = this.serializer.Serialize(command);
@@ -180,7 +188,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         internal void Deserialize_AccountInquiry_FromPythonMsgPack_ReturnsExpectedCommand()
         {
             // Arrange
-            var hexString = "g6RUeXBlrkFjY291bnRJbnF1aXJ5oklk2gAkNjJlNGNkZDktOThiOC00MGQ2LThmODctNjIyMjQxNjg2MGIxqVRpbWVzdGFtcLgxOTcwLTAxLTAxVDAwOjAwOjAwLjAwMFo=";
+            var hexString = "hKRUeXBlrkFjY291bnRJbnF1aXJ5oklk2gAkY2JjMTUxMjMtZDVjNy00Yzc0LWI3MmYtNWY5ZDU5MGEzZDNlqVRpbWVzdGFtcLgxOTcwLTAxLTAxVDAwOjAwOjAwLjAwMFqpQWNjb3VudElkqVVOS05PV04tMA==";
             var commandBytes = Convert.FromBase64String(hexString);
 
             // Act
@@ -194,7 +202,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         internal void Deserialize_GivenSubmitOrder_FromPythonMsgPack_ReturnsExpectedCommand()
         {
             // Arrange
-            var base64 = "h6RUeXBlq1N1Ym1pdE9yZGVyoklk2gAkNTM0NmUzNjUtYjZmZi00NTY3LTgyNDAtMDdjNDE5ZmIwM2RhqVRpbWVzdGFtcLgxOTcwLTAxLTAxVDAwOjAwOjAwLjAwMFqoVHJhZGVySWSqVHJhZGVyLTAwMapTdHJhdGVneUlkqVNDQUxQRVIwMapQb3NpdGlvbklkpjEyMzQ1NqVPcmRlctoA54uiSWS7Ty0xOTcwMDEwMS0wMDAwMDAtMDAxLTAwMS0xplN5bWJvbKtBVURVU0QuRlhDTalPcmRlclNpZGWjQlVZqU9yZGVyVHlwZaZNQVJLRVSoUXVhbnRpdHnOAAGGoKVQcmljZaROT05FpUxhYmVspE5PTkWrVGltZUluRm9yY2WjREFZqkV4cGlyZVRpbWWkTk9ORalUaW1lc3RhbXC4MTk3MC0wMS0wMVQwMDowMDowMC4wMDBapkluaXRJZNoAJGE4NTM3MDQwLTQzNzQtNDU3Yi04MGJhLWUwZTA0MDRmYzM1Yg==";
+            var base64 = "iKRUeXBlq1N1Ym1pdE9yZGVyoklk2gAkNWJjODQwMzItZTVjNS00MTE5LWEyZjYtNDE0Yzg0MDNiNmYyqVRpbWVzdGFtcLgxOTcwLTAxLTAxVDAwOjAwOjAwLjAwMFqoVHJhZGVySWSqVEVTVEVSLTAwMKpTdHJhdGVneUlkqlNDQUxQRVItMDGpQWNjb3VudElkqVVOS05PV04tMKpQb3NpdGlvbklkpjEyMzQ1NqVPcmRlctoA54uiSWS7Ty0xOTcwMDEwMS0wMDAwMDAtMDAxLTAwMS0xplN5bWJvbKtBVURVU0QuRlhDTalPcmRlclNpZGWjQlVZqU9yZGVyVHlwZaZNQVJLRVSoUXVhbnRpdHnOAAGGoKVQcmljZaROT05FpUxhYmVspE5PTkWrVGltZUluRm9yY2WjREFZqkV4cGlyZVRpbWWkTk9ORalUaW1lc3RhbXC4MTk3MC0wMS0wMVQwMDowMDowMC4wMDBapkluaXRJZNoAJGVjOTVlYTI5LTdkZGMtNDlkNC1iZmJmLWZmZGI4YmM3MmUyMA==";
             var commandBytes = Convert.FromBase64String(base64);
 
             // Act
@@ -208,7 +216,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         internal void Deserialize_GivenSubmitAtomicOrderWithNoTakeProfit_FromPythonMsgPack_ReturnsExpectedCommand()
         {
             // Arrange
-            var base64 = "iaRUeXBlsVN1Ym1pdEF0b21pY09yZGVyoklk2gAkNTE4ZWEwNzQtZWNlNy00ZmFiLTlmZGYtZDBiOWNmMmI4YWIwqVRpbWVzdGFtcLgxOTcwLTAxLTAxVDAwOjAwOjAwLjAwMFqoVHJhZGVySWSqVHJhZGVyLTAwMapTdHJhdGVneUlkqVNDQUxQRVIwMapQb3NpdGlvbklkpjEyMzQ1NqVFbnRyedoA54uiSWS7Ty0xOTcwMDEwMS0wMDAwMDAtMDAxLTAwMS0xplN5bWJvbKtBVURVU0QuRlhDTalPcmRlclNpZGWjQlVZqU9yZGVyVHlwZaZNQVJLRVSoUXVhbnRpdHnOAAGGoKVQcmljZaROT05FpUxhYmVspE5PTkWrVGltZUluRm9yY2WjREFZqkV4cGlyZVRpbWWkTk9ORalUaW1lc3RhbXC4MTk3MC0wMS0wMVQwMDowMDowMC4wMDBapkluaXRJZNoAJDdhODNlZDI5LWZjMjUtNDFlNS1hY2Y3LTc4OTI5ODM4NjUyY6hTdG9wTG9zc9oA8IuiSWS7Ty0xOTcwMDEwMS0wMDAwMDAtMDAxLTAwMS0yplN5bWJvbKtBVURVU0QuRlhDTalPcmRlclNpZGWkU0VMTKlPcmRlclR5cGWrU1RPUF9NQVJLRVSoUXVhbnRpdHnOAAGGoKVQcmljZacwLjk5OTAwpUxhYmVspE5PTkWrVGltZUluRm9yY2WjR1RDqkV4cGlyZVRpbWWkTk9ORalUaW1lc3RhbXC4MTk3MC0wMS0wMVQwMDowMDowMC4wMDBapkluaXRJZNoAJDhiNmQ5MDcwLTFlYWMtNGZkOC1hODZjLTY3ODI2MmY3NTcyMqpUYWtlUHJvZml0oYA=";
+            var base64 = "iqRUeXBlsVN1Ym1pdEF0b21pY09yZGVyoklk2gAkYjQ1YjUyNDQtNWQ3Ny00ZDU5LTgyM2EtNGI5YzU5MzRmZGJmqVRpbWVzdGFtcLgxOTcwLTAxLTAxVDAwOjAwOjAwLjAwMFqoVHJhZGVySWSqVEVTVEVSLTAwMKpTdHJhdGVneUlkqlNDQUxQRVItMDGpQWNjb3VudElkqVVOS05PV04tMKpQb3NpdGlvbklkpjEyMzQ1NqVFbnRyedoA54uiSWS7Ty0xOTcwMDEwMS0wMDAwMDAtMDAxLTAwMS0xplN5bWJvbKtBVURVU0QuRlhDTalPcmRlclNpZGWjQlVZqU9yZGVyVHlwZaZNQVJLRVSoUXVhbnRpdHnOAAGGoKVQcmljZaROT05FpUxhYmVspE5PTkWrVGltZUluRm9yY2WjREFZqkV4cGlyZVRpbWWkTk9ORalUaW1lc3RhbXC4MTk3MC0wMS0wMVQwMDowMDowMC4wMDBapkluaXRJZNoAJDk0N2UyOWVjLTdiOGQtNGNhZS1hZjY1LTVmZTVkMTY1NzhmZahTdG9wTG9zc9oA8IuiSWS7Ty0xOTcwMDEwMS0wMDAwMDAtMDAxLTAwMS0yplN5bWJvbKtBVURVU0QuRlhDTalPcmRlclNpZGWkU0VMTKlPcmRlclR5cGWrU1RPUF9NQVJLRVSoUXVhbnRpdHnOAAGGoKVQcmljZacwLjk5OTAwpUxhYmVspE5PTkWrVGltZUluRm9yY2WjR1RDqkV4cGlyZVRpbWWkTk9ORalUaW1lc3RhbXC4MTk3MC0wMS0wMVQwMDowMDowMC4wMDBapkluaXRJZNoAJDFhMGMwMTFmLWJhZGItNDcyZC1hMTVkLWQ3NjIzN2I5N2Y4ZKpUYWtlUHJvZml0oYA=";
             var commandBytes = Convert.FromBase64String(base64);
 
             // Act
@@ -222,7 +230,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         internal void Deserialize_GivenSubmitAtomicOrderWithTakeProfit_FromPythonMsgPack_ReturnsExpectedCommand()
         {
             // Arrange
-            var base64 = "iaRUeXBlsVN1Ym1pdEF0b21pY09yZGVyoklk2gAkMzU2OGM1MjMtNGM5OS00ZmQ1LWFkZmItNWMxY2Y2ZGVlMGY3qVRpbWVzdGFtcLgxOTcwLTAxLTAxVDAwOjAwOjAwLjAwMFqoVHJhZGVySWSqVHJhZGVyLTAwMapTdHJhdGVneUlkqVNDQUxQRVIwMapQb3NpdGlvbklkpjEyMzQ1NqVFbnRyedoA6YuiSWS7Ty0xOTcwMDEwMS0wMDAwMDAtMDAxLTAwMS0xplN5bWJvbKtBVURVU0QuRlhDTalPcmRlclNpZGWjQlVZqU9yZGVyVHlwZaVMSU1JVKhRdWFudGl0ec4AAYagpVByaWNlpzAuOTk5MDClTGFiZWykTk9ORatUaW1lSW5Gb3JjZaNEQVmqRXhwaXJlVGltZaROT05FqVRpbWVzdGFtcLgxOTcwLTAxLTAxVDAwOjAwOjAwLjAwMFqmSW5pdElk2gAkZDZhZDQ2ZDEtODY0Yy00NDc3LTg4OGMtNzIyZTNhOWNkMmJhqFN0b3BMb3Nz2gDwi6JJZLtPLTE5NzAwMTAxLTAwMDAwMC0wMDEtMDAxLTKmU3ltYm9sq0FVRFVTRC5GWENNqU9yZGVyU2lkZaRTRUxMqU9yZGVyVHlwZatTVE9QX01BUktFVKhRdWFudGl0ec4AAYagpVByaWNlpzEuMDAwMDClTGFiZWykTk9ORatUaW1lSW5Gb3JjZaNHVEOqRXhwaXJlVGltZaROT05FqVRpbWVzdGFtcLgxOTcwLTAxLTAxVDAwOjAwOjAwLjAwMFqmSW5pdElk2gAkYTUxZjZmZDctZWQ3Yy00NzIxLWI5M2QtNGM1MDQyNmEyY2RkqlRha2VQcm9maXTaAOqLoklku08tMTk3MDAxMDEtMDAwMDAwLTAwMS0wMDEtM6ZTeW1ib2yrQVVEVVNELkZYQ02pT3JkZXJTaWRlpFNFTEypT3JkZXJUeXBlpUxJTUlUqFF1YW50aXR5zgABhqClUHJpY2WnMS4wMDAxMKVMYWJlbKROT05Fq1RpbWVJbkZvcmNlo0dUQ6pFeHBpcmVUaW1lpE5PTkWpVGltZXN0YW1wuDE5NzAtMDEtMDFUMDA6MDA6MDAuMDAwWqZJbml0SWTaACRmNzEwMjgwMC02NjRjLTQ0YmUtOGQwZS01M2NiNjkwMjRhNTQ=";
+            var base64 = "iqRUeXBlsVN1Ym1pdEF0b21pY09yZGVyoklk2gAkNDkzNWM4NGMtMzg4MC00MmE2LTk1NjctMTIzNzQwYTAxMzhlqVRpbWVzdGFtcLgxOTcwLTAxLTAxVDAwOjAwOjAwLjAwMFqoVHJhZGVySWSqVEVTVEVSLTAwMKpTdHJhdGVneUlkqlNDQUxQRVItMDGpQWNjb3VudElkqVVOS05PV04tMKpQb3NpdGlvbklkpjEyMzQ1NqVFbnRyedoA6YuiSWS7Ty0xOTcwMDEwMS0wMDAwMDAtMDAxLTAwMS0xplN5bWJvbKtBVURVU0QuRlhDTalPcmRlclNpZGWjQlVZqU9yZGVyVHlwZaVMSU1JVKhRdWFudGl0ec4AAYagpVByaWNlpzAuOTk5MDClTGFiZWykTk9ORatUaW1lSW5Gb3JjZaNEQVmqRXhwaXJlVGltZaROT05FqVRpbWVzdGFtcLgxOTcwLTAxLTAxVDAwOjAwOjAwLjAwMFqmSW5pdElk2gAkYjA2MGU3MTQtZDkzMC00NGVmLTkyY2ItOGJmMjA3YWIzNzQzqFN0b3BMb3Nz2gDwi6JJZLtPLTE5NzAwMTAxLTAwMDAwMC0wMDEtMDAxLTKmU3ltYm9sq0FVRFVTRC5GWENNqU9yZGVyU2lkZaRTRUxMqU9yZGVyVHlwZatTVE9QX01BUktFVKhRdWFudGl0ec4AAYagpVByaWNlpzEuMDAwMDClTGFiZWykTk9ORatUaW1lSW5Gb3JjZaNHVEOqRXhwaXJlVGltZaROT05FqVRpbWVzdGFtcLgxOTcwLTAxLTAxVDAwOjAwOjAwLjAwMFqmSW5pdElk2gAkY2FjMmE1N2YtMTY3Yy00MTg2LTljNjktNTc5NjdhYjVlNjhhqlRha2VQcm9maXTaAOqLoklku08tMTk3MDAxMDEtMDAwMDAwLTAwMS0wMDEtM6ZTeW1ib2yrQVVEVVNELkZYQ02pT3JkZXJTaWRlpFNFTEypT3JkZXJUeXBlpUxJTUlUqFF1YW50aXR5zgABhqClUHJpY2WnMS4wMDAxMKVMYWJlbKROT05Fq1RpbWVJbkZvcmNlo0dUQ6pFeHBpcmVUaW1lpE5PTkWpVGltZXN0YW1wuDE5NzAtMDEtMDFUMDA6MDA6MDAuMDAwWqZJbml0SWTaACRjN2U0OGE4Ni1mY2I5LTRlNDEtOWYwNi0zY2JiMDI2N2FhM2I=";
             var commandBytes = Convert.FromBase64String(base64);
 
             // Act
@@ -236,7 +244,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         internal void Deserialize_GivenModifyOrder_FromPythonMsgPack_ReturnsExpectedCommand()
         {
             // Arrange
-            var base64 = "h6RUeXBlq01vZGlmeU9yZGVyoklk2gAkNmY4N2ZjMWQtYjQ1Yy00MGEwLWEzNTEtY2MwYWJjZTMzYTY0qVRpbWVzdGFtcLgxOTcwLTAxLTAxVDAwOjAwOjAwLjAwMFqoVHJhZGVySWSqVHJhZGVyLTAwMapTdHJhdGVneUlkqVNDQUxQRVIwMadPcmRlcklkqE8tMTIzNDU2rU1vZGlmaWVkUHJpY2WnMS4wMDAwMQ==";
+            var base64 = "iKRUeXBlq01vZGlmeU9yZGVyoklk2gAkMjQ2YzRjODUtYzFlOC00YTU3LTlmZGQtY2I3MGVkZmQyMjFhqVRpbWVzdGFtcLgxOTcwLTAxLTAxVDAwOjAwOjAwLjAwMFqoVHJhZGVySWSqVEVTVEVSLTAwMKpTdHJhdGVneUlkqlNDQUxQRVItMDGpQWNjb3VudElkqVVOS05PV04tMKdPcmRlcklkqE8tMTIzNDU2rU1vZGlmaWVkUHJpY2WnMS4wMDAwMQ==";
             var commandBytes = Convert.FromBase64String(base64);
 
             // Act
@@ -250,7 +258,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         internal void Deserialize_GivenCancelOrder_FromPythonMsgPack_ReturnsExpectedCommand()
         {
             // Arrange
-            var base64 = "h6RUeXBlq0NhbmNlbE9yZGVyoklk2gAkMjcwMTM5OGQtMzZiOS00ZmU1LThjZDgtY2U3MTM3OTVmMGQzqVRpbWVzdGFtcLgxOTcwLTAxLTAxVDAwOjAwOjAwLjAwMFqoVHJhZGVySWSqVHJhZGVyLTAwMapTdHJhdGVneUlkqVNDQUxQRVIwMadPcmRlcklkqE8tMTIzNDU2rENhbmNlbFJlYXNvbqdFWFBJUkVE";
+            var base64 = "iKRUeXBlq0NhbmNlbE9yZGVyoklk2gAkZGRjNGJlYTAtOGQ3YS00MmY0LThjYTktOWZhMDkxYWRiZThhqVRpbWVzdGFtcLgxOTcwLTAxLTAxVDAwOjAwOjAwLjAwMFqoVHJhZGVySWSqVEVTVEVSLTAwMKpTdHJhdGVneUlkqlNDQUxQRVItMDGpQWNjb3VudElkqVVOS05PV04tMKdPcmRlcklkqE8tMTIzNDU2rENhbmNlbFJlYXNvbqdFWFBJUkVE";
             var commandBytes = Convert.FromBase64String(base64);
 
             // Act

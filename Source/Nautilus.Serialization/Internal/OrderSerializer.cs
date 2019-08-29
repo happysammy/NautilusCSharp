@@ -89,7 +89,7 @@ namespace Nautilus.Serialization.Internal
         private static Order Deserialize(MessagePackObjectDictionary unpacked)
         {
             var type = ObjectExtractor.Enum<OrderType>(unpacked[nameof(OrderType)]);
-            var id = ObjectExtractor.OrderId(unpacked[nameof(Order.Id)]);
+            var id = ObjectExtractor.OrderId(unpacked, nameof(Order.Id));
             var symbol = ObjectExtractor.Symbol(unpacked);
             var label = ObjectExtractor.Label(unpacked);
             var side = ObjectExtractor.Enum<OrderSide>(unpacked[nameof(OrderSide)]);

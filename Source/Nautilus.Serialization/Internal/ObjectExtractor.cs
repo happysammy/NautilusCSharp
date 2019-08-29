@@ -86,33 +86,44 @@ namespace Nautilus.Serialization.Internal
         }
 
         /// <summary>
+        /// Returns an AccountId extracted from the given <see cref="MessagePackObject"/>.
+        /// </summary>
+        /// <param name="unpacked">The MessagePack object to extract from.</param>
+        /// <returns>The extracted AccountId.</returns>
+        internal static AccountId AccountId(MessagePackObjectDictionary unpacked)
+        {
+            return Nautilus.DomainModel.Identifiers.AccountId.FromString(unpacked[nameof(AccountId)].ToString());
+        }
+
+        /// <summary>
         /// Returns a PositionId extracted from the given <see cref="MessagePackObjectDictionary"/>.
         /// </summary>
         /// <param name="unpacked">The dictionary to extract from.</param>
         /// <returns>The extracted PositionId.</returns>
         internal static PositionId PositionId(MessagePackObjectDictionary unpacked)
         {
-            return new PositionId(unpacked.ToString());
-        }
-
-        /// <summary>
-        /// Returns an AccountId extracted from the given <see cref="MessagePackObject"/>.
-        /// </summary>
-        /// <param name="unpacked">The MessagePack object to extract from.</param>
-        /// <returns>The extracted AccountId.</returns>
-        internal static AccountId AccountId(MessagePackObject unpacked)
-        {
-            return Nautilus.DomainModel.Identifiers.AccountId.FromString(unpacked.ToString());
+            return new PositionId(unpacked[nameof(PositionId)].ToString());
         }
 
         /// <summary>
         /// Returns an OrderId extracted from the given <see cref="MessagePackObject"/>.
         /// </summary>
         /// <param name="unpacked">The MessagePack object to extract from.</param>
+        /// <param name="orderField">The order identifier extraction field.</param>
         /// <returns>The extracted OrderId.</returns>
-        internal static OrderId OrderId(MessagePackObject unpacked)
+        internal static OrderId OrderId(MessagePackObjectDictionary unpacked, string orderField = nameof(OrderId))
         {
-            return new OrderId(unpacked.ToString());
+            return new OrderId(unpacked[orderField].ToString());
+        }
+
+        /// <summary>
+        /// Returns an OrderIdBroker extracted from the given <see cref="MessagePackObject"/>.
+        /// </summary>
+        /// <param name="unpacked">The MessagePack object to extract from.</param>
+        /// <returns>The extracted OrderIdBroker.</returns>
+        internal static OrderId OrderIdBroker(MessagePackObjectDictionary unpacked)
+        {
+            return new OrderId(unpacked[nameof(OrderIdBroker)].ToString());
         }
 
         /// <summary>

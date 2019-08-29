@@ -8,12 +8,14 @@
 
 namespace Nautilus.Execution.Identifiers
 {
+    using Nautilus.Core.Annotations;
     using Nautilus.Core.Types;
     using Nautilus.Execution.Types;
 
     /// <summary>
     /// Represents a <see cref="Trader"/> identifier.
     /// </summary>
+    [Immutable]
     public sealed class TraderId : Identifier<Trader>
     {
         /// <summary>

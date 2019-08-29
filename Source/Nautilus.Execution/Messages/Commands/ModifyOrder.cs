@@ -28,6 +28,7 @@ namespace Nautilus.Execution.Messages.Commands
         /// </summary>
         /// <param name="traderId">The trader identifier.</param>
         /// <param name="strategyId">The strategy identifier.</param>
+        /// <param name="accountId">The account identifier.</param>
         /// <param name="orderId">The order identifier.</param>
         /// <param name="modifiedPrice">The modified price.</param>
         /// <param name="commandId">The command identifier.</param>
@@ -35,6 +36,7 @@ namespace Nautilus.Execution.Messages.Commands
         public ModifyOrder(
             TraderId traderId,
             StrategyId strategyId,
+            AccountId accountId,
             OrderId orderId,
             Price modifiedPrice,
             Guid commandId,
@@ -49,6 +51,7 @@ namespace Nautilus.Execution.Messages.Commands
 
             this.TraderId = traderId;
             this.StrategyId = strategyId;
+            this.AccountId = accountId;
             this.OrderId = orderId;
             this.ModifiedPrice = modifiedPrice;
         }
@@ -62,6 +65,11 @@ namespace Nautilus.Execution.Messages.Commands
         /// Gets the commands strategy identifier.
         /// </summary>
         public StrategyId StrategyId { get; }
+
+        /// <summary>
+        /// Gets the commands account identifier.
+        /// </summary>
+        public AccountId AccountId { get; }
 
         /// <summary>
         /// Gets the commands order identifier.
