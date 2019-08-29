@@ -25,17 +25,12 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         internal void ApplyEvent_OrderFilledBuyCase_ReturnsCorrectValues()
         {
             // Arrange
-            var position = new Position(
-                new PositionId("P-123456"),
-                new Symbol("SYMBOL", "GLOBEX"),
-                StubZonedDateTime.UnixEpoch());
-
-            var message = new OrderFilled(
+            var orderFill = new OrderFilled(
                 new OrderId("O-123456"),
                 AccountId.FromString("FXCM-02851908"),
                 new ExecutionId("E-123456"),
                 new ExecutionTicket("ET-123456"),
-                position.Symbol,
+                new Symbol("AUDUSD", new Venue("FXCM")),
                 OrderSide.BUY,
                 Quantity.Create(1000),
                 Price.Create(2000, 2),
@@ -44,10 +39,10 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            position.Apply(message);
+            var position = new Position(new PositionId("P-123456"), orderFill);
 
             // Assert
-            Assert.Equal(new Symbol("SYMBOL", "GLOBEX"), position.Symbol);
+            Assert.Equal(new Symbol("AUDUSD", new Venue("FXCM")), position.Symbol);
             Assert.Equal(new OrderId("O-123456"), position.FromOrderId);
             Assert.Equal(new OrderId("O-123456"), position.LastOrderId);
             Assert.Equal(Quantity.Create(1000), position.Quantity);
@@ -59,9 +54,10 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.Equal(new ExecutionId("E-123456"), position.LastExecutionId);
             Assert.Equal(new ExecutionTicket("ET-123456"), position.LastExecutionTicket);
             Assert.Equal(OrderSide.BUY, position.EntryDirection);
-            Assert.Equal(message, position.LastEvent);
+            Assert.Equal(orderFill, position.LastEvent);
+            Assert.True(position.IsOpen);
             Assert.True(position.IsLong);
-            Assert.False(position.IsExited);
+            Assert.False(position.IsClosed);
             Assert.False(position.IsShort);
             Assert.False(position.IsFlat);
         }
@@ -70,17 +66,12 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         internal void ApplyEvents_OrderFilledFromAlreadyShort_ReturnsCorrectMarketPositionAndQuantity()
         {
             // Arrange
-            var position = new Position(
-                new PositionId("P-123456"),
-                new Symbol("SYMBOL", "GLOBEX"),
-                StubZonedDateTime.UnixEpoch());
-
-            var message1 = new OrderFilled(
+            var orderFill11 = new OrderFilled(
                 new OrderId("O-123456"),
                 AccountId.FromString("FXCM-02851908"),
                 new ExecutionId("E-123456"),
                 new ExecutionTicket("ET-123456"),
-                position.Symbol,
+                new Symbol("AUDUSD", new Venue("FXCM")),
                 OrderSide.SELL,
                 Quantity.Create(5000),
                 Price.Create(1.00000m, 5),
@@ -88,7 +79,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            var message2 = new OrderFilled(
+            var position = new Position(new PositionId("P-123456"), orderFill11);
+
+            var orderFill2 = new OrderFilled(
                 new OrderId("O-123456"),
                 AccountId.FromString("FXCM-02851908"),
                 new ExecutionId("E-123456"),
@@ -101,7 +94,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            var message3 = new OrderFilled(
+            var orderFill3 = new OrderFilled(
                 new OrderId("O-123456"),
                 AccountId.FromString("FXCM-02851908"),
                 new ExecutionId("E-123456"),
@@ -115,16 +108,16 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            position.Apply(message1);
-            position.Apply(message2);
-            position.Apply(message3);
+            position.Apply(orderFill2);
+            position.Apply(orderFill3);
 
             // Assert
             Assert.Equal(MarketPosition.Short, position.MarketPosition);
             Assert.Equal(Quantity.Create(7000), position.Quantity);
-            Assert.Equal(message3, position.LastEvent);
+            Assert.Equal(orderFill3, position.LastEvent);
+            Assert.True(position.IsOpen);
             Assert.True(position.IsShort);
-            Assert.False(position.IsExited);
+            Assert.False(position.IsClosed);
             Assert.False(position.IsLong);
             Assert.False(position.IsFlat);
         }
@@ -133,17 +126,12 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         internal void ApplyEvents_OrderFilledFromLongPositionToFlat_ReturnsCorrectMarketPositionAndQuantity()
         {
             // Arrange
-            var position = new Position(
-                new PositionId("P-123456"),
-                new Symbol("SYMBOL", "GLOBEX"),
-                StubZonedDateTime.UnixEpoch());
-
-            var message1 = new OrderFilled(
+            var orderFill1 = new OrderFilled(
                 new OrderId("O-123456"),
                 AccountId.FromString("FXCM-02851908"),
                 new ExecutionId("E-123456"),
                 new ExecutionTicket("ET-123456"),
-                position.Symbol,
+                new Symbol("AUDUSD", new Venue("FXCM")),
                 OrderSide.BUY,
                 Quantity.Create(100000),
                 Price.Create(1.00000m, 5),
@@ -151,7 +139,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            var message2 = new OrderFilled(
+            var position = new Position(new PositionId("P-123456"), orderFill1);
+
+            var orderFill2 = new OrderFilled(
                 new OrderId("O-123456"),
                 AccountId.FromString("FXCM-02851908"),
                 new ExecutionId("E-123456"),
@@ -164,7 +154,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            var message3 = new OrderFilled(
+            var orderFill3 = new OrderFilled(
                 new OrderId("O-123457"),
                 AccountId.FromString("FXCM-02851908"),
                 new ExecutionId("E-123456"),
@@ -177,7 +167,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            var message4 = new OrderFilled(
+            var orderFill4 = new OrderFilled(
                 new OrderId("O-123458"),
                 AccountId.FromString("FXCM-02851908"),
                 new ExecutionId("E-123456"),
@@ -191,19 +181,19 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            position.Apply(message1);
-            position.Apply(message2);
-            position.Apply(message3);
-            position.Apply(message4);
+            position.Apply(orderFill2);
+            position.Apply(orderFill3);
+            position.Apply(orderFill4);
 
             // Assert
             Assert.Equal(MarketPosition.Flat, position.MarketPosition);
             Assert.Equal(Quantity.Zero(), position.Quantity);
             Assert.Equal(StubZonedDateTime.UnixEpoch(), position.ExitTime);
             Assert.Equal(Price.Create(1.00000m, 5), position.AverageExitPrice);
-            Assert.Equal(message4, position.LastEvent);
+            Assert.Equal(orderFill4, position.LastEvent);
             Assert.False(position.IsShort);
-            Assert.True(position.IsExited);
+            Assert.False(position.IsOpen);
+            Assert.True(position.IsClosed);
             Assert.False(position.IsLong);
             Assert.True(position.IsFlat);
         }
@@ -212,17 +202,12 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         internal void ApplyEvents_OrderFilledFromShortPositionToLong_ReturnsCorrectMarketPositionAndQuantity()
         {
             // Arrange
-            var position = new Position(
-                new PositionId("P-123456"),
-                new Symbol("SYMBOL", "GLOBEX"),
-                StubZonedDateTime.UnixEpoch());
-
-            var message1 = new OrderFilled(
+            var orderFill1 = new OrderFilled(
                 new OrderId("O-123456"),
                 AccountId.FromString("FXCM-02851908"),
                 new ExecutionId("E-123456"),
                 new ExecutionTicket("ET-123456"),
-                position.Symbol,
+                new Symbol("AUDUSD", new Venue("FXCM")),
                 OrderSide.SELL,
                 Quantity.Create(1000000),
                 Price.Create(1.00000m, 5),
@@ -230,7 +215,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            var message2 = new OrderFilled(
+            var position = new Position(new PositionId("P-123456"), orderFill1);
+
+            var orderFill2 = new OrderFilled(
                 new OrderId("O-123457"),
                 AccountId.FromString("FXCM-02851908"),
                 new ExecutionId("E-123456"),
@@ -243,7 +230,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            var message3 = new OrderFilled(
+            var orderFill3 = new OrderFilled(
                 new OrderId("O-123458"),
                 AccountId.FromString("FXCM-02851908"),
                 new ExecutionId("E-123456"),
@@ -257,9 +244,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            position.Apply(message1);
-            position.Apply(message2);
-            position.Apply(message3);
+            position.Apply(orderFill2);
+            position.Apply(orderFill3);
 
             // Assert
             Assert.Equal(MarketPosition.Long, position.MarketPosition);

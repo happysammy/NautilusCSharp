@@ -15,7 +15,6 @@ namespace Nautilus.DomainModel.Aggregates
     using Nautilus.Core.Message;
     using Nautilus.DomainModel.Aggregates.Base;
     using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Events.Base;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
@@ -27,49 +26,99 @@ namespace Nautilus.DomainModel.Aggregates
     [PerformanceOptimized]
     public sealed class Position : Aggregate<Position>
     {
-        private readonly List<OrderId> orderIds;
-        private readonly List<ExecutionId> executionIds;
-        private readonly List<ExecutionTicket> executionTickets;
+        private readonly HashSet<OrderId> orderIds;
+        private readonly HashSet<ExecutionId> executionIds;
+        private readonly HashSet<ExecutionTicket> executionTickets;
 
-        private int internalQuantity;
+        private int relativeQuantity;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Position"/> class.
         /// </summary>
         /// <param name="positionId">The position identifier.</param>
-        /// <param name="symbol">The position symbol.</param>
-        /// <param name="timestamp">The position timestamp.</param>
-        public Position(
-            PositionId positionId,
-            Symbol symbol,
-            ZonedDateTime timestamp)
-            : base(positionId, timestamp)
+        /// <param name="event">The fill event which opened the position.</param>
+        public Position(PositionId positionId, OrderFillEvent @event)
+            : base(positionId, @event.ExecutionTime)
         {
-            this.orderIds = new List<OrderId>();
-            this.executionIds = new List<ExecutionId>();
-            this.executionTickets = new List<ExecutionTicket>();
+            this.orderIds = new HashSet<OrderId> { @event.OrderId };
+            this.executionIds = new HashSet<ExecutionId> { @event.ExecutionId };
+            this.executionTickets = new HashSet<ExecutionTicket> { @event.ExecutionTicket };
 
-            this.Symbol = symbol;
-            this.FromOrderId = null;
-            this.LastOrderId = null;
-            this.LastExecutionId = null;
-            this.LastExecutionTicket = null;
-            this.Quantity = Quantity.Zero();
-            this.PeakQuantity = Quantity.Zero();
-            this.MarketPosition = MarketPosition.Flat;
-            this.EntryDirection = OrderSide.UNKNOWN;
-            this.EntryTime = null;
+            this.Symbol = @event.Symbol;
+            this.FromOrderId = @event.OrderId;
+            this.LastOrderId = @event.OrderId;
+            this.LastExecutionId = @event.ExecutionId;
+            this.LastExecutionTicket = @event.ExecutionTicket;
+            this.EntryDirection = @event.OrderSide;
+            this.EntryTime = @event.ExecutionTime;
             this.ExitTime = null;
-            this.AverageEntryPrice = null;
+            this.AverageEntryPrice = @event.AveragePrice;
             this.AverageExitPrice = null;
-            this.IsEntered = false;
-            this.IsExited = false;
+            this.Events.Add(@event);
+            this.LastEvent = @event;
+
+            this.relativeQuantity = 0;                  // Initialized in FillLogic
+            this.Quantity = Quantity.Zero();            // Initialized in FillLogic
+            this.PeakQuantity = Quantity.Zero();        // Initialized in FillLogic
+            this.MarketPosition = MarketPosition.Flat;  // Initialized in FillLogic
+
+            this.FillLogic(@event);
         }
 
         /// <summary>
         /// Gets the positions symbol.
         /// </summary>
         public Symbol Symbol { get; }
+
+        /// <summary>
+        /// Gets the positions entry order identifier.
+        /// </summary>
+        public OrderId FromOrderId { get; private set; }
+
+        /// <summary>
+        /// Gets the positions last order identifier.
+        /// </summary>
+        public OrderId LastOrderId { get; private set; }
+
+        /// <summary>
+        /// Gets the positions last execution identifier.
+        /// </summary>
+        public ExecutionId LastExecutionId { get; private set; }
+
+        /// <summary>
+        /// Gets the positions last execution ticket.
+        /// </summary>
+        public ExecutionTicket LastExecutionTicket { get; private set; }
+
+        /// <summary>
+        /// Gets the positions entry direction.
+        /// </summary>
+        public OrderSide EntryDirection { get; private set; }
+
+        /// <summary>
+        /// Gets the positions entry time.
+        /// </summary>
+        public ZonedDateTime EntryTime { get; private set; }
+
+        /// <summary>
+        /// Gets the positions exit time.
+        /// </summary>
+        public ZonedDateTime? ExitTime { get; private set; }
+
+        /// <summary>
+        /// Gets the positions average entry price.
+        /// </summary>
+        public Price AverageEntryPrice { get; private set; }
+
+        /// <summary>
+        /// Gets the positions average exit price.
+        /// </summary>
+        public Price? AverageExitPrice { get; private set; }
+
+        /// <summary>
+        /// Gets the last event applied to the position.
+        /// </summary>
+        public Event LastEvent { get; private set; }
 
         /// <summary>
         /// Gets the positions current quantity.
@@ -87,79 +136,29 @@ namespace Nautilus.DomainModel.Aggregates
         public MarketPosition MarketPosition { get; private set; }
 
         /// <summary>
-        /// Gets the positions entry order identifier.
-        /// </summary>
-        public OrderId? FromOrderId { get; private set; }
-
-        /// <summary>
-        /// Gets the positions last order identifier.
-        /// </summary>
-        public OrderId? LastOrderId { get; private set; }
-
-        /// <summary>
-        /// Gets the positions last execution identifier.
-        /// </summary>
-        public ExecutionId? LastExecutionId { get; private set; }
-
-        /// <summary>
-        /// Gets the positions last execution ticket.
-        /// </summary>
-        public ExecutionTicket? LastExecutionTicket { get; private set; }
-
-        /// <summary>
-        /// Gets the positions entry direction.
-        /// </summary>
-        public OrderSide EntryDirection { get; private set; }
-
-        /// <summary>
-        /// Gets the positions entry time.
-        /// </summary>
-        public ZonedDateTime? EntryTime { get; private set; }
-
-        /// <summary>
-        /// Gets the positions exit time.
-        /// </summary>
-        public ZonedDateTime? ExitTime { get; private set; }
-
-        /// <summary>
-        /// Gets the positions average entry price.
-        /// </summary>
-        public Price? AverageEntryPrice { get; private set; }
-
-        /// <summary>
-        /// Gets the positions average exit price.
-        /// </summary>
-        public Price? AverageExitPrice { get; private set; }
-
-        /// <summary>
-        /// Gets the last event applied to the position.
-        /// </summary>
-        public Event? LastEvent { get; private set; }
-
-        /// <summary>
         /// Gets a value indicating whether the position is entered.
         /// </summary>
-        public bool IsEntered { get; private set; }
+        public bool IsOpen => this.MarketPosition != MarketPosition.Flat;
 
         /// <summary>
         /// Gets a value indicating whether the position is exited.
         /// </summary>
-        public bool IsExited { get; private set; }
+        public bool IsClosed => this.MarketPosition == MarketPosition.Flat;
 
         /// <summary>
         /// Gets a value indicating whether the market position is flat.
         /// </summary>
-        public bool IsFlat => this.MarketPosition is MarketPosition.Flat;
+        public bool IsFlat => this.MarketPosition == MarketPosition.Flat;
 
         /// <summary>
         /// Gets a value indicating whether the market position is long.
         /// </summary>
-        public bool IsLong => this.MarketPosition is MarketPosition.Long;
+        public bool IsLong => this.MarketPosition == MarketPosition.Long;
 
         /// <summary>
         /// Gets a value indicating whether the market position is short.
         /// </summary>
-        public bool IsShort => this.MarketPosition is MarketPosition.Short;
+        public bool IsShort => this.MarketPosition == MarketPosition.Short;
 
         /// <summary>
         /// Returns a collection of the positions order identifiers.
@@ -201,107 +200,60 @@ namespace Nautilus.DomainModel.Aggregates
         /// Applies the given <see cref="Event"/> to this position.
         /// </summary>
         /// <param name="event">The position event.</param>
-        public void Apply(OrderEvent @event)
+        public void Apply(OrderFillEvent @event)
         {
-            switch (@event)
-            {
-                case OrderPartiallyFilled partiallyFilled:
-                    this.UpdatePosition(
-                        partiallyFilled.OrderId,
-                        partiallyFilled.ExecutionId,
-                        partiallyFilled.ExecutionTicket,
-                        partiallyFilled.OrderSide,
-                        partiallyFilled.FilledQuantity.Value,
-                        partiallyFilled.AveragePrice,
-                        partiallyFilled.ExecutionTime);
-                    break;
-                case OrderFilled filled:
-                    this.UpdatePosition(
-                        filled.OrderId,
-                        filled.ExecutionId,
-                        filled.ExecutionTicket,
-                        filled.OrderSide,
-                        filled.FilledQuantity.Value,
-                        filled.AveragePrice,
-                        filled.ExecutionTime);
-                    break;
-                default:
-                    throw ExceptionFactory.InvalidSwitchArgument(@event, nameof(@event));
-            }
-
             this.Events.Add(@event);
             this.LastEvent = @event;
+
+            this.orderIds.Add(@event.OrderId);
+            this.executionIds.Add(@event.ExecutionId);
+            this.executionTickets.Add(@event.ExecutionTicket);
+            this.LastOrderId = @event.OrderId;
+            this.LastExecutionId = @event.ExecutionId;
+            this.LastExecutionTicket = @event.ExecutionTicket;
+
+            this.FillLogic(@event);
         }
 
-        private void UpdatePosition(
-            OrderId orderId,
-            ExecutionId executionId,
-            ExecutionTicket executionTicket,
-            OrderSide orderSide,
-            int quantity,
-            Price averagePrice,
-            ZonedDateTime eventTime)
+        private static int CalculateRelativeQuantity(OrderFillEvent @event)
         {
-            Debug.PositiveInt32(quantity, nameof(quantity));
-            Debug.NotDefault(eventTime, nameof(eventTime));
-
-            this.orderIds.Add(orderId);
-            this.executionIds.Add(executionId);
-            this.executionTickets.Add(executionTicket);
-            this.LastOrderId = orderId;
-            this.LastExecutionId = executionId;
-            this.LastExecutionTicket = executionTicket;
-
-            // Entry logic
-            if (this.IsEntered is false)
-            {
-                this.FromOrderId = orderId;
-                this.EntryDirection = orderSide;
-                this.EntryTime = eventTime;
-                this.AverageEntryPrice = averagePrice;
-                this.IsEntered = true;
-            }
-
-            // Fill logic
-            switch (orderSide)
+            switch (@event.OrderSide)
             {
                 case OrderSide.BUY:
-                    this.internalQuantity += quantity;
-                    break;
+                    return @event.FilledQuantity.Value;
                 case OrderSide.SELL:
-                    this.internalQuantity -= quantity;
-                    break;
+                    return -@event.FilledQuantity.Value;
                 case OrderSide.UNKNOWN:
                     goto default;
                 default:
-                    throw ExceptionFactory.InvalidSwitchArgument(orderSide, nameof(orderSide));
+                    throw ExceptionFactory.InvalidSwitchArgument(@event.OrderSide, nameof(@event.OrderSide));
             }
+        }
 
-            this.Quantity = Quantity.Create(Math.Abs(this.internalQuantity));
-
-            // Update peak quantity
+        private void FillLogic(OrderFillEvent @event)
+        {
+            // Set quantities
+            this.relativeQuantity += CalculateRelativeQuantity(@event);
+            this.Quantity = Quantity.Create(Math.Abs(this.relativeQuantity));
             if (this.Quantity > this.PeakQuantity)
             {
                 this.PeakQuantity = this.Quantity;
             }
 
-            // Market position logic
-            if (this.internalQuantity > 0)
+            // Set market position
+            if (this.relativeQuantity > 0)
             {
                 this.MarketPosition = MarketPosition.Long;
-                this.IsExited = false;
             }
-            else if (this.internalQuantity < 0)
+            else if (this.relativeQuantity < 0)
             {
                 this.MarketPosition = MarketPosition.Short;
-                this.IsExited = false;
             }
             else
             {
                 this.MarketPosition = MarketPosition.Flat;
-                this.ExitTime = eventTime;
-                this.AverageExitPrice = averagePrice;
-                this.IsExited = true;
+                this.ExitTime = @event.ExecutionTime;
+                this.AverageExitPrice = @event.AveragePrice;
             }
         }
     }
