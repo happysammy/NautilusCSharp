@@ -1,6 +1,8 @@
 # Nautilus
-The trading services for the Nautilus stack.
+The algorithmic trading services for the Nautilus technology stack.
 
-Nautech Systems Pty Ltd.
+![Alt text](Documentation/Assets/nautechsystems_logo_small.png?raw=true "logo")
 
-> https://nautechsystems.io/nautilus
+Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
+
+> https://nautechsystems.io

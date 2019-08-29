@@ -24,7 +24,7 @@ namespace Nautilus.Data.Keys
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Allows nameof.")]
     public static class KeyProvider
     {
-        private const string NautilusData = nameof(Nautilus) + ":" + nameof(Data);
+        private const string NautilusData = nameof(NautilusData) + ":" + nameof(Data);
         private const string Ticks = nameof(Ticks);
         private const string Bars = nameof(Bars);
         private const string Instruments = nameof(Instruments);

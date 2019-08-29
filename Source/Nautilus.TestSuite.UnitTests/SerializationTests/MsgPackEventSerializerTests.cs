@@ -35,7 +35,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         }
 
         [Fact]
-        internal void CanSerializeAndDeserialize_AccountEvent()
+        internal void CanSerializeAndDeserialize_AccountStateEvent()
         {
             // Arrange
             var accountEvent = new AccountStateEvent(

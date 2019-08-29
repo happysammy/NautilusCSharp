@@ -29,7 +29,7 @@ namespace Nautilus.Common.Configuration
 
             log.Information("---------------------------------------------------------------------------");
             log.Information($"{serviceTitle} (version " + Assembly.GetExecutingAssembly().GetName().Version + ")");
-            log.Information("Copyright (c) 2015-2019 by Nautech Systems Pty Ltd. All rights reserved.");
+            log.Information("Copyright (C) 2015-2019 by Nautech Systems Pty Ltd. All rights reserved.");
             log.Information("---------------------------------------------------------------------------");
             log.Information($"OS {Environment.OSVersion}");
             log.Information($"Is64BitOperatingSystem={Environment.Is64BitOperatingSystem}");

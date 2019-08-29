@@ -16,17 +16,17 @@ namespace Nautilus.Redis
     [SuppressMessage("ReSharper", "SA1310", Justification = "Easier to read.")]
     public static class RedisConstants
     {
-        private const string LOCAL_HOST_STRING = "localhost";
-        private const int LOCAL_PORT_INT = 6379;
+        private const string LOCAL_HOST = "localhost";
+        private const int DEFAULT_PORT = 6379;
 
         /// <summary>
         /// Gets the <see cref="Redis"/> local host internet protocol string.
         /// </summary>
-        public static string LocalHost => LOCAL_HOST_STRING;
+        public static string LocalHost => LOCAL_HOST;
 
         /// <summary>
         /// Gets the <see cref="Redis"/> default port.
         /// </summary>
-        public static int DefaultPort => LOCAL_PORT_INT;
+        public static int DefaultPort => DEFAULT_PORT;
     }
 }
