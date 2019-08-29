@@ -14,6 +14,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     using Nautilus.DomainModel.Frames;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Redis;
+    using Nautilus.Redis.Data;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NodaTime;
     using StackExchange.Redis;

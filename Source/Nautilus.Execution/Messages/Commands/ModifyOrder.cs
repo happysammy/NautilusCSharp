@@ -14,7 +14,6 @@ namespace Nautilus.Execution.Messages.Commands
     using Nautilus.Core.Message;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Execution.Identifiers;
     using NodaTime;
 
     /// <summary>

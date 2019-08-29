@@ -25,7 +25,7 @@ namespace NautilusData
     using Nautilus.Fix;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
-    using Nautilus.Redis;
+    using Nautilus.Redis.Data;
     using Nautilus.Scheduler;
     using Nautilus.Serialization;
     using NodaTime;

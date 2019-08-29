@@ -14,7 +14,6 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Execution.Identifiers;
     using Nautilus.Execution.Messages.Commands;
     using Nautilus.Serialization;
     using Nautilus.TestSuite.TestKit.TestDoubles;

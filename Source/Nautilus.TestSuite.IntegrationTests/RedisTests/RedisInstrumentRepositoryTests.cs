@@ -12,6 +12,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.DomainModel.Entities;
     using Nautilus.Redis;
+    using Nautilus.Redis.Data;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using StackExchange.Redis;
     using Xunit;

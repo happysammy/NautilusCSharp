@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Redis.Builders
+namespace Nautilus.Redis.Data.Builders
 {
     using System.Collections.Generic;
     using System.Globalization;

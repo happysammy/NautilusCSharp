@@ -15,7 +15,6 @@ namespace Nautilus.Serialization.Internal
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Execution.Identifiers;
     using NodaTime;
 
     /// <summary>

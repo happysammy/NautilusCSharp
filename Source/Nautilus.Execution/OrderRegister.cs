@@ -13,7 +13,6 @@ namespace Nautilus.Execution
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Identifiers;
-    using Nautilus.Execution.Identifiers;
     using Nautilus.Execution.Messages.Commands;
 
     /// <summary>

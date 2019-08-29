@@ -13,7 +13,6 @@ namespace Nautilus.Execution.Messages.Commands
     using Nautilus.Core.Message;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Identifiers;
-    using Nautilus.Execution.Identifiers;
     using NodaTime;
 
     /// <summary>

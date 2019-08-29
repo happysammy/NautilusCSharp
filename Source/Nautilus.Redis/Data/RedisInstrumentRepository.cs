@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Redis
+namespace Nautilus.Redis.Data
 {
     using System;
     using System.Collections.Generic;
@@ -22,7 +22,7 @@ namespace Nautilus.Redis
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
-    using Nautilus.Redis.Builders;
+    using Nautilus.Redis.Data.Builders;
     using NodaTime;
     using StackExchange.Redis;
     using Venue = Nautilus.DomainModel.Identifiers.Venue;

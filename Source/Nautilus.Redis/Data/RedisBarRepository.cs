@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Redis
+namespace Nautilus.Redis.Data
 {
     using System.Collections.Generic;
     using System.Linq;

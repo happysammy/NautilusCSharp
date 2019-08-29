@@ -48,7 +48,7 @@ namespace Nautilus.Execution
             Configuration config)
             : base(container, messageBusAdapter)
         {
-            this.commandServer = new Network.CommandServer(
+            this.commandServer = new CommandServer(
                 container,
                 inboundSerializer,
                 outboundSerializer,

@@ -6,25 +6,27 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Execution.Identifiers
+namespace Nautilus.DomainModel.Identifiers
 {
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
     using Nautilus.Core.Types;
-    using Nautilus.Execution.Types;
+    using Nautilus.DomainModel.Entities;
 
     /// <summary>
-    /// Represents a <see cref="Trader"/> identifier.
+    /// Represents a valid trader identifier. Should be unique at fund level.
     /// </summary>
     [Immutable]
-    public sealed class TraderId : Identifier<Trader>
+    public sealed class TraderId : Identifier<Execution>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TraderId"/> class.
         /// </summary>
         /// <param name="value">The identifier value.</param>
         public TraderId(string value)
-        : base(value)
+            : base(value)
         {
+            Debug.NotEmptyOrWhiteSpace(value, nameof(value));
         }
     }
 }
