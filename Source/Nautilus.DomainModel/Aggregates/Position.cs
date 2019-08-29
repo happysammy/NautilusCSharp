@@ -26,9 +26,9 @@ namespace Nautilus.DomainModel.Aggregates
     [PerformanceOptimized]
     public sealed class Position : Aggregate<Position>
     {
-        private readonly HashSet<OrderId> orderIds;
-        private readonly HashSet<ExecutionId> executionIds;
-        private readonly HashSet<ExecutionTicket> executionTickets;
+        private readonly SortedSet<OrderId> orderIds;
+        private readonly SortedSet<ExecutionId> executionIds;
+        private readonly SortedSet<ExecutionTicket> executionTickets;
 
         private int relativeQuantity;
 
@@ -40,9 +40,9 @@ namespace Nautilus.DomainModel.Aggregates
         public Position(PositionId positionId, OrderFillEvent @event)
             : base(positionId, @event.ExecutionTime)
         {
-            this.orderIds = new HashSet<OrderId> { @event.OrderId };
-            this.executionIds = new HashSet<ExecutionId> { @event.ExecutionId };
-            this.executionTickets = new HashSet<ExecutionTicket> { @event.ExecutionTicket };
+            this.orderIds = new SortedSet<OrderId> { @event.OrderId };
+            this.executionIds = new SortedSet<ExecutionId> { @event.ExecutionId };
+            this.executionTickets = new SortedSet<ExecutionTicket> { @event.ExecutionTicket };
 
             this.Symbol = @event.Symbol;
             this.FromOrderId = @event.OrderId;
@@ -63,6 +63,7 @@ namespace Nautilus.DomainModel.Aggregates
             this.MarketPosition = MarketPosition.Flat;  // Initialized in FillLogic
 
             this.FillLogic(@event);
+            this.CheckClassInvariants();
         }
 
         /// <summary>
@@ -255,6 +256,15 @@ namespace Nautilus.DomainModel.Aggregates
                 this.ExitTime = @event.ExecutionTime;
                 this.AverageExitPrice = @event.AveragePrice;
             }
+        }
+
+        [System.Diagnostics.Conditional("DEBUG")]
+        private void CheckClassInvariants()
+        {
+            Debug.True(this.orderIds.Count == 1, "this.orderIds.Count == 1");
+            Debug.True(this.executionIds.Count == 1, "this.executionIds.Count == 1");
+            Debug.True(this.executionTickets.Count == 1, "this.executionTickets.Count == 1");
+            Debug.True(this.Events.Count == 1, "this.Events.Count == 1");
         }
     }
 }

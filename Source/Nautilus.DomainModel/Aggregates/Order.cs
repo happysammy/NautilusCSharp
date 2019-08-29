@@ -32,9 +32,9 @@ namespace Nautilus.DomainModel.Aggregates
     public sealed class Order : Aggregate<Order>
     {
         private readonly FiniteStateMachine orderStateMachine;
-        private readonly List<OrderId> orderIds;
-        private readonly List<OrderId> orderIdsBroker;
-        private readonly List<ExecutionId> executionIds;
+        private readonly SortedSet<OrderId> orderIds;
+        private readonly SortedSet<OrderId> orderIdsBroker;
+        private readonly SortedSet<ExecutionId> executionIds;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Order" /> class.
@@ -70,9 +70,9 @@ namespace Nautilus.DomainModel.Aggregates
             Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.orderStateMachine = CreateOrderFiniteStateMachine();
-            this.orderIds = new List<OrderId> { this.Id };
-            this.orderIdsBroker = new List<OrderId>();
-            this.executionIds = new List<ExecutionId>();
+            this.orderIds = new SortedSet<OrderId> { this.Id };
+            this.orderIdsBroker = new SortedSet<OrderId>();
+            this.executionIds = new SortedSet<ExecutionId>();
 
             this.AccountId = null;
             this.Symbol = symbol;
@@ -114,32 +114,19 @@ namespace Nautilus.DomainModel.Aggregates
         /// </summary>
         /// <param name="initialized">The order initialized event.</param>
         public Order(OrderInitialized initialized)
-            : base(initialized.OrderId, initialized.Timestamp)
+            : this(
+                initialized.OrderId,
+                initialized.Symbol,
+                initialized.Label,
+                initialized.OrderSide,
+                initialized.OrderType,
+                initialized.Quantity,
+                initialized.Price,
+                initialized.TimeInForce,
+                initialized.ExpireTime,
+                initialized.Timestamp,
+                initialized.Id)
         {
-            this.orderStateMachine = CreateOrderFiniteStateMachine();
-            this.orderIds = new List<OrderId> { this.Id };
-            this.orderIdsBroker = new List<OrderId>();
-            this.executionIds = new List<ExecutionId>();
-
-            this.Symbol = initialized.Symbol;
-            this.Label = initialized.Label;
-            this.Side = initialized.OrderSide;
-            this.Type = initialized.OrderType;
-            this.Quantity = initialized.Quantity;
-            this.FilledQuantity = Quantity.Zero();
-            this.Price = initialized.Price;
-            this.AveragePrice = null;
-            this.Slippage = null;
-            this.TimeInForce = initialized.TimeInForce;
-            this.ExpireTime = this.ValidateExpireTime(initialized.ExpireTime);
-            this.InitId = initialized.Id;
-            this.IsBuy = this.Side == OrderSide.BUY;
-            this.IsSell = this.Side == OrderSide.SELL;
-            this.IsWorking = false;
-            this.IsCompleted = false;
-
-            this.Apply(initialized);
-            this.CheckClassInvariants();
         }
 
         /// <summary>
@@ -508,8 +495,8 @@ namespace Nautilus.DomainModel.Aggregates
         [System.Diagnostics.Conditional("DEBUG")]
         private void CheckClassInvariants()
         {
-            Debug.True(this.orderIds[0] == this.Id, "this.orderIds[0] == this.Id");
-            Debug.True(this.Events[0] is OrderInitialized, "this.Events[0] is OrderInitialized"); // Should always contain the OrderInitialized event first
+            Debug.True(this.orderIds.First() == this.Id, "this.orderIds[0] == this.Id");
+            Debug.True(this.Events[0] is OrderInitialized, "this.Events[0] is OrderInitialized");
         }
     }
 }

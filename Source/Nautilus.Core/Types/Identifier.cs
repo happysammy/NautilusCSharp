@@ -17,7 +17,7 @@ namespace Nautilus.Core.Types
     /// </summary>
     /// <typeparam name="T">The identifier type.</typeparam>
     [Immutable]
-    public abstract class Identifier<T> : IEquatable<object>, IEquatable<Identifier<T>>
+    public abstract class Identifier<T> : IEquatable<object>, IEquatable<Identifier<T>>, IComparable<Identifier<T>>
     {
         private readonly string value;
 
@@ -71,6 +71,12 @@ namespace Nautilus.Core.Types
         /// <param name="other">The other object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
         public bool Equals(Identifier<T> other) => !(other is null) && this.value == other.value;
+
+        /// <inheritdoc />
+        public int CompareTo(Identifier<T> other)
+        {
+            return string.Compare(this.value, other.value, StringComparison.Ordinal);
+        }
 
         /// <summary>
         /// Returns the hash code of the wrapped object.
