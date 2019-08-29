@@ -9,6 +9,7 @@
 namespace Nautilus.DomainModel.Identifiers
 {
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
     using Nautilus.Core.Types;
     using Nautilus.DomainModel.Aggregates;
 
@@ -38,6 +39,8 @@ namespace Nautilus.DomainModel.Identifiers
         public AccountId(string brokerage, string accountNumber)
             : this(new Brokerage(brokerage), new AccountNumber(accountNumber))
         {
+            Debug.NotEmptyOrWhiteSpace(brokerage, nameof(brokerage));
+            Debug.NotEmptyOrWhiteSpace(accountNumber, nameof(accountNumber));
         }
 
         /// <summary>

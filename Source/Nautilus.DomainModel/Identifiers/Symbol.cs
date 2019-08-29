@@ -42,6 +42,8 @@ namespace Nautilus.DomainModel.Identifiers
         public Symbol(string code, string venue)
             : this(code, new Venue(venue))
         {
+            Debug.NotEmptyOrWhiteSpace(code, nameof(code));
+            Debug.NotEmptyOrWhiteSpace(venue, nameof(venue));
         }
 
         /// <summary>

@@ -8,81 +8,24 @@
 
 namespace Nautilus.DomainModel.Identifiers
 {
-    using System;
-    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
+    using Nautilus.Core.Types;
 
     /// <summary>
     /// Represents a broker symbol.
     /// </summary>
     [Immutable]
-    public struct BrokerSymbol : IEquatable<object>, IEquatable<BrokerSymbol>
+    public sealed class BrokerSymbol : Identifier<BrokerSymbol>
     {
-        private readonly string value;
-
         /// <summary>
-        /// Initializes a new instance of the <see cref="BrokerSymbol"/> structure.
+        /// Initializes a new instance of the <see cref="BrokerSymbol"/> class.
         /// </summary>
-        /// <param name="symbol">The broker symbol.</param>
-        public BrokerSymbol(string symbol)
+        /// <param name="value">The broker symbol value.</param>
+        public BrokerSymbol(string value)
+            : base(value)
         {
-            Debug.NotEmptyOrWhiteSpace(symbol, nameof(symbol));
-
-            this.value = symbol;
+            Debug.NotEmptyOrWhiteSpace(value, nameof(value));
         }
-
-        /// <summary>
-        /// Returns a value indicating whether the <see cref="BrokerSymbol"/>s are equal.
-        /// </summary>
-        /// <param name="left">The left object.</param>
-        /// <param name="right">The right object.</param>
-        /// <returns>A <see cref="bool"/>.</returns>
-        public static bool operator ==(BrokerSymbol left, BrokerSymbol right)
-        {
-            return left.Equals(right);
-        }
-
-        /// <summary>
-        /// Returns a value indicating whether the <see cref="BrokerSymbol"/>s are not equal.
-        /// </summary>
-        /// <param name="left">The left object.</param>
-        /// <param name="right">The right object.</param>
-        /// <returns>A <see cref="bool"/>.</returns>
-        public static bool operator !=(BrokerSymbol left,  BrokerSymbol right) => !(left == right);
-
-        /// <summary>
-        /// Returns a value indicating whether this <see cref="BrokerSymbol"/> is equal
-        /// to the given <see cref="object"/>.
-        /// </summary>
-        /// <param name="other">The other.</param>
-        /// <returns>A <see cref="bool"/>.</returns>
-        public override bool Equals(object other) => other is BrokerSymbol symbol && this.Equals(symbol);
-
-        /// <summary>
-        /// Returns a value indicating whether this <see cref="BrokerSymbol"/> is equal
-        /// to the given <see cref="BrokerSymbol"/>.
-        /// </summary>
-        /// <param name="other">The other object.</param>
-        /// <returns>A <see cref="bool"/>.</returns>
-        public bool Equals(BrokerSymbol other)
-        {
-            return this.value == other.value;
-        }
-
-        /// <summary>
-        /// Returns the hash code of the <see cref="BrokerSymbol"/>.
-        /// </summary>
-        /// <returns>An <see cref="int"/>.</returns>
-        public override int GetHashCode()
-        {
-            return Hash.GetCode(this.value);
-        }
-
-        /// <summary>
-        /// Returns a string representation of the <see cref="BrokerSymbol"/>.
-        /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => this.value;
     }
 }
