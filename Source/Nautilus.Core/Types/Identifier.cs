@@ -18,7 +18,6 @@ namespace Nautilus.Core.Types
     /// <typeparam name="T">The identifier type.</typeparam>
     [Immutable]
     public abstract class Identifier<T> : IEquatable<object>, IEquatable<Identifier<T>>
-        where T : class
     {
         private readonly string value;
 
