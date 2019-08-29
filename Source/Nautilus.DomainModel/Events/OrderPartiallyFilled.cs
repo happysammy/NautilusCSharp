@@ -10,7 +10,6 @@ namespace Nautilus.DomainModel.Events
 {
     using System;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events.Base;
     using Nautilus.DomainModel.Identifiers;
@@ -21,7 +20,7 @@ namespace Nautilus.DomainModel.Events
     /// Represents an event where an order had been partially filled.
     /// </summary>
     [Immutable]
-    public sealed class OrderPartiallyFilled : OrderEvent
+    public sealed class OrderPartiallyFilled : OrderFillEvent
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="OrderPartiallyFilled"/> class.
@@ -51,63 +50,23 @@ namespace Nautilus.DomainModel.Events
             ZonedDateTime eventTimestamp)
             : base(
                 orderId,
+                executionId,
+                executionTicket,
+                symbol,
+                orderSide,
+                filledQuantity,
+                averagePrice,
+                executionTime,
                 typeof(OrderPartiallyFilled),
                 eventId,
                 eventTimestamp)
         {
-            Debug.NotDefault(orderSide, nameof(orderSide));
-            Debug.NotDefault(executionTime, nameof(executionTime));
-            Debug.NotDefault(eventId, nameof(eventId));
-            Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
-
-            this.ExecutionId = executionId;
-            this.ExecutionTicket = executionTicket;
-            this.Symbol = symbol;
-            this.OrderSide = orderSide;
-            this.FilledQuantity = filledQuantity;
             this.LeavesQuantity = leavesQuantity;
-            this.AveragePrice = averagePrice;
-            this.ExecutionTime = executionTime;
         }
-
-        /// <summary>
-        /// Gets the events order execution identifier.
-        /// </summary>
-        public ExecutionId ExecutionId { get; }
-
-        /// <summary>
-        /// Gets the events order execution ticket.
-        /// </summary>
-        public ExecutionTicket ExecutionTicket { get; }
-
-        /// <summary>
-        /// Gets the events order symbol.
-        /// </summary>
-        public Symbol Symbol { get; }
-
-        /// <summary>
-        /// Gets the events order side.
-        /// </summary>
-        public OrderSide OrderSide { get; }
-
-        /// <summary>
-        /// Gets the events order filled quantity.
-        /// </summary>
-        public Quantity FilledQuantity { get; }
 
         /// <summary>
         /// Gets the events leaves quantity.
         /// </summary>
         public Quantity LeavesQuantity { get; }
-
-        /// <summary>
-        /// Gets the events order average price.
-        /// </summary>
-        public Price AveragePrice { get; }
-
-        /// <summary>
-        /// Gets the events order execution time.
-        /// </summary>
-        public ZonedDateTime ExecutionTime { get; }
     }
 }

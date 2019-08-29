@@ -8,7 +8,6 @@
 
 namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
 {
-    using System;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Enums;
