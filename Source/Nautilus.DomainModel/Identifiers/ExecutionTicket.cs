@@ -11,13 +11,12 @@ namespace Nautilus.DomainModel.Identifiers
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Types;
-    using Nautilus.DomainModel.Entities;
 
     /// <summary>
     /// Represents a valid execution ticket.
     /// </summary>
     [Immutable]
-    public sealed class ExecutionTicket : Identifier<Execution>
+    public sealed class ExecutionTicket : Identifier<ExecutionTicket>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ExecutionTicket"/> class.

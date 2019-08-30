@@ -137,7 +137,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the orders last identifier.
         /// </summary>
-        public OrderId IdLast => this.orderIds.Last(); // Should always contain an initial OrderId
+        public OrderId IdLast => this.orderIds.Last();
 
         /// <summary>
         /// Gets the orders last identifier for the broker.
@@ -195,7 +195,7 @@ namespace Nautilus.DomainModel.Aggregates
         public Price? Price { get; private set; }
 
         /// <summary>
-        /// Gets the orders average fill price (optional, may be unfilled).
+        /// Gets the orders average fill price.
         /// </summary>
         public Price? AveragePrice { get; private set; }
 
@@ -210,14 +210,14 @@ namespace Nautilus.DomainModel.Aggregates
         public TimeInForce TimeInForce { get; }
 
         /// <summary>
-        /// Gets the orders expire time (optional).
+        /// Gets the orders expire time.
         /// </summary>
         public ZonedDateTime? ExpireTime { get; }
 
         /// <summary>
         /// Gets the orders last event time.
         /// </summary>
-        public OrderEvent LastEvent => (OrderEvent)this.Events.Last();
+        public new OrderEvent? LastEvent => (OrderEvent?)base.LastEvent;
 
         /// <summary>
         /// Gets the current order status.
@@ -277,17 +277,13 @@ namespace Nautilus.DomainModel.Aggregates
         public IEnumerable<ExecutionId> GetExecutionIds() => this.executionIds;
 
         /// <summary>
-        /// Returns the order events.
-        /// </summary>
-        /// <returns>A read only collection.</returns>
-        public IEnumerable<Event> GetEvents() => this.Events;
-
-        /// <summary>
         /// Applies the given <see cref="Event"/> to the <see cref="Order"/>.
         /// </summary>
         /// <param name="orderEvent">The order event.</param>
         public void Apply(OrderEvent orderEvent)
         {
+            this.AppendEvent(orderEvent);
+
             switch (orderEvent)
             {
                 case OrderInitialized @event:
@@ -328,7 +324,6 @@ namespace Nautilus.DomainModel.Aggregates
             }
 
             this.orderStateMachine.Process(Trigger.Event(orderEvent));
-            this.Events.Add(orderEvent);
         }
 
         /// <summary>
@@ -375,19 +370,6 @@ namespace Nautilus.DomainModel.Aggregates
             return new FiniteStateMachine(stateTransitionTable, new State(OrderStatus.Initialized));
         }
 
-        /// <summary>
-        /// Updates the broker order identifier list with the given <see cref="OrderId"/>
-        /// (if not already present).
-        /// </summary>
-        /// <param name="orderId">The broker order identifier.</param>
-        private void UpdateBrokerOrderIds(OrderId orderId)
-        {
-            if (!this.orderIdsBroker.Contains(orderId))
-            {
-                this.orderIdsBroker.Add(orderId);
-            }
-        }
-
         private void When(OrderInitialized @event)
         {
             // Do nothing
@@ -410,7 +392,7 @@ namespace Nautilus.DomainModel.Aggregates
 
         private void When(OrderWorking @event)
         {
-            this.UpdateBrokerOrderIds(@event.OrderIdBroker);
+            this.orderIdsBroker.Add(@event.OrderIdBroker);
             this.SetStateToWorking();
         }
 
@@ -431,7 +413,7 @@ namespace Nautilus.DomainModel.Aggregates
 
         private void When(OrderModified @event)
         {
-            this.UpdateBrokerOrderIds(@event.OrderIdBroker);
+            this.orderIdsBroker.Add(@event.OrderIdBroker);
             this.Price = @event.ModifiedPrice;
         }
 
@@ -496,7 +478,7 @@ namespace Nautilus.DomainModel.Aggregates
         private void CheckClassInvariants()
         {
             Debug.True(this.orderIds.First() == this.Id, "this.orderIds[0] == this.Id");
-            Debug.True(this.Events[0] is OrderInitialized, "this.Events[0] is OrderInitialized");
+            Debug.True(this.GetEvents().First() is OrderInitialized, "this.Events[0] is OrderInitialized");
         }
     }
 }

@@ -24,8 +24,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             var account = new Account(
                 new Brokerage("IB"),
                 new AccountNumber("123456789"),
-                "my_username",
-                "my_password",
                 Currency.USD,
                 StubZonedDateTime.UnixEpoch());
 
@@ -52,8 +50,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             var account = new Account(
                 new Brokerage("IB"),
                 new AccountNumber("123456789"),
-                "my_username",
-                "my_password",
                 Currency.USD,
                 StubZonedDateTime.UnixEpoch());
 

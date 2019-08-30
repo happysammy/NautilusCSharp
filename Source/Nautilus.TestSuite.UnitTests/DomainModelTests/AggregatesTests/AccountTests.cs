@@ -37,8 +37,6 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var account = new Account(
                 new Brokerage("FXCM"),
                 new AccountNumber("123456789"),
-                "some username",
-                "some password",
                 Currency.AUD,
                 this.clock.TimeNow());
 
@@ -56,8 +54,6 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var account = new Account(
                 new Brokerage("FXCM"),
                 new AccountNumber("123456789"),
-                "some username",
-                "some password",
                 Currency.AUD,
                 this.clock.TimeNow());
 
@@ -94,8 +90,6 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var account = new Account(
                 new Brokerage("FXCM"),
                 new AccountNumber("123456789"),
-                "some username",
-                "some password",
                 Currency.USD,
                 this.clock.TimeNow());
 

@@ -42,12 +42,12 @@ namespace Nautilus.Common.Messages.Events
         }
 
         /// <summary>
-        /// Gets the events brokerage.
+        /// Gets the connection events broker.
         /// </summary>
         public Brokerage Broker { get; }
 
         /// <summary>
-        /// Gets the events session information.
+        /// Gets the connection events session information.
         /// </summary>
         public string SessionId { get; }
     }

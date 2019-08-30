@@ -52,7 +52,7 @@ namespace Nautilus.Messaging
         /// </summary>
         /// <param name="other">The other object.</param>
         /// <returns>True if the message identifier equals the other identifier, otherwise false.</returns>
-        public bool Equals(Mailbox other) => this.Address == other.Address;
+        public bool Equals(Mailbox other) => other != null && other.Address == this.Address;
 
         /// <summary>
         /// Returns the hash code for this <see cref="Mailbox"/>.

@@ -27,8 +27,6 @@ namespace Nautilus.DomainModel.Aggregates
         /// </summary>
         /// <param name="brokerage">The broker name.</param>
         /// <param name="accountNumber">The account number.</param>
-        /// <param name="username">The account username.</param>
-        /// <param name="password">The account password.</param>
         /// <param name="currency">The account base currency.</param>
         /// <param name="timestamp">The account creation timestamp.</param>
         /// <exception cref="ArgumentException">If any string is empty or whitespace.</exception>
@@ -36,16 +34,12 @@ namespace Nautilus.DomainModel.Aggregates
         public Account(
             Brokerage brokerage,
             AccountNumber accountNumber,
-            string username,
-            string password,
             Currency currency,
             ZonedDateTime timestamp)
             : base(
                 new AccountId(brokerage, accountNumber),
                 timestamp)
         {
-            Condition.NotEmptyOrWhiteSpace(username, nameof(username));
-            Condition.NotEmptyOrWhiteSpace(password, nameof(password));
             Condition.NotDefault(currency, nameof(currency));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
@@ -58,7 +52,6 @@ namespace Nautilus.DomainModel.Aggregates
             this.MarginUsedMaintenance = Money.Zero(this.Currency);
             this.MarginUsedLiquidation = Money.Zero(this.Currency);
             this.MarginCallStatus = string.Empty;
-            this.LastUpdated = timestamp;
         }
 
         /// <summary>
@@ -122,17 +115,13 @@ namespace Nautilus.DomainModel.Aggregates
         public string MarginCallStatus { get; private set; }
 
         /// <summary>
-        /// Gets the accounts last updated time.
-        /// </summary>
-        public ZonedDateTime LastUpdated { get; private set; }
-
-        /// <summary>
         /// Applies the given event to the brokerage account.
         /// </summary>
         /// <param name="event">The event.</param>
         public void Apply(AccountStateEvent @event)
         {
-            this.Events.Add(@event);
+            this.AppendEvent(@event);
+
             this.CashBalance = @event.CashBalance;
             this.CashStartDay = @event.CashStartDay;
             this.CashActivityDay = @event.CashActivityDay;
@@ -140,7 +129,6 @@ namespace Nautilus.DomainModel.Aggregates
             this.MarginUsedMaintenance = @event.MarginUsedMaintenance;
             this.MarginUsedLiquidation = @event.MarginUsedLiquidation;
             this.MarginCallStatus = @event.MarginCallStatus;
-            this.LastUpdated = @event.Timestamp;
         }
 
         /// <summary>

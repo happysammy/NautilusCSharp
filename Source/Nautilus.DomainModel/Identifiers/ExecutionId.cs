@@ -11,13 +11,12 @@ namespace Nautilus.DomainModel.Identifiers
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Types;
-    using Nautilus.DomainModel.Entities;
 
     /// <summary>
     /// Represents a valid execution identifier.
     /// </summary>
     [Immutable]
-    public sealed class ExecutionId : Identifier<Execution>
+    public sealed class ExecutionId : Identifier<ExecutionId>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ExecutionId"/> class.

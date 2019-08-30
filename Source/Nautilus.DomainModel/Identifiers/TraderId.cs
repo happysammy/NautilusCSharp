@@ -11,7 +11,6 @@ namespace Nautilus.DomainModel.Identifiers
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Types;
-    using Nautilus.DomainModel.Entities;
 
     /// <summary>
     /// Represents a valid trader identifier. This name and order identifier tag combination must be
@@ -21,7 +20,7 @@ namespace Nautilus.DomainModel.Identifiers
     /// separated by a hyphen '-'.
     /// </summary>
     [Immutable]
-    public sealed class TraderId : Identifier<Execution>
+    public sealed class TraderId : Identifier<TraderId>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TraderId"/> class.

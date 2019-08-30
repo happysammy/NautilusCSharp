@@ -10,6 +10,7 @@ namespace Nautilus.DomainModel.Aggregates
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Message;
@@ -40,22 +41,19 @@ namespace Nautilus.DomainModel.Aggregates
         public Position(PositionId positionId, OrderFillEvent @event)
             : base(positionId, @event.ExecutionTime)
         {
+            this.AppendEvent(@event);
+
             this.orderIds = new SortedSet<OrderId> { @event.OrderId };
             this.executionIds = new SortedSet<ExecutionId> { @event.ExecutionId };
             this.executionTickets = new SortedSet<ExecutionTicket> { @event.ExecutionTicket };
 
             this.Symbol = @event.Symbol;
             this.FromOrderId = @event.OrderId;
-            this.LastOrderId = @event.OrderId;
-            this.LastExecutionId = @event.ExecutionId;
-            this.LastExecutionTicket = @event.ExecutionTicket;
             this.EntryDirection = @event.OrderSide;
             this.EntryTime = @event.ExecutionTime;
             this.ExitTime = null;
             this.AverageEntryPrice = @event.AveragePrice;
             this.AverageExitPrice = null;
-            this.Events.Add(@event);
-            this.LastEvent = @event;
 
             this.relativeQuantity = 0;                  // Initialized in FillLogic
             this.Quantity = Quantity.Zero();            // Initialized in FillLogic
@@ -74,32 +72,32 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the positions entry order identifier.
         /// </summary>
-        public OrderId FromOrderId { get; private set; }
+        public OrderId FromOrderId { get; }
 
         /// <summary>
         /// Gets the positions last order identifier.
         /// </summary>
-        public OrderId LastOrderId { get; private set; }
+        public OrderId LastOrderId => this.orderIds.Last();
 
         /// <summary>
         /// Gets the positions last execution identifier.
         /// </summary>
-        public ExecutionId LastExecutionId { get; private set; }
+        public ExecutionId LastExecutionId => this.executionIds.Last();
 
         /// <summary>
         /// Gets the positions last execution ticket.
         /// </summary>
-        public ExecutionTicket LastExecutionTicket { get; private set; }
+        public ExecutionTicket LastExecutionTicket => this.executionTickets.Last();
 
         /// <summary>
         /// Gets the positions entry direction.
         /// </summary>
-        public OrderSide EntryDirection { get; private set; }
+        public OrderSide EntryDirection { get; }
 
         /// <summary>
         /// Gets the positions entry time.
         /// </summary>
-        public ZonedDateTime EntryTime { get; private set; }
+        public ZonedDateTime EntryTime { get; }
 
         /// <summary>
         /// Gets the positions exit time.
@@ -109,17 +107,12 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the positions average entry price.
         /// </summary>
-        public Price AverageEntryPrice { get; private set; }
+        public Price AverageEntryPrice { get; }
 
         /// <summary>
         /// Gets the positions average exit price.
         /// </summary>
         public Price? AverageExitPrice { get; private set; }
-
-        /// <summary>
-        /// Gets the last event applied to the position.
-        /// </summary>
-        public Event LastEvent { get; private set; }
 
         /// <summary>
         /// Gets the positions current quantity.
@@ -165,37 +158,19 @@ namespace Nautilus.DomainModel.Aggregates
         /// Returns a collection of the positions order identifiers.
         /// </summary>
         /// <returns>The events collection.</returns>
-        public IEnumerable<OrderId> GetOrderIds()
-        {
-            return this.orderIds;
-        }
+        public IEnumerable<OrderId> GetOrderIds() => this.orderIds;
 
         /// <summary>
         /// Returns a collection of the positions execution identifiers.
         /// </summary>
         /// <returns>The events collection.</returns>
-        public IEnumerable<ExecutionId> GetExecutionIds()
-        {
-            return this.executionIds;
-        }
+        public IEnumerable<ExecutionId> GetExecutionIds() => this.executionIds;
 
         /// <summary>
         /// Returns a collection of the positions execution tickets.
         /// </summary>
         /// <returns>The events collection.</returns>
-        public IEnumerable<ExecutionTicket> GetExecutionTickets()
-        {
-            return this.executionTickets;
-        }
-
-        /// <summary>
-        /// Returns a collection of the positions events.
-        /// </summary>
-        /// <returns>The events collection.</returns>
-        public IEnumerable<Event> GetEvents()
-        {
-            return this.Events;
-        }
+        public IEnumerable<ExecutionTicket> GetExecutionTickets() => this.executionTickets;
 
         /// <summary>
         /// Applies the given <see cref="Event"/> to this position.
@@ -203,15 +178,11 @@ namespace Nautilus.DomainModel.Aggregates
         /// <param name="event">The position event.</param>
         public void Apply(OrderFillEvent @event)
         {
-            this.Events.Add(@event);
-            this.LastEvent = @event;
+            this.AppendEvent(@event);
 
             this.orderIds.Add(@event.OrderId);
             this.executionIds.Add(@event.ExecutionId);
             this.executionTickets.Add(@event.ExecutionTicket);
-            this.LastOrderId = @event.OrderId;
-            this.LastExecutionId = @event.ExecutionId;
-            this.LastExecutionTicket = @event.ExecutionTicket;
 
             this.FillLogic(@event);
         }
@@ -264,7 +235,7 @@ namespace Nautilus.DomainModel.Aggregates
             Debug.True(this.orderIds.Count == 1, "this.orderIds.Count == 1");
             Debug.True(this.executionIds.Count == 1, "this.executionIds.Count == 1");
             Debug.True(this.executionTickets.Count == 1, "this.executionTickets.Count == 1");
-            Debug.True(this.Events.Count == 1, "this.Events.Count == 1");
+            Debug.True(this.EventCount == 1, "this.Events.Count == 1");
         }
     }
 }

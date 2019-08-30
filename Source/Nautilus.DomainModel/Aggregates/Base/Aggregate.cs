@@ -9,7 +9,7 @@
 namespace Nautilus.DomainModel.Aggregates.Base
 {
     using System.Collections.Generic;
-    using Nautilus.Core.Annotations;
+    using System.Linq;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Message;
     using Nautilus.Core.Types;
@@ -21,10 +21,11 @@ namespace Nautilus.DomainModel.Aggregates.Base
     /// aggregation of entities.
     /// </summary>
     /// <typeparam name="T">The aggregate type.</typeparam>
-    [PerformanceOptimized]
     public abstract class Aggregate<T> : Entity<T>
         where T : Entity<T>
     {
+        private readonly List<Event> events;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Aggregate{T}"/> class.
         /// </summary>
@@ -37,18 +38,37 @@ namespace Nautilus.DomainModel.Aggregates.Base
         {
             Debug.NotDefault(timestamp, nameof(timestamp));
 
-            this.Events = new List<Event>();
+            this.events = new List<Event>();
         }
+
+        /// <summary>
+        /// Gets the last event applied to the position.
+        /// </summary>
+        public Event? LastEvent => this.events.LastOrDefault();
+
+        /// <summary>
+        /// Gets the timestamp of the last event update.
+        /// </summary>
+        public ZonedDateTime? LastUpdated => this.events.LastOrDefault()?.Timestamp;
 
         /// <summary>
         /// Gets the aggregates event count.
         /// </summary>
-        public int EventCount => this.Events.Count;
+        public int EventCount => this.events.Count;
 
         /// <summary>
-        /// Gets the aggregates events list.
+        /// Append the given event to the aggregates events.
         /// </summary>
-        /// <returns>The <see cref="IList{Event}"/>.</returns>
-        protected List<Event> Events { get; }
+        /// <param name="event">The event to append.</param>
+        protected void AppendEvent(Event @event)
+        {
+            this.events.Add(@event);
+        }
+
+        /// <summary>
+        /// Returns a copy of the list of events.
+        /// </summary>
+        /// <returns>The events.</returns>
+        protected List<Event> GetEvents() => this.events.ToList();
     }
 }
