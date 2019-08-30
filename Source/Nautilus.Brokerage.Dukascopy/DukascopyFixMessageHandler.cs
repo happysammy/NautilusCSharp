@@ -13,7 +13,6 @@ namespace Nautilus.Brokerage.Dukascopy
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Identifiers;
@@ -34,7 +33,7 @@ namespace Nautilus.Brokerage.Dukascopy
     {
         private readonly Venue venue = new Venue("DUKASCOPY");
         private readonly Dictionary<string, string> symbolIndex;
-        private readonly Dictionary<string, Symbol> symbolCache;
+        private readonly ObjectCache<string, Symbol> symbolCache;
         private readonly SymbolConverter symbolConverter;
 
         private IDataGateway? dataGateway;
@@ -51,7 +50,7 @@ namespace Nautilus.Brokerage.Dukascopy
             : base(container)
         {
             this.symbolIndex = new Dictionary<string, string>();
-            this.symbolCache = new Dictionary<string, Symbol>();
+            this.symbolCache = new ObjectCache<string, Symbol>(Symbol.FromString);
             this.symbolConverter = symbolConverter;
         }
 
@@ -109,7 +108,7 @@ namespace Nautilus.Brokerage.Dukascopy
                         continue; // Symbol not set or convertible (error already logged)
                     }
 
-                    var symbol = this.GetCachedSymbol(symbolCode);
+                    var symbol = this.symbolCache.Get(symbolCode);
                     var brokerSymbol = new BrokerSymbol(brokerSymbolCode);
                     var instrumentId = new InstrumentId(symbol.ToString());
                     var quoteCurrency = message.GetField(Tags.Currency).ToEnum<Nautilus.DomainModel.Enums.Currency>();
@@ -292,7 +291,7 @@ namespace Nautilus.Brokerage.Dukascopy
 
                 this.dataGateway?.OnTick(
                     new Tick(
-                        this.GetCachedSymbol(symbolCode),
+                        this.symbolCache.Get(symbolCode),
                         Price.Create(bidDecimal),
                         Price.Create(askDecimal),
                         this.TimeNow()));
@@ -498,23 +497,6 @@ namespace Nautilus.Brokerage.Dukascopy
 
             this.symbolIndex.Add(rawSymbolCode, symbolConversion.Value);
             return symbolConversion.Value;
-        }
-
-        private Symbol GetCachedSymbol(string symbolCode)
-        {
-            Debug.NotEmptyOrWhiteSpace(symbolCode, nameof(symbolCode));
-
-            if (this.symbolCache.TryGetValue(symbolCode, out var value))
-            {
-                return value;
-            }
-            else
-            {
-                var symbol = new Symbol(symbolCode, this.venue);
-                this.symbolCache.Add(symbolCode, symbol);
-
-                return symbol;
-            }
         }
     }
 }

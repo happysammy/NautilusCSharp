@@ -35,7 +35,7 @@ namespace Nautilus.Brokerage.Fxcm
     {
         private readonly Venue venue = new Venue("FXCM");
         private readonly Dictionary<string, string> symbolIndex;
-        private readonly Dictionary<string, Symbol> symbolCache;
+        private readonly ObjectCache<string, Symbol> symbolCache;
         private readonly SymbolConverter symbolConverter;
 
         private IDataGateway? dataGateway;
@@ -52,7 +52,7 @@ namespace Nautilus.Brokerage.Fxcm
             : base(container)
         {
             this.symbolIndex = new Dictionary<string, string>();
-            this.symbolCache = new Dictionary<string, Symbol>();
+            this.symbolCache = new ObjectCache<string, Symbol>(Symbol.FromString);
             this.symbolConverter = symbolConverter;
         }
 
@@ -114,7 +114,7 @@ namespace Nautilus.Brokerage.Fxcm
                         continue; // Symbol not set or convertible (error already logged)
                     }
 
-                    var symbol = this.GetCachedSymbol(symbolCode);
+                    var symbol = this.symbolCache.Get(symbolCode);
                     var brokerSymbol = new BrokerSymbol(brokerSymbolCode);
                     var instrumentId = new InstrumentId(symbol.ToString());
                     var quoteCurrency = group.GetField(15).ToEnum<Nautilus.DomainModel.Enums.Currency>();
@@ -316,7 +316,7 @@ namespace Nautilus.Brokerage.Fxcm
 
                 this.dataGateway?.OnTick(
                     new Tick(
-                        this.GetCachedSymbol(symbolCode),
+                        this.symbolCache.Get(symbolCode),
                         Price.Create(bidDecimal),
                         Price.Create(askDecimal),
                         this.TimeNow()));
@@ -532,23 +532,6 @@ namespace Nautilus.Brokerage.Fxcm
 
             this.symbolIndex.Add(rawSymbolCode, symbolConversion.Value);
             return symbolConversion.Value;
-        }
-
-        private Symbol GetCachedSymbol(string symbolCode)
-        {
-            Debug.NotEmptyOrWhiteSpace(symbolCode, nameof(symbolCode));
-
-            if (this.symbolCache.TryGetValue(symbolCode, out var value))
-            {
-                return value;
-            }
-            else
-            {
-                var symbol = new Symbol(symbolCode, this.venue);
-                this.symbolCache.Add(symbolCode, symbol);
-
-                return symbol;
-            }
         }
     }
 }
