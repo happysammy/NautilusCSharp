@@ -9,7 +9,6 @@
 namespace Nautilus.Execution.Engine
 {
     using System.Collections.Generic;
-    using System.Linq;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Correctness;
@@ -203,13 +202,20 @@ namespace Nautilus.Execution.Engine
         /// <inheritdoc />
         public ICollection<TraderId> GetTraderIds()
         {
-            return this.indexTraderOrders.Keys.ToHashSet();
+            return new HashSet<TraderId>(this.indexTraderOrders.Keys);
         }
 
         /// <inheritdoc />
         public ICollection<StrategyId> GetStrategyIds(TraderId? traderIdFilter = null)
         {
-            return this.indexStrategyTrader.Keys.ToHashSet();
+            if (traderIdFilter is null)
+            {
+                return new HashSet<StrategyId>(this.indexStrategyOrders.Keys);
+            }
+
+            return this.indexTraderStrategies.TryGetValue(traderIdFilter, out var strategyIds)
+                ? strategyIds
+                : new HashSet<StrategyId>();
         }
 
         /// <inheritdoc />
