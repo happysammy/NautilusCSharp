@@ -34,8 +34,4 @@
         <AdditionalFiles Include="..\stylecop.json" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Interfaces" />
-    </ItemGroup>
-
 </Project>
