@@ -10,6 +10,7 @@ namespace Nautilus.DomainModel.Aggregates
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.Immutable;
     using System.Linq;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
@@ -27,9 +28,9 @@ namespace Nautilus.DomainModel.Aggregates
     [PerformanceOptimized]
     public sealed class Position : Aggregate<Position>
     {
-        private readonly SortedSet<OrderId> orderIds;
-        private readonly SortedSet<ExecutionId> executionIds;
-        private readonly SortedSet<ExecutionTicket> executionTickets;
+        private readonly HashSet<OrderId> orderIds;
+        private readonly HashSet<ExecutionId> executionIds;
+        private readonly HashSet<ExecutionTicket> executionTickets;
 
         private int relativeQuantity;
 
@@ -43,9 +44,9 @@ namespace Nautilus.DomainModel.Aggregates
         {
             this.AppendEvent(@event);
 
-            this.orderIds = new SortedSet<OrderId> { @event.OrderId };
-            this.executionIds = new SortedSet<ExecutionId> { @event.ExecutionId };
-            this.executionTickets = new SortedSet<ExecutionTicket> { @event.ExecutionTicket };
+            this.orderIds = new HashSet<OrderId> { @event.OrderId };
+            this.executionIds = new HashSet<ExecutionId> { @event.ExecutionId };
+            this.executionTickets = new HashSet<ExecutionTicket> { @event.ExecutionTicket };
 
             this.Symbol = @event.Symbol;
             this.FromOrderId = @event.OrderId;
@@ -158,19 +159,19 @@ namespace Nautilus.DomainModel.Aggregates
         /// Returns a collection of the positions order identifiers.
         /// </summary>
         /// <returns>The events collection.</returns>
-        public IEnumerable<OrderId> GetOrderIds() => this.orderIds;
+        public ImmutableSortedSet<OrderId> GetOrderIds() => this.orderIds.ToImmutableSortedSet();
 
         /// <summary>
         /// Returns a collection of the positions execution identifiers.
         /// </summary>
         /// <returns>The events collection.</returns>
-        public IEnumerable<ExecutionId> GetExecutionIds() => this.executionIds;
+        public ImmutableSortedSet<ExecutionId> GetExecutionIds() => this.executionIds.ToImmutableSortedSet();
 
         /// <summary>
         /// Returns a collection of the positions execution tickets.
         /// </summary>
         /// <returns>The events collection.</returns>
-        public IEnumerable<ExecutionTicket> GetExecutionTickets() => this.executionTickets;
+        public ImmutableSortedSet<ExecutionTicket> GetExecutionTickets() => this.executionTickets.ToImmutableSortedSet();
 
         /// <summary>
         /// Applies the given <see cref="Event"/> to this position.

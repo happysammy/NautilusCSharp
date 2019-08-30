@@ -10,6 +10,7 @@ namespace Nautilus.DomainModel.Aggregates
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.Immutable;
     using System.Linq;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
@@ -32,9 +33,9 @@ namespace Nautilus.DomainModel.Aggregates
     public sealed class Order : Aggregate<Order>
     {
         private readonly FiniteStateMachine orderStateMachine;
-        private readonly SortedSet<OrderId> orderIds;
-        private readonly SortedSet<OrderId> orderIdsBroker;
-        private readonly SortedSet<ExecutionId> executionIds;
+        private readonly HashSet<OrderId> orderIds;
+        private readonly HashSet<OrderId> orderIdsBroker;
+        private readonly HashSet<ExecutionId> executionIds;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Order" /> class.
@@ -70,9 +71,9 @@ namespace Nautilus.DomainModel.Aggregates
             Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.orderStateMachine = CreateOrderFiniteStateMachine();
-            this.orderIds = new SortedSet<OrderId> { this.Id };
-            this.orderIdsBroker = new SortedSet<OrderId>();
-            this.executionIds = new SortedSet<ExecutionId>();
+            this.orderIds = new HashSet<OrderId> { this.Id };
+            this.orderIdsBroker = new HashSet<OrderId>();
+            this.executionIds = new HashSet<ExecutionId>();
 
             this.AccountId = null;
             this.Symbol = symbol;
@@ -262,19 +263,19 @@ namespace Nautilus.DomainModel.Aggregates
         /// Returns the order identifiers.
         /// </summary>
         /// <returns>A read only collection.</returns>
-        public IEnumerable<OrderId> GetOrderIds() => this.orderIds;
+        public ImmutableSortedSet<OrderId> GetOrderIds() => this.orderIds.ToImmutableSortedSet();
 
         /// <summary>
         /// Returns the broker order identifiers.
         /// </summary>
         /// <returns>A read only collection.</returns>
-        public IEnumerable<OrderId> GetOrderIdsBroker() => this.orderIdsBroker;
+        public ImmutableSortedSet<OrderId> GetOrderIdsBroker() => this.orderIdsBroker.ToImmutableSortedSet();
 
         /// <summary>
         /// Returns the execution identifiers.
         /// </summary>
         /// <returns>A read only collection.</returns>
-        public IEnumerable<ExecutionId> GetExecutionIds() => this.executionIds;
+        public ImmutableSortedSet<ExecutionId> GetExecutionIds() => this.executionIds.ToImmutableSortedSet();
 
         /// <summary>
         /// Applies the given <see cref="Event"/> to the <see cref="Order"/>.

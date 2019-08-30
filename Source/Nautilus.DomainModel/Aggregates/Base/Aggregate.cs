@@ -69,6 +69,6 @@ namespace Nautilus.DomainModel.Aggregates.Base
         /// Returns a copy of the list of events.
         /// </summary>
         /// <returns>The events.</returns>
-        protected List<Event> GetEvents() => this.events.ToList();
+        protected List<Event> GetEvents() => this.events;
     }
 }
