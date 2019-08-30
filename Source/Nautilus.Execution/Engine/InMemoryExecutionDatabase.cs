@@ -155,6 +155,11 @@ namespace Nautilus.Execution.Engine
             this.indexOrders.Add(order.Id);
 
             this.cachedOrders.Add(order.Id, order);
+
+            this.Log.Debug($"Added new order_id={order.Id}, " +
+                           $"indexed trader_id={traderId}, " +
+                           $"indexed position_id={positionId}, " +
+                           $"indexed strategy_id={strategyId}");
         }
 
         /// <inheritdoc />
