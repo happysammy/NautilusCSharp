@@ -18,6 +18,7 @@ namespace NautilusExecutor
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.Execution;
+    using Nautilus.Execution.Engine;
     using Nautilus.Execution.Network;
     using Nautilus.Fix;
     using Nautilus.Messaging;
@@ -64,15 +65,22 @@ namespace NautilusExecutor
                 config.ServerAddress,
                 config.EventsPort);
 
-            var fixGateway = FixTradingGatewayFactory.Create(
+            var tradingGateway = FixTradingGatewayFactory.Create(
                 container,
                 messagingAdapter,
                 fixClient);
 
+            var executionDatabase = new InMemoryExecutionDatabase(container);
+            var executionEngine = new ExecutionEngine(
+                container,
+                messagingAdapter,
+                executionDatabase,
+                tradingGateway);
+
             var orderManager = new OrderManager(
                 container,
                 messagingAdapter,
-                fixGateway);
+                tradingGateway);
 
             var commandServer = new CommandRouter(
                 container,
@@ -85,7 +93,7 @@ namespace NautilusExecutor
             var addresses = new Dictionary<Address, IEndpoint>
             {
                 { ServiceAddress.Scheduler, scheduler.Endpoint },
-                { ServiceAddress.TradingGateway, fixGateway.Endpoint },
+                { ServiceAddress.TradingGateway, tradingGateway.Endpoint },
                 { ServiceAddress.OrderManager, orderManager.Endpoint },
                 { ServiceAddress.CommandServer, commandServer.Endpoint },
                 { ServiceAddress.EventPublisher, eventPublisher.Endpoint },
@@ -96,7 +104,7 @@ namespace NautilusExecutor
                 messagingAdapter,
                 addresses,
                 scheduler,
-                fixGateway,
+                tradingGateway,
                 config);
         }
 

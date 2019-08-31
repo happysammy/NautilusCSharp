@@ -29,28 +29,26 @@ namespace Nautilus.Execution.Engine
         private readonly Dictionary<AccountId, Account> accounts;
 
         private readonly Dictionary<OrderId, ModifyOrder> bufferModify;
-        private readonly Dictionary<OrderId, CancelOrder> bufferCancel;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExecutionEngine"/> class.
         /// </summary>
         /// <param name="container">The container.</param>
-        /// <param name="messageBusAdapter">The message bus adapter.</param>
+        /// <param name="messagingAdapter">The message bus adapter.</param>
         /// <param name="database">The execution database.</param>
         /// <param name="gateway">The trading gateway.</param>
         public ExecutionEngine(
             IComponentryContainer container,
-            IMessageBusAdapter messageBusAdapter,
+            IMessageBusAdapter messagingAdapter,
             IExecutionDatabase database,
             ITradingGateway gateway)
-            : base(container, messageBusAdapter)
+            : base(container, messagingAdapter)
         {
             this.database = database;
             this.gateway = gateway;
             this.accounts = new Dictionary<AccountId, Account>();
 
             this.bufferModify = new Dictionary<OrderId, ModifyOrder>();
-            this.bufferCancel = new Dictionary<OrderId, CancelOrder>();
 
             // Commands
             this.RegisterHandler<SubmitOrder>(this.OnMessage);
@@ -87,12 +85,12 @@ namespace Nautilus.Execution.Engine
         }
 
         /// <summary>
-        /// Gets the count of commands processed.
+        /// Gets the count of commands executed.
         /// </summary>
         public int CommandCount { get; private set; }
 
         /// <summary>
-        /// Gets the count of events processed.
+        /// Gets the count of events handled.
         /// </summary>
         public int EventCount { get; private set; }
 
