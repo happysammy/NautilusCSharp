@@ -75,7 +75,6 @@ namespace Nautilus.DomainModel.Aggregates
             this.orderIdsBroker = new HashSet<OrderId>();
             this.executionIds = new HashSet<ExecutionId>();
 
-            this.AccountId = null;
             this.Symbol = symbol;
             this.Label = label;
             this.Side = side;
@@ -83,8 +82,6 @@ namespace Nautilus.DomainModel.Aggregates
             this.Quantity = quantity;
             this.FilledQuantity = Quantity.Zero();
             this.Price = price;
-            this.AveragePrice = null;
-            this.Slippage = null;
             this.TimeInForce = timeInForce;
             this.ExpireTime = this.ValidateExpireTime(expireTime);
             this.IsBuy = this.Side == OrderSide.BUY;

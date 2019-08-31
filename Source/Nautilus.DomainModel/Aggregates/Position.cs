@@ -47,14 +47,12 @@ namespace Nautilus.DomainModel.Aggregates
             this.orderIds = new HashSet<OrderId> { @event.OrderId };
             this.executionIds = new HashSet<ExecutionId> { @event.ExecutionId };
             this.executionTickets = new HashSet<ExecutionTicket> { @event.ExecutionTicket };
+            this.FromOrderId = @event.OrderId;
 
             this.Symbol = @event.Symbol;
-            this.FromOrderId = @event.OrderId;
             this.EntryDirection = @event.OrderSide;
             this.EntryTime = @event.ExecutionTime;
-            this.ExitTime = null;
             this.AverageEntryPrice = @event.AveragePrice;
-            this.AverageExitPrice = null;
 
             this.relativeQuantity = 0;                  // Initialized in FillLogic
             this.Quantity = Quantity.Zero();            // Initialized in FillLogic
@@ -66,9 +64,9 @@ namespace Nautilus.DomainModel.Aggregates
         }
 
         /// <summary>
-        /// Gets the positions symbol.
+        /// Gets the positions identifier.
         /// </summary>
-        public Symbol Symbol { get; }
+        public new PositionId Id => (PositionId)base.Id;
 
         /// <summary>
         /// Gets the positions entry order identifier.
@@ -89,6 +87,11 @@ namespace Nautilus.DomainModel.Aggregates
         /// Gets the positions last execution ticket.
         /// </summary>
         public ExecutionTicket LastExecutionTicket => this.executionTickets.Last();
+
+        /// <summary>
+        /// Gets the positions symbol.
+        /// </summary>
+        public Symbol Symbol { get; }
 
         /// <summary>
         /// Gets the positions entry direction.

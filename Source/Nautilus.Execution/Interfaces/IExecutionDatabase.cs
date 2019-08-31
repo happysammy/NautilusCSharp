@@ -22,23 +22,27 @@ namespace Nautilus.Execution.Interfaces
         /// </summary>
         /// <param name="order">The order to add.</param>
         /// <param name="traderId">The trader identifier to index.</param>
+        /// <param name="accountId">The account identifier to index.</param>
         /// <param name="strategyId">The strategy identifier to index.</param>
         /// <param name="positionId">The position identifier to index.</param>
         void AddOrder(
             Order order,
             TraderId traderId,
+            AccountId accountId,
             StrategyId strategyId,
             PositionId positionId);
 
         /// <summary>
-        /// Add the given order to the execution database indexed with the given identifiers.
+        /// Add the given position to the execution database indexed with the given identifiers.
         /// </summary>
         /// <param name="position">The position to add.</param>
         /// <param name="traderId">The trader identifier to index.</param>
+        /// <param name="accountId">The account identifier to index.</param>
         /// <param name="strategyId">The strategy identifier to index.</param>
         void AddPosition(
             Position position,
             TraderId traderId,
+            AccountId accountId,
             StrategyId strategyId);
 
         /// <summary>
@@ -81,123 +85,160 @@ namespace Nautilus.Execution.Interfaces
         ICollection<TraderId> GetTraderIds();
 
         /// <summary>
-        /// Return a collection of strategy identifiers persisted in the execution database.
+        /// Return all strategy identifiers for the given trader identifier.
         /// </summary>
-        /// <param name="traderIdFilter">The optional trader identifier filter.</param>
+        /// <param name="traderId">The trader identifier.</param>
         /// <returns>The strategy identifiers.</returns>
-        ICollection<StrategyId> GetStrategyIds(TraderId? traderIdFilter = null);
+        ICollection<StrategyId> GetStrategyIds(TraderId traderId);
 
         /// <summary>
-        /// Return a collection of order identifiers persisted in the execution database.
+        /// Return all order identifiers.
         /// </summary>
-        /// <param name="traderIdFilter">The optional trader identifier filter.</param>
-        /// <param name="strategyIdFilter">The optional strategy identifier filter.</param>
         /// <returns>The order identifiers.</returns>
-        ICollection<OrderId> GetOrderIds(TraderId? traderIdFilter = null, StrategyId? strategyIdFilter = null);
+        ICollection<OrderId> GetOrderIds();
 
         /// <summary>
-        /// Return a collection of working order identifiers persisted in the execution database.
+        /// Return all order identifiers for the given trader identifier and optional strategy
+        /// identifier filter.
         /// </summary>
-        /// <param name="traderIdFilter">The optional trader identifier filter.</param>
-        /// <param name="strategyIdFilter">The optional strategy identifier filter.</param>
+        /// <param name="traderId">The trader identifier.</param>
+        /// <param name="filterStrategyId">The optional strategy identifier filter.</param>
         /// <returns>The order identifiers.</returns>
-        ICollection<OrderId> GetOrderWorkingIds(TraderId? traderIdFilter = null, StrategyId? strategyIdFilter = null);
+        ICollection<OrderId> GetOrderIds(TraderId traderId, StrategyId? filterStrategyId = null);
 
         /// <summary>
-        /// Return a collection of completed order identifiers persisted in the execution database.
+        /// Return all working order identifiers.
         /// </summary>
-        /// <param name="traderIdFilter">The optional trader identifier filter.</param>
-        /// <param name="strategyIdFilter">The optional strategy identifier filter.</param>
         /// <returns>The order identifiers.</returns>
-        ICollection<OrderId> GetOrderCompletedIds(TraderId? traderIdFilter = null, StrategyId? strategyIdFilter = null);
+        ICollection<OrderId> GetOrderWorkingIds();
 
         /// <summary>
-        /// Return a collection of position identifiers persisted in the execution database.
+        /// Return all working order identifiers for the given trader identifier and optional
+        /// strategy identifier filter.
         /// </summary>
-        /// <param name="traderIdFilter">The optional trader identifier filter.</param>
-        /// <param name="strategyIdFilter">The optional strategy identifier filter.</param>
+        /// <param name="traderId">The trader identifier.</param>
+        /// <param name="filterStrategyId">The optional strategy identifier filter.</param>
+        /// <returns>The order identifiers.</returns>
+        ICollection<OrderId> GetOrderWorkingIds(TraderId traderId, StrategyId? filterStrategyId = null);
+
+        /// <summary>
+        /// Return all completed order identifiers.
+        /// </summary>
+        /// <returns>The order identifiers.</returns>
+        ICollection<OrderId> GetOrderCompletedIds();
+
+        /// <summary>
+        /// Return all completed order identifiers for the given trader identifier and optional
+        /// strategy identifier filter.
+        /// </summary>
+        /// <param name="traderId">The trader identifier.</param>
+        /// <param name="filterStrategyId">The optional strategy identifier filter.</param>
+        /// <returns>The order identifiers.</returns>
+        ICollection<OrderId> GetOrderCompletedIds(TraderId traderId, StrategyId? filterStrategyId = null);
+
+        /// <summary>
+        /// Return all position identifiers.
+        /// </summary>
         /// <returns>The position identifiers.</returns>
-        ICollection<PositionId> GetPositionIds(TraderId? traderIdFilter = null, StrategyId? strategyIdFilter = null);
+        ICollection<PositionId> GetPositionIds();
 
         /// <summary>
-        /// Return a collection of open position identifiers persisted in the execution database.
+        /// Return all position identifiers for the given trader identifier and optional strategy
+        /// identifier filter.
         /// </summary>
-        /// <param name="traderIdFilter">The optional trader identifier filter.</param>
-        /// <param name="strategyIdFilter">The optional strategy identifier filter.</param>
+        /// <param name="traderId">The trader identifier.</param>
+        /// <param name="filterStrategyId">The optional strategy identifier filter.</param>
         /// <returns>The position identifiers.</returns>
-        ICollection<PositionId> GetPositionOpenIds(TraderId? traderIdFilter = null, StrategyId? strategyIdFilter = null);
+        ICollection<PositionId> GetPositionIds(TraderId traderId, StrategyId? filterStrategyId = null);
 
         /// <summary>
-        /// Return a collection of closed position identifiers persisted in the execution database.
+        /// Return all open position identifiers.
         /// </summary>
-        /// <param name="traderIdFilter">The optional trader identifier filter.</param>
-        /// <param name="strategyIdFilter">The optional strategy identifier filter.</param>
         /// <returns>The position identifiers.</returns>
-        ICollection<PositionId> GetPositionClosedIds(TraderId? traderIdFilter = null, StrategyId? strategyIdFilter = null);
+        ICollection<PositionId> GetPositionOpenIds();
 
         /// <summary>
-        /// Return the strategy identifier for the given order identifier (if found else null).
+        /// Return all position open identifiers for the given trader identifier and optional
+        /// strategy identifier filter.
         /// </summary>
-        /// <param name="orderId">The order identifier.</param>
-        /// <returns>The strategy identifier (if found else null).</returns>
-        StrategyId? GetStrategyForOrder(OrderId orderId);
+        /// <param name="traderId">The trader identifier.</param>
+        /// <param name="filterStrategyId">The optional strategy identifier filter.</param>
+        /// <returns>The position identifiers.</returns>
+        ICollection<PositionId> GetPositionOpenIds(TraderId traderId, StrategyId? filterStrategyId = null);
+
+        /// <summary>
+        /// Return all closed position identifiers.
+        /// </summary>
+        /// <returns>The position identifiers.</returns>
+        ICollection<PositionId> GetPositionClosedIds();
+
+        /// <summary>
+        /// Return all closed position identifiers for the given trader identifier and optional
+        /// strategy identifier filter.
+        /// </summary>
+        /// <param name="traderId">The trader identifier.</param>
+        /// <param name="filterStrategyId">The optional strategy identifier filter.</param>
+        /// <returns>The position identifiers.</returns>
+        ICollection<PositionId> GetPositionClosedIds(TraderId traderId, StrategyId? filterStrategyId = null);
 
         /// <summary>
         /// Return the order matching the given identifier from the memory cache (if found else null).
         /// </summary>
         /// <param name="orderId">The order identifier.</param>
-        /// <param name="loadIfNotFound">The flag indicating whether the order should be loaded
-        /// from the database if not found in the memory cache.</param>
         /// <returns>The order (if found else null).</returns>
-        Order? GetOrder(OrderId orderId, bool loadIfNotFound = false);
+        Order? GetOrder(OrderId orderId);
 
         /// <summary>
-        /// Return a dictionary of orders from the memory cache.
+        /// Return all orders from the memory cache.
         /// </summary>
-        /// <param name="traderIdFilter">The optional trader identifier filter.</param>
-        /// <param name="strategyIdFilter">The optional strategy identifier filter.</param>
-        /// <param name="loadIfNotFound">The flag indicating whether orders should be loaded
-        /// from the database if not found in the memory cache.</param>
         /// <returns>The dictionary of orders.</returns>
-        IDictionary<OrderId, Order> GetOrders(
-            TraderId? traderIdFilter = null,
-            StrategyId? strategyIdFilter = null,
-            bool loadIfNotFound = false);
+        IDictionary<OrderId, Order> GetOrders();
 
         /// <summary>
-        /// Return a dictionary of working orders from the memory cache.
+        /// Return all orders from the memory cache for the given trader identifier and optional
+        /// strategy identifier filter.
         /// </summary>
-        /// <param name="traderIdFilter">The optional trader identifier filter.</param>
-        /// <param name="strategyIdFilter">The optional strategy identifier filter.</param>
-        /// <param name="loadIfNotFound">The flag indicating whether orders should be loaded
-        /// from the database if not found in the memory cache.</param>
+        /// <param name="traderId">The trader identifier.</param>
+        /// <param name="filterStrategyId">The optional strategy identifier filter.</param>
         /// <returns>The dictionary of orders.</returns>
-        IDictionary<OrderId, Order> GetWorkingOrders(
-            TraderId? traderIdFilter = null,
-            StrategyId? strategyIdFilter = null,
-            bool loadIfNotFound = false);
+        IDictionary<OrderId, Order> GetOrders(TraderId traderId, StrategyId? filterStrategyId = null);
 
         /// <summary>
-        /// Return a dictionary of completed orders from the memory cache.
+        /// Return all working orders from the memory cache.
         /// </summary>
-        /// <param name="traderIdFilter">The optional trader identifier filter.</param>
-        /// <param name="strategyIdFilter">The optional strategy identifier filter.</param>
-        /// <param name="loadIfNotFound">The flag indicating whether orders should be loaded
-        /// from the database if not found in the memory cache.</param>
         /// <returns>The dictionary of orders.</returns>
-        IDictionary<OrderId, Order> GetCompletedOrders(
-            TraderId? traderIdFilter = null,
-            StrategyId? strategyIdFilter = null,
-            bool loadIfNotFound = false);
+        IDictionary<OrderId, Order> GetOrdersWorking();
+
+        /// <summary>
+        /// Return all working orders from the memory cache for the given trader identifier and
+        /// optional strategy identifier filter.
+        /// </summary>
+        /// <param name="traderId">The trader identifier.</param>
+        /// <param name="filterStrategyId">The optional strategy identifier filter.</param>
+        /// <returns>The dictionary of orders.</returns>
+        IDictionary<OrderId, Order> GetOrdersWorking(TraderId traderId, StrategyId? filterStrategyId = null);
+
+        /// <summary>
+        /// Return all completed orders from the memory cache.
+        /// </summary>
+        /// <returns>The dictionary of orders.</returns>
+        IDictionary<OrderId, Order> GetOrdersCompleted();
+
+        /// <summary>
+        /// Return a dictionary of completed orders from the memory cache for the given trader
+        /// identifier and optional strategy identifier filter.
+        /// </summary>
+        /// <param name="traderId">The trader identifier.</param>
+        /// <param name="filterStrategyId">The optional strategy identifier filter.</param>
+        /// <returns>The dictionary of orders.</returns>
+        IDictionary<OrderId, Order> GetOrdersCompleted(TraderId traderId, StrategyId? filterStrategyId = null);
 
         /// <summary>
         /// Return the position matching the given identifier from the memory cache (if found else null).
         /// </summary>
         /// <param name="positionId">The position identifier.</param>
-        /// <param name="loadIfNotFound">The flag indicating whether the position should be loaded
-        /// from the database if not found in the memory cache.</param>
         /// <returns>The position (if found else null).</returns>
-        Position? GetPosition(PositionId positionId, bool loadIfNotFound = false);
+        Position? GetPosition(PositionId positionId);
 
         /// <summary>
         /// Return the position matching the given identifier from the memory cache (if found else null).
@@ -214,42 +255,48 @@ namespace Nautilus.Execution.Interfaces
         PositionId? GetPositionId(OrderId orderId);
 
         /// <summary>
-        /// Return a dictionary of positions from the memory cache.
+        /// Return all positions from the memory cache.
         /// </summary>
-        /// <param name="traderIdFilter">The optional trader identifier filter.</param>
-        /// <param name="strategyIdFilter">The optional strategy identifier filter.</param>
-        /// <param name="loadIfNotFound">The flag indicating whether positions should be loaded
-        /// from the database if not found in the memory cache.</param>
         /// <returns>The dictionary of positions.</returns>
-        IDictionary<PositionId, Position> GetPositions(
-            TraderId? traderIdFilter = null,
-            StrategyId? strategyIdFilter = null,
-            bool loadIfNotFound = false);
+        IDictionary<PositionId, Position> GetPositions();
 
         /// <summary>
-        /// Return a dictionary of open positions from the memory cache.
+        /// Return all positions from the memory cache for the given trader identifier and
+        /// optional strategy identifier filter.
         /// </summary>
-        /// <param name="traderIdFilter">The optional trader identifier filter.</param>
-        /// <param name="strategyIdFilter">The optional strategy identifier filter.</param>
-        /// <param name="loadIfNotFound">The flag indicating whether positions should be loaded
-        /// from the database if not found in the memory cache.</param>
+        /// <param name="traderId">The trader identifier.</param>
+        /// <param name="filterStrategyId">The optional strategy identifier filter.</param>
         /// <returns>The dictionary of positions.</returns>
-        IDictionary<PositionId, Position> GetPositionsOpen(
-            TraderId? traderIdFilter = null,
-            StrategyId? strategyIdFilter = null,
-            bool loadIfNotFound = false);
+        IDictionary<PositionId, Position> GetPositions(TraderId traderId, StrategyId? filterStrategyId = null);
 
         /// <summary>
-        /// Return a dictionary of closed positions from the memory cache.
+        /// Return all open positions from the memory cache.
         /// </summary>
-        /// <param name="traderIdFilter">The optional trader identifier filter.</param>
-        /// <param name="strategyIdFilter">The optional strategy identifier filter.</param>
-        /// <param name="loadIfNotFound">The flag indicating whether positions should be loaded
-        /// from the database if not found in the memory cache.</param>
         /// <returns>The dictionary of positions.</returns>
-        IDictionary<PositionId, Position> GetPositionsClosed(
-            TraderId? traderIdFilter = null,
-            StrategyId? strategyIdFilter = null,
-            bool loadIfNotFound = false);
+        IDictionary<PositionId, Position> GetPositionsOpen();
+
+        /// <summary>
+        /// Return all open positions from the memory cache for the given trader identifier and
+        /// optional strategy identifier filter.
+        /// </summary>
+        /// <param name="traderId">The trader identifier.</param>
+        /// <param name="filterStrategyId">The optional strategy identifier filter.</param>
+        /// <returns>The dictionary of positions.</returns>
+        IDictionary<PositionId, Position> GetPositionsOpen(TraderId traderId, StrategyId? filterStrategyId = null);
+
+        /// <summary>
+        /// Return all closed positions from the memory cache .
+        /// </summary>
+        /// <returns>The dictionary of positions.</returns>
+        IDictionary<PositionId, Position> GetPositionsClosed();
+
+        /// <summary>
+        /// Return all closed positions from the memory cache for the given trader identifier and
+        /// optional strategy identifier filter.
+        /// </summary>
+        /// <param name="traderId">The trader identifier.</param>
+        /// <param name="filterStrategyId">The optional strategy identifier filter.</param>
+        /// <returns>The dictionary of positions.</returns>
+        IDictionary<PositionId, Position> GetPositionsClosed(TraderId traderId, StrategyId? filterStrategyId = null);
     }
 }

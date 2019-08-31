@@ -15,33 +15,72 @@ namespace Nautilus.Execution
     /// Provides efficient mathematical set operations. Concrete classes avoid the overhead of LINQ
     /// and interface dispatching.
     /// </summary>
-    public class SetFactory
+    public static class SetFactory
     {
         /// <summary>
         /// Return a new <see cref="HashSet{T}"/> representing the mathematical intersection of the
         /// given sets.
         /// </summary>
-        /// <param name="setA">The first set.</param>
-        /// <param name="setB">The second set.</param>
+        /// <param name="sets">The sets to intersect.</param>
         /// <typeparam name="T">The hash set type.</typeparam>
         /// <returns>The intersection of the given sets as a new set.</returns>
         [PerformanceOptimized]
-        public static HashSet<T> Intersection<T>(HashSet<T> setA, HashSet<T> setB)
+        public static HashSet<T> Intersection<T>(HashSet<T>[] sets)
         {
-            HashSet<T> intersection;
+            var setsLength = sets.Length;
 
-            if (setA.Count <= setB.Count)
+            // ReSharper disable once ConvertIfStatementToSwitchStatement
+            if (setsLength == 0)
             {
-                intersection = new HashSet<T>(setA);
-                intersection.IntersectWith(setB);
+                return new HashSet<T>();
             }
-            else
+
+            if (setsLength == 1)
             {
-                intersection = new HashSet<T>(setB);
-                intersection.IntersectWith(setA);
+                return sets[0];
+            }
+
+            var intersection = new HashSet<T>(sets[0]);
+
+            for (var i = 1; i < setsLength; i++)
+            {
+                intersection.IntersectWith(sets[i]);
             }
 
             return intersection;
+        }
+
+        /// <summary>
+        /// Return a new <see cref="SortedSet{T}"/> representing the mathematical intersection of the
+        /// given sets.
+        /// </summary>
+        /// <param name="sets">The sets to intersect.</param>
+        /// <typeparam name="T">The hash set type.</typeparam>
+        /// <returns>The intersection of the given sets as a new set.</returns>
+        [PerformanceOptimized]
+        public static SortedSet<T> IntersectionSorted<T>(HashSet<T>[] sets)
+        {
+            var setsLength = sets.Length;
+
+            // ReSharper disable once ConvertIfStatementToSwitchStatement
+            if (setsLength == 0)
+            {
+                return new SortedSet<T>();
+            }
+
+            if (setsLength == 1)
+            {
+                return new SortedSet<T>(sets[0]);
+            }
+
+            var intersection = new HashSet<T>(sets[0]);
+
+            for (var i = 1; i < setsLength; i++)
+            {
+                intersection.IntersectWith(sets[i]);
+            }
+
+            return new SortedSet<T>(intersection);
         }
     }
 }
