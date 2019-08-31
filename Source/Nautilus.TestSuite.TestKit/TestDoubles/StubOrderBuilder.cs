@@ -8,6 +8,7 @@
 
 namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
+    using System;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core.Types;
     using Nautilus.DomainModel.Aggregates;
@@ -146,7 +147,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 this.OrderLabel,
                 this.OrderSide,
                 this.Quantity,
-                this.Timestamp);
+                this.Timestamp,
+                Guid.NewGuid());
         }
 
         public Order BuildLimitOrder()
@@ -160,7 +162,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 this.Price,
                 this.TimeInForce,
                 this.ExpireTime,
-                this.Timestamp);
+                this.Timestamp,
+                Guid.NewGuid());
         }
 
         public Order BuildStopMarketOrder()
@@ -174,7 +177,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 this.Price,
                 this.TimeInForce,
                 this.ExpireTime,
-                this.Timestamp);
+                this.Timestamp,
+                Guid.NewGuid());
         }
 
         public Order BuildStopLimitOrder()
@@ -188,7 +192,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 this.Price,
                 this.TimeInForce,
                 this.ExpireTime,
-                this.Timestamp);
+                this.Timestamp,
+                Guid.NewGuid());
         }
     }
 }

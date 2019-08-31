@@ -34,12 +34,8 @@ namespace Nautilus.DomainModel.Entities.Base
             ZonedDateTime timestamp)
         {
             // Design time correctness
-            Debug.True(
-                typeof(TId).Name.EndsWith(nameof(this.Id)),
-                "The TId type name ends with 'Id'.");
-            Debug.True(
-                typeof(TId).Name.Split(nameof(this.Id))[0] == typeof(T).Name,
-                "The T type name is equal to the TId type name stripped of 'Id'.");
+            Debug.True(typeof(TId).Name.EndsWith(nameof(this.Id)), "The TId type name ends with 'Id'.");
+            Debug.True(typeof(TId).Name.Split(nameof(this.Id))[0] == typeof(T).Name, "The T type name is equal to the TId type name stripped of 'Id'.");
             Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.Id = identifier;
@@ -47,33 +43,39 @@ namespace Nautilus.DomainModel.Entities.Base
         }
 
         /// <summary>
-        /// Gets the entity identifier.
+        /// Gets the identifier.
         /// </summary>
         public TId Id { get; }
 
         /// <summary>
-        /// Gets the entity initialization timestamp.
+        /// Gets the initialization timestamp.
         /// </summary>
         public ZonedDateTime Timestamp { get; }
 
         /// <summary>
-        /// Returns a value indicating whether this entity is equal to the given <see cref="object"/>.
+        /// Returns a value indicating whether this object is equal to the given <see cref="object"/>.
         /// </summary>
         /// <param name="other">The other object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
         public override bool Equals(object other) => other is Entity<TId, T> entity && this.Equals(entity);
 
         /// <summary>
-        /// Returns a value indicating whether this entity is equal to the given entity.
+        /// Returns a value indicating whether this object is equal to the given object.
         /// </summary>
-        /// <param name="other">The other entity.</param>
+        /// <param name="other">The other object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
         public bool Equals(Entity<TId, T> other) => this.Id.Equals(other.Id);
 
         /// <summary>
-        /// Returns the hash code of the wrapped object.
+        /// Returns the hash code integer representation of this object.
         /// </summary>
         /// <returns>An <see cref="int"/>.</returns>
         public override int GetHashCode() => Hash.GetCode(this.Id);
+
+        /// <summary>
+        /// Returns a string representation of this entity.
+        /// </summary>
+        /// <returns>A <see cref="string"/>.</returns>
+        public override string ToString() => $"{nameof(T)}({this.Id})";
     }
 }

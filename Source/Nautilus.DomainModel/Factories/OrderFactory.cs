@@ -53,9 +53,9 @@ namespace Nautilus.DomainModel.Factories
             OrderSide side,
             Quantity quantity,
             ZonedDateTime timestamp,
-            Guid initEventId = default)
+            Guid initEventId)
         {
-            return new Order(
+            return Order.Create(
                 orderId,
                 symbol,
                 label,
@@ -93,9 +93,9 @@ namespace Nautilus.DomainModel.Factories
             TimeInForce timeInForce,
             ZonedDateTime? expireTime,
             ZonedDateTime timestamp,
-            Guid initEventId = default)
+            Guid initEventId)
         {
-            return new Order(
+            return Order.Create(
                 orderId,
                 symbol,
                 label,
@@ -133,9 +133,9 @@ namespace Nautilus.DomainModel.Factories
             TimeInForce timeInForce,
             ZonedDateTime? expireTime,
             ZonedDateTime timestamp,
-            Guid initEventId = default)
+            Guid initEventId)
         {
-            return new Order(
+            return Order.Create(
                 orderId,
                 symbol,
                 label,
@@ -173,9 +173,9 @@ namespace Nautilus.DomainModel.Factories
             TimeInForce timeInForce,
             ZonedDateTime? expireTime,
             ZonedDateTime timestamp,
-            Guid initEventId = default)
+            Guid initEventId)
         {
-            return new Order(
+            return Order.Create(
                 orderId,
                 symbol,
                 label,
@@ -213,9 +213,9 @@ namespace Nautilus.DomainModel.Factories
             TimeInForce timeInForce,
             ZonedDateTime? expireTime,
             ZonedDateTime timestamp,
-            Guid initEventId = default)
+            Guid initEventId)
         {
-            return new Order(
+            return Order.Create(
                 orderId,
                 symbol,
                 label,

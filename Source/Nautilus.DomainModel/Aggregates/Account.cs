@@ -19,7 +19,7 @@ namespace Nautilus.DomainModel.Aggregates
     /// <summary>
     /// Represents a brokerage account.
     /// </summary>
-    public sealed class Account : Aggregate<AccountId, Account>
+    public sealed class Account : Aggregate<AccountId, AccountStateEvent, Account>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Account"/> class.
@@ -28,7 +28,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <exception cref="ArgumentException">If any string is empty or whitespace.</exception>
         /// <exception cref="ArgumentException">If any struct is the default value.</exception>
         public Account(AccountStateEvent @event)
-            : base(@event.AccountId, @event.Timestamp)
+            : base(@event.AccountId, @event)
         {
             this.Brokerage = this.Id.Brokerage;
             this.AccountNumber = this.Id.AccountNumber;
@@ -97,15 +97,10 @@ namespace Nautilus.DomainModel.Aggregates
         /// </summary>
         public string MarginCallStatus { get; private set; }
 
-        /// <summary>
-        /// Applies the given event to the brokerage account.
-        /// </summary>
-        /// <param name="event">The event.</param>
-        public void Apply(AccountStateEvent @event)
+        /// <inheritdoc />
+        protected override void OnEvent(AccountStateEvent @event)
         {
             Debug.EqualTo(@event.AccountId, this.Id, nameof(@event.AccountId));
-
-            this.AppendEvent(@event);
 
             this.CashBalance = @event.CashBalance;
             this.CashStartDay = @event.CashStartDay;
@@ -115,12 +110,6 @@ namespace Nautilus.DomainModel.Aggregates
             this.MarginUsedLiquidation = @event.MarginUsedLiquidation;
             this.MarginCallStatus = @event.MarginCallStatus;
         }
-
-        /// <summary>
-        /// Returns a string representation of the <see cref="Account"/>.
-        /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{nameof(Account)}({this.Id})";
 
         private Money GetFreeEquity()
         {

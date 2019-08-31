@@ -11,10 +11,8 @@ namespace Nautilus.DomainModel.Aggregates
     using System;
     using System.Collections.Generic;
     using System.Collections.Immutable;
-    using System.Linq;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
-    using Nautilus.Core.Message;
     using Nautilus.DomainModel.Aggregates.Base;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events.Base;
@@ -26,7 +24,7 @@ namespace Nautilus.DomainModel.Aggregates
     /// Represents a financial market position.
     /// </summary>
     [PerformanceOptimized]
-    public sealed class Position : Aggregate<PositionId, Position>
+    public sealed class Position : Aggregate<PositionId, OrderFillEvent, Position>
     {
         private readonly HashSet<OrderId> orderIds;
         private readonly HashSet<ExecutionId> executionIds;
@@ -38,50 +36,47 @@ namespace Nautilus.DomainModel.Aggregates
         /// Initializes a new instance of the <see cref="Position"/> class.
         /// </summary>
         /// <param name="positionId">The position identifier.</param>
-        /// <param name="event">The fill event which opened the position.</param>
-        public Position(PositionId positionId, OrderFillEvent @event)
-            : base(positionId, @event.ExecutionTime)
+        /// <param name="initial">The initial fill event which opened the position.</param>
+        public Position(PositionId positionId, OrderFillEvent initial)
+            : base(positionId, initial)
         {
-            this.AppendEvent(@event);
+            this.orderIds = new HashSet<OrderId> { initial.OrderId };
+            this.executionIds = new HashSet<ExecutionId> { initial.ExecutionId };
+            this.executionTickets = new HashSet<ExecutionTicket> { initial.ExecutionTicket };
 
-            this.orderIds = new HashSet<OrderId> { @event.OrderId };
-            this.executionIds = new HashSet<ExecutionId> { @event.ExecutionId };
-            this.executionTickets = new HashSet<ExecutionTicket> { @event.ExecutionTicket };
-            this.FromOrderId = @event.OrderId;
-
-            this.Symbol = @event.Symbol;
-            this.EntryDirection = @event.OrderSide;
-            this.EntryTime = @event.ExecutionTime;
-            this.AverageEntryPrice = @event.AveragePrice;
+            this.Symbol = initial.Symbol;
+            this.EntryDirection = initial.OrderSide;
+            this.EntryTime = initial.ExecutionTime;
+            this.AverageEntryPrice = initial.AveragePrice;
 
             this.relativeQuantity = 0;                  // Initialized in FillLogic
             this.Quantity = Quantity.Zero();            // Initialized in FillLogic
             this.PeakQuantity = Quantity.Zero();        // Initialized in FillLogic
             this.MarketPosition = MarketPosition.Flat;  // Initialized in FillLogic
 
-            this.FillLogic(@event);
-            this.CheckClassInvariants();
+            this.FillLogic(initial);
+            this.CheckInitialization();
         }
 
         /// <summary>
         /// Gets the positions entry order identifier.
         /// </summary>
-        public OrderId FromOrderId { get; }
+        public OrderId FromOrderId => this.InitialEvent.OrderId;
 
         /// <summary>
         /// Gets the positions last order identifier.
         /// </summary>
-        public OrderId LastOrderId => this.orderIds.Last();
+        public OrderId LastOrderId => this.LastEvent.OrderId;
 
         /// <summary>
         /// Gets the positions last execution identifier.
         /// </summary>
-        public ExecutionId LastExecutionId => this.executionIds.Last();
+        public ExecutionId LastExecutionId => this.LastEvent.ExecutionId;
 
         /// <summary>
         /// Gets the positions last execution ticket.
         /// </summary>
-        public ExecutionTicket LastExecutionTicket => this.executionTickets.Last();
+        public ExecutionTicket LastExecutionTicket => this.LastEvent.ExecutionTicket;
 
         /// <summary>
         /// Gets the positions symbol.
@@ -122,11 +117,6 @@ namespace Nautilus.DomainModel.Aggregates
         /// Gets the positions peak quantity.
         /// </summary>
         public Quantity PeakQuantity { get; private set; }
-
-        /// <summary>
-        /// Gets the positions last event.
-        /// </summary>
-        public new OrderFillEvent LastEvent => (OrderFillEvent)base.LastEvent!;
 
         /// <summary>
         /// Gets the positions market position.
@@ -176,14 +166,9 @@ namespace Nautilus.DomainModel.Aggregates
         /// <returns>The events collection.</returns>
         public ImmutableSortedSet<ExecutionTicket> GetExecutionTickets() => this.executionTickets.ToImmutableSortedSet();
 
-        /// <summary>
-        /// Applies the given <see cref="Event"/> to this position.
-        /// </summary>
-        /// <param name="event">The position event.</param>
-        public void Apply(OrderFillEvent @event)
+        /// <inheritdoc />
+        protected override void OnEvent(OrderFillEvent @event)
         {
-            this.AppendEvent(@event);
-
             this.orderIds.Add(@event.OrderId);
             this.executionIds.Add(@event.ExecutionId);
             this.executionTickets.Add(@event.ExecutionTicket);
@@ -234,7 +219,7 @@ namespace Nautilus.DomainModel.Aggregates
         }
 
         [System.Diagnostics.Conditional("DEBUG")]
-        private void CheckClassInvariants()
+        private void CheckInitialization()
         {
             Debug.True(this.orderIds.Count == 1, "this.orderIds.Count == 1");
             Debug.True(this.executionIds.Count == 1, "this.executionIds.Count == 1");

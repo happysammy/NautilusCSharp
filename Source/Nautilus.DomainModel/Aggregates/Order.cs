@@ -15,7 +15,6 @@ namespace Nautilus.DomainModel.Aggregates
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
-    using Nautilus.Core.Message;
     using Nautilus.Core.Types;
     using Nautilus.DomainModel.Aggregates.Base;
     using Nautilus.DomainModel.Enums;
@@ -30,107 +29,47 @@ namespace Nautilus.DomainModel.Aggregates
     /// Represents a financial market order.
     /// </summary>
     [PerformanceOptimized]
-    public sealed class Order : Aggregate<OrderId, Order>
+    public sealed class Order : Aggregate<OrderId, OrderEvent, Order>
     {
         private readonly FiniteStateMachine orderStateMachine;
-        private readonly HashSet<OrderId> orderIds;
-        private readonly HashSet<OrderId> orderIdsBroker;
-        private readonly HashSet<ExecutionId> executionIds;
+        private readonly List<OrderId> orderIds;
+        private readonly List<OrderId> orderIdsBroker;
+        private readonly List<ExecutionId> executionIds;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Order" /> class.
+        /// Initializes a new instance of the <see cref="Order"/> class.
         /// </summary>
-        /// <param name="orderId">The order identifier.</param>
-        /// <param name="symbol">The order symbol.</param>
-        /// <param name="label">The order label.</param>
-        /// <param name="side">The order side.</param>
-        /// <param name="type">The order type.</param>
-        /// <param name="quantity">The order quantity.</param>
-        /// <param name="price">The order price (optional).</param>
-        /// <param name="timeInForce">The order time in force.</param>
-        /// <param name="expireTime">The order expire time (optional).</param>
-        /// <param name="timestamp">The order timestamp.</param>
-        /// <param name="initId">The order initialization event identifier.</param>
-        public Order(
-            OrderId orderId,
-            Symbol symbol,
-            Label label,
-            OrderSide side,
-            OrderType type,
-            Quantity quantity,
-            Price? price,
-            TimeInForce timeInForce,
-            ZonedDateTime? expireTime,
-            ZonedDateTime timestamp,
-            Guid initId = default)
-            : base(orderId, timestamp)
+        /// <param name="initial">The initial order event.</param>
+        public Order(OrderInitialized initial)
+            : base(initial.OrderId, initial)
         {
-            Debug.NotDefault(side, nameof(side));
-            Debug.NotDefault(type, nameof(type));
-            Debug.NotDefault(timeInForce, nameof(timeInForce));
-            Debug.NotDefault(timestamp, nameof(timestamp));
-
             this.orderStateMachine = CreateOrderFiniteStateMachine();
-            this.orderIds = new HashSet<OrderId> { this.Id };
-            this.orderIdsBroker = new HashSet<OrderId>();
-            this.executionIds = new HashSet<ExecutionId>();
+            this.orderIds = new List<OrderId> { this.Id };
+            this.orderIdsBroker = new List<OrderId>();
+            this.executionIds = new List<ExecutionId>();
 
-            this.Symbol = symbol;
-            this.Label = label;
-            this.Side = side;
-            this.Type = type;
-            this.Quantity = quantity;
+            this.Symbol = initial.Symbol;
+            this.Label = initial.Label;
+            this.Side = initial.OrderSide;
+            this.Type = initial.OrderType;
+            this.Quantity = initial.Quantity;
             this.FilledQuantity = Quantity.Zero();
-            this.Price = price;
-            this.TimeInForce = timeInForce;
-            this.ExpireTime = this.ValidateExpireTime(expireTime);
+            this.Price = initial.Price;
+            this.TimeInForce = initial.TimeInForce;
+            this.ExpireTime = this.ValidateExpireTime(initial.ExpireTime);
             this.IsBuy = this.Side == OrderSide.BUY;
             this.IsSell = this.Side == OrderSide.SELL;
             this.IsWorking = false;
             this.IsCompleted = false;
 
-            var initialized = new OrderInitialized(
-                orderId,
-                symbol,
-                label,
-                side,
-                type,
-                quantity,
-                price,
-                timeInForce,
-                expireTime,
-                initId == default ? Guid.NewGuid() : initId,
-                timestamp);
-            this.InitId = initialized.Id;
-
-            this.Apply(initialized);
-            this.CheckClassInvariants();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Order"/> class.
-        /// </summary>
-        /// <param name="initialized">The order initialized event.</param>
-        public Order(OrderInitialized initialized)
-            : this(
-                initialized.OrderId,
-                initialized.Symbol,
-                initialized.Label,
-                initialized.OrderSide,
-                initialized.OrderType,
-                initialized.Quantity,
-                initialized.Price,
-                initialized.TimeInForce,
-                initialized.ExpireTime,
-                initialized.Timestamp,
-                initialized.Id)
-        {
+            this.OnEvent(initial);
+            this.CheckInitialization();
         }
 
         /// <summary>
         /// Gets the orders last identifier.
         /// </summary>
-        public OrderId IdLast => this.orderIds.Last();
+        public OrderId IdLast => this.orderIds[this.orderIds.Count - 1];
 
         /// <summary>
         /// Gets the orders last identifier for the broker.
@@ -208,19 +147,9 @@ namespace Nautilus.DomainModel.Aggregates
         public ZonedDateTime? ExpireTime { get; }
 
         /// <summary>
-        /// Gets the orders last event.
-        /// </summary>
-        public new OrderEvent LastEvent => (OrderEvent)base.LastEvent!;
-
-        /// <summary>
         /// Gets the current order status.
         /// </summary>
         public OrderStatus Status => this.orderStateMachine.State.ToString().ToEnum<OrderStatus>();
-
-        /// <summary>
-        /// Gets the initialization event identifier.
-        /// </summary>
-        public Guid InitId { get; }
 
         /// <summary>
         /// Gets a value indicating whether the order side is BUY.
@@ -241,6 +170,55 @@ namespace Nautilus.DomainModel.Aggregates
         /// Gets a value indicating whether the order is complete.
         /// </summary>
         public bool IsCompleted { get; private set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Order" /> class.
+        /// </summary>
+        /// <param name="orderId">The order identifier.</param>
+        /// <param name="symbol">The order symbol.</param>
+        /// <param name="label">The order label.</param>
+        /// <param name="side">The order side.</param>
+        /// <param name="type">The order type.</param>
+        /// <param name="quantity">The order quantity.</param>
+        /// <param name="price">The order price (optional).</param>
+        /// <param name="timeInForce">The order time in force.</param>
+        /// <param name="expireTime">The order expire time (optional).</param>
+        /// <param name="timestamp">The order timestamp.</param>
+        /// <param name="initId">The order initialization event identifier.</param>
+        /// <returns>A new order.</returns>
+        public static Order Create(
+            OrderId orderId,
+            Symbol symbol,
+            Label label,
+            OrderSide side,
+            OrderType type,
+            Quantity quantity,
+            Price? price,
+            TimeInForce timeInForce,
+            ZonedDateTime? expireTime,
+            ZonedDateTime timestamp,
+            Guid initId)
+        {
+            Debug.NotDefault(side, nameof(side));
+            Debug.NotDefault(type, nameof(type));
+            Debug.NotDefault(timeInForce, nameof(timeInForce));
+            Debug.NotDefault(timestamp, nameof(timestamp));
+
+            var initial = new OrderInitialized(
+                orderId,
+                symbol,
+                label,
+                side,
+                type,
+                quantity,
+                price,
+                timeInForce,
+                expireTime,
+                initId,
+                timestamp);
+
+            return new Order(initial);
+        }
 
         /// <summary>
         /// Adds the modified order identifier to the order identifiers.
@@ -270,13 +248,46 @@ namespace Nautilus.DomainModel.Aggregates
         public ImmutableSortedSet<ExecutionId> GetExecutionIds() => this.executionIds.ToImmutableSortedSet();
 
         /// <summary>
-        /// Applies the given <see cref="Event"/> to the <see cref="Order"/>.
+        /// Returns a new order finite state machine.
         /// </summary>
-        /// <param name="orderEvent">The order event.</param>
-        public void Apply(OrderEvent orderEvent)
+        /// <returns>The finite state machine.</returns>
+        internal static FiniteStateMachine CreateOrderFiniteStateMachine()
         {
-            this.AppendEvent(orderEvent);
+            var stateTransitionTable = new Dictionary<StateTransition, State>
+            {
+                { new StateTransition(new State(OrderStatus.Initialized), Trigger.Event(typeof(OrderInitialized))), new State(OrderStatus.Initialized) },
+                { new StateTransition(new State(OrderStatus.Initialized), Trigger.Event(typeof(OrderSubmitted))), new State(OrderStatus.Submitted) },
+                { new StateTransition(new State(OrderStatus.Initialized), Trigger.Event(typeof(OrderCancelled))), new State(OrderStatus.Cancelled) },
+                { new StateTransition(new State(OrderStatus.Initialized), Trigger.Event(typeof(OrderCancelReject))), new State(OrderStatus.Initialized) }, // OrderCancelReject (state should remain unchanged).
+                { new StateTransition(new State(OrderStatus.Submitted), Trigger.Event(typeof(OrderRejected))), new State(OrderStatus.Rejected) },
+                { new StateTransition(new State(OrderStatus.Submitted), Trigger.Event(typeof(OrderAccepted))), new State(OrderStatus.Accepted) },
+                { new StateTransition(new State(OrderStatus.Submitted), Trigger.Event(typeof(OrderCancelled))), new State(OrderStatus.Cancelled) },
+                { new StateTransition(new State(OrderStatus.Submitted), Trigger.Event(typeof(OrderCancelReject))), new State(OrderStatus.Submitted) }, // OrderCancelReject (state should remain unchanged).
+                { new StateTransition(new State(OrderStatus.Accepted), Trigger.Event(typeof(OrderWorking))), new State(OrderStatus.Working) },
+                { new StateTransition(new State(OrderStatus.Accepted), Trigger.Event(typeof(OrderCancelReject))), new State(OrderStatus.Accepted) }, // OrderCancelReject (state should remain unchanged).
+                { new StateTransition(new State(OrderStatus.Working), Trigger.Event(typeof(OrderCancelled))), new State(OrderStatus.Cancelled) },
+                { new StateTransition(new State(OrderStatus.Working), Trigger.Event(typeof(OrderModified))), new State(OrderStatus.Working) },
+                { new StateTransition(new State(OrderStatus.Working), Trigger.Event(typeof(OrderExpired))), new State(OrderStatus.Expired) },
+                { new StateTransition(new State(OrderStatus.Working), Trigger.Event(typeof(OrderFilled))), new State(OrderStatus.Filled) },
+                { new StateTransition(new State(OrderStatus.Working), Trigger.Event(typeof(OrderPartiallyFilled))), new State(OrderStatus.PartiallyFilled) },
+                { new StateTransition(new State(OrderStatus.Working), Trigger.Event(typeof(OrderCancelReject))), new State(OrderStatus.Working) }, // OrderCancelReject (state should remain unchanged).
+                { new StateTransition(new State(OrderStatus.PartiallyFilled), Trigger.Event(typeof(OrderPartiallyFilled))), new State(OrderStatus.PartiallyFilled) },
+                { new StateTransition(new State(OrderStatus.PartiallyFilled), Trigger.Event(typeof(OrderCancelled))), new State(OrderStatus.Cancelled) },
+                { new StateTransition(new State(OrderStatus.PartiallyFilled), Trigger.Event(typeof(OrderFilled))), new State(OrderStatus.Filled) },
+            };
 
+            // Check that all OrderCancelReject events leave the state unchanged
+            Debug.True(
+                stateTransitionTable
+                .Where(kvp => kvp.Key.Trigger.ToString().Equals(nameof(OrderCancelReject)))
+                .All(kvp => kvp.Key.CurrentState.ToString().Equals(kvp.Value.ToString())), nameof(stateTransitionTable));
+
+            return new FiniteStateMachine(stateTransitionTable, new State(OrderStatus.Initialized));
+        }
+
+        /// <inheritdoc />
+        protected override void OnEvent(OrderEvent orderEvent)
+        {
             switch (orderEvent)
             {
                 case OrderInitialized @event:
@@ -317,50 +328,6 @@ namespace Nautilus.DomainModel.Aggregates
             }
 
             this.orderStateMachine.Process(Trigger.Event(orderEvent));
-        }
-
-        /// <summary>
-        /// Returns a string representation of the <see cref="Order"/>.
-        /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{nameof(Order)}({this.Id})";
-
-        /// <summary>
-        /// Creates and returns a new order FSM.
-        /// </summary>
-        /// <returns>The FSM.</returns>
-        internal static FiniteStateMachine CreateOrderFiniteStateMachine()
-        {
-            var stateTransitionTable = new Dictionary<StateTransition, State>
-            {
-                { new StateTransition(new State(OrderStatus.Initialized), Trigger.Event(typeof(OrderInitialized))), new State(OrderStatus.Initialized) },
-                { new StateTransition(new State(OrderStatus.Initialized), Trigger.Event(typeof(OrderSubmitted))), new State(OrderStatus.Submitted) },
-                { new StateTransition(new State(OrderStatus.Initialized), Trigger.Event(typeof(OrderCancelled))), new State(OrderStatus.Cancelled) },
-                { new StateTransition(new State(OrderStatus.Initialized), Trigger.Event(typeof(OrderCancelReject))), new State(OrderStatus.Initialized) }, // OrderCancelReject (state should remain unchanged).
-                { new StateTransition(new State(OrderStatus.Submitted), Trigger.Event(typeof(OrderRejected))), new State(OrderStatus.Rejected) },
-                { new StateTransition(new State(OrderStatus.Submitted), Trigger.Event(typeof(OrderAccepted))), new State(OrderStatus.Accepted) },
-                { new StateTransition(new State(OrderStatus.Submitted), Trigger.Event(typeof(OrderCancelled))), new State(OrderStatus.Cancelled) },
-                { new StateTransition(new State(OrderStatus.Submitted), Trigger.Event(typeof(OrderCancelReject))), new State(OrderStatus.Submitted) }, // OrderCancelReject (state should remain unchanged).
-                { new StateTransition(new State(OrderStatus.Accepted), Trigger.Event(typeof(OrderWorking))), new State(OrderStatus.Working) },
-                { new StateTransition(new State(OrderStatus.Accepted), Trigger.Event(typeof(OrderCancelReject))), new State(OrderStatus.Accepted) }, // OrderCancelReject (state should remain unchanged).
-                { new StateTransition(new State(OrderStatus.Working), Trigger.Event(typeof(OrderCancelled))), new State(OrderStatus.Cancelled) },
-                { new StateTransition(new State(OrderStatus.Working), Trigger.Event(typeof(OrderModified))), new State(OrderStatus.Working) },
-                { new StateTransition(new State(OrderStatus.Working), Trigger.Event(typeof(OrderExpired))), new State(OrderStatus.Expired) },
-                { new StateTransition(new State(OrderStatus.Working), Trigger.Event(typeof(OrderFilled))), new State(OrderStatus.Filled) },
-                { new StateTransition(new State(OrderStatus.Working), Trigger.Event(typeof(OrderPartiallyFilled))), new State(OrderStatus.PartiallyFilled) },
-                { new StateTransition(new State(OrderStatus.Working), Trigger.Event(typeof(OrderCancelReject))), new State(OrderStatus.Working) }, // OrderCancelReject (state should remain unchanged).
-                { new StateTransition(new State(OrderStatus.PartiallyFilled), Trigger.Event(typeof(OrderPartiallyFilled))), new State(OrderStatus.PartiallyFilled) },
-                { new StateTransition(new State(OrderStatus.PartiallyFilled), Trigger.Event(typeof(OrderCancelled))), new State(OrderStatus.Cancelled) },
-                { new StateTransition(new State(OrderStatus.PartiallyFilled), Trigger.Event(typeof(OrderFilled))), new State(OrderStatus.Filled) },
-            };
-
-            // Check that all OrderCancelReject events leave the state unchanged
-            Debug.True(
-                stateTransitionTable
-                .Where(kvp => kvp.Key.Trigger.ToString().Equals(nameof(OrderCancelReject)))
-                .All(kvp => kvp.Key.CurrentState.ToString().Equals(kvp.Value.ToString())), nameof(stateTransitionTable));
-
-            return new FiniteStateMachine(stateTransitionTable, new State(OrderStatus.Initialized));
         }
 
         private void When(OrderInitialized @event)
@@ -468,10 +435,10 @@ namespace Nautilus.DomainModel.Aggregates
         }
 
         [System.Diagnostics.Conditional("DEBUG")]
-        private void CheckClassInvariants()
+        private void CheckInitialization()
         {
             Debug.True(this.orderIds.First() == this.Id, "this.orderIds[0] == this.Id");
-            Debug.True(this.GetEvents().First() is OrderInitialized, "this.Events[0] is OrderInitialized");
+            Debug.True(this.InitialEvent is OrderInitialized, "this.Events[0] is OrderInitialized");
         }
     }
 }

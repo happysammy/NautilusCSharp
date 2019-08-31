@@ -44,7 +44,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new Label("some_label"),
                 OrderSide.BUY,
                 Quantity.Create(10),
-                StubZonedDateTime.UnixEpoch());
+                StubZonedDateTime.UnixEpoch(),
+                Guid.NewGuid());
 
             // Assert
             Assert.Equal(new Symbol("SYMBOL", "LMAX"), order.Symbol);
@@ -73,7 +74,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 Price.Create(2000, 1),
                 TimeInForce.GTD,
                 StubZonedDateTime.UnixEpoch() + Period.FromMinutes(5).ToDuration(),
-                StubZonedDateTime.UnixEpoch());
+                StubZonedDateTime.UnixEpoch(),
+                Guid.NewGuid());
 
             // Assert
             Assert.Equal(new Symbol("SYMBOL", "LMAX"), order.Symbol);
