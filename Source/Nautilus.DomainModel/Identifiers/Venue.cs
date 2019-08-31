@@ -28,7 +28,7 @@ namespace Nautilus.DomainModel.Identifiers
             : base(value.ToUpperInvariant())
         {
             Debug.NotEmptyOrWhiteSpace(value, nameof(value));
-            Debug.True(value.IsAllUpperCase(), nameof(value));
+            Debug.True(value.IsAllUpperCase(), $"The venue value '{value}' was not all upper case.");
         }
     }
 }

@@ -181,7 +181,6 @@ namespace Nautilus.Redis.Data.Builders
         public Instrument Build(ZonedDateTime timestamp)
         {
             return new Instrument(
-                new InstrumentId(this.Symbol.ToString()),
                 this.Symbol,
                 this.BrokerSymbol,
                 this.QuoteCurrency,

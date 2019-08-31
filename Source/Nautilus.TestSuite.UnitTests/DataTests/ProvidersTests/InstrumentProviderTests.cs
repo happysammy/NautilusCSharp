@@ -82,7 +82,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             var query = new Dictionary<string, string>
             {
                 { "DataType", "Instrument" },
-                { "Symbol", instrument.Symbol.ToString() },
+                { "Symbol", instrument.Symbol.Value },
             };
 
             var request = new DataRequest(
@@ -161,7 +161,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             var query = new Dictionary<string, string>
             {
                 { "DataType", "Instrument" },
-                { "Symbol", instrument.Symbol.ToString() },
+                { "Symbol", instrument.Symbol.Value },
             };
 
             var request = new DataRequest(

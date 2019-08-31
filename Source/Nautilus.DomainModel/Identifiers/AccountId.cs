@@ -11,13 +11,12 @@ namespace Nautilus.DomainModel.Identifiers
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Types;
-    using Nautilus.DomainModel.Aggregates;
 
     /// <summary>
     /// Represents a valid account identifier.
     /// </summary>
     [Immutable]
-    public sealed class AccountId : Identifier<Account>
+    public sealed class AccountId : Identifier<AccountId>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="AccountId"/> class.
@@ -25,7 +24,7 @@ namespace Nautilus.DomainModel.Identifiers
         /// <param name="brokerage">The brokerage identifier.</param>
         /// <param name="accountNumber">The account number identifier.</param>
         public AccountId(Brokerage brokerage, AccountNumber accountNumber)
-            : base($"{brokerage}-{accountNumber}")
+            : base($"{brokerage.Value}-{accountNumber.Value}")
         {
             this.Brokerage = brokerage;
             this.AccountNumber = accountNumber;

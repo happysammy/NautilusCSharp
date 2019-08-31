@@ -25,10 +25,10 @@ namespace Nautilus.DomainModel.Identifiers
         /// <param name="code">The symbols code.</param>
         /// <param name="venue">The symbols venue.</param>
         public Symbol(string code, Venue venue)
-            : base($"{code.ToUpper()}.{venue}")
+            : base($"{code.ToUpper()}.{venue.Value}")
         {
             Debug.NotEmptyOrWhiteSpace(code, nameof(code));
-            Debug.True(code.IsAllUpperCase(), nameof(code));
+            Debug.True(code.IsAllUpperCase(), $"The symbol code value '{code}' was not all upper case.");
 
             this.Code = code;
             this.Venue = venue;

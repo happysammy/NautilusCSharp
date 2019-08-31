@@ -31,7 +31,7 @@ namespace Nautilus.Serialization.Internal
         /// <returns>The extracted <see cref="decimal"/>.</returns>
         internal static decimal Decimal(MessagePackObject unpacked)
         {
-            return Convert.ToDecimal(unpacked.ToString());
+            return Convert.ToDecimal(unpacked.AsString());
         }
 
         /// <summary>

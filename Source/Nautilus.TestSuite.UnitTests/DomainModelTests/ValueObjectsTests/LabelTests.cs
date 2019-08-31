@@ -22,10 +22,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
             var label = new Label("abc123");
 
             // Act
-            var result = label.ToString();
-
             // Assert
-            Assert.Equal("abc123", result);
+            Assert.Equal("abc123", label.Value);
         }
 
         [Fact]

@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="Entity.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="Entity{TId,T}.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  https://nautechsystems.io
@@ -17,20 +17,29 @@ namespace Nautilus.DomainModel.Entities.Base
     /// <summary>
     /// The base class for all uniquely identifiable domain objects.
     /// </summary>
+    /// <typeparam name="TId">The identifier type.</typeparam>
     /// <typeparam name="T">The entity type.</typeparam>
     [Immutable]
-    public abstract class Entity<T>
-        where T : Entity<T>
+    public abstract class Entity<TId, T>
+        where TId : Identifier<TId>
+        where T : Entity<TId, T>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Entity{T}"/> class.
+        /// Initializes a new instance of the <see cref="Entity{T, TId}"/> class.
         /// </summary>
         /// <param name="identifier">The entity identifier.</param>
         /// <param name="timestamp">The entity timestamp.</param>
         protected Entity(
-            Identifier<T> identifier,
+            TId identifier,
             ZonedDateTime timestamp)
         {
+            // Design time correctness
+            Debug.True(
+                typeof(TId).Name.EndsWith("Id"),
+                "The TId type name ends with 'Id'.");
+            Debug.True(
+                typeof(TId).Name.Split("Id")[0] == typeof(T).Name,
+                "The T type name is equal to the TId type name stripped of 'Id'.");
             Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.Id = identifier;
@@ -40,7 +49,7 @@ namespace Nautilus.DomainModel.Entities.Base
         /// <summary>
         /// Gets the entity identifier.
         /// </summary>
-        public Identifier<T> Id { get; }
+        public TId Id { get; }
 
         /// <summary>
         /// Gets the entity initialization timestamp.
@@ -52,14 +61,14 @@ namespace Nautilus.DomainModel.Entities.Base
         /// </summary>
         /// <param name="other">The other object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public override bool Equals(object other) => other is Entity<T> entity && this.Equals(entity);
+        public override bool Equals(object other) => other is Entity<TId, T> entity && this.Equals(entity);
 
         /// <summary>
         /// Returns a value indicating whether this entity is equal to the given entity.
         /// </summary>
         /// <param name="other">The other entity.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public bool Equals(Entity<T> other) => this.Id.Equals(other.Id);
+        public bool Equals(Entity<TId, T> other) => this.Id.Equals(other.Id);
 
         /// <summary>
         /// Returns the hash code of the wrapped object.

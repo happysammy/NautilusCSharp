@@ -110,7 +110,6 @@ namespace Nautilus.Brokerage.Dukascopy
 
                     var symbol = this.symbolCache.Get(symbolCode);
                     var brokerSymbol = new BrokerSymbol(brokerSymbolCode);
-                    var instrumentId = new InstrumentId(symbol.ToString());
                     var quoteCurrency = message.GetField(Tags.Currency).ToEnum<Nautilus.DomainModel.Enums.Currency>();
                     var securityType = FixMessageHelper.GetSecurityType(group.GetField(9080));
                     var roundLot = Convert.ToInt32(group.GetField(561));
@@ -128,7 +127,6 @@ namespace Nautilus.Brokerage.Dukascopy
                     var maxTradeSize = Convert.ToInt32(group.GetField(9094));
 
                     var instrument = new Instrument(
-                        instrumentId,
                         symbol,
                         brokerSymbol,
                         quoteCurrency,

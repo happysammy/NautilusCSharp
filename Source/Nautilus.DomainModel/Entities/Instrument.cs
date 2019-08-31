@@ -19,12 +19,11 @@ namespace Nautilus.DomainModel.Entities
     /// Represents a tradeable financial market instrument.
     /// </summary>
     [Immutable]
-    public sealed class Instrument : Entity<Instrument>
+    public sealed class Instrument : Entity<InstrumentId, Instrument>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Instrument"/> class.
         /// </summary>
-        /// <param name="instrumentId">The instruments identifier.</param>
         /// <param name="symbol">The instruments symbol.</param>
         /// <param name="brokerSymbol">The instruments broker symbol.</param>
         /// <param name="quoteCurrency">The instruments quote currency.</param>
@@ -42,7 +41,6 @@ namespace Nautilus.DomainModel.Entities
         /// <param name="rolloverInterestSell">The instruments rollover interest for short positions.</param>
         /// <param name="timestamp"> The instruments initialization timestamp.</param>
         public Instrument(
-            InstrumentId instrumentId,
             Symbol symbol,
             BrokerSymbol brokerSymbol,
             Currency quoteCurrency,
@@ -59,7 +57,7 @@ namespace Nautilus.DomainModel.Entities
             decimal rolloverInterestBuy,
             decimal rolloverInterestSell,
             ZonedDateTime timestamp)
-            : base(instrumentId, timestamp)
+            : base(new InstrumentId(symbol.Value), timestamp)
         {
             // Keep validation logic here
             Condition.NotNegativeInt32(tickPrecision, nameof(tickPrecision));
@@ -183,6 +181,6 @@ namespace Nautilus.DomainModel.Entities
         /// Returns a string representation of the <see cref="Instrument"/>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => this.Id.ToString();
+        public override string ToString() => this.Id.Value;
     }
 }

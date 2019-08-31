@@ -98,7 +98,7 @@ namespace Nautilus.Core.Types
         /// </summary>
         /// <param name="other">The other object.</param>
         /// <returns>True if the message identifier equals the other identifier, otherwise false.</returns>
-        public bool Equals(Message other) => !(other is null) && this.Id == other.Id;
+        public bool Equals(Message other) => !(other is null) && other.Id == this.Id;
 
         /// <summary>
         /// Returns the hash code for this <see cref="Message"/>.

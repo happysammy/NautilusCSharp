@@ -94,7 +94,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A <see cref="string"/>.</returns>
         public override string ToString()
         {
-            return $"{this.Symbol}-{this.Specification}";
+            return $"{this.Symbol.Value}-{this.Specification}";
         }
     }
 }

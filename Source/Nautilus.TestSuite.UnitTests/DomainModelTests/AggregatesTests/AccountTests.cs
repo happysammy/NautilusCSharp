@@ -42,7 +42,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             // Assert
             Assert.Equal(new Brokerage("FXCM"), account.Brokerage);
-            Assert.Equal("FXCM-123456789", account.Id.ToString());
+            Assert.Equal("FXCM-123456789", account.Id.Value);
             Assert.Equal(Currency.AUD, account.Currency);
             Assert.Equal(decimal.Zero, account.CashBalance.Value);
         }

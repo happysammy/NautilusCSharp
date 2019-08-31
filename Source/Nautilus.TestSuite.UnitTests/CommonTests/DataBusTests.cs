@@ -48,7 +48,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             // Arrange
             // Act
             // Assert
-            Assert.Equal("DataBus<Tick>", this.dataBus.Name.ToString());
+            Assert.Equal("DataBus<Tick>", this.dataBus.Name.Value);
             Assert.Equal(typeof(Tick), this.dataBus.BusType);
             Assert.Equal(0, this.dataBus.Subscriptions.Count);
         }

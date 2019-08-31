@@ -16,7 +16,7 @@ namespace Nautilus.DomainModel.Identifiers
     /// Represents a valid account number.
     /// </summary>
     [Immutable]
-    public sealed class AccountNumber : Identifier<Brokerage>
+    public sealed class AccountNumber : Identifier<AccountNumber>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="AccountNumber"/> class.

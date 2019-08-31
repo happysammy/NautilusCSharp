@@ -32,9 +32,9 @@ namespace Nautilus.Serialization.Internal
         {
             return MsgPackSerializer.Serialize(new MessagePackObjectDictionary
             {
-                { nameof(Order.Id), order.Id.ToString() },
-                { nameof(Order.Symbol), order.Symbol.ToString() },
-                { nameof(Order.Label), order.Label.ToString() },
+                { nameof(Order.Id), order.Id.Value },
+                { nameof(Order.Symbol), order.Symbol.Value },
+                { nameof(Order.Label), order.Label.Value },
                 { nameof(OrderSide), order.Side.ToString() },
                 { nameof(OrderType), order.Type.ToString() },
                 { nameof(Order.Quantity), order.Quantity.Value },

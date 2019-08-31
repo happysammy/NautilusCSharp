@@ -47,10 +47,10 @@ namespace Nautilus.Data.Publishers
 
         private void OnMessage(Tick tick)
         {
-            this.Publish(tick.Symbol.ToString(), tick);
+            this.Publish(tick.Symbol.Value, tick);
 
             // Temporary logging for debug purposes
-            // this.Log.Information($"{tick.Symbol.ToString()} {tick}");
+            // this.Log.Information($"{tick.Symbol.Value} {tick}");
         }
     }
 }

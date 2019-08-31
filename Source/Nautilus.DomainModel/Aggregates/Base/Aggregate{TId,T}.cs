@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------------------------------------------------------
-// <copyright file="Aggregate.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="Aggregate{TId,T}.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  https://nautechsystems.io
@@ -20,19 +20,21 @@ namespace Nautilus.DomainModel.Aggregates.Base
     /// The base class for all uniquely identifiable domain objects which are made up of an
     /// aggregation of entities.
     /// </summary>
+    /// <typeparam name="TId">The identifier type.</typeparam>
     /// <typeparam name="T">The aggregate type.</typeparam>
-    public abstract class Aggregate<T> : Entity<T>
-        where T : Entity<T>
+    public abstract class Aggregate<TId, T> : Entity<TId, T>
+        where TId : Identifier<TId>
+        where T : Entity<TId, T>
     {
         private readonly List<Event> events;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Aggregate{T}"/> class.
+        /// Initializes a new instance of the <see cref="Aggregate{TId,T}"/> class.
         /// </summary>
         /// <param name="identifier">The aggregate identifier.</param>
         /// <param name="timestamp">The aggregate timestamp.</param>
         protected Aggregate(
-            Identifier<T> identifier,
+            TId identifier,
             ZonedDateTime timestamp)
             : base(identifier, timestamp)
         {

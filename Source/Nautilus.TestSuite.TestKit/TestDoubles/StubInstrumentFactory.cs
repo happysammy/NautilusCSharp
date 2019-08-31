@@ -19,11 +19,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     {
         public static Instrument AUDUSD()
         {
-            var symbol = new Symbol($"AUDUSD", new Venue("FXCM"));
-
             var instrument = new Instrument(
-                    new InstrumentId(symbol.ToString()),
-                    symbol,
+                    new Symbol($"AUDUSD", new Venue("FXCM")),
                     new BrokerSymbol("AUD/USD"),
                     Currency.AUD,
                     SecurityType.FOREX,
@@ -45,11 +42,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
         public static Instrument EURUSD()
         {
-            var symbol = new Symbol($"EURUSD", new Venue("FXCM"));
-
             var instrument = new Instrument(
-                    new InstrumentId(symbol.ToString()),
-                    symbol,
+                    new Symbol($"EURUSD", new Venue("FXCM")),
                     new BrokerSymbol("EUR/USD"),
                     Currency.EUR,
                     SecurityType.FOREX,
@@ -71,11 +65,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
         public static Instrument USDJPY()
         {
-            var symbol = new Symbol("USDJPY", new Venue("FXCM"));
-
             var instrument = new Instrument(
-                    new InstrumentId(symbol.ToString()),
-                    symbol,
+                    new Symbol("USDJPY", new Venue("FXCM")),
                     new BrokerSymbol("USD/JPY"),
                     Currency.JPY,
                     SecurityType.FOREX,

@@ -56,7 +56,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var unpacked = (AccountStateEvent)this.serializer.Deserialize(packed);
 
             // Assert
-            Assert.Equal("FXCM-D123456", accountEvent.AccountId.ToString());
+            Assert.Equal("FXCM-D123456", accountEvent.AccountId.Value);
             Assert.Equal(accountEvent, unpacked);
             this.output.WriteLine(Convert.ToBase64String(packed));
         }

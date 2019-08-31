@@ -177,7 +177,6 @@ namespace Nautilus.Redis.Data
                     hashEntry => hashEntry.Value.ToString());
 
             var instrument = new Instrument(
-                new InstrumentId(instrumentDict[nameof(Instrument.Id)]),
                 Symbol.FromString(instrumentDict[nameof(Instrument.Symbol)]),
                 new BrokerSymbol(instrumentDict[nameof(Instrument.BrokerSymbol)]),
                 instrumentDict[nameof(Instrument.QuoteCurrency)].ToEnum<Currency>(),
@@ -205,9 +204,9 @@ namespace Nautilus.Redis.Data
         {
             var hashEntry = new[]
             {
-                new HashEntry(nameof(Instrument.Symbol), instrument.Symbol.ToString()),
-                new HashEntry(nameof(Instrument.Id), instrument.Id.ToString()),
-                new HashEntry(nameof(Instrument.BrokerSymbol), instrument.BrokerSymbol.ToString()),
+                new HashEntry(nameof(Instrument.Symbol), instrument.Symbol.Value),
+                new HashEntry(nameof(Instrument.Id), instrument.Id.Value),
+                new HashEntry(nameof(Instrument.BrokerSymbol), instrument.BrokerSymbol.Value),
                 new HashEntry(nameof(Instrument.QuoteCurrency), instrument.QuoteCurrency.ToString()),
                 new HashEntry(nameof(Instrument.SecurityType), instrument.SecurityType.ToString()),
                 new HashEntry(nameof(Instrument.TickPrecision), instrument.TickPrecision),

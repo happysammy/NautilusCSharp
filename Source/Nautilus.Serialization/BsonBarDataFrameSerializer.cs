@@ -44,7 +44,7 @@ namespace Nautilus.Serialization
             return new BsonDocument
             {
                 { DATA_TYPE, nameof(Bar) },
-                { nameof(data.BarType.Symbol), data.BarType.Symbol.ToString() },
+                { nameof(data.BarType.Symbol), data.BarType.Symbol.Value },
                 { nameof(data.BarType.Specification), data.BarType.Specification.ToString() },
                 { DATA, new BsonArray(dataArray) },
             }.ToBson();

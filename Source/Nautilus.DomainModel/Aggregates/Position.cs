@@ -26,7 +26,7 @@ namespace Nautilus.DomainModel.Aggregates
     /// Represents a financial market position.
     /// </summary>
     [PerformanceOptimized]
-    public sealed class Position : Aggregate<Position>
+    public sealed class Position : Aggregate<PositionId, Position>
     {
         private readonly HashSet<OrderId> orderIds;
         private readonly HashSet<ExecutionId> executionIds;
@@ -62,11 +62,6 @@ namespace Nautilus.DomainModel.Aggregates
             this.FillLogic(@event);
             this.CheckClassInvariants();
         }
-
-        /// <summary>
-        /// Gets the positions identifier.
-        /// </summary>
-        public new PositionId Id => (PositionId)base.Id;
 
         /// <summary>
         /// Gets the positions entry order identifier.

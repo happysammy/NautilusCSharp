@@ -47,7 +47,7 @@ namespace Nautilus.Data.Publishers
 
         private void OnMessage(Instrument instrument)
         {
-            this.Publish(instrument.Symbol.ToString(), instrument);
+            this.Publish(instrument.Symbol.Value, instrument);
         }
     }
 }

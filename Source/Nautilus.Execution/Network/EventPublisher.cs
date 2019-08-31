@@ -57,10 +57,10 @@ namespace Nautilus.Execution.Network
             switch (message)
             {
                 case OrderEvent @event:
-                    this.Publish($"{NAUTILUS}:{EVENTS}:{EXECUTION}:{@event.OrderId}", message);
+                    this.Publish($"{NAUTILUS}:{EVENTS}:{EXECUTION}:{@event.OrderId.Value}", message);
                     break;
                 case AccountStateEvent @event:
-                    this.Publish($"{NAUTILUS}:{EVENTS}:{ACCOUNT}:{@event.AccountId}", message);
+                    this.Publish($"{NAUTILUS}:{EVENTS}:{ACCOUNT}:{@event.AccountId.Value}", message);
                     break;
                 default:
                     this.Log.Verbose($"Filtering message {message} (not published).");

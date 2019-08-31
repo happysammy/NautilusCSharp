@@ -48,8 +48,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             // Assert
             Assert.Equal(new Symbol("SYMBOL", "LMAX"), order.Symbol);
-            Assert.Equal("some_orderId", order.Id.ToString());
-            Assert.Equal("some_label", order.Label.ToString());
+            Assert.Equal("some_orderId", order.Id.Value);
+            Assert.Equal("some_label", order.Label.Value);
             Assert.Equal(OrderSide.BUY, order.Side);
             Assert.Equal(OrderType.MARKET, order.Type);
             Assert.Equal(10, order.Quantity.Value);
@@ -77,8 +77,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             // Assert
             Assert.Equal(new Symbol("SYMBOL", "LMAX"), order.Symbol);
-            Assert.Equal("some_orderId", order.Id.ToString());
-            Assert.Equal("some_label", order.Label.ToString());
+            Assert.Equal("some_orderId", order.Id.Value);
+            Assert.Equal("some_label", order.Label.Value);
             Assert.Equal(OrderSide.BUY, order.Side);
             Assert.Equal(OrderType.STOP_MARKET, order.Type);
             Assert.Equal(10, order.Quantity.Value);
@@ -195,7 +195,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             order.Apply(event3);
 
             // Assert
-            Assert.Equal("BO-123456", order.IdBroker?.ToString());
+            Assert.Equal("BO-123456", order.IdBroker?.Value);
             Assert.Equal(4, order.EventCount);
             Assert.Equal(OrderStatus.Working, order.Status);
             Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEvent.Timestamp);

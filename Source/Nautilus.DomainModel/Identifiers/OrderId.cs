@@ -11,13 +11,12 @@ namespace Nautilus.DomainModel.Identifiers
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Types;
-    using Nautilus.DomainModel.Aggregates;
 
     /// <summary>
     /// Represents a valid order identifier. This identifier value must be unique at fund level.
     /// </summary>
     [Immutable]
-    public sealed class OrderId : Identifier<Order>
+    public sealed class OrderId : Identifier<OrderId>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="OrderId"/> class.

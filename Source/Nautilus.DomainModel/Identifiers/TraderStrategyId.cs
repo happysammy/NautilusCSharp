@@ -21,7 +21,7 @@ namespace Nautilus.DomainModel.Identifiers
         /// <param name="traderId">The trader identifier.</param>
         /// <param name="strategyId">The strategy identifier.</param>
         public TraderStrategyId(TraderId traderId, StrategyId strategyId)
-            : base($"{traderId}:{strategyId}")
+            : base($"{traderId.Value}:{strategyId.Value}")
         {
             this.TraderId = traderId;
             this.StrategyId = strategyId;

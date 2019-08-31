@@ -37,7 +37,7 @@ namespace Nautilus.Serialization
             switch (@event)
             {
                 case AccountStateEvent evt:
-                    package.Add(nameof(evt.AccountId), evt.AccountId.ToString());
+                    package.Add(nameof(evt.AccountId), evt.AccountId.Value);
                     package.Add(nameof(evt.Currency), evt.Currency.ToString());
                     package.Add(nameof(evt.CashBalance), evt.CashBalance.Value.ToString(CultureInfo.InvariantCulture));
                     package.Add(nameof(evt.CashStartDay), evt.CashStartDay.Value.ToString(CultureInfo.InvariantCulture));
@@ -48,9 +48,9 @@ namespace Nautilus.Serialization
                     package.Add(nameof(evt.MarginCallStatus), evt.MarginCallStatus);
                     break;
                 case OrderInitialized evt:
-                    package.Add(nameof(evt.OrderId), evt.OrderId.ToString());
-                    package.Add(nameof(evt.Symbol), evt.Symbol.ToString());
-                    package.Add(nameof(evt.Label), evt.Label.ToString());
+                    package.Add(nameof(evt.OrderId), evt.OrderId.Value);
+                    package.Add(nameof(evt.Symbol), evt.Symbol.Value);
+                    package.Add(nameof(evt.Label), evt.Label.Value);
                     package.Add(nameof(evt.OrderSide), evt.OrderSide.ToString());
                     package.Add(nameof(evt.OrderType), evt.OrderType.ToString());
                     package.Add(nameof(evt.Quantity), evt.Quantity.Value);
@@ -59,27 +59,27 @@ namespace Nautilus.Serialization
                     package.Add(nameof(evt.ExpireTime), ObjectPacker.Pack(evt.ExpireTime));
                     break;
                 case OrderSubmitted evt:
-                    package.Add(nameof(evt.OrderId), evt.OrderId.ToString());
-                    package.Add(nameof(evt.AccountId), evt.AccountId.ToString());
+                    package.Add(nameof(evt.OrderId), evt.OrderId.Value);
+                    package.Add(nameof(evt.AccountId), evt.AccountId.Value);
                     package.Add(nameof(evt.SubmittedTime), evt.SubmittedTime.ToIsoString());
                     break;
                 case OrderAccepted evt:
-                    package.Add(nameof(evt.OrderId), evt.OrderId.ToString());
-                    package.Add(nameof(evt.AccountId), evt.AccountId.ToString());
+                    package.Add(nameof(evt.OrderId), evt.OrderId.Value);
+                    package.Add(nameof(evt.AccountId), evt.AccountId.Value);
                     package.Add(nameof(evt.AcceptedTime), evt.AcceptedTime.ToIsoString());
                     break;
                 case OrderRejected evt:
-                    package.Add(nameof(evt.OrderId), evt.OrderId.ToString());
-                    package.Add(nameof(evt.AccountId), evt.AccountId.ToString());
+                    package.Add(nameof(evt.OrderId), evt.OrderId.Value);
+                    package.Add(nameof(evt.AccountId), evt.AccountId.Value);
                     package.Add(nameof(evt.RejectedTime), evt.RejectedTime.ToIsoString());
                     package.Add(nameof(evt.RejectedReason), evt.RejectedReason);
                     break;
                 case OrderWorking evt:
-                    package.Add(nameof(evt.OrderId), evt.OrderId.ToString());
-                    package.Add(nameof(evt.OrderIdBroker), evt.OrderIdBroker.ToString());
-                    package.Add(nameof(evt.AccountId), evt.AccountId.ToString());
-                    package.Add(nameof(evt.Symbol), evt.Symbol.ToString());
-                    package.Add(nameof(evt.Label), evt.Label.ToString());
+                    package.Add(nameof(evt.OrderId), evt.OrderId.Value);
+                    package.Add(nameof(evt.OrderIdBroker), evt.OrderIdBroker.Value);
+                    package.Add(nameof(evt.AccountId), evt.AccountId.Value);
+                    package.Add(nameof(evt.Symbol), evt.Symbol.Value);
+                    package.Add(nameof(evt.Label), evt.Label.Value);
                     package.Add(nameof(evt.OrderSide), evt.OrderSide.ToString());
                     package.Add(nameof(evt.OrderType), evt.OrderType.ToString());
                     package.Add(nameof(evt.Quantity), evt.Quantity.Value);
@@ -89,35 +89,35 @@ namespace Nautilus.Serialization
                     package.Add(nameof(evt.WorkingTime), evt.WorkingTime.ToIsoString());
                     break;
                 case OrderCancelled evt:
-                    package.Add(nameof(evt.OrderId), evt.OrderId.ToString());
-                    package.Add(nameof(evt.AccountId), evt.AccountId.ToString());
+                    package.Add(nameof(evt.OrderId), evt.OrderId.Value);
+                    package.Add(nameof(evt.AccountId), evt.AccountId.Value);
                     package.Add(nameof(evt.CancelledTime), evt.CancelledTime.ToIsoString());
                     break;
                 case OrderCancelReject evt:
-                    package.Add(nameof(evt.OrderId), evt.OrderId.ToString());
-                    package.Add(nameof(evt.AccountId), evt.AccountId.ToString());
+                    package.Add(nameof(evt.OrderId), evt.OrderId.Value);
+                    package.Add(nameof(evt.AccountId), evt.AccountId.Value);
                     package.Add(nameof(evt.RejectedTime), evt.RejectedTime.ToIsoString());
                     package.Add(nameof(evt.RejectedResponseTo), evt.RejectedResponseTo);
                     package.Add(nameof(evt.RejectedReason), evt.RejectedReason);
                     break;
                 case OrderModified evt:
-                    package.Add(nameof(evt.OrderId), evt.OrderId.ToString());
-                    package.Add(nameof(evt.OrderIdBroker), evt.OrderIdBroker.ToString());
-                    package.Add(nameof(evt.AccountId), evt.AccountId.ToString());
+                    package.Add(nameof(evt.OrderId), evt.OrderId.Value);
+                    package.Add(nameof(evt.OrderIdBroker), evt.OrderIdBroker.Value);
+                    package.Add(nameof(evt.AccountId), evt.AccountId.Value);
                     package.Add(nameof(evt.ModifiedPrice), evt.ModifiedPrice.Value.ToString(CultureInfo.InvariantCulture));
                     package.Add(nameof(evt.ModifiedTime), evt.ModifiedTime.ToIsoString());
                     break;
                 case OrderExpired evt:
-                    package.Add(nameof(evt.OrderId), evt.OrderId.ToString());
-                    package.Add(nameof(evt.AccountId), evt.AccountId.ToString());
+                    package.Add(nameof(evt.OrderId), evt.OrderId.Value);
+                    package.Add(nameof(evt.AccountId), evt.AccountId.Value);
                     package.Add(nameof(evt.ExpiredTime), evt.ExpiredTime.ToIsoString());
                     break;
                 case OrderPartiallyFilled evt:
-                    package.Add(nameof(evt.OrderId), evt.OrderId.ToString());
-                    package.Add(nameof(evt.AccountId), evt.AccountId.ToString());
-                    package.Add(nameof(evt.ExecutionId), evt.ExecutionId.ToString());
-                    package.Add(nameof(evt.ExecutionTicket), evt.ExecutionTicket.ToString());
-                    package.Add(nameof(evt.Symbol), evt.Symbol.ToString());
+                    package.Add(nameof(evt.OrderId), evt.OrderId.Value);
+                    package.Add(nameof(evt.AccountId), evt.AccountId.Value);
+                    package.Add(nameof(evt.ExecutionId), evt.ExecutionId.Value);
+                    package.Add(nameof(evt.ExecutionTicket), evt.ExecutionTicket.Value);
+                    package.Add(nameof(evt.Symbol), evt.Symbol.Value);
                     package.Add(nameof(evt.OrderSide), evt.OrderSide.ToString());
                     package.Add(nameof(evt.FilledQuantity), evt.FilledQuantity.Value);
                     package.Add(nameof(evt.LeavesQuantity), evt.LeavesQuantity.Value);
@@ -125,11 +125,11 @@ namespace Nautilus.Serialization
                     package.Add(nameof(evt.ExecutionTime), evt.ExecutionTime.ToIsoString());
                     break;
                 case OrderFilled evt:
-                    package.Add(nameof(evt.OrderId), evt.OrderId.ToString());
-                    package.Add(nameof(evt.AccountId), evt.AccountId.ToString());
-                    package.Add(nameof(evt.ExecutionId), evt.ExecutionId.ToString());
-                    package.Add(nameof(evt.ExecutionTicket), evt.ExecutionTicket.ToString());
-                    package.Add(nameof(evt.Symbol), evt.Symbol.ToString());
+                    package.Add(nameof(evt.OrderId), evt.OrderId.Value);
+                    package.Add(nameof(evt.AccountId), evt.AccountId.Value);
+                    package.Add(nameof(evt.ExecutionId), evt.ExecutionId.Value);
+                    package.Add(nameof(evt.ExecutionTicket), evt.ExecutionTicket.Value);
+                    package.Add(nameof(evt.Symbol), evt.Symbol.Value);
                     package.Add(nameof(evt.OrderSide), evt.OrderSide.ToString());
                     package.Add(nameof(evt.FilledQuantity), evt.FilledQuantity.Value);
                     package.Add(nameof(evt.AveragePrice), evt.AveragePrice.ToString());

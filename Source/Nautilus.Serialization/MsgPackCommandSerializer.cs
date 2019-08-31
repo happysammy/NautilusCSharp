@@ -35,36 +35,36 @@ namespace Nautilus.Serialization
             switch (command)
             {
                 case AccountInquiry cmd:
-                    package.Add(nameof(cmd.AccountId), cmd.AccountId.ToString());
+                    package.Add(nameof(cmd.AccountId), cmd.AccountId.Value);
                     break;
                 case SubmitOrder cmd:
-                    package.Add(nameof(cmd.TraderId), cmd.TraderId.ToString());
-                    package.Add(nameof(cmd.StrategyId), cmd.StrategyId.ToString());
-                    package.Add(nameof(cmd.AccountId), cmd.AccountId.ToString());
-                    package.Add(nameof(cmd.PositionId), cmd.PositionId.ToString());
+                    package.Add(nameof(cmd.TraderId), cmd.TraderId.Value);
+                    package.Add(nameof(cmd.StrategyId), cmd.StrategyId.Value);
+                    package.Add(nameof(cmd.AccountId), cmd.AccountId.Value);
+                    package.Add(nameof(cmd.PositionId), cmd.PositionId.Value);
                     package.Add(nameof(cmd.Order), OrderSerializer.Serialize(cmd.Order));
                     break;
                 case SubmitAtomicOrder cmd:
-                    package.Add(nameof(cmd.TraderId), cmd.TraderId.ToString());
-                    package.Add(nameof(cmd.StrategyId), cmd.StrategyId.ToString());
-                    package.Add(nameof(cmd.AccountId), cmd.AccountId.ToString());
-                    package.Add(nameof(cmd.PositionId), cmd.PositionId.ToString());
+                    package.Add(nameof(cmd.TraderId), cmd.TraderId.Value);
+                    package.Add(nameof(cmd.StrategyId), cmd.StrategyId.Value);
+                    package.Add(nameof(cmd.AccountId), cmd.AccountId.Value);
+                    package.Add(nameof(cmd.PositionId), cmd.PositionId.Value);
                     package.Add(nameof(cmd.AtomicOrder.Entry), OrderSerializer.Serialize(cmd.AtomicOrder.Entry));
                     package.Add(nameof(cmd.AtomicOrder.StopLoss), OrderSerializer.Serialize(cmd.AtomicOrder.StopLoss));
                     package.Add(nameof(cmd.AtomicOrder.TakeProfit), OrderSerializer.SerializeNullable(cmd.AtomicOrder.TakeProfit));
                     break;
                 case ModifyOrder cmd:
-                    package.Add(nameof(cmd.TraderId), cmd.TraderId.ToString());
-                    package.Add(nameof(cmd.StrategyId), cmd.StrategyId.ToString());
-                    package.Add(nameof(cmd.AccountId), cmd.AccountId.ToString());
-                    package.Add(nameof(cmd.OrderId), cmd.OrderId.ToString());
+                    package.Add(nameof(cmd.TraderId), cmd.TraderId.Value);
+                    package.Add(nameof(cmd.StrategyId), cmd.StrategyId.Value);
+                    package.Add(nameof(cmd.AccountId), cmd.AccountId.Value);
+                    package.Add(nameof(cmd.OrderId), cmd.OrderId.Value);
                     package.Add(nameof(cmd.ModifiedPrice), cmd.ModifiedPrice.ToString());
                     break;
                 case CancelOrder cmd:
-                    package.Add(nameof(cmd.TraderId), cmd.TraderId.ToString());
-                    package.Add(nameof(cmd.StrategyId), cmd.StrategyId.ToString());
-                    package.Add(nameof(cmd.AccountId), cmd.AccountId.ToString());
-                    package.Add(nameof(cmd.OrderId), cmd.OrderId.ToString());
+                    package.Add(nameof(cmd.TraderId), cmd.TraderId.Value);
+                    package.Add(nameof(cmd.StrategyId), cmd.StrategyId.Value);
+                    package.Add(nameof(cmd.AccountId), cmd.AccountId.Value);
+                    package.Add(nameof(cmd.OrderId), cmd.OrderId.Value);
                     package.Add(nameof(cmd.CancelReason), cmd.CancelReason);
                     break;
                 default:
@@ -79,9 +79,9 @@ namespace Nautilus.Serialization
         {
             var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(commandBytes);
 
-            var command = unpacked[nameof(Command.Type)].ToString();
+            var command = unpacked[nameof(Command.Type)].AsString();
             var id = ObjectExtractor.Guid(unpacked[nameof(Command.Id)]);
-            var timestamp = unpacked[nameof(Command.Timestamp)].ToString().ToZonedDateTimeFromIso();
+            var timestamp = unpacked[nameof(Command.Timestamp)].AsString().ToZonedDateTimeFromIso();
 
             switch (command)
             {
@@ -117,7 +117,7 @@ namespace Nautilus.Serialization
                         ObjectExtractor.StrategyId(unpacked),
                         ObjectExtractor.AccountId(unpacked),
                         ObjectExtractor.OrderId(unpacked),
-                        ObjectExtractor.Price(unpacked[nameof(ModifyOrder.ModifiedPrice)].ToString()),
+                        ObjectExtractor.Price(unpacked[nameof(ModifyOrder.ModifiedPrice)].AsString()),
                         id,
                         timestamp);
                 case nameof(CancelOrder):
@@ -126,7 +126,7 @@ namespace Nautilus.Serialization
                         ObjectExtractor.StrategyId(unpacked),
                         ObjectExtractor.AccountId(unpacked),
                         ObjectExtractor.OrderId(unpacked),
-                        unpacked[nameof(CancelOrder.CancelReason)].ToString(),
+                        unpacked[nameof(CancelOrder.CancelReason)].AsString(),
                         id,
                         timestamp);
                 default:

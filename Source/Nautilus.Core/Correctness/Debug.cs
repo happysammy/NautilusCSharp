@@ -20,15 +20,15 @@ namespace Nautilus.Core.Correctness
     public static class Debug
     {
         /// <summary>
-        /// The condition check passes if the predicate is true.
+        /// The condition check passes if the condition predicate is true.
         /// </summary>
-        /// <param name="predicate">The predicate under check.</param>
-        /// <param name="description">The predicate description.</param>
-        /// <exception cref="ConditionFailedException">If the predicate is false.</exception>
+        /// <param name="condition">The condition under check.</param>
+        /// <param name="failedMessage">The condition failed message.</param>
+        /// <exception cref="ConditionFailedException">If the condition is false.</exception>
         [Conditional("DEBUG")]
-        public static void True(bool predicate, string description)
+        public static void True(bool condition, string failedMessage)
         {
-            Condition.True(predicate, description);
+            Condition.True(condition, failedMessage);
         }
 
         /// <summary>

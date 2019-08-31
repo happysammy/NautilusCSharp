@@ -71,7 +71,7 @@ namespace Nautilus.Data.Keys
         /// <returns>A <see cref="string"/>.</returns>
         public static string GetTickWildcardKey(Symbol symbol)
         {
-            return $"{TicksNamespace}:{symbol.Venue}:{symbol.Code}";
+            return $"{TicksNamespace}:{symbol.Venue.Value}:{symbol.Code}";
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace Nautilus.Data.Keys
         /// <returns>The key string.</returns>
         public static string GetTickKey(Symbol symbol, DateKey dateKey)
         {
-            return $"{TicksNamespace}:{symbol.Venue}:{symbol.Code}:{dateKey}";
+            return $"{TicksNamespace}:{symbol.Venue.Value}:{symbol.Code}:{dateKey}";
         }
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace Nautilus.Data.Keys
         public static string GetBarWildcardKey(BarType barType)
         {
             return BarsNamespace +
-                   $":{barType.Symbol.Venue}" +
+                   $":{barType.Symbol.Venue.Value}" +
                    $":{barType.Symbol.Code}" +
                    $":{barType.Specification.Resolution}" +
                    $":{barType.Specification.QuoteType}" + "*";
@@ -138,7 +138,7 @@ namespace Nautilus.Data.Keys
         public static string GetBarKey(BarType barType, DateKey dateKey)
         {
             return BarsNamespace +
-                   $":{barType.Symbol.Venue}" +
+                   $":{barType.Symbol.Venue.Value}" +
                    $":{barType.Symbol.Code}" +
                    $":{barType.Specification.Resolution}" +
                    $":{barType.Specification.QuoteType}" +
@@ -182,7 +182,7 @@ namespace Nautilus.Data.Keys
         /// <returns>The key <see cref="string"/>.</returns>
         public static string GetInstrumentKey(Symbol symbol)
         {
-            return InstrumentsNamespace + ":" + symbol;
+            return InstrumentsNamespace + ":" + symbol.Value;
         }
     }
 }

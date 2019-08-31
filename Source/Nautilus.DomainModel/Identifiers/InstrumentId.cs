@@ -11,13 +11,12 @@ namespace Nautilus.DomainModel.Identifiers
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Types;
-    using Nautilus.DomainModel.Entities;
 
     /// <summary>
     /// Represents a valid instrument identifier.
     /// </summary>
     [Immutable]
-    public sealed class InstrumentId : Identifier<Instrument>
+    public sealed class InstrumentId : Identifier<InstrumentId>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="InstrumentId"/> class.

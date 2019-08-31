@@ -67,7 +67,7 @@ namespace Nautilus.Fix
             this.AccountId = new AccountId(this.Brokerage, this.AccountNumber);
             this.config = config;
             this.sendAccountTag = config.SendAccountTag;
-            this.accountField = new Account(this.AccountNumber.ToString());
+            this.accountField = new Account(this.AccountNumber.Value);
 
             this.FixMessageHandler = messageHandler;
             this.FixMessageRouter = messageRouter;

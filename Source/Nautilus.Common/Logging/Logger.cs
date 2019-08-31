@@ -18,7 +18,7 @@ namespace Nautilus.Common.Logging
     public sealed class Logger : ILogger
     {
         private readonly ILoggingAdapter loggingAdapter;
-        private readonly Label component;
+        private readonly string componentName;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Logger"/> class.
@@ -28,49 +28,49 @@ namespace Nautilus.Common.Logging
         public Logger(ILoggingAdapter loggingAdapter, Label component)
         {
             this.loggingAdapter = loggingAdapter;
-            this.component = component;
+            this.componentName = component.Value;
         }
 
         /// <inheritdoc />
         public void Verbose(string message)
         {
-            this.loggingAdapter.Verbose($"{this.component}: {message}");
+            this.loggingAdapter.Verbose($"{this.componentName}: {message}");
         }
 
         /// <inheritdoc />
         public void Information(string message)
         {
-            this.loggingAdapter.Information($"{this.component}: {message}");
+            this.loggingAdapter.Information($"{this.componentName}: {message}");
         }
 
         /// <inheritdoc />
         public void Debug(string message)
         {
-            this.loggingAdapter.Debug($"{this.component}: {message}");
+            this.loggingAdapter.Debug($"{this.componentName}: {message}");
         }
 
         /// <inheritdoc />
         public void Warning(string message)
         {
-            this.loggingAdapter.Warning($"{this.component}: {message}");
+            this.loggingAdapter.Warning($"{this.componentName}: {message}");
         }
 
         /// <inheritdoc />
         public void Error(string message)
         {
-            this.loggingAdapter.Error($"{this.component}: {message}");
+            this.loggingAdapter.Error($"{this.componentName}: {message}");
         }
 
         /// <inheritdoc />
         public void Error(string message, Exception ex)
         {
-            this.loggingAdapter.Error($"{this.component}: {message}", ex);
+            this.loggingAdapter.Error($"{this.componentName}: {message}", ex);
         }
 
         /// <inheritdoc />
         public void Fatal(string message, Exception ex)
         {
-            this.loggingAdapter.Fatal($"{this.component}: {message}", ex);
+            this.loggingAdapter.Fatal($"{this.componentName}: {message}", ex);
         }
     }
 }

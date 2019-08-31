@@ -90,7 +90,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             var query = new Dictionary<string, string>
             {
                 { "DataType", "Tick[]" },
-                { "Symbol", symbol.ToString() },
+                { "Symbol", symbol.Value },
                 { "FromDateTime", datetimeFrom.ToIsoString() },
                 { "ToDateTime", datetimeTo.ToIsoString() },
             };
@@ -140,7 +140,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             var query = new Dictionary<string, string>
             {
                 { "DataType", "Tick[]" },
-                { "Symbol", symbol.ToString() },
+                { "Symbol", symbol.Value },
                 { "FromDateTime", datetimeFrom.ToIsoString() },
                 { "ToDateTime", datetimeTo.ToIsoString() },
             };

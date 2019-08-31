@@ -32,7 +32,7 @@ namespace Nautilus.DomainModel.Factories
         {
             Debug.PositiveInt32(orderIdCount, nameof(orderIdCount));
 
-            return new OrderId($"{orderId}_R{orderIdCount}");
+            return new OrderId($"{orderId.Value}_R{orderIdCount}");
         }
 
         /// <summary>

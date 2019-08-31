@@ -33,9 +33,8 @@ namespace Nautilus.Serialization
         {
             return new BsonDocument
             {
-                { nameof(Instrument.Id), instrument.Id.ToString() },
-                { nameof(Instrument.Symbol), instrument.Symbol.ToString() },
-                { nameof(Instrument.BrokerSymbol), instrument.BrokerSymbol.ToString() },
+                { nameof(Instrument.Symbol), instrument.Symbol.Value },
+                { nameof(Instrument.BrokerSymbol), instrument.BrokerSymbol.Value },
                 { nameof(Instrument.QuoteCurrency), instrument.QuoteCurrency.ToString() },
                 { nameof(Instrument.SecurityType), instrument.SecurityType.ToString() },
                 { nameof(Instrument.TickPrecision), instrument.TickPrecision },
@@ -61,7 +60,6 @@ namespace Nautilus.Serialization
             var unpacked = BsonSerializer.Deserialize<BsonDocument>(serialized);
 
             return new Instrument(
-                new InstrumentId(unpacked[nameof(Instrument.Id)].AsString),
                 Symbol.FromString(unpacked[nameof(Instrument.Symbol)].AsString),
                 new BrokerSymbol(unpacked[nameof(Instrument.BrokerSymbol)].AsString),
                 unpacked[nameof(Instrument.QuoteCurrency)].AsString.ToEnum<Currency>(),

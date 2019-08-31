@@ -30,7 +30,7 @@ namespace Nautilus.DomainModel.Aggregates
     /// Represents a financial market order.
     /// </summary>
     [PerformanceOptimized]
-    public sealed class Order : Aggregate<Order>
+    public sealed class Order : Aggregate<OrderId, Order>
     {
         private readonly FiniteStateMachine orderStateMachine;
         private readonly HashSet<OrderId> orderIds;
@@ -126,11 +126,6 @@ namespace Nautilus.DomainModel.Aggregates
                 initialized.Id)
         {
         }
-
-        /// <summary>
-        /// Gets the orders identifier.
-        /// </summary>
-        public new OrderId Id => (OrderId)base.Id;
 
         /// <summary>
         /// Gets the orders last identifier.

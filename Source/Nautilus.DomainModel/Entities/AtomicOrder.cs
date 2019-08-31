@@ -18,7 +18,7 @@ namespace Nautilus.DomainModel.Entities
     /// be managed together.
     /// </summary>
     [Immutable]
-    public sealed class AtomicOrder : Entity<AtomicOrder>
+    public sealed class AtomicOrder : Entity<AtomicOrderId, AtomicOrder>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="AtomicOrder"/> class.
@@ -30,7 +30,7 @@ namespace Nautilus.DomainModel.Entities
             Order entry,
             Order stopLoss,
             Order? takeProfit = null)
-            : base(new AtomicOrderId("A" + entry.Id), entry.Timestamp)
+            : base(new AtomicOrderId("A" + entry.Id.Value), entry.Timestamp)
         {
             this.Entry = entry;
             this.StopLoss = stopLoss;

@@ -43,7 +43,7 @@ namespace Nautilus.Serialization
             return new BsonDocument
             {
                 { DATA_TYPE, nameof(Tick) },
-                { nameof(Tick.Symbol), ticks[0].Symbol.ToString() },
+                { nameof(Tick.Symbol), ticks[0].Symbol.Value },
                 { DATA, new BsonArray(dataArray) },
             }.ToBson();
         }

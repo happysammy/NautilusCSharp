@@ -63,7 +63,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
 
             var subscriber = new SubscriberSocket(TEST_ADDRESS);
             subscriber.Connect(TEST_ADDRESS);
-            subscriber.Subscribe(instrument.Symbol.ToString());
+            subscriber.Subscribe(instrument.Symbol.Value);
             Task.Delay(100).Wait();
 
             // Act
@@ -75,11 +75,11 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
             LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
-            Assert.Equal(instrument.Symbol.ToString(), Encoding.UTF8.GetString(topic));
+            Assert.Equal(instrument.Symbol.Value, Encoding.UTF8.GetString(topic));
             Assert.Equal(instrument, this.serializer.Deserialize(message));
 
             // Tear Down
-            subscriber.Unsubscribe(instrument.Symbol.ToString());
+            subscriber.Unsubscribe(instrument.Symbol.Value);
             subscriber.Disconnect(TEST_ADDRESS);
             subscriber.Dispose();
             this.publisher.Stop();

@@ -20,7 +20,7 @@ namespace Nautilus.DomainModel.Aggregates
     /// <summary>
     /// Represents a brokerage account.
     /// </summary>
-    public sealed class Account : Aggregate<Account>
+    public sealed class Account : Aggregate<AccountId, Account>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Account"/> class.
@@ -53,11 +53,6 @@ namespace Nautilus.DomainModel.Aggregates
             this.MarginUsedLiquidation = Money.Zero(this.Currency);
             this.MarginCallStatus = string.Empty;
         }
-
-        /// <summary>
-        /// Gets the account identifier.
-        /// </summary>
-        public new AccountId Id => (AccountId)base.Id;
 
         /// <summary>
         /// Gets the accounts brokerage name.

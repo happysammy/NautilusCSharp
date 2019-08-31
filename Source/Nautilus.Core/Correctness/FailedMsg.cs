@@ -16,21 +16,11 @@ namespace Nautilus.Core.Correctness
         /// <summary>
         /// Return the check failed message.
         /// </summary>
-        /// <param name="description">The predicate description.</param>
-        /// <returns>The string.</returns>
-        public static string WasFalse(string description)
-        {
-            return $"The predicate based on {description} was false).";
-        }
-
-        /// <summary>
-        /// Return the check failed message.
-        /// </summary>
         /// <param name="paramName">The parameter being checked.</param>
         /// <returns>The string.</returns>
         public static string WasNull(string paramName)
         {
-            return $"The {paramName} was null).";
+            return $"The {paramName} was null.";
         }
 
         /// <summary>
