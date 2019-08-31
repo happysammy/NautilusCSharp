@@ -35,10 +35,10 @@ namespace Nautilus.DomainModel.Entities.Base
         {
             // Design time correctness
             Debug.True(
-                typeof(TId).Name.EndsWith("Id"),
+                typeof(TId).Name.EndsWith(nameof(this.Id)),
                 "The TId type name ends with 'Id'.");
             Debug.True(
-                typeof(TId).Name.Split("Id")[0] == typeof(T).Name,
+                typeof(TId).Name.Split(nameof(this.Id))[0] == typeof(T).Name,
                 "The T type name is equal to the TId type name stripped of 'Id'.");
             Debug.NotDefault(timestamp, nameof(timestamp));
 

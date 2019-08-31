@@ -15,7 +15,6 @@ namespace Nautilus.DomainModel.Aggregates
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
-    using NodaTime;
 
     /// <summary>
     /// Represents a brokerage account.
@@ -25,33 +24,22 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Initializes a new instance of the <see cref="Account"/> class.
         /// </summary>
-        /// <param name="brokerage">The broker name.</param>
-        /// <param name="accountNumber">The account number.</param>
-        /// <param name="currency">The account base currency.</param>
-        /// <param name="timestamp">The account creation timestamp.</param>
+        /// <param name="event">The initial account state event.</param>
         /// <exception cref="ArgumentException">If any string is empty or whitespace.</exception>
         /// <exception cref="ArgumentException">If any struct is the default value.</exception>
-        public Account(
-            Brokerage brokerage,
-            AccountNumber accountNumber,
-            Currency currency,
-            ZonedDateTime timestamp)
-            : base(
-                new AccountId(brokerage, accountNumber),
-                timestamp)
+        public Account(AccountStateEvent @event)
+            : base(@event.AccountId, @event.Timestamp)
         {
-            Condition.NotDefault(currency, nameof(currency));
-            Debug.NotDefault(timestamp, nameof(timestamp));
+            this.Brokerage = this.Id.Brokerage;
+            this.AccountNumber = this.Id.AccountNumber;
 
-            this.Brokerage = brokerage;
-            this.AccountNumber = accountNumber;
-            this.Currency = currency;
-            this.CashBalance = Money.Zero(this.Currency);
-            this.CashStartDay = Money.Zero(this.Currency);
-            this.CashActivityDay = Money.Zero(this.Currency);
-            this.MarginUsedMaintenance = Money.Zero(this.Currency);
-            this.MarginUsedLiquidation = Money.Zero(this.Currency);
-            this.MarginCallStatus = string.Empty;
+            this.Currency = @event.Currency;
+            this.CashBalance = @event.CashBalance;
+            this.CashStartDay = @event.CashStartDay;
+            this.CashActivityDay = @event.CashActivityDay;
+            this.MarginUsedMaintenance = @event.MarginUsedMaintenance;
+            this.MarginUsedLiquidation = @event.MarginUsedLiquidation;
+            this.MarginCallStatus = @event.MarginCallStatus;
         }
 
         /// <summary>
@@ -115,6 +103,8 @@ namespace Nautilus.DomainModel.Aggregates
         /// <param name="event">The event.</param>
         public void Apply(AccountStateEvent @event)
         {
+            Debug.EqualTo(@event.AccountId, this.Id, nameof(@event.AccountId));
+
             this.AppendEvent(@event);
 
             this.CashBalance = @event.CashBalance;
@@ -134,12 +124,9 @@ namespace Nautilus.DomainModel.Aggregates
 
         private Money GetFreeEquity()
         {
-            var marginUsed = this.MarginUsedMaintenance + this.MarginUsedLiquidation;
-            var freeEquity = this.CashBalance - marginUsed;
+            var totalUsedMargin = this.MarginUsedMaintenance + this.MarginUsedLiquidation;
 
-            return freeEquity > 0
-                ? Money.Create(Math.Max(0, this.CashBalance - marginUsed), this.Currency)
-                : Money.Zero(this.Currency);
+            return Money.Create(Math.Max(0, this.CashBalance - totalUsedMargin), this.Currency);
         }
     }
 }

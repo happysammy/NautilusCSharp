@@ -11,7 +11,6 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
     using System;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Common.Interfaces;
-    using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Identifiers;
@@ -34,16 +33,12 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             // Act
-            var account = new Account(
-                new Brokerage("FXCM"),
-                new AccountNumber("123456789"),
-                Currency.AUD,
-                this.clock.TimeNow());
+            var account = StubAccountFactory.ZeroCash();
 
             // Assert
-            Assert.Equal(new Brokerage("FXCM"), account.Brokerage);
-            Assert.Equal("FXCM-123456789", account.Id.Value);
-            Assert.Equal(Currency.AUD, account.Currency);
+            Assert.Equal(new Brokerage("IB"), account.Brokerage);
+            Assert.Equal("IB-123456789", account.Id.Value);
+            Assert.Equal(Currency.USD, account.Currency);
             Assert.Equal(decimal.Zero, account.CashBalance.Value);
         }
 
@@ -51,14 +46,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         internal void Update_MessageCorrect_EqualsUpdatedStatusValues()
         {
             // Arrange
-            var account = new Account(
-                new Brokerage("FXCM"),
-                new AccountNumber("123456789"),
-                Currency.AUD,
-                this.clock.TimeNow());
-
+            var account = StubAccountFactory.Create();
             var message = new AccountStateEvent(
-                new AccountId("FXCM", "D123456"),
+                new AccountId("FXCM", "123456789"),
                 Currency.AUD,
                 Money.Create(150000m, Currency.AUD),
                 Money.Create(150000m, Currency.AUD),
@@ -87,14 +77,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         internal void FreeEquity_MessageCorrect_ReturnsTrue()
         {
             // Arrange
-            var account = new Account(
-                new Brokerage("FXCM"),
-                new AccountNumber("123456789"),
-                Currency.USD,
-                this.clock.TimeNow());
-
+            var account = StubAccountFactory.Create();
             var message = new AccountStateEvent(
-                new AccountId("FXCM", "D123456"),
+                new AccountId("FXCM", "123456789"),
                 Currency.USD,
                 Money.Create(150000m, Currency.AUD),
                 Money.Create(150000m, Currency.AUD),

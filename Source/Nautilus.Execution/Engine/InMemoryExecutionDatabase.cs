@@ -14,6 +14,7 @@ namespace Nautilus.Execution.Engine
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Aggregates;
+    using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.Execution.Interfaces;
 
@@ -70,6 +71,35 @@ namespace Nautilus.Execution.Engine
 
             this.cachedOrders = new Dictionary<OrderId, Order>();
             this.cachedPositions = new Dictionary<PositionId, Position>();
+        }
+
+        /// <inheritdoc />
+        /// <exception cref="ConditionFailedException">If the order identifier is already indexed.</exception>
+        public void AddOrder(AtomicOrder order, TraderId traderId, AccountId accountId, StrategyId strategyId, PositionId positionId)
+        {
+            this.AddOrder(
+                order.Entry,
+                traderId,
+                accountId,
+                strategyId,
+                positionId);
+
+            this.AddOrder(
+                order.StopLoss,
+                traderId,
+                accountId,
+                strategyId,
+                positionId);
+
+            if (order.TakeProfit != null)
+            {
+                this.AddOrder(
+                    order.TakeProfit,
+                    traderId,
+                    accountId,
+                    strategyId,
+                    positionId);
+            }
         }
 
         /// <inheritdoc />
@@ -140,7 +170,7 @@ namespace Nautilus.Execution.Engine
 
         /// <inheritdoc />
         /// <exception cref="ConditionFailedException">If the position identifier is already indexed.</exception>
-        public void AddPosition(Position position, TraderId traderId, AccountId accountId, StrategyId strategyId)
+        public void AddPosition(Position position)
         {
             Debug.NotIn(position.Id, this.indexPositions, nameof(position.Id), nameof(this.indexPositions));
             Debug.NotIn(position.Id, this.indexPositionsOpen, nameof(position.Id), nameof(this.indexPositions));
@@ -327,9 +357,13 @@ namespace Nautilus.Execution.Engine
         /// <inheritdoc />
         public Order? GetOrder(OrderId orderId)
         {
-            return this.cachedOrders.TryGetValue(orderId, out var order)
-                ? order
-                : null;
+            if (this.cachedOrders.TryGetValue(orderId, out var order))
+            {
+                return order;
+            }
+
+            this.Log.Warning($"Cannot find Order for {orderId} in cache.");
+            return null;
         }
 
         /// <inheritdoc />
@@ -384,9 +418,13 @@ namespace Nautilus.Execution.Engine
         /// <inheritdoc />
         public Position? GetPosition(PositionId positionId)
         {
-            return this.cachedPositions.TryGetValue(positionId, out var order)
-                ? order
-                : null;
+            if (this.cachedPositions.TryGetValue(positionId, out var position))
+            {
+                return position;
+            }
+
+            this.Log.Warning($"Cannot find Position for {positionId} in the memory cache.");
+            return null;
         }
 
         /// <inheritdoc />
@@ -394,20 +432,23 @@ namespace Nautilus.Execution.Engine
         {
             if (this.indexOrderPosition.TryGetValue(orderId, out var positionId))
             {
-                return this.cachedPositions.TryGetValue(positionId, out var order)
-                    ? order
-                    : null;
+                return this.GetPosition(positionId);
             }
 
+            this.Log.Warning($"Cannot find Position for {orderId} in the database.");
             return null;
         }
 
         /// <inheritdoc />
         public PositionId? GetPositionId(OrderId orderId)
         {
-            return this.indexOrderPosition.TryGetValue(orderId, out var positionId)
-                ? positionId
-                : null;
+            if (this.indexOrderPosition.TryGetValue(orderId, out var positionId))
+            {
+                return positionId;
+            }
+
+            this.Log.Warning($"Cannot find PositionId for {orderId} in the database.");
+            return null;
         }
 
         /// <inheritdoc />
@@ -473,7 +514,7 @@ namespace Nautilus.Execution.Engine
             catch (KeyNotFoundException ex)
             {
                 // This should never happen
-                this.Log.Error($"Could not find an OrderId in the orders cache.", ex);
+                this.Log.Error($"Cannot find an OrderId in the memory cache.", ex);
             }
 
             return orders;
@@ -494,7 +535,7 @@ namespace Nautilus.Execution.Engine
             catch (KeyNotFoundException ex)
             {
                 // This should never happen
-                this.Log.Error($"Could not find PositionId in the positions cache.", ex);
+                this.Log.Error($"Cannot find a PositionId in the memory cache.", ex);
             }
 
             return positions;

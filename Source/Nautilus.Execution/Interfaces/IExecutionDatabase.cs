@@ -10,6 +10,7 @@ namespace Nautilus.Execution.Interfaces
 {
     using System.Collections.Generic;
     using Nautilus.DomainModel.Aggregates;
+    using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Identifiers;
 
     /// <summary>
@@ -17,6 +18,21 @@ namespace Nautilus.Execution.Interfaces
     /// </summary>
     public interface IExecutionDatabase
     {
+        /// <summary>
+        /// Add the given atomic order to the execution database indexed with the given identifiers.
+        /// </summary>
+        /// <param name="order">The atomic order to add.</param>
+        /// <param name="traderId">The trader identifier to index.</param>
+        /// <param name="accountId">The account identifier to index.</param>
+        /// <param name="strategyId">The strategy identifier to index.</param>
+        /// <param name="positionId">The position identifier to index.</param>
+        void AddOrder(
+            AtomicOrder order,
+            TraderId traderId,
+            AccountId accountId,
+            StrategyId strategyId,
+            PositionId positionId);
+
         /// <summary>
         /// Add the given order to the execution database indexed with the given identifiers.
         /// </summary>
@@ -36,14 +52,7 @@ namespace Nautilus.Execution.Interfaces
         /// Add the given position to the execution database indexed with the given identifiers.
         /// </summary>
         /// <param name="position">The position to add.</param>
-        /// <param name="traderId">The trader identifier to index.</param>
-        /// <param name="accountId">The account identifier to index.</param>
-        /// <param name="strategyId">The strategy identifier to index.</param>
-        void AddPosition(
-            Position position,
-            TraderId traderId,
-            AccountId accountId,
-            StrategyId strategyId);
+        void AddPosition(Position position);
 
         /// <summary>
         /// Update the given order in the execution database (using the orders last event).

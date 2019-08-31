@@ -21,14 +21,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     {
         public static Account Create()
         {
-            var account = new Account(
-                new Brokerage("IB"),
-                new AccountNumber("123456789"),
-                Currency.USD,
-                StubZonedDateTime.UnixEpoch());
-
-            var accountEventMessage = new AccountStateEvent(
-                new AccountId("FXCM", "D1234565"),
+            var @event = new AccountStateEvent(
+                new AccountId("FXCM", "123456789"),
                 Currency.USD,
                 Money.Create(100000, Currency.USD),
                 Money.Create(100000, Currency.USD),
@@ -40,21 +34,13 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            account.Apply(accountEventMessage);
-
-            return account;
+            return new Account(@event);
         }
 
         public static Account ZeroCash()
         {
-            var account = new Account(
-                new Brokerage("IB"),
-                new AccountNumber("123456789"),
-                Currency.USD,
-                StubZonedDateTime.UnixEpoch());
-
-            var accountEventMessage = new AccountStateEvent(
-                new AccountId("FXCM", "D1234565"),
+            var @event = new AccountStateEvent(
+                new AccountId("IB", "123456789"),
                 Currency.USD,
                 Money.Zero(Currency.USD),
                 Money.Zero(Currency.USD),
@@ -66,9 +52,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            account.Apply(accountEventMessage);
-
-            return account;
+            return new Account(@event);
         }
     }
 }

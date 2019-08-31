@@ -1,0 +1,361 @@
+// -------------------------------------------------------------------------------------------------
+// <copyright file="ExecutionEngine.cs" company="Nautech Systems Pty Ltd">
+//   Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
+//   The use of this source code is governed by the license as found in the LICENSE.txt file.
+//   https://nautechsystems.io
+// </copyright>
+// -------------------------------------------------------------------------------------------------
+
+namespace Nautilus.Execution.Engine
+{
+    using System.Collections.Generic;
+    using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messaging;
+    using Nautilus.Core.Message;
+    using Nautilus.DomainModel.Aggregates;
+    using Nautilus.DomainModel.Events;
+    using Nautilus.DomainModel.Events.Base;
+    using Nautilus.DomainModel.Identifiers;
+    using Nautilus.Execution.Interfaces;
+    using Nautilus.Execution.Messages.Commands;
+
+    /// <summary>
+    /// Provides a generic execution engine utilizing an abstract execution database.
+    /// </summary>
+    public class ExecutionEngine : MessageBusConnected
+    {
+        private readonly IExecutionDatabase database;
+        private readonly ITradingGateway gateway;
+        private readonly Dictionary<AccountId, Account> accounts;
+
+        private readonly Dictionary<OrderId, ModifyOrder> bufferModify;
+        private readonly Dictionary<OrderId, CancelOrder> bufferCancel;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExecutionEngine"/> class.
+        /// </summary>
+        /// <param name="container">The container.</param>
+        /// <param name="messageBusAdapter">The message bus adapter.</param>
+        /// <param name="database">The execution database.</param>
+        /// <param name="gateway">The trading gateway.</param>
+        public ExecutionEngine(
+            IComponentryContainer container,
+            IMessageBusAdapter messageBusAdapter,
+            IExecutionDatabase database,
+            ITradingGateway gateway)
+            : base(container, messageBusAdapter)
+        {
+            this.database = database;
+            this.gateway = gateway;
+            this.accounts = new Dictionary<AccountId, Account>();
+
+            this.bufferModify = new Dictionary<OrderId, ModifyOrder>();
+            this.bufferCancel = new Dictionary<OrderId, CancelOrder>();
+
+            // Commands
+            this.RegisterHandler<SubmitOrder>(this.OnMessage);
+            this.RegisterHandler<SubmitAtomicOrder>(this.OnMessage);
+            this.RegisterHandler<CancelOrder>(this.OnMessage);
+            this.RegisterHandler<ModifyOrder>(this.OnMessage);
+            this.RegisterHandler<AccountInquiry>(this.OnMessage);
+
+            // Events
+            this.RegisterHandler<OrderSubmitted>(this.OnMessage);
+            this.RegisterHandler<OrderAccepted>(this.OnMessage);
+            this.RegisterHandler<OrderRejected>(this.OnMessage);
+            this.RegisterHandler<OrderWorking>(this.OnMessage);
+            this.RegisterHandler<OrderModified>(this.OnMessage);
+            this.RegisterHandler<OrderCancelReject>(this.OnMessage);
+            this.RegisterHandler<OrderExpired>(this.OnMessage);
+            this.RegisterHandler<OrderCancelled>(this.OnMessage);
+            this.RegisterHandler<OrderPartiallyFilled>(this.OnMessage);
+            this.RegisterHandler<OrderFilled>(this.OnMessage);
+            this.RegisterHandler<AccountStateEvent>(this.OnMessage);
+
+            // Order Events
+            this.Subscribe<OrderSubmitted>();
+            this.Subscribe<OrderAccepted>();
+            this.Subscribe<OrderRejected>();
+            this.Subscribe<OrderWorking>();
+            this.Subscribe<OrderModified>();
+            this.Subscribe<OrderCancelReject>();
+            this.Subscribe<OrderExpired>();
+            this.Subscribe<OrderCancelled>();
+            this.Subscribe<OrderPartiallyFilled>();
+            this.Subscribe<OrderFilled>();
+            this.Subscribe<AccountStateEvent>();
+        }
+
+        /// <summary>
+        /// Gets the count of commands processed.
+        /// </summary>
+        public int CommandCount { get; private set; }
+
+        /// <summary>
+        /// Gets the count of events processed.
+        /// </summary>
+        public int EventCount { get; private set; }
+
+        //-- COMMANDS ------------------------------------------------------------------------------------------------//
+        private void OnMessage(SubmitOrder command)
+        {
+            this.IncrementCounter(command);
+
+            this.database.AddOrder(
+                command.Order,
+                command.TraderId,
+                command.AccountId,
+                command.StrategyId,
+                command.PositionId);
+
+            this.gateway.SubmitOrder(command.Order);
+        }
+
+        private void OnMessage(SubmitAtomicOrder command)
+        {
+            this.IncrementCounter(command);
+
+            this.database.AddOrder(
+                command.AtomicOrder,
+                command.TraderId,
+                command.AccountId,
+                command.StrategyId,
+                command.PositionId);
+
+            this.gateway.SubmitOrder(command.AtomicOrder);
+        }
+
+        private void OnMessage(CancelOrder command)
+        {
+            this.IncrementCounter(command);
+
+            var order = this.database.GetOrder(command.OrderId);
+            if (order is null)
+            {
+                this.Log.Error($"Cannot execute command {command} ({command.OrderId} was not found in the memory cache).");
+                return;
+            }
+
+            this.gateway.CancelOrder(order);
+        }
+
+        private void OnMessage(ModifyOrder command)
+        {
+            this.IncrementCounter(command);
+
+            var order = this.database.GetOrder(command.OrderId);
+            if (order is null)
+            {
+                this.Log.Error($"Cannot execute command {command} ({command.OrderId} was not found in the memory cache).");
+                return;
+            }
+
+            if (this.bufferModify.ContainsKey(command.OrderId))
+            {
+                this.bufferModify[command.OrderId] = command;
+                return;
+            }
+
+            // Buffer the command to check in later processing
+            this.bufferModify[command.OrderId] = command;
+            this.gateway.ModifyOrder(order, command.ModifiedPrice);
+        }
+
+        private void OnMessage(AccountInquiry command)
+        {
+            this.IncrementCounter(command);
+
+            this.gateway.AccountInquiry();
+        }
+
+        //-- EVENTS --------------------------------------------------------------------------------------------------//
+        private void OnMessage(OrderSubmitted @event)
+        {
+            this.IncrementCounter(@event);
+
+            this.ProcessOrderEvent(@event);
+            this.SendToEventPublisher(@event);
+        }
+
+        private void OnMessage(OrderAccepted @event)
+        {
+            this.IncrementCounter(@event);
+
+            this.ProcessOrderEvent(@event);
+            this.SendToEventPublisher(@event);
+        }
+
+        private void OnMessage(OrderRejected @event)
+        {
+            this.IncrementCounter(@event);
+
+            this.ProcessOrderEvent(@event);
+            this.SendToEventPublisher(@event);
+        }
+
+        private void OnMessage(OrderWorking @event)
+        {
+            this.IncrementCounter(@event);
+
+            this.ProcessOrderEvent(@event);
+            this.SendToEventPublisher(@event);
+        }
+
+        private void OnMessage(OrderModified @event)
+        {
+            this.IncrementCounter(@event);
+
+            var order = this.ProcessOrderEvent(@event);
+            if (order != null)
+            {
+                if (this.bufferModify.TryGetValue(order.Id, out var modifyOrder))
+                {
+                    if (!(order.Price is null) && order.Price != modifyOrder.ModifiedPrice)
+                    {
+                        this.gateway.ModifyOrder(order, modifyOrder.ModifiedPrice);
+                    }
+
+                    this.bufferModify.Remove(order.Id);
+                }
+            }
+
+            this.SendToEventPublisher(@event);
+        }
+
+        private void OnMessage(OrderCancelReject @event)
+        {
+            this.IncrementCounter(@event);
+
+            this.ProcessOrderEvent(@event);
+
+            this.SendToEventPublisher(@event);
+        }
+
+        private void OnMessage(OrderExpired @event)
+        {
+            this.IncrementCounter(@event);
+
+            this.ProcessOrderEvent(@event);
+            this.ClearModifyBuffer(@event.OrderId);
+
+            this.SendToEventPublisher(@event);
+        }
+
+        private void OnMessage(OrderCancelled @event)
+        {
+            this.IncrementCounter(@event);
+
+            this.ProcessOrderEvent(@event);
+            this.ClearModifyBuffer(@event.OrderId);
+
+            this.SendToEventPublisher(@event);
+        }
+
+        private void OnMessage(OrderPartiallyFilled @event)
+        {
+            this.IncrementCounter(@event);
+
+            this.ProcessOrderEvent(@event);
+            this.HandleOrderFillEvent(@event);
+
+            this.SendToEventPublisher(@event);
+        }
+
+        private void OnMessage(OrderFilled @event)
+        {
+            this.IncrementCounter(@event);
+
+            this.ProcessOrderEvent(@event);
+            this.HandleOrderFillEvent(@event);
+            this.ClearModifyBuffer(@event.OrderId);
+
+            this.SendToEventPublisher(@event);
+        }
+
+        private void OnMessage(AccountStateEvent @event)
+        {
+            this.IncrementCounter(@event);
+
+            if (this.accounts.TryGetValue(@event.AccountId, out var account))
+            {
+                account.Apply(@event);
+                this.database.UpdateAccount(account);
+            }
+            else
+            {
+                account = new Account(@event);
+                this.accounts[@event.AccountId] = account;
+                this.database.UpdateAccount(account);
+            }
+
+            this.SendToEventPublisher(@event);
+        }
+
+        private void IncrementCounter(Command command)
+        {
+            this.Log.Debug($"Received {@command}.");
+            this.CommandCount++;
+        }
+
+        private void IncrementCounter(Event @event)
+        {
+            this.Log.Debug($"Received {@event}.");
+            this.EventCount++;
+        }
+
+        private Order? ProcessOrderEvent(OrderEvent @event)
+        {
+            var order = this.database.GetOrder(@event.OrderId);
+            if (order is null)
+            {
+                // This should never happen
+                this.Log.Error($"Cannot process event {@event} ({@event.OrderId} was not found in the cache).");
+            }
+            else
+            {
+                order.Apply(@event);
+                this.database.UpdateOrder(order);
+            }
+
+            return order;
+        }
+
+        private void HandleOrderFillEvent(OrderFillEvent @event)
+        {
+            var positionId = this.database.GetPositionId(@event.OrderId);
+            if (positionId is null)
+            {
+                this.Log.Error($"Cannot process event {@event} (no PositionId found for {@event.OrderId}).");
+                this.SendToEventPublisher(@event);
+                return;
+            }
+
+            var position = this.database.GetPosition(positionId);
+            if (position is null)
+            {
+                // Position does not exist - create new position
+                position = new Position(positionId, @event);
+                this.database.AddPosition(position);
+            }
+            else
+            {
+                position.Apply(@event);
+                this.database.UpdatePosition(position);
+            }
+        }
+
+        private void ClearModifyBuffer(OrderId orderId)
+        {
+            if (this.bufferModify.ContainsKey(orderId))
+            {
+                this.bufferModify.Remove(orderId);
+            }
+        }
+
+        private void SendToEventPublisher(Event @event)
+        {
+            this.Send(@event, ServiceAddress.EventPublisher);
+            this.Log.Debug($"Sent {@event} to EventPublisher.");
+        }
+    }
+}
