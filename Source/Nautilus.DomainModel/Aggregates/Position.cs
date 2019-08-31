@@ -9,9 +9,8 @@
 namespace Nautilus.DomainModel.Aggregates
 {
     using System;
-    using System.Collections.Generic;
-    using System.Collections.Immutable;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Collections;
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Aggregates.Base;
     using Nautilus.DomainModel.Enums;
@@ -26,9 +25,9 @@ namespace Nautilus.DomainModel.Aggregates
     [PerformanceOptimized]
     public sealed class Position : Aggregate<PositionId, OrderFillEvent, Position>
     {
-        private readonly HashSet<OrderId> orderIds;
-        private readonly HashSet<ExecutionId> executionIds;
-        private readonly HashSet<ExecutionTicket> executionTickets;
+        private readonly UniqueList<OrderId> orderIds;
+        private readonly UniqueList<ExecutionId> executionIds;
+        private readonly UniqueList<ExecutionTicket> executionTickets;
 
         private int relativeQuantity;
 
@@ -40,9 +39,9 @@ namespace Nautilus.DomainModel.Aggregates
         public Position(PositionId positionId, OrderFillEvent initial)
             : base(positionId, initial)
         {
-            this.orderIds = new HashSet<OrderId> { initial.OrderId };
-            this.executionIds = new HashSet<ExecutionId> { initial.ExecutionId };
-            this.executionTickets = new HashSet<ExecutionTicket> { initial.ExecutionTicket };
+            this.orderIds = new UniqueList<OrderId>(initial.OrderId);
+            this.executionIds = new UniqueList<ExecutionId>(initial.ExecutionId);
+            this.executionTickets = new UniqueList<ExecutionTicket>(initial.ExecutionTicket);
 
             this.Symbol = initial.Symbol;
             this.EntryDirection = initial.OrderSide;
@@ -152,19 +151,19 @@ namespace Nautilus.DomainModel.Aggregates
         /// Returns a collection of the positions order identifiers.
         /// </summary>
         /// <returns>The events collection.</returns>
-        public ImmutableSortedSet<OrderId> GetOrderIds() => this.orderIds.ToImmutableSortedSet();
+        public UniqueList<OrderId> GetOrderIds() => this.orderIds.Copy();
 
         /// <summary>
         /// Returns a collection of the positions execution identifiers.
         /// </summary>
         /// <returns>The events collection.</returns>
-        public ImmutableSortedSet<ExecutionId> GetExecutionIds() => this.executionIds.ToImmutableSortedSet();
+        public UniqueList<ExecutionId> GetExecutionIds() => this.executionIds.Copy();
 
         /// <summary>
         /// Returns a collection of the positions execution tickets.
         /// </summary>
         /// <returns>The events collection.</returns>
-        public ImmutableSortedSet<ExecutionTicket> GetExecutionTickets() => this.executionTickets.ToImmutableSortedSet();
+        public UniqueList<ExecutionTicket> GetExecutionTickets() => this.executionTickets.Copy();
 
         /// <inheritdoc />
         protected override void OnEvent(OrderFillEvent @event)

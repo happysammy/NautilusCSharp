@@ -10,9 +10,9 @@ namespace Nautilus.DomainModel.Aggregates
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.Immutable;
     using System.Linq;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Collections;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Types;
@@ -32,9 +32,9 @@ namespace Nautilus.DomainModel.Aggregates
     public sealed class Order : Aggregate<OrderId, OrderEvent, Order>
     {
         private readonly FiniteStateMachine orderStateMachine;
-        private readonly List<OrderId> orderIds;
-        private readonly List<OrderId> orderIdsBroker;
-        private readonly List<ExecutionId> executionIds;
+        private readonly UniqueList<OrderId> orderIds;
+        private readonly UniqueList<OrderId> orderIdsBroker;
+        private readonly UniqueList<ExecutionId> executionIds;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Order"/> class.
@@ -44,9 +44,9 @@ namespace Nautilus.DomainModel.Aggregates
             : base(initial.OrderId, initial)
         {
             this.orderStateMachine = CreateOrderFiniteStateMachine();
-            this.orderIds = new List<OrderId> { this.Id };
-            this.orderIdsBroker = new List<OrderId>();
-            this.executionIds = new List<ExecutionId>();
+            this.orderIds = new UniqueList<OrderId>(this.Id);
+            this.orderIdsBroker = new UniqueList<OrderId>();
+            this.executionIds = new UniqueList<ExecutionId>();
 
             this.Symbol = initial.Symbol;
             this.Label = initial.Label;
@@ -69,12 +69,12 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the orders last identifier.
         /// </summary>
-        public OrderId IdLast => this.orderIds[this.orderIds.Count - 1];
+        public OrderId IdLast => this.orderIds.Last();
 
         /// <summary>
         /// Gets the orders last identifier for the broker.
         /// </summary>
-        public OrderId? IdBroker => this.orderIdsBroker.LastOrDefault();
+        public OrderId? IdBroker => this.orderIdsBroker.LastOrNull();
 
         /// <summary>
         /// Gets the orders account identifier.
@@ -84,7 +84,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the orders last execution identifier.
         /// </summary>
-        public ExecutionId? ExecutionId => this.executionIds.LastOrDefault();
+        public ExecutionId? ExecutionId => this.executionIds.LastOrNull();
 
         /// <summary>
         /// Gets the orders identifier count.
@@ -233,19 +233,19 @@ namespace Nautilus.DomainModel.Aggregates
         /// Returns the order identifiers.
         /// </summary>
         /// <returns>A read only collection.</returns>
-        public ImmutableSortedSet<OrderId> GetOrderIds() => this.orderIds.ToImmutableSortedSet();
+        public UniqueList<OrderId> GetOrderIds() => this.orderIds.Copy();
 
         /// <summary>
         /// Returns the broker order identifiers.
         /// </summary>
         /// <returns>A read only collection.</returns>
-        public ImmutableSortedSet<OrderId> GetOrderIdsBroker() => this.orderIdsBroker.ToImmutableSortedSet();
+        public UniqueList<OrderId> GetOrderIdsBroker() => this.orderIdsBroker.Copy();
 
         /// <summary>
         /// Returns the execution identifiers.
         /// </summary>
         /// <returns>A read only collection.</returns>
-        public ImmutableSortedSet<ExecutionId> GetExecutionIds() => this.executionIds.ToImmutableSortedSet();
+        public UniqueList<ExecutionId> GetExecutionIds() => this.executionIds.Copy();
 
         /// <summary>
         /// Returns a new order finite state machine.
