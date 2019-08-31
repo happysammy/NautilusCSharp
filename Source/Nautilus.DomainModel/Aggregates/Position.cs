@@ -124,6 +124,11 @@ namespace Nautilus.DomainModel.Aggregates
         public Quantity PeakQuantity { get; private set; }
 
         /// <summary>
+        /// Gets the positions last event.
+        /// </summary>
+        public new OrderFillEvent LastEvent => (OrderFillEvent)base.LastEvent!;
+
+        /// <summary>
         /// Gets the positions market position.
         /// </summary>
         public MarketPosition MarketPosition { get; private set; }

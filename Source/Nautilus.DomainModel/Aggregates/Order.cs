@@ -208,9 +208,9 @@ namespace Nautilus.DomainModel.Aggregates
         public ZonedDateTime? ExpireTime { get; }
 
         /// <summary>
-        /// Gets the orders last event time.
+        /// Gets the orders last event.
         /// </summary>
-        public new OrderEvent? LastEvent => (OrderEvent?)base.LastEvent;
+        public new OrderEvent LastEvent => (OrderEvent)base.LastEvent!;
 
         /// <summary>
         /// Gets the current order status.
