@@ -21,6 +21,7 @@
     <ItemGroup>
         <ProjectReference Include="..\Nautilus.Data\Nautilus.Data.csproj" />
         <ProjectReference Include="..\Nautilus.DomainModel\Nautilus.DomainModel.csproj" />
+        <ProjectReference Include="..\Nautilus.Execution\Nautilus.Execution.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -30,10 +31,6 @@
 
     <ItemGroup>
         <AdditionalFiles Include="..\stylecop.json" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Execution" />
     </ItemGroup>
 
 </Project>

@@ -39,7 +39,7 @@ namespace Nautilus.Redis.Data
         /// <summary>
         /// Initializes a new instance of the <see cref="RedisInstrumentRepository"/> class.
         /// </summary>
-        /// <param name="connection">The redis clients manager.</param>
+        /// <param name="connection">The redis connection multiplexer.</param>
         public RedisInstrumentRepository(ConnectionMultiplexer connection)
         {
             this.redisServer = connection.GetServer(RedisConstants.LocalHost, RedisConstants.DefaultPort);

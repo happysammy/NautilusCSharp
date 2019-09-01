@@ -88,7 +88,7 @@ namespace Nautilus.Execution.Interfaces
         void Flush();
 
         /// <summary>
-        /// Return a collection of trader identifiers persisted in the execution database.
+        /// Return all trader identifiers.
         /// </summary>
         /// <returns>The trader identifiers.</returns>
         ICollection<TraderId> GetTraderIds();
@@ -191,21 +191,20 @@ namespace Nautilus.Execution.Interfaces
         ICollection<PositionId> GetPositionClosedIds(TraderId traderId, StrategyId? filterStrategyId = null);
 
         /// <summary>
-        /// Return the order matching the given identifier from the memory cache (if found else null).
+        /// Return the order matching the given identifier (if found else null).
         /// </summary>
         /// <param name="orderId">The order identifier.</param>
         /// <returns>The order (if found else null).</returns>
         Order? GetOrder(OrderId orderId);
 
         /// <summary>
-        /// Return all orders from the memory cache.
+        /// Return all orders.
         /// </summary>
         /// <returns>The dictionary of orders.</returns>
         IDictionary<OrderId, Order> GetOrders();
 
         /// <summary>
-        /// Return all orders from the memory cache for the given trader identifier and optional
-        /// strategy identifier filter.
+        /// Return all orders for the given trader identifier and optional strategy identifier filter.
         /// </summary>
         /// <param name="traderId">The trader identifier.</param>
         /// <param name="filterStrategyId">The optional strategy identifier filter.</param>
@@ -213,14 +212,13 @@ namespace Nautilus.Execution.Interfaces
         IDictionary<OrderId, Order> GetOrders(TraderId traderId, StrategyId? filterStrategyId = null);
 
         /// <summary>
-        /// Return all working orders from the memory cache.
+        /// Return all working orders.
         /// </summary>
         /// <returns>The dictionary of orders.</returns>
         IDictionary<OrderId, Order> GetOrdersWorking();
 
         /// <summary>
-        /// Return all working orders from the memory cache for the given trader identifier and
-        /// optional strategy identifier filter.
+        /// Return all working orders for the given trader identifier and optional strategy identifier filter.
         /// </summary>
         /// <param name="traderId">The trader identifier.</param>
         /// <param name="filterStrategyId">The optional strategy identifier filter.</param>
@@ -228,14 +226,13 @@ namespace Nautilus.Execution.Interfaces
         IDictionary<OrderId, Order> GetOrdersWorking(TraderId traderId, StrategyId? filterStrategyId = null);
 
         /// <summary>
-        /// Return all completed orders from the memory cache.
+        /// Return all completed orders.
         /// </summary>
         /// <returns>The dictionary of orders.</returns>
         IDictionary<OrderId, Order> GetOrdersCompleted();
 
         /// <summary>
-        /// Return a dictionary of completed orders from the memory cache for the given trader
-        /// identifier and optional strategy identifier filter.
+        /// Return all completed orders for the given trader identifier and optional strategy identifier filter.
         /// </summary>
         /// <param name="traderId">The trader identifier.</param>
         /// <param name="filterStrategyId">The optional strategy identifier filter.</param>
@@ -243,35 +240,34 @@ namespace Nautilus.Execution.Interfaces
         IDictionary<OrderId, Order> GetOrdersCompleted(TraderId traderId, StrategyId? filterStrategyId = null);
 
         /// <summary>
-        /// Return the position matching the given identifier from the memory cache (if found else null).
+        /// Return the position matching the given identifier (if found else null).
         /// </summary>
         /// <param name="positionId">The position identifier.</param>
         /// <returns>The position (if found else null).</returns>
         Position? GetPosition(PositionId positionId);
 
         /// <summary>
-        /// Return the position matching the given identifier from the memory cache (if found else null).
+        /// Return the position matching the given identifier (if found else null).
         /// </summary>
         /// <param name="orderId">The order identifier for the position.</param>
         /// <returns>The position (if found else null).</returns>
         Position? GetPositionForOrder(OrderId orderId);
 
         /// <summary>
-        /// Return the position identifier indexed for the given order identifier (if found else null).
+        /// Return the position identifier for the given order identifier (if found else null).
         /// </summary>
         /// <param name="orderId">The order identifier for the position.</param>
         /// <returns>The position identifier (if found else null).</returns>
         PositionId? GetPositionId(OrderId orderId);
 
         /// <summary>
-        /// Return all positions from the memory cache.
+        /// Return all positions.
         /// </summary>
         /// <returns>The dictionary of positions.</returns>
         IDictionary<PositionId, Position> GetPositions();
 
         /// <summary>
-        /// Return all positions from the memory cache for the given trader identifier and
-        /// optional strategy identifier filter.
+        /// Return all positions for the given trader identifier and optional strategy identifier filter.
         /// </summary>
         /// <param name="traderId">The trader identifier.</param>
         /// <param name="filterStrategyId">The optional strategy identifier filter.</param>
@@ -279,14 +275,13 @@ namespace Nautilus.Execution.Interfaces
         IDictionary<PositionId, Position> GetPositions(TraderId traderId, StrategyId? filterStrategyId = null);
 
         /// <summary>
-        /// Return all open positions from the memory cache.
+        /// Return all open positions.
         /// </summary>
         /// <returns>The dictionary of positions.</returns>
         IDictionary<PositionId, Position> GetPositionsOpen();
 
         /// <summary>
-        /// Return all open positions from the memory cache for the given trader identifier and
-        /// optional strategy identifier filter.
+        /// Return all open positions for the given trader identifier and optional strategy identifier filter.
         /// </summary>
         /// <param name="traderId">The trader identifier.</param>
         /// <param name="filterStrategyId">The optional strategy identifier filter.</param>
@@ -294,14 +289,13 @@ namespace Nautilus.Execution.Interfaces
         IDictionary<PositionId, Position> GetPositionsOpen(TraderId traderId, StrategyId? filterStrategyId = null);
 
         /// <summary>
-        /// Return all closed positions from the memory cache .
+        /// Return all closed positions.
         /// </summary>
         /// <returns>The dictionary of positions.</returns>
         IDictionary<PositionId, Position> GetPositionsClosed();
 
         /// <summary>
-        /// Return all closed positions from the memory cache for the given trader identifier and
-        /// optional strategy identifier filter.
+        /// Return all closed positions for the given trader identifier and optional strategy identifier filter.
         /// </summary>
         /// <param name="traderId">The trader identifier.</param>
         /// <param name="filterStrategyId">The optional strategy identifier filter.</param>
