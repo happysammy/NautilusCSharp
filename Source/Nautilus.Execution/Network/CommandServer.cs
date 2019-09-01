@@ -17,7 +17,8 @@ namespace Nautilus.Execution.Network
     using Nautilus.Network;
 
     /// <summary>
-    /// Provides a command server for received and deserializing commands.
+    /// Provides a command server which deserializes command messages and forwards them to the
+    /// specified receiver endpoint.
     /// </summary>
     public sealed class CommandServer : MessageServer<Command, Response>
     {
@@ -29,7 +30,7 @@ namespace Nautilus.Execution.Network
         /// <param name="container">The component setup container.</param>
         /// <param name="inboundSerializer">The inbound message serializer.</param>
         /// <param name="outboundSerializer">The outbound message serializer.</param>
-        /// <param name="receiver">The receiver endpoint.</param>
+        /// <param name="receiver">The receiver endpoint for deserialized commands.</param>
         /// <param name="host">The consumers host address.</param>
         /// <param name="port">The consumers port.</param>
         public CommandServer(
@@ -58,33 +59,32 @@ namespace Nautilus.Execution.Network
 
         private void OnMessage(Envelope<SubmitOrder> envelope)
         {
-            this.OnCommand(envelope.Message, envelope.Sender);
+            this.receiver.Send(envelope.Message);
+            this.SendReceived(envelope.Message, envelope.Sender);
         }
 
         private void OnMessage(Envelope<SubmitAtomicOrder> envelope)
         {
-            this.OnCommand(envelope.Message, envelope.Sender);
+            this.receiver.Send(envelope.Message);
+            this.SendReceived(envelope.Message, envelope.Sender);
         }
 
         private void OnMessage(Envelope<CancelOrder> envelope)
         {
-            this.OnCommand(envelope.Message, envelope.Sender);
+            this.receiver.Send(envelope.Message);
+            this.SendReceived(envelope.Message, envelope.Sender);
         }
 
         private void OnMessage(Envelope<ModifyOrder> envelope)
         {
-            this.OnCommand(envelope.Message, envelope.Sender);
+            this.receiver.Send(envelope.Message);
+            this.SendReceived(envelope.Message, envelope.Sender);
         }
 
         private void OnMessage(Envelope<AccountInquiry> envelope)
         {
-            this.OnCommand(envelope.Message, envelope.Sender);
-        }
-
-        private void OnCommand(Command command, Address? sender)
-        {
-            this.receiver.Send(command);
-            this.SendReceived(command, sender);
+            this.receiver.Send(envelope.Message);
+            this.SendReceived(envelope.Message, envelope.Sender);
         }
     }
 }

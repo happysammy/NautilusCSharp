@@ -73,7 +73,7 @@ namespace Nautilus.DomainModel.Entities.Base
         public override int GetHashCode() => Hash.GetCode(this.Id);
 
         /// <summary>
-        /// Returns a string representation of this entity.
+        /// Returns a string representation of this object.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
         public override string ToString() => $"{nameof(T)}({this.Id})";

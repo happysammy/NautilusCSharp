@@ -60,7 +60,7 @@ namespace Nautilus.DomainModel.Aggregates.Base
         public int EventCount => this.events.Count;
 
         /// <summary>
-        /// Apply the given event to update the aggregate state.
+        /// Apply the given event to update the state.
         /// </summary>
         /// <param name="event">The event to apply.</param>
         public void Apply(TEvt @event)
@@ -70,13 +70,13 @@ namespace Nautilus.DomainModel.Aggregates.Base
         }
 
         /// <summary>
-        /// Called when an event is applied to the aggregate.
+        /// Called after an event is applied.
         /// </summary>
         /// <param name="event">The event to handle.</param>
         protected abstract void OnEvent(TEvt @event);
 
         /// <summary>
-        /// Returns the aggregates internal events.
+        /// Returns the internal events.
         /// </summary>
         /// <returns>The list of events.</returns>
         protected List<TEvt> Events() => this.events;

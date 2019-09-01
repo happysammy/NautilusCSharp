@@ -53,8 +53,13 @@ namespace Nautilus.DomainModel.Entities
         public Order StopLoss { get; }
 
         /// <summary>
-        /// Gets the atomic orders take-profit order (optional).
+        /// Gets the atomic orders take-profit order (optional can be null).
         /// </summary>
         public Order? TakeProfit { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether the atomic order contains a take-profit order.
+        /// </summary>
+        public bool HasTakeProfit => this.TakeProfit != null;
     }
 }

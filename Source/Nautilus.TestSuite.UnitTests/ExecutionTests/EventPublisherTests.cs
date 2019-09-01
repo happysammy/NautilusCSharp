@@ -24,7 +24,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    [SuppressMessage("ReSharper", "SA1310", Justification = "Easier to read.")]
     public class EventPublisherTests
     {
         private readonly NetworkAddress localHost = new NetworkAddress("127.0.0.1");
