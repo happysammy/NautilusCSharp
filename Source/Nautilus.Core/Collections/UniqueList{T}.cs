@@ -12,7 +12,7 @@ namespace Nautilus.Core.Collections
     using System.Collections.Generic;
 
     /// <summary>
-    /// Represents a strongly typed list of unique objects.
+    /// Represents a strongly typed list of unique objects which preserves insertion order.
     /// </summary>
     /// <typeparam name="T">The type of the objects.</typeparam>
     public class UniqueList<T> : List<T>
@@ -43,20 +43,9 @@ namespace Nautilus.Core.Collections
             base.Add(initial);
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="UniqueList{T}"/> class.
-        /// Each element of the initial collection will only be added if unique.
-        /// </summary>
-        /// <param name="collection">The initial collection for the list.</param>
-        public UniqueList(IEnumerable<T> collection)
-        {
-            this.AddRange(collection);
-        }
-
-        private UniqueList(List<T> elements)
+        private UniqueList(IEnumerable<T> elements)
             : base(elements)
         {
-            // Private constructor for the Copy() method
         }
 
         /// <summary>
@@ -140,6 +129,7 @@ namespace Nautilus.Core.Collections
         /// Return the first element of the list if not empty (otherwise throws exception).
         /// </summary>
         /// <returns>The first element.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">If the list is empty.</exception>
         public T First()
         {
             return base[0];
@@ -160,6 +150,7 @@ namespace Nautilus.Core.Collections
         /// Return the last element of the list if not empty (otherwise throws exception).
         /// </summary>
         /// <returns>The first element.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">If the list is empty.</exception>
         public T Last()
         {
             return base[this.Count - 1];
