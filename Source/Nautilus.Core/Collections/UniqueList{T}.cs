@@ -55,13 +55,7 @@ namespace Nautilus.Core.Collections
         public new T this[int index]
         {
             get => base[index];
-            set
-            {
-                if (!this.Contains(value))
-                {
-                    base[index] = value;
-                }
-            }
+            set => throw new InvalidOperationException("Cannot set an element of a UniqueList<T> by index.");
         }
 
         /// <summary>
