@@ -40,7 +40,7 @@ namespace Nautilus.DomainModel.Aggregates.Base
         }
 
         /// <summary>
-        /// Gets the initial event applied.
+        /// Gets the initial event.
         /// </summary>
         public TEvt InitialEvent => this.events[0];
 

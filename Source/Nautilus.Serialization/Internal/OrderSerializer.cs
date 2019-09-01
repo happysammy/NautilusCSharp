@@ -42,7 +42,7 @@ namespace Nautilus.Serialization.Internal
                 { nameof(Order.TimeInForce), order.TimeInForce.ToString() },
                 { nameof(Order.ExpireTime), ObjectPacker.Pack(order.ExpireTime) },
                 { nameof(Order.Timestamp), order.Timestamp.ToIsoString() },
-                { "InitId", order.InitialEvent.Id.ToString() },  // TODO: Change this on python side
+                { nameof(Order.InitId), order.InitialEvent.Id.ToString() },
             });
         }
 
@@ -95,7 +95,7 @@ namespace Nautilus.Serialization.Internal
             var side = ObjectExtractor.Enum<OrderSide>(unpacked[nameof(OrderSide)]);
             var quantity = ObjectExtractor.Quantity(unpacked[nameof(Order.Quantity)]);
             var timestamp = ObjectExtractor.ZonedDateTime(unpacked[nameof(Order.Timestamp)]);
-            var initialId = ObjectExtractor.Guid(unpacked["InitId"]);  // TODO: Change this on python side
+            var initialId = ObjectExtractor.Guid(unpacked[nameof(Order.InitId)]);
 
             switch (type)
             {

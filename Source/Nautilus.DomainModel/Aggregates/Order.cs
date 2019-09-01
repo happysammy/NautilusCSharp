@@ -67,6 +67,11 @@ namespace Nautilus.DomainModel.Aggregates
         }
 
         /// <summary>
+        /// Gets the initial order identifier..
+        /// </summary>
+        public Guid InitId => this.InitialEvent.Id;
+
+        /// <summary>
         /// Gets the orders last identifier.
         /// </summary>
         public OrderId IdLast => this.orderIds.Last();

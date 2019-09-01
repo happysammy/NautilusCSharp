@@ -143,7 +143,7 @@ namespace Nautilus.Core.Collections
         /// <summary>
         /// Return the last element of the list if not empty (otherwise throws exception).
         /// </summary>
-        /// <returns>The first element.</returns>
+        /// <returns>The last element.</returns>
         /// <exception cref="ArgumentOutOfRangeException">If the list is empty.</exception>
         public T Last()
         {

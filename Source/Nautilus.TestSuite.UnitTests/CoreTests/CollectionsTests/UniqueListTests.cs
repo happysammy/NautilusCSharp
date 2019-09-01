@@ -49,6 +49,18 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CollectionsTests
         }
 
         [Fact]
+        internal void CanInitializeWithInitialNoneUniqueElements()
+        {
+            // Arrange
+            // Act
+            var unique = new UniqueList<string> { "0", "0", "0" };
+
+            // Assert
+            Assert.Single(unique);
+            Assert.Equal("0", unique[0]);
+        }
+
+        [Fact]
         internal void Copy_WithOneElement_ReturnsIdenticalList()
         {
             // Arrange
