@@ -12,12 +12,15 @@ namespace Nautilus.DomainModel.Identifiers
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Types;
+    using Nautilus.DomainModel.Annotations;
+    using Nautilus.DomainModel.Enums;
 
     /// <summary>
     /// Represents valid venue identifier. A venue is the tradeable location for financial market
     /// instruments.
     /// </summary>
     [Immutable]
+    [IdentifierUniqueness(Uniqueness.Global)]
     public class Venue : Identifier<Venue>
     {
         /// <summary>

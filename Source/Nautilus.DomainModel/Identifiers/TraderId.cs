@@ -11,15 +11,25 @@ namespace Nautilus.DomainModel.Identifiers
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Types;
+    using Nautilus.DomainModel.Annotations;
+    using Nautilus.DomainModel.Enums;
 
     /// <summary>
-    /// Represents a valid trader identifier. This name and order identifier tag combination must be
-    /// unique at the fund level.
+    /// Represents a valid trader identifier. The <see cref="Name"/> and <see cref="OrderIdTag"/>
+    /// combination must be unique at the fund level.
     ///
+    /// <para>
     /// The string representation is the abbreviated name of the trader with an order identifier tag
     /// separated by a hyphen '-'.
+    /// </para>
+    ///
+    /// <para>
+    /// The design specification will use the <see cref="OrderIdTag"/> in identifiers sent to a
+    /// brokerage, and will not use the <see cref="Name"/>.
+    /// </para>
     /// </summary>
     [Immutable]
+    [IdentifierUniqueness(Uniqueness.Fund)]
     public sealed class TraderId : Identifier<TraderId>
     {
         /// <summary>

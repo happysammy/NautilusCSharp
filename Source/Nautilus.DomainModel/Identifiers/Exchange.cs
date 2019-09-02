@@ -10,11 +10,14 @@ namespace Nautilus.DomainModel.Identifiers
 {
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
+    using Nautilus.DomainModel.Annotations;
+    using Nautilus.DomainModel.Enums;
 
     /// <summary>
     /// Represents a valid exchange identifier. An exchange is a type of trading venue.
     /// </summary>
     [Immutable]
+    [IdentifierUniqueness(Uniqueness.Global)]
     public sealed class Exchange : Venue
     {
         /// <summary>

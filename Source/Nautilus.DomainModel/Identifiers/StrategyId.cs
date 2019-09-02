@@ -11,15 +11,25 @@ namespace Nautilus.DomainModel.Identifiers
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Types;
+    using Nautilus.DomainModel.Annotations;
+    using Nautilus.DomainModel.Enums;
 
     /// <summary>
     /// Represents a valid strategy identifier. The name and order identifier tag combination must
     /// be unique at the trader level.
     ///
+    /// <para>
     /// The string representation is the name of the strategy class with an order identifier tag
     /// separated by a hyphen '-'.
+    /// </para>
+    ///
+    /// <para>
+    /// The design specification will use the <see cref="OrderIdTag"/> in identifiers sent to a
+    /// brokerage, and will not use the <see cref="Name"/>.
+    /// </para>
     /// </summary>
     [Immutable]
+    [IdentifierUniqueness(Uniqueness.Trader)]
     public sealed class StrategyId : Identifier<StrategyId>
     {
         /// <summary>
