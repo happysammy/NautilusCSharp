@@ -8,11 +8,13 @@
 
 namespace Nautilus.Redis.Execution
 {
+    using System.Diagnostics.CodeAnalysis;
     using Nautilus.DomainModel.Identifiers;
 
     /// <summary>
     /// Provides key strings for the Redis execution database.
     /// </summary>
+    [SuppressMessage("ReSharper", "SA1310", Justification = "Easier to read.")]
     internal static class RedisKeyProvider
     {
         private const string NAUTILUS_EXECUTOR = "NautilusExecutor:";

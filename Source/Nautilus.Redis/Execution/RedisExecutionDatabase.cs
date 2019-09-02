@@ -23,17 +23,11 @@ namespace Nautilus.Redis.Execution
     /// </summary>
     public class RedisExecutionDatabase : Component, IExecutionDatabase
     {
-
-
-
-
         private readonly IServer redisServer;
         private readonly IDatabase redisDatabase;
 
         private readonly Dictionary<OrderId, Order> cachedOrders;
         private readonly Dictionary<PositionId, Position> cachedPositions;
-
-
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RedisExecutionDatabase"/> class.
