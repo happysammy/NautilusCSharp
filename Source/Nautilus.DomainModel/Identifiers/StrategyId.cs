@@ -15,8 +15,8 @@ namespace Nautilus.DomainModel.Identifiers
     using Nautilus.DomainModel.Enums;
 
     /// <summary>
-    /// Represents a valid strategy identifier. The name and order identifier tag combination must
-    /// be unique at the trader level.
+    /// Represents a valid strategy identifier. The <see cref="Name"/> and <see cref="OrderIdTag"/>
+    /// combination must be unique at the trader level.
     ///
     /// <para>
     /// The string representation is the name of the strategy class with an order identifier tag

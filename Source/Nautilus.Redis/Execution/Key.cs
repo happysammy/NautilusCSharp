@@ -34,7 +34,7 @@ namespace Nautilus.Redis.Execution
         private const string OPEN = "Open";
         private const string CLOSED = "Closed";
 
-        private const string KEY_TRADERS = NAUTILUS_EXECUTOR + TRADERS + ":";                  // + TraderId    -> ?
+        private const string KEY_TRADERS = NAUTILUS_EXECUTOR + TRADERS + ":";                  // + TraderId    -> Hash
         private const string KEY_ACCOUNTS = NAUTILUS_EXECUTOR + ACCOUNTS + ":";                // + AccountId   -> List[AccountStateEvent]
         private const string KEY_ORDERS = NAUTILUS_EXECUTOR + ORDERS + ":";                    // + OrderId     -> List[OrderEvent]
         private const string KEY_POSITIONS = NAUTILUS_EXECUTOR + POSITIONS + ":";              // + PositionId  -> List[OrderFillEvent]
@@ -42,6 +42,8 @@ namespace Nautilus.Redis.Execution
         private const string KEY_INDEX_TRADER_ORDERS = INDEX + TRADER + ORDERS + ":";          // + TraderId -> Set{OrderId}
         private const string KEY_INDEX_TRADER_POSITIONS = INDEX + TRADER + POSITIONS + ":";    // + TraderId -> Set{PositionId}
         private const string KEY_INDEX_TRADER_STRATEGIES = INDEX + TRADER + STRATEGIES + ":";  // + TraderId -> Set{StrategyId}
+        private const string KEY_INDEX_TRADER_STRATEGY_ORDERS = INDEX + TRADER + STRATEGY + ORDERS + ":";        // + TraderId : StrategyId -> Set{OrderId}
+        private const string KEY_INDEX_TRADER_STRATEGY_POSITIONS = INDEX + TRADER + STRATEGY + POSITIONS + ":";  // + TraderId : StrategyId -> Set{PositionId}
         private const string KEY_INDEX_ACCOUNT_ORDERS = INDEX + ACCOUNT + ORDERS + ":";        // + AccountId -> Set{OrderId}
         private const string KEY_INDEX_ACCOUNT_POSITIONS = INDEX + ACCOUNT + POSITIONS + ":";  // + AccountId -> Set{PositionId}
         private const string KEY_INDEX_ORDER_TRADER = INDEX + ORDER + TRADER;                  // -> HashSet[OrderId, TraderId]
@@ -59,6 +61,12 @@ namespace Nautilus.Redis.Execution
         private const string KEY_INDEX_POSITIONS = INDEX + POSITIONS;                          // Set{PositionId}
         private const string KEY_INDEX_POSITIONS_OPEN = INDEX + POSITIONS + ":" + OPEN;        // Set{PositionId}
         private const string KEY_INDEX_POSITIONS_CLOSED = INDEX + POSITIONS + ":" + CLOSED;    // Set{PositionId}
+
+        /// <summary>
+        /// Gets the Redis key.
+        /// </summary>
+        /// <returns>The key string.</returns>
+        internal static string Traders => KEY_TRADERS + "*";
 
         /// <summary>
         /// Gets the Redis key.
@@ -179,6 +187,22 @@ namespace Nautilus.Redis.Execution
         /// <param name="traderId">The trader identifier.</param>
         /// <returns>The key string.</returns>
         internal static string IndexTraderStrategies(TraderId traderId) => KEY_INDEX_TRADER_STRATEGIES + traderId.Value;
+
+        /// <summary>
+        /// Returns the Redis key.
+        /// </summary>
+        /// <param name="traderId">The trader identifier.</param>
+        /// <param name="strategyId">The strategy identifier.</param>
+        /// <returns>The key string.</returns>
+        internal static string IndexTraderStrategyOrders(TraderId traderId, StrategyId strategyId) => KEY_INDEX_TRADER_STRATEGY_ORDERS + traderId.Value + ":" + strategyId.Value;
+
+        /// <summary>
+        /// Returns the Redis key.
+        /// </summary>
+        /// <param name="traderId">The trader identifier.</param>
+        /// <param name="strategyId">The strategy identifier.</param>
+        /// <returns>The key string.</returns>
+        internal static string IndexTraderStrategyPositions(TraderId traderId, StrategyId strategyId) => KEY_INDEX_TRADER_STRATEGY_POSITIONS + traderId.Value + ":" + strategyId.Value;
 
         /// <summary>
         /// Returns the Redis key.

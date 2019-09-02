@@ -9,8 +9,10 @@
 namespace Nautilus.Redis.Execution
 {
     using System.Collections.Generic;
+    using System.Linq;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Message;
     using Nautilus.DomainModel.Aggregates;
@@ -70,14 +72,22 @@ namespace Nautilus.Redis.Execution
         {
             Debug.KeyNotIn(order.Id, this.cachedOrders, nameof(order.Id), nameof(this.cachedOrders));
 
-            this.redisDatabase.ListRightPush(Key.Order(order.Id), this.eventSerializer.Serialize(order.LastEvent));
+            this.redisDatabase.SetAdd(Key.IndexTraderOrders(traderId), order.Id.Value);
+            this.redisDatabase.SetAdd(Key.IndexTraderPositions(traderId), positionId.Value);
+            this.redisDatabase.SetAdd(Key.IndexTraderStrategies(traderId), strategyId.Value);
             this.redisDatabase.SetAdd(Key.IndexAccountOrders(accountId), order.Id.Value);
+            this.redisDatabase.SetAdd(Key.IndexAccountPositions(accountId), order.Id.Value);
             this.redisDatabase.HashSet(Key.IndexOrderTrader, new[] { new HashEntry(order.Id.Value, traderId.Value) });
             this.redisDatabase.HashSet(Key.IndexOrderAccount, new[] { new HashEntry(order.Id.Value, accountId.Value) });
             this.redisDatabase.HashSet(Key.IndexOrderPosition, new[] { new HashEntry(order.Id.Value, positionId.Value) });
             this.redisDatabase.HashSet(Key.IndexOrderStrategy, new[] { new HashEntry(order.Id.Value, strategyId.Value) });
-            this.redisDatabase.SetAdd(Key.IndexOrders, order.Id.Value);
+            this.redisDatabase.HashSet(Key.IndexPositionTrader, new[] { new HashEntry(positionId.Value, traderId.Value) });
+            this.redisDatabase.HashSet(Key.IndexPositionAccount, new[] { new HashEntry(positionId.Value, positionId.Value) });
+            this.redisDatabase.HashSet(Key.IndexPositionStrategy, new[] { new HashEntry(positionId.Value, positionId.Value) });
             this.redisDatabase.SetAdd(Key.IndexPositionOrders(positionId), order.Id.Value);
+            this.redisDatabase.SetAdd(Key.IndexOrders, order.Id.Value);
+
+            this.redisDatabase.ListRightPush(Key.Order(order.Id), this.eventSerializer.Serialize(order.LastEvent));
 
             this.cachedOrders[order.Id] = order;
         }
@@ -87,10 +97,14 @@ namespace Nautilus.Redis.Execution
         {
             Debug.KeyNotIn(position.Id, this.cachedPositions, nameof(position.Id), nameof(this.cachedPositions));
 
-            this.redisDatabase.ListRightPush(Key.Position(position.Id), this.eventSerializer.Serialize(position.LastEvent));
-            this.redisDatabase.SetAdd(Key.IndexAccountPositions(position.AccountId), position.Id.Value);
             this.redisDatabase.SetAdd(Key.IndexPositions, position.Id.Value);
-            this.redisDatabase.SetAdd(Key.IndexPositionsOpen, position.Id.Value);
+            if (position.IsOpen)
+            {
+                // The position should always be open when being added
+                this.redisDatabase.SetAdd(Key.IndexPositionsOpen, position.Id.Value);
+            }
+
+            this.redisDatabase.ListRightPush(Key.Position(position.Id), this.eventSerializer.Serialize(position.LastEvent));
 
             this.cachedPositions[position.Id] = position;
         }
@@ -138,7 +152,16 @@ namespace Nautilus.Redis.Execution
         /// <inheritdoc />
         public void CheckResiduals()
         {
-            throw new System.NotImplementedException();
+            foreach (var orderId in this.redisDatabase.SetMembers(Key.IndexOrdersWorking))
+            {
+                var order = this.GetOrder(new OrderId(orderId));
+                this.Log.Warning($"The {orderId} is still working.");
+            }
+
+            foreach (var orderId in this.redisDatabase.SetMembers(Key.IndexOrdersWorking))
+            {
+                this.Log.Warning($"The {orderId} is still working.");
+            }
         }
 
         /// <inheritdoc />
@@ -157,181 +180,431 @@ namespace Nautilus.Redis.Execution
         /// <inheritdoc />
         public ICollection<TraderId> GetTraderIds()
         {
-            throw new System.NotImplementedException();
+            return ConvertToTraderIds(this.redisServer.Keys(pattern: Key.Traders).ToArray());
         }
 
         /// <inheritdoc />
         public ICollection<StrategyId> GetStrategyIds(TraderId traderId)
         {
-            throw new System.NotImplementedException();
+            return ConvertToStrategyIds(this.redisDatabase.SetMembers(Key.IndexTraderStrategies(traderId)));
         }
 
         /// <inheritdoc />
         public ICollection<OrderId> GetOrderIds()
         {
-            throw new System.NotImplementedException();
+            return ConvertToOrderIds(this.redisDatabase.SetMembers(Key.IndexOrders));
         }
 
         /// <inheritdoc />
         public ICollection<OrderId> GetOrderIds(TraderId traderId, StrategyId? filterStrategyId = null)
         {
-            throw new System.NotImplementedException();
+            var orderIdValues = filterStrategyId is null
+                ? this.redisDatabase.SetMembers(Key.IndexTraderOrders(traderId))
+                : this.GetIntersection(Key.IndexOrdersWorking, Key.IndexTraderStrategyOrders(traderId, filterStrategyId));
+
+            return ConvertToOrderIds(orderIdValues);
         }
 
         /// <inheritdoc />
         public ICollection<OrderId> GetOrderWorkingIds()
         {
-            throw new System.NotImplementedException();
+            return ConvertToOrderIds(this.redisDatabase.SetMembers(Key.IndexOrdersWorking));
         }
 
         /// <inheritdoc />
         public ICollection<OrderId> GetOrderWorkingIds(TraderId traderId, StrategyId? filterStrategyId = null)
         {
-            throw new System.NotImplementedException();
+            var orderIdValues = filterStrategyId is null
+                ? this.GetIntersection(Key.IndexOrdersWorking, Key.IndexTraderOrders(traderId))
+                : this.GetIntersection(Key.IndexOrdersWorking, Key.IndexTraderStrategyOrders(traderId, filterStrategyId));
+
+            return ConvertToOrderIds(orderIdValues);
         }
 
         /// <inheritdoc />
         public ICollection<OrderId> GetOrderCompletedIds()
         {
-            throw new System.NotImplementedException();
+            return ConvertToOrderIds(this.redisDatabase.SetMembers(Key.IndexOrdersCompleted));
         }
 
         /// <inheritdoc />
         public ICollection<OrderId> GetOrderCompletedIds(TraderId traderId, StrategyId? filterStrategyId = null)
         {
-            throw new System.NotImplementedException();
+            var orderIdValues = filterStrategyId is null
+                ? this.GetIntersection(Key.IndexOrdersCompleted, Key.IndexTraderOrders(traderId))
+                : this.GetIntersection(Key.IndexOrdersCompleted, Key.IndexTraderStrategyOrders(traderId, filterStrategyId));
+
+            return ConvertToOrderIds(orderIdValues);
         }
 
         /// <inheritdoc />
         public ICollection<PositionId> GetPositionIds()
         {
-            throw new System.NotImplementedException();
+            return ConvertToPositionIds(this.redisDatabase.SetMembers(Key.IndexPositions));
         }
 
         /// <inheritdoc />
         public ICollection<PositionId> GetPositionIds(TraderId traderId, StrategyId? filterStrategyId = null)
         {
-            throw new System.NotImplementedException();
+            var positionIdValues = filterStrategyId is null
+                ? this.redisDatabase.SetMembers(Key.IndexTraderPositions(traderId))
+                : this.GetIntersection(Key.IndexPositions, Key.IndexTraderStrategyPositions(traderId, filterStrategyId));
+
+            return ConvertToPositionIds(positionIdValues);
         }
 
         /// <inheritdoc />
         public ICollection<PositionId> GetPositionOpenIds()
         {
-            throw new System.NotImplementedException();
+            return ConvertToPositionIds(this.redisDatabase.SetMembers(Key.IndexPositionsOpen));
         }
 
         /// <inheritdoc />
         public ICollection<PositionId> GetPositionOpenIds(TraderId traderId, StrategyId? filterStrategyId = null)
         {
-            throw new System.NotImplementedException();
+            var positionIdValues = filterStrategyId is null
+                ? this.GetIntersection(Key.IndexPositionsOpen, Key.IndexTraderPositions(traderId))
+                : this.GetIntersection(Key.IndexPositionsOpen, Key.IndexTraderStrategyPositions(traderId, filterStrategyId));
+
+            return ConvertToPositionIds(positionIdValues);
         }
 
         /// <inheritdoc />
         public ICollection<PositionId> GetPositionClosedIds()
         {
-            throw new System.NotImplementedException();
+            return ConvertToPositionIds(this.redisDatabase.SetMembers(Key.IndexPositionsClosed));
         }
 
         /// <inheritdoc />
         public ICollection<PositionId> GetPositionClosedIds(TraderId traderId, StrategyId? filterStrategyId = null)
         {
-            throw new System.NotImplementedException();
+            var positionIdValues = filterStrategyId is null
+                ? this.GetIntersection(Key.IndexPositionsClosed, Key.IndexTraderPositions(traderId))
+                : this.GetIntersection(Key.IndexPositionsClosed, Key.IndexTraderStrategyPositions(traderId, filterStrategyId));
+
+            return ConvertToPositionIds(positionIdValues);
         }
 
         /// <inheritdoc />
         public Order? GetOrder(OrderId orderId)
         {
-            throw new System.NotImplementedException();
+            if (this.cachedOrders.TryGetValue(orderId, out var order))
+            {
+                return order;
+            }
+
+            this.Log.Warning($"Cannot find {orderId} in the cache.");
+            return null;
         }
 
         /// <inheritdoc />
         public IDictionary<OrderId, Order> GetOrders()
         {
-            throw new System.NotImplementedException();
+            return new Dictionary<OrderId, Order>(this.cachedOrders);
         }
 
         /// <inheritdoc />
         public IDictionary<OrderId, Order> GetOrders(TraderId traderId, StrategyId? filterStrategyId = null)
         {
-            throw new System.NotImplementedException();
+            return this.CreateOrdersDictionary(this.GetOrderIds(traderId, filterStrategyId));
         }
 
         /// <inheritdoc />
         public IDictionary<OrderId, Order> GetOrdersWorking()
         {
-            throw new System.NotImplementedException();
+            return this.CreateOrdersWorkingDictionary(this.GetOrderWorkingIds());
         }
 
         /// <inheritdoc />
         public IDictionary<OrderId, Order> GetOrdersWorking(TraderId traderId, StrategyId? filterStrategyId = null)
         {
-            throw new System.NotImplementedException();
+            return this.CreateOrdersWorkingDictionary(this.GetOrderWorkingIds(traderId, filterStrategyId));
         }
 
         /// <inheritdoc />
         public IDictionary<OrderId, Order> GetOrdersCompleted()
         {
-            throw new System.NotImplementedException();
+            return this.CreateOrdersCompletedDictionary(this.GetOrderCompletedIds());
         }
 
         /// <inheritdoc />
         public IDictionary<OrderId, Order> GetOrdersCompleted(TraderId traderId, StrategyId? filterStrategyId = null)
         {
-            throw new System.NotImplementedException();
+            return this.CreateOrdersCompletedDictionary(this.GetOrderCompletedIds(traderId, filterStrategyId));
         }
 
         /// <inheritdoc />
         public Position? GetPosition(PositionId positionId)
         {
-            throw new System.NotImplementedException();
+            if (this.cachedPositions.TryGetValue(positionId, out var position))
+            {
+                return position;
+            }
+
+            this.Log.Warning($"Cannot find {positionId} in the cache.");
+            return null;
         }
 
         /// <inheritdoc />
         public Position? GetPositionForOrder(OrderId orderId)
         {
-            throw new System.NotImplementedException();
+            var positionId = this.GetPositionId(orderId);
+
+            return positionId is null
+                ? null
+                : this.GetPosition(positionId);
         }
 
         /// <inheritdoc />
         public PositionId? GetPositionId(OrderId orderId)
         {
-            throw new System.NotImplementedException();
+            var idValue = this.redisDatabase.HashGet(Key.IndexOrderPosition, orderId.Value);
+
+            if (idValue == RedisValue.Null)
+            {
+                this.Log.Warning($"Cannot find PositionId for {orderId}.");
+                return null;
+            }
+
+            return new PositionId(idValue);
         }
 
         /// <inheritdoc />
         public IDictionary<PositionId, Position> GetPositions()
         {
-            throw new System.NotImplementedException();
+            return new Dictionary<PositionId, Position>(this.cachedPositions);
         }
 
         /// <inheritdoc />
         public IDictionary<PositionId, Position> GetPositions(TraderId traderId, StrategyId? filterStrategyId = null)
         {
-            throw new System.NotImplementedException();
+            return this.CreatePositionsDictionary(this.GetPositionIds(traderId, filterStrategyId));
         }
 
         /// <inheritdoc />
         public IDictionary<PositionId, Position> GetPositionsOpen()
         {
-            throw new System.NotImplementedException();
+            return this.CreatePositionsOpenDictionary(this.GetPositionOpenIds());
         }
 
         /// <inheritdoc />
         public IDictionary<PositionId, Position> GetPositionsOpen(TraderId traderId, StrategyId? filterStrategyId = null)
         {
-            throw new System.NotImplementedException();
+            return this.CreatePositionsOpenDictionary(this.GetPositionOpenIds(traderId, filterStrategyId));
         }
 
         /// <inheritdoc />
         public IDictionary<PositionId, Position> GetPositionsClosed()
         {
-            throw new System.NotImplementedException();
+            return this.CreatePositionsClosedDictionary(this.GetPositionClosedIds());
         }
 
         /// <inheritdoc />
         public IDictionary<PositionId, Position> GetPositionsClosed(TraderId traderId, StrategyId? filterStrategyId = null)
         {
-            throw new System.NotImplementedException();
+            return this.CreatePositionsClosedDictionary(this.GetPositionClosedIds(traderId, filterStrategyId));
+        }
+
+        [PerformanceOptimized]
+        private static HashSet<TraderId> ConvertToTraderIds(RedisKey[] values)
+        {
+            var valuesLength = values.Length;
+            var set = new HashSet<TraderId>(valuesLength);
+            for (var i = 0; i < valuesLength; i++)
+            {
+                set.Add(TraderId.FromString(values[i]));
+            }
+
+            return set;
+        }
+
+        [PerformanceOptimized]
+        private static HashSet<TraderId> ConvertToTraderIds(RedisValue[] values)
+        {
+            var valuesLength = values.Length;
+            var set = new HashSet<TraderId>(valuesLength);
+            for (var i = 0; i < valuesLength; i++)
+            {
+                set.Add(TraderId.FromString(values[i]));
+            }
+
+            return set;
+        }
+
+        [PerformanceOptimized]
+        private static HashSet<StrategyId> ConvertToStrategyIds(RedisValue[] values)
+        {
+            var valuesLength = values.Length;
+            var set = new HashSet<StrategyId>(valuesLength);
+            for (var i = 0; i < valuesLength; i++)
+            {
+                set.Add(StrategyId.FromString(values[i]));
+            }
+
+            return set;
+        }
+
+        [PerformanceOptimized]
+        private static HashSet<OrderId> ConvertToOrderIds(RedisValue[] values)
+        {
+            var valuesLength = values.Length;
+            var set = new HashSet<OrderId>(valuesLength);
+            for (var i = 0; i < valuesLength; i++)
+            {
+                set.Add(new OrderId(values[i]));
+            }
+
+            return set;
+        }
+
+        [PerformanceOptimized]
+        private static HashSet<PositionId> ConvertToPositionIds(RedisValue[] values)
+        {
+            var valuesLength = values.Length;
+            var set = new HashSet<PositionId>(valuesLength);
+            for (var i = 0; i < valuesLength; i++)
+            {
+                set.Add(new PositionId(values[i]));
+            }
+
+            return set;
+        }
+
+        private RedisValue[] GetIntersection(string setKey1, string setKey2)
+        {
+            return this.redisDatabase.SetCombine(SetOperation.Intersect, setKey1, setKey2);
+        }
+
+        private Dictionary<OrderId, Order> CreateOrdersDictionary(ICollection<OrderId> orderIds)
+        {
+            var orders = new Dictionary<OrderId, Order>(orderIds.Count);
+            foreach (var orderId in orderIds)
+            {
+                var order = this.GetOrder(orderId);
+                if (order is null)
+                {
+                    this.Log.Error($"The {orderId} was not found in the cache.");
+                    continue;  // Do not add null order to dictionary
+                }
+
+                orders[orderId] = order;
+            }
+
+            return orders;
+        }
+
+        private Dictionary<OrderId, Order> CreateOrdersWorkingDictionary(ICollection<OrderId> orderIds)
+        {
+            var orders = new Dictionary<OrderId, Order>(orderIds.Count);
+            foreach (var orderId in orderIds)
+            {
+                var order = this.GetOrder(orderId);
+                if (order is null)
+                {
+                    this.Log.Error($"The {orderId} was not found in the cache.");
+                    continue; // Do not add null order to dictionary
+                }
+
+                if (!order.IsWorking)
+                {
+                    this.Log.Error($"The {orderId} was found not working.");
+                    continue;  // Do not add non-working order to dictionary
+                }
+
+                orders[orderId] = order;
+            }
+
+            return orders;
+        }
+
+        private Dictionary<OrderId, Order> CreateOrdersCompletedDictionary(ICollection<OrderId> orderIds)
+        {
+            var orders = new Dictionary<OrderId, Order>(orderIds.Count);
+            foreach (var orderId in orderIds)
+            {
+                var order = this.GetOrder(orderId);
+                if (order is null)
+                {
+                    this.Log.Error($"The {orderId} was not found in the cache.");
+                    continue; // Do not add null order to dictionary
+                }
+
+                if (!order.IsCompleted)
+                {
+                    this.Log.Error($"The {orderId} was found not completed.");
+                    continue;  // Do not add non-completed order to dictionary
+                }
+
+                orders[orderId] = order;
+            }
+
+            return orders;
+        }
+
+        private Dictionary<PositionId, Position> CreatePositionsDictionary(ICollection<PositionId> positionIds)
+        {
+            var positions = new Dictionary<PositionId, Position>(positionIds.Count);
+            foreach (var positionId in positionIds)
+            {
+                var position = this.GetPosition(positionId);
+                if (position is null)
+                {
+                    this.Log.Error($"The {positionId} was not found in the cache.");
+                    continue;  // Do not add null position to dictionary
+                }
+
+                positions[positionId] = position;
+            }
+
+            return positions;
+        }
+
+        private Dictionary<PositionId, Position> CreatePositionsOpenDictionary(ICollection<PositionId> positionIds)
+        {
+            var positions = new Dictionary<PositionId, Position>(positionIds.Count);
+            foreach (var positionId in positionIds)
+            {
+                var position = this.GetPosition(positionId);
+                if (position is null)
+                {
+                    this.Log.Error($"The {positionId} was not found in the cache.");
+                    continue;  // Do not add null position to dictionary
+                }
+
+                if (!position.IsOpen)
+                {
+                    this.Log.Error($"The {positionId} was found not open.");
+                    continue;  // Do not add non-open position to dictionary
+                }
+
+                positions[positionId] = position;
+            }
+
+            return positions;
+        }
+
+        private Dictionary<PositionId, Position> CreatePositionsClosedDictionary(ICollection<PositionId> positionIds)
+        {
+            var positions = new Dictionary<PositionId, Position>(positionIds.Count);
+            foreach (var positionId in positionIds)
+            {
+                var position = this.GetPosition(positionId);
+                if (position is null)
+                {
+                    this.Log.Error($"The {positionId} was not found in the cache.");
+                    continue;  // Do not add null position to dictionary
+                }
+
+                if (!position.IsClosed)
+                {
+                    this.Log.Error($"The {positionId} was found not closed.");
+                    continue;  // Do not add non-closed position to dictionary
+                }
+
+                positions[positionId] = position;
+            }
+
+            return positions;
         }
     }
 }

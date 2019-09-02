@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Execution
+namespace Nautilus.Execution.Engine
 {
     using System.Collections.Generic;
     using Nautilus.Core.Annotations;
@@ -41,7 +41,6 @@ namespace Nautilus.Execution
             }
 
             var intersection = new HashSet<T>(sets[0]);
-
             for (var i = 1; i < setsLength; i++)
             {
                 intersection.IntersectWith(sets[i]);
@@ -51,7 +50,7 @@ namespace Nautilus.Execution
         }
 
         /// <summary>
-        /// Return a new <see cref="SortedSet{T}"/> representing the mathematical intersection of the
+        /// Return a new <see cref="HashSet{T}"/> representing the mathematical intersection of the
         /// given sets.
         /// </summary>
         /// <param name="sets">The sets to intersect.</param>
@@ -73,14 +72,13 @@ namespace Nautilus.Execution
                 return new SortedSet<T>(sets[0]);
             }
 
-            var intersection = new HashSet<T>(sets[0]);
-
+            var intersection = new SortedSet<T>(sets[0]);
             for (var i = 1; i < setsLength; i++)
             {
                 intersection.IntersectWith(sets[i]);
             }
 
-            return new SortedSet<T>(intersection);
+            return intersection;
         }
     }
 }
