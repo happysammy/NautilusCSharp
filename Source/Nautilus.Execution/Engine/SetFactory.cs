@@ -15,7 +15,7 @@ namespace Nautilus.Execution.Engine
     /// Provides efficient mathematical set operations. Concrete classes avoid the overhead of LINQ
     /// and interface dispatching.
     /// </summary>
-    public static class SetFactory
+    internal static class SetFactory
     {
         /// <summary>
         /// Return a new <see cref="HashSet{T}"/> representing the mathematical intersection of the
@@ -25,7 +25,7 @@ namespace Nautilus.Execution.Engine
         /// <typeparam name="T">The hash set type.</typeparam>
         /// <returns>The intersection of the given sets as a new set.</returns>
         [PerformanceOptimized]
-        public static HashSet<T> Intersection<T>(HashSet<T>[] sets)
+        internal static HashSet<T> Intersection<T>(HashSet<T>[] sets)
         {
             var setsLength = sets.Length;
 
@@ -57,7 +57,7 @@ namespace Nautilus.Execution.Engine
         /// <typeparam name="T">The hash set type.</typeparam>
         /// <returns>The intersection of the given sets as a new set.</returns>
         [PerformanceOptimized]
-        public static SortedSet<T> IntersectionSorted<T>(HashSet<T>[] sets)
+        internal static SortedSet<T> IntersectionSorted<T>(HashSet<T>[] sets)
         {
             var setsLength = sets.Length;
 

@@ -14,6 +14,7 @@ namespace Nautilus.Redis.Execution
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
+    using Nautilus.Core.CQS;
     using Nautilus.Core.Message;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
@@ -65,6 +66,29 @@ namespace Nautilus.Redis.Execution
         /// <inheritdoc />
         public void AddOrder(AtomicOrder order, TraderId traderId, AccountId accountId, StrategyId strategyId, PositionId positionId)
         {
+            this.AddOrder(
+                order.Entry,
+                traderId,
+                accountId,
+                strategyId,
+                positionId);
+
+            this.AddOrder(
+                order.StopLoss,
+                traderId,
+                accountId,
+                strategyId,
+                positionId);
+
+            if (order.TakeProfit != null)
+            {
+                this.AddOrder(
+                    order.TakeProfit,
+                    traderId,
+                    accountId,
+                    strategyId,
+                    positionId);
+            }
         }
 
         /// <inheritdoc />
@@ -100,8 +124,12 @@ namespace Nautilus.Redis.Execution
             this.redisDatabase.SetAdd(Key.IndexPositions, position.Id.Value);
             if (position.IsOpen)
             {
-                // The position should always be open when being added
                 this.redisDatabase.SetAdd(Key.IndexPositionsOpen, position.Id.Value);
+            }
+            else
+            {
+                // The position should always be open when being added
+                this.Log.Error($"The added {position} was not open.");
             }
 
             this.redisDatabase.ListRightPush(Key.Position(position.Id), this.eventSerializer.Serialize(position.LastEvent));
@@ -152,15 +180,16 @@ namespace Nautilus.Redis.Execution
         /// <inheritdoc />
         public void CheckResiduals()
         {
-            foreach (var orderId in this.redisDatabase.SetMembers(Key.IndexOrdersWorking))
+            foreach (var orderId in this.GetOrderWorkingIds())
             {
-                var order = this.GetOrder(new OrderId(orderId));
+                this.GetOrder(orderId);  // Check working
                 this.Log.Warning($"The {orderId} is still working.");
             }
 
-            foreach (var orderId in this.redisDatabase.SetMembers(Key.IndexOrdersWorking))
+            foreach (var positionId in this.GetPositionOpenIds())
             {
-                this.Log.Warning($"The {orderId} is still working.");
+                this.GetPosition(positionId);  // Check open
+                this.Log.Warning($"The {positionId} is still open.");
             }
         }
 
@@ -180,19 +209,19 @@ namespace Nautilus.Redis.Execution
         /// <inheritdoc />
         public ICollection<TraderId> GetTraderIds()
         {
-            return ConvertToTraderIds(this.redisServer.Keys(pattern: Key.Traders).ToArray());
+            return SetFactory.ConvertToTraderIds(this.redisServer.Keys(pattern: Key.Traders).ToArray());
         }
 
         /// <inheritdoc />
         public ICollection<StrategyId> GetStrategyIds(TraderId traderId)
         {
-            return ConvertToStrategyIds(this.redisDatabase.SetMembers(Key.IndexTraderStrategies(traderId)));
+            return SetFactory.ConvertToStrategyIds(this.redisDatabase.SetMembers(Key.IndexTraderStrategies(traderId)));
         }
 
         /// <inheritdoc />
         public ICollection<OrderId> GetOrderIds()
         {
-            return ConvertToOrderIds(this.redisDatabase.SetMembers(Key.IndexOrders));
+            return SetFactory.ConvertToOrderIds(this.redisDatabase.SetMembers(Key.IndexOrders));
         }
 
         /// <inheritdoc />
@@ -200,15 +229,15 @@ namespace Nautilus.Redis.Execution
         {
             var orderIdValues = filterStrategyId is null
                 ? this.redisDatabase.SetMembers(Key.IndexTraderOrders(traderId))
-                : this.GetIntersection(Key.IndexOrdersWorking, Key.IndexTraderStrategyOrders(traderId, filterStrategyId));
+                : this.GetIntersection(Key.IndexOrders, Key.IndexTraderStrategyOrders(traderId, filterStrategyId));
 
-            return ConvertToOrderIds(orderIdValues);
+            return SetFactory.ConvertToOrderIds(orderIdValues);
         }
 
         /// <inheritdoc />
         public ICollection<OrderId> GetOrderWorkingIds()
         {
-            return ConvertToOrderIds(this.redisDatabase.SetMembers(Key.IndexOrdersWorking));
+            return SetFactory.ConvertToOrderIds(this.redisDatabase.SetMembers(Key.IndexOrdersWorking));
         }
 
         /// <inheritdoc />
@@ -218,13 +247,13 @@ namespace Nautilus.Redis.Execution
                 ? this.GetIntersection(Key.IndexOrdersWorking, Key.IndexTraderOrders(traderId))
                 : this.GetIntersection(Key.IndexOrdersWorking, Key.IndexTraderStrategyOrders(traderId, filterStrategyId));
 
-            return ConvertToOrderIds(orderIdValues);
+            return SetFactory.ConvertToOrderIds(orderIdValues);
         }
 
         /// <inheritdoc />
         public ICollection<OrderId> GetOrderCompletedIds()
         {
-            return ConvertToOrderIds(this.redisDatabase.SetMembers(Key.IndexOrdersCompleted));
+            return SetFactory.ConvertToOrderIds(this.redisDatabase.SetMembers(Key.IndexOrdersCompleted));
         }
 
         /// <inheritdoc />
@@ -234,13 +263,13 @@ namespace Nautilus.Redis.Execution
                 ? this.GetIntersection(Key.IndexOrdersCompleted, Key.IndexTraderOrders(traderId))
                 : this.GetIntersection(Key.IndexOrdersCompleted, Key.IndexTraderStrategyOrders(traderId, filterStrategyId));
 
-            return ConvertToOrderIds(orderIdValues);
+            return SetFactory.ConvertToOrderIds(orderIdValues);
         }
 
         /// <inheritdoc />
         public ICollection<PositionId> GetPositionIds()
         {
-            return ConvertToPositionIds(this.redisDatabase.SetMembers(Key.IndexPositions));
+            return SetFactory.ConvertToPositionIds(this.redisDatabase.SetMembers(Key.IndexPositions));
         }
 
         /// <inheritdoc />
@@ -250,13 +279,13 @@ namespace Nautilus.Redis.Execution
                 ? this.redisDatabase.SetMembers(Key.IndexTraderPositions(traderId))
                 : this.GetIntersection(Key.IndexPositions, Key.IndexTraderStrategyPositions(traderId, filterStrategyId));
 
-            return ConvertToPositionIds(positionIdValues);
+            return SetFactory.ConvertToPositionIds(positionIdValues);
         }
 
         /// <inheritdoc />
         public ICollection<PositionId> GetPositionOpenIds()
         {
-            return ConvertToPositionIds(this.redisDatabase.SetMembers(Key.IndexPositionsOpen));
+            return SetFactory.ConvertToPositionIds(this.redisDatabase.SetMembers(Key.IndexPositionsOpen));
         }
 
         /// <inheritdoc />
@@ -266,13 +295,13 @@ namespace Nautilus.Redis.Execution
                 ? this.GetIntersection(Key.IndexPositionsOpen, Key.IndexTraderPositions(traderId))
                 : this.GetIntersection(Key.IndexPositionsOpen, Key.IndexTraderStrategyPositions(traderId, filterStrategyId));
 
-            return ConvertToPositionIds(positionIdValues);
+            return SetFactory.ConvertToPositionIds(positionIdValues);
         }
 
         /// <inheritdoc />
         public ICollection<PositionId> GetPositionClosedIds()
         {
-            return ConvertToPositionIds(this.redisDatabase.SetMembers(Key.IndexPositionsClosed));
+            return SetFactory.ConvertToPositionIds(this.redisDatabase.SetMembers(Key.IndexPositionsClosed));
         }
 
         /// <inheritdoc />
@@ -282,7 +311,7 @@ namespace Nautilus.Redis.Execution
                 ? this.GetIntersection(Key.IndexPositionsClosed, Key.IndexTraderPositions(traderId))
                 : this.GetIntersection(Key.IndexPositionsClosed, Key.IndexTraderStrategyPositions(traderId, filterStrategyId));
 
-            return ConvertToPositionIds(positionIdValues);
+            return SetFactory.ConvertToPositionIds(positionIdValues);
         }
 
         /// <inheritdoc />
@@ -403,71 +432,6 @@ namespace Nautilus.Redis.Execution
         public IDictionary<PositionId, Position> GetPositionsClosed(TraderId traderId, StrategyId? filterStrategyId = null)
         {
             return this.CreatePositionsClosedDictionary(this.GetPositionClosedIds(traderId, filterStrategyId));
-        }
-
-        [PerformanceOptimized]
-        private static HashSet<TraderId> ConvertToTraderIds(RedisKey[] values)
-        {
-            var valuesLength = values.Length;
-            var set = new HashSet<TraderId>(valuesLength);
-            for (var i = 0; i < valuesLength; i++)
-            {
-                set.Add(TraderId.FromString(values[i]));
-            }
-
-            return set;
-        }
-
-        [PerformanceOptimized]
-        private static HashSet<TraderId> ConvertToTraderIds(RedisValue[] values)
-        {
-            var valuesLength = values.Length;
-            var set = new HashSet<TraderId>(valuesLength);
-            for (var i = 0; i < valuesLength; i++)
-            {
-                set.Add(TraderId.FromString(values[i]));
-            }
-
-            return set;
-        }
-
-        [PerformanceOptimized]
-        private static HashSet<StrategyId> ConvertToStrategyIds(RedisValue[] values)
-        {
-            var valuesLength = values.Length;
-            var set = new HashSet<StrategyId>(valuesLength);
-            for (var i = 0; i < valuesLength; i++)
-            {
-                set.Add(StrategyId.FromString(values[i]));
-            }
-
-            return set;
-        }
-
-        [PerformanceOptimized]
-        private static HashSet<OrderId> ConvertToOrderIds(RedisValue[] values)
-        {
-            var valuesLength = values.Length;
-            var set = new HashSet<OrderId>(valuesLength);
-            for (var i = 0; i < valuesLength; i++)
-            {
-                set.Add(new OrderId(values[i]));
-            }
-
-            return set;
-        }
-
-        [PerformanceOptimized]
-        private static HashSet<PositionId> ConvertToPositionIds(RedisValue[] values)
-        {
-            var valuesLength = values.Length;
-            var set = new HashSet<PositionId>(valuesLength);
-            for (var i = 0; i < valuesLength; i++)
-            {
-                set.Add(new PositionId(values[i]));
-            }
-
-            return set;
         }
 
         private RedisValue[] GetIntersection(string setKey1, string setKey2)
