@@ -34,7 +34,7 @@ namespace Nautilus.Redis.Execution
         private const string OPEN = "Open";
         private const string CLOSED = "Closed";
 
-        private const string KEY_TRADERS = NAUTILUS_EXECUTOR + TRADERS;                        // -> Set{TraderId}
+        private const string KEY_TRADERS = NAUTILUS_EXECUTOR + TRADERS + ":";                  // + TraderId    -> ?
         private const string KEY_ACCOUNTS = NAUTILUS_EXECUTOR + ACCOUNTS + ":";                // + AccountId   -> List[AccountStateEvent]
         private const string KEY_ORDERS = NAUTILUS_EXECUTOR + ORDERS + ":";                    // + OrderId     -> List[OrderEvent]
         private const string KEY_POSITIONS = NAUTILUS_EXECUTOR + POSITIONS + ":";              // + PositionId  -> List[OrderFillEvent]
@@ -63,134 +63,142 @@ namespace Nautilus.Redis.Execution
         /// <summary>
         /// Gets the Redis key.
         /// </summary>
-        internal static string Traders => KEY_TRADERS;
+        internal static string IndexOrderTrader => KEY_INDEX_ORDER_TRADER;
 
         /// <summary>
         /// Gets the Redis key.
         /// </summary>
-        internal static string Accounts => KEY_ACCOUNTS;
+        internal static string IndexOrderAccount => KEY_INDEX_ORDER_ACCOUNT;
 
         /// <summary>
         /// Gets the Redis key.
         /// </summary>
-        internal static string Orders => KEY_ORDERS;
+        internal static string IndexOrderPosition => KEY_INDEX_ORDER_POSITION;
 
         /// <summary>
         /// Gets the Redis key.
         /// </summary>
-        internal static string OrderTrader => KEY_INDEX_ORDER_TRADER;
+        internal static string IndexOrderStrategy => KEY_INDEX_ORDER_STRATEGY;
 
         /// <summary>
         /// Gets the Redis key.
         /// </summary>
-        internal static string OrderAccount => KEY_INDEX_ORDER_ACCOUNT;
+        internal static string IndexPositionTrader => KEY_INDEX_POSITION_TRADER;
 
         /// <summary>
         /// Gets the Redis key.
         /// </summary>
-        internal static string OrderPosition => KEY_INDEX_ORDER_POSITION;
+        internal static string IndexPositionAccount => KEY_INDEX_POSITION_ACCOUNT;
 
         /// <summary>
         /// Gets the Redis key.
         /// </summary>
-        internal static string OrderStrategy => KEY_INDEX_ORDER_STRATEGY;
-
-        /// <summary>
-        /// Gets the Redis key.
-        /// </summary>
-        internal static string Positions => KEY_POSITIONS;
-
-        /// <summary>
-        /// Gets the Redis key.
-        /// </summary>
-        internal static string PositionTrader => KEY_INDEX_POSITION_TRADER;
-
-        /// <summary>
-        /// Gets the Redis key.
-        /// </summary>
-        internal static string PositionAccount => KEY_INDEX_POSITION_ACCOUNT;
-
-        /// <summary>
-        /// Gets the Redis key.
-        /// </summary>
-        internal static string PositionStrategy => KEY_INDEX_POSITION_STRATEGY;
+        internal static string IndexPositionStrategy => KEY_INDEX_POSITION_STRATEGY;
 
         /// <summary>
         /// Gets the Redis key.
         /// </summary>
         /// <returns>The key string.</returns>
-        internal static string OrderIds => KEY_INDEX_ORDERS;
+        internal static string IndexOrders => KEY_INDEX_ORDERS;
 
         /// <summary>
         /// Gets the Redis key.
         /// </summary>
         /// <returns>The key string.</returns>
-        internal static string OrderWorkingIds => KEY_INDEX_ORDERS_WORKING;
+        internal static string IndexOrdersWorking => KEY_INDEX_ORDERS_WORKING;
 
         /// <summary>
         /// Gets the Redis key.
         /// </summary>
         /// <returns>The key string.</returns>
-        internal static string OrderCompletedIds => KEY_INDEX_ORDERS_COMPLETED;
+        internal static string IndexOrdersCompleted => KEY_INDEX_ORDERS_COMPLETED;
 
         /// <summary>
         /// Gets the Redis key.
         /// </summary>
         /// <returns>The key string.</returns>
-        internal static string PositionIds => KEY_INDEX_POSITIONS;
+        internal static string IndexPositions => KEY_INDEX_POSITIONS;
 
         /// <summary>
         /// Gets the Redis key.
         /// </summary>
         /// <returns>The key string.</returns>
-        internal static string PositionOpenIds => KEY_INDEX_POSITIONS_OPEN;
+        internal static string IndexPositionsOpen => KEY_INDEX_POSITIONS_OPEN;
 
         /// <summary>
         /// Gets the Redis key.
         /// </summary>
         /// <returns>The key string.</returns>
-        internal static string PositionClosedIds => KEY_INDEX_POSITIONS_CLOSED;
+        internal static string IndexPositionsClosed => KEY_INDEX_POSITIONS_CLOSED;
+
+        /// <summary>
+        /// Gets the Redis key.
+        /// </summary>
+        /// <param name="traderId">The trader identifier.</param>
+        /// <returns>The key string.</returns>
+        internal static string Trader(TraderId traderId) => KEY_TRADERS + traderId.Value;
+
+        /// <summary>
+        /// Gets the Redis key.
+        /// </summary>
+        /// <param name="accountId">The account identifier.</param>
+        /// <returns>The key string.</returns>
+        internal static string Account(AccountId accountId) => KEY_ACCOUNTS + accountId.Value;
+
+        /// <summary>
+        /// Gets the Redis key.
+        /// </summary>
+        /// <param name="orderId">The order identifier.</param>
+        /// <returns>The key string.</returns>
+        internal static string Order(OrderId orderId) => KEY_ORDERS + orderId.Value;
+
+        /// <summary>
+        /// Gets the Redis key.
+        /// </summary>
+        /// <param name="positionId">The position identifier.</param>
+        /// <returns>The key string.</returns>
+        internal static string Position(PositionId positionId) => KEY_POSITIONS + positionId.Value;
 
         /// <summary>
         /// Returns the Redis key.
         /// </summary>
         /// <param name="traderId">The trader identifier.</param>
         /// <returns>The key string.</returns>
-        internal static string TraderOrders(TraderId traderId) => KEY_INDEX_TRADER_ORDERS + traderId.Value;
+        internal static string IndexTraderOrders(TraderId traderId) => KEY_INDEX_TRADER_ORDERS + traderId.Value;
 
         /// <summary>
         /// Returns the Redis key.
         /// </summary>
         /// <param name="traderId">The trader identifier.</param>
         /// <returns>The key string.</returns>
-        internal static string TraderPositions(TraderId traderId) => KEY_INDEX_TRADER_POSITIONS + traderId.Value;
+        internal static string IndexTraderPositions(TraderId traderId) => KEY_INDEX_TRADER_POSITIONS + traderId.Value;
 
         /// <summary>
         /// Returns the Redis key.
         /// </summary>
         /// <param name="traderId">The trader identifier.</param>
         /// <returns>The key string.</returns>
-        internal static string TraderStrategies(TraderId traderId) => KEY_INDEX_TRADER_STRATEGIES + traderId.Value;
+        internal static string IndexTraderStrategies(TraderId traderId) => KEY_INDEX_TRADER_STRATEGIES + traderId.Value;
 
         /// <summary>
         /// Returns the Redis key.
         /// </summary>
         /// <param name="accountId">The account identifier.</param>
         /// <returns>The key string.</returns>
-        internal static string AccountOrders(AccountId accountId) => KEY_INDEX_ACCOUNT_ORDERS + accountId.Value;
+        internal static string IndexAccountOrders(AccountId accountId) => KEY_INDEX_ACCOUNT_ORDERS + accountId.Value;
 
         /// <summary>
         /// Returns the Redis key.
         /// </summary>
         /// <param name="accountId">The account identifier.</param>
         /// <returns>The key string.</returns>
-        internal static string AccountPositions(AccountId accountId) => KEY_INDEX_ACCOUNT_POSITIONS + accountId.Value;
+        internal static string IndexAccountPositions(AccountId accountId) => KEY_INDEX_ACCOUNT_POSITIONS + accountId.Value;
 
         /// <summary>
         /// Returns the Redis key.
         /// </summary>
         /// <param name="positionId">The position identifier.</param>
         /// <returns>The key string.</returns>
-        internal static string PositionOrders(PositionId positionId) => KEY_INDEX_POSITION_ORDERS + positionId.Value;
+        internal static string IndexPositionOrders(PositionId positionId) => KEY_INDEX_POSITION_ORDERS + positionId.Value;
     }
 }

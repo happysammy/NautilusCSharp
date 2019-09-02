@@ -43,6 +43,8 @@ namespace Nautilus.DomainModel.Aggregates
             this.executionIds = new UniqueList<ExecutionId>(initial.ExecutionId);
             this.executionTickets = new UniqueList<ExecutionTicket>(initial.ExecutionTicket);
 
+            this.AccountId = initial.AccountId;
+            this.FromOrderId = initial.OrderId;
             this.Symbol = initial.Symbol;
             this.EntryDirection = initial.OrderSide;
             this.EntryTime = initial.ExecutionTime;
@@ -58,9 +60,14 @@ namespace Nautilus.DomainModel.Aggregates
         }
 
         /// <summary>
-        /// Gets the positions entry order identifier.
+        /// Gets the positions account identifier.
         /// </summary>
-        public OrderId FromOrderId => this.InitialEvent.OrderId;
+        public AccountId AccountId { get; }
+
+        /// <summary>
+        /// Gets the positions initial entry order identifier.
+        /// </summary>
+        public OrderId FromOrderId { get; }
 
         /// <summary>
         /// Gets the positions last order identifier.
