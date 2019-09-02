@@ -11,6 +11,7 @@ namespace Nautilus.Redis.Execution
     using System.Collections.Generic;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Identifiers;
@@ -19,7 +20,7 @@ namespace Nautilus.Redis.Execution
     using Order = Nautilus.DomainModel.Aggregates.Order;
 
     /// <summary>
-    /// Provides an execution database backed by Redis.
+    /// Provides an execution database implemented with Redis.
     /// </summary>
     public class RedisExecutionDatabase : Component, IExecutionDatabase
     {
@@ -47,19 +48,22 @@ namespace Nautilus.Redis.Execution
         /// <inheritdoc />
         public void AddOrder(AtomicOrder order, TraderId traderId, AccountId accountId, StrategyId strategyId, PositionId positionId)
         {
-            throw new System.NotImplementedException();
         }
 
         /// <inheritdoc />
         public void AddOrder(Order order, TraderId traderId, AccountId accountId, StrategyId strategyId, PositionId positionId)
         {
-            throw new System.NotImplementedException();
+            Debug.KeyNotIn(order.Id, this.cachedOrders, nameof(order.Id), nameof(this.cachedOrders));
+
+            this.redisDatabase.SetAdd(Key.OrderIds, order.Id.Value);
+
+            this.cachedOrders[order.Id] = order;
         }
 
         /// <inheritdoc />
         public void AddPosition(Position position)
         {
-            throw new System.NotImplementedException();
+            this.cachedPositions[position.Id] = position;
         }
 
         /// <inheritdoc />

@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="RedisKeyProvider.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="Key.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   https://nautechsystems.io
@@ -12,10 +12,10 @@ namespace Nautilus.Redis.Execution
     using Nautilus.DomainModel.Identifiers;
 
     /// <summary>
-    /// Provides key strings for the Redis execution database.
+    /// Provides key strings for a Redis execution database.
     /// </summary>
     [SuppressMessage("ReSharper", "SA1310", Justification = "Easier to read.")]
-    internal static class RedisKeyProvider
+    internal static class Key
     {
         private const string NAUTILUS_EXECUTOR = "NautilusExecutor:";
         private const string INDEX = NAUTILUS_EXECUTOR + "Index:";
@@ -116,6 +116,42 @@ namespace Nautilus.Redis.Execution
         internal static string PositionStrategy => KEY_INDEX_POSITION_STRATEGY;
 
         /// <summary>
+        /// Gets the Redis key.
+        /// </summary>
+        /// <returns>The key string.</returns>
+        internal static string OrderIds => KEY_INDEX_ORDERS;
+
+        /// <summary>
+        /// Gets the Redis key.
+        /// </summary>
+        /// <returns>The key string.</returns>
+        internal static string OrderWorkingIds => KEY_INDEX_ORDERS_WORKING;
+
+        /// <summary>
+        /// Gets the Redis key.
+        /// </summary>
+        /// <returns>The key string.</returns>
+        internal static string OrderCompletedIds => KEY_INDEX_ORDERS_COMPLETED;
+
+        /// <summary>
+        /// Gets the Redis key.
+        /// </summary>
+        /// <returns>The key string.</returns>
+        internal static string PositionIds => KEY_INDEX_POSITIONS;
+
+        /// <summary>
+        /// Gets the Redis key.
+        /// </summary>
+        /// <returns>The key string.</returns>
+        internal static string PositionOpenIds => KEY_INDEX_POSITIONS_OPEN;
+
+        /// <summary>
+        /// Gets the Redis key.
+        /// </summary>
+        /// <returns>The key string.</returns>
+        internal static string PositionClosedIds => KEY_INDEX_POSITIONS_CLOSED;
+
+        /// <summary>
         /// Returns the Redis key.
         /// </summary>
         /// <param name="traderId">The trader identifier.</param>
@@ -149,5 +185,12 @@ namespace Nautilus.Redis.Execution
         /// <param name="accountId">The account identifier.</param>
         /// <returns>The key string.</returns>
         internal static string AccountPositions(AccountId accountId) => KEY_INDEX_ACCOUNT_POSITIONS + accountId.Value;
+
+        /// <summary>
+        /// Returns the Redis key.
+        /// </summary>
+        /// <param name="positionId">The position identifier.</param>
+        /// <returns>The key string.</returns>
+        internal static string PositionOrders(PositionId positionId) => KEY_INDEX_POSITION_ORDERS + positionId.Value;
     }
 }
