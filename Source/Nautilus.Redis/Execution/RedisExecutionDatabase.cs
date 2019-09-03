@@ -13,6 +13,7 @@ namespace Nautilus.Redis.Execution
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.CQS;
+    using Nautilus.Core.Extensions;
     using Nautilus.Core.Message;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
@@ -165,33 +166,31 @@ namespace Nautilus.Redis.Execution
         /// <inheritdoc />
         public CommandResult AddOrder(AtomicOrder order, TraderId traderId, AccountId accountId, StrategyId strategyId, PositionId positionId)
         {
-            var result1 = this.AddOrder(
+            this.AddOrder(
                 order.Entry,
                 traderId,
                 accountId,
                 strategyId,
-                positionId);
+                positionId).OnFailure(errorMsg => { CommandResult.Fail(errorMsg); });
 
-            var result2 = this.AddOrder(
+            this.AddOrder(
                 order.StopLoss,
                 traderId,
                 accountId,
                 strategyId,
-                positionId);
+                positionId).OnFailure(errorMsg => { CommandResult.Fail(errorMsg); });
 
             if (order.TakeProfit != null)
             {
-                var result3 = this.AddOrder(
+                this.AddOrder(
                     order.TakeProfit,
                     traderId,
                     accountId,
                     strategyId,
-                    positionId);
-
-                return CommandResult.Combine(result1, result2, result3);
+                    positionId).OnFailure(errorMsg => { CommandResult.Fail(errorMsg); });
             }
 
-            return CommandResult.Combine(result1, result2);
+            return CommandResult.Ok();
         }
 
         /// <inheritdoc />
