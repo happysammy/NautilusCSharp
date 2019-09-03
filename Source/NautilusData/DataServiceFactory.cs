@@ -89,10 +89,10 @@ namespace NautilusData
                 dataBusAdapter,
                 fixClient);
 
-            var redisConnection = ConnectionMultiplexer.Connect("localhost:6379,allowAdmin=true");
+            var connection = ConnectionMultiplexer.Connect("localhost:6379,allowAdmin=true");
             var tickRepository = new InMemoryTickStore(container, dataBusAdapter);
-            var barRepository = new RedisBarRepository(redisConnection);
-            var instrumentRepository = new RedisInstrumentRepository(redisConnection);
+            var barRepository = new RedisBarRepository(connection);
+            var instrumentRepository = new RedisInstrumentRepository(connection);
             instrumentRepository.CacheAll();
 
             var databaseTaskManager = new DatabaseTaskManager(

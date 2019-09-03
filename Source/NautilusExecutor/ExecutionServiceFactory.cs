@@ -23,9 +23,11 @@ namespace NautilusExecutor
     using Nautilus.Fix;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
+    using Nautilus.Redis.Execution;
     using Nautilus.Scheduler;
     using Nautilus.Serialization;
     using NodaTime;
+    using StackExchange.Redis;
 
     /// <summary>
     /// Provides a factory for creating the <see cref="ExecutionService"/>.
@@ -58,28 +60,23 @@ namespace NautilusExecutor
                 config.FixConfiguration,
                 symbolConverter);
 
-            var eventPublisher = new EventPublisher(
-                container,
-                messagingAdapter,
-                new MsgPackEventSerializer(),
-                config.ServerAddress,
-                config.EventsPort);
-
             var tradingGateway = FixTradingGatewayFactory.Create(
                 container,
                 messagingAdapter,
                 fixClient);
 
-            var executionDatabase = new InMemoryExecutionDatabase(container);
+            var connection = ConnectionMultiplexer.Connect("localhost:6379,allowAdmin=true");
+            var executionDatabase = new RedisExecutionDatabase(
+                container,
+                connection,
+                new MsgPackCommandSerializer(),
+                new MsgPackEventSerializer(),
+                true);
+
             var executionEngine = new ExecutionEngine(
                 container,
                 messagingAdapter,
                 executionDatabase,
-                tradingGateway);
-
-            var orderManager = new OrderManager(
-                container,
-                messagingAdapter,
                 tradingGateway);
 
             var commandServer = new CommandRouter(
@@ -87,14 +84,21 @@ namespace NautilusExecutor
                 messagingAdapter,
                 new MsgPackCommandSerializer(),
                 new MsgPackResponseSerializer(),
-                orderManager.Endpoint,
+                executionEngine.Endpoint,
                 config);
+
+            var eventPublisher = new EventPublisher(
+                container,
+                messagingAdapter,
+                new MsgPackEventSerializer(),
+                config.ServerAddress,
+                config.EventsPort);
 
             var addresses = new Dictionary<Address, IEndpoint>
             {
                 { ServiceAddress.Scheduler, scheduler.Endpoint },
                 { ServiceAddress.TradingGateway, tradingGateway.Endpoint },
-                { ServiceAddress.OrderManager, orderManager.Endpoint },
+                { ServiceAddress.ExecutionEngine, executionEngine.Endpoint },
                 { ServiceAddress.CommandServer, commandServer.Endpoint },
                 { ServiceAddress.EventPublisher, eventPublisher.Endpoint },
             };

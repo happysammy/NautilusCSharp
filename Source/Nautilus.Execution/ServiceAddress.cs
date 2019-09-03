@@ -45,6 +45,6 @@ namespace Nautilus.Execution
         /// <summary>
         /// Gets the <see cref="OrderManager"/> component messaging address.
         /// </summary>
-        public static Address OrderManager { get; } = new Address(nameof(OrderManager));
+        public static Address ExecutionEngine { get; } = new Address(nameof(ExecutionEngine));
     }
 }
