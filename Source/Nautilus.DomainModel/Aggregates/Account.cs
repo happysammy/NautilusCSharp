@@ -30,7 +30,7 @@ namespace Nautilus.DomainModel.Aggregates
         public Account(AccountStateEvent @event)
             : base(@event.AccountId, @event)
         {
-            this.Brokerage = this.Id.Brokerage;
+            this.Brokerage = this.Id.Broker;
             this.AccountNumber = this.Id.AccountNumber;
 
             this.Currency = @event.Currency;

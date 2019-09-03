@@ -15,6 +15,7 @@ namespace Nautilus.DomainModel.Identifiers
 
     /// <summary>
     /// Represents a valid symbol identifier. A symbol is the unique identity of a tradeable instrument.
+    /// The code and venue combination identifier value must be unique at the fund level.
     /// </summary>
     [Immutable]
     public sealed class Symbol : Identifier<Symbol>
@@ -22,7 +23,7 @@ namespace Nautilus.DomainModel.Identifiers
         /// <summary>
         /// Initializes a new instance of the <see cref="Symbol"/> class.
         /// </summary>
-        /// <param name="code">The symbols code.</param>
+        /// <param name="code">The symbols code identifier value.</param>
         /// <param name="venue">The symbols venue.</param>
         public Symbol(string code, Venue venue)
             : base($"{code.ToUpper()}.{venue.Value}")
@@ -37,8 +38,8 @@ namespace Nautilus.DomainModel.Identifiers
         /// <summary>
         /// Initializes a new instance of the <see cref="Symbol"/> class.
         /// </summary>
-        /// <param name="code">The symbols code.</param>
-        /// <param name="venue">The symbols venue.</param>
+        /// <param name="code">The symbols code identifier value.</param>
+        /// <param name="venue">The symbols venue name identifier value.</param>
         public Symbol(string code, string venue)
             : this(code, new Venue(venue))
         {

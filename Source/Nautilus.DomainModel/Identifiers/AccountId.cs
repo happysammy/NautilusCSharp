@@ -13,8 +13,8 @@ namespace Nautilus.DomainModel.Identifiers
     using Nautilus.Core.Types;
 
     /// <summary>
-    /// Represents a valid account identifier. The <see cref="Brokerage"/> and
-    /// <see cref="AccountNumber"/> combination must be unique at the fund level.
+    /// Represents a valid account identifier. The <see cref="Broker"/> and
+    /// <see cref="AccountNumber"/> combination identifier value must be unique at the fund level.
     /// </summary>
     [Immutable]
     public sealed class AccountId : Identifier<AccountId>
@@ -22,20 +22,20 @@ namespace Nautilus.DomainModel.Identifiers
         /// <summary>
         /// Initializes a new instance of the <see cref="AccountId"/> class.
         /// </summary>
-        /// <param name="brokerage">The brokerage identifier.</param>
+        /// <param name="broker">The broker identifier.</param>
         /// <param name="accountNumber">The account number identifier.</param>
-        public AccountId(Brokerage brokerage, AccountNumber accountNumber)
-            : base($"{brokerage.Value}-{accountNumber.Value}")
+        public AccountId(Brokerage broker, AccountNumber accountNumber)
+            : base($"{broker.Value}-{accountNumber.Value}")
         {
-            this.Brokerage = brokerage;
+            this.Broker = broker;
             this.AccountNumber = accountNumber;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AccountId"/> class.
         /// </summary>
-        /// <param name="brokerage">The brokerage identifier.</param>
-        /// <param name="accountNumber">The account number identifier.</param>
+        /// <param name="brokerage">The broker identifier value.</param>
+        /// <param name="accountNumber">The account number identifier value.</param>
         public AccountId(string brokerage, string accountNumber)
             : this(new Brokerage(brokerage), new AccountNumber(accountNumber))
         {
@@ -46,7 +46,7 @@ namespace Nautilus.DomainModel.Identifiers
         /// <summary>
         /// Gets the account identifiers brokerage.
         /// </summary>
-        public Brokerage Brokerage { get; }
+        public Brokerage Broker { get; }
 
         /// <summary>
         /// Gets the account identifiers account number.

@@ -21,7 +21,7 @@ namespace Nautilus.DomainModel.Identifiers
         /// <summary>
         /// Initializes a new instance of the <see cref="IdTag"/> class.
         /// </summary>
-        /// <param name="value">The identifier value.</param>
+        /// <param name="value">The identifier tag value.</param>
         public IdTag(string value)
             : base(value)
         {

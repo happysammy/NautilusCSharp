@@ -21,7 +21,7 @@ namespace Nautilus.DomainModel.Identifiers
         /// <summary>
         /// Initializes a new instance of the <see cref="ExecutionId"/> class.
         /// </summary>
-        /// <param name="value">The identifier value.</param>
+        /// <param name="value">The execution identifier value.</param>
         public ExecutionId(string value)
             : base(value)
         {

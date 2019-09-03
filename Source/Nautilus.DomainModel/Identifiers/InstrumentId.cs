@@ -13,7 +13,8 @@ namespace Nautilus.DomainModel.Identifiers
     using Nautilus.Core.Types;
 
     /// <summary>
-    /// Represents a valid instrument identifier.
+    /// Represents a valid instrument identifier. The identifier value must be unique at the fund
+    /// level.
     /// </summary>
     [Immutable]
     public sealed class InstrumentId : Identifier<InstrumentId>
@@ -21,7 +22,7 @@ namespace Nautilus.DomainModel.Identifiers
         /// <summary>
         /// Initializes a new instance of the <see cref="InstrumentId"/> class.
         /// </summary>
-        /// <param name="value">The identifier value.</param>
+        /// <param name="value">The instrument identifier value.</param>
         public InstrumentId(string value)
             : base(value)
         {

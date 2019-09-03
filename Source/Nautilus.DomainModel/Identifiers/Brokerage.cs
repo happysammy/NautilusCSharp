@@ -13,7 +13,8 @@ namespace Nautilus.DomainModel.Identifiers
     using Nautilus.Core.Types;
 
     /// <summary>
-    /// Represents a valid brokerage identifier.
+    /// Represents a valid brokerage identifier. The identifier value must be unique at the global
+    /// level.
     /// </summary>
     [Immutable]
     public sealed class Brokerage : Identifier<Brokerage>
@@ -21,11 +22,11 @@ namespace Nautilus.DomainModel.Identifiers
         /// <summary>
         /// Initializes a new instance of the <see cref="Brokerage"/> class.
         /// </summary>
-        /// <param name="value">The identifier value.</param>
-        public Brokerage(string value)
-            : base(value)
+        /// <param name="name">The brokerage name identifier value.</param>
+        public Brokerage(string name)
+            : base(name)
         {
-            Debug.NotEmptyOrWhiteSpace(value, nameof(value));
+            Debug.NotEmptyOrWhiteSpace(name, nameof(name));
         }
     }
 }

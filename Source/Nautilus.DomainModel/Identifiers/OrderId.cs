@@ -13,7 +13,7 @@ namespace Nautilus.DomainModel.Identifiers
     using Nautilus.Core.Types;
 
     /// <summary>
-    /// Represents a valid order identifier. This identifier value must be unique at fund level.
+    /// Represents a valid order identifier. The identifier value must be unique at the fund level.
     ///
     /// <para>
     /// It is expected that the identifier value starts with 'O-'.
@@ -25,7 +25,7 @@ namespace Nautilus.DomainModel.Identifiers
         /// <summary>
         /// Initializes a new instance of the <see cref="OrderId"/> class.
         /// </summary>
-        /// <param name="value">The identifier value.</param>
+        /// <param name="value">The order identifier value.</param>
         public OrderId(string value)
             : base(value)
         {

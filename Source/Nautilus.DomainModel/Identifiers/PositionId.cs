@@ -13,7 +13,8 @@ namespace Nautilus.DomainModel.Identifiers
     using Nautilus.Core.Types;
 
     /// <summary>
-    /// Represents a valid position identifier. This identifier value must be unique at fund level.
+    /// Represents a valid position identifier. This identifier value must be unique at the fund
+    /// level.
     ///
     /// <para>
     /// It is expected that the identifier value starts with 'P-'.
@@ -25,7 +26,7 @@ namespace Nautilus.DomainModel.Identifiers
         /// <summary>
         /// Initializes a new instance of the <see cref="PositionId"/> class.
         /// </summary>
-        /// <param name="value">The identifier value.</param>
+        /// <param name="value">The position identifier value.</param>
         public PositionId(string value)
             : base(value)
         {

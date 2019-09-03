@@ -14,7 +14,7 @@ namespace Nautilus.DomainModel.Identifiers
 
     /// <summary>
     /// Represents a valid strategy identifier. The <see cref="Name"/> and <see cref="OrderIdTag"/>
-    /// combination must be unique at the trader level.
+    /// combination identifier value must be unique at the trader level.
     ///
     /// <para>
     /// The string representation is the name of the strategy class with an order identifier tag
@@ -32,8 +32,8 @@ namespace Nautilus.DomainModel.Identifiers
         /// <summary>
         /// Initializes a new instance of the <see cref="StrategyId"/> class.
         /// </summary>
-        /// <param name="name">The strategies name (not set to broker).</param>
-        /// <param name="orderIdTag">The strategies order identifier tag.</param>
+        /// <param name="name">The strategy name identifier value.</param>
+        /// <param name="orderIdTag">The strategy order identifier tag value.</param>
         public StrategyId(string name, string orderIdTag)
             : base($"{name}-{orderIdTag}")
         {

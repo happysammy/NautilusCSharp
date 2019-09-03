@@ -15,7 +15,7 @@ namespace Nautilus.DomainModel.Identifiers
 
     /// <summary>
     /// Represents valid venue identifier. A venue is the tradeable location for financial market
-    /// instruments.
+    /// instruments. The identifier value must be unique at the fund level.
     /// </summary>
     [Immutable]
     public class Venue : Identifier<Venue>
@@ -23,12 +23,12 @@ namespace Nautilus.DomainModel.Identifiers
         /// <summary>
         /// Initializes a new instance of the <see cref="Venue"/> class.
         /// </summary>
-        /// <param name="value">The identifier value.</param>
-        public Venue(string value)
-            : base(value.ToUpperInvariant())
+        /// <param name="name">The venue name identifier value.</param>
+        public Venue(string name)
+            : base(name.ToUpperInvariant())
         {
-            Debug.NotEmptyOrWhiteSpace(value, nameof(value));
-            Debug.True(value.IsAllUpperCase(), $"The venue value '{value}' was not all upper case.");
+            Debug.NotEmptyOrWhiteSpace(name, nameof(name));
+            Debug.True(name.IsAllUpperCase(), $"The venue value '{name}' was not all upper case.");
         }
     }
 }

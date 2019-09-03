@@ -21,7 +21,7 @@ namespace Nautilus.DomainModel.Identifiers
         /// <summary>
         /// Initializes a new instance of the <see cref="ExecutionTicket"/> class.
         /// </summary>
-        /// <param name="value">The identifier value.</param>
+        /// <param name="value">The execution ticket identifier value.</param>
         public ExecutionTicket(string value)
             : base(value)
         {

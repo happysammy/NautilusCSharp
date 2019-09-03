@@ -13,7 +13,8 @@ namespace Nautilus.DomainModel.Identifiers
     using Nautilus.Core.Types;
 
     /// <summary>
-    /// Represents a valid atomic order identifier. This identifier value must be unique at fund level.
+    /// Represents a valid atomic order identifier. The identifier value must be unique at the fund
+    /// level.
     ///
     /// <para>
     /// It is expected that the identifier value starts with 'AO-'.

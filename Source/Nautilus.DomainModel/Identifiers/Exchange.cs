@@ -13,6 +13,7 @@ namespace Nautilus.DomainModel.Identifiers
 
     /// <summary>
     /// Represents a valid exchange identifier. An exchange is a type of trading venue.
+    /// The identifier value must be unique at the fund level.
     /// </summary>
     [Immutable]
     public sealed class Exchange : Venue
@@ -20,11 +21,11 @@ namespace Nautilus.DomainModel.Identifiers
         /// <summary>
         /// Initializes a new instance of the <see cref="Exchange"/> class.
         /// </summary>
-        /// <param name="value">The identifier value.</param>
-        public Exchange(string value)
-            : base(value)
+        /// <param name="name">The exchange name identifier value.</param>
+        public Exchange(string name)
+            : base(name)
         {
-            Debug.NotEmptyOrWhiteSpace(value, nameof(value));
+            Debug.NotEmptyOrWhiteSpace(name, nameof(name));
         }
     }
 }

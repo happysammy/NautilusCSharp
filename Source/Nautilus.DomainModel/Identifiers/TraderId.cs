@@ -14,7 +14,7 @@ namespace Nautilus.DomainModel.Identifiers
 
     /// <summary>
     /// Represents a valid trader identifier. The <see cref="Name"/> and <see cref="OrderIdTag"/>
-    /// combination must be unique at the fund level.
+    /// combination identifier value must be unique at the fund level.
     ///
     /// <para>
     /// The string representation is the abbreviated name of the trader with an order identifier tag
@@ -32,8 +32,8 @@ namespace Nautilus.DomainModel.Identifiers
         /// <summary>
         /// Initializes a new instance of the <see cref="TraderId"/> class.
         /// </summary>
-        /// <param name="name">The traders name (not set to broker).</param>
-        /// <param name="orderIdTag">The traders order identifier tag.</param>
+        /// <param name="name">The trader name identifier value.</param>
+        /// <param name="orderIdTag">The trader order identifier tag value.</param>
         public TraderId(string name, string orderIdTag)
             : base($"{name}-{orderIdTag}")
         {

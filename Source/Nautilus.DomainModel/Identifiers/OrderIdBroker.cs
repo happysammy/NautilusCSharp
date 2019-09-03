@@ -13,7 +13,7 @@ namespace Nautilus.DomainModel.Identifiers
     using Nautilus.Core.Types;
 
     /// <summary>
-    /// Represents a valid broker order identifier. This identifier value must be unique at fund level.
+    /// Represents a valid broker order identifier. The identifier value must be unique at fund level.
     /// </summary>
     [Immutable]
     public sealed class OrderIdBroker : Identifier<OrderIdBroker>
@@ -21,7 +21,7 @@ namespace Nautilus.DomainModel.Identifiers
         /// <summary>
         /// Initializes a new instance of the <see cref="OrderIdBroker"/> class.
         /// </summary>
-        /// <param name="value">The identifier value.</param>
+        /// <param name="value">The broker order identifier value.</param>
         public OrderIdBroker(string value)
             : base(value)
         {
