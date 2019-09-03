@@ -11,15 +11,12 @@ namespace Nautilus.DomainModel.Identifiers
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Types;
-    using Nautilus.DomainModel.Annotations;
-    using Nautilus.DomainModel.Enums;
 
     /// <summary>
     /// Represents a valid account identifier. The <see cref="Brokerage"/> and
     /// <see cref="AccountNumber"/> combination must be unique at the fund level.
     /// </summary>
     [Immutable]
-    [IdentifierUniqueness(Uniqueness.Fund)]
     public sealed class AccountId : Identifier<AccountId>
     {
         /// <summary>

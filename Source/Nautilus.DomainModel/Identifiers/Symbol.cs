@@ -12,14 +12,11 @@ namespace Nautilus.DomainModel.Identifiers
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Types;
-    using Nautilus.DomainModel.Annotations;
-    using Nautilus.DomainModel.Enums;
 
     /// <summary>
     /// Represents a valid symbol identifier. A symbol is the unique identity of a tradeable instrument.
     /// </summary>
     [Immutable]
-    [IdentifierUniqueness(Uniqueness.Global)]
     public sealed class Symbol : Identifier<Symbol>
     {
         /// <summary>
