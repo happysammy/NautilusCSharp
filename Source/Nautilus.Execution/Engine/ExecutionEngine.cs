@@ -209,7 +209,7 @@ namespace Nautilus.Execution.Engine
             {
                 if (this.bufferModify.TryGetValue(order.Id, out var modifyOrder))
                 {
-                    if (order.Price != null && order.Price != modifyOrder.ModifiedPrice)
+                    if (!(order.Price is null) && order.Price != modifyOrder.ModifiedPrice)
                     {
                         this.gateway.ModifyOrder(order, modifyOrder.ModifiedPrice);
                     }

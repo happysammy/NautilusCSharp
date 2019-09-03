@@ -51,7 +51,7 @@ namespace NautilusExecutor
             var messagingAdapter = MessageBusFactory.Create(container);
             var scheduler = new HashedWheelTimerScheduler(container);
 
-            var venue = new Venue(config.FixConfiguration.Broker.ToString());
+            var venue = new Venue(config.FixConfiguration.Broker.Value);
             var symbolConverter = new SymbolConverter(venue, config.SymbolIndex);
 
             var fixClient = CreateFixClient(
@@ -118,7 +118,7 @@ namespace NautilusExecutor
             FixConfiguration configuration,
             SymbolConverter symbolConverter)
         {
-            switch (configuration.Broker.ToString())
+            switch (configuration.Broker.Value)
             {
                 case "FXCM":
                     return FxcmFixClientFactory.Create(

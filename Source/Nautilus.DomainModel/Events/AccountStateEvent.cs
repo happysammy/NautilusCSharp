@@ -114,6 +114,6 @@ namespace Nautilus.DomainModel.Events
         /// Returns a string representation of this <see cref="AccountStateEvent"/>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{this.Type.Name}({this.AccountId})";
+        public override string ToString() => $"{this.Type.Name}({this.AccountId.Value})";
     }
 }
