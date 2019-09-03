@@ -9,6 +9,7 @@
 namespace Nautilus.Execution.Interfaces
 {
     using System.Collections.Generic;
+    using Nautilus.Core.CQS;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Identifiers;
@@ -19,6 +20,16 @@ namespace Nautilus.Execution.Interfaces
     public interface IExecutionDatabase
     {
         /// <summary>
+        /// Clear the current order cache and load orders from the database.
+        /// </summary>
+        void LoadOrdersCache();
+
+        /// <summary>
+        /// Clear the current position cache and load positions from the database.
+        /// </summary>
+        void LoadPositionsCache();
+
+        /// <summary>
         /// Add the given atomic order to the execution database indexed with the given identifiers.
         /// </summary>
         /// <param name="order">The atomic order to add.</param>
@@ -26,7 +37,8 @@ namespace Nautilus.Execution.Interfaces
         /// <param name="accountId">The account identifier to index.</param>
         /// <param name="strategyId">The strategy identifier to index.</param>
         /// <param name="positionId">The position identifier to index.</param>
-        void AddOrder(
+        /// <returns>The result of the operation.</returns>
+        CommandResult AddOrder(
             AtomicOrder order,
             TraderId traderId,
             AccountId accountId,
@@ -41,7 +53,8 @@ namespace Nautilus.Execution.Interfaces
         /// <param name="accountId">The account identifier to index.</param>
         /// <param name="strategyId">The strategy identifier to index.</param>
         /// <param name="positionId">The position identifier to index.</param>
-        void AddOrder(
+        /// <returns>The result of the operation.</returns>
+        CommandResult AddOrder(
             Order order,
             TraderId traderId,
             AccountId accountId,
@@ -52,7 +65,8 @@ namespace Nautilus.Execution.Interfaces
         /// Add the given position to the execution database indexed with the given identifiers.
         /// </summary>
         /// <param name="position">The position to add.</param>
-        void AddPosition(Position position);
+        /// <returns>The result of the operation.</returns>
+        CommandResult AddPosition(Position position);
 
         /// <summary>
         /// Update the given order in the execution database (using the orders last event).

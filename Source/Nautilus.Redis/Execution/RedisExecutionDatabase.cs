@@ -12,8 +12,6 @@ namespace Nautilus.Redis.Execution
     using System.Linq;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
     using Nautilus.Core.CQS;
     using Nautilus.Core.Message;
     using Nautilus.DomainModel.Aggregates;
@@ -80,34 +78,6 @@ namespace Nautilus.Redis.Execution
         /// Gets a value indicating whether the execution database will load the cache on instantiation.
         /// </summary>
         public bool OptionLoadCache { get; }
-
-        /// <inheritdoc />
-        public void AddOrder(AtomicOrder order, TraderId traderId, AccountId accountId, StrategyId strategyId, PositionId positionId)
-        {
-            this.AddOrder(
-                order.Entry,
-                traderId,
-                accountId,
-                strategyId,
-                positionId);
-
-            this.AddOrder(
-                order.StopLoss,
-                traderId,
-                accountId,
-                strategyId,
-                positionId);
-
-            if (order.TakeProfit != null)
-            {
-                this.AddOrder(
-                    order.TakeProfit,
-                    traderId,
-                    accountId,
-                    strategyId,
-                    positionId);
-            }
-        }
 
         /// <summary>
         /// Clear the current order cache and load orders from the database.
@@ -193,39 +163,79 @@ namespace Nautilus.Redis.Execution
         }
 
         /// <inheritdoc />
-        public void AddOrder(Order order, TraderId traderId, AccountId accountId, StrategyId strategyId, PositionId positionId)
+        public CommandResult AddOrder(AtomicOrder order, TraderId traderId, AccountId accountId, StrategyId strategyId, PositionId positionId)
         {
-            Debug.KeyNotIn(order.Id, this.cachedOrders, nameof(order.Id), nameof(this.cachedOrders));
+            var result1 = this.AddOrder(
+                order.Entry,
+                traderId,
+                accountId,
+                strategyId,
+                positionId);
 
-            this.redisDatabase.SetAdd(Key.IndexTraderOrders(traderId), order.Id.Value);
-            this.redisDatabase.SetAdd(Key.IndexTraderPositions(traderId), positionId.Value);
-            this.redisDatabase.SetAdd(Key.IndexTraderStrategies(traderId), strategyId.Value);
-            this.redisDatabase.SetAdd(Key.IndexAccountOrders(accountId), order.Id.Value);
-            this.redisDatabase.SetAdd(Key.IndexAccountPositions(accountId), order.Id.Value);
-            this.redisDatabase.HashSet(Key.IndexOrderTrader, new[] { new HashEntry(order.Id.Value, traderId.Value) });
-            this.redisDatabase.HashSet(Key.IndexOrderAccount, new[] { new HashEntry(order.Id.Value, accountId.Value) });
-            this.redisDatabase.HashSet(Key.IndexOrderPosition, new[] { new HashEntry(order.Id.Value, positionId.Value) });
-            this.redisDatabase.HashSet(Key.IndexOrderStrategy, new[] { new HashEntry(order.Id.Value, strategyId.Value) });
-            this.redisDatabase.HashSet(Key.IndexPositionTrader, new[] { new HashEntry(positionId.Value, traderId.Value) });
-            this.redisDatabase.HashSet(Key.IndexPositionAccount, new[] { new HashEntry(positionId.Value, positionId.Value) });
-            this.redisDatabase.HashSet(Key.IndexPositionStrategy, new[] { new HashEntry(positionId.Value, positionId.Value) });
-            this.redisDatabase.SetAdd(Key.IndexPositionOrders(positionId), order.Id.Value);
-            this.redisDatabase.SetAdd(Key.IndexOrders, order.Id.Value);
+            var result2 = this.AddOrder(
+                order.StopLoss,
+                traderId,
+                accountId,
+                strategyId,
+                positionId);
 
-            this.redisDatabase.ListRightPush(Key.Order(order.Id), this.eventSerializer.Serialize(order.LastEvent));
+            if (order.TakeProfit != null)
+            {
+                var result3 = this.AddOrder(
+                    order.TakeProfit,
+                    traderId,
+                    accountId,
+                    strategyId,
+                    positionId);
 
-            this.cachedOrders[order.Id] = order;
+                return CommandResult.Combine(result1, result2, result3);
+            }
+
+            return CommandResult.Combine(result1, result2);
         }
 
         /// <inheritdoc />
-        public void AddPosition(Position position)
+        public CommandResult AddOrder(Order order, TraderId traderId, AccountId accountId, StrategyId strategyId, PositionId positionId)
         {
-            Debug.KeyNotIn(position.Id, this.cachedPositions, nameof(position.Id), nameof(this.cachedPositions));
+            if (this.cachedOrders.ContainsKey(order.Id))
+            {
+                return CommandResult.Fail($"The {order.Id} already existed in the cache (was not unique).");
+            }
 
-            this.redisDatabase.SetAdd(Key.IndexPositions, position.Id.Value);
+            this.redisDatabase.SetAdd(Key.IndexTraderOrders(traderId), order.Id.Value, CommandFlags.FireAndForget);
+            this.redisDatabase.SetAdd(Key.IndexTraderPositions(traderId), positionId.Value, CommandFlags.FireAndForget);
+            this.redisDatabase.SetAdd(Key.IndexTraderStrategies(traderId), strategyId.Value, CommandFlags.FireAndForget);
+            this.redisDatabase.SetAdd(Key.IndexAccountOrders(accountId), order.Id.Value, CommandFlags.FireAndForget);
+            this.redisDatabase.SetAdd(Key.IndexAccountPositions(accountId), order.Id.Value, CommandFlags.FireAndForget);
+            this.redisDatabase.HashSet(Key.IndexOrderTrader, new[] { new HashEntry(order.Id.Value, traderId.Value) }, CommandFlags.FireAndForget);
+            this.redisDatabase.HashSet(Key.IndexOrderAccount, new[] { new HashEntry(order.Id.Value, accountId.Value) }, CommandFlags.FireAndForget);
+            this.redisDatabase.HashSet(Key.IndexOrderPosition, new[] { new HashEntry(order.Id.Value, positionId.Value) }, CommandFlags.FireAndForget);
+            this.redisDatabase.HashSet(Key.IndexOrderStrategy, new[] { new HashEntry(order.Id.Value, strategyId.Value) }, CommandFlags.FireAndForget);
+            this.redisDatabase.HashSet(Key.IndexPositionTrader, new[] { new HashEntry(positionId.Value, traderId.Value) }, CommandFlags.FireAndForget);
+            this.redisDatabase.HashSet(Key.IndexPositionAccount, new[] { new HashEntry(positionId.Value, positionId.Value) }, CommandFlags.FireAndForget);
+            this.redisDatabase.HashSet(Key.IndexPositionStrategy, new[] { new HashEntry(positionId.Value, positionId.Value) }, CommandFlags.FireAndForget);
+            this.redisDatabase.SetAdd(Key.IndexPositionOrders(positionId), order.Id.Value, CommandFlags.FireAndForget);
+            this.redisDatabase.SetAdd(Key.IndexOrders, order.Id.Value, CommandFlags.FireAndForget);
+
+            this.redisDatabase.ListRightPush(Key.Order(order.Id), this.eventSerializer.Serialize(order.LastEvent), When.Always, CommandFlags.FireAndForget);
+
+            this.cachedOrders[order.Id] = order;
+
+            return CommandResult.Ok();
+        }
+
+        /// <inheritdoc />
+        public CommandResult AddPosition(Position position)
+        {
+            if (this.cachedPositions.ContainsKey(position.Id))
+            {
+                return CommandResult.Fail($"The {position.Id} already existed in the cache (was not unique).");
+            }
+
+            this.redisDatabase.SetAdd(Key.IndexPositions, position.Id.Value, CommandFlags.FireAndForget);
             if (position.IsOpen)
             {
-                this.redisDatabase.SetAdd(Key.IndexPositionsOpen, position.Id.Value);
+                this.redisDatabase.SetAdd(Key.IndexPositionsOpen, position.Id.Value, CommandFlags.FireAndForget);
             }
             else
             {
@@ -233,49 +243,51 @@ namespace Nautilus.Redis.Execution
                 this.Log.Error($"The added {position} was not open.");
             }
 
-            this.redisDatabase.ListRightPush(Key.Position(position.Id), this.eventSerializer.Serialize(position.LastEvent));
+            this.redisDatabase.ListRightPush(Key.Position(position.Id), this.eventSerializer.Serialize(position.LastEvent), When.Always, CommandFlags.FireAndForget);
 
             this.cachedPositions[position.Id] = position;
+
+            return CommandResult.Ok();
         }
 
         /// <inheritdoc />
         public void UpdateOrder(Order order)
         {
-            this.redisDatabase.ListRightPush(Key.Order(order.Id), this.eventSerializer.Serialize(order.LastEvent));
-
             if (order.IsWorking)
             {
-                this.redisDatabase.SetAdd(Key.IndexOrdersWorking, order.Id.Value);
-                this.redisDatabase.SetRemove(Key.IndexOrdersCompleted, order.Id.Value);
+                this.redisDatabase.SetAdd(Key.IndexOrdersWorking, order.Id.Value, CommandFlags.FireAndForget);
+                this.redisDatabase.SetRemove(Key.IndexOrdersCompleted, order.Id.Value, CommandFlags.FireAndForget);
             }
             else if (order.IsCompleted)
             {
-                this.redisDatabase.SetAdd(Key.IndexOrdersCompleted, order.Id.Value);
-                this.redisDatabase.SetRemove(Key.IndexOrdersWorking, order.Id.Value);
+                this.redisDatabase.SetAdd(Key.IndexOrdersCompleted, order.Id.Value, CommandFlags.FireAndForget);
+                this.redisDatabase.SetRemove(Key.IndexOrdersWorking, order.Id.Value, CommandFlags.FireAndForget);
             }
+
+            this.redisDatabase.ListRightPush(Key.Order(order.Id), this.eventSerializer.Serialize(order.LastEvent), When.Always, CommandFlags.FireAndForget);
         }
 
         /// <inheritdoc />
         public void UpdatePosition(Position position)
         {
-            this.redisDatabase.ListRightPush(Key.Position(position.Id), this.eventSerializer.Serialize(position.LastEvent));
-
             if (position.IsOpen)
             {
-                this.redisDatabase.SetAdd(Key.IndexPositionsOpen, position.Id.Value);
-                this.redisDatabase.SetRemove(Key.IndexPositionsClosed, position.Id.Value);
+                this.redisDatabase.SetAdd(Key.IndexPositionsOpen, position.Id.Value, CommandFlags.FireAndForget);
+                this.redisDatabase.SetRemove(Key.IndexPositionsClosed, position.Id.Value, CommandFlags.FireAndForget);
             }
             else if (position.IsClosed)
             {
-                this.redisDatabase.SetAdd(Key.IndexPositionsClosed, position.Id.Value);
-                this.redisDatabase.SetRemove(Key.IndexPositionsOpen, position.Id.Value);
+                this.redisDatabase.SetAdd(Key.IndexPositionsClosed, position.Id.Value, CommandFlags.FireAndForget);
+                this.redisDatabase.SetRemove(Key.IndexPositionsOpen, position.Id.Value, CommandFlags.FireAndForget);
             }
+
+            this.redisDatabase.ListRightPush(Key.Position(position.Id), this.eventSerializer.Serialize(position.LastEvent), When.Always, CommandFlags.FireAndForget);
         }
 
         /// <inheritdoc />
         public void UpdateAccount(Account account)
         {
-            this.redisDatabase.ListRightPush(Key.Account(account.Id), this.eventSerializer.Serialize(account.LastEvent));
+            this.redisDatabase.ListRightPush(Key.Account(account.Id), this.eventSerializer.Serialize(account.LastEvent), When.Always, CommandFlags.FireAndForget);
         }
 
         /// <inheritdoc />

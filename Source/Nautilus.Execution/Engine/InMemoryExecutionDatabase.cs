@@ -13,6 +13,8 @@ namespace Nautilus.Execution.Engine
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
+    using Nautilus.Core.CQS;
+    using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Identifiers;
@@ -32,14 +34,14 @@ namespace Nautilus.Execution.Engine
         private readonly Dictionary<AccountId, HashSet<OrderId>> indexAccountOrders;
         private readonly Dictionary<AccountId, HashSet<PositionId>> indexAccountPositions;
 
+        private readonly Dictionary<TraderId, TraderIdentifierIndex> indexTraders;
+        private readonly HashSet<AccountId> indexAccounts;
         private readonly HashSet<OrderId> indexOrders;
         private readonly HashSet<OrderId> indexOrdersWorking;
         private readonly HashSet<OrderId> indexOrdersCompleted;
         private readonly HashSet<PositionId> indexPositions;
         private readonly HashSet<PositionId> indexPositionsOpen;
         private readonly HashSet<PositionId> indexPositionsClosed;
-
-        private readonly Dictionary<TraderId, TraderIdentifierIndex> indexTraders;
 
         private readonly Dictionary<OrderId, Order> cachedOrders;
         private readonly Dictionary<PositionId, Position> cachedPositions;
@@ -61,7 +63,7 @@ namespace Nautilus.Execution.Engine
             this.indexAccountPositions = new Dictionary<AccountId, HashSet<PositionId>>();
 
             this.indexTraders = new Dictionary<TraderId, TraderIdentifierIndex>();
-
+            this.indexAccounts = new HashSet<AccountId>();
             this.indexOrders = new HashSet<OrderId>();
             this.indexOrdersWorking = new HashSet<OrderId>();
             this.indexOrdersCompleted = new HashSet<OrderId>();
@@ -74,22 +76,34 @@ namespace Nautilus.Execution.Engine
         }
 
         /// <inheritdoc />
+        public void LoadOrdersCache()
+        {
+            this.Log.Information("Re-caching orders from the database (does nothing for this implementation.)");
+        }
+
+        /// <inheritdoc />
+        public void LoadPositionsCache()
+        {
+            this.Log.Information("Re-caching positions from the database (does nothing for this implementation.)");
+        }
+
+        /// <inheritdoc />
         /// <exception cref="ConditionFailedException">If the order identifier is already indexed.</exception>
-        public void AddOrder(AtomicOrder order, TraderId traderId, AccountId accountId, StrategyId strategyId, PositionId positionId)
+        public CommandResult AddOrder(AtomicOrder order, TraderId traderId, AccountId accountId, StrategyId strategyId, PositionId positionId)
         {
             this.AddOrder(
                 order.Entry,
                 traderId,
                 accountId,
                 strategyId,
-                positionId);
+                positionId).OnFailure(errorMsg => { CommandResult.Fail(errorMsg); });
 
             this.AddOrder(
                 order.StopLoss,
                 traderId,
                 accountId,
                 strategyId,
-                positionId);
+                positionId).OnFailure(errorMsg => { CommandResult.Fail(errorMsg); });
 
             if (order.TakeProfit != null)
             {
@@ -98,19 +112,25 @@ namespace Nautilus.Execution.Engine
                     traderId,
                     accountId,
                     strategyId,
-                    positionId);
+                    positionId).OnFailure(errorMsg => { CommandResult.Fail(errorMsg); });
             }
+
+            return CommandResult.Ok();
         }
 
         /// <inheritdoc />
         /// <exception cref="ConditionFailedException">If the order identifier is already indexed.</exception>
-        public void AddOrder(Order order, TraderId traderId, AccountId accountId, StrategyId strategyId, PositionId positionId)
+        public CommandResult AddOrder(Order order, TraderId traderId, AccountId accountId, StrategyId strategyId, PositionId positionId)
         {
             Debug.KeyNotIn(order.Id, this.indexOrderTrader, nameof(order.Id), nameof(this.indexOrderTrader));
             Debug.KeyNotIn(order.Id, this.indexOrderAccount, nameof(order.Id), nameof(this.indexOrderAccount));
             Debug.KeyNotIn(order.Id, this.indexOrderPosition, nameof(order.Id), nameof(this.indexOrderPosition));
             Debug.NotIn(order.Id, this.indexOrders, nameof(order.Id), nameof(this.indexOrders));
-            Debug.KeyNotIn(order.Id, this.cachedOrders, nameof(order.Id), nameof(this.cachedOrders));
+
+            if (this.cachedOrders.ContainsKey(order.Id))
+            {
+                return CommandResult.Fail($"The {order.Id} already existed in the cache (was not unique).");
+            }
 
             this.indexOrderTrader[order.Id] = traderId;
             this.indexOrderAccount[order.Id] = accountId;
@@ -166,21 +186,29 @@ namespace Nautilus.Execution.Engine
                            $"indexed account_id={accountId}, " +
                            $"indexed position_id={positionId}, " +
                            $"indexed strategy_id={strategyId}");
+
+            return CommandResult.Ok();
         }
 
         /// <inheritdoc />
         /// <exception cref="ConditionFailedException">If the position identifier is already indexed.</exception>
-        public void AddPosition(Position position)
+        public CommandResult AddPosition(Position position)
         {
             Debug.NotIn(position.Id, this.indexPositions, nameof(position.Id), nameof(this.indexPositions));
             Debug.NotIn(position.Id, this.indexPositionsOpen, nameof(position.Id), nameof(this.indexPositions));
-            Debug.KeyNotIn(position.Id, this.cachedPositions, nameof(position.Id), nameof(this.cachedPositions));
+
+            if (this.cachedPositions.ContainsKey(position.Id))
+            {
+                return CommandResult.Fail($"The {position.Id} already existed in the cache (was not unique).");
+            }
 
             this.indexPositions.Add(position.Id);
             this.indexPositionsOpen.Add(position.Id);
             this.cachedPositions[position.Id] = position;
 
             this.Log.Debug($"Added open position_id={position.Id}");
+
+            return CommandResult.Ok();
         }
 
         /// <inheritdoc />
@@ -265,7 +293,7 @@ namespace Nautilus.Execution.Engine
         /// <inheritdoc />
         public ICollection<AccountId> GetAccountIds()
         {
-            return null;
+            return new SortedSet<AccountId>(this.indexAccounts);
         }
 
         /// <inheritdoc />
