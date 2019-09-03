@@ -71,6 +71,24 @@ namespace Nautilus.Redis.Execution
         /// <summary>
         /// Gets the Redis key.
         /// </summary>
+        /// <returns>The key string.</returns>
+        internal static string Accounts => KEY_ACCOUNTS + "*";
+
+        /// <summary>
+        /// Gets the Redis key.
+        /// </summary>
+        /// <returns>The key string.</returns>
+        internal static string Orders => KEY_ORDERS + "*";
+
+        /// <summary>
+        /// Gets the Redis key.
+        /// </summary>
+        /// <returns>The key string.</returns>
+        internal static string Positions => KEY_POSITIONS + "*";
+
+        /// <summary>
+        /// Gets the Redis key.
+        /// </summary>
         internal static string IndexOrderTrader => KEY_INDEX_ORDER_TRADER;
 
         /// <summary>

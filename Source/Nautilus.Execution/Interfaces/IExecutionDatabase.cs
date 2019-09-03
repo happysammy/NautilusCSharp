@@ -94,10 +94,16 @@ namespace Nautilus.Execution.Interfaces
         ICollection<TraderId> GetTraderIds();
 
         /// <summary>
+        /// Return all account identifiers.
+        /// </summary>
+        /// <returns>The collection of account identifiers.</returns>
+        ICollection<AccountId> GetAccountIds();
+
+        /// <summary>
         /// Return all strategy identifiers for the given trader identifier.
         /// </summary>
         /// <param name="traderId">The trader identifier.</param>
-        /// <returns>The strategy identifiers.</returns>
+        /// <returns>The collection of strategy identifiers.</returns>
         ICollection<StrategyId> GetStrategyIds(TraderId traderId);
 
         /// <summary>
@@ -112,13 +118,13 @@ namespace Nautilus.Execution.Interfaces
         /// </summary>
         /// <param name="traderId">The trader identifier.</param>
         /// <param name="filterStrategyId">The optional strategy identifier filter.</param>
-        /// <returns>The order identifiers.</returns>
+        /// <returns>The collection of order identifiers.</returns>
         ICollection<OrderId> GetOrderIds(TraderId traderId, StrategyId? filterStrategyId = null);
 
         /// <summary>
         /// Return all working order identifiers.
         /// </summary>
-        /// <returns>The order identifiers.</returns>
+        /// <returns>The collection of order identifiers.</returns>
         ICollection<OrderId> GetOrderWorkingIds();
 
         /// <summary>
@@ -127,7 +133,7 @@ namespace Nautilus.Execution.Interfaces
         /// </summary>
         /// <param name="traderId">The trader identifier.</param>
         /// <param name="filterStrategyId">The optional strategy identifier filter.</param>
-        /// <returns>The order identifiers.</returns>
+        /// <returns>The collection of order identifiers.</returns>
         ICollection<OrderId> GetOrderWorkingIds(TraderId traderId, StrategyId? filterStrategyId = null);
 
         /// <summary>
@@ -142,7 +148,7 @@ namespace Nautilus.Execution.Interfaces
         /// </summary>
         /// <param name="traderId">The trader identifier.</param>
         /// <param name="filterStrategyId">The optional strategy identifier filter.</param>
-        /// <returns>The order identifiers.</returns>
+        /// <returns>The collection of order identifiers.</returns>
         ICollection<OrderId> GetOrderCompletedIds(TraderId traderId, StrategyId? filterStrategyId = null);
 
         /// <summary>
@@ -157,7 +163,7 @@ namespace Nautilus.Execution.Interfaces
         /// </summary>
         /// <param name="traderId">The trader identifier.</param>
         /// <param name="filterStrategyId">The optional strategy identifier filter.</param>
-        /// <returns>The position identifiers.</returns>
+        /// <returns>The collection of position identifiers.</returns>
         ICollection<PositionId> GetPositionIds(TraderId traderId, StrategyId? filterStrategyId = null);
 
         /// <summary>
@@ -172,13 +178,13 @@ namespace Nautilus.Execution.Interfaces
         /// </summary>
         /// <param name="traderId">The trader identifier.</param>
         /// <param name="filterStrategyId">The optional strategy identifier filter.</param>
-        /// <returns>The position identifiers.</returns>
+        /// <returns>The collection of position identifiers.</returns>
         ICollection<PositionId> GetPositionOpenIds(TraderId traderId, StrategyId? filterStrategyId = null);
 
         /// <summary>
         /// Return all closed position identifiers.
         /// </summary>
-        /// <returns>The position identifiers.</returns>
+        /// <returns>The collection of position identifiers.</returns>
         ICollection<PositionId> GetPositionClosedIds();
 
         /// <summary>
@@ -187,7 +193,7 @@ namespace Nautilus.Execution.Interfaces
         /// </summary>
         /// <param name="traderId">The trader identifier.</param>
         /// <param name="filterStrategyId">The optional strategy identifier filter.</param>
-        /// <returns>The position identifiers.</returns>
+        /// <returns>The collection of position identifiers.</returns>
         ICollection<PositionId> GetPositionClosedIds(TraderId traderId, StrategyId? filterStrategyId = null);
 
         /// <summary>

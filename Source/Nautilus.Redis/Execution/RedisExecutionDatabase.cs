@@ -18,6 +18,8 @@ namespace Nautilus.Redis.Execution
     using Nautilus.Core.Message;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
+    using Nautilus.DomainModel.Events;
+    using Nautilus.DomainModel.Events.Base;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.Execution.Interfaces;
     using StackExchange.Redis;
@@ -32,7 +34,6 @@ namespace Nautilus.Redis.Execution
         private readonly IDatabase redisDatabase;
         private readonly ISerializer<Command> commandSerializer;
         private readonly ISerializer<Event> eventSerializer;
-        private readonly bool optionLoadCache;
 
         private readonly Dictionary<OrderId, Order> cachedOrders;
         private readonly Dictionary<PositionId, Position> cachedPositions;
@@ -57,11 +58,28 @@ namespace Nautilus.Redis.Execution
             this.redisDatabase = connection.GetDatabase();
             this.commandSerializer = commandSerializer;
             this.eventSerializer = eventSerializer;
-            this.optionLoadCache = optionLoadCache;
+            this.OptionLoadCache = optionLoadCache;
 
             this.cachedOrders = new Dictionary<OrderId, Order>();
             this.cachedPositions = new Dictionary<PositionId, Position>();
+
+            if (this.OptionLoadCache)
+            {
+                this.Log.Information($"The OptionLoadCache is {this.OptionLoadCache}");
+                this.LoadOrdersCache();
+                this.LoadPositionsCache();
+            }
+            else
+            {
+                this.Log.Warning($"The OptionLoadCache is {this.OptionLoadCache} " +
+                                 $"this should only be done in a testing environment.");
+            }
         }
+
+        /// <summary>
+        /// Gets a value indicating whether the execution database will load the cache on instantiation.
+        /// </summary>
+        public bool OptionLoadCache { get; }
 
         /// <inheritdoc />
         public void AddOrder(AtomicOrder order, TraderId traderId, AccountId accountId, StrategyId strategyId, PositionId positionId)
@@ -89,6 +107,89 @@ namespace Nautilus.Redis.Execution
                     strategyId,
                     positionId);
             }
+        }
+
+        /// <summary>
+        /// Clear the current order cache and load orders from the database.
+        /// </summary>
+        public void LoadOrdersCache()
+        {
+            this.Log.Information("Re-caching orders from the database...");
+
+            this.cachedOrders.Clear();
+
+            var orderKeys = this.redisServer.Keys(pattern: Key.Orders).ToArray();
+
+            if (orderKeys.Length == 0)
+            {
+                this.Log.Information("No orders found in the database.");
+            }
+
+            foreach (var key in orderKeys)
+            {
+                var events = new Queue<RedisValue>(this.redisDatabase.ListRange(key));
+                if (events.Count == 0)
+                {
+                    this.Log.Error($"Cannot load order {key} from the database (no events persisted).");
+                    continue;
+                }
+
+                var initial = this.eventSerializer.Deserialize(events.Dequeue());
+                if (initial.Type != typeof(OrderInitialized))
+                {
+                    this.Log.Error($"Cannot load order {key} from the database (first event not OrderInitialized, was {initial.Type}).");
+                    continue;
+                }
+
+                var order = new Order((OrderInitialized)initial);
+                do
+                {
+                    order.Apply((OrderEvent)this.eventSerializer.Deserialize(events.Dequeue()));
+                }
+                while (events.Count > 0);
+
+                this.cachedOrders[order.Id] = order;
+            }
+
+            this.Log.Information($"Cached {this.cachedOrders.Count} orders.");
+        }
+
+        /// <summary>
+        /// Clear the current order cache and load orders from the database.
+        /// </summary>
+        public void LoadPositionsCache()
+        {
+            this.Log.Information("Re-caching positions from the database...");
+
+            this.cachedPositions.Clear();
+
+            var positionKeys = this.redisServer.Keys(pattern: Key.Positions).ToArray();
+
+            if (positionKeys.Length == 0)
+            {
+                this.Log.Information("No positions found in the database.");
+            }
+
+            foreach (var key in positionKeys)
+            {
+                var events = new Queue<RedisValue>(this.redisDatabase.ListRange(key));
+                if (events.Count == 0)
+                {
+                    this.Log.Error($"Cannot load position {key} from the database (no events persisted).");
+                    continue;
+                }
+
+                var position = new Position(new PositionId(key), (OrderFillEvent)this.eventSerializer.Deserialize(events.Dequeue()));
+                do
+                {
+                    position.Apply((OrderFillEvent)this.eventSerializer.Deserialize(events.Dequeue()));
+                }
+                while (events.Count > 0);
+
+                this.cachedPositions[position.Id] = position;
+            }
+
+            this.Log.Information($"Cached {this.cachedPositions.Count} positions.");
         }
 
         /// <inheritdoc />
@@ -210,6 +311,12 @@ namespace Nautilus.Redis.Execution
         public ICollection<TraderId> GetTraderIds()
         {
             return SetFactory.ConvertToTraderIds(this.redisServer.Keys(pattern: Key.Traders).ToArray());
+        }
+
+        /// <inheritdoc />
+        public ICollection<AccountId> GetAccountIds()
+        {
+            return SetFactory.ConvertToAccountIds(this.redisServer.Keys(pattern: Key.Accounts).ToArray());
         }
 
         /// <inheritdoc />

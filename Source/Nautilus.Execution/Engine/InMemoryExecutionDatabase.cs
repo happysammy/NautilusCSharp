@@ -263,6 +263,12 @@ namespace Nautilus.Execution.Engine
         }
 
         /// <inheritdoc />
+        public ICollection<AccountId> GetAccountIds()
+        {
+            return null;
+        }
+
+        /// <inheritdoc />
         public ICollection<StrategyId> GetStrategyIds(TraderId traderId)
         {
             return this.indexTraders.TryGetValue(traderId, out var traderIndex)
