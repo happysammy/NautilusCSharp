@@ -9,9 +9,6 @@
 namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 {
     using System.Diagnostics.CodeAnalysis;
-    using Nautilus.Fix.MessageFactories;
-    using Nautilus.TestSuite.TestKit.TestDoubles;
-    using Xunit;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class ExecutionEngineTests

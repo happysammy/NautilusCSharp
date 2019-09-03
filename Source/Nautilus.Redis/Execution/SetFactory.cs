@@ -17,6 +17,7 @@ namespace Nautilus.Redis.Execution
     /// Provides efficient mathematical set operations. Concrete classes avoid the overhead of LINQ
     /// and interface dispatching.
     /// </summary>
+    [PerformanceOptimized]
     internal static class SetFactory
     {
         /// <summary>

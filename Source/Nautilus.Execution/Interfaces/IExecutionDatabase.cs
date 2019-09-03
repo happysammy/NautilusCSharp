@@ -38,7 +38,7 @@ namespace Nautilus.Execution.Interfaces
         /// <param name="strategyId">The strategy identifier to index.</param>
         /// <param name="positionId">The position identifier to index.</param>
         /// <returns>The result of the operation.</returns>
-        CommandResult AddOrder(
+        CommandResult AddAtomicOrder(
             AtomicOrder order,
             TraderId traderId,
             AccountId accountId,

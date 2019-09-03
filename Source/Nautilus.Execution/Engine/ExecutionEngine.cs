@@ -11,6 +11,7 @@ namespace Nautilus.Execution.Engine
     using System.Collections.Generic;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
+    using Nautilus.Core.Extensions;
     using Nautilus.Core.Message;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Events;
@@ -104,23 +105,23 @@ namespace Nautilus.Execution.Engine
                 command.TraderId,
                 command.AccountId,
                 command.StrategyId,
-                command.PositionId);
-
-            this.gateway.SubmitOrder(command.Order);
+                command.PositionId)
+                .OnSuccess(() => this.gateway.SubmitOrder(command.Order))
+                .OnFailure(result => this.Log.Error($"Cannot execute command {command} ({result.Message})."));
         }
 
         private void OnMessage(SubmitAtomicOrder command)
         {
             this.IncrementCounter(command);
 
-            this.database.AddOrder(
+            this.database.AddAtomicOrder(
                 command.AtomicOrder,
                 command.TraderId,
                 command.AccountId,
                 command.StrategyId,
-                command.PositionId);
-
-            this.gateway.SubmitOrder(command.AtomicOrder);
+                command.PositionId)
+                .OnSuccess(() => this.gateway.SubmitOrder(command.AtomicOrder))
+                .OnFailure(result => this.Log.Error($"Cannot execute command {command} ({result.Message})."));
         }
 
         private void OnMessage(CancelOrder command)
@@ -208,7 +209,7 @@ namespace Nautilus.Execution.Engine
             {
                 if (this.bufferModify.TryGetValue(order.Id, out var modifyOrder))
                 {
-                    if (!(order.Price is null) && order.Price != modifyOrder.ModifiedPrice)
+                    if (order.Price != null && order.Price != modifyOrder.ModifiedPrice)
                     {
                         this.gateway.ModifyOrder(order, modifyOrder.ModifiedPrice);
                     }

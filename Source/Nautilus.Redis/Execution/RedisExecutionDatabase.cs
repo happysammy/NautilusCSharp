@@ -164,7 +164,7 @@ namespace Nautilus.Redis.Execution
         }
 
         /// <inheritdoc />
-        public CommandResult AddOrder(AtomicOrder order, TraderId traderId, AccountId accountId, StrategyId strategyId, PositionId positionId)
+        public CommandResult AddAtomicOrder(AtomicOrder order, TraderId traderId, AccountId accountId, StrategyId strategyId, PositionId positionId)
         {
             this.AddOrder(
                 order.Entry,

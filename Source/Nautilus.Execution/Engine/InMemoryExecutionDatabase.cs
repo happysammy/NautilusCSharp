@@ -89,7 +89,7 @@ namespace Nautilus.Execution.Engine
 
         /// <inheritdoc />
         /// <exception cref="ConditionFailedException">If the order identifier is already indexed.</exception>
-        public CommandResult AddOrder(AtomicOrder order, TraderId traderId, AccountId accountId, StrategyId strategyId, PositionId positionId)
+        public CommandResult AddAtomicOrder(AtomicOrder order, TraderId traderId, AccountId accountId, StrategyId strategyId, PositionId positionId)
         {
             this.AddOrder(
                 order.Entry,
