@@ -59,7 +59,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
             return new OrderWorking(
                 order.Id,
-                new OrderId("B" + order.Id.Value),
+                new OrderIdBroker("B" + order.Id.Value),
                 AccountId.FromString("FXCM-02851908"),
                 order.Symbol,
                 order.Label,
@@ -78,7 +78,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             return new OrderModified(
                 order.Id,
-                new OrderId("B" + order.Id.Value),
+                new OrderIdBroker("B" + order.Id.Value),
                 AccountId.FromString("FXCM-02851908"),
                 newPrice,
                 StubZonedDateTime.UnixEpoch(),

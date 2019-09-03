@@ -13,7 +13,11 @@ namespace Nautilus.DomainModel.Identifiers
     using Nautilus.Core.Types;
 
     /// <summary>
-    /// Represents a valid atomic order identifier.
+    /// Represents a valid atomic order identifier. This identifier value must be unique at fund level.
+    ///
+    /// <para>
+    /// It is expected that the identifier value starts with 'AO-'.
+    /// </para>
     /// </summary>
     [Immutable]
     public sealed class AtomicOrderId : Identifier<AtomicOrderId>
@@ -26,6 +30,7 @@ namespace Nautilus.DomainModel.Identifiers
             : base(value)
         {
             Debug.NotEmptyOrWhiteSpace(value, nameof(value));
+            Debug.True(value.StartsWith("AO-"), $"The value did not start with 'AO-', was {value}.");
         }
     }
 }

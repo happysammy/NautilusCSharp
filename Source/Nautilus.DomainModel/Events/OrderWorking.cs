@@ -43,7 +43,7 @@ namespace Nautilus.DomainModel.Events
         /// <param name="eventTimestamp">The event timestamp.</param>
         public OrderWorking(
             OrderId orderId,
-            OrderId orderIdBroker,
+            OrderIdBroker orderIdBroker,
             AccountId accountId,
             Symbol symbol,
             Label label,
@@ -85,7 +85,7 @@ namespace Nautilus.DomainModel.Events
         /// <summary>
         /// Gets the events order identifier from the broker.
         /// </summary>
-        public OrderId OrderIdBroker { get; }
+        public OrderIdBroker OrderIdBroker { get; }
 
         /// <summary>
         /// Gets the events account identifier.

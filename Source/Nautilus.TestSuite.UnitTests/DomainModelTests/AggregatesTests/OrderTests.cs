@@ -39,9 +39,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Arrange
             // Act
             var order = OrderFactory.Market(
-                new OrderId("some_orderId"),
+                new OrderId("O-123456-S1"),
                 new Symbol("SYMBOL", "LMAX"),
-                new Label("some_label"),
+                new Label("S1-E"),
                 OrderSide.BUY,
                 Quantity.Create(10),
                 StubZonedDateTime.UnixEpoch(),
@@ -49,13 +49,13 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             // Assert
             Assert.Equal(new Symbol("SYMBOL", "LMAX"), order.Symbol);
-            Assert.Equal("some_orderId", order.Id.Value);
-            Assert.Equal("some_label", order.Label.Value);
+            Assert.Equal("O-123456-S1", order.Id.Value);
+            Assert.Equal("S1-E", order.Label.Value);
             Assert.Equal(OrderSide.BUY, order.Side);
             Assert.Equal(OrderType.MARKET, order.Type);
             Assert.Equal(10, order.Quantity.Value);
             Assert.Null(order.AveragePrice);
-            Assert.Equal(new List<OrderId> { new OrderId("some_orderId") }, order.GetOrderIds());
+            Assert.Equal(new List<OrderId> { new OrderId("O-123456-S1") }, order.GetOrderIds());
             Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEvent.Timestamp);
             Assert.Equal(OrderStatus.Initialized, order.Status);
         }
@@ -66,9 +66,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Arrange
             // Act
             var order = OrderFactory.StopMarket(
-                new OrderId("some_orderId"),
+                new OrderId("O-123456"),
                 new Symbol("SYMBOL", "LMAX"),
-                new Label("some_label"),
+                new Label("S1_SL"),
                 OrderSide.BUY,
                 Quantity.Create(10),
                 Price.Create(2000, 1),
@@ -79,8 +79,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             // Assert
             Assert.Equal(new Symbol("SYMBOL", "LMAX"), order.Symbol);
-            Assert.Equal("some_orderId", order.Id.Value);
-            Assert.Equal("some_label", order.Label.Value);
+            Assert.Equal("O-123456", order.Id.Value);
+            Assert.Equal("S1_SL", order.Label.Value);
             Assert.Equal(OrderSide.BUY, order.Side);
             Assert.Equal(OrderType.STOP_MARKET, order.Type);
             Assert.Equal(10, order.Quantity.Value);
@@ -89,7 +89,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.Null(order.Slippage);
             Assert.Equal(TimeInForce.GTD, order.TimeInForce);
             Assert.Equal(StubZonedDateTime.UnixEpoch() + Period.FromMinutes(5).ToDuration(), order.ExpireTime);
-            Assert.Equal(new List<OrderId> { new OrderId("some_orderId") }.ToImmutableList(), order.GetOrderIds());
+            Assert.Equal(new List<OrderId> { new OrderId("O-123456") }.ToImmutableList(), order.GetOrderIds());
             Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEvent.Timestamp);
             Assert.Equal(OrderStatus.Initialized, order.Status);
         }
@@ -279,7 +279,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var event2 = StubEventMessages.OrderAcceptedEvent(order);
             var event3 = new OrderWorking(
                 order.Id,
-                new OrderId("B" + order.Id),
+                new OrderIdBroker("B" + order.Id),
                 AccountId.FromString("FXCM-02851908"),
                 new Symbol("AUDUSD", "FXCM"),
                 order.Label,
@@ -498,8 +498,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         internal void Equals_OrderWithTheSameOrderId_ReturnsFalse()
         {
             // Arrange
-            var order1 = new StubOrderBuilder().WithOrderId("1234567").BuildStopMarketOrder();
-            var order2 = new StubOrderBuilder().WithOrderId("123456789").BuildStopMarketOrder();
+            var order1 = new StubOrderBuilder().WithOrderId("O-1234567").BuildStopMarketOrder();
+            var order2 = new StubOrderBuilder().WithOrderId("O-123456789").BuildStopMarketOrder();
 
             // Act
             var result = order1.Equals(order2);
@@ -512,8 +512,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         internal void Equals_OrderWithTheSameOrderId_ReturnsTrue()
         {
             // Arrange
-            var order1 = new StubOrderBuilder().WithOrderId("123456789").BuildStopMarketOrder();
-            var order2 = new StubOrderBuilder().WithOrderId("123456789").BuildStopMarketOrder();
+            var order1 = new StubOrderBuilder().WithOrderId("O-123456789").BuildStopMarketOrder();
+            var order2 = new StubOrderBuilder().WithOrderId("O-123456789").BuildStopMarketOrder();
 
             // Act
             var result = order1.Equals(order2);

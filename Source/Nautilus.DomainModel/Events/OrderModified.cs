@@ -34,7 +34,7 @@ namespace Nautilus.DomainModel.Events
         /// <param name="eventTimestamp">The event timestamp.</param>
         public OrderModified(
             OrderId orderId,
-            OrderId orderIdBroker,
+            OrderIdBroker orderIdBroker,
             AccountId accountId,
             Price modifiedPrice,
             ZonedDateTime modifiedTime,
@@ -59,7 +59,7 @@ namespace Nautilus.DomainModel.Events
         /// <summary>
         /// Gets the events broker order identifier.
         /// </summary>
-        public OrderId OrderIdBroker { get; }
+        public OrderIdBroker OrderIdBroker { get; }
 
         /// <summary>
         /// Gets the events account identifier.

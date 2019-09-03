@@ -312,7 +312,7 @@ namespace Nautilus.Fix
 
                 var orderModified = new OrderModified(
                     new OrderId(OrderIdPostfixRemover.Remove(orderId)),
-                    new OrderId(orderIdBroker),
+                    new OrderIdBroker(orderIdBroker),
                     this.AccountId,
                     Price.Create(price, price.GetDecimalPlaces()),
                     timestamp,
@@ -356,7 +356,7 @@ namespace Nautilus.Fix
 
                 var orderWorking = new OrderWorking(
                     new OrderId(OrderIdPostfixRemover.Remove(orderId)),
-                    new OrderId(orderIdBroker),
+                    new OrderIdBroker(orderIdBroker),
                     this.AccountId,
                     new Symbol(symbolCode, venue),
                     new Label(label),

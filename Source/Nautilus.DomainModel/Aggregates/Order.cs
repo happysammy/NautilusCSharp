@@ -33,7 +33,7 @@ namespace Nautilus.DomainModel.Aggregates
     {
         private readonly FiniteStateMachine orderStateMachine;
         private readonly UniqueList<OrderId> orderIds;
-        private readonly UniqueList<OrderId> orderIdsBroker;
+        private readonly UniqueList<OrderIdBroker> orderIdsBroker;
         private readonly UniqueList<ExecutionId> executionIds;
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace Nautilus.DomainModel.Aggregates
         {
             this.orderStateMachine = CreateOrderFiniteStateMachine();
             this.orderIds = new UniqueList<OrderId>(this.Id);
-            this.orderIdsBroker = new UniqueList<OrderId>();
+            this.orderIdsBroker = new UniqueList<OrderIdBroker>();
             this.executionIds = new UniqueList<ExecutionId>();
 
             this.Symbol = initial.Symbol;
@@ -79,7 +79,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the orders last identifier for the broker.
         /// </summary>
-        public OrderId? IdBroker => this.orderIdsBroker.LastOrNull();
+        public OrderIdBroker? IdBroker => this.orderIdsBroker.LastOrNull();
 
         /// <summary>
         /// Gets the orders account identifier.
@@ -244,7 +244,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// Returns the broker order identifiers.
         /// </summary>
         /// <returns>A read only collection.</returns>
-        public UniqueList<OrderId> GetOrderIdsBroker() => this.orderIdsBroker.Copy();
+        public UniqueList<OrderIdBroker> GetOrderIdsBroker() => this.orderIdsBroker.Copy();
 
         /// <summary>
         /// Returns the execution identifiers.

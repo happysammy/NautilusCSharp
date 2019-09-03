@@ -14,6 +14,10 @@ namespace Nautilus.DomainModel.Identifiers
 
     /// <summary>
     /// Represents a valid position identifier. This identifier value must be unique at fund level.
+    ///
+    /// <para>
+    /// It is expected that the identifier value starts with 'P-'.
+    /// </para>
     /// </summary>
     [Immutable]
     public sealed class PositionId : Identifier<PositionId>
@@ -26,6 +30,7 @@ namespace Nautilus.DomainModel.Identifiers
             : base(value)
         {
             Debug.NotEmptyOrWhiteSpace(value, nameof(value));
+            Debug.True(value.StartsWith("P-"), $"The value did not start with 'P-', was {value}.");
         }
     }
 }

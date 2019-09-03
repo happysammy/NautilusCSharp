@@ -120,9 +120,9 @@ namespace Nautilus.Serialization.Internal
         /// </summary>
         /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <returns>The extracted OrderIdBroker.</returns>
-        internal static OrderId OrderIdBroker(MessagePackObjectDictionary unpacked)
+        internal static OrderIdBroker OrderIdBroker(MessagePackObjectDictionary unpacked)
         {
-            return new OrderId(unpacked[nameof(OrderIdBroker)].AsString());
+            return new OrderIdBroker(unpacked[nameof(OrderIdBroker)].AsString());
         }
 
         /// <summary>

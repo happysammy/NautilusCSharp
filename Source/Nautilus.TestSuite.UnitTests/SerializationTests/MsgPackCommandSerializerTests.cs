@@ -43,7 +43,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
                 new TraderId("TESTER", "000"),
                 new StrategyId("EMACross", "001"),
                 new AccountId("FXCM", "028999999"),
-                new PositionId("001"),
+                new PositionId("P-123456"),
                 order,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -71,7 +71,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
                 new TraderId("TESTER", "000"),
                 new StrategyId("EMACross", "001"),
                 new AccountId("FXCM", "028999999"),
-                new PositionId("001"),
+                new PositionId("P-123456"),
                 atomicOrder,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -100,7 +100,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
                 new TraderId("TESTER", "000"),
                 new StrategyId("EMACross", "001"),
                 new AccountId("FXCM", "028999999"),
-                new PositionId("001"),
+                new PositionId("P-123456"),
                 atomicOrder,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -125,7 +125,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
                 new TraderId("TESTER", "000"),
                 new StrategyId("EMACross", "001"),
                 new AccountId("FXCM", "028999999"),
-                new OrderId("123456"),
+                new OrderId("O-123456"),
                 "EXPIRED",
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -149,7 +149,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
                 new TraderId("TESTER", "000"),
                 new StrategyId("EMACross", "001"),
                 new AccountId("FXCM", "028999999"),
-                new OrderId("123456"),
+                new OrderId("O-123456"),
                 Price.Create(1.50000m, 5),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
