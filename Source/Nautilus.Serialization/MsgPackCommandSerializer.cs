@@ -9,11 +9,13 @@
 namespace Nautilus.Serialization
 {
     using MsgPack;
+    using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Message;
     using Nautilus.DomainModel.Entities;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.Execution.Messages.Commands;
     using Nautilus.Serialization.Internal;
 
@@ -22,6 +24,20 @@ namespace Nautilus.Serialization
     /// </summary>
     public sealed class MsgPackCommandSerializer : IMessageSerializer<Command>
     {
+        private readonly ObjectCache<string, TraderId> cachedTraderIds;
+        private readonly ObjectCache<string, AccountId> cachedAccountIds;
+        private readonly ObjectCache<string, StrategyId> cachedStrategyIds;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MsgPackCommandSerializer"/> class.
+        /// </summary>
+        public MsgPackCommandSerializer()
+        {
+            this.cachedTraderIds = new ObjectCache<string, TraderId>(TraderId.FromString);
+            this.cachedAccountIds = new ObjectCache<string, AccountId>(AccountId.FromString);
+            this.cachedStrategyIds = new ObjectCache<string, StrategyId>(StrategyId.FromString);
+        }
+
         /// <inheritdoc />
         public byte[] Serialize(Command command)
         {

@@ -11,6 +11,7 @@ namespace Nautilus.Serialization
     using System.Diagnostics.CodeAnalysis;
     using MongoDB.Bson;
     using MongoDB.Bson.Serialization;
+    using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Correctness;
@@ -25,6 +26,16 @@ namespace Nautilus.Serialization
     {
         private const string DATA_TYPE = "DataType";
         private const string DATA = "Data";
+
+        private readonly ObjectCache<string, Symbol> cachedSymbols;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BsonTickArraySerializer"/> class.
+        /// </summary>
+        public BsonTickArraySerializer()
+        {
+            this.cachedSymbols = new ObjectCache<string, Symbol>(Symbol.FromString);
+        }
 
         /// <inheritdoc />
         public DataEncoding DataEncoding => DataEncoding.Bson;
@@ -55,7 +66,7 @@ namespace Nautilus.Serialization
 
             var data = BsonSerializer.Deserialize<BsonDocument>(dataBytes);
 
-            var symbol = Symbol.FromString(data[nameof(Tick.Symbol)].AsString);
+            var symbol = this.cachedSymbols.Get(data[nameof(Tick.Symbol)].AsString);
             var valueArray = data[DATA].AsBsonArray;
 
             var ticks = new Tick[valueArray.Count];
