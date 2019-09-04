@@ -102,6 +102,13 @@ namespace Nautilus.Execution.Interfaces
         void Flush();
 
         /// <summary>
+        /// Return the trader identifier for the given order identifier..
+        /// </summary>
+        /// <param name="orderId">The order identifier.</param>
+        /// <returns>The traders identifier.</returns>
+        TraderId? GetTraderForOrder(OrderId orderId);
+
+        /// <summary>
         /// Return all trader identifiers.
         /// </summary>
         /// <returns>The trader identifiers.</returns>

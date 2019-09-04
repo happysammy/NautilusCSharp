@@ -351,6 +351,18 @@ namespace Nautilus.Execution.Engine
             }
         }
 
+        private void SendToEventPublisher(OrderEvent @event)
+        {
+            var traderId = this.database.GetTraderForOrder(@event.OrderId);
+            if (traderId is null)
+            {
+                this.Log.Error($"Cannot send event {@event} to publisher (cannot find TraderId).");
+                return;
+            }
+
+            this.SendToEventPublisher(new TradeEvent(traderId, @event));
+        }
+
         private void SendToEventPublisher(Event @event)
         {
             this.Send(@event, ServiceAddress.EventPublisher);

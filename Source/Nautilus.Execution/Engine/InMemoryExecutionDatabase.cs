@@ -285,6 +285,18 @@ namespace Nautilus.Execution.Engine
         }
 
         /// <inheritdoc />
+        public TraderId? GetTraderForOrder(OrderId orderId)
+        {
+            if (this.indexOrderTrader.TryGetValue(orderId, out var traderId))
+            {
+                return traderId;
+            }
+
+            this.Log.Warning($"Cannot find TraderId for {orderId}.");
+            return null;
+        }
+
+        /// <inheritdoc />
         public ICollection<TraderId> GetTraderIds()
         {
             return new SortedSet<TraderId>(this.indexTraders.Keys);

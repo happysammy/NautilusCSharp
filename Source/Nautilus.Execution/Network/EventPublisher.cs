@@ -20,10 +20,8 @@ namespace Nautilus.Execution.Network
     /// </summary>
     public sealed class EventPublisher : MessagePublisher<Event>
     {
-        private const string NAUTILUS = "NAUTILUS";
-        private const string EVENTS = "EVENTS";
+        private const string TRADE = "TRADE";
         private const string ACCOUNT = "ACCOUNT";
-        private const string EXECUTION = "EXECUTION";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EventPublisher"/> class.
@@ -47,23 +45,23 @@ namespace Nautilus.Execution.Network
                 port,
                 Guid.NewGuid())
         {
-            this.RegisterHandler<Event>(this.OnMessage);
+            this.RegisterHandler<Event>(this.OnEvent);
 
             this.Subscribe<Event>();
         }
 
-        private void OnMessage(Event message)
+        private void OnEvent(Event @event)
         {
-            switch (message)
+            switch (@event)
             {
-                case OrderEvent @event:
-                    this.Publish($"{NAUTILUS}:{EVENTS}:{EXECUTION}:{@event.OrderId.Value}", message);
+                case TradeEvent tradeEvent:
+                    this.Publish($"{TRADE}:{tradeEvent.TraderId.Value}", tradeEvent.Event);
                     break;
-                case AccountStateEvent @event:
-                    this.Publish($"{NAUTILUS}:{EVENTS}:{ACCOUNT}:{@event.AccountId.Value}", message);
+                case AccountEvent accountEvent:
+                    this.Publish($"{ACCOUNT}:{accountEvent.AccountId.Value}", accountEvent);
                     break;
                 default:
-                    this.Log.Verbose($"Filtering message {message} (not published).");
+                    this.Log.Verbose($"Filtering event {@event} (not published).");
                     break;
             }
         }

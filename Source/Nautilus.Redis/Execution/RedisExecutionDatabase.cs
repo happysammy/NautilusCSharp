@@ -319,6 +319,19 @@ namespace Nautilus.Redis.Execution
         }
 
         /// <inheritdoc />
+        public TraderId? GetTraderForOrder(OrderId orderId)
+        {
+            var traderId = this.redisDatabase.HashGet(Key.IndexOrderTrader, orderId.Value);
+            if (traderId == RedisValue.Null)
+            {
+                this.Log.Warning($"Cannot find TraderId for {orderId}.");
+                return null;
+            }
+
+            return TraderId.FromString(traderId);
+        }
+
+        /// <inheritdoc />
         public ICollection<TraderId> GetTraderIds()
         {
             return SetFactory.ConvertToTraderIds(this.redisServer.Keys(pattern: Key.Traders).ToArray());
