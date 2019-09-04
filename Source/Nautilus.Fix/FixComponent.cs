@@ -21,6 +21,8 @@ namespace Nautilus.Fix
     using QuickFix.Fields;
     using QuickFix.FIX44;
     using QuickFix.Transport;
+
+    using AccountType = Nautilus.DomainModel.Enums.AccountType;
     using Message = QuickFix.Message;
 
     /// <summary>
@@ -64,7 +66,8 @@ namespace Nautilus.Fix
 
             this.Brokerage = config.Broker;
             this.AccountNumber = config.Credentials.AccountNumber;
-            this.AccountId = new AccountId(this.Brokerage, this.AccountNumber);
+            this.AccountType = config.AccountType;
+            this.AccountId = new AccountId(this.Brokerage, this.AccountNumber, this.AccountType);
             this.config = config;
             this.sendAccountTag = config.SendAccountTag;
             this.accountField = new Account(this.AccountNumber.Value);
@@ -79,14 +82,19 @@ namespace Nautilus.Fix
         public ILogger Log => this.logger;
 
         /// <summary>
-        /// Gets the name of the brokerage.
+        /// Gets the brokerage identifier.
         /// </summary>
         public Brokerage Brokerage { get; }
 
         /// <summary>
-        /// Gets the account number for FIX component.
+        /// Gets the account number identifier.
         /// </summary>
         public AccountNumber AccountNumber { get; }
+
+        /// <summary>
+        /// Gets the account type.
+        /// </summary>
+        public AccountType AccountType { get; }
 
         /// <summary>
         /// Gets the account identifier.

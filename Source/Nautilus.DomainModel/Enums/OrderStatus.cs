@@ -16,7 +16,7 @@ namespace Nautilus.DomainModel.Enums
     public enum OrderStatus
     {
         /// <summary>
-        /// Unknown order status (invalid value).
+        /// The unknown order status (invalid value).
         /// </summary>
         [InvalidValue]
         Unknown = 0,
@@ -27,48 +27,58 @@ namespace Nautilus.DomainModel.Enums
         Initialized = 1,
 
         /// <summary>
-        /// Submitted order status.
+        /// The denied order status.
         /// </summary>
-        Submitted = 2,
+        Denied = 2,
 
         /// <summary>
-        /// Accepted order status.
+        /// The invalid order status.
         /// </summary>
-        Accepted = 3,
+        Invalid = 3,
 
         /// <summary>
-        /// Rejected order status.
+        /// The submitted order status.
         /// </summary>
-        Rejected = 4,
+        Submitted = 4,
 
         /// <summary>
-        /// Working order status.
+        /// The accepted order status.
         /// </summary>
-        Working = 5,
+        Accepted = 5,
 
         /// <summary>
-        /// Cancelled order status.
+        /// The rejected order status.
         /// </summary>
-        Cancelled = 6,
+        Rejected = 6,
 
         /// <summary>
-        /// Over filled order status.
+        /// The working order status.
         /// </summary>
-        OverFilled = 7,
+        Working = 7,
 
         /// <summary>
-        /// Partially filled order status.
+        /// The cancelled order status.
         /// </summary>
-        PartiallyFilled = 8,
-
-        /// <summary>
-        /// Completely filled order status.
-        /// </summary>
-        Filled = 9,
+        Cancelled = 8,
 
         /// <summary>
         /// Expired order status.
         /// </summary>
-        Expired = 10,
+        Expired = 9,
+
+        /// <summary>
+        /// The over filled order status.
+        /// </summary>
+        OverFilled = 10,
+
+        /// <summary>
+        /// The partially filled order status.
+        /// </summary>
+        PartiallyFilled = 11,
+
+        /// <summary>
+        /// The completely filled order status.
+        /// </summary>
+        Filled = 12,
     }
 }

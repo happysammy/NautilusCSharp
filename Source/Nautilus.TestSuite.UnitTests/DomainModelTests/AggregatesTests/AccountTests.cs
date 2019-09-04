@@ -37,7 +37,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             // Assert
             Assert.Equal(new Brokerage("IB"), account.Brokerage);
-            Assert.Equal("IB-123456789", account.Id.Value);
+            Assert.Equal("IB-123456789-SIMULATED", account.Id.Value);
             Assert.Equal(Currency.USD, account.Currency);
             Assert.Equal(decimal.Zero, account.CashBalance.Value);
         }
@@ -48,7 +48,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Arrange
             var account = StubAccountFactory.Create();
             var message = new AccountStateEvent(
-                new AccountId("FXCM", "123456789"),
+                new AccountId("FXCM", "123456789", "SIMULATED"),
                 Currency.AUD,
                 Money.Create(150000m, Currency.AUD),
                 Money.Create(150000m, Currency.AUD),
@@ -79,7 +79,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Arrange
             var account = StubAccountFactory.Create();
             var message = new AccountStateEvent(
-                new AccountId("FXCM", "123456789"),
+                new AccountId("FXCM", "123456789", "SIMULATED"),
                 Currency.USD,
                 Money.Create(150000m, Currency.AUD),
                 Money.Create(150000m, Currency.AUD),

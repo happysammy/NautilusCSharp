@@ -27,7 +27,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Arrange
             var orderFill = new OrderFilled(
                 new OrderId("O-123456"),
-                AccountId.FromString("FXCM-02851908"),
+                AccountId.FromString("FXCM-02851908-DEMO"),
                 new ExecutionId("E-123456"),
                 new ExecutionTicket("ET-123456"),
                 new Symbol("AUDUSD", new Venue("FXCM")),
@@ -68,7 +68,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Arrange
             var orderFill11 = new OrderFilled(
                 new OrderId("O-123456"),
-                AccountId.FromString("FXCM-02851908"),
+                AccountId.FromString("FXCM-02851908-DEMO"),
                 new ExecutionId("E-123456"),
                 new ExecutionTicket("ET-123456"),
                 new Symbol("AUDUSD", new Venue("FXCM")),
@@ -83,7 +83,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             var orderFill2 = new OrderFilled(
                 new OrderId("O-123456"),
-                AccountId.FromString("FXCM-02851908"),
+                AccountId.FromString("FXCM-02851908-DEMO"),
                 new ExecutionId("E-123456"),
                 new ExecutionTicket("ET-123456"),
                 position.Symbol,
@@ -96,7 +96,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             var orderFill3 = new OrderFilled(
                 new OrderId("O-123456"),
-                AccountId.FromString("FXCM-02851908"),
+                AccountId.FromString("FXCM-02851908-DEMO"),
                 new ExecutionId("E-123456"),
                 new ExecutionTicket("ET-123456"),
                 position.Symbol,
@@ -128,7 +128,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Arrange
             var orderFill1 = new OrderFilled(
                 new OrderId("O-123456"),
-                AccountId.FromString("FXCM-02851908"),
+                AccountId.FromString("FXCM-02851908-DEMO"),
                 new ExecutionId("E-123456"),
                 new ExecutionTicket("ET-123456"),
                 new Symbol("AUDUSD", new Venue("FXCM")),
@@ -143,7 +143,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             var orderFill2 = new OrderFilled(
                 new OrderId("O-123456"),
-                AccountId.FromString("FXCM-02851908"),
+                AccountId.FromString("FXCM-02851908-DEMO"),
                 new ExecutionId("E-123456"),
                 new ExecutionTicket("ET-123456"),
                 position.Symbol,
@@ -156,7 +156,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             var orderFill3 = new OrderFilled(
                 new OrderId("O-123457"),
-                AccountId.FromString("FXCM-02851908"),
+                AccountId.FromString("FXCM-02851908-DEMO"),
                 new ExecutionId("E-123456"),
                 new ExecutionTicket("ET-123456"),
                 position.Symbol,
@@ -169,7 +169,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             var orderFill4 = new OrderFilled(
                 new OrderId("O-123458"),
-                AccountId.FromString("FXCM-02851908"),
+                AccountId.FromString("FXCM-02851908-DEMO"),
                 new ExecutionId("E-123456"),
                 new ExecutionTicket("ET-123456"),
                 position.Symbol,
@@ -204,7 +204,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Arrange
             var orderFill1 = new OrderFilled(
                 new OrderId("O-123456"),
-                AccountId.FromString("FXCM-02851908"),
+                AccountId.FromString("FXCM-02851908-DEMO"),
                 new ExecutionId("E-123456"),
                 new ExecutionTicket("ET-123456"),
                 new Symbol("AUDUSD", new Venue("FXCM")),
@@ -219,7 +219,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             var orderFill2 = new OrderFilled(
                 new OrderId("O-123457"),
-                AccountId.FromString("FXCM-02851908"),
+                AccountId.FromString("FXCM-02851908-DEMO"),
                 new ExecutionId("E-123456"),
                 new ExecutionTicket("ET-123456"),
                 position.Symbol,
@@ -232,7 +232,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             var orderFill3 = new OrderFilled(
                 new OrderId("O-123458"),
-                AccountId.FromString("FXCM-02851908"),
+                AccountId.FromString("FXCM-02851908-DEMO"),
                 new ExecutionId("E-123456"),
                 new ExecutionTicket("ET-123456"),
                 position.Symbol,

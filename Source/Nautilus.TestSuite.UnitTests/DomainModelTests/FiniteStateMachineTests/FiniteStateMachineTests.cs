@@ -63,7 +63,6 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FiniteStateMachineTests
             var stateMachine = Order.CreateOrderFiniteStateMachine();
 
             // Act
-            stateMachine.Process(Trigger.Event(typeof(OrderInitialized)));  // Redundant trigger doesn't throw.
             stateMachine.Process(Trigger.Event(typeof(OrderSubmitted)));
             stateMachine.Process(Trigger.Event(typeof(OrderAccepted)));
             stateMachine.Process(Trigger.Event(typeof(OrderWorking)));

@@ -62,7 +62,6 @@ namespace Nautilus.DomainModel.Aggregates
             this.IsWorking = false;
             this.IsCompleted = false;
 
-            this.OnEvent(initial);
             this.CheckInitialization();
         }
 
@@ -260,14 +259,11 @@ namespace Nautilus.DomainModel.Aggregates
         {
             var stateTransitionTable = new Dictionary<StateTransition, State>
             {
-                { new StateTransition(new State(OrderStatus.Initialized), Trigger.Event(typeof(OrderInitialized))), new State(OrderStatus.Initialized) },
                 { new StateTransition(new State(OrderStatus.Initialized), Trigger.Event(typeof(OrderSubmitted))), new State(OrderStatus.Submitted) },
                 { new StateTransition(new State(OrderStatus.Initialized), Trigger.Event(typeof(OrderCancelled))), new State(OrderStatus.Cancelled) },
-                { new StateTransition(new State(OrderStatus.Initialized), Trigger.Event(typeof(OrderCancelReject))), new State(OrderStatus.Initialized) }, // OrderCancelReject (state should remain unchanged).
                 { new StateTransition(new State(OrderStatus.Submitted), Trigger.Event(typeof(OrderRejected))), new State(OrderStatus.Rejected) },
                 { new StateTransition(new State(OrderStatus.Submitted), Trigger.Event(typeof(OrderAccepted))), new State(OrderStatus.Accepted) },
                 { new StateTransition(new State(OrderStatus.Submitted), Trigger.Event(typeof(OrderCancelled))), new State(OrderStatus.Cancelled) },
-                { new StateTransition(new State(OrderStatus.Submitted), Trigger.Event(typeof(OrderCancelReject))), new State(OrderStatus.Submitted) }, // OrderCancelReject (state should remain unchanged).
                 { new StateTransition(new State(OrderStatus.Accepted), Trigger.Event(typeof(OrderWorking))), new State(OrderStatus.Working) },
                 { new StateTransition(new State(OrderStatus.Accepted), Trigger.Event(typeof(OrderCancelReject))), new State(OrderStatus.Accepted) }, // OrderCancelReject (state should remain unchanged).
                 { new StateTransition(new State(OrderStatus.Working), Trigger.Event(typeof(OrderCancelled))), new State(OrderStatus.Cancelled) },
@@ -293,6 +289,8 @@ namespace Nautilus.DomainModel.Aggregates
         /// <inheritdoc />
         protected override void OnEvent(OrderEvent orderEvent)
         {
+            this.orderStateMachine.Process(Trigger.Event(orderEvent));
+
             switch (orderEvent)
             {
                 case OrderInitialized @event:
@@ -331,8 +329,6 @@ namespace Nautilus.DomainModel.Aggregates
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(orderEvent, nameof(orderEvent));
             }
-
-            this.orderStateMachine.Process(Trigger.Event(orderEvent));
         }
 
         private void When(OrderInitialized @event)

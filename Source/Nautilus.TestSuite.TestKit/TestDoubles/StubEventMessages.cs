@@ -23,7 +23,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             return new OrderSubmitted(
                 order.Id,
-                AccountId.FromString("FXCM-02851908"),
+                AccountId.FromString("FXCM-02851908-DEMO"),
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -33,7 +33,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             return new OrderRejected(
                 order.Id,
-                AccountId.FromString("FXCM-02851908"),
+                AccountId.FromString("FXCM-02851908-DEMO"),
                 StubZonedDateTime.UnixEpoch(),
                 "some_rejected_reason",
                 Guid.NewGuid(),
@@ -44,7 +44,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             return new OrderAccepted(
                 order.Id,
-                AccountId.FromString("FXCM-02851908"),
+                AccountId.FromString("FXCM-02851908-DEMO"),
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -60,7 +60,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             return new OrderWorking(
                 order.Id,
                 new OrderIdBroker("B" + order.Id.Value),
-                AccountId.FromString("FXCM-02851908"),
+                AccountId.FromString("FXCM-02851908-DEMO"),
                 order.Symbol,
                 order.Label,
                 order.Side,
@@ -79,7 +79,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             return new OrderModified(
                 order.Id,
                 new OrderIdBroker("B" + order.Id.Value),
-                AccountId.FromString("FXCM-02851908"),
+                AccountId.FromString("FXCM-02851908-DEMO"),
                 newPrice,
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
@@ -90,7 +90,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             return new OrderCancelled(
                 order.Id,
-                AccountId.FromString("FXCM-02851908"),
+                AccountId.FromString("FXCM-02851908-DEMO"),
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -100,7 +100,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             return new OrderExpired(
                 order.Id,
-                AccountId.FromString("FXCM-02851908"),
+                AccountId.FromString("FXCM-02851908-DEMO"),
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -119,7 +119,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
             return new OrderPartiallyFilled(
                 order.Id,
-                AccountId.FromString("FXCM-02851908"),
+                AccountId.FromString("FXCM-02851908-DEMO"),
                 new ExecutionId("NONE"),
                 new ExecutionTicket("NONE"),
                 order.Symbol,
@@ -141,7 +141,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
             return new OrderFilled(
                 order.Id,
-                AccountId.FromString("FXCM-02851908"),
+                AccountId.FromString("FXCM-02851908-DEMO"),
                 new ExecutionId("NONE"),
                 new ExecutionTicket("NONE"),
                 order.Symbol,

@@ -16,6 +16,7 @@ namespace Nautilus.Data
     using Nautilus.Common.Configuration;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Extensions;
+    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Fix;
@@ -62,6 +63,7 @@ namespace Nautilus.Data
 
             var fixSettings = ConfigReader.LoadConfig(configPath);
             var broker = new Brokerage(fixSettings["Brokerage"]);
+            var accountType = fixSettings["AccountType"].ToEnum<AccountType>();
             var credentials = new FixCredentials(
                 fixSettings["Account"],
                 fixSettings["Username"],
@@ -79,6 +81,7 @@ namespace Nautilus.Data
 
             this.FixConfiguration = new FixConfiguration(
                 broker,
+                accountType,
                 configPath,
                 credentials,
                 Convert.ToBoolean(fixSettings["SendAccountTag"]),

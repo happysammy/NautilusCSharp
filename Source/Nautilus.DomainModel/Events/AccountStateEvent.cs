@@ -11,8 +11,8 @@ namespace Nautilus.DomainModel.Events
     using System;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
-    using Nautilus.Core.Message;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Events.Base;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
@@ -21,7 +21,7 @@ namespace Nautilus.DomainModel.Events
     /// Represents an account change event.
     /// </summary>
     [Immutable]
-    public sealed class AccountStateEvent : Event
+    public sealed class AccountStateEvent : AccountEvent
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="AccountStateEvent" /> class.
@@ -49,12 +49,15 @@ namespace Nautilus.DomainModel.Events
             string marginCallStatus,
             Guid eventId,
             ZonedDateTime eventTimestamp)
-            : base(typeof(AccountStateEvent), eventId, eventTimestamp)
+            : base(
+                accountId,
+                typeof(AccountStateEvent),
+                eventId,
+                eventTimestamp)
         {
             Debug.NotDefault(eventId, nameof(eventId));
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
 
-            this.AccountId = accountId;
             this.Currency = currency;
             this.CashBalance = cashBalance;
             this.CashStartDay = cashStartDay;
@@ -64,11 +67,6 @@ namespace Nautilus.DomainModel.Events
             this.MarginUsedMaintenance = marginUsedMaintenance;
             this.MarginCallStatus = marginCallStatus;
         }
-
-        /// <summary>
-        /// Gets the events account identifier.
-        /// </summary>
-        public AccountId AccountId { get; }
 
         /// <summary>
         /// Gets the events account currency.

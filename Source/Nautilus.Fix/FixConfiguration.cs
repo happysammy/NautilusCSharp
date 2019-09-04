@@ -10,6 +10,7 @@ namespace Nautilus.Fix
 {
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
+    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
     using NodaTime;
 
@@ -23,6 +24,7 @@ namespace Nautilus.Fix
         /// Initializes a new instance of the <see cref="FixConfiguration"/> class.
         /// </summary>
         /// <param name="broker">The FIX brokerage name.</param>
+        /// <param name="accountType">The FIX account type.</param>
         /// <param name="configPath">The FIX configuration file path.</param>
         /// <param name="credentials">The FIX credentials.</param>
         /// <param name="sendAccountTag">The option flag to send account tags with messages.</param>
@@ -30,6 +32,7 @@ namespace Nautilus.Fix
         /// <param name="disconnectTime">The time to disconnect FIX sessions.</param>
         public FixConfiguration(
             Brokerage broker,
+            AccountType accountType,
             string configPath,
             FixCredentials credentials,
             bool sendAccountTag,
@@ -39,6 +42,7 @@ namespace Nautilus.Fix
             Condition.NotEmptyOrWhiteSpace(configPath, nameof(configPath));
 
             this.Broker = broker;
+            this.AccountType = accountType;
             this.ConfigPath = configPath;
             this.Credentials = credentials;
             this.SendAccountTag = sendAccountTag;
@@ -50,6 +54,11 @@ namespace Nautilus.Fix
         /// Gets the FIX brokerage name.
         /// </summary>
         public Brokerage Broker { get; }
+
+        /// <summary>
+        /// Gets the FIX account type.
+        /// </summary>
+        public AccountType AccountType { get; }
 
         /// <summary>
         /// Gets the FIX configuration file path.

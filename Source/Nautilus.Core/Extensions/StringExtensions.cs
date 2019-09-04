@@ -26,7 +26,7 @@ namespace Nautilus.Core.Extensions
         {
             if (string.IsNullOrWhiteSpace(input))
             {
-                return default(T);
+                return default;
             }
 
             return (T)Enum.Parse(typeof(T), input);

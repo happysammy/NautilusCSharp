@@ -22,7 +22,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public static Account Create()
         {
             var @event = new AccountStateEvent(
-                new AccountId("FXCM", "123456789"),
+                new AccountId("FXCM", "123456789", "SIMULATED"),
                 Currency.USD,
                 Money.Create(100000, Currency.USD),
                 Money.Create(100000, Currency.USD),
@@ -40,7 +40,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public static Account ZeroCash()
         {
             var @event = new AccountStateEvent(
-                new AccountId("IB", "123456789"),
+                new AccountId("IB", "123456789", "SIMULATED"),
                 Currency.USD,
                 Money.Zero(Currency.USD),
                 Money.Zero(Currency.USD),
