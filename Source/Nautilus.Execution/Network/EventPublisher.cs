@@ -12,7 +12,6 @@ namespace Nautilus.Execution.Network
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Message;
     using Nautilus.DomainModel.Events;
-    using Nautilus.DomainModel.Events.Base;
     using Nautilus.Network;
 
     /// <summary>
@@ -20,6 +19,7 @@ namespace Nautilus.Execution.Network
     /// </summary>
     public sealed class EventPublisher : MessagePublisher<Event>
     {
+        private const string EVENTS = "EVENTS";
         private const string TRADE = "TRADE";
         private const string ACCOUNT = "ACCOUNT";
 
@@ -27,43 +27,33 @@ namespace Nautilus.Execution.Network
         /// Initializes a new instance of the <see cref="EventPublisher"/> class.
         /// </summary>
         /// <param name="container">The component setup container.</param>
-        /// <param name="messageBusAdapter">The messaging adapter.</param>
         /// <param name="serializer">The event serializer.</param>
         /// <param name="host">The publishers host address.</param>
         /// <param name="port">The publishers port.</param>
         public EventPublisher(
             IComponentryContainer container,
-            IMessageBusAdapter messageBusAdapter,
             ISerializer<Event> serializer,
             NetworkAddress host,
             NetworkPort port)
             : base(
                 container,
-                messageBusAdapter,
                 serializer,
                 host,
                 port,
                 Guid.NewGuid())
         {
-            this.RegisterHandler<Event>(this.OnEvent);
-
-            this.Subscribe<Event>();
+            this.RegisterHandler<TradeEvent>(this.OnEvent);
+            this.RegisterHandler<AccountStateEvent>(this.OnEvent);
         }
 
-        private void OnEvent(Event @event)
+        private void OnEvent(TradeEvent @event)
         {
-            switch (@event)
-            {
-                case TradeEvent tradeEvent:
-                    this.Publish($"{TRADE}:{tradeEvent.TraderId.Value}", tradeEvent.Event);
-                    break;
-                case AccountEvent accountEvent:
-                    this.Publish($"{ACCOUNT}:{accountEvent.AccountId.Value}", accountEvent);
-                    break;
-                default:
-                    this.Log.Verbose($"Filtering event {@event} (not published).");
-                    break;
-            }
+            this.Publish($"{EVENTS}:{TRADE}:{@event.TraderId.Value}", @event.Event);
+        }
+
+        private void OnEvent(AccountStateEvent @event)
+        {
+            this.Publish($"{EVENTS}:{ACCOUNT}:{@event.AccountId.Value}", @event);
         }
     }
 }

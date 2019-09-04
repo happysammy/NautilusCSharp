@@ -12,6 +12,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
     using System.Text;
     using System.Threading.Tasks;
     using Nautilus.Common.Interfaces;
+    using Nautilus.DomainModel.Events;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.Execution.Network;
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Network;
@@ -54,7 +56,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             var publisher = new EventPublisher(
                 this.container,
-                this.messageBusAdapter,
                 new MsgPackEventSerializer(),
                 this.localHost,
                 new NetworkPort(56601));
@@ -64,15 +65,16 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             var subscriber = new SubscriberSocket(testAddress);
             subscriber.Connect(testAddress);
-            subscriber.Subscribe("NAUTILUS");
+            subscriber.Subscribe("EVENTS:TRADE:TESTER-001");
             Task.Delay(100).Wait();
 
             var serializer = new MsgPackEventSerializer();
             var order = new StubOrderBuilder().BuildMarketOrder();
             var rejected = StubEventMessages.OrderRejectedEvent(order);
+            var tradeEvent = new TradeEvent(TraderId.FromString("TESTER-001"), rejected);
 
             // Act
-            publisher.Endpoint.Send(rejected);
+            publisher.Endpoint.Send(tradeEvent);
             this.output.WriteLine("Waiting for published events...");
 
             var topic = subscriber.ReceiveFrameBytes();
@@ -82,11 +84,11 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
-            Assert.Equal("NAUTILUS:EVENTS:EXECUTION:O-123456", Encoding.UTF8.GetString(topic));
-            Assert.Equal(rejected, @event);
+            Assert.Equal("EVENTS:TRADE:TESTER-001", Encoding.UTF8.GetString(topic));
+            Assert.Equal(typeof(OrderRejected), @event.GetType());
 
             // Tear Down
-            subscriber.Unsubscribe("NAUTILUS");
+            subscriber.Unsubscribe("EVENTS:TRADE:TESTER-001");
             subscriber.Disconnect(testAddress);
             subscriber.Dispose();
             publisher.Stop();
