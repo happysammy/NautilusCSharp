@@ -114,9 +114,10 @@ namespace Nautilus.Brokerage.Fxcm
                         continue; // Symbol not set or convertible (error already logged)
                     }
 
-                    var symbol = this.symbolCache.Get(symbolCode);
+                    var symbol = this.symbolCache.Get(symbolCode + $".{this.venue.Value}");
                     var brokerSymbol = new BrokerSymbol(brokerSymbolCode);
                     var quoteCurrency = group.GetField(15).ToEnum<Nautilus.DomainModel.Enums.Currency>();
+
                     var securityType = FixMessageHelper.GetSecurityType(group.GetField(9080));
                     var roundLot = Convert.ToInt32(group.GetField(561));
                     var tickPrecision = Convert.ToInt32(group.GetField(9001));
