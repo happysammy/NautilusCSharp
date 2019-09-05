@@ -73,11 +73,18 @@ namespace NautilusExecutor
                 new MsgPackEventSerializer(),
                 true);
 
+            var eventPublisher = new EventPublisher(
+                container,
+                new MsgPackEventSerializer(),
+                config.ServerAddress,
+                config.EventsPort);
+
             var executionEngine = new ExecutionEngine(
                 container,
                 messagingAdapter,
                 executionDatabase,
-                tradingGateway);
+                tradingGateway,
+                eventPublisher.Endpoint);
 
             var commandServer = new CommandRouter(
                 container,
@@ -86,12 +93,6 @@ namespace NautilusExecutor
                 new MsgPackResponseSerializer(),
                 executionEngine.Endpoint,
                 config);
-
-            var eventPublisher = new EventPublisher(
-                container,
-                new MsgPackEventSerializer(),
-                config.ServerAddress,
-                config.EventsPort);
 
             var addresses = new Dictionary<Address, IEndpoint>
             {

@@ -19,6 +19,7 @@ namespace Nautilus.Execution.Engine
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.Execution.Interfaces;
     using Nautilus.Execution.Messages.Commands;
+    using Nautilus.Messaging.Interfaces;
 
     /// <summary>
     /// Provides a generic execution engine utilizing an abstract execution database.
@@ -27,6 +28,7 @@ namespace Nautilus.Execution.Engine
     {
         private readonly IExecutionDatabase database;
         private readonly ITradingGateway gateway;
+        private readonly IEndpoint eventPublisher;
         private readonly Dictionary<AccountId, Account> accounts;
 
         private readonly Dictionary<OrderId, ModifyOrder> bufferModify;
@@ -38,15 +40,18 @@ namespace Nautilus.Execution.Engine
         /// <param name="messagingAdapter">The message bus adapter.</param>
         /// <param name="database">The execution database.</param>
         /// <param name="gateway">The trading gateway.</param>
+        /// <param name="eventPublisher">The event publisher endpoint.</param>
         public ExecutionEngine(
             IComponentryContainer container,
             IMessageBusAdapter messagingAdapter,
             IExecutionDatabase database,
-            ITradingGateway gateway)
+            ITradingGateway gateway,
+            IEndpoint eventPublisher)
             : base(container, messagingAdapter)
         {
             this.database = database;
             this.gateway = gateway;
+            this.eventPublisher = eventPublisher;
             this.accounts = new Dictionary<AccountId, Account>();
 
             this.bufferModify = new Dictionary<OrderId, ModifyOrder>();
@@ -365,7 +370,7 @@ namespace Nautilus.Execution.Engine
 
         private void SendToEventPublisher(Event @event)
         {
-            this.Send(@event, ServiceAddress.EventPublisher);
+            this.eventPublisher.Send(@event);
             this.Log.Debug($"Sent {@event} to EventPublisher.");
         }
     }
