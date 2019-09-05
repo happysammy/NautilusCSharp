@@ -313,12 +313,13 @@ namespace Nautilus.Brokerage.Fxcm
                     }
                 }
 
-                this.dataGateway?.OnTick(
-                    new Tick(
-                        this.symbolCache.Get(symbolCode + $".{this.venue.Value}"),
-                        Price.Create(bidDecimal),
-                        Price.Create(askDecimal),
-                        this.TimeNow()));
+                var tick = new Tick(
+                    this.symbolCache.Get(symbolCode + $".{this.venue.Value}"),
+                    Price.Create(bidDecimal),
+                    Price.Create(askDecimal),
+                    this.TimeNow());
+
+                this.dataGateway?.OnTick(tick);
             });
         }
 
