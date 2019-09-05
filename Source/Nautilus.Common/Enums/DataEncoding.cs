@@ -22,7 +22,7 @@ namespace Nautilus.Common.Enums
         Unknown = 0,
 
         /// <summary>
-        /// The UTF8 encoding specification.
+        /// The UTF-8 encoding specification.
         /// </summary>
         Utf8 = 1,
 
