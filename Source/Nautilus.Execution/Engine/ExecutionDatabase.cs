@@ -64,6 +64,14 @@ namespace Nautilus.Execution.Engine
         /// <inheritdoc />
         public abstract void LoadPositionsCache();
 
+        /// <inheritdoc/>
+        public void ClearCaches()
+        {
+            this.CachedAccounts.Clear();
+            this.CachedOrders.Clear();
+            this.CachedPositions.Clear();
+        }
+
         /// <inheritdoc />
         public void CheckResiduals()
         {
@@ -78,14 +86,6 @@ namespace Nautilus.Execution.Engine
                 this.GetPosition(positionId);  // Check open
                 this.Log.Warning($"The {positionId} is still open.");
             }
-        }
-
-        /// <inheritdoc/>
-        public void Reset()
-        {
-            this.CachedAccounts.Clear();
-            this.CachedOrders.Clear();
-            this.CachedPositions.Clear();
         }
 
         /// <inheritdoc/>

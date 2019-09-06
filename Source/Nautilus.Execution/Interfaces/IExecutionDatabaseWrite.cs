@@ -14,7 +14,7 @@ namespace Nautilus.Execution.Interfaces
     using Nautilus.DomainModel.Identifiers;
 
     /// <summary>
-    /// Provides an execution database with write operations.
+    /// Provides an adapter to an execution databases write operations.
     /// </summary>
     public interface IExecutionDatabaseWrite
     {

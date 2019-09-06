@@ -9,7 +9,7 @@
 namespace Nautilus.Execution.Interfaces
 {
     /// <summary>
-    /// Provides an execution database with write operations.
+    /// Provides an adapter to an execution databases command operations.
     /// </summary>
     public interface IExecutionDatabaseCommand
     {
@@ -34,14 +34,14 @@ namespace Nautilus.Execution.Interfaces
         void LoadPositionsCache();
 
         /// <summary>
+        /// Reset the execution database by clearing all stateful values.
+        /// </summary>
+        void ClearCaches();
+
+        /// <summary>
         /// Check for residual working orders and open positions.
         /// </summary>
         void CheckResiduals();
-
-        /// <summary>
-        /// Reset the execution database by clearing all stateful values.
-        /// </summary>
-        void Reset();
 
         /// <summary>
         /// WARNING: Flush the execution database of all persisted data.

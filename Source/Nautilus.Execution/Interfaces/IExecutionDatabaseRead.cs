@@ -13,7 +13,7 @@ namespace Nautilus.Execution.Interfaces
     using Nautilus.DomainModel.Identifiers;
 
     /// <summary>
-    /// Provides an execution database with read operations.
+    /// Provides an adapter to an execution databases read operations.
     /// </summary>
     public interface IExecutionDatabaseRead
     {
