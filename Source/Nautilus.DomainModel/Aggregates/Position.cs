@@ -50,12 +50,12 @@ namespace Nautilus.DomainModel.Aggregates
             this.EntryTime = initial.ExecutionTime;
             this.AverageEntryPrice = initial.AveragePrice;
 
-            this.relativeQuantity = 0;                  // Initialized in FillLogic
-            this.Quantity = Quantity.Zero();            // Initialized in FillLogic
-            this.PeakQuantity = Quantity.Zero();        // Initialized in FillLogic
-            this.MarketPosition = MarketPosition.Flat;  // Initialized in FillLogic
+            this.relativeQuantity = 0;                  // Initialized in SetState
+            this.Quantity = Quantity.Zero();            // Initialized in SetState
+            this.PeakQuantity = Quantity.Zero();        // Initialized in SetState
+            this.MarketPosition = MarketPosition.Flat;  // Initialized in SetState
 
-            this.FillLogic(initial);
+            this.SetState(initial);
             this.CheckInitialization();
         }
 
@@ -130,12 +130,12 @@ namespace Nautilus.DomainModel.Aggregates
         public MarketPosition MarketPosition { get; private set; }
 
         /// <summary>
-        /// Gets a value indicating whether the position is entered.
+        /// Gets a value indicating whether the position is open.
         /// </summary>
         public bool IsOpen => this.MarketPosition != MarketPosition.Flat;
 
         /// <summary>
-        /// Gets a value indicating whether the position is exited.
+        /// Gets a value indicating whether the position is closed.
         /// </summary>
         public bool IsClosed => this.MarketPosition == MarketPosition.Flat;
 
@@ -179,10 +179,10 @@ namespace Nautilus.DomainModel.Aggregates
             this.executionIds.Add(@event.ExecutionId);
             this.executionTickets.Add(@event.ExecutionTicket);
 
-            this.FillLogic(@event);
+            this.SetState(@event);
         }
 
-        private static int CalculateRelativeQuantity(OrderFillEvent @event)
+        private static int CalculateFilledRelativeQuantity(OrderFillEvent @event)
         {
             switch (@event.OrderSide)
             {
@@ -197,10 +197,10 @@ namespace Nautilus.DomainModel.Aggregates
             }
         }
 
-        private void FillLogic(OrderFillEvent @event)
+        private void SetState(OrderFillEvent @event)
         {
             // Set quantities
-            this.relativeQuantity += CalculateRelativeQuantity(@event);
+            this.relativeQuantity += CalculateFilledRelativeQuantity(@event);
             this.Quantity = Quantity.Create(Math.Abs(this.relativeQuantity));
             if (this.Quantity > this.PeakQuantity)
             {

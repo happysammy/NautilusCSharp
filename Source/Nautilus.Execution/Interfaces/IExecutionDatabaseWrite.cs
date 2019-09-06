@@ -19,21 +19,6 @@ namespace Nautilus.Execution.Interfaces
     public interface IExecutionDatabaseWrite
     {
         /// <summary>
-        /// Clear the current order cache and load orders from the database.
-        /// </summary>
-        void LoadAccountsCache();
-
-        /// <summary>
-        /// Clear the current order cache and load orders from the database.
-        /// </summary>
-        void LoadOrdersCache();
-
-        /// <summary>
-        /// Clear the current position cache and load positions from the database.
-        /// </summary>
-        void LoadPositionsCache();
-
-        /// <summary>
         /// Add the given atomic order to the execution database indexed with the given identifiers.
         /// </summary>
         /// <param name="order">The atomic order to add.</param>
@@ -89,20 +74,5 @@ namespace Nautilus.Execution.Interfaces
         /// </summary>
         /// <param name="account">The account to update.</param>
         void UpdateAccount(Account account);
-
-        /// <summary>
-        /// Check for residual working orders and open positions.
-        /// </summary>
-        void CheckResiduals();
-
-        /// <summary>
-        /// Reset the execution database by clearing all stateful values.
-        /// </summary>
-        void Reset();
-
-        /// <summary>
-        /// WARNING: Flush the execution database of all persisted data.
-        /// </summary>
-        void Flush();
     }
 }

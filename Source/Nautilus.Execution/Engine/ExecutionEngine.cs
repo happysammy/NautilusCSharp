@@ -339,7 +339,7 @@ namespace Nautilus.Execution.Engine
             {
                 // Position does not exist - create new position
                 position = new Position(positionId, @event);
-                this.database.AddPosition(position);
+                this.database.AddPosition(position).OnFailure(msg => this.Log.Error(msg));
             }
             else
             {
@@ -358,7 +358,7 @@ namespace Nautilus.Execution.Engine
 
         private void SendToEventPublisher(OrderEvent @event)
         {
-            var traderId = this.database.GetTraderForOrder(@event.OrderId);
+            var traderId = this.database.GetTraderId(@event.OrderId);
             if (traderId is null)
             {
                 this.Log.Error($"Cannot send event {@event} to publisher (cannot find TraderId).");

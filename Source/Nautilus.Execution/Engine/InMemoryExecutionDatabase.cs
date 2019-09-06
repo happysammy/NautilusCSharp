@@ -45,8 +45,9 @@ namespace Nautilus.Execution.Engine
         /// Initializes a new instance of the <see cref="InMemoryExecutionDatabase"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
-        public InMemoryExecutionDatabase(IComponentryContainer container)
-            : base(container)
+        /// <param name="optionLoadCache">The option flag to load cache on instantiation.</param>
+        public InMemoryExecutionDatabase(IComponentryContainer container, bool optionLoadCache)
+            : base(container, optionLoadCache)
         {
             this.indexOrderTrader = new Dictionary<OrderId, TraderId>();
             this.indexOrderAccount = new Dictionary<OrderId, AccountId>();
@@ -68,21 +69,45 @@ namespace Nautilus.Execution.Engine
         }
 
         /// <inheritdoc />
-        public void LoadAccountsCache()
+        public override void LoadAccountsCache()
         {
             this.Log.Information("Re-caching accounts from the database (does nothing for this implementation.)");
         }
 
         /// <inheritdoc />
-        public void LoadOrdersCache()
+        public override void LoadOrdersCache()
         {
             this.Log.Information("Re-caching orders from the database (does nothing for this implementation.)");
         }
 
         /// <inheritdoc />
-        public void LoadPositionsCache()
+        public override void LoadPositionsCache()
         {
             this.Log.Information("Re-caching positions from the database (does nothing for this implementation.)");
+        }
+
+        /// <inheritdoc />
+        public override void Flush()
+        {
+            this.Log.Information("Flushing the database...");
+
+            this.indexOrderTrader.Clear();
+            this.indexOrderAccount.Clear();
+            this.indexOrderPosition.Clear();
+            this.indexPositionTrader.Clear();
+            this.indexPositionAccount.Clear();
+            this.indexPositionOrders.Clear();
+            this.indexAccountOrders.Clear();
+            this.indexAccountPositions.Clear();
+            this.indexTraders.Clear();
+            this.indexOrders.Clear();
+            this.indexOrdersWorking.Clear();
+            this.indexOrdersCompleted.Clear();
+            this.indexPositions.Clear();
+            this.indexPositionsOpen.Clear();
+            this.indexPositionsClosed.Clear();
+
+            this.Log.Information("Database flushed.");
         }
 
         /// <inheritdoc />
@@ -241,53 +266,7 @@ namespace Nautilus.Execution.Engine
         }
 
         /// <inheritdoc />
-        public void CheckResiduals()
-        {
-            foreach (var orderId in this.indexOrdersWorking)
-            {
-                this.Log.Warning($"Order {orderId} still working.");
-            }
-
-            foreach (var positionId in this.indexPositionsOpen)
-            {
-                this.Log.Warning($"Position {positionId} still open.");
-            }
-        }
-
-        /// <inheritdoc />
-        public void Reset()
-        {
-            this.CachedAccounts.Clear();
-            this.CachedOrders.Clear();
-            this.CachedPositions.Clear();
-        }
-
-        /// <inheritdoc />
-        public void Flush()
-        {
-            this.Log.Information("Flushing the database...");
-
-            this.indexOrderTrader.Clear();
-            this.indexOrderAccount.Clear();
-            this.indexOrderPosition.Clear();
-            this.indexPositionTrader.Clear();
-            this.indexPositionAccount.Clear();
-            this.indexPositionOrders.Clear();
-            this.indexAccountOrders.Clear();
-            this.indexAccountPositions.Clear();
-            this.indexTraders.Clear();
-            this.indexOrders.Clear();
-            this.indexOrdersWorking.Clear();
-            this.indexOrdersCompleted.Clear();
-            this.indexPositions.Clear();
-            this.indexPositionsOpen.Clear();
-            this.indexPositionsClosed.Clear();
-
-            this.Log.Information("Database flushed...");
-        }
-
-        /// <inheritdoc />
-        public override TraderId? GetTraderForOrder(OrderId orderId)
+        public override TraderId? GetTraderId(OrderId orderId)
         {
             if (this.indexOrderTrader.TryGetValue(orderId, out var traderId))
             {
@@ -295,6 +274,18 @@ namespace Nautilus.Execution.Engine
             }
 
             this.Log.Warning($"Cannot find TraderId for {orderId}.");
+            return null;
+        }
+
+        /// <inheritdoc />
+        public override PositionId? GetPositionId(OrderId orderId)
+        {
+            if (this.indexOrderPosition.TryGetValue(orderId, out var positionId))
+            {
+                return positionId;
+            }
+
+            this.Log.Warning($"Cannot find PositionId for {orderId} in the database.");
             return null;
         }
 
@@ -308,18 +299,6 @@ namespace Nautilus.Execution.Engine
         public override ICollection<AccountId> GetAccountIds()
         {
             return new SortedSet<AccountId>(this.indexAccounts);
-        }
-
-        /// <inheritdoc />
-        public override PositionId? GetPositionId(OrderId orderId)
-        {
-            if (this.indexOrderPosition.TryGetValue(orderId, out var positionId))
-            {
-                return positionId;
-            }
-
-            this.Log.Warning($"Cannot find PositionId for {orderId} in the database.");
-            return null;
         }
 
         /// <inheritdoc />

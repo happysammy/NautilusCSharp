@@ -267,7 +267,7 @@ namespace Nautilus.Execution
                     {
                         // Flush cache.
                         this.modifyCache.Remove(order.Id);
-                        this.Log.Debug($"Order {order.Id} complete, cache flushed.");
+                        this.Log.Debug($"Order {order.Id} completed, modify buffer cleared.");
                     }
                 }
 

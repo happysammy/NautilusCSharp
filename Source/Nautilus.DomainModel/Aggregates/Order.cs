@@ -166,12 +166,12 @@ namespace Nautilus.DomainModel.Aggregates
         public bool IsSell { get; }
 
         /// <summary>
-        /// Gets a value indicating whether the order is active.
+        /// Gets a value indicating whether the order is working.
         /// </summary>
         public bool IsWorking { get; private set; }
 
         /// <summary>
-        /// Gets a value indicating whether the order is complete.
+        /// Gets a value indicating whether the order is completed.
         /// </summary>
         public bool IsCompleted { get; private set; }
 

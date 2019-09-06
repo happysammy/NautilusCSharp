@@ -34,9 +34,6 @@ namespace Nautilus.Redis.Execution
         private readonly ISerializer<Command> commandSerializer;
         private readonly ISerializer<Event> eventSerializer;
 
-        private readonly Dictionary<OrderId, Order> cachedOrders;
-        private readonly Dictionary<PositionId, Position> cachedPositions;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="RedisExecutionDatabase"/> class.
         /// </summary>
@@ -51,24 +48,17 @@ namespace Nautilus.Redis.Execution
             ISerializer<Command> commandSerializer,
             ISerializer<Event> eventSerializer,
             bool optionLoadCache)
-            : base(container)
+            : base(container, optionLoadCache)
         {
             this.redisServer = connection.GetServer(RedisConstants.LocalHost, RedisConstants.DefaultPort);
             this.redisDatabase = connection.GetDatabase();
             this.commandSerializer = commandSerializer;
             this.eventSerializer = eventSerializer;
 
-            this.cachedOrders = new Dictionary<OrderId, Order>();
-            this.cachedPositions = new Dictionary<PositionId, Position>();
-
-            this.OptionLoadCache = optionLoadCache;
-
             if (this.OptionLoadCache)
             {
                 this.Log.Information($"The OptionLoadCache is {this.OptionLoadCache}");
-                this.LoadAccountsCache();
-                this.LoadOrdersCache();
-                this.LoadPositionsCache();
+                this.LoadCaches();
             }
             else
             {
@@ -77,15 +67,8 @@ namespace Nautilus.Redis.Execution
             }
         }
 
-        /// <summary>
-        /// Gets a value indicating whether the execution database will load the cache on instantiation.
-        /// </summary>
-        public bool OptionLoadCache { get; }
-
-        /// <summary>
-        /// Clear the current order cache and load orders from the database.
-        /// </summary>
-        public void LoadAccountsCache()
+        /// <inheritdoc />
+        public override void LoadAccountsCache()
         {
             this.Log.Information("Re-caching accounts from the database...");
 
@@ -125,14 +108,12 @@ namespace Nautilus.Redis.Execution
             }
         }
 
-        /// <summary>
-        /// Clear the current order cache and load orders from the database.
-        /// </summary>
-        public void LoadOrdersCache()
+        /// <inheritdoc />
+        public override void LoadOrdersCache()
         {
             this.Log.Information("Re-caching orders from the database...");
 
-            this.cachedOrders.Clear();
+            this.CachedOrders.Clear();
 
             var orderKeys = this.redisServer.Keys(pattern: Key.Orders).ToArray();
 
@@ -164,20 +145,18 @@ namespace Nautilus.Redis.Execution
                     order.Apply((OrderEvent)this.eventSerializer.Deserialize(events.Dequeue()));
                 }
 
-                this.cachedOrders[order.Id] = order;
+                this.CachedOrders[order.Id] = order;
             }
 
-            this.Log.Information($"Cached {this.cachedOrders.Count} orders.");
+            this.Log.Information($"Cached {this.CachedOrders.Count} orders.");
         }
 
-        /// <summary>
-        /// Clear the current order cache and load orders from the database.
-        /// </summary>
-        public void LoadPositionsCache()
+        /// <inheritdoc />
+        public override void LoadPositionsCache()
         {
             this.Log.Information("Re-caching positions from the database...");
 
-            this.cachedPositions.Clear();
+            this.CachedPositions.Clear();
 
             var positionKeys = this.redisServer.Keys(pattern: Key.Positions).ToArray();
 
@@ -202,10 +181,18 @@ namespace Nautilus.Redis.Execution
                     position.Apply((OrderFillEvent)this.eventSerializer.Deserialize(events.Dequeue()));
                 }
 
-                this.cachedPositions[position.Id] = position;
+                this.CachedPositions[position.Id] = position;
             }
 
-            this.Log.Information($"Cached {this.cachedPositions.Count} positions.");
+            this.Log.Information($"Cached {this.CachedPositions.Count} positions.");
+        }
+
+        /// <inheritdoc />
+        public override void Flush()
+        {
+            this.Log.Information("Flushing the database...");
+            this.redisServer.FlushDatabase();
+            this.Log.Information("Database flushed.");
         }
 
         /// <inheritdoc />
@@ -241,7 +228,7 @@ namespace Nautilus.Redis.Execution
         /// <inheritdoc />
         public CommandResult AddOrder(Order order, TraderId traderId, AccountId accountId, StrategyId strategyId, PositionId positionId)
         {
-            if (this.cachedOrders.ContainsKey(order.Id))
+            if (this.CachedOrders.ContainsKey(order.Id))
             {
                 return CommandResult.Fail($"The {order.Id} already existed in the cache (was not unique).");
             }
@@ -263,7 +250,7 @@ namespace Nautilus.Redis.Execution
 
             this.redisDatabase.ListRightPush(Key.Order(order.Id), this.eventSerializer.Serialize(order.LastEvent), When.Always, CommandFlags.FireAndForget);
 
-            this.cachedOrders[order.Id] = order;
+            this.CachedOrders[order.Id] = order;
 
             return CommandResult.Ok();
         }
@@ -271,7 +258,7 @@ namespace Nautilus.Redis.Execution
         /// <inheritdoc />
         public CommandResult AddPosition(Position position)
         {
-            if (this.cachedPositions.ContainsKey(position.Id))
+            if (this.CachedPositions.ContainsKey(position.Id))
             {
                 return CommandResult.Fail($"The {position.Id} already existed in the cache (was not unique).");
             }
@@ -289,7 +276,7 @@ namespace Nautilus.Redis.Execution
 
             this.redisDatabase.ListRightPush(Key.Position(position.Id), this.eventSerializer.Serialize(position.LastEvent), When.Always, CommandFlags.FireAndForget);
 
-            this.cachedPositions[position.Id] = position;
+            this.CachedPositions[position.Id] = position;
 
             return CommandResult.Ok();
         }
@@ -335,39 +322,7 @@ namespace Nautilus.Redis.Execution
         }
 
         /// <inheritdoc />
-        public void CheckResiduals()
-        {
-            foreach (var orderId in this.GetOrderWorkingIds())
-            {
-                this.GetOrder(orderId);  // Check working
-                this.Log.Warning($"The {orderId} is still working.");
-            }
-
-            foreach (var positionId in this.GetPositionOpenIds())
-            {
-                this.GetPosition(positionId);  // Check open
-                this.Log.Warning($"The {positionId} is still open.");
-            }
-        }
-
-        /// <inheritdoc/>
-        public void Reset()
-        {
-            this.CachedAccounts.Clear();
-            this.CachedOrders.Clear();
-            this.CachedPositions.Clear();
-        }
-
-        /// <inheritdoc />
-        public void Flush()
-        {
-            this.Log.Information("Flushing the database...");
-            this.redisServer.FlushDatabase();
-            this.Log.Information("Database flushed...");
-        }
-
-        /// <inheritdoc />
-        public override TraderId? GetTraderForOrder(OrderId orderId)
+        public override TraderId? GetTraderId(OrderId orderId)
         {
             var traderId = this.redisDatabase.HashGet(Key.IndexOrderTrader, orderId.Value);
             if (traderId == RedisValue.Null)
@@ -377,6 +332,20 @@ namespace Nautilus.Redis.Execution
             }
 
             return TraderId.FromString(traderId);
+        }
+
+        /// <inheritdoc />
+        public override PositionId? GetPositionId(OrderId orderId)
+        {
+            var idValue = this.redisDatabase.HashGet(Key.IndexOrderPosition, orderId.Value);
+
+            if (idValue == RedisValue.Null)
+            {
+                this.Log.Warning($"Cannot find PositionId for {orderId}.");
+                return null;
+            }
+
+            return new PositionId(idValue);
         }
 
         /// <inheritdoc />
@@ -491,20 +460,6 @@ namespace Nautilus.Redis.Execution
                 : this.GetIntersection(Key.IndexPositionsClosed, Key.IndexTraderStrategyPositions(traderId, filterStrategyId));
 
             return SetFactory.ConvertToSet(positionIdValues, PositionId.FromString);
-        }
-
-        /// <inheritdoc />
-        public override PositionId? GetPositionId(OrderId orderId)
-        {
-            var idValue = this.redisDatabase.HashGet(Key.IndexOrderPosition, orderId.Value);
-
-            if (idValue == RedisValue.Null)
-            {
-                this.Log.Warning($"Cannot find PositionId for {orderId}.");
-                return null;
-            }
-
-            return new PositionId(idValue);
         }
 
         private RedisValue[] GetIntersection(string setKey1, string setKey2)

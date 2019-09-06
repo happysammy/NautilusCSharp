@@ -18,11 +18,18 @@ namespace Nautilus.Execution.Interfaces
     public interface IExecutionDatabaseRead
     {
         /// <summary>
-        /// Return the trader identifier for the given order identifier..
+        /// Return the trader identifier for the given order identifier.
         /// </summary>
         /// <param name="orderId">The order identifier.</param>
-        /// <returns>The traders identifier.</returns>
-        TraderId? GetTraderForOrder(OrderId orderId);
+        /// <returns>The traders identifier (if found else null).</returns>
+        TraderId? GetTraderId(OrderId orderId);
+
+        /// <summary>
+        /// Return the position identifier for the given order identifier (if found else null).
+        /// </summary>
+        /// <param name="orderId">The order identifier for the position.</param>
+        /// <returns>The position identifier (if found else null).</returns>
+        PositionId? GetPositionId(OrderId orderId);
 
         /// <summary>
         /// Return all trader identifiers.
@@ -195,13 +202,6 @@ namespace Nautilus.Execution.Interfaces
         /// <param name="orderId">The order identifier for the position.</param>
         /// <returns>The position (if found else null).</returns>
         Position? GetPositionForOrder(OrderId orderId);
-
-        /// <summary>
-        /// Return the position identifier for the given order identifier (if found else null).
-        /// </summary>
-        /// <param name="orderId">The order identifier for the position.</param>
-        /// <returns>The position identifier (if found else null).</returns>
-        PositionId? GetPositionId(OrderId orderId);
 
         /// <summary>
         /// Return all positions.

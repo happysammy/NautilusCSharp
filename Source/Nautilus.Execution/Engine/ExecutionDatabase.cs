@@ -18,19 +18,25 @@ namespace Nautilus.Execution.Engine
     /// <summary>
     /// Provides the abstract base class for all execution databases.
     /// </summary>
-    public abstract class ExecutionDatabase : Component, IExecutionDatabaseRead
+    public abstract class ExecutionDatabase : Component, IExecutionDatabaseRead, IExecutionDatabaseCommand
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ExecutionDatabase"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
-        protected ExecutionDatabase(IComponentryContainer container)
+        /// <param name="optionLoadCache">The option flag to load cache on instantiation.</param>
+        protected ExecutionDatabase(IComponentryContainer container, bool optionLoadCache)
         : base(container)
         {
             this.CachedAccounts = new Dictionary<AccountId, Account>();
             this.CachedOrders = new Dictionary<OrderId, Order>();
             this.CachedPositions = new Dictionary<PositionId, Position>();
+
+            this.OptionLoadCache = optionLoadCache;
         }
+
+        /// <inheritdoc />
+        public bool OptionLoadCache { get; }
 
         /// <summary>
         /// Gets the cached accounts.
@@ -38,17 +44,61 @@ namespace Nautilus.Execution.Engine
         protected Dictionary<AccountId, Account> CachedAccounts { get; }
 
         /// <summary>
-        /// Gets the cached accounts.
+        /// Gets the cached orders.
         /// </summary>
         protected Dictionary<OrderId, Order> CachedOrders { get; }
 
         /// <summary>
-        /// Gets the cached accounts.
+        /// Gets the cached positions.
         /// </summary>
         protected Dictionary<PositionId, Position> CachedPositions { get; }
 
         /// <inheritdoc />
-        public abstract TraderId? GetTraderForOrder(OrderId orderId);
+        public void LoadCaches()
+        {
+            this.LoadAccountsCache();
+            this.LoadOrdersCache();
+            this.LoadPositionsCache();
+        }
+
+        /// <inheritdoc />
+        public abstract void LoadAccountsCache();
+
+        /// <inheritdoc />
+        public abstract void LoadOrdersCache();
+
+        /// <inheritdoc />
+        public abstract void LoadPositionsCache();
+
+        /// <inheritdoc />
+        public void CheckResiduals()
+        {
+            foreach (var orderId in this.GetOrderWorkingIds())
+            {
+                this.GetOrder(orderId);  // Check working
+                this.Log.Warning($"The {orderId} is still working.");
+            }
+
+            foreach (var positionId in this.GetPositionOpenIds())
+            {
+                this.GetPosition(positionId);  // Check open
+                this.Log.Warning($"The {positionId} is still open.");
+            }
+        }
+
+        /// <inheritdoc/>
+        public void Reset()
+        {
+            this.CachedAccounts.Clear();
+            this.CachedOrders.Clear();
+            this.CachedPositions.Clear();
+        }
+
+        /// <inheritdoc/>
+        public abstract void Flush();
+
+        /// <inheritdoc />
+        public abstract TraderId? GetTraderId(OrderId orderId);
 
         /// <inheritdoc />
         public abstract PositionId? GetPositionId(OrderId orderId);
@@ -212,7 +262,7 @@ namespace Nautilus.Execution.Engine
                 var order = this.GetOrder(orderId);
                 if (order is null)
                 {
-                    this.Log.Error($"The {orderId} was not found in the cache.");
+                    this.Log.Error($"Cannot find {orderId} in the cache.");
                     continue;  // Do not add null order to dictionary
                 }
 
@@ -230,7 +280,7 @@ namespace Nautilus.Execution.Engine
                 var order = this.GetOrder(orderId);
                 if (order is null)
                 {
-                    this.Log.Error($"The {orderId} was not found in the cache.");
+                    this.Log.Error($"Cannot find {orderId} in the cache.");
                     continue; // Do not add null order to dictionary
                 }
 
@@ -254,7 +304,7 @@ namespace Nautilus.Execution.Engine
                 var order = this.GetOrder(orderId);
                 if (order is null)
                 {
-                    this.Log.Error($"The {orderId} was not found in the cache.");
+                    this.Log.Error($"Cannot find {orderId} in the cache.");
                     continue; // Do not add null order to dictionary
                 }
 
@@ -278,7 +328,7 @@ namespace Nautilus.Execution.Engine
                 var position = this.GetPosition(positionId);
                 if (position is null)
                 {
-                    this.Log.Error($"The {positionId} was not found in the cache.");
+                    this.Log.Error($"Cannot find {positionId} in the cache.");
                     continue;  // Do not add null position to dictionary
                 }
 
@@ -296,7 +346,7 @@ namespace Nautilus.Execution.Engine
                 var position = this.GetPosition(positionId);
                 if (position is null)
                 {
-                    this.Log.Error($"The {positionId} was not found in the cache.");
+                    this.Log.Error($"Cannot find {positionId} in the cache.");
                     continue;  // Do not add null position to dictionary
                 }
 
@@ -320,7 +370,7 @@ namespace Nautilus.Execution.Engine
                 var position = this.GetPosition(positionId);
                 if (position is null)
                 {
-                    this.Log.Error($"The {positionId} was not found in the cache.");
+                    this.Log.Error($"Cannot find {positionId} in the cache.");
                     continue;  // Do not add null position to dictionary
                 }
 

@@ -8,15 +8,10 @@
 
 namespace Nautilus.Execution.Interfaces
 {
-    using Nautilus.Core.CQS;
-    using Nautilus.DomainModel.Aggregates;
-    using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.Identifiers;
-
     /// <summary>
     /// Provides an execution database for persisting execution related data.
     /// </summary>
-    public interface IExecutionDatabase : IExecutionDatabaseRead, IExecutionDatabaseWrite
+    public interface IExecutionDatabase : IExecutionDatabaseRead, IExecutionDatabaseWrite, IExecutionDatabaseCommand
     {
     }
 }
