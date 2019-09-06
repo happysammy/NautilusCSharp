@@ -43,7 +43,7 @@ namespace Nautilus.Execution
         public static Address EventPublisher { get; } = new Address(nameof(EventPublisher));
 
         /// <summary>
-        /// Gets the <see cref="OrderManager"/> component messaging address.
+        /// Gets the <see cref="ExecutionEngine"/> component messaging address.
         /// </summary>
         public static Address ExecutionEngine { get; } = new Address(nameof(ExecutionEngine));
     }
