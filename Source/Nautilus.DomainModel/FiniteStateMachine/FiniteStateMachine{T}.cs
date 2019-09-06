@@ -1,5 +1,5 @@
 ﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="FiniteStateMachine.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="FiniteStateMachine{T}.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  https://nautechsystems.io
@@ -13,26 +13,25 @@ namespace Nautilus.DomainModel.FiniteStateMachine
     using System.Collections.Immutable;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
-    using Nautilus.Core.Extensions;
 
     /// <summary>
-    /// Represents a simple generic finite state machine comprising of a state transition look-up
+    /// Provides a generic finite state machine of state T comprising of a state transition look-up
     /// table to determine trigger processing validity.
     /// </summary>
+    /// <typeparam name="T">The state type.</typeparam>
     [PerformanceOptimized]
-    internal class FiniteStateMachine
+    internal class FiniteStateMachine<T>
+        where T : struct
     {
-        private readonly ImmutableDictionary<StateTransition, State> stateTransitionTable;
+        private readonly ImmutableDictionary<StateTransition<T>, T> stateTransitionTable;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FiniteStateMachine"/> class.
+        /// Initializes a new instance of the <see cref="FiniteStateMachine{T}"/> class.
         /// </summary>
         /// <param name="stateTransitionTable">The state transition table.</param>
         /// <param name="startingState">The starting state.</param>
         /// <exception cref="ArgumentException">Throws if the state transition table is empty.</exception>
-        internal FiniteStateMachine(
-            Dictionary<StateTransition, State> stateTransitionTable,
-            State startingState)
+        internal FiniteStateMachine(Dictionary<StateTransition<T>, T> stateTransitionTable, T startingState)
         {
             Condition.NotEmpty(stateTransitionTable, nameof(stateTransitionTable));
 
@@ -43,18 +42,7 @@ namespace Nautilus.DomainModel.FiniteStateMachine
         /// <summary>
         /// Gets the current state.
         /// </summary>
-        internal State State { get; private set; }
-
-        /// <summary>
-        /// Gets the current state as an enumeration of type T.
-        /// </summary>
-        /// <typeparam name="T">The type of the enumeration to return.</typeparam>
-        /// <returns>The state as an enumeration.</returns>
-        internal T StateAsEnum<T>()
-            where T : struct, Enum
-        {
-            return this.State.ToString().ToEnum<T>();
-        }
+        internal T State { get; private set; }
 
         /// <summary>
         /// Processes the finite state machine with the given <see cref="Trigger"/>.
@@ -63,28 +51,16 @@ namespace Nautilus.DomainModel.FiniteStateMachine
         /// <exception cref="ArgumentNullException">Throws if the trigger is null.</exception>
         internal void Process(Trigger trigger)
         {
-            var transition = new StateTransition(this.State, trigger);
+            var transition = new StateTransition<T>(this.State, trigger);
 
-            if (!this.IsValidStateTransition(transition))
+            if (this.stateTransitionTable.TryGetValue(transition, out var state))
+            {
+                this.State = state;
+            }
+            else
             {
                 throw new InvalidOperationException($"Invalid state transition ({transition.Description()}).");
             }
-
-            this.ChangeStateTo(this.StateTransitionResult(transition));
-        }
-
-        private bool IsValidStateTransition(StateTransition transition) => this.stateTransitionTable.ContainsKey(transition);
-
-        private void ChangeStateTo(State state)
-        {
-            Debug.NotDefault(state, nameof(state));
-
-            this.State = state;
-        }
-
-        private State StateTransitionResult(StateTransition transition)
-        {
-            return this.stateTransitionTable[transition];
         }
     }
 }

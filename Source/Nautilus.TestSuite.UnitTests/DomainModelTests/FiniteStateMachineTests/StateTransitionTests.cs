@@ -22,29 +22,29 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FiniteStateMachineTests
         public void IndexDictionary_WithExampleStateTransition_ReturnsExpectedValue()
         {
             // Arrange
-            var stateTransitionTable = new Dictionary<StateTransition, State>
+            var stateTransitionTable = new Dictionary<StateTransition<OrderState>, OrderState>
             {
-                { new StateTransition(new State(OrderState.Initialized), Trigger.Event(typeof(OrderAccepted))), new State(OrderState.Accepted) },
+                { new StateTransition<OrderState>(OrderState.Initialized, Trigger.Event(typeof(OrderAccepted))), OrderState.Accepted },
             };
 
             // Act
-            var result = stateTransitionTable[new StateTransition(new State(OrderState.Initialized), Trigger.Event(typeof(OrderAccepted)))];
+            var result = stateTransitionTable[new StateTransition<OrderState>(OrderState.Initialized, Trigger.Event(typeof(OrderAccepted)))];
 
             // Assert
-            Assert.Equal(new State(OrderState.Accepted), result);
+            Assert.Equal(OrderState.Accepted, result);
         }
 
         [Fact]
         public void ContainsKey_WithExampleTransitionTable_ReturnsTrue()
         {
             // Arrange
-            var stateTransitionTable = new Dictionary<StateTransition, State>
+            var stateTransitionTable = new Dictionary<StateTransition<OrderState>, OrderState>
             {
-                { new StateTransition(new State(OrderState.Initialized), Trigger.Event(typeof(OrderAccepted))), new State(OrderState.Accepted) },
+                { new StateTransition<OrderState>(OrderState.Initialized, Trigger.Event(typeof(OrderAccepted))), OrderState.Accepted },
             };
 
             // Act
-            var result = stateTransitionTable.ContainsKey(new StateTransition(new State(OrderState.Initialized), Trigger.Event(typeof(OrderAccepted))));
+            var result = stateTransitionTable.ContainsKey(new StateTransition<OrderState>(OrderState.Initialized, Trigger.Event(typeof(OrderAccepted))));
 
             // Assert
             Assert.True(result);
@@ -54,9 +54,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FiniteStateMachineTests
         public void Equals_VariousStateTransitionsAndOperators_TestsCorrectly()
         {
             // Arrange
-            var stateTransition1 = new StateTransition(new State(OrderState.Initialized), Trigger.Event(typeof(OrderAccepted)));
-            var stateTransition2 = new StateTransition(new State(OrderState.Initialized), Trigger.Event(typeof(OrderAccepted)));
-            var stateTransition3 = new StateTransition(new State(OrderState.Accepted), Trigger.Event(typeof(OrderWorking)));
+            var stateTransition1 = new StateTransition<OrderState>(OrderState.Initialized, Trigger.Event(typeof(OrderAccepted)));
+            var stateTransition2 = new StateTransition<OrderState>(OrderState.Initialized, Trigger.Event(typeof(OrderAccepted)));
+            var stateTransition3 = new StateTransition<OrderState>(OrderState.Accepted, Trigger.Event(typeof(OrderWorking)));
 
             // Act
             var result1 = stateTransition1.Equals(stateTransition2);
@@ -77,7 +77,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FiniteStateMachineTests
         public void GetHashCode_ReturnsExpectedInt()
         {
             // Arrange
-            var stateTransition = new StateTransition(new State(OrderState.Initialized), Trigger.Event(typeof(OrderAccepted)));
+            var stateTransition = new StateTransition<OrderState>(OrderState.Initialized, Trigger.Event(typeof(OrderAccepted)));
 
             // Act
             var result = stateTransition.GetHashCode();
@@ -90,7 +90,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FiniteStateMachineTests
         public void ToString_ReturnsExpectedString()
         {
             // Arrange
-            var stateTransition = new StateTransition(new State(OrderState.Initialized), Trigger.Event(typeof(OrderAccepted)));
+            var stateTransition = new StateTransition<OrderState>(OrderState.Initialized, Trigger.Event(typeof(OrderAccepted)));
 
             // Act
             var result = stateTransition.ToString();
@@ -103,7 +103,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FiniteStateMachineTests
         public void Description_ReturnsExpectedString()
         {
             // Arrange
-            var stateTransition = new StateTransition(new State(OrderState.Initialized), Trigger.Event(typeof(OrderAccepted)));
+            var stateTransition = new StateTransition<OrderState>(OrderState.Initialized, Trigger.Event(typeof(OrderAccepted)));
 
             // Act
             var result = stateTransition.Description();

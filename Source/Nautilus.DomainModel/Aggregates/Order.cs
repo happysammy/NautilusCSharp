@@ -31,7 +31,7 @@ namespace Nautilus.DomainModel.Aggregates
     [PerformanceOptimized]
     public sealed class Order : Aggregate<OrderId, OrderEvent, Order>
     {
-        private readonly FiniteStateMachine orderStateMachine;
+        private readonly FiniteStateMachine<OrderState> orderFiniteStateMachine;
         private readonly UniqueList<OrderId> orderIds;
         private readonly UniqueList<OrderIdBroker> orderIdsBroker;
         private readonly UniqueList<ExecutionId> executionIds;
@@ -43,7 +43,7 @@ namespace Nautilus.DomainModel.Aggregates
         public Order(OrderInitialized initial)
             : base(initial.OrderId, initial)
         {
-            this.orderStateMachine = CreateOrderFiniteStateMachine();
+            this.orderFiniteStateMachine = CreateOrderFiniteStateMachine();
             this.orderIds = new UniqueList<OrderId>(this.Id);
             this.orderIdsBroker = new UniqueList<OrderIdBroker>();
             this.executionIds = new UniqueList<ExecutionId>();
@@ -66,7 +66,7 @@ namespace Nautilus.DomainModel.Aggregates
         }
 
         /// <summary>
-        /// Gets the initial order identifier..
+        /// Gets the order initialized event identifier.
         /// </summary>
         public Guid InitId => this.InitialEvent.Id;
 
@@ -153,7 +153,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the current order state.
         /// </summary>
-        public OrderState State => this.orderStateMachine.StateAsEnum<OrderState>();
+        public OrderState State => this.orderFiniteStateMachine.State;
 
         /// <summary>
         /// Gets a value indicating whether the order side is BUY.
@@ -255,26 +255,26 @@ namespace Nautilus.DomainModel.Aggregates
         /// Returns a new order finite state machine.
         /// </summary>
         /// <returns>The finite state machine.</returns>
-        internal static FiniteStateMachine CreateOrderFiniteStateMachine()
+        internal static FiniteStateMachine<OrderState> CreateOrderFiniteStateMachine()
         {
-            var stateTransitionTable = new Dictionary<StateTransition, State>
+            var stateTransitionTable = new Dictionary<StateTransition<OrderState>, OrderState>
             {
-                { new StateTransition(new State(OrderState.Initialized), Trigger.Event(typeof(OrderSubmitted))), new State(OrderState.Submitted) },
-                { new StateTransition(new State(OrderState.Initialized), Trigger.Event(typeof(OrderCancelled))), new State(OrderState.Cancelled) },
-                { new StateTransition(new State(OrderState.Submitted), Trigger.Event(typeof(OrderRejected))), new State(OrderState.Rejected) },
-                { new StateTransition(new State(OrderState.Submitted), Trigger.Event(typeof(OrderAccepted))), new State(OrderState.Accepted) },
-                { new StateTransition(new State(OrderState.Submitted), Trigger.Event(typeof(OrderCancelled))), new State(OrderState.Cancelled) },
-                { new StateTransition(new State(OrderState.Accepted), Trigger.Event(typeof(OrderWorking))), new State(OrderState.Working) },
-                { new StateTransition(new State(OrderState.Accepted), Trigger.Event(typeof(OrderCancelReject))), new State(OrderState.Accepted) }, // OrderCancelReject (state should remain unchanged).
-                { new StateTransition(new State(OrderState.Working), Trigger.Event(typeof(OrderCancelled))), new State(OrderState.Cancelled) },
-                { new StateTransition(new State(OrderState.Working), Trigger.Event(typeof(OrderModified))), new State(OrderState.Working) },
-                { new StateTransition(new State(OrderState.Working), Trigger.Event(typeof(OrderExpired))), new State(OrderState.Expired) },
-                { new StateTransition(new State(OrderState.Working), Trigger.Event(typeof(OrderFilled))), new State(OrderState.Filled) },
-                { new StateTransition(new State(OrderState.Working), Trigger.Event(typeof(OrderPartiallyFilled))), new State(OrderState.PartiallyFilled) },
-                { new StateTransition(new State(OrderState.Working), Trigger.Event(typeof(OrderCancelReject))), new State(OrderState.Working) }, // OrderCancelReject (state should remain unchanged).
-                { new StateTransition(new State(OrderState.PartiallyFilled), Trigger.Event(typeof(OrderPartiallyFilled))), new State(OrderState.PartiallyFilled) },
-                { new StateTransition(new State(OrderState.PartiallyFilled), Trigger.Event(typeof(OrderCancelled))), new State(OrderState.Cancelled) },
-                { new StateTransition(new State(OrderState.PartiallyFilled), Trigger.Event(typeof(OrderFilled))), new State(OrderState.Filled) },
+                { new StateTransition<OrderState>(OrderState.Initialized, Trigger.Event(typeof(OrderSubmitted))), OrderState.Submitted },
+                { new StateTransition<OrderState>(OrderState.Initialized, Trigger.Event(typeof(OrderCancelled))), OrderState.Cancelled },
+                { new StateTransition<OrderState>(OrderState.Submitted, Trigger.Event(typeof(OrderRejected))), OrderState.Rejected },
+                { new StateTransition<OrderState>(OrderState.Submitted, Trigger.Event(typeof(OrderAccepted))), OrderState.Accepted },
+                { new StateTransition<OrderState>(OrderState.Submitted, Trigger.Event(typeof(OrderCancelled))), OrderState.Cancelled },
+                { new StateTransition<OrderState>(OrderState.Accepted, Trigger.Event(typeof(OrderWorking))), OrderState.Working },
+                { new StateTransition<OrderState>(OrderState.Accepted, Trigger.Event(typeof(OrderCancelReject))), OrderState.Accepted }, // OrderCancelReject (state should remain unchanged).
+                { new StateTransition<OrderState>(OrderState.Working, Trigger.Event(typeof(OrderCancelled))), OrderState.Cancelled },
+                { new StateTransition<OrderState>(OrderState.Working, Trigger.Event(typeof(OrderModified))), OrderState.Working },
+                { new StateTransition<OrderState>(OrderState.Working, Trigger.Event(typeof(OrderExpired))), OrderState.Expired },
+                { new StateTransition<OrderState>(OrderState.Working, Trigger.Event(typeof(OrderFilled))), OrderState.Filled },
+                { new StateTransition<OrderState>(OrderState.Working, Trigger.Event(typeof(OrderPartiallyFilled))), OrderState.PartiallyFilled },
+                { new StateTransition<OrderState>(OrderState.Working, Trigger.Event(typeof(OrderCancelReject))), OrderState.Working }, // OrderCancelReject (state should remain unchanged).
+                { new StateTransition<OrderState>(OrderState.PartiallyFilled, Trigger.Event(typeof(OrderPartiallyFilled))), OrderState.PartiallyFilled },
+                { new StateTransition<OrderState>(OrderState.PartiallyFilled, Trigger.Event(typeof(OrderCancelled))), OrderState.Cancelled },
+                { new StateTransition<OrderState>(OrderState.PartiallyFilled, Trigger.Event(typeof(OrderFilled))), OrderState.Filled },
             };
 
             // Check that all OrderCancelReject events leave the state unchanged
@@ -283,13 +283,13 @@ namespace Nautilus.DomainModel.Aggregates
                 .Where(kvp => kvp.Key.Trigger.ToString().Equals(nameof(OrderCancelReject)))
                 .All(kvp => kvp.Key.CurrentState.ToString().Equals(kvp.Value.ToString())), nameof(stateTransitionTable));
 
-            return new FiniteStateMachine(stateTransitionTable, new State(OrderState.Initialized));
+            return new FiniteStateMachine<OrderState>(stateTransitionTable, OrderState.Initialized);
         }
 
         /// <inheritdoc />
         protected override void OnEvent(OrderEvent orderEvent)
         {
-            this.orderStateMachine.Process(Trigger.Event(orderEvent));
+            this.orderFiniteStateMachine.Process(Trigger.Event(orderEvent));
 
             switch (orderEvent)
             {
