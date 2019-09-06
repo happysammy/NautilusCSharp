@@ -259,6 +259,8 @@ namespace Nautilus.Redis.Execution
 
             this.CachedOrders[order.Id] = order;
 
+            this.Log.Debug($"Added new {order.Id}, indexed {traderId}, {accountId}, {positionId}, {strategyId}");
+
             return CommandResult.Ok();
         }
 
@@ -284,6 +286,8 @@ namespace Nautilus.Redis.Execution
             this.redisDatabase.ListRightPush(Key.Position(position.Id), this.eventSerializer.Serialize(position.LastEvent), When.Always, CommandFlags.FireAndForget);
 
             this.CachedPositions[position.Id] = position;
+
+            this.Log.Debug($"Added new {position.Id}");
 
             return CommandResult.Ok();
         }
