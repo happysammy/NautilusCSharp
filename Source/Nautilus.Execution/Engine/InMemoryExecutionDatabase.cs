@@ -9,21 +9,18 @@
 namespace Nautilus.Execution.Engine
 {
     using System.Collections.Generic;
-    using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.CQS;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Identifiers;
-    using Nautilus.Execution.Interfaces;
 
     /// <summary>
     /// Provides an in-memory execution database.
     /// </summary>
-    public class InMemoryExecutionDatabase : Component, IExecutionDatabase
+    public class InMemoryExecutionDatabase : ExecutionDatabase
     {
         private readonly Dictionary<OrderId, TraderId> indexOrderTrader;
         private readonly Dictionary<OrderId, AccountId> indexOrderAccount;
@@ -42,9 +39,6 @@ namespace Nautilus.Execution.Engine
         private readonly HashSet<PositionId> indexPositions;
         private readonly HashSet<PositionId> indexPositionsOpen;
         private readonly HashSet<PositionId> indexPositionsClosed;
-
-        private readonly Dictionary<OrderId, Order> cachedOrders;
-        private readonly Dictionary<PositionId, Position> cachedPositions;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InMemoryExecutionDatabase"/> class.
@@ -70,26 +64,23 @@ namespace Nautilus.Execution.Engine
             this.indexPositions = new HashSet<PositionId>();
             this.indexPositionsOpen = new HashSet<PositionId>();
             this.indexPositionsClosed = new HashSet<PositionId>();
-
-            this.cachedOrders = new Dictionary<OrderId, Order>();
-            this.cachedPositions = new Dictionary<PositionId, Position>();
         }
 
         /// <inheritdoc />
-        public void LoadOrdersCache()
+        public override void LoadOrdersCache()
         {
             this.Log.Information("Re-caching orders from the database (does nothing for this implementation.)");
         }
 
         /// <inheritdoc />
-        public void LoadPositionsCache()
+        public override void LoadPositionsCache()
         {
             this.Log.Information("Re-caching positions from the database (does nothing for this implementation.)");
         }
 
         /// <inheritdoc />
         /// <exception cref="ConditionFailedException">If the order identifier is already indexed.</exception>
-        public CommandResult AddAtomicOrder(AtomicOrder order, TraderId traderId, AccountId accountId, StrategyId strategyId, PositionId positionId)
+        public override CommandResult AddAtomicOrder(AtomicOrder order, TraderId traderId, AccountId accountId, StrategyId strategyId, PositionId positionId)
         {
             this.AddOrder(
                 order.Entry,
@@ -120,14 +111,14 @@ namespace Nautilus.Execution.Engine
 
         /// <inheritdoc />
         /// <exception cref="ConditionFailedException">If the order identifier is already indexed.</exception>
-        public CommandResult AddOrder(Order order, TraderId traderId, AccountId accountId, StrategyId strategyId, PositionId positionId)
+        public override CommandResult AddOrder(Order order, TraderId traderId, AccountId accountId, StrategyId strategyId, PositionId positionId)
         {
             Debug.KeyNotIn(order.Id, this.indexOrderTrader, nameof(order.Id), nameof(this.indexOrderTrader));
             Debug.KeyNotIn(order.Id, this.indexOrderAccount, nameof(order.Id), nameof(this.indexOrderAccount));
             Debug.KeyNotIn(order.Id, this.indexOrderPosition, nameof(order.Id), nameof(this.indexOrderPosition));
             Debug.NotIn(order.Id, this.indexOrders, nameof(order.Id), nameof(this.indexOrders));
 
-            if (this.cachedOrders.ContainsKey(order.Id))
+            if (this.CachedOrders.ContainsKey(order.Id))
             {
                 return CommandResult.Fail($"The {order.Id} already existed in the cache (was not unique).");
             }
@@ -179,7 +170,7 @@ namespace Nautilus.Execution.Engine
             }
 
             this.indexOrders.Add(order.Id);
-            this.cachedOrders[order.Id] = order;
+            this.CachedOrders[order.Id] = order;
 
             this.Log.Debug($"Added new order_id={order.Id}, " +
                            $"indexed trader_id={traderId}, " +
@@ -192,19 +183,19 @@ namespace Nautilus.Execution.Engine
 
         /// <inheritdoc />
         /// <exception cref="ConditionFailedException">If the position identifier is already indexed.</exception>
-        public CommandResult AddPosition(Position position)
+        public override CommandResult AddPosition(Position position)
         {
             Debug.NotIn(position.Id, this.indexPositions, nameof(position.Id), nameof(this.indexPositions));
             Debug.NotIn(position.Id, this.indexPositionsOpen, nameof(position.Id), nameof(this.indexPositions));
 
-            if (this.cachedPositions.ContainsKey(position.Id))
+            if (this.CachedPositions.ContainsKey(position.Id))
             {
                 return CommandResult.Fail($"The {position.Id} already existed in the cache (was not unique).");
             }
 
             this.indexPositions.Add(position.Id);
             this.indexPositionsOpen.Add(position.Id);
-            this.cachedPositions[position.Id] = position;
+            this.CachedPositions[position.Id] = position;
 
             this.Log.Debug($"Added open position_id={position.Id}");
 
@@ -212,7 +203,7 @@ namespace Nautilus.Execution.Engine
         }
 
         /// <inheritdoc />
-        public void UpdateOrder(Order order)
+        public override void UpdateOrder(Order order)
         {
             if (order.IsWorking)
             {
@@ -227,7 +218,7 @@ namespace Nautilus.Execution.Engine
         }
 
         /// <inheritdoc />
-        public void UpdatePosition(Position position)
+        public override void UpdatePosition(Position position)
         {
             if (position.IsClosed)
             {
@@ -237,13 +228,13 @@ namespace Nautilus.Execution.Engine
         }
 
         /// <inheritdoc />
-        public void UpdateAccount(Account account)
+        public override void UpdateAccount(Account account)
         {
             // Do nothing in memory
         }
 
         /// <inheritdoc />
-        public void CheckResiduals()
+        public override void CheckResiduals()
         {
             foreach (var orderId in this.indexOrdersWorking)
             {
@@ -257,7 +248,7 @@ namespace Nautilus.Execution.Engine
         }
 
         /// <inheritdoc />
-        public void Reset()
+        public override void Reset()
         {
             this.indexOrderTrader.Clear();
             this.indexOrderAccount.Clear();
@@ -274,18 +265,18 @@ namespace Nautilus.Execution.Engine
             this.indexPositions.Clear();
             this.indexPositionsOpen.Clear();
             this.indexPositionsClosed.Clear();
-            this.cachedOrders.Clear();
-            this.cachedPositions.Clear();
+            this.CachedOrders.Clear();
+            this.CachedPositions.Clear();
         }
 
         /// <inheritdoc />
-        public void Flush()
+        public override void Flush()
         {
             this.Log.Information("Flushing the database (in-memory database does nothing).");
         }
 
         /// <inheritdoc />
-        public TraderId? GetTraderForOrder(OrderId orderId)
+        public override TraderId? GetTraderForOrder(OrderId orderId)
         {
             if (this.indexOrderTrader.TryGetValue(orderId, out var traderId))
             {
@@ -297,196 +288,19 @@ namespace Nautilus.Execution.Engine
         }
 
         /// <inheritdoc />
-        public ICollection<TraderId> GetTraderIds()
+        public override ICollection<TraderId> GetTraderIds()
         {
             return new SortedSet<TraderId>(this.indexTraders.Keys);
         }
 
         /// <inheritdoc />
-        public ICollection<AccountId> GetAccountIds()
+        public override ICollection<AccountId> GetAccountIds()
         {
             return new SortedSet<AccountId>(this.indexAccounts);
         }
 
         /// <inheritdoc />
-        public ICollection<StrategyId> GetStrategyIds(TraderId traderId)
-        {
-            return this.indexTraders.TryGetValue(traderId, out var traderIndex)
-                ? new SortedSet<StrategyId>(traderIndex.StrategyIds)
-                : new SortedSet<StrategyId>();
-        }
-
-        /// <inheritdoc />
-        public ICollection<OrderId> GetOrderIds()
-        {
-            return new SortedSet<OrderId>(this.indexOrders);
-        }
-
-        /// <inheritdoc />
-        public ICollection<OrderId> GetOrderIds(TraderId traderId, StrategyId? strategyIdFilter = null)
-        {
-            return this.indexTraders.TryGetValue(traderId, out var traderIndex)
-                ? new SortedSet<OrderId>(traderIndex.OrderIds(strategyIdFilter))
-                : new SortedSet<OrderId>();
-        }
-
-        /// <inheritdoc />
-        public ICollection<OrderId> GetOrderWorkingIds()
-        {
-            return new SortedSet<OrderId>(this.indexOrdersWorking);
-        }
-
-        /// <inheritdoc />
-        public ICollection<OrderId> GetOrderWorkingIds(TraderId traderId, StrategyId? filterStrategyId = null)
-        {
-            return this.indexTraders.TryGetValue(traderId, out var traderIndex)
-                ? SetFactory.IntersectionSorted(new[] { this.indexOrdersWorking, traderIndex.OrderIds(filterStrategyId) })
-                : new SortedSet<OrderId>();
-        }
-
-        /// <inheritdoc />
-        public ICollection<OrderId> GetOrderCompletedIds()
-        {
-            return new SortedSet<OrderId>(this.indexOrdersCompleted);
-        }
-
-        /// <inheritdoc />
-        public ICollection<OrderId> GetOrderCompletedIds(TraderId traderId, StrategyId? filterStrategyId = null)
-        {
-            return this.indexTraders.TryGetValue(traderId, out var traderIndex)
-                ? SetFactory.IntersectionSorted(new[] { this.indexOrdersCompleted, traderIndex.OrderIds(filterStrategyId) })
-                : new SortedSet<OrderId>();
-        }
-
-        /// <inheritdoc />
-        public ICollection<PositionId> GetPositionIds()
-        {
-            return new SortedSet<PositionId>(this.cachedPositions.Keys);
-        }
-
-        /// <inheritdoc />
-        public ICollection<PositionId> GetPositionIds(TraderId traderId, StrategyId? filterStrategyId = null)
-        {
-            return this.indexTraders.TryGetValue(traderId, out var traderIndex)
-                ? SetFactory.IntersectionSorted(new[] { this.indexPositions, traderIndex.PositionIds(filterStrategyId) })
-                : new SortedSet<PositionId>();
-        }
-
-        /// <inheritdoc />
-        public ICollection<PositionId> GetPositionOpenIds()
-        {
-            return new SortedSet<PositionId>(this.indexPositionsOpen);
-        }
-
-        /// <inheritdoc />
-        public ICollection<PositionId> GetPositionOpenIds(TraderId traderId, StrategyId? filterStrategyId = null)
-        {
-            return this.indexTraders.TryGetValue(traderId, out var traderIndex)
-                ? SetFactory.IntersectionSorted(new[] { this.indexPositionsOpen, traderIndex.PositionIds(filterStrategyId) })
-                : new SortedSet<PositionId>();
-        }
-
-        /// <inheritdoc />
-        public ICollection<PositionId> GetPositionClosedIds()
-        {
-            return new SortedSet<PositionId>(this.indexPositionsClosed);
-        }
-
-        /// <inheritdoc />
-        public ICollection<PositionId> GetPositionClosedIds(TraderId traderId, StrategyId? filterStrategyId = null)
-        {
-            return this.indexTraders.TryGetValue(traderId, out var traderIndex)
-                ? SetFactory.IntersectionSorted(new[] { this.indexPositionsClosed, traderIndex.PositionIds(filterStrategyId) })
-                : new SortedSet<PositionId>();
-        }
-
-        /// <inheritdoc />
-        public Order? GetOrder(OrderId orderId)
-        {
-            if (this.cachedOrders.TryGetValue(orderId, out var order))
-            {
-                return order;
-            }
-
-            this.Log.Warning($"Cannot find Order for {orderId} in cache.");
-            return null;
-        }
-
-        /// <inheritdoc />
-        public IDictionary<OrderId, Order> GetOrders()
-        {
-            return new Dictionary<OrderId, Order>(this.cachedOrders);
-        }
-
-        /// <inheritdoc />
-        [PerformanceOptimized]
-        public IDictionary<OrderId, Order> GetOrders(TraderId traderId, StrategyId? filterStrategyId = null)
-        {
-            var orderIds = this.indexTraders.TryGetValue(traderId, out var traderIndex)
-                ? SetFactory.Intersection(new[] { this.indexOrders, traderIndex.OrderIds(filterStrategyId) })
-                : new HashSet<OrderId>();
-
-            return this.GetOrdersFromCache(orderIds);
-        }
-
-        /// <inheritdoc />
-        public IDictionary<OrderId, Order> GetOrdersWorking()
-        {
-            return this.GetOrdersFromCache(this.indexOrdersWorking);
-        }
-
-        /// <inheritdoc />
-        public IDictionary<OrderId, Order> GetOrdersWorking(TraderId traderId, StrategyId? filterStrategyId = null)
-        {
-            var orderIds = this.indexTraders.TryGetValue(traderId, out var traderIndex)
-                ? SetFactory.Intersection(new[] { this.indexOrdersWorking, traderIndex.OrderIds(filterStrategyId) })
-                : new HashSet<OrderId>();
-
-            return this.GetOrdersFromCache(orderIds);
-        }
-
-        /// <inheritdoc />
-        public IDictionary<OrderId, Order> GetOrdersCompleted()
-        {
-            return this.GetOrdersFromCache(this.indexOrdersCompleted);
-        }
-
-        /// <inheritdoc />
-        public IDictionary<OrderId, Order> GetOrdersCompleted(TraderId traderId, StrategyId? filterStrategyId = null)
-        {
-            var orderIds = this.indexTraders.TryGetValue(traderId, out var traderIndex)
-                ? SetFactory.Intersection(new[] { this.indexOrdersCompleted, traderIndex.OrderIds(filterStrategyId) })
-                : new HashSet<OrderId>();
-
-            return this.GetOrdersFromCache(orderIds);
-        }
-
-        /// <inheritdoc />
-        public Position? GetPosition(PositionId positionId)
-        {
-            if (this.cachedPositions.TryGetValue(positionId, out var position))
-            {
-                return position;
-            }
-
-            this.Log.Warning($"Cannot find Position for {positionId} in the memory cache.");
-            return null;
-        }
-
-        /// <inheritdoc />
-        public Position? GetPositionForOrder(OrderId orderId)
-        {
-            if (this.indexOrderPosition.TryGetValue(orderId, out var positionId))
-            {
-                return this.GetPosition(positionId);
-            }
-
-            this.Log.Warning($"Cannot find Position for {orderId} in the database.");
-            return null;
-        }
-
-        /// <inheritdoc />
-        public PositionId? GetPositionId(OrderId orderId)
+        public override PositionId? GetPositionId(OrderId orderId)
         {
             if (this.indexOrderPosition.TryGetValue(orderId, out var positionId))
             {
@@ -498,93 +312,95 @@ namespace Nautilus.Execution.Engine
         }
 
         /// <inheritdoc />
-        public IDictionary<PositionId, Position> GetPositions()
+        public override ICollection<StrategyId> GetStrategyIds(TraderId traderId)
         {
-            return new Dictionary<PositionId, Position>(this.cachedPositions);
+            return this.indexTraders.TryGetValue(traderId, out var traderIndex)
+                ? new SortedSet<StrategyId>(traderIndex.StrategyIds)
+                : new SortedSet<StrategyId>();
         }
 
         /// <inheritdoc />
-        public IDictionary<PositionId, Position> GetPositions(TraderId traderId, StrategyId? filterStrategyId = null)
+        public override ICollection<OrderId> GetOrderIds()
         {
-            var positionIds = this.indexTraders.TryGetValue(traderId, out var traderIndex)
-                ? SetFactory.Intersection(new[] { this.indexPositions, traderIndex.PositionIds(filterStrategyId) })
-                : new HashSet<PositionId>();
-
-            return this.GetPositionsFromCache(positionIds);
+            return new SortedSet<OrderId>(this.indexOrders);
         }
 
         /// <inheritdoc />
-        public IDictionary<PositionId, Position> GetPositionsOpen()
+        public override ICollection<OrderId> GetOrderIds(TraderId traderId, StrategyId? strategyIdFilter = null)
         {
-            return this.GetPositionsFromCache(this.indexPositionsOpen);
+            return this.indexTraders.TryGetValue(traderId, out var traderIndex)
+                ? new SortedSet<OrderId>(traderIndex.OrderIds(strategyIdFilter))
+                : new SortedSet<OrderId>();
         }
 
         /// <inheritdoc />
-        public IDictionary<PositionId, Position> GetPositionsOpen(TraderId traderId, StrategyId? filterStrategyId = null)
+        public override ICollection<OrderId> GetOrderWorkingIds()
         {
-            var positionIds = this.indexTraders.TryGetValue(traderId, out var traderIndex)
-                ? SetFactory.Intersection(new[] { this.indexPositionsOpen, traderIndex.PositionIds(filterStrategyId) })
-                : new HashSet<PositionId>();
-
-            return this.GetPositionsFromCache(positionIds);
+            return new SortedSet<OrderId>(this.indexOrdersWorking);
         }
 
         /// <inheritdoc />
-        public IDictionary<PositionId, Position> GetPositionsClosed()
+        public override ICollection<OrderId> GetOrderWorkingIds(TraderId traderId, StrategyId? filterStrategyId = null)
         {
-            return this.GetPositionsFromCache(this.indexPositionsClosed);
+            return this.indexTraders.TryGetValue(traderId, out var traderIndex)
+                ? SetFactory.IntersectionSorted(new[] { this.indexOrdersWorking, traderIndex.OrderIds(filterStrategyId) })
+                : new SortedSet<OrderId>();
         }
 
         /// <inheritdoc />
-        public IDictionary<PositionId, Position> GetPositionsClosed(TraderId traderId, StrategyId? filterStrategyId = null)
+        public override ICollection<OrderId> GetOrderCompletedIds()
         {
-            var positionIds = this.indexTraders.TryGetValue(traderId, out var traderIndex)
-                ? SetFactory.Intersection(new[] { this.indexPositionsClosed, traderIndex.PositionIds(filterStrategyId) })
-                : new HashSet<PositionId>();
-
-            return this.GetPositionsFromCache(positionIds);
+            return new SortedSet<OrderId>(this.indexOrdersCompleted);
         }
 
-        [PerformanceOptimized]
-        private Dictionary<OrderId, Order> GetOrdersFromCache(HashSet<OrderId> orderIds)
+        /// <inheritdoc />
+        public override ICollection<OrderId> GetOrderCompletedIds(TraderId traderId, StrategyId? filterStrategyId = null)
         {
-            var orders = new Dictionary<OrderId, Order>();
-
-            try
-            {
-                foreach (var orderId in orderIds)
-                {
-                    orders[orderId] = this.cachedOrders[orderId];
-                }
-            }
-            catch (KeyNotFoundException ex)
-            {
-                // This should never happen
-                this.Log.Error($"Cannot find an OrderId in the memory cache.", ex);
-            }
-
-            return orders;
+            return this.indexTraders.TryGetValue(traderId, out var traderIndex)
+                ? SetFactory.IntersectionSorted(new[] { this.indexOrdersCompleted, traderIndex.OrderIds(filterStrategyId) })
+                : new SortedSet<OrderId>();
         }
 
-        [PerformanceOptimized]
-        private Dictionary<PositionId, Position> GetPositionsFromCache(HashSet<PositionId> positionIds)
+        /// <inheritdoc />
+        public override ICollection<PositionId> GetPositionIds()
         {
-            var positions = new Dictionary<PositionId, Position>();
+            return new SortedSet<PositionId>(this.CachedPositions.Keys);
+        }
 
-            try
-            {
-                foreach (var positionId in positionIds)
-                {
-                    positions[positionId] = this.cachedPositions[positionId];
-                }
-            }
-            catch (KeyNotFoundException ex)
-            {
-                // This should never happen
-                this.Log.Error($"Cannot find a PositionId in the memory cache.", ex);
-            }
+        /// <inheritdoc />
+        public override ICollection<PositionId> GetPositionIds(TraderId traderId, StrategyId? filterStrategyId = null)
+        {
+            return this.indexTraders.TryGetValue(traderId, out var traderIndex)
+                ? SetFactory.IntersectionSorted(new[] { this.indexPositions, traderIndex.PositionIds(filterStrategyId) })
+                : new SortedSet<PositionId>();
+        }
 
-            return positions;
+        /// <inheritdoc />
+        public override ICollection<PositionId> GetPositionOpenIds()
+        {
+            return new SortedSet<PositionId>(this.indexPositionsOpen);
+        }
+
+        /// <inheritdoc />
+        public override ICollection<PositionId> GetPositionOpenIds(TraderId traderId, StrategyId? filterStrategyId = null)
+        {
+            return this.indexTraders.TryGetValue(traderId, out var traderIndex)
+                ? SetFactory.IntersectionSorted(new[] { this.indexPositionsOpen, traderIndex.PositionIds(filterStrategyId) })
+                : new SortedSet<PositionId>();
+        }
+
+        /// <inheritdoc />
+        public override ICollection<PositionId> GetPositionClosedIds()
+        {
+            return new SortedSet<PositionId>(this.indexPositionsClosed);
+        }
+
+        /// <inheritdoc />
+        public override ICollection<PositionId> GetPositionClosedIds(TraderId traderId, StrategyId? filterStrategyId = null)
+        {
+            return this.indexTraders.TryGetValue(traderId, out var traderIndex)
+                ? SetFactory.IntersectionSorted(new[] { this.indexPositionsClosed, traderIndex.PositionIds(filterStrategyId) })
+                : new SortedSet<PositionId>();
         }
     }
 }
