@@ -52,7 +52,6 @@ namespace Nautilus.DomainModel.FiniteStateMachine
         internal void Process(Trigger trigger)
         {
             var transition = new StateTransition<T>(this.State, trigger);
-
             if (this.stateTransitionTable.TryGetValue(transition, out var state))
             {
                 this.State = state;
