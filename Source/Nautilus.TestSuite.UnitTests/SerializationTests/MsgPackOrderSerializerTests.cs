@@ -21,11 +21,13 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
     public class MsgPackOrderSerializerTests
     {
         private readonly ITestOutputHelper output;
+        private readonly OrderSerializer serializer;
 
         public MsgPackOrderSerializerTests(ITestOutputHelper output)
         {
             // Fixture Setup
             this.output = output;
+            this.serializer = new OrderSerializer();
         }
 
         [Fact]
@@ -37,8 +39,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
                 .BuildMarketOrder();
 
             // Act
-            var packed = OrderSerializer.Serialize(order);
-            var unpacked = OrderSerializer.Deserialize(packed);
+            var packed = this.serializer.Serialize(order);
+            var unpacked = this.serializer.Deserialize(packed);
 
             // Assert
             Assert.Equal(order, unpacked);
@@ -60,8 +62,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var order = new StubOrderBuilder().BuildStopLimitOrder();
 
             // Act
-            var packed = OrderSerializer.Serialize(order);
-            var unpacked = OrderSerializer.Deserialize(packed);
+            var packed = this.serializer.Serialize(order);
+            var unpacked = this.serializer.Deserialize(packed);
 
             // Assert
             Assert.Equal(order, unpacked);
@@ -83,8 +85,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var order = new StubOrderBuilder().BuildStopMarketOrder();
 
             // Act
-            var packed = OrderSerializer.Serialize(order);
-            var unpacked = OrderSerializer.Deserialize(packed);
+            var packed = this.serializer.Serialize(order);
+            var unpacked = this.serializer.Deserialize(packed);
 
             // Assert
             Assert.Equal(order, unpacked);
@@ -106,8 +108,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var order = new StubOrderBuilder().BuildStopLimitOrder();
 
             // Act
-            var packed = OrderSerializer.Serialize(order);
-            var unpacked = OrderSerializer.Deserialize(packed);
+            var packed = this.serializer.Serialize(order);
+            var unpacked = this.serializer.Deserialize(packed);
 
             // Assert
             Assert.Equal(order, unpacked);
@@ -129,8 +131,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var order = new StubOrderBuilder().TakeProfitOrder("O-125").BuildLimitOrder();
 
             // Act
-            var packed = OrderSerializer.SerializeNullable(order);
-            var unpacked = OrderSerializer.DeserializeNullable(packed);
+            var packed = this.serializer.SerializeNullable(order);
+            var unpacked = this.serializer.DeserializeNullable(packed);
 
             // Assert
             if (unpacked is null)
@@ -156,8 +158,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         {
             // Arrange
             // Act
-            var packed = OrderSerializer.SerializeNullable(null);
-            var unpacked = OrderSerializer.DeserializeNullable(packed);
+            var packed = this.serializer.SerializeNullable(null);
+            var unpacked = this.serializer.DeserializeNullable(packed);
 
             // Assert
             Assert.Null(unpacked);

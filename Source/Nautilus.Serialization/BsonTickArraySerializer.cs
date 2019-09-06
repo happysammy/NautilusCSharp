@@ -14,6 +14,7 @@ namespace Nautilus.Serialization
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
@@ -41,6 +42,7 @@ namespace Nautilus.Serialization
         public DataEncoding DataEncoding => DataEncoding.Bson;
 
         /// <inheritdoc />
+        [PerformanceOptimized]
         public byte[] Serialize(Tick[] ticks)
         {
             Debug.NotEmpty(ticks, nameof(ticks));
@@ -60,6 +62,7 @@ namespace Nautilus.Serialization
         }
 
         /// <inheritdoc />
+        [PerformanceOptimized]
         public Tick[] Deserialize(byte[] dataBytes)
         {
             Debug.NotEmpty(dataBytes, nameof(dataBytes));

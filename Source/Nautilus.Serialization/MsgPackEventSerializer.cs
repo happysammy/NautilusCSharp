@@ -8,10 +8,8 @@
 
 namespace Nautilus.Serialization
 {
-    using System;
     using System.Globalization;
     using MsgPack;
-    using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
@@ -26,23 +24,17 @@ namespace Nautilus.Serialization
     /// </summary>
     public sealed class MsgPackEventSerializer : ISerializer<Event>
     {
-        private readonly ObjectCache<string, TraderId> cachedTraderIds;
-        private readonly ObjectCache<string, AccountId> cachedAccountIds;
-        private readonly ObjectCache<string, StrategyId> cachedStrategyIds;
-        private readonly ObjectCache<string, Symbol> cachedSymbols;
+        private readonly IdentifierCache identifierCache;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MsgPackEventSerializer"/> class.
         /// </summary>
         public MsgPackEventSerializer()
         {
-            this.cachedTraderIds = new ObjectCache<string, TraderId>(TraderId.FromString);
-            this.cachedAccountIds = new ObjectCache<string, AccountId>(AccountId.FromString);
-            this.cachedStrategyIds = new ObjectCache<string, StrategyId>(StrategyId.FromString);
-            this.cachedSymbols = new ObjectCache<string, Symbol>(Symbol.FromString);
+            this.identifierCache = new IdentifierCache();
         }
 
-        /// <inheritdoc />
+                /// <inheritdoc />
         public byte[] Serialize(Event @event)
         {
             var package = new MessagePackObjectDictionary
@@ -166,16 +158,16 @@ namespace Nautilus.Serialization
             var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(serializedEvent);
 
             var @event = unpacked[nameof(Event.Type)].ToString();
-            var id = Guid.Parse(unpacked[nameof(Command.Id)].AsString());
-            var timestamp = unpacked[nameof(Event.Timestamp)].AsString().ToZonedDateTimeFromIso();
+            var id = ObjectExtractor.Guid(unpacked[nameof(Event.Id)]);
+            var timestamp = ObjectExtractor.ZonedDateTime(unpacked[nameof(Event.Timestamp)]);
 
             switch (@event)
             {
                 case nameof(AccountStateEvent):
-                    var currency = unpacked[nameof(AccountStateEvent.Currency)].AsString().ToEnum<Currency>();
+                    var currency = ObjectExtractor.Enum<Currency>(unpacked[nameof(AccountStateEvent.Currency)]);
                     return new AccountStateEvent(
-                        this.cachedAccountIds.Get(unpacked[nameof(AccountId)].AsString()),
-                        unpacked[nameof(AccountStateEvent.Currency)].AsString().ToEnum<Currency>(),
+                        this.identifierCache.AccountId(unpacked),
+                        currency,
                         ObjectExtractor.Money(unpacked[nameof(AccountStateEvent.CashBalance)], currency),
                         ObjectExtractor.Money(unpacked[nameof(AccountStateEvent.CashStartDay)], currency),
                         ObjectExtractor.Money(unpacked[nameof(AccountStateEvent.CashActivityDay)], currency),
@@ -187,8 +179,8 @@ namespace Nautilus.Serialization
                         timestamp);
                 case nameof(OrderInitialized):
                     return new OrderInitialized(
-                        new OrderId(unpacked[nameof(OrderId)].AsString()),
-                        ObjectExtractor.Symbol(unpacked),
+                        ObjectExtractor.OrderId(unpacked),
+                        this.identifierCache.Symbol(unpacked),
                         ObjectExtractor.Label(unpacked),
                         ObjectExtractor.Enum<OrderSide>(unpacked[nameof(OrderInitialized.OrderSide)]),
                         ObjectExtractor.Enum<OrderType>(unpacked[nameof(OrderInitialized.OrderType)]),
@@ -200,32 +192,32 @@ namespace Nautilus.Serialization
                         timestamp);
                 case nameof(OrderSubmitted):
                     return new OrderSubmitted(
-                        new OrderId(unpacked[nameof(OrderId)].AsString()),
-                        this.cachedAccountIds.Get(unpacked[nameof(AccountId)].AsString()),
+                        ObjectExtractor.OrderId(unpacked),
+                        this.identifierCache.AccountId(unpacked),
                         ObjectExtractor.ZonedDateTime(unpacked[nameof(OrderSubmitted.SubmittedTime)]),
                         id,
                         timestamp);
                 case nameof(OrderAccepted):
                     return new OrderAccepted(
-                        new OrderId(unpacked[nameof(OrderId)].AsString()),
-                        this.cachedAccountIds.Get(unpacked[nameof(AccountId)].AsString()),
+                        ObjectExtractor.OrderId(unpacked),
+                        this.identifierCache.AccountId(unpacked),
                         ObjectExtractor.ZonedDateTime(unpacked[nameof(OrderAccepted.AcceptedTime)]),
                         id,
                         timestamp);
                 case nameof(OrderRejected):
                     return new OrderRejected(
-                        new OrderId(unpacked[nameof(OrderId)].AsString()),
-                        this.cachedAccountIds.Get(unpacked[nameof(AccountId)].AsString()),
+                        ObjectExtractor.OrderId(unpacked),
+                        this.identifierCache.AccountId(unpacked),
                         ObjectExtractor.ZonedDateTime(unpacked[nameof(OrderRejected.RejectedTime)]),
                         unpacked[nameof(OrderRejected.RejectedReason)].ToString(),
                         id,
                         timestamp);
                 case nameof(OrderWorking):
                     return new OrderWorking(
-                        new OrderId(unpacked[nameof(OrderId)].AsString()),
-                        new OrderIdBroker(unpacked[nameof(OrderIdBroker)].AsString()),
-                        this.cachedAccountIds.Get(unpacked[nameof(AccountId)].AsString()),
-                        this.cachedSymbols.Get(unpacked[nameof(Symbol)].AsString()),
+                        ObjectExtractor.OrderId(unpacked),
+                        ObjectExtractor.OrderIdBroker(unpacked),
+                        this.identifierCache.AccountId(unpacked),
+                        this.identifierCache.Symbol(unpacked),
                         ObjectExtractor.Label(unpacked),
                         ObjectExtractor.Enum<OrderSide>(unpacked[nameof(OrderWorking.OrderSide)]),
                         ObjectExtractor.Enum<OrderType>(unpacked[nameof(OrderWorking.OrderType)]),
@@ -238,15 +230,15 @@ namespace Nautilus.Serialization
                         timestamp);
                 case nameof(OrderCancelled):
                     return new OrderCancelled(
-                        new OrderId(unpacked[nameof(OrderId)].AsString()),
-                        this.cachedAccountIds.Get(unpacked[nameof(AccountId)].AsString()),
+                        ObjectExtractor.OrderId(unpacked),
+                        this.identifierCache.AccountId(unpacked),
                         ObjectExtractor.ZonedDateTime(unpacked[nameof(OrderCancelled.CancelledTime)]),
                         id,
                         timestamp);
                 case nameof(OrderCancelReject):
                     return new OrderCancelReject(
-                        new OrderId(unpacked[nameof(OrderId)].AsString()),
-                        this.cachedAccountIds.Get(unpacked[nameof(AccountId)].AsString()),
+                        ObjectExtractor.OrderId(unpacked),
+                        this.identifierCache.AccountId(unpacked),
                         ObjectExtractor.ZonedDateTime(unpacked[nameof(OrderCancelReject.RejectedTime)]),
                         unpacked[nameof(OrderCancelReject.RejectedResponseTo)].ToString(),
                         unpacked[nameof(OrderCancelReject.RejectedReason)].ToString(),
@@ -254,27 +246,27 @@ namespace Nautilus.Serialization
                         timestamp);
                 case nameof(OrderModified):
                     return new OrderModified(
-                        new OrderId(unpacked[nameof(OrderId)].AsString()),
-                        new OrderIdBroker(unpacked[nameof(OrderIdBroker)].AsString()),
-                        this.cachedAccountIds.Get(unpacked[nameof(AccountId)].AsString()),
+                        ObjectExtractor.OrderId(unpacked),
+                        ObjectExtractor.OrderIdBroker(unpacked),
+                        this.identifierCache.AccountId(unpacked),
                         ObjectExtractor.Price(unpacked[nameof(OrderModified.ModifiedPrice)]),
                         ObjectExtractor.ZonedDateTime(unpacked[nameof(OrderModified.ModifiedTime)]),
                         id,
                         timestamp);
                 case nameof(OrderExpired):
                     return new OrderExpired(
-                        new OrderId(unpacked[nameof(OrderId)].AsString()),
-                        this.cachedAccountIds.Get(unpacked[nameof(AccountId)].AsString()),
+                        ObjectExtractor.OrderId(unpacked),
+                        this.identifierCache.AccountId(unpacked),
                         ObjectExtractor.ZonedDateTime(unpacked[nameof(OrderExpired.ExpiredTime)]),
                         id,
                         timestamp);
                 case nameof(OrderPartiallyFilled):
                     return new OrderPartiallyFilled(
-                        new OrderId(unpacked[nameof(OrderId)].AsString()),
-                        this.cachedAccountIds.Get(unpacked[nameof(AccountId)].AsString()),
+                        ObjectExtractor.OrderId(unpacked),
+                        this.identifierCache.AccountId(unpacked),
                         ObjectExtractor.ExecutionId(unpacked),
                         ObjectExtractor.ExecutionTicket(unpacked),
-                        this.cachedSymbols.Get(unpacked[nameof(Symbol)].AsString()),
+                        this.identifierCache.Symbol(unpacked),
                         ObjectExtractor.Enum<OrderSide>(unpacked[nameof(OrderPartiallyFilled.OrderSide)]),
                         ObjectExtractor.Quantity(unpacked[nameof(OrderPartiallyFilled.FilledQuantity)]),
                         ObjectExtractor.Quantity(unpacked[nameof(OrderPartiallyFilled.LeavesQuantity)]),
@@ -284,11 +276,11 @@ namespace Nautilus.Serialization
                         timestamp);
                 case nameof(OrderFilled):
                     return new OrderFilled(
-                        new OrderId(unpacked[nameof(OrderId)].AsString()),
-                        this.cachedAccountIds.Get(unpacked[nameof(AccountId)].AsString()),
+                        ObjectExtractor.OrderId(unpacked),
+                        this.identifierCache.AccountId(unpacked),
                         ObjectExtractor.ExecutionId(unpacked),
                         ObjectExtractor.ExecutionTicket(unpacked),
-                        this.cachedSymbols.Get(unpacked[nameof(Symbol)].AsString()),
+                        this.identifierCache.Symbol(unpacked),
                         ObjectExtractor.Enum<OrderSide>(unpacked[nameof(OrderFilled.OrderSide)]),
                         ObjectExtractor.Quantity(unpacked[nameof(OrderFilled.FilledQuantity)]),
                         ObjectExtractor.Price(unpacked[nameof(OrderFilled.AveragePrice)]),

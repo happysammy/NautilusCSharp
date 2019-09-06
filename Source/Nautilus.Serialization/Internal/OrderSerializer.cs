@@ -10,25 +10,37 @@ namespace Nautilus.Serialization.Internal
 {
     using System.ComponentModel;
     using MsgPack;
+    using Nautilus.Common.Componentry;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
+    using Nautilus.DomainModel.Identifiers;
 
     /// <summary>
     /// Provides serialization of <see cref="Order"/> objects to MessagePack specification bytes.
     /// </summary>
-    internal static class OrderSerializer
+    internal class OrderSerializer
     {
         private static readonly byte[] Empty = MsgPackSerializer.Serialize(new MessagePackObjectDictionary());
+
+        private readonly ObjectCache<string, Symbol> symbolCache;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OrderSerializer"/> class.
+        /// </summary>
+        public OrderSerializer()
+        {
+            this.symbolCache = new ObjectCache<string, Symbol>(Symbol.FromString);
+        }
 
         /// <summary>
         /// Returns the given <see cref="Order"/> serialized to MessagePack specification bytes.
         /// </summary>
         /// <param name="order">The order to serialize.</param>
         /// <returns>The serialized bytes.</returns>
-        internal static byte[] Serialize(Order order)
+        internal byte[] Serialize(Order order)
         {
             return MsgPackSerializer.Serialize(new MessagePackObjectDictionary
             {
@@ -51,9 +63,9 @@ namespace Nautilus.Serialization.Internal
         /// </summary>
         /// <param name="order">The nullable order to serialize.</param>
         /// <returns>The serialized nullable order bytes.</returns>
-        internal static byte[] SerializeNullable(Order? order)
+        internal byte[] SerializeNullable(Order? order)
         {
-            return order == null ? Empty : Serialize(order);
+            return order == null ? Empty : this.Serialize(order);
         }
 
         /// <summary>
@@ -61,11 +73,11 @@ namespace Nautilus.Serialization.Internal
         /// </summary>
         /// <param name="orderBytes">The order bytes.</param>
         /// <returns>The deserialized <see cref="Order"/>.</returns>
-        internal static Order Deserialize(byte[] orderBytes)
+        internal Order Deserialize(byte[] orderBytes)
         {
             var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(orderBytes);
 
-            return Deserialize(unpacked);
+            return this.Deserialize(unpacked);
         }
 
         /// <summary>
@@ -73,11 +85,11 @@ namespace Nautilus.Serialization.Internal
         /// </summary>
         /// <param name="orderBytes">The message pack object dictionary.</param>
         /// <returns>The deserialized <see cref="Order"/>?.</returns>
-        internal static Order? DeserializeNullable(byte[] orderBytes)
+        internal Order? DeserializeNullable(byte[] orderBytes)
         {
             var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(orderBytes);
 
-            return unpacked.Count == 0 ? null : Deserialize(unpacked);
+            return unpacked.Count == 0 ? null : this.Deserialize(unpacked);
         }
 
         /// <summary>
@@ -86,11 +98,11 @@ namespace Nautilus.Serialization.Internal
         /// <param name="unpacked">The unpacked order object dictionary.</param>
         /// <returns>The deserialized <see cref="Order"/>.</returns>
         /// <exception cref="InvalidEnumArgumentException">If the order type is unknown.</exception>
-        private static Order Deserialize(MessagePackObjectDictionary unpacked)
+        private Order Deserialize(MessagePackObjectDictionary unpacked)
         {
             var type = ObjectExtractor.Enum<OrderType>(unpacked[nameof(OrderType)]);
             var id = ObjectExtractor.OrderId(unpacked, nameof(Order.Id));
-            var symbol = ObjectExtractor.Symbol(unpacked);
+            var symbol = this.symbolCache.Get(unpacked[nameof(Symbol)].AsString());
             var label = ObjectExtractor.Label(unpacked);
             var side = ObjectExtractor.Enum<OrderSide>(unpacked[nameof(OrderSide)]);
             var quantity = ObjectExtractor.Quantity(unpacked[nameof(Order.Quantity)]);

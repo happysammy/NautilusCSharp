@@ -8,16 +8,12 @@
 
 namespace Nautilus.Serialization
 {
-    using System;
     using MsgPack;
-    using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Message;
     using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Execution.Messages.Commands;
     using Nautilus.Serialization.Internal;
 
@@ -26,18 +22,16 @@ namespace Nautilus.Serialization
     /// </summary>
     public sealed class MsgPackCommandSerializer : IMessageSerializer<Command>
     {
-        private readonly ObjectCache<string, TraderId> cachedTraderIds;
-        private readonly ObjectCache<string, AccountId> cachedAccountIds;
-        private readonly ObjectCache<string, StrategyId> cachedStrategyIds;
+        private readonly IdentifierCache identifierCache;
+        private readonly OrderSerializer orderSerializer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MsgPackCommandSerializer"/> class.
         /// </summary>
         public MsgPackCommandSerializer()
         {
-            this.cachedTraderIds = new ObjectCache<string, TraderId>(TraderId.FromString);
-            this.cachedAccountIds = new ObjectCache<string, AccountId>(AccountId.FromString);
-            this.cachedStrategyIds = new ObjectCache<string, StrategyId>(StrategyId.FromString);
+            this.identifierCache = new IdentifierCache();
+            this.orderSerializer = new OrderSerializer();
         }
 
         /// <inheritdoc />
@@ -60,16 +54,16 @@ namespace Nautilus.Serialization
                     package.Add(nameof(cmd.StrategyId), cmd.StrategyId.Value);
                     package.Add(nameof(cmd.AccountId), cmd.AccountId.Value);
                     package.Add(nameof(cmd.PositionId), cmd.PositionId.Value);
-                    package.Add(nameof(cmd.Order), OrderSerializer.Serialize(cmd.Order));
+                    package.Add(nameof(cmd.Order), this.orderSerializer.Serialize(cmd.Order));
                     break;
                 case SubmitAtomicOrder cmd:
                     package.Add(nameof(cmd.TraderId), cmd.TraderId.Value);
                     package.Add(nameof(cmd.StrategyId), cmd.StrategyId.Value);
                     package.Add(nameof(cmd.AccountId), cmd.AccountId.Value);
                     package.Add(nameof(cmd.PositionId), cmd.PositionId.Value);
-                    package.Add(nameof(cmd.AtomicOrder.Entry), OrderSerializer.Serialize(cmd.AtomicOrder.Entry));
-                    package.Add(nameof(cmd.AtomicOrder.StopLoss), OrderSerializer.Serialize(cmd.AtomicOrder.StopLoss));
-                    package.Add(nameof(cmd.AtomicOrder.TakeProfit), OrderSerializer.SerializeNullable(cmd.AtomicOrder.TakeProfit));
+                    package.Add(nameof(cmd.AtomicOrder.Entry), this.orderSerializer.Serialize(cmd.AtomicOrder.Entry));
+                    package.Add(nameof(cmd.AtomicOrder.StopLoss), this.orderSerializer.Serialize(cmd.AtomicOrder.StopLoss));
+                    package.Add(nameof(cmd.AtomicOrder.TakeProfit), this.orderSerializer.SerializeNullable(cmd.AtomicOrder.TakeProfit));
                     break;
                 case ModifyOrder cmd:
                     package.Add(nameof(cmd.TraderId), cmd.TraderId.Value);
@@ -98,52 +92,52 @@ namespace Nautilus.Serialization
             var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(commandBytes);
 
             var command = unpacked[nameof(Command.Type)].AsString();
-            var id = Guid.Parse(unpacked[nameof(Command.Id)].AsString());
+            var id = ObjectExtractor.Guid(unpacked[nameof(Command.Id)]);
             var timestamp = unpacked[nameof(Command.Timestamp)].AsString().ToZonedDateTimeFromIso();
 
             switch (command)
             {
                 case nameof(AccountInquiry):
                     return new AccountInquiry(
-                        this.cachedAccountIds.Get(unpacked[nameof(AccountId)].AsString()),
+                        this.identifierCache.AccountId(unpacked),
                         id,
                         timestamp);
                 case nameof(SubmitOrder):
                     return new SubmitOrder(
-                        this.cachedTraderIds.Get(unpacked[nameof(TraderId)].AsString()),
-                        this.cachedStrategyIds.Get(unpacked[nameof(StrategyId)].AsString()),
-                        this.cachedAccountIds.Get(unpacked[nameof(AccountId)].AsString()),
-                        new PositionId(unpacked[nameof(PositionId)].AsString()),
-                        OrderSerializer.Deserialize(unpacked[nameof(SubmitOrder.Order)].AsBinary()),
+                        this.identifierCache.TraderId(unpacked),
+                        this.identifierCache.StrategyId(unpacked),
+                        this.identifierCache.AccountId(unpacked),
+                        ObjectExtractor.PositionId(unpacked),
+                        this.orderSerializer.Deserialize(unpacked[nameof(SubmitOrder.Order)].AsBinary()),
                         id,
                         timestamp);
                 case nameof(SubmitAtomicOrder):
                     return new SubmitAtomicOrder(
-                        this.cachedTraderIds.Get(unpacked[nameof(TraderId)].AsString()),
-                        this.cachedStrategyIds.Get(unpacked[nameof(StrategyId)].AsString()),
-                        this.cachedAccountIds.Get(unpacked[nameof(AccountId)].AsString()),
-                        new PositionId(unpacked[nameof(PositionId)].AsString()),
+                        this.identifierCache.TraderId(unpacked),
+                        this.identifierCache.StrategyId(unpacked),
+                        this.identifierCache.AccountId(unpacked),
+                        ObjectExtractor.PositionId(unpacked),
                         new AtomicOrder(
-                            OrderSerializer.Deserialize(unpacked[nameof(AtomicOrder.Entry)].AsBinary()),
-                            OrderSerializer.Deserialize(unpacked[nameof(AtomicOrder.StopLoss)].AsBinary()),
-                            OrderSerializer.DeserializeNullable(unpacked[nameof(AtomicOrder.TakeProfit)].AsBinary())),
+                            this.orderSerializer.Deserialize(unpacked[nameof(AtomicOrder.Entry)].AsBinary()),
+                            this.orderSerializer.Deserialize(unpacked[nameof(AtomicOrder.StopLoss)].AsBinary()),
+                            this.orderSerializer.DeserializeNullable(unpacked[nameof(AtomicOrder.TakeProfit)].AsBinary())),
                         id,
                         timestamp);
                 case nameof(ModifyOrder):
                     return new ModifyOrder(
-                        this.cachedTraderIds.Get(unpacked[nameof(TraderId)].AsString()),
-                        this.cachedStrategyIds.Get(unpacked[nameof(StrategyId)].AsString()),
-                        this.cachedAccountIds.Get(unpacked[nameof(AccountId)].AsString()),
-                        new OrderId(unpacked[nameof(OrderId)].AsString()),
-                        Price.Create(Convert.ToDecimal(unpacked[nameof(ModifyOrder.ModifiedPrice)].AsString())),
+                        this.identifierCache.TraderId(unpacked),
+                        this.identifierCache.StrategyId(unpacked),
+                        this.identifierCache.AccountId(unpacked),
+                        ObjectExtractor.OrderId(unpacked),
+                        ObjectExtractor.Price(unpacked[nameof(ModifyOrder.ModifiedPrice)].AsString()),
                         id,
                         timestamp);
                 case nameof(CancelOrder):
                     return new CancelOrder(
-                        this.cachedTraderIds.Get(unpacked[nameof(TraderId)].AsString()),
-                        this.cachedStrategyIds.Get(unpacked[nameof(StrategyId)].AsString()),
-                        this.cachedAccountIds.Get(unpacked[nameof(AccountId)].AsString()),
-                        new OrderId(unpacked[nameof(OrderId)].AsString()),
+                        this.identifierCache.TraderId(unpacked),
+                        this.identifierCache.StrategyId(unpacked),
+                        this.identifierCache.AccountId(unpacked),
+                        ObjectExtractor.OrderId(unpacked),
                         unpacked[nameof(CancelOrder.CancelReason)].AsString(),
                         id,
                         timestamp);

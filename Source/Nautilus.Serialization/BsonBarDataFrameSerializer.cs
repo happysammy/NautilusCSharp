@@ -13,6 +13,7 @@ namespace Nautilus.Serialization
     using MongoDB.Bson.Serialization;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Frames;
     using Nautilus.DomainModel.Identifiers;
@@ -31,6 +32,7 @@ namespace Nautilus.Serialization
         public DataEncoding DataEncoding => DataEncoding.Bson;
 
         /// <inheritdoc />
+        [PerformanceOptimized]
         public byte[] Serialize(BarDataFrame data)
         {
             Debug.NotEmpty(data.Bars, nameof(data.Bars));
@@ -51,6 +53,7 @@ namespace Nautilus.Serialization
         }
 
         /// <inheritdoc />
+        [PerformanceOptimized]
         public BarDataFrame Deserialize(byte[] dataBytes)
         {
             Debug.NotEmpty(dataBytes, nameof(dataBytes));

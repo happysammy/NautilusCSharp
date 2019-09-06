@@ -13,6 +13,7 @@ namespace Nautilus.Serialization
     using MongoDB.Bson.Serialization;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Entities;
 
@@ -43,6 +44,7 @@ namespace Nautilus.Serialization
         /// </summary>
         /// <param name="instruments">The instruments to serialize.</param>
         /// <returns>The serialized byte array array.</returns>
+        [PerformanceOptimized]
         public byte[] Serialize(Instrument[] instruments)
         {
             Debug.NotEmpty(instruments, nameof(instruments));
@@ -66,6 +68,7 @@ namespace Nautilus.Serialization
         /// </summary>
         /// <param name="dataBytes">The instrument data bytes to deserialize.</param>
         /// <returns>The deserialized instrument array.</returns>
+        [PerformanceOptimized]
         public Instrument[] Deserialize(byte[] dataBytes)
         {
             Debug.NotEmpty(dataBytes, nameof(dataBytes));
