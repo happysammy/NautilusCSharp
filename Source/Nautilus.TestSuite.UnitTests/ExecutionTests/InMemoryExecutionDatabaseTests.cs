@@ -9,7 +9,6 @@
 namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 {
     using System.Diagnostics.CodeAnalysis;
-    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.Execution.Engine;
     using Nautilus.Execution.Interfaces;
