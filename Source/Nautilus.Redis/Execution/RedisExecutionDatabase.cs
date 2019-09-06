@@ -66,6 +66,7 @@ namespace Nautilus.Redis.Execution
             if (this.OptionLoadCache)
             {
                 this.Log.Information($"The OptionLoadCache is {this.OptionLoadCache}");
+                this.LoadAccountsCache();
                 this.LoadOrdersCache();
                 this.LoadPositionsCache();
             }
@@ -84,6 +85,49 @@ namespace Nautilus.Redis.Execution
         /// <summary>
         /// Clear the current order cache and load orders from the database.
         /// </summary>
+        public void LoadAccountsCache()
+        {
+            this.Log.Information("Re-caching accounts from the database...");
+
+            this.CachedAccounts.Clear();
+
+            var accountKeys = this.redisServer.Keys(pattern: Key.Accounts).ToArray();
+
+            if (accountKeys.Length == 0)
+            {
+                this.Log.Information("No accounts found in the database.");
+                return;
+            }
+
+            foreach (var key in accountKeys)
+            {
+                var events = new Queue<RedisValue>(this.redisDatabase.ListRange(key));
+                if (events.Count == 0)
+                {
+                    this.Log.Error($"Cannot load account {key} from the database (no events persisted).");
+                    continue;
+                }
+
+                var initial = this.eventSerializer.Deserialize(events.Dequeue());
+                if (initial.Type != typeof(AccountStateEvent))
+                {
+                    this.Log.Error($"Cannot load account {key} from the database (event not AccountStateEvent, was {initial.Type}).");
+                    continue;
+                }
+
+                var account = new Account((AccountStateEvent)this.eventSerializer.Deserialize(events.Dequeue()));
+                this.CachedAccounts[account.Id] = account;
+            }
+
+            foreach (var account in this.CachedAccounts)
+            {
+                this.Log.Information($"Cached {account}.");
+            }
+        }
+
+        /// <summary>
+        /// Clear the current order cache and load orders from the database.
+        /// </summary>
         public void LoadOrdersCache()
         {
             this.Log.Information("Re-caching orders from the database...");
@@ -95,6 +139,7 @@ namespace Nautilus.Redis.Execution
             if (orderKeys.Length == 0)
             {
                 this.Log.Information("No orders found in the database.");
+                return;
             }
 
             foreach (var key in orderKeys)
@@ -114,11 +159,10 @@ namespace Nautilus.Redis.Execution
                 }
 
                 var order = new Order((OrderInitialized)initial);
-                do
+                while (events.Count > 0)
                 {
                     order.Apply((OrderEvent)this.eventSerializer.Deserialize(events.Dequeue()));
                 }
-                while (events.Count > 0);
 
                 this.cachedOrders[order.Id] = order;
             }
@@ -140,6 +184,7 @@ namespace Nautilus.Redis.Execution
             if (positionKeys.Length == 0)
             {
                 this.Log.Information("No positions found in the database.");
+                return;
             }
 
             foreach (var key in positionKeys)
@@ -152,11 +197,10 @@ namespace Nautilus.Redis.Execution
                 }
 
                 var position = new Position(new PositionId(key), (OrderFillEvent)this.eventSerializer.Deserialize(events.Dequeue()));
-                do
+                while (events.Count > 0);
                 {
                     position.Apply((OrderFillEvent)this.eventSerializer.Deserialize(events.Dequeue()));
                 }
-                while (events.Count > 0);
 
                 this.cachedPositions[position.Id] = position;
             }

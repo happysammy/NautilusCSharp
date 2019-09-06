@@ -68,6 +68,12 @@ namespace Nautilus.Execution.Engine
         }
 
         /// <inheritdoc />
+        public void LoadAccountsCache()
+        {
+            this.Log.Information("Re-caching accounts from the database (does nothing for this implementation.)");
+        }
+
+        /// <inheritdoc />
         public void LoadOrdersCache()
         {
             this.Log.Information("Re-caching orders from the database (does nothing for this implementation.)");

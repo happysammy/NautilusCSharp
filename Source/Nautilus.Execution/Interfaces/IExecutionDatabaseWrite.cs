@@ -21,6 +21,11 @@ namespace Nautilus.Execution.Interfaces
         /// <summary>
         /// Clear the current order cache and load orders from the database.
         /// </summary>
+        void LoadAccountsCache();
+
+        /// <summary>
+        /// Clear the current order cache and load orders from the database.
+        /// </summary>
         void LoadOrdersCache();
 
         /// <summary>
