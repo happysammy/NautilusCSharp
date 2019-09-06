@@ -164,7 +164,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             var working = new OrderWorking(
                 order.Id,
-                new OrderIdBroker("B" + order.Id),
+                new OrderIdBroker("B" + order.Id.Value),
                 AccountId.FromString("FXCM-02851908-DEMO"),
                 order.Symbol,
                 new Label("E"),
@@ -202,7 +202,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             var working = new OrderWorking(
                 order.Id,
-                new OrderIdBroker("B" + order.Id),
+                new OrderIdBroker("B" + order.Id.Value),
                 AccountId.FromString("FXCM-02851908-DEMO"),
                 order.Symbol,
                 new Label("E"),
@@ -276,7 +276,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var order = new StubOrderBuilder().BuildStopLimitOrder();
             var modified = new OrderModified(
                 order.Id,
-                new OrderIdBroker("B" + order.Id),
+                new OrderIdBroker("B" + order.Id.Value),
                 AccountId.FromString("FXCM-02851908-DEMO"),
                 Price.Create(2, 1),
                 StubZonedDateTime.UnixEpoch(),

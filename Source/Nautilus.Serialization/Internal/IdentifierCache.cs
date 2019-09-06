@@ -34,16 +34,6 @@ namespace Nautilus.Serialization.Internal
         }
 
         /// <summary>
-        /// Returns a Symbol extracted from the given <see cref="MessagePackObject"/>.
-        /// </summary>
-        /// <param name="unpacked">The MessagePack object to extract from.</param>
-        /// <returns>The extracted Symbol.</returns>
-        internal Symbol Symbol(MessagePackObjectDictionary unpacked)
-        {
-            return this.cachedSymbols.Get(unpacked[nameof(this.Symbol)].AsString());
-        }
-
-        /// <summary>
         /// Returns a TraderId extracted from the given <see cref="MessagePackObjectDictionary"/>.
         /// </summary>
         /// <param name="unpacked">The dictionary to extract from.</param>
@@ -51,6 +41,16 @@ namespace Nautilus.Serialization.Internal
         internal TraderId TraderId(MessagePackObjectDictionary unpacked)
         {
             return this.cachedTraderIds.Get(unpacked[nameof(this.TraderId)].AsString());
+        }
+
+        /// <summary>
+        /// Returns an AccountId extracted from the given <see cref="MessagePackObject"/>.
+        /// </summary>
+        /// <param name="unpacked">The MessagePack object to extract from.</param>
+        /// <returns>The extracted AccountId.</returns>
+        internal AccountId AccountId(MessagePackObjectDictionary unpacked)
+        {
+            return this.cachedAccountIds.Get(unpacked[nameof(this.AccountId)].AsString());
         }
 
         /// <summary>
@@ -64,13 +64,13 @@ namespace Nautilus.Serialization.Internal
         }
 
         /// <summary>
-        /// Returns an AccountId extracted from the given <see cref="MessagePackObject"/>.
+        /// Returns a Symbol extracted from the given <see cref="MessagePackObject"/>.
         /// </summary>
         /// <param name="unpacked">The MessagePack object to extract from.</param>
-        /// <returns>The extracted AccountId.</returns>
-        internal AccountId AccountId(MessagePackObjectDictionary unpacked)
+        /// <returns>The extracted Symbol.</returns>
+        internal Symbol Symbol(MessagePackObjectDictionary unpacked)
         {
-            return this.cachedAccountIds.Get(unpacked[nameof(this.AccountId)].AsString());
+            return this.cachedSymbols.Get(unpacked[nameof(this.Symbol)].AsString());
         }
     }
 }

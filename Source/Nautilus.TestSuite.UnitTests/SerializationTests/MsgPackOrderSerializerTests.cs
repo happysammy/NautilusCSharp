@@ -11,6 +11,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
+    using Nautilus.DomainModel.Enums;
     using Nautilus.Serialization.Internal;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NodaTime;
@@ -167,46 +168,46 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             this.output.WriteLine(Encoding.UTF8.GetString(packed));
         }
 
-// [Fact]
-//        internal void Deserialize_GivenMarketOrder_FromPythonMsgPack_ReturnsExpectedOrder()
-//        {
-//            // Arrange
-//            var base64 = "i6JJZLtPLTE5NzAwMTAxLTAwMDAwMC0wMDEtMDAxLTGmU3ltYm9sq0FVRFVTRC5GWENNqU9yZGVyU2lkZaNCVVmpT3JkZXJUeXBlpk1BUktFVKhRdWFudGl0ec4AAYagpVByaWNlpE5PTkWlTGFiZWykVTFfRatUaW1lSW5Gb3JjZaNEQVmqRXhwaXJlVGltZaROT05FqVRpbWVzdGFtcLgxOTcwLTAxLTAxVDAwOjAwOjAwLjAwMFqmSW5pdElk2gAkYjdhOWRkN2UtMmFkOC00ZDYzLTg1ZGItNGUzMzMwM2U3ODA2";
-//            var orderBytes = Convert.FromBase64String(base64);
-//
-//            // Act
-//            var order = OrderSerializer.Deserialize(orderBytes);
-//
-//            // Assert
-//            Assert.Equal(OrderType.MARKET, order.Type);
-//        }
-//
-//        [Fact]
-//        internal void Deserialize_GivenLimitOrder_FromPythonMsgPack_ReturnsExpectedOrder()
-//        {
-//            // Arrange
-//            var base64 = "i6JJZKdPMTIzNDU2plN5bWJvbKtBVURVU0QuRlhDTalPcmRlclNpZGWjQlVZqU9yZGVyVHlwZaVMSU1JVKhRdWFudGl0ec4AAYagpVByaWNlpzEuMDAwMDClTGFiZWykTk9ORatUaW1lSW5Gb3JjZaNHVESqRXhwaXJlVGltZbgxOTcwLTAxLTAxVDAwOjAwOjAwLjAwMFqpVGltZXN0YW1wuDE5NzAtMDEtMDFUMDA6MDA6MDAuMDAwWqZJbml0SWTaACQ1YzRiZTllNC0yYTQxLTRjZjQtYmRkMS04OTE0ODM0Mjc5ZDg=";
-//            var orderBytes = Convert.FromBase64String(base64);
-//
-//            // Act
-//            var order = OrderSerializer.Deserialize(orderBytes);
-//
-//            // Assert
-//            Assert.Equal(OrderType.LIMIT, order.Type);
-//        }
-//
-//        [Fact]
-//        internal void Deserialize_GivenStopLimitOrder_FromPythonMsgPack_ReturnsExpectedOrder()
-//        {
-//            // Arrange
-//            var base64 = "i6JJZKdPMTIzNDU2plN5bWJvbKtBVURVU0QuRlhDTalPcmRlclNpZGWjQlVZqU9yZGVyVHlwZapTVE9QX0xJTUlUqFF1YW50aXR5zgABhqClUHJpY2WnMS4wMDAwMKVMYWJlbKVTMV9TTKtUaW1lSW5Gb3JjZaNEQVmqRXhwaXJlVGltZaROT05FqVRpbWVzdGFtcLgxOTcwLTAxLTAxVDAwOjAwOjAwLjAwMFqmSW5pdElk2gAkNTA5ZmUxNTctNjIyNi00N2MyLWEzOGYtNjQ4MzFkNjlkMmIy";
-//            var orderBytes = Convert.FromBase64String(base64);
-//
-//            // Act
-//            var order = OrderSerializer.Deserialize(orderBytes);
-//
-//            // Assert
-//            Assert.Equal(OrderType.STOP_LIMIT, order.Type);
-//        }
+        [Fact]
+        internal void Deserialize_GivenMarketOrder_FromPythonMsgPack_ReturnsExpectedOrder()
+        {
+            // Arrange
+            var base64 = "i6JJZLtPLTE5NzAwMTAxLTAwMDAwMC0wMDEtMDAxLTGmU3ltYm9sq0FVRFVTRC5GWENNqU9yZGVyU2lkZaNCVVmpT3JkZXJUeXBlpk1BUktFVKhRdWFudGl0ec4AAYagpVByaWNlpE5PTkWlTGFiZWykVTFfRatUaW1lSW5Gb3JjZaNEQVmqRXhwaXJlVGltZaROT05FqVRpbWVzdGFtcLgxOTcwLTAxLTAxVDAwOjAwOjAwLjAwMFqmSW5pdElk2gAkZjAwZmI1NmQtNzE2Mi00NWZmLWE1NGItOTRlMzY1NDEwM2Qw";
+            var orderBytes = Convert.FromBase64String(base64);
+
+            // Act
+            var order = this.serializer.Deserialize(orderBytes);
+
+            // Assert
+            Assert.Equal(OrderType.MARKET, order.Type);
+        }
+
+        [Fact]
+        internal void Deserialize_GivenLimitOrder_FromPythonMsgPack_ReturnsExpectedOrder()
+        {
+            // Arrange
+            var base64 = "i6JJZLtPLTE5NzAwMTAxLTAwMDAwMC0wMDEtMDAxLTGmU3ltYm9sq0FVRFVTRC5GWENNqU9yZGVyU2lkZaNCVVmpT3JkZXJUeXBlpUxJTUlUqFF1YW50aXR5zgABhqClUHJpY2WnMS4wMDAwMKVMYWJlbKVTMV9TTKtUaW1lSW5Gb3JjZaNEQVmqRXhwaXJlVGltZaROT05FqVRpbWVzdGFtcLgxOTcwLTAxLTAxVDAwOjAwOjAwLjAwMFqmSW5pdElk2gAkMmVkMDA4ZTAtYWNmMS00NzdiLWI0NGQtYmMwMWNhYjJmMmVm";
+            var orderBytes = Convert.FromBase64String(base64);
+
+            // Act
+            var order = this.serializer.Deserialize(orderBytes);
+
+            // Assert
+            Assert.Equal(OrderType.LIMIT, order.Type);
+        }
+
+        [Fact]
+        internal void Deserialize_GivenStopLimitOrder_FromPythonMsgPack_ReturnsExpectedOrder()
+        {
+            // Arrange
+            var base64 = "i6JJZKhPLTEyMzQ1NqZTeW1ib2yrQVVEVVNELkZYQ02pT3JkZXJTaWRlo0JVWalPcmRlclR5cGWqU1RPUF9MSU1JVKhRdWFudGl0ec4AAYagpVByaWNlpzEuMDAwMDClTGFiZWylUzFfU0yrVGltZUluRm9yY2WjREFZqkV4cGlyZVRpbWWkTk9ORalUaW1lc3RhbXC4MTk3MC0wMS0wMVQwMDowMDowMC4wMDBapkluaXRJZNoAJGM0ODM2NDNlLWI1MGUtNGU3NC04Y2JhLTM1Y2ZlODZkNDc2Yg==";
+            var orderBytes = Convert.FromBase64String(base64);
+
+            // Act
+            var order = this.serializer.Deserialize(orderBytes);
+
+            // Assert
+            Assert.Equal(OrderType.STOP_LIMIT, order.Type);
+        }
     }
 }
