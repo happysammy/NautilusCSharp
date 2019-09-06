@@ -24,19 +24,13 @@ namespace Nautilus.Execution.Engine
         /// Initializes a new instance of the <see cref="ExecutionDatabase"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
-        /// <param name="optionLoadCache">The option flag to load cache on instantiation.</param>
-        protected ExecutionDatabase(IComponentryContainer container, bool optionLoadCache)
+        protected ExecutionDatabase(IComponentryContainer container)
         : base(container)
         {
             this.CachedAccounts = new Dictionary<AccountId, Account>();
             this.CachedOrders = new Dictionary<OrderId, Order>();
             this.CachedPositions = new Dictionary<PositionId, Position>();
-
-            this.OptionLoadCache = optionLoadCache;
         }
-
-        /// <inheritdoc />
-        public bool OptionLoadCache { get; }
 
         /// <summary>
         /// Gets the cached accounts.

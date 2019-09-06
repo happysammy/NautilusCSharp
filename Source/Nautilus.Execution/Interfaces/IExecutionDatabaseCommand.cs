@@ -14,11 +14,6 @@ namespace Nautilus.Execution.Interfaces
     public interface IExecutionDatabaseCommand
     {
         /// <summary>
-        /// Gets a value indicating whether the execution database will load the caches on instantiation.
-        /// </summary>
-        bool OptionLoadCache { get; }
-
-        /// <summary>
         /// Clear all caches and reload from the database.
         /// </summary>
         void LoadCaches();

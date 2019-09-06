@@ -45,9 +45,8 @@ namespace Nautilus.Execution.Engine
         /// Initializes a new instance of the <see cref="InMemoryExecutionDatabase"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
-        /// <param name="optionLoadCache">The option flag to load cache on instantiation.</param>
-        public InMemoryExecutionDatabase(IComponentryContainer container, bool optionLoadCache)
-            : base(container, optionLoadCache)
+        public InMemoryExecutionDatabase(IComponentryContainer container)
+            : base(container)
         {
             this.indexOrderTrader = new Dictionary<OrderId, TraderId>();
             this.indexOrderAccount = new Dictionary<OrderId, AccountId>();

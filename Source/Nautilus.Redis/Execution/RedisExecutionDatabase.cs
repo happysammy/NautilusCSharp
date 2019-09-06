@@ -48,12 +48,14 @@ namespace Nautilus.Redis.Execution
             ISerializer<Command> commandSerializer,
             ISerializer<Event> eventSerializer,
             bool optionLoadCache)
-            : base(container, optionLoadCache)
+            : base(container)
         {
             this.redisServer = connection.GetServer(RedisConstants.LocalHost, RedisConstants.DefaultPort);
             this.redisDatabase = connection.GetDatabase();
             this.commandSerializer = commandSerializer;
             this.eventSerializer = eventSerializer;
+
+            this.OptionLoadCache = optionLoadCache;
 
             if (this.OptionLoadCache)
             {
@@ -66,6 +68,11 @@ namespace Nautilus.Redis.Execution
                                  $"this should only be done in a testing environment.");
             }
         }
+
+        /// <summary>
+        /// Gets a value indicating whether the execution database will load the caches on instantiation.
+        /// </summary>
+        public bool OptionLoadCache { get; }
 
         /// <inheritdoc />
         public override void LoadAccountsCache()
@@ -176,7 +183,7 @@ namespace Nautilus.Redis.Execution
                 }
 
                 var position = new Position(new PositionId(key), (OrderFillEvent)this.eventSerializer.Deserialize(events.Dequeue()));
-                while (events.Count > 0);
+                while (events.Count > 0)
                 {
                     position.Apply((OrderFillEvent)this.eventSerializer.Deserialize(events.Dequeue()));
                 }
