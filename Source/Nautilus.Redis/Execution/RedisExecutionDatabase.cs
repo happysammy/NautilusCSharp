@@ -306,16 +306,11 @@ namespace Nautilus.Redis.Execution
         }
 
         /// <inheritdoc />
-        public override void Reset()
-        {
-            this.cachedOrders.Clear();
-            this.cachedPositions.Clear();
-        }
-
-        /// <inheritdoc />
         public override void Flush()
         {
+            this.Log.Information("Flushing the database...");
             this.redisServer.FlushDatabase();
+            this.Log.Information("Database flushed...");
         }
 
         /// <inheritdoc />

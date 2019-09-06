@@ -77,7 +77,12 @@ namespace Nautilus.Execution.Engine
         public abstract void CheckResiduals();
 
         /// <inheritdoc />
-        public abstract void Reset();
+        public void Reset()
+        {
+            this.CachedAccounts.Clear();
+            this.CachedOrders.Clear();
+            this.CachedPositions.Clear();
+        }
 
         /// <inheritdoc />
         public abstract void Flush();

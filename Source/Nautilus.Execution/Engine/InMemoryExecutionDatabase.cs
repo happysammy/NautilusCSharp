@@ -248,8 +248,10 @@ namespace Nautilus.Execution.Engine
         }
 
         /// <inheritdoc />
-        public override void Reset()
+        public override void Flush()
         {
+            this.Log.Information("Flushing the database...");
+
             this.indexOrderTrader.Clear();
             this.indexOrderAccount.Clear();
             this.indexOrderPosition.Clear();
@@ -265,14 +267,8 @@ namespace Nautilus.Execution.Engine
             this.indexPositions.Clear();
             this.indexPositionsOpen.Clear();
             this.indexPositionsClosed.Clear();
-            this.CachedOrders.Clear();
-            this.CachedPositions.Clear();
-        }
 
-        /// <inheritdoc />
-        public override void Flush()
-        {
-            this.Log.Information("Flushing the database (in-memory database does nothing).");
+            this.Log.Information("Database flushed...");
         }
 
         /// <inheritdoc />
