@@ -29,7 +29,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FiniteStateMachineTests
             var result = stateMachine.State;
 
             // Assert
-            Assert.Equal(new State(OrderStatus.Initialized), result);
+            Assert.Equal(new State(OrderState.Initialized), result);
         }
 
         [Fact]
@@ -42,7 +42,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FiniteStateMachineTests
             stateMachine.Process(Trigger.Event(typeof(OrderSubmitted)));
 
             // Assert
-            Assert.Equal(new State(OrderStatus.Submitted), stateMachine.State);
+            Assert.Equal(new State(OrderState.Submitted), stateMachine.State);
         }
 
         [Fact]
@@ -70,7 +70,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FiniteStateMachineTests
             stateMachine.Process(Trigger.Event(typeof(OrderFilled)));
 
             // Assert
-            Assert.Equal(new State(OrderStatus.Filled), stateMachine.State);
+            Assert.Equal(new State(OrderState.Filled), stateMachine.State);
         }
 
         [Fact]

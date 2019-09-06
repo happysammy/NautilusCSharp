@@ -57,7 +57,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.Null(order.AveragePrice);
             Assert.Equal(new List<OrderId> { new OrderId("O-123456-S1") }, order.GetOrderIds());
             Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEvent.Timestamp);
-            Assert.Equal(OrderStatus.Initialized, order.Status);
+            Assert.Equal(OrderState.Initialized, order.State);
         }
 
         [Fact]
@@ -91,7 +91,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.Equal(StubZonedDateTime.UnixEpoch() + Period.FromMinutes(5).ToDuration(), order.ExpireTime);
             Assert.Equal(new List<OrderId> { new OrderId("O-123456") }.ToImmutableList(), order.GetOrderIds());
             Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEvent.Timestamp);
-            Assert.Equal(OrderStatus.Initialized, order.Status);
+            Assert.Equal(OrderState.Initialized, order.State);
         }
 
         [Fact]
@@ -131,7 +131,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             // Assert
             Assert.Equal(3, order.EventCount);
-            Assert.Equal(OrderStatus.Rejected, order.Status);
+            Assert.Equal(OrderState.Rejected, order.State);
             Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEvent.Timestamp);
         }
 
@@ -154,7 +154,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             // Assert
             Assert.Equal(5, order.EventCount);
-            Assert.Equal(OrderStatus.Cancelled, order.Status);
+            Assert.Equal(OrderState.Cancelled, order.State);
             Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEvent.Timestamp);
         }
 
@@ -177,7 +177,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             // Assert
             Assert.Equal(5, order.EventCount);
-            Assert.Equal(OrderStatus.Expired, order.Status);
+            Assert.Equal(OrderState.Expired, order.State);
             Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEvent.Timestamp);
         }
 
@@ -199,7 +199,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Assert
             Assert.Equal("BO-123456", order.IdBroker?.Value);
             Assert.Equal(4, order.EventCount);
-            Assert.Equal(OrderStatus.Working, order.Status);
+            Assert.Equal(OrderState.Working, order.State);
             Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEvent.Timestamp);
         }
 
@@ -221,7 +221,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             order.Apply(event4);
 
             // Assert
-            Assert.Equal(OrderStatus.Filled, order.Status);
+            Assert.Equal(OrderState.Filled, order.State);
         }
 
         [Fact]
@@ -245,10 +245,10 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             order.Apply(event3);
             order.Apply(event4);
 
-            var result = order.Status;
+            var result = order.State;
 
             // Assert
-            Assert.Equal(OrderStatus.PartiallyFilled, result);
+            Assert.Equal(OrderState.PartiallyFilled, result);
         }
 
         [Fact]
@@ -343,7 +343,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var result = order.IsCompleted;
 
             // Assert
-            Assert.True(order.Status == OrderStatus.PartiallyFilled);
+            Assert.True(order.State == OrderState.PartiallyFilled);
             Assert.False(result);
         }
 
@@ -380,7 +380,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             order.Apply(event4);
 
             // Assert
-            Assert.Equal(OrderStatus.Filled, order.Status);
+            Assert.Equal(OrderState.Filled, order.State);
             Assert.True(order.IsCompleted);
         }
 
@@ -449,7 +449,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var result = order.Slippage;
 
             // Assert
-            Assert.Equal(OrderStatus.Filled, order.Status);
+            Assert.Equal(OrderState.Filled, order.State);
             Assert.Equal(expectedSlippage, result);
         }
 
@@ -490,7 +490,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var result = order.Slippage;
 
             // Assert
-            Assert.Equal(OrderStatus.Filled, order.Status);
+            Assert.Equal(OrderState.Filled, order.State);
             Assert.Equal(expectedSlippage, result);
         }
 

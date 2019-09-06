@@ -13,6 +13,7 @@ namespace Nautilus.DomainModel.FiniteStateMachine
     using System.Collections.Immutable;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
+    using Nautilus.Core.Extensions;
 
     /// <summary>
     /// Represents a simple generic finite state machine comprising of a state transition look-up
@@ -40,9 +41,20 @@ namespace Nautilus.DomainModel.FiniteStateMachine
         }
 
         /// <summary>
-        /// Gets the current <see cref="DomainModel.FiniteStateMachine.State"/>.
+        /// Gets the current state.
         /// </summary>
         internal State State { get; private set; }
+
+        /// <summary>
+        /// Gets the current state as an enumeration of type T.
+        /// </summary>
+        /// <typeparam name="T">The type of the enumeration to return.</typeparam>
+        /// <returns>The state as an enumeration.</returns>
+        internal T StateAsEnum<T>()
+            where T : struct, Enum
+        {
+            return this.State.ToString().ToEnum<T>();
+        }
 
         /// <summary>
         /// Processes the finite state machine with the given <see cref="Trigger"/>.

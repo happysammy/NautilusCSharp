@@ -20,9 +20,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FiniteStateMachineTests
         public void Equals_VariousStateTransitionsAndOperators_TestsCorrectly()
         {
             // Arrange
-            var state1 = new State(OrderStatus.Initialized);
-            var state2 = new State(OrderStatus.Initialized);
-            var state3 = new State(OrderStatus.Accepted);
+            var state1 = new State(OrderState.Initialized);
+            var state2 = new State(OrderState.Initialized);
+            var state3 = new State(OrderState.Accepted);
 
             // Act
             var result1 = state1.Equals(state2);
@@ -45,7 +45,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FiniteStateMachineTests
         public void GetHashCode_ReturnsExpectedInt()
         {
             // Arrange
-            var state = new State(OrderStatus.Initialized);
+            var state = new State(OrderState.Initialized);
 
             // Act
             var result = state.GetHashCode();
@@ -58,7 +58,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FiniteStateMachineTests
         public void ToString_ReturnsExpectedString()
         {
             // Arrange
-            var state = new State(OrderStatus.Initialized);
+            var state = new State(OrderState.Initialized);
 
             // Act
             var result = state.ToString();
