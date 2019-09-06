@@ -20,6 +20,7 @@ namespace Nautilus.Redis.Execution
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Events.Base;
     using Nautilus.DomainModel.Identifiers;
+    using Nautilus.Execution.Engine;
     using Nautilus.Execution.Interfaces;
     using StackExchange.Redis;
     using Order = Nautilus.DomainModel.Aggregates.Order;
@@ -334,25 +335,25 @@ namespace Nautilus.Redis.Execution
         /// <inheritdoc />
         public ICollection<TraderId> GetTraderIds()
         {
-            return SetFactory.ConvertToTraderIds(this.redisServer.Keys(pattern: Key.Traders).ToArray());
+            return SetFactory.ConvertToSet(this.redisServer.Keys(pattern: Key.Traders).ToArray(), TraderId.FromString);
         }
 
         /// <inheritdoc />
         public ICollection<AccountId> GetAccountIds()
         {
-            return SetFactory.ConvertToAccountIds(this.redisServer.Keys(pattern: Key.Accounts).ToArray());
+            return SetFactory.ConvertToSet(this.redisServer.Keys(pattern: Key.Accounts).ToArray(), AccountId.FromString);
         }
 
         /// <inheritdoc />
         public ICollection<StrategyId> GetStrategyIds(TraderId traderId)
         {
-            return SetFactory.ConvertToStrategyIds(this.redisDatabase.SetMembers(Key.IndexTraderStrategies(traderId)));
+            return SetFactory.ConvertToSet(this.redisDatabase.SetMembers(Key.IndexTraderStrategies(traderId)), StrategyId.FromString);
         }
 
         /// <inheritdoc />
         public ICollection<OrderId> GetOrderIds()
         {
-            return SetFactory.ConvertToOrderIds(this.redisDatabase.SetMembers(Key.IndexOrders));
+            return SetFactory.ConvertToSet(this.redisDatabase.SetMembers(Key.IndexOrders), OrderId.FromString);
         }
 
         /// <inheritdoc />
@@ -362,13 +363,13 @@ namespace Nautilus.Redis.Execution
                 ? this.redisDatabase.SetMembers(Key.IndexTraderOrders(traderId))
                 : this.GetIntersection(Key.IndexOrders, Key.IndexTraderStrategyOrders(traderId, filterStrategyId));
 
-            return SetFactory.ConvertToOrderIds(orderIdValues);
+            return SetFactory.ConvertToSet(orderIdValues, OrderId.FromString);
         }
 
         /// <inheritdoc />
         public ICollection<OrderId> GetOrderWorkingIds()
         {
-            return SetFactory.ConvertToOrderIds(this.redisDatabase.SetMembers(Key.IndexOrdersWorking));
+            return SetFactory.ConvertToSet(this.redisDatabase.SetMembers(Key.IndexOrdersWorking), OrderId.FromString);
         }
 
         /// <inheritdoc />
@@ -378,13 +379,13 @@ namespace Nautilus.Redis.Execution
                 ? this.GetIntersection(Key.IndexOrdersWorking, Key.IndexTraderOrders(traderId))
                 : this.GetIntersection(Key.IndexOrdersWorking, Key.IndexTraderStrategyOrders(traderId, filterStrategyId));
 
-            return SetFactory.ConvertToOrderIds(orderIdValues);
+            return SetFactory.ConvertToSet(orderIdValues, OrderId.FromString);
         }
 
         /// <inheritdoc />
         public ICollection<OrderId> GetOrderCompletedIds()
         {
-            return SetFactory.ConvertToOrderIds(this.redisDatabase.SetMembers(Key.IndexOrdersCompleted));
+            return SetFactory.ConvertToSet(this.redisDatabase.SetMembers(Key.IndexOrdersCompleted), OrderId.FromString);
         }
 
         /// <inheritdoc />
@@ -394,13 +395,13 @@ namespace Nautilus.Redis.Execution
                 ? this.GetIntersection(Key.IndexOrdersCompleted, Key.IndexTraderOrders(traderId))
                 : this.GetIntersection(Key.IndexOrdersCompleted, Key.IndexTraderStrategyOrders(traderId, filterStrategyId));
 
-            return SetFactory.ConvertToOrderIds(orderIdValues);
+            return SetFactory.ConvertToSet(orderIdValues, OrderId.FromString);
         }
 
         /// <inheritdoc />
         public ICollection<PositionId> GetPositionIds()
         {
-            return SetFactory.ConvertToPositionIds(this.redisDatabase.SetMembers(Key.IndexPositions));
+            return SetFactory.ConvertToSet(this.redisDatabase.SetMembers(Key.IndexPositions), PositionId.FromString);
         }
 
         /// <inheritdoc />
@@ -410,13 +411,13 @@ namespace Nautilus.Redis.Execution
                 ? this.redisDatabase.SetMembers(Key.IndexTraderPositions(traderId))
                 : this.GetIntersection(Key.IndexPositions, Key.IndexTraderStrategyPositions(traderId, filterStrategyId));
 
-            return SetFactory.ConvertToPositionIds(positionIdValues);
+            return SetFactory.ConvertToSet(positionIdValues, PositionId.FromString);
         }
 
         /// <inheritdoc />
         public ICollection<PositionId> GetPositionOpenIds()
         {
-            return SetFactory.ConvertToPositionIds(this.redisDatabase.SetMembers(Key.IndexPositionsOpen));
+            return SetFactory.ConvertToSet(this.redisDatabase.SetMembers(Key.IndexPositionsOpen), PositionId.FromString);
         }
 
         /// <inheritdoc />
@@ -426,13 +427,13 @@ namespace Nautilus.Redis.Execution
                 ? this.GetIntersection(Key.IndexPositionsOpen, Key.IndexTraderPositions(traderId))
                 : this.GetIntersection(Key.IndexPositionsOpen, Key.IndexTraderStrategyPositions(traderId, filterStrategyId));
 
-            return SetFactory.ConvertToPositionIds(positionIdValues);
+            return SetFactory.ConvertToSet(positionIdValues, PositionId.FromString);
         }
 
         /// <inheritdoc />
         public ICollection<PositionId> GetPositionClosedIds()
         {
-            return SetFactory.ConvertToPositionIds(this.redisDatabase.SetMembers(Key.IndexPositionsClosed));
+            return SetFactory.ConvertToSet(this.redisDatabase.SetMembers(Key.IndexPositionsClosed), PositionId.FromString);
         }
 
         /// <inheritdoc />
@@ -442,7 +443,7 @@ namespace Nautilus.Redis.Execution
                 ? this.GetIntersection(Key.IndexPositionsClosed, Key.IndexTraderPositions(traderId))
                 : this.GetIntersection(Key.IndexPositionsClosed, Key.IndexTraderStrategyPositions(traderId, filterStrategyId));
 
-            return SetFactory.ConvertToPositionIds(positionIdValues);
+            return SetFactory.ConvertToSet(positionIdValues, PositionId.FromString);
         }
 
         /// <inheritdoc />

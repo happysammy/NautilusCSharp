@@ -32,5 +32,15 @@ namespace Nautilus.DomainModel.Identifiers
             Debug.NotEmptyOrWhiteSpace(value, nameof(value));
             Debug.True(value.StartsWith("O-"), $"The value did not start with 'O-', was {value}.");
         }
+
+        /// <summary>
+        /// Return a new <see cref="OrderId"/> parsed from the given string value.
+        /// </summary>
+        /// <param name="value">The order identifier value.</param>
+        /// <returns>The order identifier.</returns>
+        public static OrderId FromString(string value)
+        {
+            return new OrderId(value);
+        }
     }
 }

@@ -33,5 +33,15 @@ namespace Nautilus.DomainModel.Identifiers
             Debug.NotEmptyOrWhiteSpace(value, nameof(value));
             Debug.True(value.StartsWith("P-"), $"The value did not start with 'P-', was {value}.");
         }
+
+        /// <summary>
+        /// Return a new <see cref="PositionId"/> parsed from the given string value.
+        /// </summary>
+        /// <param name="value">The position identifier value.</param>
+        /// <returns>The position identifier.</returns>
+        public static PositionId FromString(string value)
+        {
+            return new PositionId(value);
+        }
     }
 }
