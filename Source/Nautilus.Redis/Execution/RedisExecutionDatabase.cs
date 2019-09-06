@@ -20,13 +20,14 @@ namespace Nautilus.Redis.Execution
     using Nautilus.DomainModel.Events.Base;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.Execution.Engine;
+    using Nautilus.Execution.Interfaces;
     using StackExchange.Redis;
     using Order = Nautilus.DomainModel.Aggregates.Order;
 
     /// <summary>
     /// Provides an execution database implemented with Redis.
     /// </summary>
-    public class RedisExecutionDatabase : ExecutionDatabase
+    public class RedisExecutionDatabase : ExecutionDatabase, IExecutionDatabase
     {
         private readonly IServer redisServer;
         private readonly IDatabase redisDatabase;
@@ -83,7 +84,7 @@ namespace Nautilus.Redis.Execution
         /// <summary>
         /// Clear the current order cache and load orders from the database.
         /// </summary>
-        public override void LoadOrdersCache()
+        public void LoadOrdersCache()
         {
             this.Log.Information("Re-caching orders from the database...");
 
@@ -128,7 +129,7 @@ namespace Nautilus.Redis.Execution
         /// <summary>
         /// Clear the current order cache and load orders from the database.
         /// </summary>
-        public override void LoadPositionsCache()
+        public void LoadPositionsCache()
         {
             this.Log.Information("Re-caching positions from the database...");
 
@@ -164,7 +165,7 @@ namespace Nautilus.Redis.Execution
         }
 
         /// <inheritdoc />
-        public override CommandResult AddAtomicOrder(AtomicOrder order, TraderId traderId, AccountId accountId, StrategyId strategyId, PositionId positionId)
+        public CommandResult AddAtomicOrder(AtomicOrder order, TraderId traderId, AccountId accountId, StrategyId strategyId, PositionId positionId)
         {
             this.AddOrder(
                 order.Entry,
@@ -194,7 +195,7 @@ namespace Nautilus.Redis.Execution
         }
 
         /// <inheritdoc />
-        public override CommandResult AddOrder(Order order, TraderId traderId, AccountId accountId, StrategyId strategyId, PositionId positionId)
+        public CommandResult AddOrder(Order order, TraderId traderId, AccountId accountId, StrategyId strategyId, PositionId positionId)
         {
             if (this.cachedOrders.ContainsKey(order.Id))
             {
@@ -224,7 +225,7 @@ namespace Nautilus.Redis.Execution
         }
 
         /// <inheritdoc />
-        public override CommandResult AddPosition(Position position)
+        public CommandResult AddPosition(Position position)
         {
             if (this.cachedPositions.ContainsKey(position.Id))
             {
@@ -250,7 +251,7 @@ namespace Nautilus.Redis.Execution
         }
 
         /// <inheritdoc />
-        public override void UpdateOrder(Order order)
+        public void UpdateOrder(Order order)
         {
             if (order.IsWorking)
             {
@@ -267,7 +268,7 @@ namespace Nautilus.Redis.Execution
         }
 
         /// <inheritdoc />
-        public override void UpdatePosition(Position position)
+        public void UpdatePosition(Position position)
         {
             if (position.IsOpen)
             {
@@ -284,13 +285,13 @@ namespace Nautilus.Redis.Execution
         }
 
         /// <inheritdoc />
-        public override void UpdateAccount(Account account)
+        public void UpdateAccount(Account account)
         {
             this.redisDatabase.ListRightPush(Key.Account(account.Id), this.eventSerializer.Serialize(account.LastEvent), When.Always, CommandFlags.FireAndForget);
         }
 
         /// <inheritdoc />
-        public override void CheckResiduals()
+        public void CheckResiduals()
         {
             foreach (var orderId in this.GetOrderWorkingIds())
             {
@@ -305,8 +306,16 @@ namespace Nautilus.Redis.Execution
             }
         }
 
+        /// <inheritdoc/>
+        public void Reset()
+        {
+            this.CachedAccounts.Clear();
+            this.CachedOrders.Clear();
+            this.CachedPositions.Clear();
+        }
+
         /// <inheritdoc />
-        public override void Flush()
+        public void Flush()
         {
             this.Log.Information("Flushing the database...");
             this.redisServer.FlushDatabase();

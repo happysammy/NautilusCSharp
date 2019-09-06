@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="IExecutionDatabaseReadOnly.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="IExecutionDatabaseRead.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   https://nautechsystems.io
@@ -13,9 +13,9 @@ namespace Nautilus.Execution.Interfaces
     using Nautilus.DomainModel.Identifiers;
 
     /// <summary>
-    /// Provides an execution database for persisting execution related data.
+    /// Provides an execution database with read operations.
     /// </summary>
-    public interface IExecutionDatabaseReadOnly
+    public interface IExecutionDatabaseRead
     {
         /// <summary>
         /// Return the trader identifier for the given order identifier..

@@ -16,11 +16,12 @@ namespace Nautilus.Execution.Engine
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Identifiers;
+    using Nautilus.Execution.Interfaces;
 
     /// <summary>
     /// Provides an in-memory execution database.
     /// </summary>
-    public class InMemoryExecutionDatabase : ExecutionDatabase
+    public class InMemoryExecutionDatabase : ExecutionDatabase, IExecutionDatabase
     {
         private readonly Dictionary<OrderId, TraderId> indexOrderTrader;
         private readonly Dictionary<OrderId, AccountId> indexOrderAccount;
@@ -67,20 +68,20 @@ namespace Nautilus.Execution.Engine
         }
 
         /// <inheritdoc />
-        public override void LoadOrdersCache()
+        public void LoadOrdersCache()
         {
             this.Log.Information("Re-caching orders from the database (does nothing for this implementation.)");
         }
 
         /// <inheritdoc />
-        public override void LoadPositionsCache()
+        public void LoadPositionsCache()
         {
             this.Log.Information("Re-caching positions from the database (does nothing for this implementation.)");
         }
 
         /// <inheritdoc />
         /// <exception cref="ConditionFailedException">If the order identifier is already indexed.</exception>
-        public override CommandResult AddAtomicOrder(AtomicOrder order, TraderId traderId, AccountId accountId, StrategyId strategyId, PositionId positionId)
+        public CommandResult AddAtomicOrder(AtomicOrder order, TraderId traderId, AccountId accountId, StrategyId strategyId, PositionId positionId)
         {
             this.AddOrder(
                 order.Entry,
@@ -111,7 +112,7 @@ namespace Nautilus.Execution.Engine
 
         /// <inheritdoc />
         /// <exception cref="ConditionFailedException">If the order identifier is already indexed.</exception>
-        public override CommandResult AddOrder(Order order, TraderId traderId, AccountId accountId, StrategyId strategyId, PositionId positionId)
+        public CommandResult AddOrder(Order order, TraderId traderId, AccountId accountId, StrategyId strategyId, PositionId positionId)
         {
             Debug.KeyNotIn(order.Id, this.indexOrderTrader, nameof(order.Id), nameof(this.indexOrderTrader));
             Debug.KeyNotIn(order.Id, this.indexOrderAccount, nameof(order.Id), nameof(this.indexOrderAccount));
@@ -183,7 +184,7 @@ namespace Nautilus.Execution.Engine
 
         /// <inheritdoc />
         /// <exception cref="ConditionFailedException">If the position identifier is already indexed.</exception>
-        public override CommandResult AddPosition(Position position)
+        public CommandResult AddPosition(Position position)
         {
             Debug.NotIn(position.Id, this.indexPositions, nameof(position.Id), nameof(this.indexPositions));
             Debug.NotIn(position.Id, this.indexPositionsOpen, nameof(position.Id), nameof(this.indexPositions));
@@ -203,7 +204,7 @@ namespace Nautilus.Execution.Engine
         }
 
         /// <inheritdoc />
-        public override void UpdateOrder(Order order)
+        public void UpdateOrder(Order order)
         {
             if (order.IsWorking)
             {
@@ -218,7 +219,7 @@ namespace Nautilus.Execution.Engine
         }
 
         /// <inheritdoc />
-        public override void UpdatePosition(Position position)
+        public void UpdatePosition(Position position)
         {
             if (position.IsClosed)
             {
@@ -228,13 +229,13 @@ namespace Nautilus.Execution.Engine
         }
 
         /// <inheritdoc />
-        public override void UpdateAccount(Account account)
+        public void UpdateAccount(Account account)
         {
             // Do nothing in memory
         }
 
         /// <inheritdoc />
-        public override void CheckResiduals()
+        public void CheckResiduals()
         {
             foreach (var orderId in this.indexOrdersWorking)
             {
@@ -248,7 +249,15 @@ namespace Nautilus.Execution.Engine
         }
 
         /// <inheritdoc />
-        public override void Flush()
+        public void Reset()
+        {
+            this.CachedAccounts.Clear();
+            this.CachedOrders.Clear();
+            this.CachedPositions.Clear();
+        }
+
+        /// <inheritdoc />
+        public void Flush()
         {
             this.Log.Information("Flushing the database...");
 

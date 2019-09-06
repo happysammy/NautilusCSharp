@@ -17,6 +17,7 @@ namespace Nautilus.Execution.Engine
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Events.Base;
     using Nautilus.DomainModel.Identifiers;
+    using Nautilus.Execution.Interfaces;
     using Nautilus.Execution.Messages.Commands;
     using Nautilus.Messaging.Interfaces;
 
@@ -25,7 +26,7 @@ namespace Nautilus.Execution.Engine
     /// </summary>
     public class ExecutionEngine : MessageBusConnected
     {
-        private readonly ExecutionDatabase database;
+        private readonly IExecutionDatabase database;
         private readonly ITradingGateway gateway;
         private readonly IEndpoint eventPublisher;
         private readonly Dictionary<AccountId, Account> accounts;
@@ -43,7 +44,7 @@ namespace Nautilus.Execution.Engine
         public ExecutionEngine(
             IComponentryContainer container,
             IMessageBusAdapter messagingAdapter,
-            ExecutionDatabase database,
+            IExecutionDatabase database,
             ITradingGateway gateway,
             IEndpoint eventPublisher)
             : base(container, messagingAdapter)

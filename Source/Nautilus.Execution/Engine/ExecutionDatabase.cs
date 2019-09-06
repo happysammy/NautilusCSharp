@@ -11,16 +11,14 @@ namespace Nautilus.Execution.Engine
     using System.Collections.Generic;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core.CQS;
     using Nautilus.DomainModel.Aggregates;
-    using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.Execution.Interfaces;
 
     /// <summary>
     /// Provides the abstract base class for all execution databases.
     /// </summary>
-    public abstract class ExecutionDatabase : Component, IExecutionDatabase
+    public abstract class ExecutionDatabase : Component, IExecutionDatabaseRead
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ExecutionDatabase"/> class.
@@ -48,44 +46,6 @@ namespace Nautilus.Execution.Engine
         /// Gets the cached accounts.
         /// </summary>
         protected Dictionary<PositionId, Position> CachedPositions { get; }
-
-        /// <inheritdoc />
-        public abstract void LoadOrdersCache();
-
-        /// <inheritdoc />
-        public abstract void LoadPositionsCache();
-
-        /// <inheritdoc />
-        public abstract CommandResult AddAtomicOrder(AtomicOrder order, TraderId traderId, AccountId accountId, StrategyId strategyId, PositionId positionId);
-
-        /// <inheritdoc />
-        public abstract CommandResult AddOrder(Order order, TraderId traderId, AccountId accountId, StrategyId strategyId, PositionId positionId);
-
-        /// <inheritdoc />
-        public abstract CommandResult AddPosition(Position position);
-
-        /// <inheritdoc />
-        public abstract void UpdateOrder(Order order);
-
-        /// <inheritdoc />
-        public abstract void UpdatePosition(Position position);
-
-        /// <inheritdoc />
-        public abstract void UpdateAccount(Account account);
-
-        /// <inheritdoc />
-        public abstract void CheckResiduals();
-
-        /// <inheritdoc />
-        public void Reset()
-        {
-            this.CachedAccounts.Clear();
-            this.CachedOrders.Clear();
-            this.CachedPositions.Clear();
-        }
-
-        /// <inheritdoc />
-        public abstract void Flush();
 
         /// <inheritdoc />
         public abstract TraderId? GetTraderForOrder(OrderId orderId);
