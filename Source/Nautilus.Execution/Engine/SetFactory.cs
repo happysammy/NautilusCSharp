@@ -34,7 +34,7 @@ namespace Nautilus.Execution.Engine
             var set = new HashSet<TOutput>(valuesLength);
             for (var i = 0; i < valuesLength; i++)
             {
-#pragma warning disable 8602
+                #pragma warning disable 8602
                 // TODO: Fix this nullability warning
                 set.Add(create(values[i].ToString()));
             }
