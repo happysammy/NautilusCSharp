@@ -90,6 +90,13 @@ namespace Nautilus.Execution.Engine
         {
             this.Log.Information("Flushing the database...");
 
+            this.ClearCaches();
+
+            foreach (var traderIndex in this.indexTraders.Values)
+            {
+                traderIndex.Clear();
+            }
+
             this.indexOrderTrader.Clear();
             this.indexOrderAccount.Clear();
             this.indexOrderPosition.Clear();
@@ -99,6 +106,7 @@ namespace Nautilus.Execution.Engine
             this.indexAccountOrders.Clear();
             this.indexAccountPositions.Clear();
             this.indexTraders.Clear();
+            this.indexAccounts.Clear();
             this.indexOrders.Clear();
             this.indexOrdersWorking.Clear();
             this.indexOrdersCompleted.Clear();
@@ -113,28 +121,40 @@ namespace Nautilus.Execution.Engine
         /// <exception cref="ConditionFailedException">If the order identifier is already indexed.</exception>
         public CommandResult AddAtomicOrder(AtomicOrder order, TraderId traderId, AccountId accountId, StrategyId strategyId, PositionId positionId)
         {
-            this.AddOrder(
+            var resultEntry = this.AddOrder(
                 order.Entry,
                 traderId,
                 accountId,
                 strategyId,
-                positionId).OnFailure(errorMsg => { CommandResult.Fail(errorMsg); });
+                positionId);
+            if (resultEntry.IsFailure)
+            {
+                return resultEntry;
+            }
 
-            this.AddOrder(
+            var resultStopLoss = this.AddOrder(
                 order.StopLoss,
                 traderId,
                 accountId,
                 strategyId,
-                positionId).OnFailure(errorMsg => { CommandResult.Fail(errorMsg); });
+                positionId);
+            if (resultStopLoss.IsFailure)
+            {
+                return resultStopLoss;
+            }
 
             if (order.TakeProfit != null)
             {
-                this.AddOrder(
+                var resultTakeProfit = this.AddOrder(
                     order.TakeProfit,
                     traderId,
                     accountId,
                     strategyId,
-                    positionId).OnFailure(errorMsg => { CommandResult.Fail(errorMsg); });
+                    positionId);
+                if (resultTakeProfit.IsFailure)
+                {
+                    return resultTakeProfit;
+                }
             }
 
             return CommandResult.Ok();
@@ -144,16 +164,17 @@ namespace Nautilus.Execution.Engine
         /// <exception cref="ConditionFailedException">If the order identifier is already indexed.</exception>
         public CommandResult AddOrder(Order order, TraderId traderId, AccountId accountId, StrategyId strategyId, PositionId positionId)
         {
-            Debug.KeyNotIn(order.Id, this.indexOrderTrader, nameof(order.Id), nameof(this.indexOrderTrader));
-            Debug.KeyNotIn(order.Id, this.indexOrderAccount, nameof(order.Id), nameof(this.indexOrderAccount));
-            Debug.KeyNotIn(order.Id, this.indexOrderPosition, nameof(order.Id), nameof(this.indexOrderPosition));
-            Debug.NotIn(order.Id, this.indexOrders, nameof(order.Id), nameof(this.indexOrders));
-
             if (this.CachedOrders.ContainsKey(order.Id))
             {
                 return CommandResult.Fail($"The {order.Id} already existed in the cache (was not unique).");
             }
 
+            Debug.KeyNotIn(order.Id, this.indexOrderTrader, nameof(order.Id), nameof(this.indexOrderTrader));
+            Debug.KeyNotIn(order.Id, this.indexOrderAccount, nameof(order.Id), nameof(this.indexOrderAccount));
+            Debug.KeyNotIn(order.Id, this.indexOrderPosition, nameof(order.Id), nameof(this.indexOrderPosition));
+            Debug.NotIn(order.Id, this.indexOrders, nameof(order.Id), nameof(this.indexOrders));
+
+            this.indexAccounts.Add(accountId);
             this.indexOrderTrader[order.Id] = traderId;
             this.indexOrderAccount[order.Id] = accountId;
             this.indexOrderPosition[order.Id] = positionId;
@@ -198,6 +219,7 @@ namespace Nautilus.Execution.Engine
             else
             {
                 this.indexTraders[traderId] = new TraderIdentifierIndex(traderId);
+                this.indexTraders[traderId].AddIdentifiers(order.Id, positionId, strategyId);
             }
 
             this.indexOrders.Add(order.Id);
@@ -212,13 +234,13 @@ namespace Nautilus.Execution.Engine
         /// <exception cref="ConditionFailedException">If the position identifier is already indexed.</exception>
         public CommandResult AddPosition(Position position)
         {
-            Debug.NotIn(position.Id, this.indexPositions, nameof(position.Id), nameof(this.indexPositions));
-            Debug.NotIn(position.Id, this.indexPositionsOpen, nameof(position.Id), nameof(this.indexPositions));
-
             if (this.CachedPositions.ContainsKey(position.Id))
             {
                 return CommandResult.Fail($"The {position.Id} already existed in the cache (was not unique).");
             }
+
+            Debug.NotIn(position.Id, this.indexPositions, nameof(position.Id), nameof(this.indexPositions));
+            Debug.NotIn(position.Id, this.indexPositionsOpen, nameof(position.Id), nameof(this.indexPositions));
 
             this.indexPositions.Add(position.Id);
             this.indexPositionsOpen.Add(position.Id);

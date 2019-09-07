@@ -29,7 +29,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
         private OrderSide OrderSide { get; set; } = OrderSide.BUY;
 
-        private Quantity Quantity { get; set; } = Quantity.Create(1);
+        private Quantity Quantity { get; set; } = Quantity.Create(100000);
 
         private Price Price { get; set; } = Price.Create(1, 1);
 

@@ -50,7 +50,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 StubZonedDateTime.UnixEpoch());
         }
 
-        public static OrderWorking OrderWorkingEvent(Order order, Price? workingPrice)
+        public static OrderWorking OrderWorkingEvent(Order order, Price? workingPrice = null)
         {
             if (workingPrice is null)
             {
@@ -110,7 +110,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             Order order,
             int filledQuantity,
             int leavesQuantity,
-            Price? averagePrice)
+            Price? averagePrice = null)
         {
             if (averagePrice is null)
             {
@@ -132,7 +132,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 StubZonedDateTime.UnixEpoch());
         }
 
-        public static OrderFilled OrderFilledEvent(Order order, Price? averagePrice)
+        public static OrderFilled OrderFilledEvent(Order order, Price? averagePrice = null)
         {
             if (averagePrice is null)
             {

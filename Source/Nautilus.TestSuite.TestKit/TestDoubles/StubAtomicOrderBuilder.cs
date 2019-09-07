@@ -17,9 +17,16 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public static AtomicOrder Build()
         {
             return new AtomicOrder(
-                new StubOrderBuilder().WithOrderId("EntryOrderId").BuildStopMarketOrder(),
-                new StubOrderBuilder().WithOrderId("StopLossOrderId").BuildStopMarketOrder(),
-                new StubOrderBuilder().WithOrderId("ProfitTargetOrderId").BuildStopMarketOrder());
+                new StubOrderBuilder().WithOrderId("O-123456-1").BuildStopMarketOrder(),
+                new StubOrderBuilder().WithOrderId("O-123456-2").BuildStopMarketOrder(),
+                new StubOrderBuilder().WithOrderId("O-123456-3").BuildLimitOrder());
+        }
+
+        public static AtomicOrder BuildWithNoTakeProfit()
+        {
+            return new AtomicOrder(
+                new StubOrderBuilder().WithOrderId("O-123456-1").BuildStopMarketOrder(),
+                new StubOrderBuilder().WithOrderId("O-123456-2").BuildStopMarketOrder());
         }
     }
 }

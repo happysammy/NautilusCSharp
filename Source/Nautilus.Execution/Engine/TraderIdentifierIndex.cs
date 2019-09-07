@@ -49,6 +49,18 @@ namespace Nautilus.Execution.Engine
         public HashSet<StrategyId> StrategyIds => this.indexStrategies;
 
         /// <summary>
+        /// Clears the trader index.
+        /// </summary>
+        public void Clear()
+        {
+            this.indexOrders.Clear();
+            this.indexPositions.Clear();
+            this.indexStrategies.Clear();
+            this.indexStrategyOrders.Clear();
+            this.indexStrategyPositions.Clear();
+        }
+
+        /// <summary>
         /// Add the given order identifier to the index.
         /// </summary>
         /// <param name="orderId">The order identifier to add.</param>

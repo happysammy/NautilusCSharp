@@ -67,9 +67,11 @@ namespace Nautilus.Execution.Engine
         /// <inheritdoc/>
         public void ClearCaches()
         {
+            this.Log.Debug($"Clearing caches...");
             this.CachedAccounts.Clear();
             this.CachedOrders.Clear();
             this.CachedPositions.Clear();
+            this.Log.Information($"Caches cleared.");
         }
 
         /// <inheritdoc />

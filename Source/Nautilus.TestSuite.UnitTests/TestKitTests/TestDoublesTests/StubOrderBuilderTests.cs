@@ -32,7 +32,7 @@ namespace Nautilus.TestSuite.UnitTests.TestKitTests.TestDoublesTests
             Assert.Equal("TEST_ORDER", order.Label.Value);
             Assert.Equal(OrderSide.BUY, order.Side);
             Assert.Equal(OrderType.STOP_MARKET, order.Type);
-            Assert.Equal(Quantity.Create(1), order.Quantity);
+            Assert.Equal(Quantity.Create(100000), order.Quantity);
             Assert.Equal(Price.Create(1, 1), order.Price);
             Assert.Equal(TimeInForce.DAY, order.TimeInForce);
             Assert.Null(order.ExpireTime);
