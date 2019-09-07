@@ -68,6 +68,19 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
         }
 
         [Fact]
+        internal void GetPositionForOrder_WhenNoPositionExists_ReturnsNull()
+        {
+            // Arrange
+            var orderId = new OrderId("O-123456");
+
+            // Act
+            var result = this.database.GetPositionForOrder(orderId);
+
+            // Assert
+            Assert.Null(result);
+        }
+
+        [Fact]
         internal void GetOrder_WhenNoOrderExists_ReturnsNull()
         {
             // Arrange
@@ -140,6 +153,95 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             Assert.Contains(traderId, this.database.GetTraderIds());
             Assert.Contains(accountId, this.database.GetAccountIds());
             Assert.Contains(strategyId, this.database.GetStrategyIds(traderId));
+        }
+
+        [Fact]
+        internal void GetOrders_WhenDoesNotExistInCache_ReturnsEmptyDictionary()
+        {
+            // Arrange
+            var order = new StubOrderBuilder().EntryOrder("O-123456").BuildMarketOrder();
+            var traderId = TraderId.FromString("TESTER-000");
+            var accountId = AccountId.FromString("NAUTILUS-000-SIMULATED");
+            var positionId = new PositionId("P-123456");
+            var strategyId = new StrategyId("SCALPER", "001");
+
+            this.database.AddOrder(order, traderId, accountId, strategyId, positionId);
+
+            // Act
+            this.database.ClearCaches();
+
+            LogDumper.Dump(this.logger, this.output);
+
+            // Assert
+            Assert.Empty(this.database.GetOrders());
+            Assert.Empty(this.database.GetOrders(traderId));
+            Assert.Empty(this.database.GetOrders(traderId, strategyId));
+        }
+
+        [Fact]
+        internal void GetOrdersWorking_WhenDoesNotExistInCache_ReturnsEmptyDictionary()
+        {
+            // Arrange
+            var order = new StubOrderBuilder().EntryOrder("O-123456").BuildMarketOrder();
+            var traderId = TraderId.FromString("TESTER-000");
+            var accountId = AccountId.FromString("NAUTILUS-000-SIMULATED");
+            var positionId = new PositionId("P-123456");
+            var strategyId = new StrategyId("SCALPER", "001");
+
+            this.database.AddOrder(order, traderId, accountId, strategyId, positionId);
+            order.Apply(StubEventMessages.OrderSubmittedEvent(order));
+            this.database.UpdateOrder(order);
+
+            // Act
+            this.database.ClearCaches();
+
+            LogDumper.Dump(this.logger, this.output);
+
+            // Assert
+            Assert.Empty(this.database.GetOrders());
+            Assert.Empty(this.database.GetOrders(traderId));
+            Assert.Empty(this.database.GetOrders(traderId, strategyId));
+            Assert.Empty(this.database.GetOrdersWorking());
+            Assert.Empty(this.database.GetOrdersWorking(traderId));
+            Assert.Empty(this.database.GetOrdersWorking(traderId, strategyId));
+            Assert.Empty(this.database.GetOrdersCompleted());
+            Assert.Empty(this.database.GetOrdersCompleted(traderId));
+            Assert.Empty(this.database.GetOrdersCompleted(traderId, strategyId));
+        }
+
+        [Fact]
+        internal void GetOrdersCompleted_WhenDoesNotExistInCache_ReturnsEmptyDictionary()
+        {
+            // Arrange
+            var order = new StubOrderBuilder().EntryOrder("O-123456").BuildMarketOrder();
+            var traderId = TraderId.FromString("TESTER-000");
+            var accountId = AccountId.FromString("NAUTILUS-000-SIMULATED");
+            var positionId = new PositionId("P-123456");
+            var strategyId = new StrategyId("SCALPER", "001");
+
+            this.database.AddOrder(order, traderId, accountId, strategyId, positionId);
+
+            order.Apply(StubEventMessages.OrderSubmittedEvent(order));
+            this.database.UpdateOrder(order);
+
+            order.Apply(StubEventMessages.OrderRejectedEvent(order));
+            this.database.UpdateOrder(order);
+
+            // Act
+            this.database.ClearCaches();
+
+            LogDumper.Dump(this.logger, this.output);
+
+            // Assert
+            Assert.Empty(this.database.GetOrders());
+            Assert.Empty(this.database.GetOrders(traderId));
+            Assert.Empty(this.database.GetOrders(traderId, strategyId));
+            Assert.Empty(this.database.GetOrdersWorking());
+            Assert.Empty(this.database.GetOrdersWorking(traderId));
+            Assert.Empty(this.database.GetOrdersWorking(traderId, strategyId));
+            Assert.Empty(this.database.GetOrdersCompleted());
+            Assert.Empty(this.database.GetOrdersCompleted(traderId));
+            Assert.Empty(this.database.GetOrdersCompleted(traderId, strategyId));
         }
 
         [Fact]
@@ -331,6 +433,100 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             Assert.Contains(atomicOrder.StopLoss.Id, this.database.GetOrders());
             Assert.Contains(atomicOrder.StopLoss.Id, this.database.GetOrders(traderId));
             Assert.Contains(atomicOrder.StopLoss.Id, this.database.GetOrders(traderId, strategyId));
+        }
+
+        [Fact]
+        internal void GetPositions_WhenNotPositionsInCache_ReturnsEmptyDictionary()
+        {
+            // Arrange
+            var order = new StubOrderBuilder().BuildMarketOrder();
+            var traderId = TraderId.FromString("TESTER-000");
+            var accountId = AccountId.FromString("NAUTILUS-000-SIMULATED");
+            var strategyId = new StrategyId("SCALPER", "001");
+            var positionId = new PositionId("P-123456");
+
+            this.database.AddOrder(order, traderId, accountId, strategyId, positionId);
+
+            var position = new Position(positionId, StubEventMessages.OrderPartiallyFilledEvent(order, 50000, 50000));
+            this.database.AddPosition(position);
+
+            position.Apply(StubEventMessages.OrderFilledEvent(order));
+            this.database.UpdatePosition(position);
+
+            // Act
+            this.database.ClearCaches();
+
+            LogDumper.Dump(this.logger, this.output);
+
+            // Assert
+            Assert.Empty(this.database.GetPositions());
+            Assert.Empty(this.database.GetPositions(traderId));
+            Assert.Empty(this.database.GetPositions(traderId, strategyId));
+        }
+
+        [Fact]
+        internal void GetPositionsOpen_WhenNotPositionsInCache_ReturnsEmptyDictionary()
+        {
+            // Arrange
+            var order = new StubOrderBuilder().BuildMarketOrder();
+            var traderId = TraderId.FromString("TESTER-000");
+            var accountId = AccountId.FromString("NAUTILUS-000-SIMULATED");
+            var strategyId = new StrategyId("SCALPER", "001");
+            var positionId = new PositionId("P-123456");
+
+            this.database.AddOrder(order, traderId, accountId, strategyId, positionId);
+
+            var position = new Position(positionId, StubEventMessages.OrderPartiallyFilledEvent(order, 50000, 50000));
+            this.database.AddPosition(position);
+
+            position.Apply(StubEventMessages.OrderFilledEvent(order));
+            this.database.UpdatePosition(position);
+
+            // Act
+            this.database.ClearCaches();
+
+            LogDumper.Dump(this.logger, this.output);
+
+            // Assert
+            Assert.Empty(this.database.GetPositionsOpen());
+            Assert.Empty(this.database.GetPositionsOpen(traderId));
+            Assert.Empty(this.database.GetPositionsOpen(traderId, strategyId));
+        }
+
+        [Fact]
+        internal void GetPositionsClosed_WhenNotPositionsInCache_ReturnsEmptyDictionary()
+        {
+            // Arrange
+            var order1 = new StubOrderBuilder()
+                .WithOrderId("O-123456-1")
+                .BuildMarketOrder();
+
+            var order2 = new StubOrderBuilder()
+                .WithOrderId("O-123456-2")
+                .WithOrderSide(OrderSide.SELL)
+                .BuildMarketOrder();
+
+            var traderId = TraderId.FromString("TESTER-000");
+            var accountId = AccountId.FromString("NAUTILUS-000-SIMULATED");
+            var strategyId = new StrategyId("SCALPER", "001");
+            var positionId = new PositionId("P-123456");
+
+            this.database.AddOrder(order1, traderId, accountId, strategyId, positionId);
+            this.database.AddOrder(order2, traderId, accountId, strategyId, positionId);
+
+            var position = new Position(positionId, StubEventMessages.OrderFilledEvent(order1));
+            this.database.AddPosition(position);
+
+            position.Apply(StubEventMessages.OrderFilledEvent(order2));
+            this.database.UpdatePosition(position);
+
+            // Act
+            this.database.ClearCaches();
+
+            // Assert
+            Assert.Empty(this.database.GetPositionsClosed());
+            Assert.Empty(this.database.GetPositionsClosed(traderId));
+            Assert.Empty(this.database.GetPositionsClosed(traderId, strategyId));
         }
 
         [Fact]
