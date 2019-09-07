@@ -192,7 +192,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
         }
 
         [Fact]
-        internal void AddAtomicOrder_WhenAnOrderAlreadyExists_ReturnsFailureResult()
+        internal void AddAtomicOrder_WhenEntryOrderAlreadyExists_ReturnsFailureResult()
         {
             // Arrange
             var atomicOrder = StubAtomicOrderBuilder.Build();
@@ -201,7 +201,45 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             var positionId = new PositionId("P-123456");
             var strategyId = new StrategyId("SCALPER", "001");
 
-            this.database.AddAtomicOrder(atomicOrder, traderId, accountId, strategyId, positionId);
+            this.database.AddOrder(atomicOrder.Entry, traderId, accountId, strategyId, positionId);
+
+            // Act
+            var result = this.database.AddAtomicOrder(atomicOrder, traderId, accountId, strategyId, positionId);
+
+            // Assert
+            Assert.True(result.IsFailure);
+        }
+
+        [Fact]
+        internal void AddAtomicOrder_WhenStopLossOrderAlreadyExists_ReturnsFailureResult()
+        {
+            // Arrange
+            var atomicOrder = StubAtomicOrderBuilder.Build();
+            var traderId = TraderId.FromString("TESTER-000");
+            var accountId = AccountId.FromString("NAUTILUS-000-SIMULATED");
+            var positionId = new PositionId("P-123456");
+            var strategyId = new StrategyId("SCALPER", "001");
+
+            this.database.AddOrder(atomicOrder.StopLoss, traderId, accountId, strategyId, positionId);
+
+            // Act
+            var result = this.database.AddAtomicOrder(atomicOrder, traderId, accountId, strategyId, positionId);
+
+            // Assert
+            Assert.True(result.IsFailure);
+        }
+
+        [Fact]
+        internal void AddAtomicOrder_WhenTakeProfitOrderAlreadyExists_ReturnsFailureResult()
+        {
+            // Arrange
+            var atomicOrder = StubAtomicOrderBuilder.Build();
+            var traderId = TraderId.FromString("TESTER-000");
+            var accountId = AccountId.FromString("NAUTILUS-000-SIMULATED");
+            var positionId = new PositionId("P-123456");
+            var strategyId = new StrategyId("SCALPER", "001");
+
+            this.database.AddOrder(atomicOrder.TakeProfit, traderId, accountId, strategyId, positionId);
 
             // Act
             var result = this.database.AddAtomicOrder(atomicOrder, traderId, accountId, strategyId, positionId);
@@ -339,6 +377,9 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Assert
             Assert.Equal(position, this.database.GetPosition(positionId));
+            Assert.Contains(position.Id, this.database.GetPositions());
+            Assert.Contains(position.Id, this.database.GetPositions(traderId));
+            Assert.Contains(position.Id, this.database.GetPositions(traderId, strategyId));
             Assert.Contains(position.Id, this.database.GetPositionsOpen());
             Assert.Contains(position.Id, this.database.GetPositionsOpen(traderId));
             Assert.Contains(position.Id, this.database.GetPositionsOpen(traderId, strategyId));
@@ -496,6 +537,9 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Assert
             Assert.Equal(position, this.database.GetPosition(positionId));
+            Assert.Contains(position.Id, this.database.GetPositions());
+            Assert.Contains(position.Id, this.database.GetPositions(traderId));
+            Assert.Contains(position.Id, this.database.GetPositions(traderId, strategyId));
             Assert.Contains(position.Id, this.database.GetPositionsOpen());
             Assert.Contains(position.Id, this.database.GetPositionsOpen(traderId));
             Assert.Contains(position.Id, this.database.GetPositionsOpen(traderId, strategyId));
@@ -536,6 +580,9 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Assert
             Assert.Equal(position, this.database.GetPosition(positionId));
+            Assert.Contains(position.Id, this.database.GetPositions());
+            Assert.Contains(position.Id, this.database.GetPositions(traderId));
+            Assert.Contains(position.Id, this.database.GetPositions(traderId, strategyId));
             Assert.Contains(position.Id, this.database.GetPositionsClosed());
             Assert.Contains(position.Id, this.database.GetPositionsClosed(traderId));
             Assert.Contains(position.Id, this.database.GetPositionsClosed(traderId, strategyId));
