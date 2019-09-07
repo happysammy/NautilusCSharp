@@ -1,12 +1,12 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="InMemoryExecutionDatabaseTests.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="RedisExecutionDatabaseTests.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  https://nautechsystems.io
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.UnitTests.ExecutionTests
+namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
@@ -15,21 +15,25 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Execution.Engine;
     using Nautilus.Execution.Interfaces;
+    using Nautilus.Redis;
+    using Nautilus.Redis.Execution;
+    using Nautilus.Serialization;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
+    using StackExchange.Redis;
     using Xunit;
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class InMemoryExecutionDatabaseTests
+    public class RedisExecutionDatabaseTests : IDisposable
     {
         private readonly ITestOutputHelper output;
         private readonly MockLoggingAdapter logger;
+        private readonly ConnectionMultiplexer redisConnection;
         private readonly IExecutionDatabase database;
 
-        public InMemoryExecutionDatabaseTests(ITestOutputHelper output)
+        public RedisExecutionDatabaseTests(ITestOutputHelper output)
         {
             // Fixture Setup
             this.output = output;
@@ -37,7 +41,20 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             var containerFactory = new StubComponentryContainerFactory();
             this.logger = containerFactory.LoggingAdapter;
             var container = containerFactory.Create();
-            this.database = new InMemoryExecutionDatabase(container);
+
+            this.redisConnection = ConnectionMultiplexer.Connect("localhost:6379,allowAdmin=true");
+            this.database = new RedisExecutionDatabase(
+                container,
+                this.redisConnection,
+                new MsgPackCommandSerializer(),
+                new MsgPackEventSerializer(),
+                false);
+        }
+
+        public void Dispose()
+        {
+            // Tear Down
+            this.redisConnection.GetServer(RedisConstants.LocalHost, RedisConstants.DefaultPort).FlushAllDatabases();
         }
 
         [Fact]
@@ -146,11 +163,10 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             Assert.Single(this.database.GetOrders());
             Assert.Single(this.database.GetOrders(traderId));
             Assert.Single(this.database.GetOrders(traderId, strategyId));
+            Assert.Contains(order.Id, this.database.GetOrderIds(traderId, strategyId));
             Assert.Contains(order.Id, this.database.GetOrders());
             Assert.Contains(order.Id, this.database.GetOrders(traderId));
             Assert.Contains(order.Id, this.database.GetOrders(traderId, strategyId));
-            Assert.Contains(traderId, this.database.GetTraderIds());
-            Assert.Contains(accountId, this.database.GetAccountIds());
             Assert.Contains(strategyId, this.database.GetStrategyIds(traderId));
         }
 

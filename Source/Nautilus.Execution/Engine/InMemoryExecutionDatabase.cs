@@ -118,7 +118,6 @@ namespace Nautilus.Execution.Engine
         }
 
         /// <inheritdoc />
-        /// <exception cref="ConditionFailedException">If the order identifier is already indexed.</exception>
         public CommandResult AddAtomicOrder(AtomicOrder order, TraderId traderId, AccountId accountId, StrategyId strategyId, PositionId positionId)
         {
             var resultEntry = this.AddOrder(

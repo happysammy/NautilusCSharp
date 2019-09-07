@@ -65,7 +65,7 @@ namespace Nautilus.Redis.Execution
             else
             {
                 this.Log.Warning($"The OptionLoadCache is {this.OptionLoadCache} " +
-                                 $"this should only be done in a testing environment.");
+                                 $"(this should only be done in a testing environment).");
             }
         }
 
@@ -207,28 +207,40 @@ namespace Nautilus.Redis.Execution
         /// <inheritdoc />
         public CommandResult AddAtomicOrder(AtomicOrder order, TraderId traderId, AccountId accountId, StrategyId strategyId, PositionId positionId)
         {
-            this.AddOrder(
+            var resultEntry = this.AddOrder(
                 order.Entry,
                 traderId,
                 accountId,
                 strategyId,
-                positionId).OnFailure(errorMsg => { CommandResult.Fail(errorMsg); });
+                positionId);
+            if (resultEntry.IsFailure)
+            {
+                return resultEntry;
+            }
 
-            this.AddOrder(
+            var resultStopLoss = this.AddOrder(
                 order.StopLoss,
                 traderId,
                 accountId,
                 strategyId,
-                positionId).OnFailure(errorMsg => { CommandResult.Fail(errorMsg); });
+                positionId);
+            if (resultStopLoss.IsFailure)
+            {
+                return resultStopLoss;
+            }
 
             if (order.TakeProfit != null)
             {
-                this.AddOrder(
+                var resultTakeProfit = this.AddOrder(
                     order.TakeProfit,
                     traderId,
                     accountId,
                     strategyId,
-                    positionId).OnFailure(errorMsg => { CommandResult.Fail(errorMsg); });
+                    positionId);
+                if (resultTakeProfit.IsFailure)
+                {
+                    return resultTakeProfit;
+                }
             }
 
             return CommandResult.Ok();
@@ -242,9 +254,12 @@ namespace Nautilus.Redis.Execution
                 return CommandResult.Fail($"The {order.Id} already existed in the cache (was not unique).");
             }
 
+            this.redisDatabase.SetAdd(Key.IndexTraders, traderId.Value, CommandFlags.FireAndForget);
             this.redisDatabase.SetAdd(Key.IndexTraderOrders(traderId), order.Id.Value, CommandFlags.FireAndForget);
             this.redisDatabase.SetAdd(Key.IndexTraderPositions(traderId), positionId.Value, CommandFlags.FireAndForget);
             this.redisDatabase.SetAdd(Key.IndexTraderStrategies(traderId), strategyId.Value, CommandFlags.FireAndForget);
+            this.redisDatabase.SetAdd(Key.IndexTraderStrategyOrders(traderId, strategyId), order.Id.Value, CommandFlags.FireAndForget);
+            this.redisDatabase.SetAdd(Key.IndexTraderStrategyPositions(traderId, strategyId), positionId.Value, CommandFlags.FireAndForget);
             this.redisDatabase.SetAdd(Key.IndexAccountOrders(accountId), order.Id.Value, CommandFlags.FireAndForget);
             this.redisDatabase.SetAdd(Key.IndexAccountPositions(accountId), order.Id.Value, CommandFlags.FireAndForget);
             this.redisDatabase.HashSet(Key.IndexOrderTrader, new[] { new HashEntry(order.Id.Value, traderId.Value) }, CommandFlags.FireAndForget);
@@ -364,7 +379,7 @@ namespace Nautilus.Redis.Execution
         /// <inheritdoc />
         public override ICollection<TraderId> GetTraderIds()
         {
-            return SetFactory.ConvertToSet(this.redisServer.Keys(pattern: Key.Traders).ToArray(), TraderId.FromString);
+            return SetFactory.ConvertToSet(this.redisDatabase.SetMembers(Key.IndexTraders).ToArray(), TraderId.FromString);
         }
 
         /// <inheritdoc />
@@ -390,7 +405,7 @@ namespace Nautilus.Redis.Execution
         {
             var orderIdValues = filterStrategyId is null
                 ? this.redisDatabase.SetMembers(Key.IndexTraderOrders(traderId))
-                : this.GetIntersection(Key.IndexOrders, Key.IndexTraderStrategyOrders(traderId, filterStrategyId));
+                : this.redisDatabase.SetMembers(Key.IndexTraderStrategyOrders(traderId, filterStrategyId));
 
             return SetFactory.ConvertToSet(orderIdValues, OrderId.FromString);
         }
@@ -438,7 +453,7 @@ namespace Nautilus.Redis.Execution
         {
             var positionIdValues = filterStrategyId is null
                 ? this.redisDatabase.SetMembers(Key.IndexTraderPositions(traderId))
-                : this.GetIntersection(Key.IndexPositions, Key.IndexTraderStrategyPositions(traderId, filterStrategyId));
+                : this.redisDatabase.SetMembers(Key.IndexTraderStrategyPositions(traderId, filterStrategyId));
 
             return SetFactory.ConvertToSet(positionIdValues, PositionId.FromString);
         }
