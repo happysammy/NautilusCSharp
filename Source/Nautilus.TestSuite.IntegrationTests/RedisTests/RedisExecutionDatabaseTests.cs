@@ -656,7 +656,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void UpdateOrder_WhenOrderWorking_CorrectlyUpdatesIndexes()
         {
             // Arrange
-            var order = new StubOrderBuilder().EntryOrder("O-123456").BuildMarketOrder();
+            var order = new StubOrderBuilder().EntryOrder("O-123456").BuildStopMarketOrder();
             var traderId = TraderId.FromString("TESTER-000");
             var accountId = AccountId.FromString("NAUTILUS-000-SIMULATED");
             var positionId = new PositionId("P-123456");

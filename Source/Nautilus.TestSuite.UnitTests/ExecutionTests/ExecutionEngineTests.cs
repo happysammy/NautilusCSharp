@@ -302,7 +302,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
         internal void OnModifyOrderCommand_WhenOrderExists_SendsToGateway()
         {
             // Arrange
-            var order = new StubOrderBuilder().EntryOrder("O-123456").BuildMarketOrder();
+            var order = new StubOrderBuilder().EntryOrder("O-123456").BuildStopMarketOrder();
             var traderId = TraderId.FromString("TESTER-000");
             var accountId = AccountId.FromString("NAUTILUS-000-SIMULATED");
             var positionId = new PositionId("P-123456");
@@ -437,7 +437,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
         internal void OnModifyOrderCommand_WhenOrderAlreadyBeingModified_DoesNotSendToGateway()
         {
             // Arrange
-            var order = new StubOrderBuilder().EntryOrder("O-123456").BuildMarketOrder();
+            var order = new StubOrderBuilder().EntryOrder("O-123456").BuildStopMarketOrder();
             var traderId = TraderId.FromString("TESTER-000");
             var accountId = AccountId.FromString("NAUTILUS-000-SIMULATED");
             var positionId = new PositionId("P-123456");

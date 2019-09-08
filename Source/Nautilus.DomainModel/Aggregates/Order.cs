@@ -356,6 +356,8 @@ namespace Nautilus.DomainModel.Aggregates
 
         private void When(OrderWorking @event)
         {
+            Debug.True(!(this.Price is null), "An order with no price can never be working.");
+
             this.orderIdsBroker.Add(@event.OrderIdBroker);
             this.SetStateToWorking();
         }
