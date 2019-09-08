@@ -362,10 +362,11 @@ namespace Nautilus.Brokerage.Fxcm
             {
                 var brokerSymbol = message.GetField(Tags.Symbol);
 
-                var symbol = message.IsSetField(Tags.Symbol)
+                var symbolCode = message.IsSetField(Tags.Symbol)
                     ? this.symbolConverter.GetNautilusSymbolCode(brokerSymbol).Value
                     : string.Empty;
 
+                var symbol = this.symbolCache.Get(symbolCode + $".{this.venue.Value}").Value;
                 var orderId = GetField(message, Tags.ClOrdID);
                 var brokerOrderId = GetField(message, Tags.OrderID);
                 var orderLabel = GetField(message, Tags.SecondaryClOrdID);
