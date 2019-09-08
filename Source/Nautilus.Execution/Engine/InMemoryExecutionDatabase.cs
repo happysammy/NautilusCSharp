@@ -12,7 +12,6 @@ namespace Nautilus.Execution.Engine
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.CQS;
-    using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Identifiers;
@@ -160,7 +159,25 @@ namespace Nautilus.Execution.Engine
         }
 
         /// <inheritdoc />
-        /// <exception cref="ConditionFailedException">If the order identifier is already indexed.</exception>
+        public CommandResult AddAccount(Account account)
+        {
+            if (this.CachedAccounts.ContainsKey(account.Id))
+            {
+                return CommandResult.Fail($"The {account.Id} already existed in the cache (was not unique).");
+            }
+
+            Debug.NotIn(account.Id, this.indexAccounts, nameof(account.Id), nameof(this.indexAccounts));
+
+            this.indexAccounts.Add(account.Id);
+
+            this.CachedAccounts[account.Id] = account;
+
+            this.Log.Debug($"Added new {account.Id}.");
+
+            return CommandResult.Ok();
+        }
+
+        /// <inheritdoc />
         public CommandResult AddOrder(Order order, TraderId traderId, AccountId accountId, StrategyId strategyId, PositionId positionId)
         {
             if (this.CachedOrders.ContainsKey(order.Id))
@@ -224,7 +241,7 @@ namespace Nautilus.Execution.Engine
             this.indexOrders.Add(order.Id);
             this.CachedOrders[order.Id] = order;
 
-            this.Log.Debug($"Added new {order.Id}, indexed {traderId}, {accountId}, {positionId}, {strategyId}");
+            this.Log.Debug($"Added new {order.Id}, indexed {traderId}, {accountId}, {positionId}, {strategyId}.");
 
             return CommandResult.Ok();
         }
@@ -245,7 +262,7 @@ namespace Nautilus.Execution.Engine
             this.indexPositionsOpen.Add(position.Id);
             this.CachedPositions[position.Id] = position;
 
-            this.Log.Debug($"Added open position_id={position.Id}");
+            this.Log.Debug($"Added new {position.Id}.");
 
             return CommandResult.Ok();
         }

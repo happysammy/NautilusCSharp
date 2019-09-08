@@ -19,6 +19,13 @@ namespace Nautilus.Execution.Interfaces
     public interface IExecutionDatabaseWrite
     {
         /// <summary>
+        /// Add the given account to the execution database.
+        /// </summary>
+        /// <param name="account">The account to add.</param>
+        /// <returns>The result of the operation.</returns>
+        CommandResult AddAccount(Account account);
+
+        /// <summary>
         /// Add the given atomic order to the execution database indexed with the given identifiers.
         /// </summary>
         /// <param name="order">The atomic order to add.</param>

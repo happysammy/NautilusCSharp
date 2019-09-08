@@ -29,7 +29,6 @@ namespace Nautilus.Execution.Engine
         private readonly IExecutionDatabase database;
         private readonly ITradingGateway gateway;
         private readonly IEndpoint eventPublisher;
-        private readonly Dictionary<AccountId, Account> accounts;
 
         private readonly Dictionary<OrderId, ModifyOrder> bufferModify;
 
@@ -52,7 +51,6 @@ namespace Nautilus.Execution.Engine
             this.database = database;
             this.gateway = gateway;
             this.eventPublisher = eventPublisher;
-            this.accounts = new Dictionary<AccountId, Account>();
 
             this.bufferModify = new Dictionary<OrderId, ModifyOrder>();
 
@@ -103,16 +101,19 @@ namespace Nautilus.Execution.Engine
         //-- COMMANDS ------------------------------------------------------------------------------------------------//
         private void OnMessage(SubmitOrder command)
         {
-            this.IncrementCounter(command);
+            this.Execute(() =>
+            {
+                this.IncrementCounter(command);
 
-            this.database.AddOrder(
-                command.Order,
-                command.TraderId,
-                command.AccountId,
-                command.StrategyId,
-                command.PositionId)
-                .OnSuccess(() => this.gateway.SubmitOrder(command.Order))
-                .OnFailure(result => this.Log.Error($"Cannot execute command {command} ({result.Message})."));
+                this.database.AddOrder(
+                        command.Order,
+                        command.TraderId,
+                        command.AccountId,
+                        command.StrategyId,
+                        command.PositionId)
+                    .OnSuccess(() => this.gateway.SubmitOrder(command.Order))
+                    .OnFailure(result => this.Log.Error($"Cannot execute command {command} ({result.Message})."));
+            });
         }
 
         private void OnMessage(SubmitAtomicOrder command)
@@ -280,15 +281,15 @@ namespace Nautilus.Execution.Engine
         {
             this.IncrementCounter(@event);
 
-            if (this.accounts.TryGetValue(@event.AccountId, out var account))
+            var account = this.database.GetAccount(@event.AccountId);
+            if (account is null)
             {
-                account.Apply(@event);
-                this.database.UpdateAccount(account);
+                account = new Account(@event);
+                this.database.AddAccount(account);
             }
             else
             {
-                account = new Account(@event);
-                this.accounts[@event.AccountId] = account;
+                account.Apply(@event);
                 this.database.UpdateAccount(account);
             }
 
@@ -297,7 +298,7 @@ namespace Nautilus.Execution.Engine
 
         private void IncrementCounter(Command command)
         {
-            this.Log.Debug($"Received {@command}.");
+            this.Log.Debug($"Received {command}.");
             this.CommandCount++;
         }
 

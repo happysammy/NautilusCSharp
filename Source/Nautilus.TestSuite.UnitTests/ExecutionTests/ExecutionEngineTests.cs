@@ -8,12 +8,18 @@
 
 namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 {
+    using System;
     using System.Diagnostics.CodeAnalysis;
+    using System.Threading.Tasks;
     using Nautilus.Common.Interfaces;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.Execution.Engine;
     using Nautilus.Execution.Interfaces;
+    using Nautilus.Execution.Messages.Commands;
     using Nautilus.Messaging.Interfaces;
+    using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
+    using Xunit;
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
@@ -48,6 +54,57 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 this.database,
                 this.tradingGateway,
                 this.receiver);
+        }
+
+        [Fact]
+        internal void OnSubmitOrderCommand_OperatesDatabaseAndSendsToGateway()
+        {
+            // Arrange
+            var order = new StubOrderBuilder().EntryOrder("O-123456").BuildMarketOrder();
+            var traderId = TraderId.FromString("TESTER-000");
+            var accountId = AccountId.FromString("NAUTILUS-000-SIMULATED");
+            var positionId = new PositionId("P-123456");
+            var strategyId = new StrategyId("SCALPER", "001");
+
+            var command = new SubmitOrder(
+                traderId,
+                strategyId,
+                accountId,
+                positionId,
+                order,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            // Act
+            this.engine.Endpoint.Send(command);
+
+            Task.Delay(300);
+            LogDumper.Dump(this.logger, this.output);
+
+            // Assert
+            // Assert.Equal("", this.tradingGateway.CalledMethods[0]);
+        }
+
+        [Fact]
+        internal void OnOrderSubmitted_OperatesDatabaseAndSendsToGateway()
+        {
+            // Arrange
+            var order = new StubOrderBuilder().EntryOrder("O-123456").BuildMarketOrder();
+            var traderId = TraderId.FromString("TESTER-000");
+            var accountId = AccountId.FromString("NAUTILUS-000-SIMULATED");
+            var positionId = new PositionId("P-123456");
+            var strategyId = new StrategyId("SCALPER", "001");
+
+            var submitted = StubEventMessages.OrderSubmittedEvent(order);
+
+            // Act
+            this.engine.Endpoint.Send(submitted);
+
+            Task.Delay(300);
+            LogDumper.Dump(this.logger, this.output);
+
+            // Assert
+            // Assert.Equal("", this.tradingGateway.CalledMethods[0]);
         }
     }
 }

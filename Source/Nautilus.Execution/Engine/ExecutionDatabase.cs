@@ -145,6 +145,14 @@ namespace Nautilus.Execution.Engine
         public abstract ICollection<PositionId> GetPositionClosedIds(TraderId traderId, StrategyId? filterStrategyId = null);
 
         /// <inheritdoc />
+        public Account? GetAccount(AccountId accountId)
+        {
+            return this.CachedAccounts.TryGetValue(accountId, out var account)
+                ? account
+                : null;
+        }
+
+        /// <inheritdoc />
         public Order? GetOrder(OrderId orderId)
         {
             if (this.CachedOrders.TryGetValue(orderId, out var order))

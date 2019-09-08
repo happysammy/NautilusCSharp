@@ -45,7 +45,7 @@ namespace Nautilus.Common.Componentry
             this.stoppedTimes = new List<ZonedDateTime>();
 
             this.Name = new Label(this.GetType().ExtractFormattedName());
-            this.Address = new Address(this.Name.ToString());
+            this.Address = new Address(this.Name.Value);
             this.Mailbox = new Mailbox(this.Address, this.Endpoint);
             this.Log = container.LoggerFactory.Create(this.Name);
             this.State = initial;
@@ -125,7 +125,7 @@ namespace Nautilus.Common.Componentry
         /// <param name="start">The start message.</param>
         protected virtual void OnStart(Start start)
         {
-            this.Log.Error($"Received {start} and OnStart() not overridden in implementation.");
+            this.Log.Error($"Received {start} with OnStart() not overridden in implementation.");
         }
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace Nautilus.Common.Componentry
         /// <param name="stop">The stop message.</param>
         protected virtual void OnStop(Stop stop)
         {
-            this.Log.Error($"Received {stop} and OnStop() not overridden in implementation.");
+            this.Log.Error($"Received {stop} with OnStop() not overridden in implementation.");
         }
 
         /// <summary>

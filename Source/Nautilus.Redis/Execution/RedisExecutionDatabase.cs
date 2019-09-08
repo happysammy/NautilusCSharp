@@ -12,7 +12,6 @@ namespace Nautilus.Redis.Execution
     using System.Linq;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.CQS;
-    using Nautilus.Core.Extensions;
     using Nautilus.Core.Message;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
@@ -247,6 +246,23 @@ namespace Nautilus.Redis.Execution
         }
 
         /// <inheritdoc />
+        public CommandResult AddAccount(Account account)
+        {
+            if (this.CachedAccounts.ContainsKey(account.Id))
+            {
+                return CommandResult.Fail($"The {account.Id} already existed in the cache (was not unique).");
+            }
+
+            this.redisDatabase.ListRightPush(Key.Account(account.Id), this.eventSerializer.Serialize(account.LastEvent), When.Always, CommandFlags.FireAndForget);
+
+            this.CachedAccounts[account.Id] = account;
+
+            this.Log.Debug($"Added new {account.Id}.");
+
+            return CommandResult.Ok();
+        }
+
+        /// <inheritdoc />
         public CommandResult AddOrder(Order order, TraderId traderId, AccountId accountId, StrategyId strategyId, PositionId positionId)
         {
             if (this.CachedOrders.ContainsKey(order.Id))
@@ -310,6 +326,12 @@ namespace Nautilus.Redis.Execution
         }
 
         /// <inheritdoc />
+        public void UpdateAccount(Account account)
+        {
+            this.redisDatabase.ListRightPush(Key.Account(account.Id), this.eventSerializer.Serialize(account.LastEvent), When.Always, CommandFlags.FireAndForget);
+        }
+
+        /// <inheritdoc />
         public void UpdateOrder(Order order)
         {
             if (order.IsWorking)
@@ -341,12 +363,6 @@ namespace Nautilus.Redis.Execution
             }
 
             this.redisDatabase.ListRightPush(Key.Position(position.Id), this.eventSerializer.Serialize(position.LastEvent), When.Always, CommandFlags.FireAndForget);
-        }
-
-        /// <inheritdoc />
-        public void UpdateAccount(Account account)
-        {
-            this.redisDatabase.ListRightPush(Key.Account(account.Id), this.eventSerializer.Serialize(account.LastEvent), When.Always, CommandFlags.FireAndForget);
         }
 
         /// <inheritdoc />

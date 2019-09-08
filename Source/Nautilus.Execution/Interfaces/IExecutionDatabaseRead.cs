@@ -141,6 +141,13 @@ namespace Nautilus.Execution.Interfaces
         ICollection<PositionId> GetPositionClosedIds(TraderId traderId, StrategyId? filterStrategyId = null);
 
         /// <summary>
+        /// Return the account matching the given identifier (if found else null).
+        /// </summary>
+        /// <param name="accountId">The account identifier.</param>
+        /// <returns>The account (if found else null).</returns>
+        Account? GetAccount(AccountId accountId);
+
+        /// <summary>
         /// Return the order matching the given identifier (if found else null).
         /// </summary>
         /// <param name="orderId">The order identifier.</param>

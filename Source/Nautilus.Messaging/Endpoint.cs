@@ -59,10 +59,7 @@ namespace Nautilus.Messaging
         public static bool operator !=(Endpoint left,  Endpoint right) => !(left == right);
 
         /// <inheritdoc />
-        public void Send(object message)
-        {
-            this.target.Invoke(message);
-        }
+        public void Send(object message) => this.target.Invoke(message);
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="Endpoint"/> is equal
@@ -78,18 +75,12 @@ namespace Nautilus.Messaging
         /// </summary>
         /// <param name="other">The other object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public bool Equals(Endpoint other)
-        {
-            return this.target == other.target;
-        }
+        public bool Equals(Endpoint other) => !(other is null) && this.target == other.target;
 
         /// <summary>
         /// Returns the hash code of the <see cref="Endpoint"/>.
         /// </summary>
         /// <returns>An <see cref="int"/>.</returns>
-        public override int GetHashCode()
-        {
-            return Hash.GetCode(this.target);
-        }
+        public override int GetHashCode() => Hash.GetCode(this.target);
     }
 }
