@@ -10,8 +10,10 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using System.Threading.Tasks;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Message;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.Execution.Engine;
     using Nautilus.Execution.Interfaces;
@@ -29,7 +31,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
         private readonly MockLoggingAdapter logger;
         private readonly IMessageBusAdapter messageBusAdapter;
         private readonly MockTradingGateway tradingGateway;
-        private readonly IEndpoint receiver;
+        private readonly MockMessagingAgent receiver;
         private readonly IExecutionDatabase database;
         private readonly ExecutionEngine engine;
 
@@ -44,7 +46,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             var service = new MockMessageBusFactory(container);
             this.messageBusAdapter = service.MessageBusAdapter;
             this.tradingGateway = new MockTradingGateway();
-            this.receiver = new MockMessagingAgent().Endpoint;
+            this.receiver = new MockMessagingAgent();
+            this.receiver.RegisterHandler<Event>(this.receiver.OnMessage);
 
             this.database = new InMemoryExecutionDatabase(container);
 
@@ -53,7 +56,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 this.messageBusAdapter,
                 this.database,
                 this.tradingGateway,
-                this.receiver);
+                this.receiver.Endpoint);
         }
 
         [Fact]
@@ -68,25 +71,68 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             var command = new SubmitOrder(
                 traderId,
-                strategyId,
                 accountId,
+                strategyId,
                 positionId,
                 order,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             // Act
+            Task.Delay(300);
+
             this.engine.Endpoint.Send(command);
 
-            Task.Delay(300);
             LogDumper.Dump(this.logger, this.output);
 
             // Assert
-            // Assert.Equal("", this.tradingGateway.CalledMethods[0]);
+            Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
+            Assert.Equal(1, this.engine.ProcessedCount);
+            Assert.Equal(1, this.engine.CommandCount);
+            Assert.Single(this.tradingGateway.CalledMethods);
+            Assert.Single(this.tradingGateway.ReceivedObjects);
+            Assert.Equal("SubmitOrder", this.tradingGateway.CalledMethods[0]);
+            Assert.Equal(order, this.tradingGateway.ReceivedObjects[0]);
         }
 
         [Fact]
-        internal void OnOrderSubmitted_OperatesDatabaseAndSendsToGateway()
+        internal void OnSubmitAtomicOrderCommand_OperatesDatabaseAndSendsToGateway()
+        {
+            // Arrange
+            var atomicOrder = StubAtomicOrderBuilder.Build();
+            var traderId = TraderId.FromString("TESTER-000");
+            var accountId = AccountId.FromString("NAUTILUS-000-SIMULATED");
+            var positionId = new PositionId("P-123456");
+            var strategyId = new StrategyId("SCALPER", "001");
+
+            var command = new SubmitAtomicOrder(
+                traderId,
+                accountId,
+                strategyId,
+                positionId,
+                atomicOrder,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            // Act
+            Task.Delay(300);
+
+            this.engine.Endpoint.Send(command);
+
+            LogDumper.Dump(this.logger, this.output);
+
+            // Assert
+            Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
+            Assert.Equal(1, this.engine.ProcessedCount);
+            Assert.Equal(1, this.engine.CommandCount);
+            Assert.Single(this.tradingGateway.CalledMethods);
+            Assert.Single(this.tradingGateway.ReceivedObjects);
+            Assert.Equal("SubmitOrder", this.tradingGateway.CalledMethods[0]);
+            Assert.Equal(atomicOrder, this.tradingGateway.ReceivedObjects[0]);
+        }
+
+        [Fact]
+        internal void OnCancelOrderCommand_WhenNoOrderExists_DoesNotSendCommand()
         {
             // Arrange
             var order = new StubOrderBuilder().EntryOrder("O-123456").BuildMarketOrder();
@@ -95,16 +141,63 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             var positionId = new PositionId("P-123456");
             var strategyId = new StrategyId("SCALPER", "001");
 
-            var submitted = StubEventMessages.OrderSubmittedEvent(order);
+            var command = new CancelOrder(
+                traderId,
+                accountId,
+                strategyId,
+                order.Id,
+                "TEST",
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.engine.Endpoint.Send(submitted);
-
             Task.Delay(300);
+
+            this.engine.Endpoint.Send(command);
+
             LogDumper.Dump(this.logger, this.output);
 
             // Assert
-            // Assert.Equal("", this.tradingGateway.CalledMethods[0]);
+            Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
+            Assert.Equal(1, this.engine.ProcessedCount);
+            Assert.Equal(1, this.engine.CommandCount);
+            Assert.Empty(this.tradingGateway.CalledMethods);
+            Assert.Empty(this.tradingGateway.ReceivedObjects);
+        }
+
+        [Fact]
+        internal void OnOrderSubmitted_UpdatesOrder_SendsToPublisher()
+        {
+            // Arrange
+            var order = new StubOrderBuilder().EntryOrder("O-123456").BuildMarketOrder();
+            var traderId = TraderId.FromString("TESTER-000");
+            var accountId = AccountId.FromString("NAUTILUS-000-SIMULATED");
+            var positionId = new PositionId("P-123456");
+            var strategyId = new StrategyId("SCALPER", "001");
+
+            var submitOrder = new SubmitOrder(
+                traderId,
+                accountId,
+                strategyId,
+                positionId,
+                order,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            var submitted = StubEventMessages.OrderSubmittedEvent(order);
+
+            // Act
+            this.engine.Endpoint.Send(submitOrder);
+            this.engine.Endpoint.Send(submitted);
+
+            LogDumper.Dump(this.logger, this.output);
+
+            // Assert
+            Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
+            Assert.Equal(2, this.engine.ProcessedCount);
+            Assert.Equal(1, this.engine.CommandCount);
+            Assert.Equal(1, this.engine.EventCount);
+            Assert.Single(this.receiver.Messages);
         }
     }
 }

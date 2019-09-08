@@ -25,16 +25,16 @@ namespace Nautilus.Execution.Messages.Commands
         /// Initializes a new instance of the <see cref="SubmitAtomicOrder"/> class.
         /// </summary>
         /// <param name="traderId">The trader identifier.</param>
-        /// <param name="strategyId">The strategy identifier.</param>
         /// <param name="accountId">The account identifier.</param>
+        /// <param name="strategyId">The strategy identifier.</param>
         /// <param name="positionId">The position identifier.</param>
         /// <param name="atomicOrder">The atomic order to submit.</param>
         /// <param name="commandId">The command identifier.</param>
         /// <param name="commandTimestamp">The command timestamp.</param>
         public SubmitAtomicOrder(
             TraderId traderId,
-            StrategyId strategyId,
             AccountId accountId,
+            StrategyId strategyId,
             PositionId positionId,
             AtomicOrder atomicOrder,
             Guid commandId,
@@ -45,8 +45,8 @@ namespace Nautilus.Execution.Messages.Commands
                 commandTimestamp)
         {
             this.TraderId = traderId;
-            this.StrategyId = strategyId;
             this.AccountId = accountId;
+            this.StrategyId = strategyId;
             this.PositionId = positionId;
             this.AtomicOrder = atomicOrder;
         }
@@ -57,14 +57,14 @@ namespace Nautilus.Execution.Messages.Commands
         public TraderId TraderId { get; }
 
         /// <summary>
-        /// Gets the commands strategy identifier.
-        /// </summary>
-        public StrategyId StrategyId { get; }
-
-        /// <summary>
         /// Gets the commands account identifier.
         /// </summary>
         public AccountId AccountId { get; }
+
+        /// <summary>
+        /// Gets the commands strategy identifier.
+        /// </summary>
+        public StrategyId StrategyId { get; }
 
         /// <summary>
         /// Gets the commands position identifier.

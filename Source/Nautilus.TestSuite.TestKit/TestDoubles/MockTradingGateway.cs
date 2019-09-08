@@ -8,6 +8,7 @@
 
 namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
+    using System;
     using System.Collections.Generic;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Aggregates;
@@ -29,6 +30,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             this.CalledMethods = new List<string>();
             this.ReceivedObjects = new List<object>();
+
+            Console.WriteLine("Initialized");
         }
 
         /// <summary>

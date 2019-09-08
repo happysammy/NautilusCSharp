@@ -41,8 +41,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             var command = new SubmitOrder(
                 new TraderId("TESTER", "000"),
-                new StrategyId("EMACross", "001"),
                 new AccountId("FXCM", "028999999", "SIMULATED"),
+                new StrategyId("EMACross", "001"),
                 new PositionId("P-123456"),
                 order,
                 Guid.NewGuid(),
@@ -69,8 +69,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             var command = new SubmitAtomicOrder(
                 new TraderId("TESTER", "000"),
-                new StrategyId("EMACross", "001"),
                 new AccountId("FXCM", "028999999", "SIMULATED"),
+                new StrategyId("EMACross", "001"),
                 new PositionId("P-123456"),
                 atomicOrder,
                 Guid.NewGuid(),
@@ -98,8 +98,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             var command = new SubmitAtomicOrder(
                 new TraderId("TESTER", "000"),
-                new StrategyId("EMACross", "001"),
                 new AccountId("FXCM", "028999999", "SIMULATED"),
+                new StrategyId("EMACross", "001"),
                 new PositionId("P-123456"),
                 atomicOrder,
                 Guid.NewGuid(),
@@ -123,8 +123,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var order = new StubOrderBuilder().BuildMarketOrder();
             var command = new CancelOrder(
                 new TraderId("TESTER", "000"),
-                new StrategyId("EMACross", "001"),
                 new AccountId("FXCM", "028999999", "SIMULATED"),
+                new StrategyId("EMACross", "001"),
                 new OrderId("O-123456"),
                 "EXPIRED",
                 Guid.NewGuid(),
@@ -147,8 +147,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var order = new StubOrderBuilder().BuildMarketOrder();
             var command = new ModifyOrder(
                 new TraderId("TESTER", "000"),
-                new StrategyId("EMACross", "001"),
                 new AccountId("FXCM", "028999999", "SIMULATED"),
+                new StrategyId("EMACross", "001"),
                 new OrderId("O-123456"),
                 Price.Create(1.50000m, 5),
                 Guid.NewGuid(),

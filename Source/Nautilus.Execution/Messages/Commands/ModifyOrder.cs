@@ -26,16 +26,16 @@ namespace Nautilus.Execution.Messages.Commands
         /// Initializes a new instance of the <see cref="ModifyOrder"/> class.
         /// </summary>
         /// <param name="traderId">The trader identifier.</param>
-        /// <param name="strategyId">The strategy identifier.</param>
         /// <param name="accountId">The account identifier.</param>
+        /// <param name="strategyId">The strategy identifier.</param>
         /// <param name="orderId">The order identifier.</param>
         /// <param name="modifiedPrice">The modified price.</param>
         /// <param name="commandId">The command identifier.</param>
         /// <param name="commandTimestamp">The command timestamp.</param>
         public ModifyOrder(
             TraderId traderId,
-            StrategyId strategyId,
             AccountId accountId,
+            StrategyId strategyId,
             OrderId orderId,
             Price modifiedPrice,
             Guid commandId,
@@ -49,8 +49,8 @@ namespace Nautilus.Execution.Messages.Commands
             Debug.NotDefault(commandTimestamp, nameof(commandTimestamp));
 
             this.TraderId = traderId;
-            this.StrategyId = strategyId;
             this.AccountId = accountId;
+            this.StrategyId = strategyId;
             this.OrderId = orderId;
             this.ModifiedPrice = modifiedPrice;
         }
@@ -61,14 +61,14 @@ namespace Nautilus.Execution.Messages.Commands
         public TraderId TraderId { get; }
 
         /// <summary>
-        /// Gets the commands strategy identifier.
-        /// </summary>
-        public StrategyId StrategyId { get; }
-
-        /// <summary>
         /// Gets the commands account identifier.
         /// </summary>
         public AccountId AccountId { get; }
+
+        /// <summary>
+        /// Gets the commands strategy identifier.
+        /// </summary>
+        public StrategyId StrategyId { get; }
 
         /// <summary>
         /// Gets the commands order identifier.

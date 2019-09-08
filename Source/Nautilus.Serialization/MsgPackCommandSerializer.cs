@@ -105,8 +105,8 @@ namespace Nautilus.Serialization
                 case nameof(SubmitOrder):
                     return new SubmitOrder(
                         this.identifierCache.TraderId(unpacked),
-                        this.identifierCache.StrategyId(unpacked),
                         this.identifierCache.AccountId(unpacked),
+                        this.identifierCache.StrategyId(unpacked),
                         ObjectExtractor.PositionId(unpacked),
                         this.orderSerializer.Deserialize(unpacked[nameof(SubmitOrder.Order)].AsBinary()),
                         id,
@@ -114,8 +114,8 @@ namespace Nautilus.Serialization
                 case nameof(SubmitAtomicOrder):
                     return new SubmitAtomicOrder(
                         this.identifierCache.TraderId(unpacked),
-                        this.identifierCache.StrategyId(unpacked),
                         this.identifierCache.AccountId(unpacked),
+                        this.identifierCache.StrategyId(unpacked),
                         ObjectExtractor.PositionId(unpacked),
                         new AtomicOrder(
                             this.orderSerializer.Deserialize(unpacked[nameof(AtomicOrder.Entry)].AsBinary()),
@@ -126,8 +126,8 @@ namespace Nautilus.Serialization
                 case nameof(ModifyOrder):
                     return new ModifyOrder(
                         this.identifierCache.TraderId(unpacked),
-                        this.identifierCache.StrategyId(unpacked),
                         this.identifierCache.AccountId(unpacked),
+                        this.identifierCache.StrategyId(unpacked),
                         ObjectExtractor.OrderId(unpacked),
                         ObjectExtractor.Price(unpacked[nameof(ModifyOrder.ModifiedPrice)].AsString()),
                         id,
@@ -135,8 +135,8 @@ namespace Nautilus.Serialization
                 case nameof(CancelOrder):
                     return new CancelOrder(
                         this.identifierCache.TraderId(unpacked),
-                        this.identifierCache.StrategyId(unpacked),
                         this.identifierCache.AccountId(unpacked),
+                        this.identifierCache.StrategyId(unpacked),
                         ObjectExtractor.OrderId(unpacked),
                         unpacked[nameof(CancelOrder.CancelReason)].AsString(),
                         id,
