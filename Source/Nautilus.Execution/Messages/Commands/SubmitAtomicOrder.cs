@@ -75,5 +75,11 @@ namespace Nautilus.Execution.Messages.Commands
         /// Gets the commands atomic order.
         /// </summary>
         public AtomicOrder AtomicOrder { get; }
+
+        /// <summary>
+        /// Returns a string representation of this object.
+        /// </summary>
+        /// <returns>A <see cref="string"/>.</returns>
+        public override string ToString() => $"{nameof(SubmitAtomicOrder)}(AtomicOrderId={this.AtomicOrder.Id.Value}, HasTakeProfit={this.AtomicOrder.HasTakeProfit})";
     }
 }

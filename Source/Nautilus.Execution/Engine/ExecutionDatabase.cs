@@ -50,9 +50,12 @@ namespace Nautilus.Execution.Engine
         /// <inheritdoc />
         public void LoadCaches()
         {
-            this.LoadAccountsCache();
-            this.LoadOrdersCache();
-            this.LoadPositionsCache();
+            this.Execute(() =>
+            {
+                this.LoadAccountsCache();
+                this.LoadOrdersCache();
+                this.LoadPositionsCache();
+            });
         }
 
         /// <inheritdoc />

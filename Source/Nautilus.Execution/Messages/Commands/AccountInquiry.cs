@@ -46,5 +46,11 @@ namespace Nautilus.Execution.Messages.Commands
         /// Gets the commands account identifier.
         /// </summary>
         public AccountId AccountId { get; }
+
+        /// <summary>
+        /// Returns a string representation of this object.
+        /// </summary>
+        /// <returns>A <see cref="string"/>.</returns>
+        public override string ToString() => $"{nameof(AccountInquiry)}(AccountId={this.AccountId.Value})";
     }
 }

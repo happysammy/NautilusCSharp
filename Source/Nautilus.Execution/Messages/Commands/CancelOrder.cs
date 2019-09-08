@@ -79,5 +79,11 @@ namespace Nautilus.Execution.Messages.Commands
         /// Gets the commands cancel reason.
         /// </summary>
         public string CancelReason { get; }
+
+        /// <summary>
+        /// Returns a string representation of this object.
+        /// </summary>
+        /// <returns>A <see cref="string"/>.</returns>
+        public override string ToString() => $"{nameof(CancelOrder)}(OrderId={this.AccountId.Value}, Reason={this.CancelReason})";
     }
 }

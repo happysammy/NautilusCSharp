@@ -8,11 +8,10 @@
 
 namespace Nautilus.Execution.Engine
 {
+    using System;
     using System.Collections.Generic;
-    using System.Threading;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
-    using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Message;
     using Nautilus.DomainModel.Aggregates;
@@ -103,19 +102,16 @@ namespace Nautilus.Execution.Engine
         //-- COMMANDS ------------------------------------------------------------------------------------------------//
         private void OnMessage(SubmitOrder command)
         {
-            this.Execute(() =>
-            {
-                this.IncrementCounter(command);
+            this.IncrementCounter(command);
 
-                this.database.AddOrder(
-                        command.Order,
-                        command.TraderId,
-                        command.AccountId,
-                        command.StrategyId,
-                        command.PositionId)
-                    .OnSuccess(() => this.gateway.SubmitOrder(command.Order))
-                    .OnFailure(result => this.Log.Error($"Cannot execute command {command} ({result.Message})."));
-            });
+            this.database.AddOrder(
+                    command.Order,
+                    command.TraderId,
+                    command.AccountId,
+                    command.StrategyId,
+                    command.PositionId)
+                .OnSuccess(() => this.gateway.SubmitOrder(command.Order))
+                .OnFailure(result => this.Log.Error($"Cannot execute {command} {result.Message}"));
         }
 
         private void OnMessage(SubmitAtomicOrder command)
@@ -129,7 +125,7 @@ namespace Nautilus.Execution.Engine
                 command.StrategyId,
                 command.PositionId)
                 .OnSuccess(() => this.gateway.SubmitOrder(command.AtomicOrder))
-                .OnFailure(result => this.Log.Error($"Cannot execute command {command} ({result.Message})."));
+                .OnFailure(result => this.Log.Error($"Cannot execute {command} {result.Message}"));
         }
 
         private void OnMessage(CancelOrder command)
@@ -139,7 +135,7 @@ namespace Nautilus.Execution.Engine
             var order = this.database.GetOrder(command.OrderId);
             if (order is null)
             {
-                this.Log.Error($"Cannot execute command {command} ({command.OrderId} was not found in the memory cache).");
+                this.Log.Error($"Cannot execute {command} the {command.OrderId} was not found in the memory cache.");
                 return;
             }
 
@@ -153,13 +149,21 @@ namespace Nautilus.Execution.Engine
             var order = this.database.GetOrder(command.OrderId);
             if (order is null)
             {
-                this.Log.Error($"Cannot execute command {command} ({command.OrderId} was not found in the memory cache).");
+                this.Log.Error($"Cannot execute {command} the {command.OrderId} was not found in the memory cache.");
+                return;
+            }
+
+            if (!order.IsWorking)
+            {
+                this.bufferModify[command.OrderId] = command;
+                this.Log.Warning($"Buffering {command} as not yet working.");
                 return;
             }
 
             if (this.bufferModify.ContainsKey(command.OrderId))
             {
                 this.bufferModify[command.OrderId] = command;
+                this.Log.Debug($"Buffering {command} as order already being modified.");
                 return;
             }
 
@@ -197,6 +201,7 @@ namespace Nautilus.Execution.Engine
             this.IncrementCounter(@event);
 
             this.ProcessOrderEvent(@event);
+            this.ClearModifyBuffer(@event.OrderId);
             this.SendToEventPublisher(@event);
         }
 
@@ -204,7 +209,12 @@ namespace Nautilus.Execution.Engine
         {
             this.IncrementCounter(@event);
 
-            this.ProcessOrderEvent(@event);
+            var order = this.ProcessOrderEvent(@event);
+            if (order != null)
+            {
+                this.ProcessModifyBuffer(order);
+            }
+
             this.SendToEventPublisher(@event);
         }
 
@@ -215,15 +225,7 @@ namespace Nautilus.Execution.Engine
             var order = this.ProcessOrderEvent(@event);
             if (order != null)
             {
-                if (this.bufferModify.TryGetValue(order.Id, out var modifyOrder))
-                {
-                    if (!(order.Price is null) && order.Price != modifyOrder.ModifiedPrice)
-                    {
-                        this.gateway.ModifyOrder(order, modifyOrder.ModifiedPrice);
-                    }
-
-                    this.bufferModify.Remove(order.Id);
-                }
+                this.ProcessModifyBuffer(order);
             }
 
             this.SendToEventPublisher(@event);
@@ -233,7 +235,11 @@ namespace Nautilus.Execution.Engine
         {
             this.IncrementCounter(@event);
 
-            this.ProcessOrderEvent(@event);
+            var order = this.ProcessOrderEvent(@event);
+            if (order != null)
+            {
+                this.ProcessModifyBuffer(order);
+            }
 
             this.SendToEventPublisher(@event);
         }
@@ -320,8 +326,16 @@ namespace Nautilus.Execution.Engine
             }
             else
             {
-                order.Apply(@event);
-                this.database.UpdateOrder(order);
+                try
+                {
+                    order.Apply(@event);
+                    this.database.UpdateOrder(order);
+                }
+                catch (Exception ex)
+                {
+                    this.Log.Error(ex.Message);
+                    return null;
+                }
             }
 
             return order;
@@ -348,6 +362,21 @@ namespace Nautilus.Execution.Engine
             {
                 position.Apply(@event);
                 this.database.UpdatePosition(position);
+            }
+        }
+
+        private void ProcessModifyBuffer(Order order)
+        {
+            if (this.bufferModify.TryGetValue(order.Id, out var modifyOrder))
+            {
+                if (!(order.Price is null) && order.Price != modifyOrder.ModifiedPrice)
+                {
+                    this.gateway.ModifyOrder(order, modifyOrder.ModifiedPrice);
+                    this.Log.Debug($"Sent {modifyOrder} to TradingGateway.");
+                }
+
+                this.bufferModify.Remove(order.Id);
+                this.Log.Debug($"Cleared {modifyOrder} from buffer.");
             }
         }
 

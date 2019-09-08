@@ -75,5 +75,11 @@ namespace Nautilus.Execution.Messages.Commands
         /// Gets the commands order.
         /// </summary>
         public Order Order { get; }
+
+        /// <summary>
+        /// Returns a string representation of this object.
+        /// </summary>
+        /// <returns>A <see cref="string"/>.</returns>
+        public override string ToString() => $"{nameof(SubmitOrder)}(OrderId={this.Order.Id.Value})";
     }
 }

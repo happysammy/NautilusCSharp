@@ -11,6 +11,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using System;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.DomainModel.Aggregates;
+    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
@@ -19,6 +20,22 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public static class StubEventMessages
     {
+        public static AccountStateEvent AccountStateEvent(string accountId = "FXCM-123456789-SIMULATED")
+        {
+            return new AccountStateEvent(
+                AccountId.FromString(accountId),
+                Currency.USD,
+                Money.Create(100000, Currency.USD),
+                Money.Create(100000, Currency.USD),
+                Money.Zero(Currency.USD),
+                Money.Zero(Currency.USD),
+                Money.Zero(Currency.USD),
+                decimal.Zero,
+                string.Empty,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+        }
+
         public static OrderSubmitted OrderSubmittedEvent(Order order)
         {
             return new OrderSubmitted(
@@ -92,6 +109,18 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 order.Id,
                 AccountId.FromString("FXCM-02851908-DEMO"),
                 StubZonedDateTime.UnixEpoch(),
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+        }
+
+        public static OrderCancelReject OrderCancelRejectEvent(Order order)
+        {
+            return new OrderCancelReject(
+                order.Id,
+                AccountId.FromString("FXCM-02851908-DEMO"),
+                StubZonedDateTime.UnixEpoch(),
+                "NONE",
+                "TEST",
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
         }
