@@ -21,7 +21,7 @@ namespace Nautilus.Network
     /// Provides a generic data publisher.
     /// </summary>
     /// <typeparam name="T">The publishing data type.</typeparam>
-    public abstract class DataPublisher<T> : DataBusConnected
+    public abstract class DataPublisher<T> : DataBusConnected, IDisposable
     {
         private readonly PublisherSocket socket;
         private readonly IDataSerializer<T> dataSerializer;
@@ -71,6 +71,14 @@ namespace Nautilus.Network
         /// </summary>
         public int PublishedCount { get; private set; }
 
+        /// <summary>
+        /// Dispose of the socket.
+        /// </summary>
+        public void Dispose()
+        {
+            this.socket?.Dispose();
+        }
+
         /// <inheritdoc />
         protected override void OnStart(Start start)
         {
@@ -83,8 +91,6 @@ namespace Nautilus.Network
         {
             this.socket.Unbind(this.ServerAddress.Value);
             this.Log.Debug($"Unbound {this.socket.GetType().Name} from {this.ServerAddress}");
-
-            this.socket.Dispose();
         }
 
         /// <summary>

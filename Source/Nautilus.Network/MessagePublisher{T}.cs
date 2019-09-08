@@ -22,7 +22,7 @@ namespace Nautilus.Network
     /// Provides a generic message publisher.
     /// </summary>
     /// <typeparam name="T">The publishing message type.</typeparam>
-    public abstract class MessagePublisher<T> : Component
+    public abstract class MessagePublisher<T> : Component, IDisposable
         where T : Message
     {
         private readonly PublisherSocket socket;
@@ -71,6 +71,14 @@ namespace Nautilus.Network
         /// </summary>
         public int PublishedCount { get; private set; }
 
+        /// <summary>
+        /// Dispose of the socket.
+        /// </summary>
+        public void Dispose()
+        {
+            this.socket?.Dispose();
+        }
+
         /// <inheritdoc />
         protected override void OnStart(Start start)
         {
@@ -83,8 +91,6 @@ namespace Nautilus.Network
         {
             this.socket.Unbind(this.ServerAddress.Value);
             this.Log.Debug($"Unbound {this.socket.GetType().Name} from {this.ServerAddress}");
-
-            this.socket.Dispose();
         }
 
         /// <summary>

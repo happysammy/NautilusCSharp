@@ -32,7 +32,7 @@ namespace Nautilus.Network
     /// <typeparam name="TInbound">The inbound message type.</typeparam>
     /// <typeparam name="TOutbound">The outbound response type.</typeparam>
     [SuppressMessage("ReSharper", "SA1310", Justification = "Easier to read.")]
-    public abstract class MessageServer<TInbound, TOutbound> : Component
+    public abstract class MessageServer<TInbound, TOutbound> : Component, IDisposable
         where TInbound : Message
         where TOutbound : Response
     {
@@ -101,6 +101,14 @@ namespace Nautilus.Network
         /// </summary>
         public int SentCount { get; private set; }
 
+        /// <summary>
+        /// Dispose of the socket.
+        /// </summary>
+        public void Dispose()
+        {
+            this.socket?.Dispose();
+        }
+
         /// <inheritdoc />
         protected override void OnStart(Start start)
         {
@@ -116,8 +124,6 @@ namespace Nautilus.Network
             this.cts.Cancel();
             this.socket.Unbind(this.ServerAddress.Value);
             this.Log.Debug($"Unbound {this.socket.GetType().Name} from {this.ServerAddress}");
-
-            this.socket.Dispose();
         }
 
         /// <summary>
