@@ -136,8 +136,6 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             // Tear Down
             requester1.Disconnect(testAddress);
             requester2.Disconnect(testAddress);
-            requester1.Dispose();
-            requester2.Dispose();
             server.Stop();
             Task.Delay(100).Wait();  // Allows sockets to dispose
         }
@@ -185,8 +183,6 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             // Tear Down
             requester1.Disconnect(testAddress);
             requester2.Disconnect(testAddress);
-            requester1.Dispose();
-            requester2.Dispose();
             server.Stop();
             Task.Delay(100).Wait();  // Allows sockets to dispose
         }
@@ -229,7 +225,6 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
 
             // Tear Down
             requester.Disconnect(testAddress);
-            requester.Dispose();
             server.Stop();
             Task.Delay(100).Wait();  // Allows sockets to dispose
         }
@@ -282,7 +277,6 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
 
             // Tear Down
             requester.Disconnect(testAddress);
-            requester.Dispose();
             server.Stop();
             Task.Delay(100).Wait();  // Allows sockets to dispose
         }
@@ -379,7 +373,6 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
 
             // Tear Down
             requester.Disconnect(testAddress);
-            requester.Dispose();
             server.Stop();
             Task.Delay(100).Wait();  // Allows sockets to dispose
         }
@@ -438,8 +431,6 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             // Tear Down
             requester1.Disconnect(testAddress);
             requester2.Disconnect(testAddress);
-            requester1.Dispose();
-            requester2.Dispose();
             server.Stop();
             Task.Delay(100).Wait();  // Allows sockets to dispose
         }
