@@ -1,54 +1,58 @@
-//--------------------------------------------------------------------------------------------------
-// <copyright file="SubmitOrder.cs" company="Nautech Systems Pty Ltd">
+﻿//--------------------------------------------------------------------------------------------------
+// <copyright file="CancelOrder.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  https://nautechsystems.io
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Execution.Messages.Commands
+namespace Nautilus.DomainModel.Commands
 {
     using System;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
     using Nautilus.Core.Message;
-    using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Identifiers;
     using NodaTime;
 
     /// <summary>
-    /// Represents a command to submit an <see cref="Order"/>.
+    /// Represents a command to cancel an order.
     /// </summary>
     [Immutable]
-    public sealed class SubmitOrder : Command
+    public sealed class CancelOrder : Command
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="SubmitOrder"/> class.
+        /// Initializes a new instance of the <see cref="CancelOrder"/> class.
         /// </summary>
         /// <param name="traderId">The trader identifier.</param>
         /// <param name="accountId">The account identifier.</param>
         /// <param name="strategyId">The strategy identifier.</param>
-        /// <param name="positionId">The position identifier.</param>
-        /// <param name="order">The order to submit.</param>
+        /// <param name="orderId">The order identifier.</param>
+        /// <param name="cancelReason">The cancel reason.</param>
         /// <param name="commandId">The command identifier.</param>
         /// <param name="commandTimestamp">The command timestamp.</param>
-        public SubmitOrder(
+        public CancelOrder(
             TraderId traderId,
             AccountId accountId,
             StrategyId strategyId,
-            PositionId positionId,
-            Order order,
+            OrderId orderId,
+            string cancelReason,
             Guid commandId,
             ZonedDateTime commandTimestamp)
             : base(
-                typeof(SubmitOrder),
+                typeof(CancelOrder),
                 commandId,
                 commandTimestamp)
         {
+            Debug.NotEmptyOrWhiteSpace(cancelReason, nameof(cancelReason));
+            Debug.NotDefault(commandId, nameof(commandId));
+            Debug.NotDefault(commandTimestamp, nameof(commandTimestamp));
+
             this.TraderId = traderId;
             this.AccountId = accountId;
             this.StrategyId = strategyId;
-            this.PositionId = positionId;
-            this.Order = order;
+            this.OrderId = orderId;
+            this.CancelReason = cancelReason;
         }
 
         /// <summary>
@@ -67,19 +71,19 @@ namespace Nautilus.Execution.Messages.Commands
         public StrategyId StrategyId { get; }
 
         /// <summary>
-        /// Gets the commands position identifier.
+        /// Gets the commands order identifier.
         /// </summary>
-        public PositionId PositionId { get; }
+        public OrderId OrderId { get; }
 
         /// <summary>
-        /// Gets the commands order.
+        /// Gets the commands cancel reason.
         /// </summary>
-        public Order Order { get; }
+        public string CancelReason { get; }
 
         /// <summary>
         /// Returns a string representation of this object.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{nameof(SubmitOrder)}(OrderId={this.Order.Id.Value})";
+        public override string ToString() => $"{nameof(CancelOrder)}(OrderId={this.AccountId.Value}, Reason={this.CancelReason})";
     }
 }

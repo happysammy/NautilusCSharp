@@ -11,7 +11,7 @@ namespace Nautilus.Execution.Network
     using System;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Message;
-    using Nautilus.Execution.Messages.Commands;
+    using Nautilus.DomainModel.Commands;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Network;

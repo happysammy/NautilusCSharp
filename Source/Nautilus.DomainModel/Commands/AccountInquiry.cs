@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Execution.Messages.Commands
+namespace Nautilus.DomainModel.Commands
 {
     using System;
     using Nautilus.Core.Annotations;

@@ -13,12 +13,12 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
     using System.Linq;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Message;
+    using Nautilus.DomainModel.Commands;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Execution.Engine;
     using Nautilus.Execution.Interfaces;
-    using Nautilus.Execution.Messages.Commands;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;

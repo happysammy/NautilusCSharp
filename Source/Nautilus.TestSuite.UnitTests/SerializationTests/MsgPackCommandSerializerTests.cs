@@ -11,10 +11,10 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
+    using Nautilus.DomainModel.Commands;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Execution.Messages.Commands;
     using Nautilus.Serialization;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;

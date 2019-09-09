@@ -15,11 +15,11 @@ namespace Nautilus.Execution.Engine
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Message;
     using Nautilus.DomainModel.Aggregates;
+    using Nautilus.DomainModel.Commands;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Events.Base;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.Execution.Interfaces;
-    using Nautilus.Execution.Messages.Commands;
     using Nautilus.Messaging.Interfaces;
 
     /// <summary>
