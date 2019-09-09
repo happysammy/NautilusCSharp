@@ -4,7 +4,6 @@
   },
 
   "network": {
-    "serverAddress": "127.0.0.1",
     "commandsPort": 55555,
     "eventsPort": 55556,
     "commandsPerSecond": 100,

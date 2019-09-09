@@ -50,7 +50,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             var publisher = new MockDataPublisher(
                 this.container,
                 DataBusFactory.Create(this.container),
-                NetworkAddress.LocalHost,
+                NetworkHost.LocalHost,
                 new NetworkPort(55555));
 
             // Assert
@@ -66,7 +66,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             var publisher = new MockDataPublisher(
                 this.container,
                 DataBusFactory.Create(this.container),
-                NetworkAddress.LocalHost,
+                NetworkHost.LocalHost,
                 new NetworkPort(55555));
             publisher.Start();
 

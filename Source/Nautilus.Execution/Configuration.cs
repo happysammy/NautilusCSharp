@@ -33,19 +33,14 @@ namespace Nautilus.Execution
         /// <param name="loggingAdapter">The logging adapter.</param>
         /// <param name="configJson">The parsed configuration JSON.</param>
         /// <param name="symbolIndex">The parsed symbols index string.</param>
-        /// <param name="isDevelopment">The flag indicating whether the hosting environment is development.</param>
         public Configuration(
             ILoggingAdapter loggingAdapter,
             JObject configJson,
-            string symbolIndex,
-            bool isDevelopment)
+            string symbolIndex)
         {
             this.LoggingAdapter = loggingAdapter;
 
             // Network Settings
-            this.ServerAddress = isDevelopment
-                ? NetworkAddress.LocalHost
-                : new NetworkAddress((string)configJson[ConfigSection.Network]["serverAddress"]);
             this.CommandsPort = new NetworkPort((ushort)configJson[ConfigSection.Network]["commandsPort"]);
             this.EventsPort = new NetworkPort((ushort)configJson[ConfigSection.Network]["eventsPort"]);
             this.CommandsPerSecond = (int)configJson[ConfigSection.Network]["commandsPerSecond"];
@@ -91,11 +86,6 @@ namespace Nautilus.Execution
         /// Gets the systems logging adapter.
         /// </summary>
         public ILoggingAdapter LoggingAdapter { get; }
-
-        /// <summary>
-        /// Gets the configuration server address.
-        /// </summary>
-        public NetworkAddress ServerAddress { get; }
 
         /// <summary>
         /// Gets the configuration commands port.

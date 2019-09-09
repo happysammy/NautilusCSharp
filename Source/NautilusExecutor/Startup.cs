@@ -53,8 +53,7 @@ namespace NautilusExecutor
             var config = new Configuration(
                 loggingAdapter,
                 configJson,
-                symbolIndex,
-                this.Environment.IsDevelopment());
+                symbolIndex);
 
             VersionChecker.Run(loggingAdapter, "NautilusExecutor - Financial Market Execution Service");
 

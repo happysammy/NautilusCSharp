@@ -31,20 +31,18 @@ namespace Nautilus.Execution.Network
         /// <param name="inboundSerializer">The inbound message serializer.</param>
         /// <param name="outboundSerializer">The outbound message serializer.</param>
         /// <param name="receiver">The receiver endpoint for deserialized commands.</param>
-        /// <param name="host">The consumers host address.</param>
         /// <param name="port">The consumers port.</param>
         public CommandServer(
             IComponentryContainer container,
             IMessageSerializer<Command> inboundSerializer,
             IMessageSerializer<Response> outboundSerializer,
             IEndpoint receiver,
-            NetworkAddress host,
             NetworkPort port)
             : base(
                 container,
                 inboundSerializer,
                 outboundSerializer,
-                host,
+                NetworkHost.LocalHost,
                 port,
                 Guid.NewGuid())
         {

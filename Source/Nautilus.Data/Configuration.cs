@@ -36,19 +36,14 @@ namespace Nautilus.Data
         /// <param name="loggingAdapter">The logging adapter.</param>
         /// <param name="configJson">The parsed configuration JSON.</param>
         /// <param name="symbolsIndex">The parsed symbols index string.</param>
-        /// <param name="isDevelopment">The flag indicating whether the hosting environment is development.</param>
         public Configuration(
             ILoggingAdapter loggingAdapter,
             JObject configJson,
-            string symbolsIndex,
-            bool isDevelopment)
+            string symbolsIndex)
         {
             this.LoggingAdapter = loggingAdapter;
 
             // Network Settings
-            this.ServerAddress = isDevelopment
-                ? NetworkAddress.LocalHost
-                : new NetworkAddress((string)configJson[ConfigSection.Network]["serverAddress"]);
             this.TickRequestPort = new NetworkPort((ushort)configJson[ConfigSection.Network]["tickReqPort"]);
             this.TickSubscribePort = new NetworkPort((ushort)configJson[ConfigSection.Network]["tickSubPort"]);
             this.BarRequestPort = new NetworkPort((ushort)configJson[ConfigSection.Network]["barReqPort"]);
@@ -122,11 +117,6 @@ namespace Nautilus.Data
         /// Gets the systems logging adapter.
         /// </summary>
         public ILoggingAdapter LoggingAdapter { get; }
-
-        /// <summary>
-        /// Gets the network configuration server address.
-        /// </summary>
-        public NetworkAddress ServerAddress { get; }
 
         /// <summary>
         /// Gets the network configuration tick request port.

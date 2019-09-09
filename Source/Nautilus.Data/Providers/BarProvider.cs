@@ -38,7 +38,6 @@ namespace Nautilus.Data.Providers
         /// <param name="inboundSerializer">The inbound message serializer.</param>
         /// <param name="outboundSerializer">The outbound message serializer.</param>
         /// <param name="dataSerializer">The data serializer.</param>
-        /// <param name="host">The host address.</param>
         /// <param name="port">The port.</param>
         public BarProvider(
             IComponentryContainer container,
@@ -46,13 +45,12 @@ namespace Nautilus.Data.Providers
             IDataSerializer<BarDataFrame> dataSerializer,
             IMessageSerializer<Request> inboundSerializer,
             IMessageSerializer<Response> outboundSerializer,
-            NetworkAddress host,
             NetworkPort port)
             : base(
                 container,
                 inboundSerializer,
                 outboundSerializer,
-                host,
+                NetworkHost.LocalHost,
                 port,
                 Guid.NewGuid())
         {

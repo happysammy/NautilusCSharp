@@ -64,7 +64,6 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
                 this.dataSerializer,
                 this.requestSerializer,
                 this.responseSerializer,
-                NetworkAddress.LocalHost,
                 new NetworkPort(55523));
         }
 

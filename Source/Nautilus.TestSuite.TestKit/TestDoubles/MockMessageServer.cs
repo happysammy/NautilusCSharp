@@ -22,7 +22,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     {
         public MockMessageServer(
             IComponentryContainer container,
-            NetworkAddress host,
+            NetworkHost host,
             NetworkPort port,
             Guid id)
             : base(

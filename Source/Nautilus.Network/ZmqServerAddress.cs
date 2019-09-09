@@ -21,7 +21,7 @@ namespace Nautilus.Network
         /// </summary>
         /// <param name="host">The host network address.</param>
         /// <param name="port">The port.</param>
-        public ZmqServerAddress(NetworkAddress host, NetworkPort port)
+        public ZmqServerAddress(NetworkHost host, NetworkPort port)
         {
             this.Host = host;
             this.Port = port;
@@ -31,7 +31,7 @@ namespace Nautilus.Network
         /// <summary>
         /// Gets the server addresses network address.
         /// </summary>
-        public NetworkAddress Host { get; }
+        public NetworkHost Host { get; }
 
         /// <summary>
         /// Gets the server addresses port.

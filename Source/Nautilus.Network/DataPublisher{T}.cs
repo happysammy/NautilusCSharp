@@ -39,7 +39,7 @@ namespace Nautilus.Network
             IComponentryContainer container,
             IDataBusAdapter dataBusAdapter,
             IDataSerializer<T> dataSerializer,
-            NetworkAddress host,
+            NetworkHost host,
             NetworkPort port,
             Guid id)
             : base(container, dataBusAdapter)

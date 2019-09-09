@@ -28,7 +28,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class EventPublisherTests
     {
-        private readonly NetworkAddress localHost = new NetworkAddress("127.0.0.1");
+        private readonly NetworkHost localHost = new NetworkHost("127.0.0.1");
         private readonly ITestOutputHelper output;
         private readonly IComponentryContainer container;
         private readonly MockLoggingAdapter loggingAdapter;
@@ -57,7 +57,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             var publisher = new EventPublisher(
                 this.container,
                 new MsgPackEventSerializer(),
-                this.localHost,
                 new NetworkPort(56601));
             publisher.Start();
 

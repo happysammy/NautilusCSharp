@@ -4,7 +4,6 @@
   },
 
   "network": {
-    "serverAddress": "127.0.0.1",
     "tickReqPort": 55501,
     "tickSubPort": 55502,
     "barReqPort": 55503,

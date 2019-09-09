@@ -53,8 +53,7 @@ namespace NautilusData
             var config = new Configuration(
                 loggingAdapter,
                 configJson,
-                symbolIndex,
-                this.Environment.IsDevelopment());
+                symbolIndex);
 
             VersionChecker.Run(loggingAdapter, "NautilusData - Financial Market Data Service");
 

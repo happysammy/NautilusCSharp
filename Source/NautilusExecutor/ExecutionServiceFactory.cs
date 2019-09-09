@@ -76,7 +76,6 @@ namespace NautilusExecutor
             var eventPublisher = new EventPublisher(
                 container,
                 new MsgPackEventSerializer(),
-                config.ServerAddress,
                 config.EventsPort);
 
             var executionEngine = new ExecutionEngine(

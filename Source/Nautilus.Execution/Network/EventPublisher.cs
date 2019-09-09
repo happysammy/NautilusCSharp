@@ -28,17 +28,15 @@ namespace Nautilus.Execution.Network
         /// </summary>
         /// <param name="container">The component setup container.</param>
         /// <param name="serializer">The event serializer.</param>
-        /// <param name="host">The publishers host address.</param>
         /// <param name="port">The publishers port.</param>
         public EventPublisher(
             IComponentryContainer container,
             ISerializer<Event> serializer,
-            NetworkAddress host,
             NetworkPort port)
             : base(
                 container,
                 serializer,
-                host,
+                NetworkHost.LocalHost,
                 port,
                 Guid.NewGuid())
         {

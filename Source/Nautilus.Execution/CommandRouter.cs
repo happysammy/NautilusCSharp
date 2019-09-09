@@ -51,7 +51,6 @@ namespace Nautilus.Execution
                 inboundSerializer,
                 outboundSerializer,
                 this.Endpoint,
-                config.ServerAddress,
                 config.CommandsPort);
 
             this.commandThrottler = new Throttler(

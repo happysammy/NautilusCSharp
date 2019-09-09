@@ -24,19 +24,17 @@ namespace Nautilus.Data.Publishers
         /// <param name="container">The componentry container.</param>
         /// <param name="dataBusAdapter">The data bus adapter.</param>
         /// <param name="serializer">The tick serializer.</param>
-        /// <param name="host">The host address.</param>
         /// <param name="port">The port.</param>
         public TickPublisher(
             IComponentryContainer container,
             IDataBusAdapter dataBusAdapter,
             IDataSerializer<Tick> serializer,
-            NetworkAddress host,
             NetworkPort port)
             : base(
                 container,
                 dataBusAdapter,
                 serializer,
-                host,
+                NetworkHost.LocalHost,
                 port,
                 Guid.NewGuid())
         {

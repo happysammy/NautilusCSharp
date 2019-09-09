@@ -46,7 +46,6 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
                 container,
                 DataBusFactory.Create(container),
                 new Utf8TickSerializer(),
-                NetworkAddress.LocalHost,
                 new NetworkPort(55506));
         }
 

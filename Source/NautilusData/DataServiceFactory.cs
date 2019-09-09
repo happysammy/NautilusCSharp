@@ -58,21 +58,18 @@ namespace NautilusData
                 container,
                 dataBusAdapter,
                 new Utf8TickSerializer(),
-                config.ServerAddress,
                 config.TickSubscribePort);
 
             var barPublisher = new BarPublisher(
                 container,
                 dataBusAdapter,
                 new Utf8BarSerializer(),
-                config.ServerAddress,
                 config.BarSubscribePort);
 
             var instrumentPublisher = new InstrumentPublisher(
                 container,
                 dataBusAdapter,
                 new BsonInstrumentSerializer(),
-                config.ServerAddress,
                 config.InstrumentSubscribePort);
 
             var venue = new Venue(config.FixConfiguration.Broker.Value);
@@ -112,7 +109,6 @@ namespace NautilusData
                 new BsonTickArraySerializer(),
                 new MsgPackRequestSerializer(new MsgPackQuerySerializer()),
                 new MsgPackResponseSerializer(),
-                config.ServerAddress,
                 config.TickRequestPort);
 
             var barProvider = new BarProvider(
@@ -121,7 +117,6 @@ namespace NautilusData
                 new BsonBarDataFrameSerializer(),
                 new MsgPackRequestSerializer(new MsgPackQuerySerializer()),
                 new MsgPackResponseSerializer(),
-                config.ServerAddress,
                 config.BarRequestPort);
 
             var instrumentProvider = new InstrumentProvider(
@@ -130,7 +125,6 @@ namespace NautilusData
                 new BsonInstrumentArraySerializer(),
                 new MsgPackRequestSerializer(new MsgPackQuerySerializer()),
                 new MsgPackResponseSerializer(),
-                config.ServerAddress,
                 config.InstrumentRequestPort);
 
             var addresses = new Dictionary<Address, IEndpoint>

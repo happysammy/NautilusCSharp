@@ -52,7 +52,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             // Act
             var server = new MockMessageServer(
                 this.container,
-                NetworkAddress.LocalHost,
+                NetworkHost.LocalHost,
                 new NetworkPort(55555),
                 Guid.NewGuid());
 
@@ -76,7 +76,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             // Act
             var server = new MockMessageServer(
                 this.container,
-                NetworkAddress.LocalHost,
+                NetworkHost.LocalHost,
                 new NetworkPort(55556),
                 Guid.NewGuid());
             server.Start();
@@ -102,7 +102,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
 
             var server = new MockMessageServer(
                 this.container,
-                NetworkAddress.LocalHost,
+                NetworkHost.LocalHost,
                 new NetworkPort(testPort),
                 Guid.NewGuid());
             server.Start();
@@ -149,7 +149,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
 
             var server = new MockMessageServer(
                 this.container,
-                NetworkAddress.LocalHost,
+                NetworkHost.LocalHost,
                 new NetworkPort(testPort),
                 Guid.NewGuid());
             server.Start();
@@ -196,7 +196,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
 
             var server = new MockMessageServer(
                 this.container,
-                NetworkAddress.LocalHost,
+                NetworkHost.LocalHost,
                 new NetworkPort(testPort),
                 Guid.NewGuid());
             server.Start();
@@ -238,7 +238,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
 
             var server = new MockMessageServer(
                 this.container,
-                NetworkAddress.LocalHost,
+                NetworkHost.LocalHost,
                 new NetworkPort(testPort),
                 Guid.NewGuid());
             server.Start();
@@ -290,7 +290,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
 
             var server = new MockMessageServer(
                 this.container,
-                NetworkAddress.LocalHost,
+                NetworkHost.LocalHost,
                 new NetworkPort(testPort),
                 Guid.NewGuid());
             server.Start();
@@ -340,7 +340,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
 
             var server = new MockMessageServer(
                 this.container,
-                NetworkAddress.LocalHost,
+                NetworkHost.LocalHost,
                 new NetworkPort(testPort),
                 Guid.NewGuid());
             server.Start();
@@ -386,7 +386,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
 
             var server = new MockMessageServer(
                 this.container,
-                NetworkAddress.LocalHost,
+                NetworkHost.LocalHost,
                 new NetworkPort(testPort),
                 Guid.NewGuid());
             server.Start();
