@@ -24,7 +24,7 @@ namespace Nautilus.Core.CQS.Base
         /// <param name="message">The message string.</param>
         protected Result(bool isFailure, string message)
         {
-            Debug.NotEmptyOrWhiteSpace(message, nameof(message));
+            Condition.NotEmptyOrWhiteSpace(message, nameof(message));
 
             this.IsFailure = isFailure;
             this.IsSuccess = !isFailure;

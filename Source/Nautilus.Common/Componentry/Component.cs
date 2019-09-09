@@ -36,7 +36,7 @@ namespace Nautilus.Common.Componentry
         /// </summary>
         /// <param name="container">The components componentry container.</param>
         /// <param name="initial">The initial state of the component.</param>
-        protected Component(IComponentryContainer container, State initial = State.Init)
+        protected Component(IComponentryContainer container, State initial = State.Initialized)
         {
             this.clock = container.Clock;
             this.guidFactory = container.GuidFactory;
@@ -194,7 +194,7 @@ namespace Nautilus.Common.Componentry
 
         private void OnMessage(Start message)
         {
-            this.Log.Information($"Starting from message {message}...");
+            this.Log.Debug($"Starting from message {message}...");
 
             this.OnStart(message);
             this.startedTimes.Add(this.TimeNow());
@@ -205,7 +205,7 @@ namespace Nautilus.Common.Componentry
 
         private void OnMessage(Stop message)
         {
-            this.Log.Information($"Stopping from message {message}...");
+            this.Log.Debug($"Stopping from message {message}...");
 
             this.OnStop(message);
             this.stoppedTimes.Add(this.TimeNow());

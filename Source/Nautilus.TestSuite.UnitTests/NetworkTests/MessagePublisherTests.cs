@@ -55,7 +55,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
 
             // Assert
             Assert.Equal("tcp://127.0.0.1:55555", publisher.ServerAddress.Value);
-            Assert.Equal(State.Init, publisher.State);
+            Assert.Equal(State.Initialized, publisher.State);
             Assert.Equal(0, publisher.PublishedCount);
         }
 

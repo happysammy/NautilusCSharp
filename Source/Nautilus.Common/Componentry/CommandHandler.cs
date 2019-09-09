@@ -10,6 +10,7 @@ namespace Nautilus.Common.Componentry
 {
     using System;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Correctness;
 
     /// <summary>
     /// A class which provides encapsulated execution of <see cref="Action"/>(s)
@@ -40,7 +41,7 @@ namespace Nautilus.Common.Componentry
             {
                 action.Invoke();
             }
-            catch (ArgumentException ex)
+            catch (ConditionFailedException ex)
             {
                 this.log.Error(ex.Message, ex);
             }

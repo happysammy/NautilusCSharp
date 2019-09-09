@@ -24,7 +24,7 @@ namespace Nautilus.Common.Enums
         /// <summary>
         /// The component is initialized.
         /// </summary>
-        Init = 1,
+        Initialized = 1,
 
         /// <summary>
         /// The component is running normally.

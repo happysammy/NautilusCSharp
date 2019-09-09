@@ -35,7 +35,7 @@ namespace Nautilus.Core.Extensions
         /// <returns>A <see cref="ZonedDateTime"/>.</returns>
         public static ZonedDateTime ToZonedDateTimeFromIso(this string dateTime)
         {
-            Debug.NotEmptyOrWhiteSpace(dateTime, nameof(dateTime));
+            Condition.NotEmptyOrWhiteSpace(dateTime, nameof(dateTime));
 
             return NodaIsoStringParsePattern.Parse(dateTime.Replace("Z", string.Empty)).Value;
         }
@@ -47,7 +47,7 @@ namespace Nautilus.Core.Extensions
         /// <returns>A <see cref="ZonedDateTime"/>.</returns>
         public static ZonedDateTime? ToNullableZonedDateTimeFromIso(this string dateTime)
         {
-            Debug.NotEmptyOrWhiteSpace(dateTime, nameof(dateTime));
+            Condition.NotEmptyOrWhiteSpace(dateTime, nameof(dateTime));
 
             return NodaIsoStringParsePattern.Parse(dateTime.Replace("Z", string.Empty)).Value;
         }
@@ -60,8 +60,8 @@ namespace Nautilus.Core.Extensions
         /// <returns>A <see cref="ZonedDateTime"/>.</returns>
         public static ZonedDateTime ToZonedDateTime(this string dateTime, string parsePattern)
         {
-            Debug.NotEmptyOrWhiteSpace(dateTime, nameof(dateTime));
-            Debug.NotEmptyOrWhiteSpace(parsePattern, nameof(parsePattern));
+            Condition.NotEmptyOrWhiteSpace(dateTime, nameof(dateTime));
+            Condition.NotEmptyOrWhiteSpace(parsePattern, nameof(parsePattern));
 
             return ZonedDateTimePattern
                 .CreateWithInvariantCulture(parsePattern, DateTimeZoneProviders.Tzdb)
@@ -91,7 +91,7 @@ namespace Nautilus.Core.Extensions
         public static string ToStringWithParsePattern(this ZonedDateTime time, string parsePattern)
         {
             Debug.NotDefault(time, nameof(time));
-            Debug.NotEmptyOrWhiteSpace(parsePattern, nameof(parsePattern));
+            Condition.NotEmptyOrWhiteSpace(parsePattern, nameof(parsePattern));
 
             return time.ToString(parsePattern, CultureInfo.InvariantCulture.DateTimeFormat) + "Z";
         }

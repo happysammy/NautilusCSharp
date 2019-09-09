@@ -29,15 +29,15 @@ namespace Nautilus.Core.Extensions
         /// <summary>
         /// Returns the decimal tick size from the given <see cref="int"/>.
         /// </summary>
-        /// <param name="value">The value.</param>
+        /// <param name="decimals">The value.</param>
         /// <returns>A decimal representation of the tick size.</returns>
-        public static decimal ToTickSize(this int value)
+        public static decimal ToTickSize(this int decimals)
         {
-            Debug.NotNegativeInt32(value, nameof(value));
+            Condition.NotNegativeInt32(decimals, nameof(decimals));
 
             decimal divisor = 1;
 
-            for (var i = 0; i < value; i++)
+            for (var i = 0; i < decimals; i++)
             {
                 divisor *= 10;
             }

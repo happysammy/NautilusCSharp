@@ -60,7 +60,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
 
             // Assert
             Assert.Equal("tcp://127.0.0.1:55555", server.ServerAddress.ToString());
-            Assert.Equal(State.Init, server.State);
+            Assert.Equal(State.Initialized, server.State);
             Assert.Equal(0, server.ReceivedCount);
             Assert.Equal(0, server.SentCount);
 
