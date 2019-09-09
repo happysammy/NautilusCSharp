@@ -46,8 +46,8 @@ namespace Nautilus.Fix
         {
             this.fixClient = fixClient;
 
-            this.RegisterHandler<ConnectFix>(this.OnMessage);
-            this.RegisterHandler<DisconnectFix>(this.OnMessage);
+            this.RegisterHandler<Connect>(this.OnMessage);
+            this.RegisterHandler<Disconnect>(this.OnMessage);
         }
 
         /// <inheritdoc />
@@ -534,12 +534,12 @@ namespace Nautilus.Fix
             this.fixClient.Disconnect();
         }
 
-        private void OnMessage(ConnectFix message)
+        private void OnMessage(Connect message)
         {
             this.fixClient.Connect();
         }
 
-        private void OnMessage(DisconnectFix message)
+        private void OnMessage(Disconnect message)
         {
             this.fixClient.Disconnect();
         }

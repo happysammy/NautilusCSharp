@@ -16,7 +16,7 @@ namespace Nautilus.Common.Messages.Commands
     using NodaTime;
 
     /// <summary>
-    /// Represents a command to subscribe to type T.
+    /// Represents a command to subscribe a component to type T.
     /// </summary>
     /// <typeparam name="T">The subscription type.</typeparam>
     [Immutable]

@@ -14,7 +14,7 @@ namespace Nautilus.Common.Messages.Commands
     using NodaTime;
 
     /// <summary>
-    /// Represents a command to stop the component.
+    /// Represents a command to stop a component.
     /// </summary>
     [Immutable]
     public sealed class Stop : Command

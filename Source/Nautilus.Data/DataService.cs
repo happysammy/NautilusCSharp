@@ -82,8 +82,8 @@ namespace Nautilus.Data
                 this.NewGuid(),
                 this.TimeNow()));
 
-            this.RegisterHandler<ConnectFix>(this.OnMessage);
-            this.RegisterHandler<DisconnectFix>(this.OnMessage);
+            this.RegisterHandler<Connect>(this.OnMessage);
+            this.RegisterHandler<Disconnect>(this.OnMessage);
             this.RegisterHandler<FixSessionConnected>(this.OnMessage);
             this.RegisterHandler<FixSessionDisconnected>(this.OnMessage);
             this.RegisterHandler<MarketOpened>(this.OnMessage);
@@ -149,13 +149,13 @@ namespace Nautilus.Data
             this.SendAll(stop, receivers);
         }
 
-        private void OnMessage(ConnectFix message)
+        private void OnMessage(Connect message)
         {
             // Forward message
             this.Send(message, ServiceAddress.DataGateway);
         }
 
-        private void OnMessage(DisconnectFix message)
+        private void OnMessage(Disconnect message)
         {
             // Forward message
             this.Send(message, ServiceAddress.DataGateway);
@@ -247,7 +247,7 @@ namespace Nautilus.Data
                     now);
                 var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, now);
 
-                var job = new ConnectFix(
+                var job = new Connect(
                     nextTime,
                     this.NewGuid(),
                     this.TimeNow());
@@ -273,7 +273,7 @@ namespace Nautilus.Data
                     now);
                 var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, now);
 
-                var job = new DisconnectFix(
+                var job = new Disconnect(
                     nextTime,
                     this.NewGuid(),
                     this.TimeNow());

@@ -16,7 +16,7 @@ namespace Nautilus.Common.Messages.Commands
     using NodaTime;
 
     /// <summary>
-    /// Represents a command to unsubscribe from type T.
+    /// Represents a command to unsubscribe a component from type T.
     /// </summary>
     /// <typeparam name="T">The data type.</typeparam>
     [Immutable]

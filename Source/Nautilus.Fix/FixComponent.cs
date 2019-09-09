@@ -145,7 +145,7 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// Returns a new <see cref="Guid"/> from the black box systems <see cref="Guid"/> factory.
+        /// Returns a new <see cref="Guid"/> from the components guid factory.
         /// </summary>
         /// <returns>A <see cref="Guid"/>.</returns>
         public Guid NewGuid()
@@ -223,7 +223,7 @@ namespace Nautilus.Fix
 
                 this.messageBusAdapter.SendToBus(connected, null, this.TimeNow());
 
-                this.Log.Debug($"Logon - {sessionId}");
+                this.Log.Debug($"Connected to {sessionId}");
             });
         }
 
@@ -243,7 +243,7 @@ namespace Nautilus.Fix
 
                 this.messageBusAdapter.SendToBus(disconnected, null, this.TimeNow());
 
-                this.Log.Debug($"Logout - {sessionId}");
+                this.Log.Debug($"Disconnected from {sessionId}");
             });
         }
 
@@ -289,18 +289,6 @@ namespace Nautilus.Fix
         {
             this.commandHandler.Execute(() =>
             {
-                if (message is null)
-                {
-                    this.Log.Error("The message was null");
-                    return;
-                }
-
-                if (sessionId is null)
-                {
-                    this.Log.Error("The session id was null");
-                    return;
-                }
-
                 try
                 {
                     this.Crack(message, sessionId);
