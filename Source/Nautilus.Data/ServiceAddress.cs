@@ -8,13 +8,11 @@
 
 namespace Nautilus.Data
 {
-    using Nautilus.Core.Annotations;
     using Nautilus.Messaging;
 
     /// <summary>
     /// Provides data service component messaging addresses.
     /// </summary>
-    [PerformanceOptimized]
     public static class ServiceAddress
     {
         /// <summary>

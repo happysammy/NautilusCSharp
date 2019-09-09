@@ -11,7 +11,6 @@ namespace Nautilus.DomainModel.FiniteStateMachine
     using System;
     using System.Collections.Generic;
     using System.Collections.Immutable;
-    using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
 
     /// <summary>
@@ -19,7 +18,6 @@ namespace Nautilus.DomainModel.FiniteStateMachine
     /// table to determine trigger processing validity.
     /// </summary>
     /// <typeparam name="T">The state type.</typeparam>
-    [PerformanceOptimized]
     internal class FiniteStateMachine<T>
         where T : struct
     {

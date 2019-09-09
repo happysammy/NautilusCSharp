@@ -11,7 +11,6 @@ namespace Nautilus.DomainModel.Aggregates
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Nautilus.Core.Annotations;
     using Nautilus.Core.Collections;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
@@ -28,7 +27,6 @@ namespace Nautilus.DomainModel.Aggregates
     /// <summary>
     /// Represents a financial market order.
     /// </summary>
-    [PerformanceOptimized]
     public sealed class Order : Aggregate<OrderId, OrderEvent, Order>
     {
         private readonly FiniteStateMachine<OrderState> orderFiniteStateMachine;

@@ -14,7 +14,6 @@ namespace Nautilus.Data.Aggregation
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messages.Events;
-    using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Data.Messages.Commands;
     using Nautilus.DomainModel.Enums;
@@ -25,7 +24,6 @@ namespace Nautilus.Data.Aggregation
     /// <summary>
     /// Provides a bar aggregator for a certain symbol.
     /// </summary>
-    [PerformanceOptimized]
     public sealed class BarAggregator : Component
     {
         private readonly IEndpoint parent;

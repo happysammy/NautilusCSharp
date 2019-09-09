@@ -16,7 +16,6 @@ namespace Nautilus.Data.Aggregation
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messages.Events;
-    using Nautilus.Core.Annotations;
     using Nautilus.Core.Extensions;
     using Nautilus.Data.Messages.Commands;
     using Nautilus.DomainModel.Identifiers;
@@ -28,7 +27,6 @@ namespace Nautilus.Data.Aggregation
     /// <summary>
     /// Provides a bar aggregation controller to manage bar aggregators for many symbols.
     /// </summary>
-    [PerformanceOptimized]
     public sealed class BarAggregationController : DataBusConnected
     {
         private readonly IComponentryContainer storedContainer;

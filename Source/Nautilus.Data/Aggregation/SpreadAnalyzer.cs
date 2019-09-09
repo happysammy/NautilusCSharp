@@ -11,7 +11,6 @@ namespace Nautilus.Data.Aggregation
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
@@ -19,7 +18,6 @@ namespace Nautilus.Data.Aggregation
     /// <summary>
     /// Provides spread analysis for a markets <see cref="Tick"/>s.
     /// </summary>
-    [PerformanceOptimized]
     public sealed class SpreadAnalyzer
     {
         private readonly List<decimal> thisBarsSpreads;

@@ -27,7 +27,6 @@ namespace Nautilus.Fix
     /// <summary>
     /// Provides a gateway to, and anti-corruption layer from, the FIX module of the service.
     /// </summary>
-    [PerformanceOptimized]
     public sealed class FixTradingGateway : MessageBusConnected, ITradingGateway
     {
         private readonly IFixClient fixClient;

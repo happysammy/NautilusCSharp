@@ -9,7 +9,6 @@
 namespace Nautilus.Fix
 {
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Annotations;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Identifiers;
@@ -19,7 +18,6 @@ namespace Nautilus.Fix
     /// <summary>
     /// Provides a FIX client.
     /// </summary>
-    [PerformanceOptimized]
     public sealed class FixClient : FixComponent, IFixClient
     {
         /// <summary>

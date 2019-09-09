@@ -11,8 +11,8 @@ namespace Nautilus.Core.Annotations
     using System;
 
     /// <summary>
-    /// This decorative attribute indicates that the annotated class, struct or method has been
-    /// performance optimized, therefore there is a tendency towards low level implementations over
+    /// This decorative attribute indicates that the annotated method has been performance
+    /// optimized, therefore there is a tendency towards low level implementations over
     /// typical OO abstractions as follows;
     /// - primitive types
     /// - concrete types (avoiding interface dispatch overhead)
@@ -23,7 +23,7 @@ namespace Nautilus.Core.Annotations
     /// class, struct or method towards increasing OO abstractions for code readability and
     /// understanding.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Method)]
+    [AttributeUsage(AttributeTargets.Method)]
     public sealed class PerformanceOptimizedAttribute : Attribute
     {
     }

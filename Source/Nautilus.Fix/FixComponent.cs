@@ -12,7 +12,6 @@ namespace Nautilus.Fix
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Events;
-    using Nautilus.Core.Annotations;
     using Nautilus.Core.Types;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.Fix.Interfaces;
@@ -28,7 +27,6 @@ namespace Nautilus.Fix
     /// <summary>
     /// The base class for all FIX components.
     /// </summary>
-    [PerformanceOptimized]
     public class FixComponent : MessageCracker, IApplication
     {
         private readonly IZonedClock clock;

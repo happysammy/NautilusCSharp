@@ -13,7 +13,6 @@ namespace Nautilus.Network
     using System.Threading.Tasks;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Messaging.Interfaces;
     using NodaTime;
@@ -21,7 +20,6 @@ namespace Nautilus.Network
     /// <summary>
     /// Provides a message throttler.
     /// </summary>
-    [PerformanceOptimized]
     public sealed class Throttler : Component
     {
         private readonly IEndpoint receiver;

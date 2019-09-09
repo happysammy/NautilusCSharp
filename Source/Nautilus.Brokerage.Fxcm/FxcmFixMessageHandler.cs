@@ -30,7 +30,6 @@ namespace Nautilus.Brokerage.Fxcm
     /// <summary>
     /// Provides an implementation for handling FXCM FIX messages.
     /// </summary>
-    [PerformanceOptimized]
     public sealed class FxcmFixMessageHandler : Component, IFixMessageHandler
     {
         private readonly Venue venue = new Venue("FXCM");

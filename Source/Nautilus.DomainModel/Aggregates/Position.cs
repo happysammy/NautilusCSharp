@@ -9,7 +9,6 @@
 namespace Nautilus.DomainModel.Aggregates
 {
     using System;
-    using Nautilus.Core.Annotations;
     using Nautilus.Core.Collections;
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Aggregates.Base;
@@ -22,7 +21,6 @@ namespace Nautilus.DomainModel.Aggregates
     /// <summary>
     /// Represents a financial market position.
     /// </summary>
-    [PerformanceOptimized]
     public sealed class Position : Aggregate<PositionId, OrderFillEvent, Position>
     {
         private readonly UniqueList<OrderId> orderIds;

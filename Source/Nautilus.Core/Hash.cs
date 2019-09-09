@@ -13,7 +13,6 @@ namespace Nautilus.Core
     /// <summary>
     /// Provides standardized hash code generation.
     /// </summary>
-    [PerformanceOptimized]
     public static class Hash
     {
         private const int INITIALIZER = 17;
@@ -25,6 +24,7 @@ namespace Nautilus.Core
         /// <param name="value">The value.</param>
         /// <typeparam name="T">The type of value.</typeparam>
         /// <returns>The hash code <see cref="int"/>.</returns>
+        [PerformanceOptimized]
         public static int GetCode<T>(T value)
         {
             unchecked
@@ -41,6 +41,7 @@ namespace Nautilus.Core
         /// <typeparam name="T1">The type of value1.</typeparam>
         /// <typeparam name="T2">The type of value2.</typeparam>
         /// <returns>The hash code <see cref="int"/>.</returns>
+        [PerformanceOptimized]
         public static int GetCode<T1, T2>(T1 value1, T2 value2)
         {
             unchecked
@@ -63,6 +64,7 @@ namespace Nautilus.Core
         /// <typeparam name="T2">The type of value2.</typeparam>
         /// <typeparam name="T3">The type of value3.</typeparam>
         /// <returns>The hash code <see cref="int"/>.</returns>
+        [PerformanceOptimized]
         public static int GetCode<T1, T2, T3>(T1 value1, T2 value2, T3 value3)
         {
             unchecked
@@ -88,6 +90,7 @@ namespace Nautilus.Core
         /// <typeparam name="T3">The type of value3.</typeparam>
         /// <typeparam name="T4">The type of value4.</typeparam>
         /// <returns>The hash code <see cref="int"/>.</returns>
+        [PerformanceOptimized]
         public static int GetCode<T1, T2, T3, T4>(T1 value1, T2 value2, T3 value3, T4 value4)
         {
             unchecked
@@ -116,6 +119,7 @@ namespace Nautilus.Core
         /// <typeparam name="T4">The type of value4.</typeparam>
         /// <typeparam name="T5">The type of value5.</typeparam>
         /// <returns>The hash code <see cref="int"/>.</returns>
+        [PerformanceOptimized]
         public static int GetCode<T1, T2, T3, T4, T5>(T1 value1, T2 value2, T3 value3, T4 value4, T5 value5)
         {
             unchecked
@@ -147,6 +151,7 @@ namespace Nautilus.Core
         /// <typeparam name="T5">The type of value5.</typeparam>
         /// <typeparam name="T6">The type of value6.</typeparam>
         /// <returns>The hash code <see cref="int"/>.</returns>
+        [PerformanceOptimized]
         public static int GetCode<T1, T2, T3, T4, T5, T6>(T1 value1, T2 value2, T3 value3, T4 value4, T5 value5, T6 value6)
         {
             unchecked

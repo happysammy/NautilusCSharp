@@ -11,7 +11,6 @@ namespace Nautilus.Execution
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messaging;
-    using Nautilus.Core.Annotations;
     using Nautilus.Core.Message;
     using Nautilus.Execution.Messages.Commands;
     using Nautilus.Execution.Network;
@@ -22,7 +21,6 @@ namespace Nautilus.Execution
     /// <summary>
     /// Provides a <see cref="Command"/> message server using the ZeroMQ protocol.
     /// </summary>
-    [PerformanceOptimized]
     public class CommandRouter : MessageBusConnected
     {
         private readonly CommandServer commandServer;

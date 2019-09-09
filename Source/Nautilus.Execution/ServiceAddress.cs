@@ -8,13 +8,11 @@
 
 namespace Nautilus.Execution
 {
-    using Nautilus.Core.Annotations;
     using Nautilus.Messaging;
 
     /// <summary>
     /// Provides execution service component messaging addresses.
     /// </summary>
-    [PerformanceOptimized]
     public static class ServiceAddress
     {
         /// <summary>
