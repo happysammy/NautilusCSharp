@@ -34,7 +34,8 @@ namespace Nautilus.Fix
         private readonly ILogger logger;
         private readonly IMessageBusAdapter messageBusAdapter;
         private readonly CommandHandler commandHandler;
-        private readonly FixConfiguration config;
+        private readonly FixCredentials credentials;
+        private readonly string configPath;
         private readonly bool sendAccountTag;
         private readonly Account accountField;
 
@@ -62,11 +63,13 @@ namespace Nautilus.Fix
             this.messageBusAdapter = messageBusAdapter;
             this.commandHandler = new CommandHandler(this.logger);
 
-            this.Brokerage = config.Broker;
-            this.AccountNumber = config.Credentials.AccountNumber;
-            this.AccountType = config.AccountType;
-            this.AccountId = new AccountId(this.Brokerage, this.AccountNumber, this.AccountType);
-            this.config = config;
+            this.AccountId = new AccountId(config.Broker, config.Credentials.AccountNumber, config.AccountType);
+            this.Brokerage = this.AccountId.Broker;
+            this.AccountNumber = this.AccountId.AccountNumber;
+            this.AccountType = this.AccountId.AccountType;
+
+            this.credentials = config.Credentials;
+            this.configPath = config.ConfigPath;
             this.sendAccountTag = config.SendAccountTag;
             this.accountField = new Account(this.AccountNumber.Value);
 
@@ -78,6 +81,11 @@ namespace Nautilus.Fix
         /// Gets the components logger.
         /// </summary>
         public ILogger Log => this.logger;
+
+        /// <summary>
+        /// Gets the account identifier.
+        /// </summary>
+        public AccountId AccountId { get; }
 
         /// <summary>
         /// Gets the brokerage identifier.
@@ -93,11 +101,6 @@ namespace Nautilus.Fix
         /// Gets the account type.
         /// </summary>
         public AccountType AccountType { get; }
-
-        /// <summary>
-        /// Gets the account identifier.
-        /// </summary>
-        public AccountId AccountId { get; }
 
         /// <summary>
         /// Gets the components FIX message handler.
@@ -169,7 +172,7 @@ namespace Nautilus.Fix
         {
             this.commandHandler.Execute(() =>
             {
-                var settings = new SessionSettings(this.config.ConfigPath);
+                var settings = new SessionSettings(this.configPath);
                 var storeFactory = new FileStoreFactory(settings);
 
                 // var logFactory = new ScreenLogFactory(settings);
@@ -267,8 +270,8 @@ namespace Nautilus.Fix
             {
                 if (message is Logon)
                 {
-                    message.SetField(new Username(this.config.Credentials.Username));
-                    message.SetField(new Password(this.config.Credentials.Password));
+                    message.SetField(new Username(this.credentials.Username));
+                    message.SetField(new Password(this.credentials.Password));
 
                     this.Log.Debug("Authorizing session...");
                 }

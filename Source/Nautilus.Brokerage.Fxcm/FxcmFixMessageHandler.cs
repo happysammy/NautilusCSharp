@@ -41,9 +41,8 @@ namespace Nautilus.Brokerage.Fxcm
         private readonly AccountId accountId;
         private readonly Currency accountCurrency;
         private readonly Venue venue = new Venue("FXCM");
-        private readonly Dictionary<string, string> symbolIndex;
-        private readonly ObjectCache<string, Symbol> symbolCache;
         private readonly SymbolConverter symbolConverter;
+        private readonly ObjectCache<string, Symbol> symbolCache;
 
         private IDataGateway? dataGateway;
         private IEndpoint? tradingGateway;
@@ -64,9 +63,8 @@ namespace Nautilus.Brokerage.Fxcm
         {
             this.accountId = accountId;
             this.accountCurrency = accountCurrency;
-            this.symbolIndex = new Dictionary<string, string>();
-            this.symbolCache = new ObjectCache<string, Symbol>(Symbol.FromString);
             this.symbolConverter = symbolConverter;
+            this.symbolCache = new ObjectCache<string, Symbol>(Symbol.FromString);
         }
 
         /// <summary>
@@ -171,13 +169,12 @@ namespace Nautilus.Brokerage.Fxcm
                     message.GetGroup(i, group);
 
                     var brokerSymbolCode = GetField(group, Tags.Symbol);
-                    var symbolCode = this.ConvertBrokerSymbolCode(brokerSymbolCode);
-                    if (symbolCode == string.Empty)
+                    var symbol = this.GetSymbol(brokerSymbolCode);
+                    if (symbol is null)
                     {
                         continue; // Symbol not set or convertible (error already logged)
                     }
 
-                    var symbol = this.symbolCache.Get(symbolCode + $".{this.venue.Value}");
                     var brokerSymbol = new BrokerSymbol(brokerSymbolCode);
                     var quoteCurrency = group.GetField(15).ToEnum<Nautilus.DomainModel.Enums.Currency>();
 
@@ -305,8 +302,8 @@ namespace Nautilus.Brokerage.Fxcm
 
             this.Execute(() =>
             {
-                var symbolCode = this.ConvertBrokerSymbolCode(GetField(message, Tags.Symbol));
-                if (symbolCode == string.Empty)
+                var symbol = this.GetSymbol(GetField(message, Tags.Symbol));
+                if (symbol is null)
                 {
                     return; // Symbol not set or convertible (error already logged)
                 }
@@ -340,13 +337,11 @@ namespace Nautilus.Brokerage.Fxcm
                     }
                 }
 
-                var tick = new Tick(
-                    this.symbolCache.Get(symbolCode + $".{this.venue.Value}"),
+                this.dataGateway?.OnTick(new Tick(
+                    symbol,
                     Price.Create(bidDecimal),
                     Price.Create(askDecimal),
-                    this.TimeNow());
-
-                this.dataGateway?.OnTick(tick);
+                    this.TimeNow()));
             });
         }
 
@@ -393,17 +388,10 @@ namespace Nautilus.Brokerage.Fxcm
 
             this.Execute(() =>
             {
-                var brokerSymbol = message.GetField(Tags.Symbol);
-                var symbolCode = message.IsSetField(Tags.Symbol)
-                    ? this.symbolConverter.GetNautilusSymbolCode(brokerSymbol).Value
-                    : string.Empty;
-
-                var symbol = this.symbolCache.Get(symbolCode + $".{this.venue.Value}").Value;
-
+                var symbol = this.GetSymbol(message.GetField(Tags.Symbol));
                 if (symbol is null)
                 {
-                    this.Log.Error($"Could not find symbol.");
-                    return;
+                    return; // Error already logged.
                 }
 
                 var orderId = GetField(message, Tags.ClOrdID);
@@ -474,7 +462,7 @@ namespace Nautilus.Brokerage.Fxcm
                         new OrderId(OrderIdPostfixRemover.Remove(orderId)),
                         new OrderIdBroker(orderIdBroker),
                         this.accountId,
-                        new Symbol(symbolCode, this.venue),
+                        symbol,
                         new Label(orderLabel),
                         orderSide,
                         orderType,
@@ -513,7 +501,7 @@ namespace Nautilus.Brokerage.Fxcm
                         this.accountId,
                         new ExecutionId(executionId),
                         new ExecutionTicket(executionTicket),
-                        new Symbol(symbolCode, this.venue),
+                        symbol,
                         orderSide,
                         Quantity.Create(filledQuantity),
                         Price.Create(averagePrice, averagePrice.GetDecimalPlaces()),
@@ -537,7 +525,7 @@ namespace Nautilus.Brokerage.Fxcm
                         this.accountId,
                         new ExecutionId(executionId),
                         new ExecutionTicket(executionTicket),
-                        new Symbol(symbolCode, this.venue),
+                        symbol,
                         orderSide,
                         Quantity.Create(filledQuantity),
                         Quantity.Create(leavesQuantity),
@@ -553,35 +541,29 @@ namespace Nautilus.Brokerage.Fxcm
             });
         }
 
-        private static string GetField(FieldMap report, int tag)
+        private static string GetField(FieldMap map, int tag)
         {
-            return report.IsSetField(tag)
-                ? report.GetField(tag)
+            return map.IsSetField(tag)
+                ? map.GetField(tag)
                 : string.Empty;
         }
 
-        private string ConvertBrokerSymbolCode(string rawSymbolCode)
+        private Symbol? GetSymbol(string brokerSymbolCode)
         {
-            if (rawSymbolCode == string.Empty)
+            if (brokerSymbolCode == string.Empty)
             {
                 this.Log.Error("The symbol tag did not contain a string.");
-                return rawSymbolCode;
+                return null;
             }
 
-            if (this.symbolIndex.TryGetValue(rawSymbolCode, out var value))
+            var symbolCodeQuery = this.symbolConverter.GetNautilusSymbolCode(brokerSymbolCode);
+            if (symbolCodeQuery.IsFailure)
             {
-                return value;
+                this.Log.Error(symbolCodeQuery.Message);
+                return null;
             }
 
-            var symbolConversion = this.symbolConverter.GetNautilusSymbolCode(rawSymbolCode);
-            if (symbolConversion.IsFailure)
-            {
-                this.Log.Error(symbolConversion.Message);
-                return string.Empty; // Cannot get Nautilus symbol for broker symbol
-            }
-
-            this.symbolIndex.Add(rawSymbolCode, symbolConversion.Value);
-            return symbolConversion.Value;
+            return this.symbolCache.Get($"{symbolCodeQuery.Value}.{this.venue.Value}");
         }
     }
 }
