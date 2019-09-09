@@ -9,6 +9,7 @@
 namespace Nautilus.Brokerage.Fxcm
 {
     using Nautilus.Common.Interfaces;
+    using Nautilus.DomainModel.Enums;
     using Nautilus.Fix;
 
     /// <summary>
@@ -36,11 +37,13 @@ namespace Nautilus.Brokerage.Fxcm
                 config,
                 new FxcmFixMessageHandler(
                     container,
+                    config.AccountId,
+                    Currency.USD,  // TODO: Remove this hard-coding.
                     symbolConverter),
                 new FxcmFixMessageRouter(
                     container,
-                    symbolConverter,
-                    config.Credentials.AccountNumber));
+                    config.AccountId,
+                    symbolConverter));
         }
     }
 }

@@ -8,7 +8,6 @@
 
 namespace Nautilus.Brokerage.Fxcm
 {
-    using System;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Aggregates;
@@ -26,7 +25,7 @@ namespace Nautilus.Brokerage.Fxcm
     public sealed class FxcmFixMessageRouter : Component, IFixMessageRouter
     {
         private readonly SymbolConverter symbolConverter;
-        private readonly AccountNumber accountNumber;
+        private readonly AccountId accountId;
 
         private Session? fixSession;
 
@@ -34,17 +33,16 @@ namespace Nautilus.Brokerage.Fxcm
         /// Initializes a new instance of the <see cref="FxcmFixMessageRouter"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
+        /// <param name="accountId">The account identifier for the router.</param>
         /// <param name="symbolConverter">The symbol provider.</param>
-        /// <param name="accountNumber">The FIX account number.</param>
-        /// <exception cref="ArgumentException">If the account number is empty or white space.</exception>
         public FxcmFixMessageRouter(
             IComponentryContainer container,
-            SymbolConverter symbolConverter,
-            AccountNumber accountNumber)
+            AccountId accountId,
+            SymbolConverter symbolConverter)
         : base(container)
         {
+            this.accountId = accountId;
             this.symbolConverter = symbolConverter;
-            this.accountNumber = accountNumber;
         }
 
         /// <summary>
@@ -159,7 +157,7 @@ namespace Nautilus.Brokerage.Fxcm
         {
             var message = NewOrderSingleFactory.Create(
                 this.symbolConverter.GetBrokerSymbolCode(order.Symbol.Code).Value,
-                this.accountNumber,
+                this.accountId.AccountNumber,
                 order,
                 this.TimeNow());
 
@@ -184,7 +182,7 @@ namespace Nautilus.Brokerage.Fxcm
             {
                 var message = NewOrderListEntryFactory.CreateWithStopLossAndTakeProfit(
                     brokerSymbolQuery.Value,
-                    this.accountNumber,
+                    this.accountId.AccountNumber,
                     atomicOrder,
                     this.TimeNow());
 
@@ -194,7 +192,7 @@ namespace Nautilus.Brokerage.Fxcm
             {
                 var message = NewOrderListEntryFactory.CreateWithStopLoss(
                     brokerSymbolQuery.Value,
-                    this.accountNumber,
+                    this.accountId.AccountNumber,
                     atomicOrder,
                     this.TimeNow());
 

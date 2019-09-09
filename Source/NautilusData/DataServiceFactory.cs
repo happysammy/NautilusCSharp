@@ -9,7 +9,6 @@
 namespace NautilusData
 {
     using System.Collections.Generic;
-    using Nautilus.Brokerage.Dukascopy;
     using Nautilus.Brokerage.Fxcm;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Data;
@@ -160,12 +159,6 @@ namespace NautilusData
             {
                 case "FXCM":
                     return FxcmFixClientFactory.Create(
-                        container,
-                        messageBusAdapter,
-                        configuration,
-                        symbolConverter);
-                case "DUKASCOPY":
-                    return DukascopyFixClientFactory.Create(
                         container,
                         messageBusAdapter,
                         configuration,

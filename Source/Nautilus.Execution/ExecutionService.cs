@@ -128,7 +128,6 @@ namespace Nautilus.Execution
             this.Log.Information($"{message.SessionId} session is connected.");
 
             this.tradingGateway.AccountInquiry();
-            this.tradingGateway.TradingSessionStatus();
 
             this.CreateDisconnectFixJob();
             this.CreateConnectFixJob();

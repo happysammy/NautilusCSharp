@@ -12,12 +12,18 @@ namespace Nautilus.Common.Interfaces
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.Messaging;
 
     /// <summary>
     /// Provides a gateway to, and anti-corruption layer from a data gateway.
     /// </summary>
     public interface IDataGateway
     {
+        /// <summary>
+        /// Gets the data gateways messaging endpoint.
+        /// </summary>
+        Endpoint Endpoint { get; }
+
         /// <summary>
         /// Gets the data gateways brokerage name.
         /// </summary>

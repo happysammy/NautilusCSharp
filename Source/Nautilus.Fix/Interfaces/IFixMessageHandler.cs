@@ -9,6 +9,7 @@
 namespace Nautilus.Fix.Interfaces
 {
     using Nautilus.Common.Interfaces;
+    using Nautilus.Messaging.Interfaces;
     using QuickFix.FIX44;
 
     /// <summary>
@@ -26,7 +27,7 @@ namespace Nautilus.Fix.Interfaces
         /// Initializes the FIX trading gateway.
         /// </summary>
         /// <param name="gateway">The trading gateway.</param>
-        void InitializeGateway(ITradingGateway gateway);
+        void InitializeGateway(IEndpoint gateway);
 
         /// <summary>
         /// Handles business message reject messages.

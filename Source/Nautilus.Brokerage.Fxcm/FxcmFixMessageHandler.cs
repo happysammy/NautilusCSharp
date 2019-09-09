@@ -15,16 +15,22 @@ namespace Nautilus.Brokerage.Fxcm
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
+    using Nautilus.Core.Types;
     using Nautilus.DomainModel.Entities;
+    using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Fix;
     using Nautilus.Fix.Interfaces;
+    using Nautilus.Messaging.Interfaces;
     using NodaTime;
     using QuickFix;
     using QuickFix.Fields;
     using QuickFix.FIX44;
+    using Currency = Nautilus.DomainModel.Enums.Currency;
+    using OrderCancelReject = Nautilus.DomainModel.Events.OrderCancelReject;
     using Price = Nautilus.DomainModel.ValueObjects.Price;
+    using Quantity = Nautilus.DomainModel.ValueObjects.Quantity;
     using Symbol = Nautilus.DomainModel.Identifiers.Symbol;
 
     /// <summary>
@@ -32,24 +38,32 @@ namespace Nautilus.Brokerage.Fxcm
     /// </summary>
     public sealed class FxcmFixMessageHandler : Component, IFixMessageHandler
     {
+        private readonly AccountId accountId;
+        private readonly Currency accountCurrency;
         private readonly Venue venue = new Venue("FXCM");
         private readonly Dictionary<string, string> symbolIndex;
         private readonly ObjectCache<string, Symbol> symbolCache;
         private readonly SymbolConverter symbolConverter;
 
         private IDataGateway? dataGateway;
-        private ITradingGateway? tradingGateway;
+        private IEndpoint? tradingGateway;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FxcmFixMessageHandler"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
+        /// <param name="accountId">The account identifier for the handler.</param>
+        /// <param name="accountCurrency">The account currency.</param>
         /// <param name="symbolConverter">The instrument data provider.</param>
         public FxcmFixMessageHandler(
             IComponentryContainer container,
+            AccountId accountId,
+            Currency accountCurrency,
             SymbolConverter symbolConverter)
             : base(container)
         {
+            this.accountId = accountId;
+            this.accountCurrency = accountCurrency;
             this.symbolIndex = new Dictionary<string, string>();
             this.symbolCache = new ObjectCache<string, Symbol>(Symbol.FromString);
             this.symbolConverter = symbolConverter;
@@ -68,9 +82,27 @@ namespace Nautilus.Brokerage.Fxcm
         /// Initializes the FIX trading gateway.
         /// </summary>
         /// <param name="gateway">The trading gateway.</param>
-        public void InitializeGateway(ITradingGateway gateway)
+        public void InitializeGateway(IEndpoint gateway)
         {
             this.tradingGateway = gateway;
+        }
+
+        /// <summary>
+        /// Handles collateral inquiry acknowledgement messages.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        [SystemBoundary]
+        public void OnMessage(CollateralInquiryAck message)
+        {
+            Debug.NotNull(this.tradingGateway, nameof(this.tradingGateway));
+
+            this.Execute(() =>
+            {
+                var inquiryId = message.GetField(Tags.CollInquiryID);
+                var accountNumber = Convert.ToInt32(message.GetField(Tags.Account)).ToString();
+
+                this.Log.Verbose($"Received {message}");
+            });
         }
 
         /// <summary>
@@ -80,6 +112,38 @@ namespace Nautilus.Brokerage.Fxcm
         [SystemBoundary]
         public void OnMessage(BusinessMessageReject message)
         {
+            this.Execute(() =>
+            {
+                this.Log.Verbose($"Received {message}");
+            });
+        }
+
+        /// <summary>
+        /// Handles position report messages.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        [SystemBoundary]
+        public void OnMessage(PositionReport message)
+        {
+            this.Execute(() =>
+            {
+                Condition.NotEmptyOrWhiteSpace(message.Account.ToString(), nameof(message.Account));
+
+                this.Log.Debug($"PositionReport: ({message.Account})");
+            });
+        }
+
+        /// <summary>
+        /// Handles request for positions acknowledgement messages.
+        /// </summary>
+        /// <param name="message">
+        /// The message.
+        /// </param>
+        [SystemBoundary]
+        public void OnMessage(RequestForPositionsAck message)
+        {
+            Debug.NotNull(this.tradingGateway, nameof(this.tradingGateway));
+
             this.Execute(() =>
             {
                 this.Log.Verbose($"Received {message}");
@@ -163,25 +227,6 @@ namespace Nautilus.Brokerage.Fxcm
         }
 
         /// <summary>
-        /// Handles collateral inquiry acknowledgement messages.
-        /// </summary>
-        /// <param name="message">The message.</param>
-        [SystemBoundary]
-        public void OnMessage(CollateralInquiryAck message)
-        {
-            Debug.NotNull(this.tradingGateway, nameof(this.tradingGateway));
-
-            this.Execute(() =>
-            {
-                var inquiryId = message.GetField(Tags.CollInquiryID);
-                var accountNumber = Convert.ToInt32(message.GetField(Tags.Account)).ToString();
-
-                this.Log.Verbose($"Received {message}");
-                this.tradingGateway?.OnCollateralInquiryAck(inquiryId, accountNumber);
-            });
-        }
-
-        /// <summary>
         /// Handles collateral report messages.
         /// </summary>
         /// <param name="message">The message.</param>
@@ -194,47 +239,30 @@ namespace Nautilus.Brokerage.Fxcm
             {
                 var inquiryId = message.GetField(Tags.CollRptID);
                 var accountNumber = message.GetField(Tags.Account);
+
                 var cashBalance = Convert.ToDecimal(message.GetField(Tags.CashOutstanding));
-                var cashStart = Convert.ToDecimal(message.GetField(Tags.StartCash));
+                var cashStartDay = Convert.ToDecimal(message.GetField(Tags.StartCash));
                 var cashDaily = Convert.ToDecimal(message.GetField(9047));
                 var marginUsedMaintenance = Convert.ToDecimal(message.GetField(9046));
                 var marginUsedLiq = Convert.ToDecimal(message.GetField(9038));
                 var marginRatio = Convert.ToDecimal(message.GetField(Tags.MarginRatio));
-                var marginCall = message.GetField(9045);
-                var time = this.TimeNow();
+                var marginCallStatus = message.GetField(9045);
 
-                this.Log.Verbose($"Received {message}");
-                this.tradingGateway?.OnAccountReport(
-                    inquiryId,
-                    accountNumber,
-                    cashBalance,
-                    cashStart,
-                    cashDaily,
-                    marginUsedMaintenance,
-                    marginUsedLiq,
+                var accountEvent = new AccountStateEvent(
+                    this.accountId,
+                    this.accountCurrency,
+                    Money.Create(cashBalance, this.accountCurrency),
+                    Money.Create(cashStartDay, this.accountCurrency),
+                    Money.Create(cashDaily, this.accountCurrency),
+                    Money.Create(marginUsedLiq, this.accountCurrency),
+                    Money.Create(marginUsedMaintenance, this.accountCurrency),
                     marginRatio,
-                    marginCall,
-                    time);
-            });
-        }
+                    marginCallStatus,
+                    this.NewGuid(),
+                    this.TimeNow());
 
-        /// <summary>
-        /// Handles request for positions acknowledgement messages.
-        /// </summary>
-        /// <param name="message">
-        /// The message.
-        /// </param>
-        [SystemBoundary]
-        public void OnMessage(RequestForPositionsAck message)
-        {
-            Debug.NotNull(this.tradingGateway, nameof(this.tradingGateway));
-
-            this.Execute(() =>
-            {
                 this.Log.Verbose($"Received {message}");
-                this.tradingGateway?.OnRequestForPositionsAck(
-                    message.Account.ToString(),
-                    message.PosReqID.ToString());
+                this.tradingGateway?.Send(accountEvent);
             });
         }
 
@@ -327,24 +355,30 @@ namespace Nautilus.Brokerage.Fxcm
         /// </summary>
         /// <param name="message">The message.</param>
         [SystemBoundary]
-        public void OnMessage(OrderCancelReject message)
+        public void OnMessage(QuickFix.FIX44.OrderCancelReject message)
         {
             Debug.NotNull(this.tradingGateway, nameof(this.tradingGateway));
 
             this.Execute(() =>
             {
+                this.Log.Verbose($"Received {message}");
+
                 var orderId = message.ClOrdID.ToString();
                 var fxcmCode = message.GetField(9025);
                 var cancelRejectResponseTo = message.CxlRejResponseTo.ToString();
                 var cancelRejectReason = $"{message.CxlRejReason}, {message.Text.ToString().TrimEnd('.')}, FXCMCode={fxcmCode}";
                 var timestamp = FixMessageHelper.ConvertExecutionReportString(GetField(message, Tags.TransactTime));
 
-                this.Log.Verbose($"Received {message}");
-                this.tradingGateway?.OnOrderCancelReject(
-                    orderId,
+                var orderCancelReject = new OrderCancelReject(
+                    new OrderId(OrderIdPostfixRemover.Remove(orderId)),
+                    this.accountId,
+                    timestamp,
                     cancelRejectResponseTo,
                     cancelRejectReason,
-                    timestamp);
+                    this.NewGuid(),
+                    this.TimeNow());
+
+                this.tradingGateway?.Send(orderCancelReject);
             });
         }
 
@@ -373,7 +407,7 @@ namespace Nautilus.Brokerage.Fxcm
                 }
 
                 var orderId = GetField(message, Tags.ClOrdID);
-                var brokerOrderId = GetField(message, Tags.OrderID);
+                var orderIdBroker = GetField(message, Tags.OrderID);
                 var orderLabel = GetField(message, Tags.SecondaryClOrdID);
                 var orderSide = FixMessageHelper.GetOrderSide(GetField(message, Tags.Side));
                 var orderType = FixMessageHelper.GetOrderType(GetField(message, Tags.OrdType));
@@ -393,29 +427,41 @@ namespace Nautilus.Brokerage.Fxcm
                     var rejectReasonText = GetField(message, Tags.CxlRejReason);
                     var rejectReason = $"Code({rejectReasonCode})={FixMessageHelper.GetCancelRejectReasonString(rejectReasonCode)}, FXCM({fxcmRejectCode})={rejectReasonText}";
 
-                    this.tradingGateway?.OnOrderRejected(
-                        orderId,
+                    var orderRejected = new OrderRejected(
+                        new OrderId(OrderIdPostfixRemover.Remove(orderId)),
+                        this.accountId,
+                        timestamp,
                         rejectReason,
-                        timestamp);
+                        this.NewGuid(),
+                        this.TimeNow());
+
+                    this.tradingGateway?.Send(orderRejected);
                 }
 
                 if (orderStatus == OrdStatus.CANCELED.ToString())
                 {
-                    this.tradingGateway?.OnOrderCancelled(
-                        orderId,
-                        brokerOrderId,
-                        orderLabel,
-                        timestamp);
+                    var orderCancelled = new OrderCancelled(
+                        new OrderId(OrderIdPostfixRemover.Remove(orderId)),
+                        this.accountId,
+                        timestamp,
+                        this.NewGuid(),
+                        this.TimeNow());
+
+                    this.tradingGateway?.Send(orderCancelled);
                 }
 
                 if (orderStatus == OrdStatus.REPLACED.ToString())
                 {
-                    this.tradingGateway?.OnOrderModified(
-                        orderId,
-                        brokerOrderId,
-                        orderLabel,
-                        price,
-                        timestamp);
+                    var orderModified = new OrderModified(
+                        new OrderId(OrderIdPostfixRemover.Remove(orderId)),
+                        new OrderIdBroker(orderIdBroker),
+                        this.accountId,
+                        Price.Create(price, price.GetDecimalPlaces()),
+                        timestamp,
+                        this.NewGuid(),
+                        this.TimeNow());
+
+                    this.tradingGateway?.Send(orderModified);
                 }
 
                 if (orderStatus == OrdStatus.NEW.ToString())
@@ -424,28 +470,35 @@ namespace Nautilus.Brokerage.Fxcm
                         ? FixMessageHelper.ConvertExecutionReportString(message.GetField(Tags.ExpireTime))
                         : (ZonedDateTime?)null;
 
-                    this.tradingGateway?.OnOrderWorking(
-                        orderId,
-                        brokerOrderId,
-                        symbol,
-                        this.venue,
-                        orderLabel,
+                    var orderWorking = new OrderWorking(
+                        new OrderId(OrderIdPostfixRemover.Remove(orderId)),
+                        new OrderIdBroker(orderIdBroker),
+                        this.accountId,
+                        new Symbol(symbolCode, this.venue),
+                        new Label(orderLabel),
                         orderSide,
                         orderType,
-                        orderQty,
-                        price,
+                        Quantity.Create(orderQty),
+                        Price.Create(price, price.GetDecimalPlaces()),
                         timeInForce,
                         expireTime,
-                        timestamp);
+                        timestamp,
+                        this.NewGuid(),
+                        this.TimeNow());
+
+                    this.tradingGateway?.Send(orderWorking);
                 }
 
                 if (orderStatus == OrdStatus.EXPIRED.ToString())
                 {
-                    this.tradingGateway?.OnOrderExpired(
-                        orderId,
-                        brokerOrderId,
-                        orderLabel,
-                        timestamp);
+                    var orderExpired = new OrderExpired(
+                        new OrderId(OrderIdPostfixRemover.Remove(orderId)),
+                        this.accountId,
+                        timestamp,
+                        this.NewGuid(),
+                        this.TimeNow());
+
+                    this.tradingGateway?.Send(orderExpired);
                 }
 
                 if (orderStatus == OrdStatus.FILLED.ToString())
@@ -455,17 +508,20 @@ namespace Nautilus.Brokerage.Fxcm
                     var filledQuantity = Convert.ToInt32(GetField(message, Tags.CumQty));
                     var averagePrice = Convert.ToDecimal(GetField(message, Tags.AvgPx));
 
-                    this.tradingGateway?.OnOrderFilled(
-                        orderId,
-                        brokerOrderId,
-                        executionId,
-                        executionTicket,
-                        symbol,
-                        this.venue,
+                    var orderFilled = new OrderFilled(
+                        new OrderId(OrderIdPostfixRemover.Remove(orderId)),
+                        this.accountId,
+                        new ExecutionId(executionId),
+                        new ExecutionTicket(executionTicket),
+                        new Symbol(symbolCode, this.venue),
                         orderSide,
-                        filledQuantity,
-                        averagePrice,
-                        timestamp);
+                        Quantity.Create(filledQuantity),
+                        Price.Create(averagePrice, averagePrice.GetDecimalPlaces()),
+                        timestamp,
+                        this.NewGuid(),
+                        this.TimeNow());
+
+                    this.tradingGateway?.Send(orderFilled);
                 }
 
                 if (orderStatus == OrdStatus.PARTIALLY_FILLED.ToString())
@@ -476,36 +532,24 @@ namespace Nautilus.Brokerage.Fxcm
                     var leavesQuantity = Convert.ToInt32(GetField(message, Tags.LeavesQty));
                     var averagePrice = Convert.ToDecimal(GetField(message, Tags.AvgPx));
 
-                    this.tradingGateway?.OnOrderPartiallyFilled(
-                        orderId,
-                        brokerOrderId,
-                        executionId,
-                        executionTicket,
-                        symbol,
-                        this.venue,
+                    var orderPartiallyFilled = new OrderPartiallyFilled(
+                        new OrderId(OrderIdPostfixRemover.Remove(orderId)),
+                        this.accountId,
+                        new ExecutionId(executionId),
+                        new ExecutionTicket(executionTicket),
+                        new Symbol(symbolCode, this.venue),
                         orderSide,
-                        filledQuantity,
-                        leavesQuantity,
-                        averagePrice,
-                        timestamp);
+                        Quantity.Create(filledQuantity),
+                        Quantity.Create(leavesQuantity),
+                        Price.Create(averagePrice, averagePrice.GetDecimalPlaces()),
+                        timestamp,
+                        this.NewGuid(),
+                        this.TimeNow());
+
+                    this.tradingGateway?.Send(orderPartiallyFilled);
                 }
 
                 this.Log.Debug($"Received ExecutionReport(ClOrdID={orderId}, Status={message.GetField(Tags.OrdStatus)}).");
-            });
-        }
-
-        /// <summary>
-        /// Handles position report messages.
-        /// </summary>
-        /// <param name="message">The message.</param>
-        [SystemBoundary]
-        public void OnMessage(PositionReport message)
-        {
-            Debug.NotNull(this.tradingGateway, nameof(this.tradingGateway));
-
-            this.Execute(() =>
-            {
-                this.tradingGateway?.OnPositionReport(message.Account.ToString());
             });
         }
 

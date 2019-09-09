@@ -8,30 +8,46 @@
 
 namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
-    using System;
     using System.Collections.Generic;
+    using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messages.Commands;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Identifiers;
+    using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.ValueObjects;
-    using NodaTime;
 
     /// <summary>
     /// Provides a mock trading gateway for testing.
     /// </summary>
-    public class MockTradingGateway : ITradingGateway
+    public class MockTradingGateway : Component, ITradingGateway
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MockTradingGateway"/> class.
         /// </summary>
-        public MockTradingGateway()
+        /// <param name="container">The componentry container.</param>
+        public MockTradingGateway(IComponentryContainer container)
+            : base(container)
         {
             this.CalledMethods = new List<string>();
             this.ReceivedObjects = new List<object>();
 
-            Console.WriteLine("Initialized");
+            // Commands
+            this.RegisterHandler<Connect>(this.OnMessage);
+            this.RegisterHandler<Disconnect>(this.OnMessage);
+
+            // Events
+            this.RegisterHandler<OrderSubmitted>(this.OnMessage);
+            this.RegisterHandler<OrderAccepted>(this.OnMessage);
+            this.RegisterHandler<OrderRejected>(this.OnMessage);
+            this.RegisterHandler<OrderWorking>(this.OnMessage);
+            this.RegisterHandler<OrderModified>(this.OnMessage);
+            this.RegisterHandler<OrderCancelReject>(this.OnMessage);
+            this.RegisterHandler<OrderExpired>(this.OnMessage);
+            this.RegisterHandler<OrderCancelled>(this.OnMessage);
+            this.RegisterHandler<OrderPartiallyFilled>(this.OnMessage);
+            this.RegisterHandler<OrderFilled>(this.OnMessage);
+            this.RegisterHandler<AccountStateEvent>(this.OnMessage);
         }
 
         /// <summary>
@@ -45,24 +61,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public List<string> CalledMethods { get; }
 
         /// <inheritdoc/>
-        public Brokerage Brokerage => new Brokerage("NAUTILUS");
-
-        /// <inheritdoc/>
-        public AccountId AccountId => AccountId.FromString("NAUTILUS-000-SIMULATED");
-
-        /// <inheritdoc/>
-        public bool IsConnected => true;
-
-        /// <inheritdoc/>
         public void AccountInquiry()
         {
             this.CalledMethods.Add(nameof(this.AccountInquiry));
-        }
-
-        /// <inheritdoc/>
-        public void TradingSessionStatus()
-        {
-            this.CalledMethods.Add(nameof(this.TradingSessionStatus));
         }
 
         /// <inheritdoc/>
@@ -93,145 +94,69 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             this.ReceivedObjects.Add(order);
         }
 
-        /// <inheritdoc/>
-        public void OnPositionReport(string account)
+        private void OnMessage(Connect message)
         {
-            this.CalledMethods.Add(nameof(this.OnPositionReport));
+            this.ReceivedObjects.Add(message);
         }
 
-        /// <inheritdoc/>
-        public void OnBusinessMessage(string message)
+        private void OnMessage(Disconnect message)
         {
-            this.CalledMethods.Add(nameof(this.OnBusinessMessage));
+            this.ReceivedObjects.Add(message);
         }
 
-        /// <inheritdoc/>
-        public void OnCollateralInquiryAck(string inquiryId, string accountNumber)
+        private void OnMessage(OrderSubmitted @event)
         {
-            this.CalledMethods.Add(nameof(this.OnCollateralInquiryAck));
+            this.ReceivedObjects.Add(@event);
         }
 
-        /// <inheritdoc/>
-        public void OnRequestForPositionsAck(string accountNumber, string positionRequestId)
+        private void OnMessage(OrderAccepted @event)
         {
-            this.CalledMethods.Add(nameof(this.OnRequestForPositionsAck));
+            this.ReceivedObjects.Add(@event);
         }
 
-        /// <inheritdoc/>
-        public void OnAccountReport(
-            string inquiryId,
-            string accountNumber,
-            decimal cashBalance,
-            decimal cashStartDay,
-            decimal cashDaily,
-            decimal marginUsedMaintenance,
-            decimal marginUsedLiq,
-            decimal marginRatio,
-            string marginCallStatus,
-            ZonedDateTime timestamp)
+        private void OnMessage(OrderRejected @event)
         {
-            this.CalledMethods.Add(nameof(this.OnAccountReport));
+            this.ReceivedObjects.Add(@event);
         }
 
-        /// <inheritdoc/>
-        public void OnOrderRejected(
-            string orderId,
-            string rejectReason,
-            ZonedDateTime timestamp)
+        private void OnMessage(OrderWorking @event)
         {
-            this.CalledMethods.Add(nameof(this.OnOrderRejected));
+            this.ReceivedObjects.Add(@event);
         }
 
-        /// <inheritdoc/>
-        public void OnOrderCancelReject(
-            string orderId,
-            string cancelRejectResponseTo,
-            string cancelRejectReason,
-            ZonedDateTime timestamp)
+        private void OnMessage(OrderModified @event)
         {
-            this.CalledMethods.Add(nameof(this.OnOrderCancelReject));
+            this.ReceivedObjects.Add(@event);
         }
 
-        /// <inheritdoc/>
-        public void OnOrderCancelled(
-            string orderId,
-            string orderIdBroker,
-            string label,
-            ZonedDateTime timestamp)
+        private void OnMessage(OrderCancelReject @event)
         {
-            this.CalledMethods.Add(nameof(this.OnOrderCancelled));
+            this.ReceivedObjects.Add(@event);
         }
 
-        /// <inheritdoc/>
-        public void OnOrderModified(
-            string orderId,
-            string orderIdBroker,
-            string label,
-            decimal price,
-            ZonedDateTime timestamp)
+        private void OnMessage(OrderExpired @event)
         {
-            this.CalledMethods.Add(nameof(this.OnOrderModified));
+            this.ReceivedObjects.Add(@event);
         }
 
-        /// <inheritdoc/>
-        public void OnOrderWorking(
-            string orderId,
-            string orderIdBroker,
-            string symbolCode,
-            Venue venue,
-            string label,
-            OrderSide side,
-            OrderType type,
-            int quantity,
-            decimal price,
-            TimeInForce timeInForce,
-            ZonedDateTime? expireTime,
-            ZonedDateTime timestamp)
+        private void OnMessage(OrderCancelled @event)
         {
-            this.CalledMethods.Add(nameof(this.OnOrderWorking));
+            this.ReceivedObjects.Add(@event);
         }
 
-        /// <inheritdoc/>
-        public void OnOrderExpired(
-            string orderId,
-            string orderIdBroker,
-            string label,
-            ZonedDateTime timestamp)
+        private void OnMessage(OrderPartiallyFilled @event)
         {
-            this.CalledMethods.Add(nameof(this.OnOrderExpired));
+            this.ReceivedObjects.Add(@event);
         }
 
-        /// <inheritdoc/>
-        public void OnOrderFilled(
-            string orderId,
-            string orderIdBroker,
-            string executionId,
-            string executionTicket,
-            string symbolCode,
-            Venue venue,
-            OrderSide side,
-            int filledQuantity,
-            decimal averagePrice,
-            ZonedDateTime timestamp)
+        private void OnMessage(OrderFilled @event)
         {
-            this.CalledMethods.Add(nameof(this.OnOrderFilled));
+            this.ReceivedObjects.Add(@event);
         }
 
-        /// <inheritdoc/>
-        public void OnOrderPartiallyFilled(
-            string orderId,
-            string orderIdBroker,
-            string executionId,
-            string executionTicket,
-            string symbolCode,
-            Venue venue,
-            OrderSide side,
-            int filledQuantity,
-            int leavesQuantity,
-            decimal averagePrice,
-            ZonedDateTime timestamp)
+        private void OnMessage(AccountStateEvent @event)
         {
-            this.CalledMethods.Add(nameof(this.OnOrderPartiallyFilled));
+            this.ReceivedObjects.Add(@event);
         }
     }
 }

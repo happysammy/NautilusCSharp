@@ -45,7 +45,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             var container = containerFactory.Create();
             var service = new MockMessageBusFactory(container);
             this.messageBusAdapter = service.MessageBusAdapter;
-            this.tradingGateway = new MockTradingGateway();
+            this.tradingGateway = new MockTradingGateway(container);
             this.receiver = new MockMessagingAgent();
             this.receiver.RegisterHandler<Event>(this.receiver.OnMessage);
 

@@ -130,7 +130,7 @@ namespace Nautilus.Fix
         /// <param name="gateway">The trading gateway.</param>
         public void InitializeGateway(ITradingGateway gateway)
         {
-            this.FixMessageHandler.InitializeGateway(gateway);
+            this.FixMessageHandler.InitializeGateway(gateway.Endpoint);
         }
 
         /// <summary>

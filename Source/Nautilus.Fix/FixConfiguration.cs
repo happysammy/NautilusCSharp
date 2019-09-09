@@ -41,6 +41,7 @@ namespace Nautilus.Fix
         {
             Condition.NotEmptyOrWhiteSpace(configPath, nameof(configPath));
 
+            this.AccountId = new AccountId(broker, credentials.AccountNumber, accountType);
             this.Broker = broker;
             this.AccountType = accountType;
             this.ConfigPath = configPath;
@@ -49,6 +50,11 @@ namespace Nautilus.Fix
             this.ConnectTime = connectTime;
             this.DisconnectTime = disconnectTime;
         }
+
+        /// <summary>
+        /// Gets the FIX configuration account identifier.
+        /// </summary>
+        public AccountId AccountId { get; }
 
         /// <summary>
         /// Gets the FIX brokerage name.
