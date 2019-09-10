@@ -15,6 +15,7 @@ namespace Nautilus.Network
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Types;
+    using Nautilus.Messaging;
     using NetMQ;
     using NetMQ.Sockets;
 
@@ -59,6 +60,9 @@ namespace Nautilus.Network
 
             this.ServerAddress = new ZmqServerAddress(host, port);
             this.PublishedCount = 0;
+
+            this.RegisterHandler<Envelope<Start>>(this.OnMessage);
+            this.RegisterHandler<Envelope<Stop>>(this.OnMessage);
         }
 
         /// <summary>
@@ -104,6 +108,16 @@ namespace Nautilus.Network
 
             this.PublishedCount++;
             this.Log.Verbose($"[{this.PublishedCount}]--> Topic={topic}, Message={message}");
+        }
+
+        private void OnMessage(Envelope<Start> message)
+        {
+            this.Open(message);
+        }
+
+        private void OnMessage(Envelope<Stop> message)
+        {
+            this.Open(message);
         }
     }
 }

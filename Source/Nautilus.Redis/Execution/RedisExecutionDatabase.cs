@@ -81,7 +81,6 @@ namespace Nautilus.Redis.Execution
             this.CachedAccounts.Clear();
 
             var accountKeys = this.redisServer.Keys(pattern: Key.Accounts).ToArray();
-
             if (accountKeys.Length == 0)
             {
                 this.Log.Information("No accounts found in the database.");
@@ -104,7 +103,7 @@ namespace Nautilus.Redis.Execution
                     continue;
                 }
 
-                var account = new Account((AccountStateEvent)this.eventSerializer.Deserialize(events.Dequeue()));
+                var account = new Account((AccountStateEvent)initial);
                 this.CachedAccounts[account.Id] = account;
             }
 
@@ -122,7 +121,6 @@ namespace Nautilus.Redis.Execution
             this.CachedOrders.Clear();
 
             var orderKeys = this.redisServer.Keys(pattern: Key.Orders).ToArray();
-
             if (orderKeys.Length == 0)
             {
                 this.Log.Information("No orders found in the database.");
@@ -165,7 +163,6 @@ namespace Nautilus.Redis.Execution
             this.CachedPositions.Clear();
 
             var positionKeys = this.redisServer.Keys(pattern: Key.Positions).ToArray();
-
             if (positionKeys.Length == 0)
             {
                 this.Log.Information("No positions found in the database.");
