@@ -72,7 +72,7 @@ namespace NautilusData
                 config.InstrumentSubscribePort);
 
             var venue = new Venue(config.FixConfiguration.Broker.Value);
-            var symbolConverter = new SymbolConverter(venue, config.SymbolIndex);
+            var symbolConverter = new SymbolConverter(config.SymbolIndex);
 
             var fixClient = CreateFixClient(
                 container,

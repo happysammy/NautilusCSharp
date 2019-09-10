@@ -85,7 +85,7 @@ namespace Nautilus.Data
 
             // Data Settings
             this.SymbolIndex =
-                JsonConvert.DeserializeObject<Dictionary<string, string>>(symbolsIndex);
+                JsonConvert.DeserializeObject<ImmutableDictionary<string, string>>(symbolsIndex);
 
             var symbols = (JArray)configJson[ConfigSection.Data]["symbols"];
             this.SubscribingSymbols = symbols
@@ -156,7 +156,7 @@ namespace Nautilus.Data
         /// <summary>
         /// Gets the symbol conversion index.
         /// </summary>
-        public IReadOnlyDictionary<string, string> SymbolIndex { get; }
+        public ImmutableDictionary<string, string> SymbolIndex { get; }
 
         /// <summary>
         /// Gets the subscribing symbols.

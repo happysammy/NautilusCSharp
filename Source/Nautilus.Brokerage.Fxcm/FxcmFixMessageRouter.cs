@@ -86,17 +86,14 @@ namespace Nautilus.Brokerage.Fxcm
         /// </param>
         public void UpdateInstrumentSubscribe(Symbol symbol)
         {
-            var brokerSymbolQuery = this.symbolConverter.GetBrokerSymbolCode(symbol.Code);
-
-            if (brokerSymbolQuery.IsFailure)
+            var brokerSymbolCode = this.symbolConverter.GetBrokerSymbolCode(symbol.Code);
+            if (brokerSymbolCode is null)
             {
-                this.Log.Error(brokerSymbolQuery.Message);
+                this.Log.Error($"Cannot find broker symbol for {symbol.Code}.");
                 return;
             }
 
-            var message = SecurityListRequestFactory.Create(
-                brokerSymbolQuery.Value,
-                this.TimeNow());
+            var message = SecurityListRequestFactory.Create(brokerSymbolCode, this.TimeNow());
 
             this.SendFixMessage(message);
         }
@@ -117,16 +114,15 @@ namespace Nautilus.Brokerage.Fxcm
         /// <param name="symbol">The symbol.</param>
         public void MarketDataRequestSubscribe(Symbol symbol)
         {
-            var brokerSymbolQuery = this.symbolConverter.GetBrokerSymbolCode(symbol.Code);
-
-            if (brokerSymbolQuery.IsFailure)
+            var brokerSymbolCode = this.symbolConverter.GetBrokerSymbolCode(symbol.Code);
+            if (brokerSymbolCode is null)
             {
-                this.Log.Error(brokerSymbolQuery.Message);
+                this.Log.Error($"Cannot find broker symbol for {symbol.Code}.");
                 return;
             }
 
             var message = MarketDataRequestFactory.Create(
-                brokerSymbolQuery.Value,
+                brokerSymbolCode,
                 0,
                 this.TimeNow());
 
@@ -138,7 +134,7 @@ namespace Nautilus.Brokerage.Fxcm
         /// </summary>
         public void MarketDataRequestSubscribeAll()
         {
-            foreach (var brokerSymbol in this.symbolConverter.GetAllBrokerSymbols())
+            foreach (var brokerSymbol in this.symbolConverter.BrokerSymbolCodes)
             {
                 var message = MarketDataRequestFactory.Create(
                     brokerSymbol,
@@ -155,8 +151,15 @@ namespace Nautilus.Brokerage.Fxcm
         /// <param name="order">The order to submit.</param>
         public void SubmitOrder(Order order)
         {
+            var brokerSymbolCode = this.symbolConverter.GetBrokerSymbolCode(order.Symbol.Code);
+            if (brokerSymbolCode is null)
+            {
+                this.Log.Error($"Cannot find broker symbol for {order.Symbol.Code}.");
+                return;
+            }
+
             var message = NewOrderSingleFactory.Create(
-                this.symbolConverter.GetBrokerSymbolCode(order.Symbol.Code).Value,
+                brokerSymbolCode,
                 this.accountId.AccountNumber,
                 order,
                 this.TimeNow());
@@ -170,18 +173,17 @@ namespace Nautilus.Brokerage.Fxcm
         /// <param name="atomicOrder">The atomic order to submit.</param>
         public void SubmitOrder(AtomicOrder atomicOrder)
         {
-            var brokerSymbolQuery = this.symbolConverter.GetBrokerSymbolCode(atomicOrder.Symbol.Code);
-
-            if (brokerSymbolQuery.IsFailure)
+            var brokerSymbolCode = this.symbolConverter.GetBrokerSymbolCode(atomicOrder.Symbol.Code);
+            if (brokerSymbolCode is null)
             {
-                this.Log.Error(brokerSymbolQuery.Message);
+                this.Log.Error($"Cannot find broker symbol for {atomicOrder.Symbol.Code}.");
                 return;
             }
 
             if (atomicOrder.TakeProfit != null)
             {
                 var message = NewOrderListEntryFactory.CreateWithStopLossAndTakeProfit(
-                    brokerSymbolQuery.Value,
+                    brokerSymbolCode,
                     this.accountId.AccountNumber,
                     atomicOrder,
                     this.TimeNow());
@@ -191,7 +193,7 @@ namespace Nautilus.Brokerage.Fxcm
             else
             {
                 var message = NewOrderListEntryFactory.CreateWithStopLoss(
-                    brokerSymbolQuery.Value,
+                    brokerSymbolCode,
                     this.accountId.AccountNumber,
                     atomicOrder,
                     this.TimeNow());
@@ -207,16 +209,15 @@ namespace Nautilus.Brokerage.Fxcm
         /// <param name="modifiedPrice">The modified order price.</param>
         public void ModifyOrder(Order order, Price modifiedPrice)
         {
-            var brokerSymbolQuery = this.symbolConverter.GetBrokerSymbolCode(order.Symbol.Code);
-
-            if (brokerSymbolQuery.IsFailure)
+            var brokerSymbolCode = this.symbolConverter.GetBrokerSymbolCode(order.Symbol.Code);
+            if (brokerSymbolCode is null)
             {
-                this.Log.Error(brokerSymbolQuery.Message);
+                this.Log.Error($"Cannot find broker symbol for {order.Symbol.Code}.");
                 return;
             }
 
             var message = OrderCancelReplaceRequestFactory.Create(
-                brokerSymbolQuery.Value,
+                brokerSymbolCode,
                 order,
                 modifiedPrice.Value,
                 this.TimeNow());
@@ -230,16 +231,15 @@ namespace Nautilus.Brokerage.Fxcm
         /// <param name="order">The order to cancel.</param>
         public void CancelOrder(Order order)
         {
-            var brokerSymbolQuery = this.symbolConverter.GetBrokerSymbolCode(order.Symbol.Code);
-
-            if (brokerSymbolQuery.IsFailure)
+            var brokerSymbolCode = this.symbolConverter.GetBrokerSymbolCode(order.Symbol.Code);
+            if (brokerSymbolCode is null)
             {
-                this.Log.Error(brokerSymbolQuery.Message);
+                this.Log.Error($"Cannot find broker symbol for {order.Symbol.Code}.");
                 return;
             }
 
             var message = OrderCancelRequestFactory.Create(
-                brokerSymbolQuery.Value,
+                brokerSymbolCode,
                 order,
                 this.TimeNow());
 

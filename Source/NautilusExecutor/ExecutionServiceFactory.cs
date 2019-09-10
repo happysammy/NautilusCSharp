@@ -51,7 +51,7 @@ namespace NautilusExecutor
             var scheduler = new HashedWheelTimerScheduler(container);
 
             var venue = new Venue(config.FixConfiguration.Broker.Value);
-            var symbolConverter = new SymbolConverter(venue, config.SymbolIndex);
+            var symbolConverter = new SymbolConverter(config.SymbolIndex);
 
             var fixClient = CreateFixClient(
                 container,
@@ -69,8 +69,7 @@ namespace NautilusExecutor
                 container,
                 connection,
                 new MsgPackCommandSerializer(),
-                new MsgPackEventSerializer(),
-                true);
+                new MsgPackEventSerializer());
 
             var eventPublisher = new EventPublisher(
                 container,

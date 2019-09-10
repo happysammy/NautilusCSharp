@@ -12,77 +12,66 @@ namespace Nautilus.Fix
     using System.Collections.Immutable;
     using System.Linq;
     using Nautilus.Core.Correctness;
-    using Nautilus.Core.CQS;
-    using Nautilus.DomainModel.Identifiers;
 
     /// <summary>
     /// Provides a converter between Nautilus symbols and broker symbols.
     /// </summary>
     public sealed class SymbolConverter
     {
-        private readonly ImmutableList<Symbol> symbols;
-        private readonly ImmutableDictionary<string, string> symbolIndex;
+        private readonly ImmutableDictionary<string, string> indexBrokerNautilus;
+        private readonly ImmutableDictionary<string, string> indexNautilusBroker;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SymbolConverter"/> class.
         /// </summary>
-        /// <param name="venue">The symbol providers venue.</param>
-        /// <param name="symbolIndex">The symbol index dictionary.</param>
-        public SymbolConverter(Venue venue, IReadOnlyDictionary<string, string> symbolIndex)
+        /// <param name="indexBrokerNautilus">The symbol index broker to nautilus.</param>
+        public SymbolConverter(ImmutableDictionary<string, string> indexBrokerNautilus)
         {
-            this.symbolIndex = symbolIndex.ToImmutableDictionary();
-            this.symbols = this.symbolIndex
-                .Values
-                .Select(symbol => new Symbol(symbol, venue))
-                .ToImmutableList();
+            this.indexBrokerNautilus = indexBrokerNautilus;
+
+            var reversed = new Dictionary<string, string>();
+            foreach (var (key, value) in indexBrokerNautilus)
+            {
+                reversed[value] = key;
+            }
+
+            this.indexNautilusBroker = reversed.ToImmutableDictionary();
+
+            this.BrokerSymbolCodes = this.indexBrokerNautilus.Keys.ToList();
         }
+
+        /// <summary>
+        /// Gets all broker symbol codes.
+        /// </summary>
+        /// <returns>The collection of broker symbols.</returns>
+        public IEnumerable<string> BrokerSymbolCodes { get; }
 
         /// <summary>
         /// Gets the Nautilus symbol from the given broker symbol (must be contained in the index).
         /// </summary>
-        /// <param name="brokerSymbol">The broker symbol.</param>
+        /// <param name="brokerSymbolCode">The broker symbol.</param>
         /// <returns>If successful returns the result, otherwise returns failure result.</returns>
-        public QueryResult<string> GetNautilusSymbolCode(string brokerSymbol)
+        public string? GetNautilusSymbolCode(string brokerSymbolCode)
         {
-            Debug.NotEmptyOrWhiteSpace(brokerSymbol, nameof(brokerSymbol));
+            Debug.NotEmptyOrWhiteSpace(brokerSymbolCode, nameof(brokerSymbolCode));
 
-            return this.symbolIndex.TryGetValue(brokerSymbol, out var symbol)
-                ? QueryResult<string>.Ok(symbol)
-                : QueryResult<string>.Fail(
-                    $"Cannot find the Nautilus symbol (index did not contain the given broker symbol {brokerSymbol}).");
+            return this.indexBrokerNautilus.TryGetValue(brokerSymbolCode, out var nautilusSymbolCode)
+                ? nautilusSymbolCode
+                : null;
         }
 
         /// <summary>
         /// Gets the broker symbol from the given Nautilus symbol (must be contained in the index).
         /// </summary>
-        /// <param name="nautilusSymbol">The Nautilus symbol.</param>
+        /// <param name="nautilusSymbolCode">The Nautilus symbol.</param>
         /// <returns>If successful returns the result, otherwise returns failure result.</returns>
-        public QueryResult<string> GetBrokerSymbolCode(string nautilusSymbol)
+        public string? GetBrokerSymbolCode(string nautilusSymbolCode)
         {
-            Debug.NotEmptyOrWhiteSpace(nautilusSymbol, nameof(nautilusSymbol));
+            Debug.NotEmptyOrWhiteSpace(nautilusSymbolCode, nameof(nautilusSymbolCode));
 
-            return this.symbolIndex.ContainsValue(nautilusSymbol)
-                ? QueryResult<string>.Ok(this.symbolIndex.FirstOrDefault(x => x.Value == nautilusSymbol).Key)
-                : QueryResult<string>.Fail(
-                    $"Cannot find the broker symbol (index did not contain the given Nautilus symbol {nautilusSymbol}).");
-        }
-
-        /// <summary>
-        /// Gets all Nautilus symbols contained in the index.
-        /// </summary>
-        /// <returns>The collection of Nautilus symbols.</returns>
-        public IEnumerable<Symbol> GetAllSymbols()
-        {
-            return this.symbols;
-        }
-
-        /// <summary>
-        /// Returns all broker symbols.
-        /// </summary>
-        /// <returns>The collection of broker symbols.</returns>
-        public IEnumerable<string> GetAllBrokerSymbols()
-        {
-            return this.symbolIndex.Keys.ToList();
+            return this.indexNautilusBroker.TryGetValue(nautilusSymbolCode, out var brokerSymbolCode)
+                ? brokerSymbolCode
+                : null;
         }
     }
 }

@@ -557,13 +557,13 @@ namespace Nautilus.Brokerage.Fxcm
             }
 
             var symbolCodeQuery = this.symbolConverter.GetNautilusSymbolCode(brokerSymbolCode);
-            if (symbolCodeQuery.IsFailure)
+            if (symbolCodeQuery is null)
             {
-                this.Log.Error(symbolCodeQuery.Message);
+                this.Log.Error($"Could not find Nautilus symbol for {brokerSymbolCode}.");
                 return null;
             }
 
-            return this.symbolCache.Get($"{symbolCodeQuery.Value}.{this.venue.Value}");
+            return this.symbolCache.Get($"{symbolCodeQuery}.{this.venue.Value}");
         }
     }
 }

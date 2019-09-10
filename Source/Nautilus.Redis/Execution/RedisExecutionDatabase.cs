@@ -46,7 +46,7 @@ namespace Nautilus.Redis.Execution
             ConnectionMultiplexer connection,
             ISerializer<Command> commandSerializer,
             ISerializer<Event> eventSerializer,
-            bool optionLoadCache)
+            bool optionLoadCache = true)
             : base(container)
         {
             this.redisServer = connection.GetServer(RedisConstants.LocalHost, RedisConstants.DefaultPort);

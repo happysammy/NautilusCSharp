@@ -99,6 +99,18 @@ namespace Nautilus.Execution.Engine
         /// </summary>
         public int EventCount { get; private set; }
 
+        private void IncrementCounter(Command command)
+        {
+            this.Log.Debug($"Received {command}.");
+            this.CommandCount++;
+        }
+
+        private void IncrementCounter(Event @event)
+        {
+            this.Log.Debug($"Received {@event}.");
+            this.EventCount++;
+        }
+
         //-- COMMANDS ------------------------------------------------------------------------------------------------//
         private void OnMessage(SubmitOrder command)
         {
@@ -302,18 +314,6 @@ namespace Nautilus.Execution.Engine
             }
 
             this.SendToEventPublisher(@event);
-        }
-
-        private void IncrementCounter(Command command)
-        {
-            this.Log.Debug($"Received {command}.");
-            this.CommandCount++;
-        }
-
-        private void IncrementCounter(Event @event)
-        {
-            this.Log.Debug($"Received {@event}.");
-            this.EventCount++;
         }
 
         private Order? ProcessOrderEvent(OrderEvent @event)

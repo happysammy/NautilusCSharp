@@ -9,7 +9,7 @@
 namespace Nautilus.Execution
 {
     using System;
-    using System.Collections.Generic;
+    using System.Collections.Immutable;
     using System.IO;
     using Nautilus.Common.Configuration;
     using Nautilus.Common.Interfaces;
@@ -79,7 +79,7 @@ namespace Nautilus.Execution
                 disconnectTime);
 
             // Data Settings
-            this.SymbolIndex = JsonConvert.DeserializeObject<Dictionary<string, string>>(symbolIndex);
+            this.SymbolIndex = JsonConvert.DeserializeObject<ImmutableDictionary<string, string>>(symbolIndex);
         }
 
         /// <summary>
@@ -115,6 +115,6 @@ namespace Nautilus.Execution
         /// <summary>
         /// Gets the symbol conversion index.
         /// </summary>
-        public IReadOnlyDictionary<string, string> SymbolIndex { get; }
+        public ImmutableDictionary<string, string> SymbolIndex { get; }
     }
 }
