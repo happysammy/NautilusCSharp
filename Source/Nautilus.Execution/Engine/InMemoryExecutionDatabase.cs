@@ -311,6 +311,30 @@ namespace Nautilus.Execution.Engine
         }
 
         /// <inheritdoc />
+        public override TraderId? GetTraderId(PositionId positionId)
+        {
+            if (this.indexPositionTrader.TryGetValue(positionId, out var traderId))
+            {
+                return traderId;
+            }
+
+            this.Log.Warning($"Cannot find TraderId for {positionId}.");
+            return null;
+        }
+
+        /// <inheritdoc />
+        public override AccountId? GetAccountId(PositionId positionId)
+        {
+            if (this.indexPositionAccount.TryGetValue(positionId, out var accountId))
+            {
+                return accountId;
+            }
+
+            this.Log.Warning($"Cannot find AccountId for {positionId} in the database.");
+            return null;
+        }
+
+        /// <inheritdoc />
         public override PositionId? GetPositionId(OrderId orderId)
         {
             if (this.indexOrderPosition.TryGetValue(orderId, out var positionId))

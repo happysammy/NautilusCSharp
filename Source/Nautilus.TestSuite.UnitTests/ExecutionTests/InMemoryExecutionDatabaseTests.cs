@@ -41,13 +41,39 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
         }
 
         [Fact]
-        internal void GetTraderId_WhenNoTraderExists_ReturnsNull()
+        internal void GetTraderIdWithOrderId_WhenNoTraderExists_ReturnsNull()
         {
             // Arrange
             var orderId = new OrderId("O-123456");
 
             // Act
             var result = this.database.GetTraderId(orderId);
+
+            // Assert
+            Assert.Null(result);
+        }
+
+        [Fact]
+        internal void GetTraderIdWithPositionId_WhenNoTraderExists_ReturnsNull()
+        {
+            // Arrange
+            var positionId = new PositionId("P-123456");
+
+            // Act
+            var result = this.database.GetTraderId(positionId);
+
+            // Assert
+            Assert.Null(result);
+        }
+
+        [Fact]
+        internal void GetAccountIdWithPositionId_WhenNoAccountExists_ReturnsNull()
+        {
+            // Arrange
+            var positionId = new PositionId("P-123456");
+
+            // Act
+            var result = this.database.GetAccountId(positionId);
 
             // Assert
             Assert.Null(result);

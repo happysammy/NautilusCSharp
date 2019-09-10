@@ -107,9 +107,9 @@ namespace Nautilus.Redis.Execution
                 this.CachedAccounts[account.Id] = account;
             }
 
-            foreach (var account in this.CachedAccounts)
+            foreach (var kvp in this.CachedAccounts)
             {
-                this.Log.Information($"Cached {account}.");
+                this.Log.Information($"Cached {kvp.Key}.");
             }
         }
 
@@ -152,7 +152,7 @@ namespace Nautilus.Redis.Execution
                 this.CachedOrders[order.Id] = order;
             }
 
-            this.Log.Information($"Cached {this.CachedOrders.Count} orders.");
+            this.Log.Information($"Cached {this.CachedOrders.Count} order(s).");
         }
 
         /// <inheritdoc />
@@ -178,7 +178,10 @@ namespace Nautilus.Redis.Execution
                     continue;
                 }
 
-                var position = new Position(new PositionId(key), (OrderFillEvent)this.eventSerializer.Deserialize(events.Dequeue()));
+                var position = new Position(
+                    new PositionId(key.ToString().Split(':').Last()),
+                    (OrderFillEvent)this.eventSerializer.Deserialize(events.Dequeue()));
+
                 while (events.Count > 0)
                 {
                     position.Apply((OrderFillEvent)this.eventSerializer.Deserialize(events.Dequeue()));
@@ -187,7 +190,7 @@ namespace Nautilus.Redis.Execution
                 this.CachedPositions[position.Id] = position;
             }
 
-            this.Log.Information($"Cached {this.CachedPositions.Count} positions.");
+            this.Log.Information($"Cached {this.CachedPositions.Count} position(s).");
         }
 
         /// <inheritdoc />
@@ -376,6 +379,32 @@ namespace Nautilus.Redis.Execution
         }
 
         /// <inheritdoc />
+        public override TraderId? GetTraderId(PositionId positionId)
+        {
+            var traderId = this.redisDatabase.HashGet(Key.IndexPositionTrader, positionId.Value);
+            if (traderId == RedisValue.Null)
+            {
+                this.Log.Warning($"Cannot find TraderId for {positionId}.");
+                return null;
+            }
+
+            return TraderId.FromString(traderId);
+        }
+
+        /// <inheritdoc />
+        public override AccountId? GetAccountId(PositionId positionId)
+        {
+            var accountId = this.redisDatabase.HashGet(Key.IndexPositionAccount, positionId.Value);
+            if (accountId == RedisValue.Null)
+            {
+                this.Log.Warning($"Cannot find AccountId for {positionId}.");
+                return null;
+            }
+
+            return AccountId.FromString(accountId);
+        }
+
+        /// <inheritdoc />
         public override PositionId? GetPositionId(OrderId orderId)
         {
             var idValue = this.redisDatabase.HashGet(Key.IndexOrderPosition, orderId.Value);
@@ -398,7 +427,11 @@ namespace Nautilus.Redis.Execution
         /// <inheritdoc />
         public override ICollection<AccountId> GetAccountIds()
         {
-            return SetFactory.ConvertToSet(this.redisServer.Keys(pattern: Key.Accounts).ToArray(), AccountId.FromString);
+            var accountIds = this.redisServer.Keys(pattern: Key.Accounts)
+                .Select(k => k.ToString().Split(':').Last())
+                .ToArray();
+
+            return SetFactory.ConvertToSet(accountIds, AccountId.FromString);
         }
 
         /// <inheritdoc />

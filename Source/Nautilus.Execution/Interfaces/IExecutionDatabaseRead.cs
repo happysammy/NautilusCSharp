@@ -25,6 +25,20 @@ namespace Nautilus.Execution.Interfaces
         TraderId? GetTraderId(OrderId orderId);
 
         /// <summary>
+        /// Return the trader identifier for the given position identifier.
+        /// </summary>
+        /// <param name="positionId">The position identifier.</param>
+        /// <returns>The traders identifier (if found else null).</returns>
+        TraderId? GetTraderId(PositionId positionId);
+
+        /// <summary>
+        /// Return the account identifier for the given position identifier.
+        /// </summary>
+        /// <param name="positionId">The position identifier.</param>
+        /// <returns>The accounts identifier (if found else null).</returns>
+        AccountId? GetAccountId(PositionId positionId);
+
+        /// <summary>
         /// Return the position identifier for the given order identifier (if found else null).
         /// </summary>
         /// <param name="orderId">The order identifier for the position.</param>
