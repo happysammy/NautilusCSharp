@@ -40,7 +40,6 @@ namespace Nautilus.Fix
         private readonly Account accountField;
 
         private SocketInitiator? initiator;
-        private Session? session;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FixComponent"/> class.
@@ -116,7 +115,12 @@ namespace Nautilus.Fix
         /// Gets a value indicating whether the FIX session is connected.
         /// </summary>
         /// <returns>A <see cref="bool"/>.</returns>
-        public bool IsConnected => this.session != null && this.session.IsLoggedOn;
+        public bool IsConnected => this.FixSession != null && this.FixSession.IsLoggedOn;
+
+        /// <summary>
+        /// Gets the components FIX session.
+        /// </summary>
+        protected Session? FixSession { get; private set; }
 
         /// <summary>
         /// The initializes the FIX data gateway.
@@ -204,9 +208,9 @@ namespace Nautilus.Fix
             this.commandHandler.Execute(() =>
             {
                 this.Log.Debug("Creating session...");
-                this.session = Session.LookupSession(sessionId);
-                this.FixMessageRouter.ConnectSession(this.session);
-                this.Log.Debug($"Session {this.session}");
+                this.FixSession = Session.LookupSession(sessionId);
+                this.FixMessageRouter.ConnectSession(this.FixSession);
+                this.Log.Debug($"Session {this.FixSession}");
             });
         }
 

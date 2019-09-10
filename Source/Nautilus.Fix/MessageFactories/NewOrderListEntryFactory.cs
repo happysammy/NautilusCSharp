@@ -48,11 +48,11 @@ namespace Nautilus.Fix.MessageFactories
 
             var entry = atomicOrder.Entry;
             var order1 = new NewOrderList.NoOrdersGroup();
-            order1.SetField(new ClOrdID(entry.Id.ToString()));
+            order1.SetField(new ClOrdID(entry.Id.Value));
             order1.SetField(new ListSeqNo(0));
-            order1.SetField(new SecondaryClOrdID(entry.Label.ToString()));
+            order1.SetField(new SecondaryClOrdID(entry.Label.Value));
             order1.SetField(new ClOrdLinkID("1"));
-            order1.SetField(new Account(accountNumber.ToString()));
+            order1.SetField(new Account(accountNumber.Value));
             order1.SetField(new Symbol(brokerSymbol));
             order1.SetField(FixMessageHelper.GetFixOrderSide(entry.Side));
             order1.SetField(new OrdType(OrdType.STOP));
@@ -75,11 +75,11 @@ namespace Nautilus.Fix.MessageFactories
 
             var stopLoss = atomicOrder.StopLoss;
             var order2 = new NewOrderList.NoOrdersGroup();
-            order2.SetField(new ClOrdID(stopLoss.Id.ToString()));
+            order2.SetField(new ClOrdID(stopLoss.Id.Value));
             order2.SetField(new ListSeqNo(1));
-            order2.SetField(new SecondaryClOrdID(stopLoss.Label.ToString()));
+            order2.SetField(new SecondaryClOrdID(stopLoss.Label.Value));
             order2.SetField(new ClOrdLinkID("2"));
-            order2.SetField(new Account(accountNumber.ToString()));
+            order2.SetField(new Account(accountNumber.Value));
             order2.SetField(new Symbol(brokerSymbol));
             order2.SetField(FixMessageHelper.GetFixOrderSide(stopLoss.Side));
             order2.SetField(new OrdType(OrdType.STOP));
@@ -122,11 +122,11 @@ namespace Nautilus.Fix.MessageFactories
 
             var entry = atomicOrder.Entry;
             var order1 = new NewOrderList.NoOrdersGroup();
-            order1.SetField(new ClOrdID(entry.Id.ToString()));
+            order1.SetField(new ClOrdID(entry.Id.Value));
             order1.SetField(new ListSeqNo(0));
-            order1.SetField(new SecondaryClOrdID(entry.Label.ToString()));
+            order1.SetField(new SecondaryClOrdID(entry.Label.Value));
             order1.SetField(new ClOrdLinkID("1"));
-            order1.SetField(new Account(accountNumber.ToString()));
+            order1.SetField(new Account(accountNumber.Value));
             order1.SetField(new Symbol(brokerSymbol));
             order1.SetField(FixMessageHelper.GetFixOrderSide(entry.Side));
             order1.SetField(new OrdType(OrdType.STOP));
@@ -149,11 +149,11 @@ namespace Nautilus.Fix.MessageFactories
 
             var stopLoss = atomicOrder.StopLoss;
             var order2 = new NewOrderList.NoOrdersGroup();
-            order2.SetField(new ClOrdID(stopLoss.Id.ToString()));
+            order2.SetField(new ClOrdID(stopLoss.Id.Value));
             order2.SetField(new ListSeqNo(1));
-            order2.SetField(new SecondaryClOrdID(stopLoss.Label.ToString()));
+            order2.SetField(new SecondaryClOrdID(stopLoss.Label.Value));
             order2.SetField(new ClOrdLinkID("2"));
-            order2.SetField(new Account(accountNumber.ToString()));
+            order2.SetField(new Account(accountNumber.Value));
             order2.SetField(new Symbol(brokerSymbol));
             order2.SetField(FixMessageHelper.GetFixOrderSide(stopLoss.Side));
             order2.SetField(new OrdType(OrdType.STOP));
@@ -172,11 +172,11 @@ namespace Nautilus.Fix.MessageFactories
             if (takeProfit != null)
             {
                 var order3 = new NewOrderList.NoOrdersGroup();
-                order3.SetField(new ClOrdID(takeProfit.Id.ToString()));
+                order3.SetField(new ClOrdID(takeProfit.Id.Value));
                 order3.SetField(new ListSeqNo(2));
-                order3.SetField(new SecondaryClOrdID(takeProfit.Label.ToString()));
+                order3.SetField(new SecondaryClOrdID(takeProfit.Label.Value));
                 order3.SetField(new ClOrdLinkID("2"));
-                order3.SetField(new Account(accountNumber.ToString()));
+                order3.SetField(new Account(accountNumber.Value));
                 order3.SetField(new Symbol(brokerSymbol));
                 order3.SetField(FixMessageHelper.GetFixOrderSide(takeProfit.Side));
                 order3.SetField(new OrdType(OrdType.LIMIT));

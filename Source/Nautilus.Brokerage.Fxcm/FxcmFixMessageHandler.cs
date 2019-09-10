@@ -386,159 +386,165 @@ namespace Nautilus.Brokerage.Fxcm
         {
             Debug.NotNull(this.tradingGateway, nameof(this.tradingGateway));
 
-            this.Execute(() =>
+            var orderId = GetField(message, Tags.ClOrdID);
+            var orderIdBroker = GetField(message, Tags.OrderID);
+            var orderLabel = GetField(message, Tags.SecondaryClOrdID);
+            var orderSide = FixMessageHelper.GetOrderSide(GetField(message, Tags.Side));
+            var orderType = FixMessageHelper.GetOrderType(GetField(message, Tags.OrdType));
+            var price = FixMessageHelper.GetOrderPrice(
+                orderType,
+                Convert.ToDecimal(GetField(message, Tags.StopPx)),
+                Convert.ToDecimal(GetField(message, Tags.Price)));
+            var timeInForce = FixMessageHelper.GetTimeInForce(GetField(message, Tags.TimeInForce));
+            var timestamp = FixMessageHelper.ConvertExecutionReportString(GetField(message, Tags.TransactTime));
+            var orderQty = Convert.ToInt32(GetField(message, Tags.OrderQty));
+
+            var orderStatus = message.GetField(Tags.OrdStatus);
+            if (orderStatus == OrdStatus.REJECTED.ToString())
+            {
+                var rejectReasonCode = message.GetField(9025);
+                var fxcmRejectCode = message.GetField(9029);
+                var rejectReasonText = GetField(message, Tags.CxlRejReason);
+                var rejectReason = $"Code({rejectReasonCode})={FixMessageHelper.GetCancelRejectReasonString(rejectReasonCode)}, FXCM({fxcmRejectCode})={rejectReasonText}";
+
+                var orderRejected = new OrderRejected(
+                    new OrderId(OrderIdPostfixRemover.Remove(orderId)),
+                    this.accountId,
+                    timestamp,
+                    rejectReason,
+                    this.NewGuid(),
+                    this.TimeNow());
+
+                this.tradingGateway?.Send(orderRejected);
+            }
+            else if (orderStatus == OrdStatus.CANCELED.ToString())
+            {
+                var orderCancelled = new OrderCancelled(
+                    new OrderId(OrderIdPostfixRemover.Remove(orderId)),
+                    this.accountId,
+                    timestamp,
+                    this.NewGuid(),
+                    this.TimeNow());
+
+                this.tradingGateway?.Send(orderCancelled);
+            }
+            else if (orderStatus == OrdStatus.REPLACED.ToString())
+            {
+                var orderModified = new OrderModified(
+                    new OrderId(OrderIdPostfixRemover.Remove(orderId)),
+                    new OrderIdBroker(orderIdBroker),
+                    this.accountId,
+                    Price.Create(price, price.GetDecimalPlaces()),
+                    timestamp,
+                    this.NewGuid(),
+                    this.TimeNow());
+
+                this.tradingGateway?.Send(orderModified);
+            }
+            else if (orderStatus == OrdStatus.NEW.ToString())
+            {
+                var expireTime = message.IsSetField(Tags.ExpireTime)
+                    ? FixMessageHelper.ConvertExecutionReportString(message.GetField(Tags.ExpireTime))
+                    : (ZonedDateTime?)null;
+
+                var symbol = this.GetSymbol(message.GetField(Tags.Symbol));
+                if (symbol is null)
+                {
+                    this.Log.Error("Could not get symbol for event.");
+                    return;
+                }
+
+                var orderWorking = new OrderWorking(
+                    new OrderId(OrderIdPostfixRemover.Remove(orderId)),
+                    new OrderIdBroker(orderIdBroker),
+                    this.accountId,
+                    symbol,
+                    new Label(orderLabel),
+                    orderSide,
+                    orderType,
+                    Quantity.Create(orderQty),
+                    Price.Create(price, price.GetDecimalPlaces()),
+                    timeInForce,
+                    expireTime,
+                    timestamp,
+                    this.NewGuid(),
+                    this.TimeNow());
+
+                this.tradingGateway?.Send(orderWorking);
+            }
+            else if (orderStatus == OrdStatus.EXPIRED.ToString())
+            {
+                var orderExpired = new OrderExpired(
+                    new OrderId(OrderIdPostfixRemover.Remove(orderId)),
+                    this.accountId,
+                    timestamp,
+                    this.NewGuid(),
+                    this.TimeNow());
+
+                this.tradingGateway?.Send(orderExpired);
+            }
+            else if (orderStatus == OrdStatus.FILLED.ToString())
             {
                 var symbol = this.GetSymbol(message.GetField(Tags.Symbol));
                 if (symbol is null)
                 {
-                    return; // Error already logged.
+                    this.Log.Error("Could not get symbol for event.");
+                    return;
                 }
 
-                var orderId = GetField(message, Tags.ClOrdID);
-                var orderIdBroker = GetField(message, Tags.OrderID);
-                var orderLabel = GetField(message, Tags.SecondaryClOrdID);
-                var orderSide = FixMessageHelper.GetOrderSide(GetField(message, Tags.Side));
-                var orderType = FixMessageHelper.GetOrderType(GetField(message, Tags.OrdType));
-                var price = FixMessageHelper.GetOrderPrice(
-                    orderType,
-                    Convert.ToDecimal(GetField(message, Tags.StopPx)),
-                    Convert.ToDecimal(GetField(message, Tags.Price)));
-                var timeInForce = FixMessageHelper.GetTimeInForce(GetField(message, Tags.TimeInForce));
-                var timestamp = FixMessageHelper.ConvertExecutionReportString(GetField(message, Tags.TransactTime));
-                var orderQty = Convert.ToInt32(GetField(message, Tags.OrderQty));
+                var executionId = GetField(message, Tags.ExecID);
+                var executionTicket = GetField(message, 9041);
+                var filledQuantity = Convert.ToInt32(GetField(message, Tags.CumQty));
+                var averagePrice = Convert.ToDecimal(GetField(message, Tags.AvgPx));
 
-                var orderStatus = message.GetField(Tags.OrdStatus);
-                if (orderStatus == OrdStatus.REJECTED.ToString())
+                var orderFilled = new OrderFilled(
+                    new OrderId(OrderIdPostfixRemover.Remove(orderId)),
+                    this.accountId,
+                    new ExecutionId(executionId),
+                    new ExecutionTicket(executionTicket),
+                    symbol,
+                    orderSide,
+                    Quantity.Create(filledQuantity),
+                    Price.Create(averagePrice, averagePrice.GetDecimalPlaces()),
+                    timestamp,
+                    this.NewGuid(),
+                    this.TimeNow());
+
+                this.tradingGateway?.Send(orderFilled);
+            }
+            else if (orderStatus == OrdStatus.PARTIALLY_FILLED.ToString())
+            {
+                var symbol = this.GetSymbol(message.GetField(Tags.Symbol));
+                if (symbol is null)
                 {
-                    var rejectReasonCode = message.GetField(9025);
-                    var fxcmRejectCode = message.GetField(9029);
-                    var rejectReasonText = GetField(message, Tags.CxlRejReason);
-                    var rejectReason = $"Code({rejectReasonCode})={FixMessageHelper.GetCancelRejectReasonString(rejectReasonCode)}, FXCM({fxcmRejectCode})={rejectReasonText}";
-
-                    var orderRejected = new OrderRejected(
-                        new OrderId(OrderIdPostfixRemover.Remove(orderId)),
-                        this.accountId,
-                        timestamp,
-                        rejectReason,
-                        this.NewGuid(),
-                        this.TimeNow());
-
-                    this.tradingGateway?.Send(orderRejected);
+                    this.Log.Error("Could not get symbol for event.");
+                    return;
                 }
 
-                if (orderStatus == OrdStatus.CANCELED.ToString())
-                {
-                    var orderCancelled = new OrderCancelled(
-                        new OrderId(OrderIdPostfixRemover.Remove(orderId)),
-                        this.accountId,
-                        timestamp,
-                        this.NewGuid(),
-                        this.TimeNow());
+                var executionId = GetField(message, Tags.ExecID);
+                var executionTicket = GetField(message, 9041);
+                var filledQuantity = Convert.ToInt32(GetField(message, Tags.CumQty));
+                var leavesQuantity = Convert.ToInt32(GetField(message, Tags.LeavesQty));
+                var averagePrice = Convert.ToDecimal(GetField(message, Tags.AvgPx));
 
-                    this.tradingGateway?.Send(orderCancelled);
-                }
+                var orderPartiallyFilled = new OrderPartiallyFilled(
+                    new OrderId(OrderIdPostfixRemover.Remove(orderId)),
+                    this.accountId,
+                    new ExecutionId(executionId),
+                    new ExecutionTicket(executionTicket),
+                    symbol,
+                    orderSide,
+                    Quantity.Create(filledQuantity),
+                    Quantity.Create(leavesQuantity),
+                    Price.Create(averagePrice, averagePrice.GetDecimalPlaces()),
+                    timestamp,
+                    this.NewGuid(),
+                    this.TimeNow());
 
-                if (orderStatus == OrdStatus.REPLACED.ToString())
-                {
-                    var orderModified = new OrderModified(
-                        new OrderId(OrderIdPostfixRemover.Remove(orderId)),
-                        new OrderIdBroker(orderIdBroker),
-                        this.accountId,
-                        Price.Create(price, price.GetDecimalPlaces()),
-                        timestamp,
-                        this.NewGuid(),
-                        this.TimeNow());
+                this.tradingGateway?.Send(orderPartiallyFilled);
+            }
 
-                    this.tradingGateway?.Send(orderModified);
-                }
-
-                if (orderStatus == OrdStatus.NEW.ToString())
-                {
-                    var expireTime = message.IsSetField(Tags.ExpireTime)
-                        ? FixMessageHelper.ConvertExecutionReportString(message.GetField(Tags.ExpireTime))
-                        : (ZonedDateTime?)null;
-
-                    var orderWorking = new OrderWorking(
-                        new OrderId(OrderIdPostfixRemover.Remove(orderId)),
-                        new OrderIdBroker(orderIdBroker),
-                        this.accountId,
-                        symbol,
-                        new Label(orderLabel),
-                        orderSide,
-                        orderType,
-                        Quantity.Create(orderQty),
-                        Price.Create(price, price.GetDecimalPlaces()),
-                        timeInForce,
-                        expireTime,
-                        timestamp,
-                        this.NewGuid(),
-                        this.TimeNow());
-
-                    this.tradingGateway?.Send(orderWorking);
-                }
-
-                if (orderStatus == OrdStatus.EXPIRED.ToString())
-                {
-                    var orderExpired = new OrderExpired(
-                        new OrderId(OrderIdPostfixRemover.Remove(orderId)),
-                        this.accountId,
-                        timestamp,
-                        this.NewGuid(),
-                        this.TimeNow());
-
-                    this.tradingGateway?.Send(orderExpired);
-                }
-
-                if (orderStatus == OrdStatus.FILLED.ToString())
-                {
-                    var executionId = GetField(message, Tags.ExecID);
-                    var executionTicket = GetField(message, 9041);
-                    var filledQuantity = Convert.ToInt32(GetField(message, Tags.CumQty));
-                    var averagePrice = Convert.ToDecimal(GetField(message, Tags.AvgPx));
-
-                    var orderFilled = new OrderFilled(
-                        new OrderId(OrderIdPostfixRemover.Remove(orderId)),
-                        this.accountId,
-                        new ExecutionId(executionId),
-                        new ExecutionTicket(executionTicket),
-                        symbol,
-                        orderSide,
-                        Quantity.Create(filledQuantity),
-                        Price.Create(averagePrice, averagePrice.GetDecimalPlaces()),
-                        timestamp,
-                        this.NewGuid(),
-                        this.TimeNow());
-
-                    this.tradingGateway?.Send(orderFilled);
-                }
-
-                if (orderStatus == OrdStatus.PARTIALLY_FILLED.ToString())
-                {
-                    var executionId = GetField(message, Tags.ExecID);
-                    var executionTicket = GetField(message, 9041);
-                    var filledQuantity = Convert.ToInt32(GetField(message, Tags.CumQty));
-                    var leavesQuantity = Convert.ToInt32(GetField(message, Tags.LeavesQty));
-                    var averagePrice = Convert.ToDecimal(GetField(message, Tags.AvgPx));
-
-                    var orderPartiallyFilled = new OrderPartiallyFilled(
-                        new OrderId(OrderIdPostfixRemover.Remove(orderId)),
-                        this.accountId,
-                        new ExecutionId(executionId),
-                        new ExecutionTicket(executionTicket),
-                        symbol,
-                        orderSide,
-                        Quantity.Create(filledQuantity),
-                        Quantity.Create(leavesQuantity),
-                        Price.Create(averagePrice, averagePrice.GetDecimalPlaces()),
-                        timestamp,
-                        this.NewGuid(),
-                        this.TimeNow());
-
-                    this.tradingGateway?.Send(orderPartiallyFilled);
-                }
-
-                this.Log.Debug($"Received ExecutionReport(ClOrdID={orderId}, Status={message.GetField(Tags.OrdStatus)}).");
-            });
+            this.Log.Debug($"Received ExecutionReport(ClOrdID={orderId}, Status={orderStatus}).");
         }
 
         private static string GetField(FieldMap map, int tag)

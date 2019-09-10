@@ -249,7 +249,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Act
             this.engine.Endpoint.Send(submit);
-            this.engine.Endpoint.Send(StubEventMessages.OrderSubmittedEvent(order));
             this.engine.Endpoint.Send(StubEventMessages.OrderAcceptedEvent(order));
             this.engine.Endpoint.Send(StubEventMessages.OrderWorkingEvent(order));
             this.engine.Endpoint.Send(cancel);
@@ -258,7 +257,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
-            Assert.Equal(5, this.engine.ProcessedCount);
+            Assert.Equal(4, this.engine.ProcessedCount);
             Assert.Equal(2, this.engine.CommandCount);
             Assert.Equal(2, this.tradingGateway.CalledMethods.Count);
             Assert.Equal(2, this.tradingGateway.ReceivedObjects.Count);
@@ -328,7 +327,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Act
             this.engine.Endpoint.Send(submit);
-            this.engine.Endpoint.Send(StubEventMessages.OrderSubmittedEvent(order));
             this.engine.Endpoint.Send(StubEventMessages.OrderAcceptedEvent(order));
             this.engine.Endpoint.Send(StubEventMessages.OrderWorkingEvent(order));
             this.engine.Endpoint.Send(modify);
@@ -337,9 +335,9 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
-            Assert.Equal(5, this.engine.ProcessedCount);
+            Assert.Equal(4, this.engine.ProcessedCount);
             Assert.Equal(2, this.engine.CommandCount);
-            Assert.Equal(3, this.engine.EventCount);
+            Assert.Equal(2, this.engine.EventCount);
             Assert.Equal(2, this.tradingGateway.CalledMethods.Count);
             Assert.Equal(2, this.tradingGateway.ReceivedObjects.Count);
             Assert.Equal("SubmitOrder", this.tradingGateway.CalledMethods[0]);
@@ -472,7 +470,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Act
             this.engine.Endpoint.Send(submit);
-            this.engine.Endpoint.Send(StubEventMessages.OrderSubmittedEvent(order));
             this.engine.Endpoint.Send(StubEventMessages.OrderAcceptedEvent(order));
             this.engine.Endpoint.Send(StubEventMessages.OrderWorkingEvent(order));
             this.engine.Endpoint.Send(modify1);
@@ -482,9 +479,9 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
-            Assert.Equal(6, this.engine.ProcessedCount);
+            Assert.Equal(5, this.engine.ProcessedCount);
             Assert.Equal(3, this.engine.CommandCount);
-            Assert.Equal(3, this.engine.EventCount);
+            Assert.Equal(2, this.engine.EventCount);
             Assert.Equal(2, this.tradingGateway.CalledMethods.Count);
             Assert.Equal(2, this.tradingGateway.ReceivedObjects.Count);
             Assert.Equal("SubmitOrder", this.tradingGateway.CalledMethods[0]);
@@ -533,15 +530,14 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Act
             this.engine.Endpoint.Send(submitOrder);
-            this.engine.Endpoint.Send(StubEventMessages.OrderSubmittedEvent(order));
 
             LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
-            Assert.Equal(2, this.engine.ProcessedCount);
+            Assert.Equal(1, this.engine.ProcessedCount);
             Assert.Equal(1, this.engine.CommandCount);
-            Assert.Equal(1, this.engine.EventCount);
+            Assert.Equal(0, this.engine.EventCount);
             Assert.Single(this.receiver.Messages);
             Assert.Equal(OrderState.Submitted, order.State);
         }
@@ -567,16 +563,15 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Act
             this.engine.Endpoint.Send(submitOrder);
-            this.engine.Endpoint.Send(StubEventMessages.OrderSubmittedEvent(order));
             this.engine.Endpoint.Send(StubEventMessages.OrderAcceptedEvent(order));
 
             LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
-            Assert.Equal(3, this.engine.ProcessedCount);
+            Assert.Equal(2, this.engine.ProcessedCount);
             Assert.Equal(1, this.engine.CommandCount);
-            Assert.Equal(2, this.engine.EventCount);
+            Assert.Equal(1, this.engine.EventCount);
             Assert.Equal(2, this.receiver.Messages.Count);
             Assert.Equal(OrderState.Accepted, order.State);
         }
@@ -602,16 +597,15 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Act
             this.engine.Endpoint.Send(submitOrder);
-            this.engine.Endpoint.Send(StubEventMessages.OrderSubmittedEvent(order));
             this.engine.Endpoint.Send(StubEventMessages.OrderRejectedEvent(order));
 
             LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
-            Assert.Equal(3, this.engine.ProcessedCount);
+            Assert.Equal(2, this.engine.ProcessedCount);
             Assert.Equal(1, this.engine.CommandCount);
-            Assert.Equal(2, this.engine.EventCount);
+            Assert.Equal(1, this.engine.EventCount);
             Assert.Equal(2, this.receiver.Messages.Count);
             Assert.Equal(OrderState.Rejected, order.State);
         }
@@ -647,7 +641,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             // Act
             this.engine.Endpoint.Send(submit);
             this.engine.Endpoint.Send(modify);
-            this.engine.Endpoint.Send(StubEventMessages.OrderSubmittedEvent(order));
             this.engine.Endpoint.Send(StubEventMessages.OrderAcceptedEvent(order));
             this.engine.Endpoint.Send(StubEventMessages.OrderWorkingEvent(order));
 
@@ -655,9 +648,9 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
-            Assert.Equal(5, this.engine.ProcessedCount);
+            Assert.Equal(4, this.engine.ProcessedCount);
             Assert.Equal(2, this.engine.CommandCount);
-            Assert.Equal(3, this.engine.EventCount);
+            Assert.Equal(2, this.engine.EventCount);
             Assert.Equal(2, this.tradingGateway.CalledMethods.Count);
             Assert.Equal(2, this.tradingGateway.ReceivedObjects.Count);
             Assert.Equal("SubmitOrder", this.tradingGateway.CalledMethods[0]);
@@ -686,7 +679,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Act
             this.engine.Endpoint.Send(submitOrder);
-            this.engine.Endpoint.Send(StubEventMessages.OrderSubmittedEvent(order));
             this.engine.Endpoint.Send(StubEventMessages.OrderAcceptedEvent(order));
             this.engine.Endpoint.Send(StubEventMessages.OrderWorkingEvent(order));
 
@@ -694,9 +686,9 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
-            Assert.Equal(4, this.engine.ProcessedCount);
+            Assert.Equal(3, this.engine.ProcessedCount);
             Assert.Equal(1, this.engine.CommandCount);
-            Assert.Equal(3, this.engine.EventCount);
+            Assert.Equal(2, this.engine.EventCount);
             Assert.Equal(3, this.receiver.Messages.Count);
             Assert.Equal(OrderState.Working, order.State);
         }
@@ -731,7 +723,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Act
             this.engine.Endpoint.Send(submit);
-            this.engine.Endpoint.Send(StubEventMessages.OrderSubmittedEvent(order));
             this.engine.Endpoint.Send(StubEventMessages.OrderAcceptedEvent(order));
             this.engine.Endpoint.Send(StubEventMessages.OrderWorkingEvent(order));
             this.engine.Endpoint.Send(modify);
@@ -741,9 +732,9 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
-            Assert.Equal(6, this.engine.ProcessedCount);
+            Assert.Equal(5, this.engine.ProcessedCount);
             Assert.Equal(2, this.engine.CommandCount);
-            Assert.Equal(4, this.engine.EventCount);
+            Assert.Equal(3, this.engine.EventCount);
             Assert.Equal(2, this.tradingGateway.CalledMethods.Count);
             Assert.Equal(2, this.tradingGateway.ReceivedObjects.Count);
             Assert.Equal("SubmitOrder", this.tradingGateway.CalledMethods[0]);
@@ -773,7 +764,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Act
             this.engine.Endpoint.Send(submitOrder);
-            this.engine.Endpoint.Send(StubEventMessages.OrderSubmittedEvent(order));
             this.engine.Endpoint.Send(StubEventMessages.OrderAcceptedEvent(order));
             this.engine.Endpoint.Send(StubEventMessages.OrderWorkingEvent(order));
             this.engine.Endpoint.Send(StubEventMessages.OrderExpiredEvent(order));
@@ -782,9 +772,9 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
-            Assert.Equal(5, this.engine.ProcessedCount);
+            Assert.Equal(4, this.engine.ProcessedCount);
             Assert.Equal(1, this.engine.CommandCount);
-            Assert.Equal(4, this.engine.EventCount);
+            Assert.Equal(3, this.engine.EventCount);
             Assert.Equal(4, this.receiver.Messages.Count);
             Assert.Equal(OrderState.Expired, order.State);
         }
@@ -810,7 +800,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Act
             this.engine.Endpoint.Send(submitOrder);
-            this.engine.Endpoint.Send(StubEventMessages.OrderSubmittedEvent(order));
             this.engine.Endpoint.Send(StubEventMessages.OrderAcceptedEvent(order));
             this.engine.Endpoint.Send(StubEventMessages.OrderWorkingEvent(order));
             this.engine.Endpoint.Send(StubEventMessages.OrderCancelledEvent(order));
@@ -819,9 +808,9 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
-            Assert.Equal(5, this.engine.ProcessedCount);
+            Assert.Equal(4, this.engine.ProcessedCount);
             Assert.Equal(1, this.engine.CommandCount);
-            Assert.Equal(4, this.engine.EventCount);
+            Assert.Equal(3, this.engine.EventCount);
             Assert.Equal(4, this.receiver.Messages.Count);
             Assert.Equal(OrderState.Cancelled, order.State);
         }
@@ -847,7 +836,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Act
             this.engine.Endpoint.Send(submitOrder);
-            this.engine.Endpoint.Send(StubEventMessages.OrderSubmittedEvent(order));
             this.engine.Endpoint.Send(StubEventMessages.OrderAcceptedEvent(order));
             this.engine.Endpoint.Send(StubEventMessages.OrderWorkingEvent(order));
             this.engine.Endpoint.Send(StubEventMessages.OrderCancelRejectEvent(order));
@@ -856,9 +844,9 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
-            Assert.Equal(5, this.engine.ProcessedCount);
+            Assert.Equal(4, this.engine.ProcessedCount);
             Assert.Equal(1, this.engine.CommandCount);
-            Assert.Equal(4, this.engine.EventCount);
+            Assert.Equal(3, this.engine.EventCount);
             Assert.Equal(4, this.receiver.Messages.Count);
             Assert.Equal(OrderState.Working, order.State);
         }
@@ -884,7 +872,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Act
             this.engine.Endpoint.Send(submitOrder);
-            this.engine.Endpoint.Send(StubEventMessages.OrderSubmittedEvent(order));
             this.engine.Endpoint.Send(StubEventMessages.OrderAcceptedEvent(order));
             this.engine.Endpoint.Send(StubEventMessages.OrderFilledEvent(order));
 
@@ -892,9 +879,9 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
-            Assert.Equal(4, this.engine.ProcessedCount);
+            Assert.Equal(3, this.engine.ProcessedCount);
             Assert.Equal(1, this.engine.CommandCount);
-            Assert.Equal(3, this.engine.EventCount);
+            Assert.Equal(2, this.engine.EventCount);
             Assert.Equal(3, this.receiver.Messages.Count);
             Assert.Equal(OrderState.Filled, order.State);
         }
@@ -920,7 +907,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Act
             this.engine.Endpoint.Send(submitOrder);
-            this.engine.Endpoint.Send(StubEventMessages.OrderSubmittedEvent(order));
             this.engine.Endpoint.Send(StubEventMessages.OrderAcceptedEvent(order));
             this.engine.Endpoint.Send(StubEventMessages.OrderPartiallyFilledEvent(order, 50000, 50000));
 
@@ -928,9 +914,9 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
-            Assert.Equal(4, this.engine.ProcessedCount);
+            Assert.Equal(3, this.engine.ProcessedCount);
             Assert.Equal(1, this.engine.CommandCount);
-            Assert.Equal(3, this.engine.EventCount);
+            Assert.Equal(2, this.engine.EventCount);
             Assert.Equal(3, this.receiver.Messages.Count);
             Assert.Equal(OrderState.PartiallyFilled, order.State);
         }

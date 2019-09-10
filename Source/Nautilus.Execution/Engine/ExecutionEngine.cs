@@ -116,28 +116,91 @@ namespace Nautilus.Execution.Engine
         {
             this.IncrementCounter(command);
 
-            this.database.AddOrder(
-                    command.Order,
-                    command.TraderId,
+            var result = this.database.AddOrder(
+                command.Order,
+                command.TraderId,
+                command.AccountId,
+                command.StrategyId,
+                command.PositionId);
+
+            if (result.IsSuccess)
+            {
+                this.gateway.SubmitOrder(command.Order);
+
+                var submitted = new OrderSubmitted(
+                    command.Order.Id,
                     command.AccountId,
-                    command.StrategyId,
-                    command.PositionId)
-                .OnSuccess(() => this.gateway.SubmitOrder(command.Order))
-                .OnFailure(result => this.Log.Error($"Cannot execute {command} {result.Message}"));
+                    this.TimeNow(),
+                    this.NewGuid(),
+                    this.TimeNow());
+
+                command.Order.Apply(submitted);
+                this.database.UpdateOrder(command.Order);
+
+                this.SendToEventPublisher(submitted);
+            }
+            else
+            {
+                this.Log.Error($"Cannot execute {command} {result.Message}");
+            }
         }
 
         private void OnMessage(SubmitAtomicOrder command)
         {
             this.IncrementCounter(command);
 
-            this.database.AddAtomicOrder(
+            var result = this.database.AddAtomicOrder(
                 command.AtomicOrder,
                 command.TraderId,
                 command.AccountId,
                 command.StrategyId,
-                command.PositionId)
-                .OnSuccess(() => this.gateway.SubmitOrder(command.AtomicOrder))
-                .OnFailure(result => this.Log.Error($"Cannot execute {command} {result.Message}"));
+                command.PositionId);
+
+            if (result.IsSuccess)
+            {
+                this.gateway.SubmitOrder(command.AtomicOrder);
+
+                var submitted1 = new OrderSubmitted(
+                    command.AtomicOrder.Entry.Id,
+                    command.AccountId,
+                    this.TimeNow(),
+                    this.NewGuid(),
+                    this.TimeNow());
+
+                var submitted2 = new OrderSubmitted(
+                    command.AtomicOrder.StopLoss.Id,
+                    command.AccountId,
+                    this.TimeNow(),
+                    this.NewGuid(),
+                    this.TimeNow());
+
+                command.AtomicOrder.Entry.Apply(submitted1);
+                command.AtomicOrder.StopLoss.Apply(submitted2);
+                this.database.UpdateOrder(command.AtomicOrder.Entry);
+                this.database.UpdateOrder(command.AtomicOrder.StopLoss);
+
+                this.SendToEventPublisher(submitted1);
+                this.SendToEventPublisher(submitted2);
+
+                if (command.AtomicOrder.TakeProfit != null)
+                {
+                    var submitted3 = new OrderSubmitted(
+                        command.AtomicOrder.Entry.Id,
+                        command.AccountId,
+                        this.TimeNow(),
+                        this.NewGuid(),
+                        this.TimeNow());
+
+                    command.AtomicOrder.TakeProfit.Apply(submitted3);
+                    this.database.UpdateOrder(command.AtomicOrder.TakeProfit);
+
+                    this.SendToEventPublisher(submitted3);
+                }
+            }
+            else
+            {
+                this.Log.Error($"Cannot execute {command} {result.Message}");
+            }
         }
 
         private void OnMessage(CancelOrder command)

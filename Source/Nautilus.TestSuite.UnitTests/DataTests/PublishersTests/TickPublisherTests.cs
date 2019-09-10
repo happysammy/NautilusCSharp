@@ -27,7 +27,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class TickPublisherTests
     {
-        private const string TEST_ADDRESS = "tcp://localhost:55506";
+        private const string TEST_ADDRESS = "tcp://localhost:55606";
         private readonly ITestOutputHelper output;
         private readonly MockLoggingAdapter loggingAdapter;
         private readonly TickPublisher publisher;
@@ -46,7 +46,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
                 container,
                 DataBusFactory.Create(container),
                 new Utf8TickSerializer(),
-                new NetworkPort(55506));
+                new NetworkPort(55606));
         }
 
         [Fact]
@@ -80,7 +80,6 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
             // Tear Down
             subscriber.Unsubscribe(symbol.ToString());
             subscriber.Disconnect(TEST_ADDRESS);
-            subscriber.Dispose();
             this.publisher.Stop();
             Task.Delay(100).Wait();  // Allows sockets to dispose
         }

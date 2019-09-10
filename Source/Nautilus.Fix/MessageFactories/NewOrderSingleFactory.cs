@@ -42,9 +42,9 @@ namespace Nautilus.Fix.MessageFactories
 
             var message = new NewOrderSingle();
 
-            message.SetField(new ClOrdID(order.Id.ToString()));
-            message.SetField(new SecondaryClOrdID(order.Label.ToString()));
-            message.SetField(new Account(accountNumber.ToString()));
+            message.SetField(new ClOrdID(order.Id.Value));
+            message.SetField(new SecondaryClOrdID(order.Label.Value));
+            message.SetField(new Account(accountNumber.Value));
             message.SetField(new Symbol(brokerSymbol));
             message.SetField(FixMessageHelper.GetFixOrderSide(order.Side));
             message.SetField(new TransactTime(timeNow.ToDateTimeUtc()));

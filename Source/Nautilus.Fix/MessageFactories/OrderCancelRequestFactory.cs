@@ -36,9 +36,9 @@ namespace Nautilus.Fix.MessageFactories
 
             var message = new OrderCancelRequest();
 
-            message.SetField(new OrigClOrdID(order.Id.ToString()));
-            message.SetField(new OrderID(order.IdBroker?.ToString()));
-            message.SetField(new ClOrdID(order.IdLast.ToString()));
+            message.SetField(new OrigClOrdID(order.Id.Value));
+            message.SetField(new OrderID(order.IdBroker?.Value));
+            message.SetField(new ClOrdID(order.IdLast.Value));
             message.SetField(new Symbol(brokerSymbol));
             message.SetField(new Quantity(order.Quantity.Value));
             message.SetField(FixMessageHelper.GetFixOrderSide(order.Side));

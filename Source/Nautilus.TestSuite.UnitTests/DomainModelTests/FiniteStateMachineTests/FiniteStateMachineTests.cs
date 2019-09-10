@@ -53,7 +53,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FiniteStateMachineTests
 
             // Act
             // Assert
-            Assert.Throws<InvalidOperationException>(() => stateMachine.Process(Trigger.Event(typeof(OrderWorking))));
+            Assert.Throws<InvalidOperationException>(() => stateMachine.Process(Trigger.Event(typeof(OrderExpired))));
         }
 
         [Fact]
