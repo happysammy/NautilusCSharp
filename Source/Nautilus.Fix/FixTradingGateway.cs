@@ -17,7 +17,7 @@ namespace Nautilus.Fix
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
-    /// Provides a gateway to, and anti-corruption layer from, the FIX module of the service.
+    /// Provides a gateway to the brokers FIX trading network.
     /// </summary>
     public sealed class FixTradingGateway : MessageBusConnected, ITradingGateway
     {

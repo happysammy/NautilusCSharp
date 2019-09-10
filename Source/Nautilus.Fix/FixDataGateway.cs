@@ -17,7 +17,7 @@ namespace Nautilus.Fix
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
-    /// Provides a gateway to, and anti-corruption layer from, the FIX module of the service.
+    /// Provides a gateway to the data providers FIX network.
     /// </summary>
     public sealed class FixDataGateway : DataBusConnected, IDataGateway
     {

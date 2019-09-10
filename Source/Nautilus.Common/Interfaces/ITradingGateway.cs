@@ -14,7 +14,7 @@ namespace Nautilus.Common.Interfaces
     using Nautilus.Messaging;
 
     /// <summary>
-    /// Provides a gateway to, and anti-corruption layer from a trading gateway.
+    /// Provides a gateway to the brokers trading network.
     /// </summary>
     public interface ITradingGateway
     {

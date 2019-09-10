@@ -15,7 +15,7 @@ namespace Nautilus.Common.Interfaces
     using Nautilus.Messaging;
 
     /// <summary>
-    /// Provides a gateway to, and anti-corruption layer from a data gateway.
+    /// Provides a gateway to the data providers network.
     /// </summary>
     public interface IDataGateway
     {
