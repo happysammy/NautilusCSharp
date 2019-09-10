@@ -86,7 +86,6 @@ namespace Nautilus.Execution
                 {
                     ServiceAddress.TradingGateway,
                     ServiceAddress.CommandServer,
-                    ServiceAddress.EventPublisher,
                 };
 
                 this.SendAll(start, receivers);
@@ -105,7 +104,6 @@ namespace Nautilus.Execution
             {
                 ServiceAddress.TradingGateway,
                 ServiceAddress.CommandServer,
-                ServiceAddress.EventPublisher,
             };
 
             this.SendAll(stop, receivers);
