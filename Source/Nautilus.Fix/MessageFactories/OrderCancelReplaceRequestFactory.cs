@@ -44,12 +44,12 @@ namespace Nautilus.Fix.MessageFactories
             message.SetField(new ClOrdID(order.IdLast.Value));
             message.SetField(new Symbol(brokerSymbol));
             message.SetField(new Quantity(order.Quantity.Value));
-            message.SetField(FixMessageHelper.GetFixOrderSide(order.Side));
+            message.SetField(FixMessageHelper.GetFixOrderSide(order.OrderSide));
             message.SetField(new TransactTime(transactionTime.ToDateTimeUtc()));
-            message.SetField(FixMessageHelper.GetFixOrderType(order.Type));
+            message.SetField(FixMessageHelper.GetFixOrderType(order.OrderType));
 
             // Set the order price depending on order type.
-            switch (order.Type)
+            switch (order.OrderType)
             {
                 case OrderType.MARKET:
                     break;
@@ -68,7 +68,7 @@ namespace Nautilus.Fix.MessageFactories
                 case OrderType.UNKNOWN:
                     goto default;
                 default:
-                    throw ExceptionFactory.InvalidSwitchArgument(order.Type, nameof(order.Type));
+                    throw ExceptionFactory.InvalidSwitchArgument(order.OrderType, nameof(order.OrderType));
             }
 
             return message;

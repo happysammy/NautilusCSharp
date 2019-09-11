@@ -46,7 +46,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             // Assert
             Assert.Equal(order, unpacked);
             Assert.Equal(order.Symbol, unpacked.Symbol);
-            Assert.Equal(order.Type, unpacked.Type);
+            Assert.Equal(order.OrderType, unpacked.OrderType);
             Assert.Equal(order.Price, unpacked.Price);
             Assert.Equal(order.ExecutionId, unpacked.ExecutionId);
             Assert.Equal(order.Label, unpacked.Label);
@@ -69,7 +69,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             // Assert
             Assert.Equal(order, unpacked);
             Assert.Equal(order.Symbol, unpacked.Symbol);
-            Assert.Equal(order.Type, unpacked.Type);
+            Assert.Equal(order.OrderType, unpacked.OrderType);
             Assert.Equal(order.Price, unpacked.Price);
             Assert.Equal(order.ExecutionId, unpacked.ExecutionId);
             Assert.Equal(order.Label, unpacked.Label);
@@ -92,7 +92,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             // Assert
             Assert.Equal(order, unpacked);
             Assert.Equal(order.Symbol, unpacked.Symbol);
-            Assert.Equal(order.Type, unpacked.Type);
+            Assert.Equal(order.OrderType, unpacked.OrderType);
             Assert.Equal(order.Price, unpacked.Price);
             Assert.Equal(order.ExecutionId, unpacked.ExecutionId);
             Assert.Equal(order.Label, unpacked.Label);
@@ -115,7 +115,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             // Assert
             Assert.Equal(order, unpacked);
             Assert.Equal(order.Symbol, unpacked.Symbol);
-            Assert.Equal(order.Type, unpacked.Type);
+            Assert.Equal(order.OrderType, unpacked.OrderType);
             Assert.Equal(order.Price, unpacked.Price);
             Assert.Equal(order.ExecutionId, unpacked.ExecutionId);
             Assert.Equal(order.Label, unpacked.Label);
@@ -144,7 +144,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             Assert.Equal(order, unpacked);
             Assert.Equal(order.Symbol, unpacked.Symbol);
-            Assert.Equal(order.Type, unpacked.Type);
+            Assert.Equal(order.OrderType, unpacked.OrderType);
             Assert.Equal(order.Price, unpacked.Price);
             Assert.Equal(order.ExecutionId, unpacked.ExecutionId);
             Assert.Equal(order.Label, unpacked.Label);
@@ -179,7 +179,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var order = this.serializer.Deserialize(orderBytes);
 
             // Assert
-            Assert.Equal(OrderType.MARKET, order.Type);
+            Assert.Equal(OrderType.MARKET, order.OrderType);
         }
 
         [Fact]
@@ -193,7 +193,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var order = this.serializer.Deserialize(orderBytes);
 
             // Assert
-            Assert.Equal(OrderType.LIMIT, order.Type);
+            Assert.Equal(OrderType.LIMIT, order.OrderType);
         }
 
         [Fact]
@@ -207,7 +207,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var order = this.serializer.Deserialize(orderBytes);
 
             // Assert
-            Assert.Equal(OrderType.STOP_LIMIT, order.Type);
+            Assert.Equal(OrderType.STOP_LIMIT, order.OrderType);
         }
     }
 }

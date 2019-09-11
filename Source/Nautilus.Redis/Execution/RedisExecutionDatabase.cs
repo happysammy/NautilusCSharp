@@ -8,8 +8,10 @@
 
 namespace Nautilus.Redis.Execution
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection.Metadata.Ecma335;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.CQS;
     using Nautilus.Core.Message;
@@ -76,7 +78,7 @@ namespace Nautilus.Redis.Execution
         /// <inheritdoc />
         public override void LoadAccountsCache()
         {
-            this.Log.Information("Re-caching accounts from the database...");
+            this.Log.Debug("Re-caching accounts from the database...");
 
             this.CachedAccounts.Clear();
 
@@ -116,7 +118,7 @@ namespace Nautilus.Redis.Execution
         /// <inheritdoc />
         public override void LoadOrdersCache()
         {
-            this.Log.Information("Re-caching orders from the database...");
+            this.Log.Debug("Re-caching orders from the database...");
 
             this.CachedOrders.Clear();
 
@@ -146,7 +148,14 @@ namespace Nautilus.Redis.Execution
                 var order = new Order((OrderInitialized)initial);
                 while (events.Count > 0)
                 {
-                    order.Apply((OrderEvent)this.eventSerializer.Deserialize(events.Dequeue()));
+                    var nextEvent = (OrderEvent)this.eventSerializer.Deserialize(events.Dequeue());
+                    if (nextEvent is null)
+                    {
+                        this.Log.Error("Could not deserialize OrderEvent.");
+                        continue;
+                    }
+
+                    order.Apply(nextEvent);
                 }
 
                 this.CachedOrders[order.Id] = order;
@@ -158,7 +167,7 @@ namespace Nautilus.Redis.Execution
         /// <inheritdoc />
         public override void LoadPositionsCache()
         {
-            this.Log.Information("Re-caching positions from the database...");
+            this.Log.Debug("Re-caching positions from the database...");
 
             this.CachedPositions.Clear();
 
@@ -181,10 +190,16 @@ namespace Nautilus.Redis.Execution
                 var position = new Position(
                     new PositionId(key.ToString().Split(':').Last()),
                     (OrderFillEvent)this.eventSerializer.Deserialize(events.Dequeue()));
-
                 while (events.Count > 0)
                 {
-                    position.Apply((OrderFillEvent)this.eventSerializer.Deserialize(events.Dequeue()));
+                    var nextEvent = (OrderFillEvent)this.eventSerializer.Deserialize(events.Dequeue());
+                    if (nextEvent is null)
+                    {
+                        this.Log.Error("Could not deserialize OrderFillEvent.");
+                        continue;
+                    }
+
+                    position.Apply(nextEvent);
                 }
 
                 this.CachedPositions[position.Id] = position;

@@ -54,7 +54,7 @@ namespace Nautilus.Fix.MessageFactories
             order1.SetField(new ClOrdLinkID("1"));
             order1.SetField(new Account(accountNumber.Value));
             order1.SetField(new Symbol(brokerSymbol));
-            order1.SetField(FixMessageHelper.GetFixOrderSide(entry.Side));
+            order1.SetField(FixMessageHelper.GetFixOrderSide(entry.OrderSide));
             order1.SetField(new OrdType(OrdType.STOP));
             order1.SetField(FixMessageHelper.GetFixTimeInForce(entry.TimeInForce));
 
@@ -81,7 +81,7 @@ namespace Nautilus.Fix.MessageFactories
             order2.SetField(new ClOrdLinkID("2"));
             order2.SetField(new Account(accountNumber.Value));
             order2.SetField(new Symbol(brokerSymbol));
-            order2.SetField(FixMessageHelper.GetFixOrderSide(stopLoss.Side));
+            order2.SetField(FixMessageHelper.GetFixOrderSide(stopLoss.OrderSide));
             order2.SetField(new OrdType(OrdType.STOP));
             order2.SetField(FixMessageHelper.GetFixTimeInForce(stopLoss.TimeInForce));
             order2.SetField(new OrderQty(stopLoss.Quantity.Value));
@@ -128,7 +128,7 @@ namespace Nautilus.Fix.MessageFactories
             order1.SetField(new ClOrdLinkID("1"));
             order1.SetField(new Account(accountNumber.Value));
             order1.SetField(new Symbol(brokerSymbol));
-            order1.SetField(FixMessageHelper.GetFixOrderSide(entry.Side));
+            order1.SetField(FixMessageHelper.GetFixOrderSide(entry.OrderSide));
             order1.SetField(new OrdType(OrdType.STOP));
             order1.SetField(FixMessageHelper.GetFixTimeInForce(entry.TimeInForce));
 
@@ -155,7 +155,7 @@ namespace Nautilus.Fix.MessageFactories
             order2.SetField(new ClOrdLinkID("2"));
             order2.SetField(new Account(accountNumber.Value));
             order2.SetField(new Symbol(brokerSymbol));
-            order2.SetField(FixMessageHelper.GetFixOrderSide(stopLoss.Side));
+            order2.SetField(FixMessageHelper.GetFixOrderSide(stopLoss.OrderSide));
             order2.SetField(new OrdType(OrdType.STOP));
             order2.SetField(FixMessageHelper.GetFixTimeInForce(stopLoss.TimeInForce));
             order2.SetField(new OrderQty(stopLoss.Quantity.Value));
@@ -178,7 +178,7 @@ namespace Nautilus.Fix.MessageFactories
                 order3.SetField(new ClOrdLinkID("2"));
                 order3.SetField(new Account(accountNumber.Value));
                 order3.SetField(new Symbol(brokerSymbol));
-                order3.SetField(FixMessageHelper.GetFixOrderSide(takeProfit.Side));
+                order3.SetField(FixMessageHelper.GetFixOrderSide(takeProfit.OrderSide));
                 order3.SetField(new OrdType(OrdType.LIMIT));
                 order3.SetField(FixMessageHelper.GetFixTimeInForce(takeProfit.TimeInForce));
                 order3.SetField(new OrderQty(takeProfit.Quantity.Value));

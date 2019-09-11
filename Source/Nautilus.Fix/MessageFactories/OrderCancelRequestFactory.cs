@@ -41,7 +41,7 @@ namespace Nautilus.Fix.MessageFactories
             message.SetField(new ClOrdID(order.IdLast.Value));
             message.SetField(new Symbol(brokerSymbol));
             message.SetField(new Quantity(order.Quantity.Value));
-            message.SetField(FixMessageHelper.GetFixOrderSide(order.Side));
+            message.SetField(FixMessageHelper.GetFixOrderSide(order.OrderSide));
             message.SetField(new TransactTime(transactionTime.ToDateTimeUtc()));
 
             return message;

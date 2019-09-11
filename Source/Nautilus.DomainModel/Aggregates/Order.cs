@@ -31,7 +31,6 @@ namespace Nautilus.DomainModel.Aggregates
     {
         private readonly FiniteStateMachine<OrderState> orderFiniteStateMachine;
         private readonly UniqueList<OrderId> orderIds;
-        private readonly UniqueList<OrderIdBroker> orderIdsBroker;
         private readonly UniqueList<ExecutionId> executionIds;
 
         /// <summary>
@@ -43,20 +42,19 @@ namespace Nautilus.DomainModel.Aggregates
         {
             this.orderFiniteStateMachine = CreateOrderFiniteStateMachine();
             this.orderIds = new UniqueList<OrderId>(this.Id);
-            this.orderIdsBroker = new UniqueList<OrderIdBroker>();
             this.executionIds = new UniqueList<ExecutionId>();
 
             this.Symbol = initial.Symbol;
             this.Label = initial.Label;
-            this.Side = initial.OrderSide;
-            this.Type = initial.OrderType;
+            this.OrderSide = initial.OrderSide;
+            this.OrderType = initial.OrderType;
             this.Quantity = initial.Quantity;
             this.FilledQuantity = Quantity.Zero();
             this.Price = initial.Price;
             this.TimeInForce = initial.TimeInForce;
             this.ExpireTime = this.ValidateExpireTime(initial.ExpireTime);
-            this.IsBuy = this.Side == OrderSide.BUY;
-            this.IsSell = this.Side == OrderSide.SELL;
+            this.IsBuy = this.OrderSide == OrderSide.BUY;
+            this.IsSell = this.OrderSide == OrderSide.SELL;
             this.IsWorking = false;
             this.IsCompleted = false;
 
@@ -76,7 +74,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the orders last identifier for the broker.
         /// </summary>
-        public OrderIdBroker? IdBroker => this.orderIdsBroker.LastOrNull();
+        public OrderIdBroker? IdBroker { get; private set; }
 
         /// <summary>
         /// Gets the orders account identifier.
@@ -106,12 +104,12 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the orders type.
         /// </summary>
-        public OrderType Type { get; }
+        public OrderType OrderType { get; }
 
         /// <summary>
         /// Gets the orders side.
         /// </summary>
-        public OrderSide Side { get; }
+        public OrderSide OrderSide { get; }
 
         /// <summary>
         /// Gets the orders quantity.
@@ -238,12 +236,6 @@ namespace Nautilus.DomainModel.Aggregates
         public UniqueList<OrderId> GetOrderIds() => this.orderIds.Copy();
 
         /// <summary>
-        /// Returns the broker order identifiers.
-        /// </summary>
-        /// <returns>A read only collection.</returns>
-        public UniqueList<OrderIdBroker> GetOrderIdsBroker() => this.orderIdsBroker.Copy();
-
-        /// <summary>
         /// Returns the execution identifiers.
         /// </summary>
         /// <returns>A read only collection.</returns>
@@ -269,6 +261,7 @@ namespace Nautilus.DomainModel.Aggregates
                 { new StateTransition<OrderState>(OrderState.Accepted, Trigger.Event(typeof(OrderFilled))), OrderState.Filled },
                 { new StateTransition<OrderState>(OrderState.Accepted, Trigger.Event(typeof(OrderPartiallyFilled))), OrderState.PartiallyFilled },
                 { new StateTransition<OrderState>(OrderState.Working, Trigger.Event(typeof(OrderCancelReject))), OrderState.Working }, // OrderCancelReject (state should remain unchanged).
+                { new StateTransition<OrderState>(OrderState.Working, Trigger.Event(typeof(OrderWorking))), OrderState.Working }, // TODO: Find out correct states
                 { new StateTransition<OrderState>(OrderState.Working, Trigger.Event(typeof(OrderCancelled))), OrderState.Cancelled },
                 { new StateTransition<OrderState>(OrderState.Working, Trigger.Event(typeof(OrderModified))), OrderState.Working },
                 { new StateTransition<OrderState>(OrderState.Working, Trigger.Event(typeof(OrderExpired))), OrderState.Expired },
@@ -356,9 +349,15 @@ namespace Nautilus.DomainModel.Aggregates
 
         private void When(OrderWorking @event)
         {
-            Debug.True(!(this.Price is null), "An order with no price can never be working.");
+            Debug.True(!(this.Price is null), "An order with a null price can never be working.");
+            Debug.EqualTo(@event.Symbol, this.Symbol, nameof(@event.Symbol));
+            Debug.EqualTo(@event.Label, this.Label, nameof(@event.Label));
+            Debug.EqualTo(@event.OrderSide, this.OrderSide, nameof(@event.OrderSide));
+            Debug.EqualTo(@event.OrderType, this.OrderType, nameof(@event.OrderSide));
+            Debug.EqualTo(@event.Quantity, this.Quantity, nameof(@event.OrderSide));
+            Debug.EqualTo(@event.TimeInForce, this.TimeInForce, nameof(@event.TimeInForce));
 
-            this.orderIdsBroker.Add(@event.OrderIdBroker);
+            this.IdBroker = @event.OrderIdBroker;
             this.SetStateToWorking();
         }
 
@@ -379,7 +378,6 @@ namespace Nautilus.DomainModel.Aggregates
 
         private void When(OrderModified @event)
         {
-            this.orderIdsBroker.Add(@event.OrderIdBroker);
             this.Price = @event.ModifiedPrice;
         }
 
@@ -435,7 +433,7 @@ namespace Nautilus.DomainModel.Aggregates
                 return decimal.Zero;
             }
 
-            return this.Side == OrderSide.BUY
+            return this.OrderSide == OrderSide.BUY
                 ? this.AveragePrice.Value - this.Price.Value
                 : this.Price.Value - this.AveragePrice.Value;
         }

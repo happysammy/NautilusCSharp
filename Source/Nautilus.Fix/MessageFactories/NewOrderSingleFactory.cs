@@ -46,9 +46,9 @@ namespace Nautilus.Fix.MessageFactories
             message.SetField(new SecondaryClOrdID(order.Label.Value));
             message.SetField(new Account(accountNumber.Value));
             message.SetField(new Symbol(brokerSymbol));
-            message.SetField(FixMessageHelper.GetFixOrderSide(order.Side));
+            message.SetField(FixMessageHelper.GetFixOrderSide(order.OrderSide));
             message.SetField(new TransactTime(timeNow.ToDateTimeUtc()));
-            message.SetField(FixMessageHelper.GetFixOrderType(order.Type));
+            message.SetField(FixMessageHelper.GetFixOrderType(order.OrderType));
             message.SetField(FixMessageHelper.GetFixTimeInForce(order.TimeInForce));
 
             if (order.ExpireTime.HasValue)
@@ -59,7 +59,7 @@ namespace Nautilus.Fix.MessageFactories
 
             message.SetField(new OrderQty(order.Quantity.Value));
 
-            switch (order.Type)
+            switch (order.OrderType)
             {
                 case OrderType.MARKET:
                     // Do nothing.
@@ -83,7 +83,7 @@ namespace Nautilus.Fix.MessageFactories
                 case OrderType.UNKNOWN:
                     goto default;
                 default:
-                    throw ExceptionFactory.InvalidSwitchArgument(order.Type, nameof(order.Type));
+                    throw ExceptionFactory.InvalidSwitchArgument(order.OrderType, nameof(order.OrderType));
             }
 
             return message;

@@ -51,8 +51,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.Equal(new Symbol("SYMBOL", "LMAX"), order.Symbol);
             Assert.Equal("O-123456-S1", order.Id.Value);
             Assert.Equal("S1-E", order.Label.Value);
-            Assert.Equal(OrderSide.BUY, order.Side);
-            Assert.Equal(OrderType.MARKET, order.Type);
+            Assert.Equal(OrderSide.BUY, order.OrderSide);
+            Assert.Equal(OrderType.MARKET, order.OrderType);
             Assert.Equal(10, order.Quantity.Value);
             Assert.Null(order.AveragePrice);
             Assert.Equal(new List<OrderId> { new OrderId("O-123456-S1") }, order.GetOrderIds());
@@ -81,8 +81,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.Equal(new Symbol("SYMBOL", "LMAX"), order.Symbol);
             Assert.Equal("O-123456", order.Id.Value);
             Assert.Equal("S1_SL", order.Label.Value);
-            Assert.Equal(OrderSide.BUY, order.Side);
-            Assert.Equal(OrderType.STOP_MARKET, order.Type);
+            Assert.Equal(OrderSide.BUY, order.OrderSide);
+            Assert.Equal(OrderType.STOP_MARKET, order.OrderType);
             Assert.Equal(10, order.Quantity.Value);
             Assert.Equal(Price.Create(2000, 1), order.Price);
             Assert.Null(order.AveragePrice);
@@ -283,8 +283,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 AccountId.FromString("FXCM-02851908-DEMO"),
                 new Symbol("AUDUSD", "FXCM"),
                 order.Label,
-                order.Side,
-                order.Type,
+                order.OrderSide,
+                order.OrderType,
                 order.Quantity,
                 order.Price,
                 order.TimeInForce,
@@ -326,7 +326,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new ExecutionId("some_execution_id"),
                 new ExecutionTicket("some_execution_ticket"),
                 order.Symbol,
-                order.Side,
+                order.OrderSide,
                 Quantity.Create(order.Quantity.Value / 2),
                 Quantity.Create(order.Quantity.Value / 2),
                 order.Price,
@@ -366,7 +366,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new ExecutionId("some_execution_id"),
                 new ExecutionTicket("some_execution_ticket"),
                 order.Symbol,
-                order.Side,
+                order.OrderSide,
                 order.Quantity,
                 order.Price,
                 StubZonedDateTime.UnixEpoch(),
@@ -433,7 +433,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new ExecutionId("some_execution_id"),
                 new ExecutionTicket("some_execution_ticket"),
                 order.Symbol,
-                order.Side,
+                order.OrderSide,
                 order.Quantity,
                 Price.Create(averagePrice, 5),
                 StubZonedDateTime.UnixEpoch(),
@@ -474,7 +474,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new ExecutionId("some_execution_id"),
                 new ExecutionTicket("some_execution_ticket"),
                 order.Symbol,
-                order.Side,
+                order.OrderSide,
                 order.Quantity,
                 Price.Create(averagePrice, 5),
                 StubZonedDateTime.UnixEpoch(),
