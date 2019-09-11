@@ -384,53 +384,36 @@ namespace Nautilus.Redis.Execution
         public override TraderId? GetTraderId(OrderId orderId)
         {
             var traderId = this.redisDatabase.HashGet(Key.IndexOrderTrader, orderId.Value);
-            if (traderId == RedisValue.Null)
-            {
-                this.Log.Warning($"Cannot find TraderId for {orderId}.");
-                return null;
-            }
-
-            return TraderId.FromString(traderId);
+            return traderId == RedisValue.Null
+                ? null
+                : TraderId.FromString(traderId);
         }
 
         /// <inheritdoc />
         public override TraderId? GetTraderId(PositionId positionId)
         {
             var traderId = this.redisDatabase.HashGet(Key.IndexPositionTrader, positionId.Value);
-            if (traderId == RedisValue.Null)
-            {
-                this.Log.Warning($"Cannot find TraderId for {positionId}.");
-                return null;
-            }
-
-            return TraderId.FromString(traderId);
+            return traderId == RedisValue.Null
+                ? null
+                : TraderId.FromString(traderId);
         }
 
         /// <inheritdoc />
         public override AccountId? GetAccountId(PositionId positionId)
         {
             var accountId = this.redisDatabase.HashGet(Key.IndexPositionAccount, positionId.Value);
-            if (accountId == RedisValue.Null)
-            {
-                this.Log.Warning($"Cannot find AccountId for {positionId}.");
-                return null;
-            }
-
-            return AccountId.FromString(accountId);
+            return accountId == RedisValue.Null
+                ? null
+                : AccountId.FromString(accountId);
         }
 
         /// <inheritdoc />
         public override PositionId? GetPositionId(OrderId orderId)
         {
             var idValue = this.redisDatabase.HashGet(Key.IndexOrderPosition, orderId.Value);
-
-            if (idValue == RedisValue.Null)
-            {
-                this.Log.Warning($"Cannot find PositionId for {orderId}.");
-                return null;
-            }
-
-            return new PositionId(idValue);
+            return idValue == RedisValue.Null
+                ? null
+                : new PositionId(idValue);
         }
 
         /// <inheritdoc />
