@@ -185,7 +185,7 @@ namespace Nautilus.Execution.Engine
                 if (command.AtomicOrder.TakeProfit != null)
                 {
                     var submitted3 = new OrderSubmitted(
-                        command.AtomicOrder.Entry.Id,
+                        command.AtomicOrder.TakeProfit.Id,
                         command.AccountId,
                         this.TimeNow(),
                         this.NewGuid(),
