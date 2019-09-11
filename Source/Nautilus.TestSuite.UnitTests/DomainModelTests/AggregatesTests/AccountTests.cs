@@ -33,7 +33,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             // Act
-            var account = StubAccountFactory.ZeroCash();
+            var account = StubAccountProvider.ZeroCash();
 
             // Assert
             Assert.Equal(new Brokerage("IB"), account.Brokerage);
@@ -46,7 +46,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         internal void Update_MessageCorrect_EqualsUpdatedStatusValues()
         {
             // Arrange
-            var account = StubAccountFactory.Create();
+            var account = StubAccountProvider.Create();
             var message = new AccountStateEvent(
                 new AccountId("FXCM", "123456789", "SIMULATED"),
                 Currency.AUD,
@@ -77,7 +77,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         internal void FreeEquity_MessageCorrect_ReturnsTrue()
         {
             // Arrange
-            var account = StubAccountFactory.Create();
+            var account = StubAccountProvider.Create();
             var message = new AccountStateEvent(
                 new AccountId("FXCM", "123456789", "SIMULATED"),
                 Currency.USD,

@@ -33,7 +33,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             // Fixture Setup
             this.output = output;
 
-            var containerFactory = new StubComponentryContainerFactory();
+            var containerFactory = new StubComponentryContainerProvider();
             var container = containerFactory.Create();
 
             this.loggingAdapter = containerFactory.LoggingAdapter;
@@ -226,7 +226,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
         internal void GivenData_WhenNoSubscribers_DoesNothing()
         {
             // Arrange
-            var tick = StubTickFactory.Create(new Symbol("AUDUSD", new Venue("FXCM")));
+            var tick = StubTickProvider.Create(new Symbol("AUDUSD", new Venue("FXCM")));
 
             // Act
             this.dataBus.Endpoint.Send(tick);
@@ -258,7 +258,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            var tick = StubTickFactory.Create(new Symbol("AUDUSD", new Venue("FXCM")));
+            var tick = StubTickProvider.Create(new Symbol("AUDUSD", new Venue("FXCM")));
 
             // Act
             this.dataBus.Endpoint.Send(subscribe1);

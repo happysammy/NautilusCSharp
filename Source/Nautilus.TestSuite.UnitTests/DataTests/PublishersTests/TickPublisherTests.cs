@@ -37,7 +37,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
             // Fixture Setup
             this.output = output;
 
-            var containerFactory = new StubComponentryContainerFactory();
+            var containerFactory = new StubComponentryContainerProvider();
             var container = containerFactory
             .Create();
             this.loggingAdapter = containerFactory
@@ -63,7 +63,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
             subscriber.Subscribe(symbol.Value);
             Task.Delay(100).Wait();
 
-            var tick = StubTickFactory.Create(symbol);
+            var tick = StubTickProvider.Create(symbol);
 
             // Act
             this.publisher.Endpoint.Send(tick);

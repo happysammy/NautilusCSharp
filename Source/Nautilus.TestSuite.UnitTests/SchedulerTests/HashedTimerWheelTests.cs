@@ -32,7 +32,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
             // Fixture Setup
             this.output = output;
 
-            var containerFactory = new StubComponentryContainerFactory();
+            var containerFactory = new StubComponentryContainerProvider();
             var container = containerFactory.Create();
             this.loggingAdapter = containerFactory.LoggingAdapter;
             this.testReceiver = new MockMessagingAgent();

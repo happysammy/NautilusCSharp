@@ -39,7 +39,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
             // Fixture Setup
             this.output = output;
 
-            var containerFactory = new StubComponentryContainerFactory();
+            var containerFactory = new StubComponentryContainerProvider();
             var container = containerFactory.Create();
             this.loggingAdapter = containerFactory.LoggingAdapter;
             this.serializer = new BsonInstrumentSerializer();
@@ -58,7 +58,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
             this.publisher.Start();
             Task.Delay(100).Wait();
 
-            var instrument = StubInstrumentFactory.AUDUSD();
+            var instrument = StubInstrumentProvider.AUDUSD();
 
             var subscriber = new SubscriberSocket(TEST_ADDRESS);
             subscriber.Connect(TEST_ADDRESS);

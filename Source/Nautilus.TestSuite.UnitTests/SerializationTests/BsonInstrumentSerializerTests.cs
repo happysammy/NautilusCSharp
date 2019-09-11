@@ -32,7 +32,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         {
             // Arrange
             var serializer = new BsonInstrumentSerializer();
-            var instrument = StubInstrumentFactory.AUDUSD();
+            var instrument = StubInstrumentProvider.AUDUSD();
 
             // Act
             var packed = serializer.Serialize(instrument);

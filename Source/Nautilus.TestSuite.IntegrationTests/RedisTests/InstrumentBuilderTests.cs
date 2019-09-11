@@ -32,7 +32,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void Build_WithValidInstrument_ReturnsExpectedInstrument()
         {
             // Arrange
-            var audusd = StubInstrumentFactory.AUDUSD();
+            var audusd = StubInstrumentProvider.AUDUSD();
             var instrumentBuilder = new InstrumentBuilder(audusd);
 
             // Act
@@ -46,7 +46,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void Update_WithValidInstrument_ReturnsExpectedInstrument()
         {
             // Arrange
-            var audusd = StubInstrumentFactory.AUDUSD();
+            var audusd = StubInstrumentProvider.AUDUSD();
             var instrumentBuilder = new InstrumentBuilder(audusd);
 
             // Act
@@ -62,7 +62,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void Update_WithChanges_ReturnsNewInstrument()
         {
             // Arrange
-            var audusd = StubInstrumentFactory.AUDUSD();
+            var audusd = StubInstrumentProvider.AUDUSD();
             var instrumentBuilder = new InstrumentBuilder(audusd);
 
             var instrument = new Instrument(

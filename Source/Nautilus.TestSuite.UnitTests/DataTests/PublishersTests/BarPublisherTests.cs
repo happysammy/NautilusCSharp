@@ -38,7 +38,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
             // Fixture Setup
             this.output = output;
 
-            var containerFactory = new StubComponentryContainerFactory();
+            var containerFactory = new StubComponentryContainerProvider();
             var container = containerFactory.Create();
             this.loggingAdapter = containerFactory.LoggingAdapter;
             this.serializer = new Utf8BarSerializer();

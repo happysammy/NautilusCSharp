@@ -39,7 +39,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             // Fixture Setup
             this.output = output;
 
-            var containerFactory = new StubComponentryContainerFactory();
+            var containerFactory = new StubComponentryContainerProvider();
             this.logger = containerFactory.LoggingAdapter;
             var container = containerFactory.Create();
 
@@ -230,7 +230,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var strategyId = new StrategyId("SCALPER", "001");
 
             this.database.AddOrder(order, traderId, accountId, strategyId, positionId);
-            order.Apply(StubEventMessages.OrderSubmittedEvent(order));
+            order.Apply(StubEventMessageProvider.OrderSubmittedEvent(order));
             this.database.UpdateOrder(order);
 
             // Act
@@ -262,10 +262,10 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             this.database.AddOrder(order, traderId, accountId, strategyId, positionId);
 
-            order.Apply(StubEventMessages.OrderSubmittedEvent(order));
+            order.Apply(StubEventMessageProvider.OrderSubmittedEvent(order));
             this.database.UpdateOrder(order);
 
-            order.Apply(StubEventMessages.OrderRejectedEvent(order));
+            order.Apply(StubEventMessageProvider.OrderRejectedEvent(order));
             this.database.UpdateOrder(order);
 
             // Act
@@ -338,7 +338,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void AddAtomicOrder_WhenEntryOrderAlreadyExists_ReturnsFailureResult()
         {
             // Arrange
-            var atomicOrder = StubAtomicOrderBuilder.Build();
+            var atomicOrder = StubAtomicOrderProvider.Create();
             var traderId = TraderId.FromString("TESTER-000");
             var accountId = AccountId.FromString("NAUTILUS-000-SIMULATED");
             var positionId = new PositionId("P-123456");
@@ -357,7 +357,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void AddAtomicOrder_WhenStopLossOrderAlreadyExists_ReturnsFailureResult()
         {
             // Arrange
-            var atomicOrder = StubAtomicOrderBuilder.Build();
+            var atomicOrder = StubAtomicOrderProvider.Create();
             var traderId = TraderId.FromString("TESTER-000");
             var accountId = AccountId.FromString("NAUTILUS-000-SIMULATED");
             var positionId = new PositionId("P-123456");
@@ -376,7 +376,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void AddAtomicOrder_WhenTakeProfitOrderAlreadyExists_ReturnsFailureResult()
         {
             // Arrange
-            var atomicOrder = StubAtomicOrderBuilder.Build();
+            var atomicOrder = StubAtomicOrderProvider.Create();
             var traderId = TraderId.FromString("TESTER-000");
             var accountId = AccountId.FromString("NAUTILUS-000-SIMULATED");
             var positionId = new PositionId("P-123456");
@@ -397,7 +397,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void AddAtomicOrder_WithTakeProfit_CorrectlyAddsOrdersWithIndexes()
         {
             // Arrange
-            var atomicOrder = StubAtomicOrderBuilder.Build();
+            var atomicOrder = StubAtomicOrderProvider.Create();
             var traderId = TraderId.FromString("TESTER-000");
             var accountId = AccountId.FromString("NAUTILUS-000-SIMULATED");
             var positionId = new PositionId("P-123456");
@@ -443,7 +443,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void AddAtomicOrder_WithNoTakeProfit_CorrectlyAddsOrdersWithIndexes()
         {
             // Arrange
-            var atomicOrder = StubAtomicOrderBuilder.BuildWithNoTakeProfit();
+            var atomicOrder = StubAtomicOrderProvider.Create(false);
             var traderId = TraderId.FromString("TESTER-000");
             var accountId = AccountId.FromString("NAUTILUS-000-SIMULATED");
             var positionId = new PositionId("P-123456");
@@ -490,10 +490,10 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             this.database.AddOrder(order, traderId, accountId, strategyId, positionId);
 
-            var position = new Position(positionId, StubEventMessages.OrderPartiallyFilledEvent(order, 50000, 50000));
+            var position = new Position(positionId, StubEventMessageProvider.OrderPartiallyFilledEvent(order, 50000, 50000));
             this.database.AddPosition(position);
 
-            position.Apply(StubEventMessages.OrderFilledEvent(order));
+            position.Apply(StubEventMessageProvider.OrderFilledEvent(order));
             this.database.UpdatePosition(position);
 
             // Act
@@ -519,10 +519,10 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             this.database.AddOrder(order, traderId, accountId, strategyId, positionId);
 
-            var position = new Position(positionId, StubEventMessages.OrderPartiallyFilledEvent(order, 50000, 50000));
+            var position = new Position(positionId, StubEventMessageProvider.OrderPartiallyFilledEvent(order, 50000, 50000));
             this.database.AddPosition(position);
 
-            position.Apply(StubEventMessages.OrderFilledEvent(order));
+            position.Apply(StubEventMessageProvider.OrderFilledEvent(order));
             this.database.UpdatePosition(position);
 
             // Act
@@ -557,10 +557,10 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             this.database.AddOrder(order1, traderId, accountId, strategyId, positionId);
             this.database.AddOrder(order2, traderId, accountId, strategyId, positionId);
 
-            var position = new Position(positionId, StubEventMessages.OrderFilledEvent(order1));
+            var position = new Position(positionId, StubEventMessageProvider.OrderFilledEvent(order1));
             this.database.AddPosition(position);
 
-            position.Apply(StubEventMessages.OrderFilledEvent(order2));
+            position.Apply(StubEventMessageProvider.OrderFilledEvent(order2));
             this.database.UpdatePosition(position);
 
             // Act
@@ -584,7 +584,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             this.database.AddOrder(order, traderId, accountId, strategyId, positionId);
 
-            var position = new Position(positionId, StubEventMessages.OrderFilledEvent(order));
+            var position = new Position(positionId, StubEventMessageProvider.OrderFilledEvent(order));
 
             this.database.AddPosition(position);
 
@@ -607,7 +607,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             this.database.AddOrder(order, traderId, accountId, strategyId, positionId);
 
-            var position = new Position(positionId, StubEventMessages.OrderFilledEvent(order));
+            var position = new Position(positionId, StubEventMessageProvider.OrderFilledEvent(order));
 
             // Act
             this.database.AddPosition(position);
@@ -635,7 +635,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void UpdateAccount_WhenAccountDoesNotYetExist_CorrectlyUpdatesAccount()
         {
             // Arrange
-            var account = StubAccountFactory.Create();
+            var account = StubAccountProvider.Create();
             this.database.UpdateAccount(account);
 
             // Act
@@ -651,7 +651,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void UpdateAccount_WhenAccountExists_CorrectlyUpdatesAccount()
         {
             // Arrange
-            var account = StubAccountFactory.Create();
+            var account = StubAccountProvider.Create();
             this.database.UpdateAccount(account);
 
             var message = new AccountStateEvent(
@@ -690,13 +690,13 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             this.database.AddOrder(order, traderId, accountId, strategyId, positionId);
 
-            order.Apply(StubEventMessages.OrderSubmittedEvent(order));
+            order.Apply(StubEventMessageProvider.OrderSubmittedEvent(order));
             this.database.UpdateOrder(order);
 
-            order.Apply(StubEventMessages.OrderAcceptedEvent(order));
+            order.Apply(StubEventMessageProvider.OrderAcceptedEvent(order));
             this.database.UpdateOrder(order);
 
-            order.Apply(StubEventMessages.OrderWorkingEvent(order));
+            order.Apply(StubEventMessageProvider.OrderWorkingEvent(order));
 
             // Act
             this.database.UpdateOrder(order);
@@ -729,10 +729,10 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             this.database.AddOrder(order, traderId, accountId, strategyId, positionId);
 
-            order.Apply(StubEventMessages.OrderSubmittedEvent(order));
+            order.Apply(StubEventMessageProvider.OrderSubmittedEvent(order));
             this.database.UpdateOrder(order);
 
-            order.Apply(StubEventMessages.OrderRejectedEvent(order));
+            order.Apply(StubEventMessageProvider.OrderRejectedEvent(order));
 
             // Act
             this.database.UpdateOrder(order);
@@ -765,11 +765,11 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             this.database.AddOrder(order, traderId, accountId, strategyId, positionId);
 
-            var position = new Position(positionId, StubEventMessages.OrderPartiallyFilledEvent(order, 50000, 50000));
+            var position = new Position(positionId, StubEventMessageProvider.OrderPartiallyFilledEvent(order, 50000, 50000));
             this.database.AddPosition(position);
 
             // Act
-            position.Apply(StubEventMessages.OrderFilledEvent(order));
+            position.Apply(StubEventMessageProvider.OrderFilledEvent(order));
             this.database.UpdatePosition(position);
 
             LogDumper.Dump(this.logger, this.output);
@@ -808,11 +808,11 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             this.database.AddOrder(order1, traderId, accountId, strategyId, positionId);
             this.database.AddOrder(order2, traderId, accountId, strategyId, positionId);
 
-            var position = new Position(positionId, StubEventMessages.OrderFilledEvent(order1));
+            var position = new Position(positionId, StubEventMessageProvider.OrderFilledEvent(order1));
             this.database.AddPosition(position);
 
             // Act
-            position.Apply(StubEventMessages.OrderFilledEvent(order2));
+            position.Apply(StubEventMessageProvider.OrderFilledEvent(order2));
             this.database.UpdatePosition(position);
 
             LogDumper.Dump(this.logger, this.output);
@@ -855,14 +855,14 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             this.database.AddOrder(order2, traderId, accountId, strategyId, positionId);
             this.database.AddOrder(order3, traderId, accountId, strategyId, positionId);
 
-            var position = new Position(positionId, StubEventMessages.OrderFilledEvent(order1));
+            var position = new Position(positionId, StubEventMessageProvider.OrderFilledEvent(order1));
             this.database.AddPosition(position);
 
-            position.Apply(StubEventMessages.OrderFilledEvent(order2));
+            position.Apply(StubEventMessageProvider.OrderFilledEvent(order2));
             this.database.UpdatePosition(position);
 
             // Act
-            position.Apply(StubEventMessages.OrderFilledEvent(order3));
+            position.Apply(StubEventMessageProvider.OrderFilledEvent(order3));
             this.database.UpdatePosition(position);
 
             LogDumper.Dump(this.logger, this.output);
@@ -881,7 +881,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void LoadAccountsCache_WhenAccountInDatabase_CorrectlyCachesAccount()
         {
             // Arrange
-            var account = StubAccountFactory.Create();
+            var account = StubAccountProvider.Create();
             this.database.UpdateAccount(account);
 
             var message = new AccountStateEvent(
@@ -925,16 +925,16 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             this.database.AddOrder(order1, traderId, accountId, strategyId, positionId);
             this.database.AddOrder(order2, traderId, accountId, strategyId, positionId);
 
-            order2.Apply(StubEventMessages.OrderSubmittedEvent(order2));
+            order2.Apply(StubEventMessageProvider.OrderSubmittedEvent(order2));
             this.database.UpdateOrder(order2);
 
-            order2.Apply(StubEventMessages.OrderAcceptedEvent(order2));
+            order2.Apply(StubEventMessageProvider.OrderAcceptedEvent(order2));
             this.database.UpdateOrder(order2);
 
-            order2.Apply(StubEventMessages.OrderWorkingEvent(order2));
+            order2.Apply(StubEventMessageProvider.OrderWorkingEvent(order2));
             this.database.UpdateOrder(order2);
 
-            order2.Apply(StubEventMessages.OrderCancelledEvent(order2));
+            order2.Apply(StubEventMessageProvider.OrderCancelledEvent(order2));
             this.database.UpdateOrder(order2);
 
             this.database.ClearCaches();
@@ -965,10 +965,10 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             this.database.AddOrder(order, traderId, accountId, strategyId, positionId);
 
-            var position = new Position(positionId, StubEventMessages.OrderPartiallyFilledEvent(order, 50000, 50000));
+            var position = new Position(positionId, StubEventMessageProvider.OrderPartiallyFilledEvent(order, 50000, 50000));
             this.database.AddPosition(position);
 
-            position.Apply(StubEventMessages.OrderFilledEvent(order));
+            position.Apply(StubEventMessageProvider.OrderFilledEvent(order));
             this.database.UpdatePosition(position);
 
             this.database.ClearCaches();

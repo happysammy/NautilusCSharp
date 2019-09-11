@@ -192,7 +192,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         {
             // Arrange
             var dataSerializer = new BsonInstrumentArraySerializer();
-            var instrument = StubInstrumentFactory.AUDUSD();
+            var instrument = StubInstrumentProvider.AUDUSD();
             var correlationId = Guid.NewGuid();
 
             var instruments = new[] { instrument };

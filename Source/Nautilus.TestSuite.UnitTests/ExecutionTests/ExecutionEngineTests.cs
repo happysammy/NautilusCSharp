@@ -38,10 +38,10 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             // Fixture Setup
             this.output = output;
 
-            var containerFactory = new StubComponentryContainerFactory();
+            var containerFactory = new StubComponentryContainerProvider();
             this.logger = containerFactory.LoggingAdapter;
             var container = containerFactory.Create();
-            var messageBusAdapter = new MockMessageBusFactory(container).MessageBusAdapter;
+            var messageBusAdapter = new MockMessageBusProvider(container).MessageBusAdapter;
             this.tradingGateway = new MockTradingGateway(container);
             this.receiver = new MockMessagingAgent();
             this.receiver.RegisterHandler<Event>(this.receiver.OnMessage);
@@ -151,7 +151,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
         internal void OnSubmitAtomicOrderCommand_WhenCommandValid_OperatesDatabaseAndSendsToGateway()
         {
             // Arrange
-            var atomicOrder = StubAtomicOrderBuilder.Build();
+            var atomicOrder = StubAtomicOrderProvider.Create();
             var traderId = TraderId.FromString("TESTER-000");
             var accountId = AccountId.FromString("NAUTILUS-000-SIMULATED");
             var positionId = new PositionId("P-123456");
@@ -185,7 +185,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
         internal void OnSubmitAtomicOrderCommand_WhenDuplicatedCommand_OperatesDatabaseAndSendsToGateway()
         {
             // Arrange
-            var atomicOrder = StubAtomicOrderBuilder.Build();
+            var atomicOrder = StubAtomicOrderProvider.Create();
             var traderId = TraderId.FromString("TESTER-000");
             var accountId = AccountId.FromString("NAUTILUS-000-SIMULATED");
             var positionId = new PositionId("P-123456");
@@ -246,8 +246,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Act
             this.engine.Endpoint.Send(submit);
-            this.engine.Endpoint.Send(StubEventMessages.OrderAcceptedEvent(order));
-            this.engine.Endpoint.Send(StubEventMessages.OrderWorkingEvent(order));
+            this.engine.Endpoint.Send(StubEventMessageProvider.OrderAcceptedEvent(order));
+            this.engine.Endpoint.Send(StubEventMessageProvider.OrderWorkingEvent(order));
             this.engine.Endpoint.Send(cancel);
 
             LogDumper.DumpWithDelay(this.logger, this.output, 200);
@@ -324,8 +324,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Act
             this.engine.Endpoint.Send(submit);
-            this.engine.Endpoint.Send(StubEventMessages.OrderAcceptedEvent(order));
-            this.engine.Endpoint.Send(StubEventMessages.OrderWorkingEvent(order));
+            this.engine.Endpoint.Send(StubEventMessageProvider.OrderAcceptedEvent(order));
+            this.engine.Endpoint.Send(StubEventMessageProvider.OrderWorkingEvent(order));
             this.engine.Endpoint.Send(modify);
 
             LogDumper.DumpWithDelay(this.logger, this.output, 200);
@@ -467,8 +467,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Act
             this.engine.Endpoint.Send(submit);
-            this.engine.Endpoint.Send(StubEventMessages.OrderAcceptedEvent(order));
-            this.engine.Endpoint.Send(StubEventMessages.OrderWorkingEvent(order));
+            this.engine.Endpoint.Send(StubEventMessageProvider.OrderAcceptedEvent(order));
+            this.engine.Endpoint.Send(StubEventMessageProvider.OrderWorkingEvent(order));
             this.engine.Endpoint.Send(modify1);
             this.engine.Endpoint.Send(modify2);
 
@@ -490,7 +490,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
         internal void OnAccountStateEvent_UpdatesAccountSendsToPublisher()
         {
             // Arrange
-            var @event = StubEventMessages.AccountStateEvent();
+            var @event = StubEventMessageProvider.AccountStateEvent();
 
             // Act
             this.engine.Endpoint.Send(@event);
@@ -560,7 +560,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Act
             this.engine.Endpoint.Send(submitOrder);
-            this.engine.Endpoint.Send(StubEventMessages.OrderAcceptedEvent(order));
+            this.engine.Endpoint.Send(StubEventMessageProvider.OrderAcceptedEvent(order));
 
             LogDumper.DumpWithDelay(this.logger, this.output);
 
@@ -594,7 +594,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Act
             this.engine.Endpoint.Send(submitOrder);
-            this.engine.Endpoint.Send(StubEventMessages.OrderRejectedEvent(order));
+            this.engine.Endpoint.Send(StubEventMessageProvider.OrderRejectedEvent(order));
 
             LogDumper.DumpWithDelay(this.logger, this.output);
 
@@ -638,8 +638,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             // Act
             this.engine.Endpoint.Send(submit);
             this.engine.Endpoint.Send(modify);
-            this.engine.Endpoint.Send(StubEventMessages.OrderAcceptedEvent(order));
-            this.engine.Endpoint.Send(StubEventMessages.OrderWorkingEvent(order));
+            this.engine.Endpoint.Send(StubEventMessageProvider.OrderAcceptedEvent(order));
+            this.engine.Endpoint.Send(StubEventMessageProvider.OrderWorkingEvent(order));
 
             LogDumper.DumpWithDelay(this.logger, this.output);
 
@@ -676,8 +676,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Act
             this.engine.Endpoint.Send(submitOrder);
-            this.engine.Endpoint.Send(StubEventMessages.OrderAcceptedEvent(order));
-            this.engine.Endpoint.Send(StubEventMessages.OrderWorkingEvent(order));
+            this.engine.Endpoint.Send(StubEventMessageProvider.OrderAcceptedEvent(order));
+            this.engine.Endpoint.Send(StubEventMessageProvider.OrderWorkingEvent(order));
 
             LogDumper.DumpWithDelay(this.logger, this.output);
 
@@ -720,10 +720,10 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Act
             this.engine.Endpoint.Send(submit);
-            this.engine.Endpoint.Send(StubEventMessages.OrderAcceptedEvent(order));
-            this.engine.Endpoint.Send(StubEventMessages.OrderWorkingEvent(order));
+            this.engine.Endpoint.Send(StubEventMessageProvider.OrderAcceptedEvent(order));
+            this.engine.Endpoint.Send(StubEventMessageProvider.OrderWorkingEvent(order));
             this.engine.Endpoint.Send(modify);
-            this.engine.Endpoint.Send(StubEventMessages.OrderModifiedEvent(order, Price.Create(1.00010m, 5)));
+            this.engine.Endpoint.Send(StubEventMessageProvider.OrderModifiedEvent(order, Price.Create(1.00010m, 5)));
 
             LogDumper.DumpWithDelay(this.logger, this.output);
 
@@ -761,9 +761,9 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Act
             this.engine.Endpoint.Send(submitOrder);
-            this.engine.Endpoint.Send(StubEventMessages.OrderAcceptedEvent(order));
-            this.engine.Endpoint.Send(StubEventMessages.OrderWorkingEvent(order));
-            this.engine.Endpoint.Send(StubEventMessages.OrderExpiredEvent(order));
+            this.engine.Endpoint.Send(StubEventMessageProvider.OrderAcceptedEvent(order));
+            this.engine.Endpoint.Send(StubEventMessageProvider.OrderWorkingEvent(order));
+            this.engine.Endpoint.Send(StubEventMessageProvider.OrderExpiredEvent(order));
 
             LogDumper.DumpWithDelay(this.logger, this.output);
 
@@ -797,9 +797,9 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Act
             this.engine.Endpoint.Send(submitOrder);
-            this.engine.Endpoint.Send(StubEventMessages.OrderAcceptedEvent(order));
-            this.engine.Endpoint.Send(StubEventMessages.OrderWorkingEvent(order));
-            this.engine.Endpoint.Send(StubEventMessages.OrderCancelledEvent(order));
+            this.engine.Endpoint.Send(StubEventMessageProvider.OrderAcceptedEvent(order));
+            this.engine.Endpoint.Send(StubEventMessageProvider.OrderWorkingEvent(order));
+            this.engine.Endpoint.Send(StubEventMessageProvider.OrderCancelledEvent(order));
 
             LogDumper.DumpWithDelay(this.logger, this.output);
 
@@ -833,9 +833,9 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Act
             this.engine.Endpoint.Send(submitOrder);
-            this.engine.Endpoint.Send(StubEventMessages.OrderAcceptedEvent(order));
-            this.engine.Endpoint.Send(StubEventMessages.OrderWorkingEvent(order));
-            this.engine.Endpoint.Send(StubEventMessages.OrderCancelRejectEvent(order));
+            this.engine.Endpoint.Send(StubEventMessageProvider.OrderAcceptedEvent(order));
+            this.engine.Endpoint.Send(StubEventMessageProvider.OrderWorkingEvent(order));
+            this.engine.Endpoint.Send(StubEventMessageProvider.OrderCancelRejectEvent(order));
 
             LogDumper.DumpWithDelay(this.logger, this.output);
 
@@ -869,8 +869,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Act
             this.engine.Endpoint.Send(submitOrder);
-            this.engine.Endpoint.Send(StubEventMessages.OrderAcceptedEvent(order));
-            this.engine.Endpoint.Send(StubEventMessages.OrderFilledEvent(order));
+            this.engine.Endpoint.Send(StubEventMessageProvider.OrderAcceptedEvent(order));
+            this.engine.Endpoint.Send(StubEventMessageProvider.OrderFilledEvent(order));
 
             LogDumper.DumpWithDelay(this.logger, this.output);
 
@@ -904,8 +904,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Act
             this.engine.Endpoint.Send(submitOrder);
-            this.engine.Endpoint.Send(StubEventMessages.OrderAcceptedEvent(order));
-            this.engine.Endpoint.Send(StubEventMessages.OrderPartiallyFilledEvent(order, 50000, 50000));
+            this.engine.Endpoint.Send(StubEventMessageProvider.OrderAcceptedEvent(order));
+            this.engine.Endpoint.Send(StubEventMessageProvider.OrderPartiallyFilledEvent(order, 50000, 50000));
 
             LogDumper.DumpWithDelay(this.logger, this.output);
 
@@ -939,9 +939,9 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Act
             this.engine.Endpoint.Send(submitOrder);
-            this.engine.Endpoint.Send(StubEventMessages.OrderSubmittedEvent(order));
-            this.engine.Endpoint.Send(StubEventMessages.OrderAcceptedEvent(order));
-            this.engine.Endpoint.Send(StubEventMessages.OrderFilledEvent(order));
+            this.engine.Endpoint.Send(StubEventMessageProvider.OrderSubmittedEvent(order));
+            this.engine.Endpoint.Send(StubEventMessageProvider.OrderAcceptedEvent(order));
+            this.engine.Endpoint.Send(StubEventMessageProvider.OrderFilledEvent(order));
 
             LogDumper.DumpWithDelay(this.logger, this.output);
 
@@ -980,14 +980,14 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             this.engine.Endpoint.Send(submitOrder1);
             this.engine.Endpoint.Send(submitOrder2);
-            this.engine.Endpoint.Send(StubEventMessages.OrderSubmittedEvent(order1));
-            this.engine.Endpoint.Send(StubEventMessages.OrderSubmittedEvent(order2));
-            this.engine.Endpoint.Send(StubEventMessages.OrderAcceptedEvent(order1));
-            this.engine.Endpoint.Send(StubEventMessages.OrderAcceptedEvent(order2));
-            this.engine.Endpoint.Send(StubEventMessages.OrderFilledEvent(order1));
+            this.engine.Endpoint.Send(StubEventMessageProvider.OrderSubmittedEvent(order1));
+            this.engine.Endpoint.Send(StubEventMessageProvider.OrderSubmittedEvent(order2));
+            this.engine.Endpoint.Send(StubEventMessageProvider.OrderAcceptedEvent(order1));
+            this.engine.Endpoint.Send(StubEventMessageProvider.OrderAcceptedEvent(order2));
+            this.engine.Endpoint.Send(StubEventMessageProvider.OrderFilledEvent(order1));
 
             // Act
-            this.engine.Endpoint.Send(StubEventMessages.OrderFilledEvent(order2));
+            this.engine.Endpoint.Send(StubEventMessageProvider.OrderFilledEvent(order2));
 
             LogDumper.DumpWithDelay(this.logger, this.output);
 

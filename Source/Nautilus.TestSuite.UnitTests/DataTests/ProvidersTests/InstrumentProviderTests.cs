@@ -48,7 +48,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             // Fixture Setup
             this.output = output;
 
-            var containerFactory = new StubComponentryContainerFactory();
+            var containerFactory = new StubComponentryContainerProvider();
             var container = containerFactory.Create();
             this.loggingAdapter = containerFactory.LoggingAdapter;
             this.repository = new MockInstrumentRepository();
@@ -76,7 +76,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             requester.Connect(TEST_ADDRESS);
             Task.Delay(100).Wait();  // Allow socket to connect
 
-            var instrument = StubInstrumentFactory.AUDUSD();
+            var instrument = StubInstrumentProvider.AUDUSD();
 
             var query = new Dictionary<string, string>
             {
@@ -150,7 +150,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             requester.Connect(TEST_ADDRESS);
             Task.Delay(100).Wait();  // Allow socket to connect
 
-            var instrument = StubInstrumentFactory.AUDUSD();
+            var instrument = StubInstrumentProvider.AUDUSD();
             this.repository.Add(instrument, StubZonedDateTime.UnixEpoch());
 
             var query = new Dictionary<string, string>
@@ -191,8 +191,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             requester.Connect(TEST_ADDRESS);
             Task.Delay(100).Wait();  // Allow socket to connect
 
-            var instrument1 = StubInstrumentFactory.AUDUSD();
-            var instrument2 = StubInstrumentFactory.EURUSD();
+            var instrument1 = StubInstrumentProvider.AUDUSD();
+            var instrument2 = StubInstrumentProvider.EURUSD();
             this.repository.Add(instrument1, StubZonedDateTime.UnixEpoch());
             this.repository.Add(instrument2, StubZonedDateTime.UnixEpoch());
 

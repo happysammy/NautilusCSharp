@@ -122,8 +122,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Arrange
             var order = new StubOrderBuilder().BuildStopMarketOrder();
 
-            var event1 = StubEventMessages.OrderSubmittedEvent(order);
-            var event2 = StubEventMessages.OrderRejectedEvent(order);
+            var event1 = StubEventMessageProvider.OrderSubmittedEvent(order);
+            var event2 = StubEventMessageProvider.OrderRejectedEvent(order);
 
             // Act
             order.Apply(event1);
@@ -141,10 +141,10 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Arrange
             var order = new StubOrderBuilder().BuildStopMarketOrder();
 
-            var event1 = StubEventMessages.OrderSubmittedEvent(order);
-            var event2 = StubEventMessages.OrderAcceptedEvent(order);
-            var event3 = StubEventMessages.OrderWorkingEvent(order, order.Price);
-            var event4 = StubEventMessages.OrderCancelledEvent(order);
+            var event1 = StubEventMessageProvider.OrderSubmittedEvent(order);
+            var event2 = StubEventMessageProvider.OrderAcceptedEvent(order);
+            var event3 = StubEventMessageProvider.OrderWorkingEvent(order, order.Price);
+            var event4 = StubEventMessageProvider.OrderCancelledEvent(order);
 
             // Act
             order.Apply(event1);
@@ -164,10 +164,10 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Arrange
             var order = new StubOrderBuilder().BuildStopMarketOrder();
 
-            var event1 = StubEventMessages.OrderSubmittedEvent(order);
-            var event2 = StubEventMessages.OrderAcceptedEvent(order);
-            var event3 = StubEventMessages.OrderWorkingEvent(order, order.Price);
-            var event4 = StubEventMessages.OrderExpiredEvent(order);
+            var event1 = StubEventMessageProvider.OrderSubmittedEvent(order);
+            var event2 = StubEventMessageProvider.OrderAcceptedEvent(order);
+            var event3 = StubEventMessageProvider.OrderWorkingEvent(order, order.Price);
+            var event4 = StubEventMessageProvider.OrderExpiredEvent(order);
 
             // Act
             order.Apply(event1);
@@ -187,9 +187,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Arrange
             var order = new StubOrderBuilder().BuildStopMarketOrder();
 
-            var event1 = StubEventMessages.OrderSubmittedEvent(order);
-            var event2 = StubEventMessages.OrderAcceptedEvent(order);
-            var event3 = StubEventMessages.OrderWorkingEvent(order, order.Price);
+            var event1 = StubEventMessageProvider.OrderSubmittedEvent(order);
+            var event2 = StubEventMessageProvider.OrderAcceptedEvent(order);
+            var event3 = StubEventMessageProvider.OrderWorkingEvent(order, order.Price);
 
             // Act
             order.Apply(event1);
@@ -209,10 +209,10 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Arrange
             var order = new StubOrderBuilder().BuildStopMarketOrder();
 
-            var event1 = StubEventMessages.OrderSubmittedEvent(order);
-            var event2 = StubEventMessages.OrderAcceptedEvent(order);
-            var event3 = StubEventMessages.OrderWorkingEvent(order, order.Price);
-            var event4 = StubEventMessages.OrderFilledEvent(order, order.Price);
+            var event1 = StubEventMessageProvider.OrderSubmittedEvent(order);
+            var event2 = StubEventMessageProvider.OrderAcceptedEvent(order);
+            var event3 = StubEventMessageProvider.OrderWorkingEvent(order, order.Price);
+            var event4 = StubEventMessageProvider.OrderFilledEvent(order, order.Price);
 
             // Act
             order.Apply(event1);
@@ -230,10 +230,10 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Arrange
             var order = new StubOrderBuilder().BuildStopMarketOrder();
 
-            var event1 = StubEventMessages.OrderSubmittedEvent(order);
-            var event2 = StubEventMessages.OrderAcceptedEvent(order);
-            var event3 = StubEventMessages.OrderWorkingEvent(order, order.Price);
-            var event4 = StubEventMessages.OrderPartiallyFilledEvent(
+            var event1 = StubEventMessageProvider.OrderSubmittedEvent(order);
+            var event2 = StubEventMessageProvider.OrderAcceptedEvent(order);
+            var event3 = StubEventMessageProvider.OrderWorkingEvent(order, order.Price);
+            var event4 = StubEventMessageProvider.OrderPartiallyFilledEvent(
                 order,
                 order.Quantity / 2,
                 order.Quantity / 2,
@@ -275,8 +275,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 throw new InvalidOperationException("Order must have a price.");
             }
 
-            var event1 = StubEventMessages.OrderSubmittedEvent(order);
-            var event2 = StubEventMessages.OrderAcceptedEvent(order);
+            var event1 = StubEventMessageProvider.OrderSubmittedEvent(order);
+            var event2 = StubEventMessageProvider.OrderAcceptedEvent(order);
             var event3 = new OrderWorking(
                 order.Id,
                 new OrderIdBroker("B" + order.Id),
@@ -317,9 +317,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 throw new InvalidOperationException("Order must have a price.");
             }
 
-            var event1 = StubEventMessages.OrderSubmittedEvent(order);
-            var event2 = StubEventMessages.OrderAcceptedEvent(order);
-            var event3 = StubEventMessages.OrderWorkingEvent(order, order.Price);
+            var event1 = StubEventMessageProvider.OrderSubmittedEvent(order);
+            var event2 = StubEventMessageProvider.OrderAcceptedEvent(order);
+            var event3 = StubEventMessageProvider.OrderWorkingEvent(order, order.Price);
             var event4 = new OrderPartiallyFilled(
                 order.Id,
                 AccountId.FromString("FXCM-02851908-DEMO"),
@@ -357,9 +357,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 throw new InvalidOperationException("Order must have a price.");
             }
 
-            var event1 = StubEventMessages.OrderSubmittedEvent(order);
-            var event2 = StubEventMessages.OrderAcceptedEvent(order);
-            var event3 = StubEventMessages.OrderWorkingEvent(order, order.Price);
+            var event1 = StubEventMessageProvider.OrderSubmittedEvent(order);
+            var event2 = StubEventMessageProvider.OrderAcceptedEvent(order);
+            var event3 = StubEventMessageProvider.OrderWorkingEvent(order, order.Price);
             var event4 = new OrderFilled(
                 order.Id,
                 AccountId.FromString("FXCM-02851908-DEMO"),
@@ -424,9 +424,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                .WithPrice(Price.Create(0.80000m, 5))
                .BuildStopMarketOrder();
 
-            var event1 = StubEventMessages.OrderSubmittedEvent(order);
-            var event2 = StubEventMessages.OrderAcceptedEvent(order);
-            var event3 = StubEventMessages.OrderWorkingEvent(order, order.Price);
+            var event1 = StubEventMessageProvider.OrderSubmittedEvent(order);
+            var event2 = StubEventMessageProvider.OrderAcceptedEvent(order);
+            var event3 = StubEventMessageProvider.OrderWorkingEvent(order, order.Price);
             var event4 = new OrderFilled(
                 order.Id,
                 AccountId.FromString("FXCM-02851908-DEMO"),
@@ -465,9 +465,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                .WithPrice(Price.Create(1.20000m, 5))
                .BuildStopMarketOrder();
 
-            var event1 = StubEventMessages.OrderSubmittedEvent(order);
-            var event2 = StubEventMessages.OrderAcceptedEvent(order);
-            var event3 = StubEventMessages.OrderWorkingEvent(order, order.Price);
+            var event1 = StubEventMessageProvider.OrderSubmittedEvent(order);
+            var event2 = StubEventMessageProvider.OrderAcceptedEvent(order);
+            var event3 = StubEventMessageProvider.OrderWorkingEvent(order, order.Price);
             var event4 = new OrderFilled(
                 order.Id,
                 AccountId.FromString("FXCM-02851908-DEMO"),

@@ -40,10 +40,10 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             // Fixture Setup
             this.output = output;
 
-            var containerFactory = new StubComponentryContainerFactory();
+            var containerFactory = new StubComponentryContainerProvider();
             this.container = containerFactory.Create();
             this.loggingAdapter = containerFactory.LoggingAdapter;
-            var service = new MockMessageBusFactory(this.container);
+            var service = new MockMessageBusProvider(this.container);
             this.messageBusAdapter = service.MessageBusAdapter;
             this.receiver = new MockMessagingAgent().Endpoint;
         }
@@ -69,7 +69,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             var serializer = new MsgPackEventSerializer();
             var order = new StubOrderBuilder().BuildMarketOrder();
-            var rejected = StubEventMessages.OrderRejectedEvent(order);
+            var rejected = StubEventMessageProvider.OrderRejectedEvent(order);
             var tradeEvent = new TradeEvent(TraderId.FromString("TESTER-001"), rejected);
 
             // Act

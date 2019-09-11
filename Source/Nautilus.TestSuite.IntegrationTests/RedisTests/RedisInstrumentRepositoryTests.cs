@@ -44,7 +44,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void Test_can_add_one_instrument()
         {
             // Arrange
-            var instrument = StubInstrumentFactory.AUDUSD();
+            var instrument = StubInstrumentProvider.AUDUSD();
 
             // Act
             var result = this.repository.Add(instrument, StubZonedDateTime.UnixEpoch());
@@ -60,7 +60,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void Test_can_delete_one_instrument()
         {
             // Arrange
-            var instrument = StubInstrumentFactory.AUDUSD();
+            var instrument = StubInstrumentProvider.AUDUSD();
             this.repository.Add(instrument, StubZonedDateTime.UnixEpoch());
 
             // Act
@@ -75,9 +75,9 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void Test_can_add_collection_of_instruments()
         {
             // Arrange
-            var instrument1 = StubInstrumentFactory.AUDUSD();
-            var instrument2 = StubInstrumentFactory.EURUSD();
-            var instrument3 = StubInstrumentFactory.USDJPY();
+            var instrument1 = StubInstrumentProvider.AUDUSD();
+            var instrument2 = StubInstrumentProvider.EURUSD();
+            var instrument3 = StubInstrumentProvider.USDJPY();
 
             // Act
             var result1 = this.repository.Add(instrument1, StubZonedDateTime.UnixEpoch());
@@ -99,9 +99,9 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void Test_can_delete_all_instruments()
         {
             // Arrange
-            var instrument1 = StubInstrumentFactory.AUDUSD();
-            var instrument2 = StubInstrumentFactory.EURUSD();
-            var instrument3 = StubInstrumentFactory.USDJPY();
+            var instrument1 = StubInstrumentProvider.AUDUSD();
+            var instrument2 = StubInstrumentProvider.EURUSD();
+            var instrument3 = StubInstrumentProvider.USDJPY();
 
             this.repository.Add(instrument1, StubZonedDateTime.UnixEpoch());
             this.repository.Add(instrument2, StubZonedDateTime.UnixEpoch());
@@ -119,7 +119,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void Test_can_find_one_instrument()
         {
             // Arrange
-            var instrument = StubInstrumentFactory.AUDUSD();
+            var instrument = StubInstrumentProvider.AUDUSD();
             this.repository.Add(instrument, StubZonedDateTime.UnixEpoch());
             this.repository.CacheAll();
 
@@ -135,9 +135,9 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         {
             // Arrange
             this.output.WriteLine(nameof(Instrument.TickPrecision));
-            var instrument1 = StubInstrumentFactory.AUDUSD();
-            var instrument2 = StubInstrumentFactory.EURUSD();
-            var instrument3 = StubInstrumentFactory.USDJPY();
+            var instrument1 = StubInstrumentProvider.AUDUSD();
+            var instrument2 = StubInstrumentProvider.EURUSD();
+            var instrument3 = StubInstrumentProvider.USDJPY();
 
             this.repository.Add(instrument1, StubZonedDateTime.UnixEpoch());
             this.repository.Add(instrument2, StubZonedDateTime.UnixEpoch());
