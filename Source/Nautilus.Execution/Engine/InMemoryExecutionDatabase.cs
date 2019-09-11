@@ -323,6 +323,18 @@ namespace Nautilus.Execution.Engine
         }
 
         /// <inheritdoc />
+        public override AccountId? GetAccountId(OrderId orderId)
+        {
+            if (this.indexOrderAccount.TryGetValue(orderId, out var accountId))
+            {
+                return accountId;
+            }
+
+            this.Log.Warning($"Cannot find AccountId for {orderId}.");
+            return null;
+        }
+
+        /// <inheritdoc />
         public override AccountId? GetAccountId(PositionId positionId)
         {
             if (this.indexPositionAccount.TryGetValue(positionId, out var accountId))

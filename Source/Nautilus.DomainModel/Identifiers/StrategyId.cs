@@ -55,6 +55,15 @@ namespace Nautilus.DomainModel.Identifiers
         public IdTag OrderIdTag { get; }
 
         /// <summary>
+        /// Returns a nil strategy identifier.
+        /// </summary>
+        /// <returns>The strategy identifier.</returns>
+        public static StrategyId Nil()
+        {
+            return new StrategyId("NIL", "NIL");  // TODO: Temporary method
+        }
+
+        /// <summary>
         /// Return a new <see cref="StrategyId"/> parsed from the given string value.
         /// It is expected a strategy identifier is the class name of the strategy with
         /// an order identifier tag separated by a hyphen '-'.

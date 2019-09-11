@@ -18,6 +18,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Execution.Engine;
     using Nautilus.Execution.Interfaces;
+    using Nautilus.Scheduler;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;
@@ -41,6 +42,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             var containerFactory = new StubComponentryContainerProvider();
             this.logger = containerFactory.LoggingAdapter;
             var container = containerFactory.Create();
+            var scheduler = new HashedWheelTimerScheduler(container);
             var messageBusAdapter = new MockMessageBusProvider(container).MessageBusAdapter;
             this.tradingGateway = new MockTradingGateway(container);
             this.receiver = new MockMessagingAgent();
@@ -50,6 +52,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             this.engine = new ExecutionEngine(
                 container,
+                scheduler,
                 messageBusAdapter,
                 this.database,
                 this.tradingGateway,

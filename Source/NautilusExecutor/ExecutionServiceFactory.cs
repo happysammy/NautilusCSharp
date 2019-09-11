@@ -78,6 +78,7 @@ namespace NautilusExecutor
 
             var executionEngine = new ExecutionEngine(
                 container,
+                scheduler,
                 messagingAdapter,
                 executionDatabase,
                 tradingGateway,

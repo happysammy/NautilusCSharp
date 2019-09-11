@@ -397,6 +397,15 @@ namespace Nautilus.Redis.Execution
         }
 
         /// <inheritdoc />
+        public override AccountId? GetAccountId(OrderId orderId)
+        {
+            var accountId = this.redisDatabase.HashGet(Key.IndexOrderAccount, orderId.Value);
+            return accountId == RedisValue.Null
+                ? null
+                : AccountId.FromString(accountId);
+        }
+
+        /// <inheritdoc />
         public override AccountId? GetAccountId(PositionId positionId)
         {
             var accountId = this.redisDatabase.HashGet(Key.IndexPositionAccount, positionId.Value);

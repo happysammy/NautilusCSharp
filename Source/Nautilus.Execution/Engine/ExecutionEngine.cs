@@ -10,23 +10,28 @@ namespace Nautilus.Execution.Engine
 {
     using System;
     using System.Collections.Generic;
+    using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Message;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Commands;
+    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Events.Base;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.Execution.Interfaces;
     using Nautilus.Messaging.Interfaces;
+    using Nautilus.Scheduler;
+    using NodaTime;
 
     /// <summary>
     /// Provides a generic execution engine utilizing an abstract execution database.
     /// </summary>
     public class ExecutionEngine : MessageBusConnected
     {
+        private readonly IScheduler scheduler;
         private readonly IExecutionDatabase database;
         private readonly ITradingGateway gateway;
         private readonly IEndpoint eventPublisher;
@@ -36,24 +41,31 @@ namespace Nautilus.Execution.Engine
         /// <summary>
         /// Initializes a new instance of the <see cref="ExecutionEngine"/> class.
         /// </summary>
-        /// <param name="container">The container.</param>
+        /// <param name="container">The componentry container.</param>
+        /// <param name="scheduler">The scheduler.</param>
         /// <param name="messagingAdapter">The message bus adapter.</param>
         /// <param name="database">The execution database.</param>
         /// <param name="gateway">The trading gateway.</param>
         /// <param name="eventPublisher">The event publisher endpoint.</param>
+        /// <param name="optionGtdExpiryBackups">The option flag for GTD order expiry cancel backups.</param>
         public ExecutionEngine(
             IComponentryContainer container,
+            IScheduler scheduler,
             IMessageBusAdapter messagingAdapter,
             IExecutionDatabase database,
             ITradingGateway gateway,
-            IEndpoint eventPublisher)
+            IEndpoint eventPublisher,
+            bool optionGtdExpiryBackups = true)
             : base(container, messagingAdapter)
         {
             this.database = database;
+            this.scheduler = scheduler;
             this.gateway = gateway;
             this.eventPublisher = eventPublisher;
 
             this.bufferModify = new Dictionary<OrderId, ModifyOrder>();
+
+            this.OptionGtdExpiryBackups = optionGtdExpiryBackups;
 
             // Commands
             this.RegisterHandler<SubmitOrder>(this.OnMessage);
@@ -88,6 +100,11 @@ namespace Nautilus.Execution.Engine
             this.Subscribe<OrderFilled>();
             this.Subscribe<AccountStateEvent>();
         }
+
+        /// <summary>
+        /// Gets a value indicating whether GTD order expiry cancel backups are turned on.
+        /// </summary>
+        public bool OptionGtdExpiryBackups { get; }
 
         /// <summary>
         /// Gets the count of commands executed.
@@ -214,6 +231,12 @@ namespace Nautilus.Execution.Engine
                 return;
             }
 
+            if (order.IsCompleted)
+            {
+                this.Log.Warning($"Ignored {command} as {command.OrderId} is already completed.");
+                return;
+            }
+
             this.gateway.CancelOrder(order);
         }
 
@@ -288,9 +311,65 @@ namespace Nautilus.Execution.Engine
             if (order != null)
             {
                 this.ProcessModifyBuffer(order);
+
+                if (this.OptionGtdExpiryBackups && this.IsValidGoodTillDateOrder(order))
+                {
+                    // Creates a scheduled CancelOrder backup command for the expiry time
+                    this.CreateGtdCancelBackup(order);
+                }
             }
 
             this.SendToEventPublisher(@event);
+        }
+
+        private bool IsValidGoodTillDateOrder(Order order)
+        {
+            return order.TimeInForce == TimeInForce.GTD &&
+                   order.ExpireTime != null &&
+                   this.TimeNow().IsLessThan((ZonedDateTime)order.ExpireTime);
+        }
+
+        private void CreateGtdCancelBackup(Order order)
+        {
+            if (order.ExpireTime.HasValue)
+            {
+                var traderId = this.database.GetTraderId(order.Id);
+                if (traderId is null)
+                {
+                    // This should never happen
+                    this.Log.Error($"Cannot schedule backup CancelOrder command (cannot find TraderId for {order.Id})");
+                    return;
+                }
+
+                var accountId = this.database.GetAccountId(order.Id);
+                if (accountId is null)
+                {
+                    // This should never happen
+                    this.Log.Error($"Cannot schedule backup CancelOrder command (cannot find AccountId for {order.Id})");
+                    return;
+                }
+
+                var strategyId = StrategyId.Nil();
+
+                var cancelOrder = new CancelOrder(
+                    traderId,
+                    accountId,
+                    strategyId,
+                    order.Id,
+                    "GTD_EXPIRY_BACKUP",
+                    this.NewGuid(),
+                    order.ExpireTime.Value);
+
+                var delay = TimingProvider.GetDurationToNextUtc(order.ExpireTime.Value, this.InstantNow());
+                this.scheduler.ScheduleSendOnce(delay, this.Endpoint, cancelOrder, this.Endpoint);
+
+                this.Log.Debug($"Scheduled GTD CancelOrder backup for {order.ExpireTime.Value.ToIsoString()}.");
+            }
+            else
+            {
+                // This should never happen
+                this.Log.Error($"No expire time set for GTD order {order.Id}");
+            }
         }
 
         private void OnMessage(OrderModified @event)
