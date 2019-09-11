@@ -80,9 +80,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
             // Tear Down
             subscriber.Unsubscribe(instrument.Symbol.Value);
             subscriber.Disconnect(TEST_ADDRESS);
-            subscriber.Dispose();
             this.publisher.Stop();
-            Task.Delay(100).Wait();  // Allows sockets to dispose
         }
     }
 }

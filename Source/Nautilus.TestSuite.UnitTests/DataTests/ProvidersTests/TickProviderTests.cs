@@ -110,9 +110,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
 
             // Tear Down;
             requester.Disconnect(TEST_ADDRESS);
-            requester.Dispose();
             this.provider.Stop();
-            Task.Delay(100).Wait();  // Allows sockets to dispose
         }
 
         [Fact]
@@ -165,9 +163,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
 
             // Tear Down;
             requester.Disconnect(TEST_ADDRESS);
-            requester.Dispose();
             this.provider.Stop();
-            Task.Delay(100).Wait();  // Allows sockets to dispose
         }
     }
 }

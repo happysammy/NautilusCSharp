@@ -81,7 +81,6 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
             subscriber.Unsubscribe(symbol.ToString());
             subscriber.Disconnect(TEST_ADDRESS);
             this.publisher.Stop();
-            Task.Delay(100).Wait();  // Allows sockets to dispose
         }
     }
 }

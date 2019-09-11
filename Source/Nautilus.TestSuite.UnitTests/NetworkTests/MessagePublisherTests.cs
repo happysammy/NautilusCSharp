@@ -77,7 +77,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             subscriber.Connect(testAddress);
             subscriber.Subscribe(TEST_TOPIC);
 
-            Task.Delay(100).Wait(); // Allow sockets to initiate
+            Task.Delay(300).Wait(); // Allow sockets to initiate
 
             // Act
             const string message = "1234,1234";
@@ -98,7 +98,6 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             subscriber.Unsubscribe(TEST_TOPIC);
             subscriber.Disconnect(testAddress);
             publisher.Stop();
-            Task.Delay(100).Wait();  // Allows sockets to dispose
         }
     }
 }

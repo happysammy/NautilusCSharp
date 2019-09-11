@@ -59,7 +59,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
             // Act
             this.scheduler.ScheduleOnce(Duration.Zero, this.Run);
 
-            Task.Delay(200).Wait(); // Wait for potential action(s) to fire.
+            Task.Delay(300).Wait(); // Wait for potential action(s) to fire.
 
             // Assert
             Assert.Equal(1, this.testActionCount);
@@ -72,7 +72,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
             // Act
             this.scheduler.ScheduleOnceCancelable(Duration.Zero, this.Run);
 
-            Task.Delay(200).Wait(); // Wait for potential action(s) to fire.
+            Task.Delay(300).Wait(); // Wait for potential action(s) to fire.
 
             // Assert
             Assert.Equal(1, this.testActionCount);
@@ -86,7 +86,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
             var cancelable = this.scheduler.ScheduleOnceCancelable(Duration.Zero, this.Run);
             cancelable.Cancel();
 
-            Task.Delay(200).Wait(); // Wait for potential action(s) to fire.
+            Task.Delay(300).Wait(); // Wait for potential action(s) to fire.
 
             // Assert
             Assert.Equal(0, this.testActionCount);
@@ -103,7 +103,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
                 this.Run);
 
             // Takes approx 50ms to spool up the scheduler.
-            Task.Delay(200).Wait(); // Wait for potential action(s) to fire.
+            Task.Delay(300).Wait(); // Wait for potential action(s) to fire.
 
             // Assert
             Assert.True(this.testActionCount > 1);
@@ -120,7 +120,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
                 this.Run);
 
             // Takes approx 50ms to spool up the scheduler.
-            Task.Delay(200).Wait(); // Wait for potential action(s) to fire.
+            Task.Delay(300).Wait(); // Wait for potential action(s) to fire.
 
             // Assert
             Assert.True(this.testActionCount > 1);
@@ -138,7 +138,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
             cancelable.Cancel();
 
             // Takes approx 50ms to spool up the scheduler.
-            Task.Delay(200).Wait(); // Wait for potential action(s) to fire.
+            Task.Delay(300).Wait(); // Wait for potential action(s) to fire.
 
             // Assert
             Assert.Equal(0, this.testActionCount);
@@ -155,7 +155,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
                 "TEST",
                 this.scheduler.Endpoint);
 
-            Task.Delay(200).Wait(); // Wait for potential message(s) to send.
+            Task.Delay(300).Wait(); // Wait for potential message(s) to send.
 
             // Assert
             Assert.Single(this.testReceiver.Messages);
@@ -173,7 +173,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
                 "TEST",
                 this.scheduler.Endpoint);
 
-            Task.Delay(200).Wait(); // Wait for potential message(s) to send.
+            Task.Delay(300).Wait(); // Wait for potential message(s) to send.
 
             // Assert
             Assert.Single(this.testReceiver.Messages);
@@ -191,7 +191,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
                 "TEST",
                 this.scheduler.Endpoint);
             cancelable.Cancel();
-            Task.Delay(200).Wait(); // Wait for potential message(s) to send.
+            Task.Delay(300).Wait(); // Wait for potential message(s) to send.
 
             // Assert
             Assert.Empty(this.testReceiver.Messages);
@@ -209,7 +209,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
                 "TEST",
                 this.scheduler.Endpoint);
 
-            Task.Delay(200).Wait(); // Wait for potential message(s) to send.
+            Task.Delay(300).Wait(); // Wait for potential message(s) to send.
 
             // Assert
             Assert.True(this.testReceiver.Messages.Count > 1);
@@ -228,7 +228,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
                 "TEST",
                 this.scheduler.Endpoint);
 
-            Task.Delay(200).Wait(); // Wait for potential message(s) to send.
+            Task.Delay(300).Wait(); // Wait for potential message(s) to send.
 
             // Assert
             Assert.True(this.testReceiver.Messages.Count > 1);
@@ -247,7 +247,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
                 "TEST",
                 this.scheduler.Endpoint);
             cancelable.Cancel();
-            Task.Delay(200).Wait(); // Wait for potential message(s) to send.
+            Task.Delay(300).Wait(); // Wait for potential message(s) to send.
 
             // Assert
             Assert.Empty(this.testReceiver.Messages);
