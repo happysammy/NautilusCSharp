@@ -58,6 +58,28 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         }
 
         [Fact]
+        internal void Instantiation_WhenOptionLoadCacheFalse_ReturnsNull()
+        {
+            // Arrange
+            // Act
+            var containerFactory = new StubComponentryContainerProvider();
+            var container = containerFactory.Create();
+
+            var redisConnection2 = ConnectionMultiplexer.Connect("localhost:6379,allowAdmin=true");
+            var database2 = new RedisExecutionDatabase(
+                container,
+                this.redisConnection,
+                new MsgPackCommandSerializer(),
+                new MsgPackEventSerializer(),
+                false);
+
+            // Assert
+            Assert.Empty(database2.GetAccountIds());
+            Assert.Empty(database2.GetOrders());
+            Assert.Empty(database2.GetPositions());
+        }
+
+        [Fact]
         internal void GetTraderId_WhenNoTraderExists_ReturnsNull()
         {
             // Arrange
@@ -165,6 +187,22 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             // Assert
             Assert.True(result.IsFailure);
+        }
+
+        [Fact]
+        internal void AddAccount_WithNoAccountsInDatabase_CorrectlyAddsAccountWithIndexes()
+        {
+            // Arrange
+            var account = StubAccountProvider.Create();
+
+            // Act
+            this.database.AddAccount(account);
+
+            LogDumper.Dump(this.logger, this.output);
+
+            // Assert
+            Assert.Equal(account, this.database.GetAccount(account.Id));
+            Assert.Equal(account.Id, this.database.GetAccountIds().First());
         }
 
         [Fact]

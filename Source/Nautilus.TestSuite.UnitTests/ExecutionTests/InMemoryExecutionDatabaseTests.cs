@@ -10,6 +10,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
@@ -316,6 +317,22 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             Assert.DoesNotContain(traderId, this.database.GetTraderIds());
             Assert.DoesNotContain(accountId, this.database.GetAccountIds());
             Assert.DoesNotContain(strategyId, this.database.GetStrategyIds(traderId));
+        }
+
+        [Fact]
+        internal void AddAccount_WithNoAccountsInDatabase_CorrectlyAddsAccountWithIndexes()
+        {
+            // Arrange
+            var account = StubAccountProvider.Create();
+
+            // Act
+            this.database.AddAccount(account);
+
+            LogDumper.Dump(this.logger, this.output);
+
+            // Assert
+            Assert.Equal(account, this.database.GetAccount(account.Id));
+            Assert.Equal(account.Id, this.database.GetAccountIds().First());
         }
 
         [Fact]
