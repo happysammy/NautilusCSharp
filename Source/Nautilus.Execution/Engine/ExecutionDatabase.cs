@@ -164,13 +164,9 @@ namespace Nautilus.Execution.Engine
         /// <inheritdoc />
         public Order? GetOrder(OrderId orderId)
         {
-            if (this.CachedOrders.TryGetValue(orderId, out var order))
-            {
-                return order;
-            }
-
-            this.Log.Warning($"Cannot find {orderId} in the cache.");
-            return null;
+            return this.CachedOrders.TryGetValue(orderId, out var order)
+                ? order
+                : null;
         }
 
         /// <inheritdoc />
@@ -212,13 +208,9 @@ namespace Nautilus.Execution.Engine
         /// <inheritdoc />
         public Position? GetPosition(PositionId positionId)
         {
-            if (this.CachedPositions.TryGetValue(positionId, out var position))
-            {
-                return position;
-            }
-
-            this.Log.Warning($"Cannot find {positionId} in the cache.");
-            return null;
+            return this.CachedPositions.TryGetValue(positionId, out var position)
+                ? position
+                : null;
         }
 
         /// <inheritdoc />
