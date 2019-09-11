@@ -161,7 +161,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var barSpec = new BarSpecification(1, Resolution.MINUTE, QuoteType.BID);
             var correlationId = Guid.NewGuid();
 
-            var bars = new[] { StubBarBuilder.Build(), StubBarBuilder.Build() };
+            var bars = new[] { StubBarProvider.Build(), StubBarProvider.Build() };
             var dataFrame = new BarDataFrame(new BarType(symbol, barSpec), bars);
             var data = dataSerializer.Serialize(dataFrame);
 

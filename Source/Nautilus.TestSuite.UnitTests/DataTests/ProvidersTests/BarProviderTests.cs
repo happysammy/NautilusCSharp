@@ -122,8 +122,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             var datetimeTo = datetimeFrom + Duration.FromMinutes(1);
 
             var barType = StubBarType.AUDUSD();
-            var bar1 = StubBarBuilder.BuildWithTimestamp(datetimeFrom);
-            var bar2 = StubBarBuilder.BuildWithTimestamp(datetimeTo);
+            var bar1 = StubBarProvider.BuildWithTimestamp(datetimeFrom);
+            var bar2 = StubBarProvider.BuildWithTimestamp(datetimeTo);
 
             this.repository.Add(barType, bar1);
             this.repository.Add(barType, bar2);
