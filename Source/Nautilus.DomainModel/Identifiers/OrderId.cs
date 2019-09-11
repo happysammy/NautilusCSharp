@@ -30,7 +30,8 @@ namespace Nautilus.DomainModel.Identifiers
             : base(value)
         {
             Debug.NotEmptyOrWhiteSpace(value, nameof(value));
-            Debug.True(value.StartsWith("O-"), $"The value did not start with 'O-', was {value}.");
+
+            // Debug.True(value.StartsWith("O-"), $"The value did not start with 'O-', was {value}.");
         }
 
         /// <summary>

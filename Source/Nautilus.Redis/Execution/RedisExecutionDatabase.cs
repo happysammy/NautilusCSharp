@@ -8,10 +8,8 @@
 
 namespace Nautilus.Redis.Execution
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection.Metadata.Ecma335;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.CQS;
     using Nautilus.Core.Message;
