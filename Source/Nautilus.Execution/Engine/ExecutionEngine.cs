@@ -118,13 +118,13 @@ namespace Nautilus.Execution.Engine
 
         private void IncrementCounter(Command command)
         {
-            this.Log.Information($"Received {command}.");
+            this.Log.Information($"Received command {command}.");
             this.CommandCount++;
         }
 
         private void IncrementCounter(Event @event)
         {
-            this.Log.Information($"Received {@event}.");
+            this.Log.Information($"Received event {@event}.");
             this.EventCount++;
         }
 
