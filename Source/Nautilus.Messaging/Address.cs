@@ -9,7 +9,6 @@
 namespace Nautilus.Messaging
 {
     using System;
-    using System.Text;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
@@ -26,12 +25,13 @@ namespace Nautilus.Messaging
         /// Initializes a new instance of the <see cref="Address"/> structure.
         /// </summary>
         /// <param name="value">The value of the address.</param>
-        public Address(byte[] value)
+        /// <param name="decoder">The decoder for the address string.</param>
+        public Address(byte[] value, Func<byte[], string> decoder)
         {
             Debug.NotEmpty(value, nameof(value));
 
-            this.StringValue = Encoding.UTF8.GetString(value);
             this.BytesValue = value;
+            this.StringValue = decoder(value);
         }
 
         /// <summary>
@@ -47,14 +47,14 @@ namespace Nautilus.Messaging
         }
 
         /// <summary>
-        /// Gets addresses string value.
-        /// </summary>
-        public string StringValue { get; }
-
-        /// <summary>
         /// Gets addresses byte[] value (can be an empty byte[]).
         /// </summary>
         public byte[] BytesValue { get; }
+
+        /// <summary>
+        /// Gets addresses string value.
+        /// </summary>
+        public string StringValue { get; }
 
         /// <summary>
         /// Gets a value indicating whether the address has a bytes represented value.

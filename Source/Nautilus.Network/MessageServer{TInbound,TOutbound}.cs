@@ -151,7 +151,7 @@ namespace Nautilus.Network
                     this.outboundSerializer.Serialize(outbound));
 
                 this.SentCount++;
-                this.Log.Debug($"[{this.SentCount}]--> {outbound} to Address({receiver}).");
+                this.Log.Debug($"[{this.SentCount}]--> {outbound} to Address({receiver.Value.StringValue}).");
             });
         }
 
@@ -173,7 +173,7 @@ namespace Nautilus.Network
                 if (received is null)
                 {
                     // This should never happen due to generic type constraints
-                    throw new DesignTimeException($"The message was not of type {typeof(TOutbound)}).");
+                    throw new DesignTimeException($"The message was not of type {typeof(TOutbound)}.");
                 }
 
                 this.SendMessage(received, receiver);
@@ -202,7 +202,7 @@ namespace Nautilus.Network
                 if (failure is null)
                 {
                     // This should never happen due to generic type constraints
-                    throw new DesignTimeException($"The message was not of type {typeof(TOutbound)}).");
+                    throw new DesignTimeException($"The message was not of type {typeof(TOutbound)}.");
                 }
 
                 this.SendMessage(failure, receiver);
@@ -231,7 +231,7 @@ namespace Nautilus.Network
                 if (rejected is null)
                 {
                     // This should never happen due to generic type constraints
-                    throw new DesignTimeException($"The message was not of type {typeof(TOutbound)}).");
+                    throw new DesignTimeException($"The message was not of type {typeof(TOutbound)}.");
                 }
 
                 this.SendMessage(rejected, receiver);
@@ -260,14 +260,14 @@ namespace Nautilus.Network
                     var error = $"Message was malformed (expected {EXPECTED_FRAMES_COUNT} frames, received {msg.Count}).";
                     if (msg.Count >= 1)
                     {
-                        this.SendRejected(error, Guid.Empty, new Address(msg[0]));
+                        this.SendRejected(error, Guid.Empty, new Address(msg[0], Encoding.ASCII.GetString));
                     }
 
                     this.Log.Error(error);
                 }
                 else
                 {
-                    this.DeserializeMessage(new Address(msg[0]), msg[2]);
+                    this.DeserializeMessage(new Address(msg[0], Encoding.ASCII.GetString), msg[2]);
                 }
             });
         }
@@ -286,7 +286,7 @@ namespace Nautilus.Network
                 this.SendToSelf(envelope);
 
                 this.ReceivedCount++;
-                this.Log.Debug($"[{this.ReceivedCount}]<-- {received} from Address({sender}).");
+                this.Log.Debug($"[{this.ReceivedCount}]<-- {received} from Address({sender.StringValue}).");
             }
             catch (SerializationException ex)
             {
