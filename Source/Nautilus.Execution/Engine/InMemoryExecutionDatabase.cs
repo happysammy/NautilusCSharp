@@ -242,7 +242,7 @@ namespace Nautilus.Execution.Engine
             this.indexOrders.Add(order.Id);
             this.CachedOrders[order.Id] = order;
 
-            this.Log.Debug($"Added new {order.Id}, indexed {traderId}, {accountId}, {positionId}, {strategyId}.");
+            this.Log.Debug($"Added new {order.Id}.");
 
             return CommandResult.Ok();
         }
