@@ -233,8 +233,7 @@ namespace Nautilus.Execution.Engine
 
             if (order.IsCompleted)
             {
-                this.Log.Warning($"Ignored command {command} as {command.OrderId} is already completed.");
-                return;
+                this.Log.Warning($"Received command {command} and {command.OrderId} is already completed.");
             }
 
             this.gateway.CancelOrder(order);
