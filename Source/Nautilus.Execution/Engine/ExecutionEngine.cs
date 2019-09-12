@@ -158,7 +158,7 @@ namespace Nautilus.Execution.Engine
             }
             else
             {
-                this.Log.Error($"Cannot execute {command} {result.Message}");
+                this.Log.Error($"Cannot execute command {command} {result.Message}");
             }
         }
 
@@ -216,7 +216,7 @@ namespace Nautilus.Execution.Engine
             }
             else
             {
-                this.Log.Error($"Cannot execute {command} {result.Message}");
+                this.Log.Error($"Cannot execute command {command} {result.Message}");
             }
         }
 
@@ -227,13 +227,13 @@ namespace Nautilus.Execution.Engine
             var order = this.database.GetOrder(command.OrderId);
             if (order is null)
             {
-                this.Log.Error($"Cannot execute {command} the {command.OrderId} was not found in the memory cache.");
+                this.Log.Error($"Cannot execute command {command} the {command.OrderId} was not found in the memory cache.");
                 return;
             }
 
             if (order.IsCompleted)
             {
-                this.Log.Warning($"Ignored {command} as {command.OrderId} is already completed.");
+                this.Log.Warning($"Ignored command {command} as {command.OrderId} is already completed.");
                 return;
             }
 
@@ -247,21 +247,21 @@ namespace Nautilus.Execution.Engine
             var order = this.database.GetOrder(command.OrderId);
             if (order is null)
             {
-                this.Log.Error($"Cannot execute {command} the {command.OrderId} was not found in the memory cache.");
+                this.Log.Error($"Cannot execute command {command} the {command.OrderId} was not found in the memory cache.");
                 return;
             }
 
             if (!order.IsWorking)
             {
                 this.bufferModify[command.OrderId] = command;
-                this.Log.Warning($"Buffering {command} as not yet working.");
+                this.Log.Warning($"Buffering command {command} as not yet working.");
                 return;
             }
 
             if (this.bufferModify.ContainsKey(command.OrderId))
             {
                 this.bufferModify[command.OrderId] = command;
-                this.Log.Debug($"Buffering {command} as order already being modified.");
+                this.Log.Debug($"Buffering command {command} as order already being modified.");
                 return;
             }
 
@@ -511,11 +511,11 @@ namespace Nautilus.Execution.Engine
                 if (!(order.Price is null) && order.Price != modifyOrder.ModifiedPrice)
                 {
                     this.gateway.ModifyOrder(order, modifyOrder.ModifiedPrice);
-                    this.Log.Debug($"Sent {modifyOrder} to TradingGateway.");
+                    this.Log.Debug($"Sent command {modifyOrder} to TradingGateway.");
                 }
 
                 this.bufferModify.Remove(order.Id);
-                this.Log.Debug($"Cleared {modifyOrder} from buffer.");
+                this.Log.Debug($"Cleared command {modifyOrder} from buffer.");
             }
         }
 
@@ -524,6 +524,7 @@ namespace Nautilus.Execution.Engine
             if (this.bufferModify.ContainsKey(orderId))
             {
                 this.bufferModify.Remove(orderId);
+                this.Log.Debug($"Cleared ModifyOrder buffer for {orderId}.");
             }
         }
 
@@ -542,7 +543,7 @@ namespace Nautilus.Execution.Engine
         private void SendToEventPublisher(Event @event)
         {
             this.eventPublisher.Send(@event);
-            this.Log.Debug($"Sent {@event} to EventPublisher.");
+            this.Log.Debug($"Sent event {@event} to EventPublisher.");
         }
     }
 }
