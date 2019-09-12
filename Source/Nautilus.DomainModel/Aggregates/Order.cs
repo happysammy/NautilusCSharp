@@ -48,6 +48,7 @@ namespace Nautilus.DomainModel.Aggregates
             this.Label = initial.Label;
             this.OrderSide = initial.OrderSide;
             this.OrderType = initial.OrderType;
+            this.OrderPurpose = initial.OrderPurpose;
             this.Quantity = initial.Quantity;
             this.FilledQuantity = Quantity.Zero();
             this.Price = initial.Price;
@@ -110,6 +111,11 @@ namespace Nautilus.DomainModel.Aggregates
         /// Gets the orders side.
         /// </summary>
         public OrderSide OrderSide { get; }
+
+        /// <summary>
+        /// Gets the orders purpose.
+        /// </summary>
+        public OrderPurpose OrderPurpose { get; }
 
         /// <summary>
         /// Gets the orders quantity.
@@ -179,6 +185,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <param name="label">The order label.</param>
         /// <param name="side">The order side.</param>
         /// <param name="type">The order type.</param>
+        /// <param name="purpose">The order purpose.</param>
         /// <param name="quantity">The order quantity.</param>
         /// <param name="price">The order price (optional).</param>
         /// <param name="timeInForce">The order time in force.</param>
@@ -192,6 +199,7 @@ namespace Nautilus.DomainModel.Aggregates
             Label label,
             OrderSide side,
             OrderType type,
+            OrderPurpose purpose,
             Quantity quantity,
             Price? price,
             TimeInForce timeInForce,
@@ -210,6 +218,7 @@ namespace Nautilus.DomainModel.Aggregates
                 label,
                 side,
                 type,
+                purpose,
                 quantity,
                 price,
                 timeInForce,

@@ -62,6 +62,7 @@ namespace Nautilus.Serialization
                     package.Add(nameof(evt.Label), evt.Label.Value);
                     package.Add(nameof(evt.OrderSide), evt.OrderSide.ToString());
                     package.Add(nameof(evt.OrderType), evt.OrderType.ToString());
+                    package.Add(nameof(evt.OrderPurpose), evt.OrderPurpose.ToString());
                     package.Add(nameof(evt.Quantity), evt.Quantity.Value);
                     package.Add(nameof(evt.Price), ObjectPacker.Pack(evt.Price));
                     package.Add(nameof(evt.TimeInForce), evt.TimeInForce.ToString());
@@ -183,6 +184,7 @@ namespace Nautilus.Serialization
                         ObjectExtractor.Label(unpacked),
                         ObjectExtractor.Enum<OrderSide>(unpacked[nameof(OrderInitialized.OrderSide)]),
                         ObjectExtractor.Enum<OrderType>(unpacked[nameof(OrderInitialized.OrderType)]),
+                        ObjectExtractor.Enum<OrderPurpose>(unpacked[nameof(OrderInitialized.OrderPurpose)]),
                         ObjectExtractor.Quantity(unpacked[nameof(OrderInitialized.Quantity)]),
                         ObjectExtractor.NullablePrice(unpacked[nameof(OrderInitialized.Price)]),
                         ObjectExtractor.Enum<TimeInForce>(unpacked[nameof(OrderInitialized.TimeInForce)]),

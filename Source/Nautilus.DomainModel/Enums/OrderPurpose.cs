@@ -9,7 +9,7 @@
 namespace Nautilus.DomainModel.Enums
 {
     /// <summary>
-    /// Represents an order purpose.
+    /// Represents a specified order purpose.
     /// </summary>
     public enum OrderPurpose
     {

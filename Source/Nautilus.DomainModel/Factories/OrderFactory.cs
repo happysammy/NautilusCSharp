@@ -42,6 +42,7 @@ namespace Nautilus.DomainModel.Factories
         /// <param name="symbol">The order symbol.</param>
         /// <param name="label">The order label.</param>
         /// <param name="side">The order side.</param>
+        /// <param name="purpose">The order purpose.</param>
         /// <param name="quantity">The order quantity.</param>
         /// <param name="timestamp">The order timestamp.</param>
         /// <param name="initEventId">The order initialization event GUID.</param>
@@ -51,6 +52,7 @@ namespace Nautilus.DomainModel.Factories
             Symbol symbol,
             Label label,
             OrderSide side,
+            OrderPurpose purpose,
             Quantity quantity,
             ZonedDateTime timestamp,
             Guid initEventId)
@@ -61,6 +63,7 @@ namespace Nautilus.DomainModel.Factories
                 label,
                 side,
                 OrderType.MARKET,
+                purpose,
                 quantity,
                 null,
                 TimeInForce.DAY,
@@ -76,6 +79,7 @@ namespace Nautilus.DomainModel.Factories
         /// <param name="symbol">The order symbol.</param>
         /// <param name="label">The order label.</param>
         /// <param name="side">The order side.</param>
+        /// <param name="purpose">The order purpose.</param>
         /// <param name="quantity">The order quantity.</param>
         /// <param name="price">The order price (optional).</param>
         /// <param name="timeInForce">The order time in force.</param>
@@ -88,6 +92,7 @@ namespace Nautilus.DomainModel.Factories
             Symbol symbol,
             Label label,
             OrderSide side,
+            OrderPurpose purpose,
             Quantity quantity,
             Price? price,
             TimeInForce timeInForce,
@@ -101,6 +106,7 @@ namespace Nautilus.DomainModel.Factories
                 label,
                 side,
                 OrderType.MIT,
+                purpose,
                 quantity,
                 price,
                 timeInForce,
@@ -116,6 +122,7 @@ namespace Nautilus.DomainModel.Factories
         /// <param name="symbol">The order symbol.</param>
         /// <param name="label">The order label.</param>
         /// <param name="side">The order side.</param>
+        /// <param name="purpose">The order purpose.</param>
         /// <param name="quantity">The order quantity.</param>
         /// <param name="price">The order price (optional).</param>
         /// <param name="timeInForce">The order time in force.</param>
@@ -128,6 +135,7 @@ namespace Nautilus.DomainModel.Factories
             Symbol symbol,
             Label label,
             OrderSide side,
+            OrderPurpose purpose,
             Quantity quantity,
             Price? price,
             TimeInForce timeInForce,
@@ -141,6 +149,7 @@ namespace Nautilus.DomainModel.Factories
                 label,
                 side,
                 OrderType.LIMIT,
+                purpose,
                 quantity,
                 price,
                 timeInForce,
@@ -156,6 +165,7 @@ namespace Nautilus.DomainModel.Factories
         /// <param name="symbol">The order symbol.</param>
         /// <param name="label">The order label.</param>
         /// <param name="side">The order side.</param>
+        /// <param name="purpose">The order purpose.</param>
         /// <param name="quantity">The order quantity.</param>
         /// <param name="price">The order price (optional).</param>
         /// <param name="timeInForce">The order time in force.</param>
@@ -168,6 +178,7 @@ namespace Nautilus.DomainModel.Factories
             Symbol symbol,
             Label label,
             OrderSide side,
+            OrderPurpose purpose,
             Quantity quantity,
             Price? price,
             TimeInForce timeInForce,
@@ -181,6 +192,7 @@ namespace Nautilus.DomainModel.Factories
                 label,
                 side,
                 OrderType.STOP_MARKET,
+                purpose,
                 quantity,
                 price,
                 timeInForce,
@@ -196,6 +208,7 @@ namespace Nautilus.DomainModel.Factories
         /// <param name="symbol">The order symbol.</param>
         /// <param name="label">The order label.</param>
         /// <param name="side">The order side.</param>
+        /// <param name="purpose">The order purpose.</param>
         /// <param name="quantity">The order quantity.</param>
         /// <param name="price">The order price (optional).</param>
         /// <param name="timeInForce">The order time in force.</param>
@@ -208,6 +221,7 @@ namespace Nautilus.DomainModel.Factories
             Symbol symbol,
             Label label,
             OrderSide side,
+            OrderPurpose purpose,
             Quantity quantity,
             Price? price,
             TimeInForce timeInForce,
@@ -221,6 +235,7 @@ namespace Nautilus.DomainModel.Factories
                 label,
                 side,
                 OrderType.STOP_LIMIT,
+                purpose,
                 quantity,
                 price,
                 timeInForce,

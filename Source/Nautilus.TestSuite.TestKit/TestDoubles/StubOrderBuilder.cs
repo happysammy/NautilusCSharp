@@ -29,6 +29,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
         private OrderSide OrderSide { get; set; } = OrderSide.BUY;
 
+        private OrderPurpose OrderPurpose { get; set; } = OrderPurpose.NONE;
+
         private Quantity Quantity { get; set; } = Quantity.Create(100000);
 
         private Price Price { get; set; } = Price.Create(1, 1);
@@ -107,6 +109,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             this.Symbol = new Symbol("AUDUSD", new Venue("FXCM"));
             this.OrderId = new OrderId(orderId);
             this.OrderSide = OrderSide.BUY;
+            this.OrderPurpose = OrderPurpose.ENTRY;
             this.Quantity = Quantity.Create(100000);
             this.Price = Price.Create(0.80000m, 5);
             this.TimeInForce = TimeInForce.GTD;
@@ -120,6 +123,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             this.Symbol = new Symbol("AUDUSD", "FXCM");
             this.OrderId = new OrderId(orderId);
             this.OrderSide = OrderSide.SELL;
+            this.OrderPurpose = OrderPurpose.STOP_LOSS;
             this.Quantity = Quantity.Create(100000);
             this.Price = Price.Create(0.79900m, 5);
             this.TimeInForce = TimeInForce.GTC;
@@ -132,6 +136,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             this.Symbol = new Symbol("AUDUSD", new Venue("FXCM"));
             this.OrderId = new OrderId(orderId);
             this.OrderSide = OrderSide.SELL;
+            this.OrderPurpose = OrderPurpose.TAKE_PROFIT;
             this.Quantity = Quantity.Create(100000);
             this.Price = Price.Create(0.80100m, 5);
             this.TimeInForce = TimeInForce.GTC;
@@ -146,6 +151,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 this.Symbol,
                 this.OrderLabel,
                 this.OrderSide,
+                this.OrderPurpose,
                 this.Quantity,
                 this.Timestamp,
                 Guid.NewGuid());
@@ -158,6 +164,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 this.Symbol,
                 this.OrderLabel,
                 this.OrderSide,
+                this.OrderPurpose,
                 this.Quantity,
                 this.Price,
                 this.TimeInForce,
@@ -173,6 +180,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 this.Symbol,
                 this.OrderLabel,
                 this.OrderSide,
+                this.OrderPurpose,
                 this.Quantity,
                 this.Price,
                 this.TimeInForce,
@@ -188,6 +196,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 this.Symbol,
                 this.OrderLabel,
                 this.OrderSide,
+                this.OrderPurpose,
                 this.Quantity,
                 this.Price,
                 this.TimeInForce,

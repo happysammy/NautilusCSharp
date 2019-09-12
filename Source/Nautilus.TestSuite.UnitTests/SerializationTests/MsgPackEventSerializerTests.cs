@@ -72,6 +72,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
                 order.Label,
                 order.OrderSide,
                 order.OrderType,
+                order.OrderPurpose,
                 order.Quantity,
                 order.Price,
                 order.TimeInForce,

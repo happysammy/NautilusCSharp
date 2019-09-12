@@ -32,6 +32,7 @@ namespace Nautilus.DomainModel.Events
         /// <param name="label">The event order label.</param>
         /// <param name="orderSide">The event order side.</param>
         /// <param name="orderType">The event order type.</param>
+        /// <param name="orderPurpose">The event order purpose.</param>
         /// <param name="quantity">The event order quantity.</param>
         /// <param name="price">The event order price (optional).</param>
         /// <param name="timeInForce">The event order time in force.</param>
@@ -44,6 +45,7 @@ namespace Nautilus.DomainModel.Events
             Label label,
             OrderSide orderSide,
             OrderType orderType,
+            OrderPurpose orderPurpose,
             Quantity quantity,
             Price? price,
             TimeInForce timeInForce,
@@ -66,6 +68,7 @@ namespace Nautilus.DomainModel.Events
             this.Label = label;
             this.OrderSide = orderSide;
             this.OrderType = orderType;
+            this.OrderPurpose = orderPurpose;
             this.Quantity = quantity;
             this.Price = price;
             this.TimeInForce = timeInForce;
@@ -91,6 +94,11 @@ namespace Nautilus.DomainModel.Events
         /// Gets the events order type.
         /// </summary>
         public OrderType OrderType { get; }
+
+        /// <summary>
+        /// Gets the events order purpose.
+        /// </summary>
+        public OrderPurpose OrderPurpose { get; }
 
         /// <summary>
         /// Gets the events order quantity.

@@ -49,6 +49,7 @@ namespace Nautilus.Serialization.Internal
                 { nameof(Order.Label), order.Label.Value },
                 { nameof(OrderSide), order.OrderSide.ToString() },
                 { nameof(OrderType), order.OrderType.ToString() },
+                { nameof(OrderPurpose), order.OrderPurpose.ToString() },
                 { nameof(Order.Quantity), order.Quantity.Value },
                 { nameof(Order.Price), ObjectPacker.Pack(order.Price) },
                 { nameof(Order.TimeInForce), order.TimeInForce.ToString() },
@@ -76,7 +77,6 @@ namespace Nautilus.Serialization.Internal
         internal Order Deserialize(byte[] orderBytes)
         {
             var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(orderBytes);
-
             return this.Deserialize(unpacked);
         }
 
@@ -88,7 +88,6 @@ namespace Nautilus.Serialization.Internal
         internal Order? DeserializeNullable(byte[] orderBytes)
         {
             var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(orderBytes);
-
             return unpacked.Count == 0 ? null : this.Deserialize(unpacked);
         }
 
@@ -105,6 +104,7 @@ namespace Nautilus.Serialization.Internal
             var symbol = this.symbolCache.Get(unpacked[nameof(Symbol)].AsString());
             var label = ObjectExtractor.Label(unpacked);
             var side = ObjectExtractor.Enum<OrderSide>(unpacked[nameof(OrderSide)]);
+            var purpose = ObjectExtractor.Enum<OrderPurpose>(unpacked[nameof(OrderPurpose)]);
             var quantity = ObjectExtractor.Quantity(unpacked[nameof(Order.Quantity)]);
             var timestamp = ObjectExtractor.ZonedDateTime(unpacked[nameof(Order.Timestamp)]);
             var initialId = ObjectExtractor.Guid(unpacked[nameof(Order.InitId)]);
@@ -117,6 +117,7 @@ namespace Nautilus.Serialization.Internal
                         symbol,
                         label,
                         side,
+                        purpose,
                         quantity,
                         timestamp,
                         initialId);
@@ -126,6 +127,7 @@ namespace Nautilus.Serialization.Internal
                         symbol,
                         label,
                         side,
+                        purpose,
                         quantity,
                         ObjectExtractor.Price(unpacked[nameof(Order.Price)]),
                         ObjectExtractor.Enum<TimeInForce>(unpacked[nameof(Order.TimeInForce)]),
@@ -138,6 +140,7 @@ namespace Nautilus.Serialization.Internal
                         symbol,
                         label,
                         side,
+                        purpose,
                         quantity,
                         ObjectExtractor.Price(unpacked[nameof(Order.Price)]),
                         ObjectExtractor.Enum<TimeInForce>(unpacked[nameof(Order.TimeInForce)]),
@@ -150,6 +153,7 @@ namespace Nautilus.Serialization.Internal
                         symbol,
                         label,
                         side,
+                        purpose,
                         quantity,
                         ObjectExtractor.Price(unpacked[nameof(Order.Price)]),
                         ObjectExtractor.Enum<TimeInForce>(unpacked[nameof(Order.TimeInForce)]),
@@ -162,6 +166,7 @@ namespace Nautilus.Serialization.Internal
                         symbol,
                         label,
                         side,
+                        purpose,
                         quantity,
                         ObjectExtractor.Price(unpacked[nameof(Order.Price)]),
                         ObjectExtractor.Enum<TimeInForce>(unpacked[nameof(Order.TimeInForce)]),
