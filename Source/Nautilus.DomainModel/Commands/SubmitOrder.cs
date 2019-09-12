@@ -12,6 +12,7 @@ namespace Nautilus.DomainModel.Commands
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Message;
     using Nautilus.DomainModel.Aggregates;
+    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
     using NodaTime;
 
@@ -75,6 +76,11 @@ namespace Nautilus.DomainModel.Commands
         /// Gets the commands order.
         /// </summary>
         public Order Order { get; }
+
+        /// <summary>
+        /// Gets the commands order purpose.
+        /// </summary>
+        public OrderPurpose OrderPurpose { get; } = OrderPurpose.NONE;
 
         /// <summary>
         /// Returns a string representation of this object.
