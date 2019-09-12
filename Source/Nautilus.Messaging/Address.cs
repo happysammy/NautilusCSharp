@@ -31,7 +31,7 @@ namespace Nautilus.Messaging
             Debug.NotEmpty(value, nameof(value));
 
             this.BytesValue = value;
-            this.StringValue = decoder(value);
+            this.StringValue = decoder(value).Replace(Environment.NewLine, string.Empty);
         }
 
         /// <summary>
