@@ -18,6 +18,7 @@ namespace Nautilus.Network
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core.Correctness;
+    using Nautilus.Core.Exceptions;
     using Nautilus.Core.Message;
     using Nautilus.Core.Types;
     using Nautilus.Messaging;
@@ -77,7 +78,7 @@ namespace Nautilus.Network
             this.inboundSerializer = inboundSerializer;
             this.outboundSerializer = outboundSerializer;
 
-            this.ServerAddress = new ZmqServerAddress(host, port);
+            this.NetworkAddress = new ZmqNetworkAddress(host, port);
             this.ReceivedCount = 0;
             this.SentCount = 0;
 
@@ -87,9 +88,9 @@ namespace Nautilus.Network
         }
 
         /// <summary>
-        /// Gets the server address for the router.
+        /// Gets the network address for the router.
         /// </summary>
-        public ZmqServerAddress ServerAddress { get; }
+        public ZmqNetworkAddress NetworkAddress { get; }
 
         /// <summary>
         /// Gets the server received message count.
@@ -112,8 +113,8 @@ namespace Nautilus.Network
         /// <inheritdoc />
         protected override void OnStart(Start start)
         {
-            this.socket.Bind(this.ServerAddress.Value);
-            this.Log.Debug($"Bound {this.socket.GetType().Name} to {this.ServerAddress}");
+            this.socket.Bind(this.NetworkAddress.Value);
+            this.Log.Debug($"Bound {this.socket.GetType().Name} to {this.NetworkAddress}");
 
             Task.Run(this.StartWork, this.cts.Token);
         }
@@ -122,8 +123,8 @@ namespace Nautilus.Network
         protected override void OnStop(Stop stop)
         {
             this.cts.Cancel();
-            this.socket.Unbind(this.ServerAddress.Value);
-            this.Log.Debug($"Unbound {this.socket.GetType().Name} from {this.ServerAddress}");
+            this.socket.Unbind(this.NetworkAddress.Value);
+            this.Log.Debug($"Unbound {this.socket.GetType().Name} from {this.NetworkAddress}");
         }
 
         /// <summary>
@@ -172,8 +173,7 @@ namespace Nautilus.Network
                 if (received is null)
                 {
                     // This should never happen due to generic type constraints
-                    throw new InvalidOperationException(
-                        $"Design time error (message was not of type {typeof(TOutbound)}).");
+                    throw new DesignTimeException($"The message was not of type {typeof(TOutbound)}).");
                 }
 
                 this.SendMessage(received, receiver);
@@ -202,8 +202,7 @@ namespace Nautilus.Network
                 if (failure is null)
                 {
                     // This should never happen due to generic type constraints
-                    throw new InvalidOperationException(
-                        $"Design time error (message was not of type {typeof(TOutbound)}).");
+                    throw new DesignTimeException($"The message was not of type {typeof(TOutbound)}).");
                 }
 
                 this.SendMessage(failure, receiver);
@@ -232,8 +231,7 @@ namespace Nautilus.Network
                 if (rejected is null)
                 {
                     // This should never happen due to generic type constraints
-                    throw new InvalidOperationException(
-                        $"Design time error (message was not of type {typeof(TOutbound)}).");
+                    throw new DesignTimeException($"The message was not of type {typeof(TOutbound)}).");
                 }
 
                 this.SendMessage(rejected, receiver);
@@ -316,7 +314,7 @@ namespace Nautilus.Network
         {
             if (request is IEnvelope envelope)
             {
-                var errorMessage = $"Message type {envelope.MessageType.Name} not valid at this address {this.ServerAddress}.";
+                var errorMessage = $"Message type {envelope.MessageType.Name} not valid at this address {this.NetworkAddress}.";
                 this.SendRejected(errorMessage, envelope.MessageBase.Id, envelope.Sender);
 
                 this.Log.Error(errorMessage);

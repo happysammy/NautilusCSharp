@@ -35,7 +35,7 @@ namespace Nautilus.Data.Integrity
 
             if (bars.Length == 0)
             {
-                return QueryResult<List<string>>.Fail("No bars for BarDataChecker to check");
+                return QueryResult<List<string>>.Fail("no bars to check");
             }
 
             CheckDuplicateBars(barType, bars, anomalyList);

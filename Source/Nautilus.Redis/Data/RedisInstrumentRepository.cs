@@ -118,7 +118,7 @@ namespace Nautilus.Redis.Data
 
             if (instrumentBuilder.Changes.Count == 0)
             {
-                return CommandResult.Ok($"Instrument {symbol} unchanged in cache...");
+                return CommandResult.Ok($"instrument {symbol} unchanged in cache...");
             }
 
             var changesString = new StringBuilder();
@@ -133,7 +133,7 @@ namespace Nautilus.Redis.Data
             this.cache[symbol] = updatedInstrument;
             this.Write(instrument);
 
-            return CommandResult.Ok($"Updated instrument {symbol}" + changesString);
+            return CommandResult.Ok($"updated instrument {symbol}" + changesString);
         }
 
         /// <inheritdoc />
@@ -141,7 +141,7 @@ namespace Nautilus.Redis.Data
         {
             return this.cache.ContainsKey(symbol)
                 ? QueryResult<Instrument>.Ok(this.cache[symbol])
-                : QueryResult<Instrument>.Fail($"Cannot find instrument {symbol}");
+                : QueryResult<Instrument>.Fail($"cannot find instrument {symbol}");
         }
 
         /// <inheritdoc />
@@ -154,7 +154,7 @@ namespace Nautilus.Redis.Data
 
             return instruments.Count > 0
                 ? QueryResult<IEnumerable<Instrument>>.Ok(instruments)
-                : QueryResult<IEnumerable<Instrument>>.Fail($"Cannot find any instrument for {venue}");
+                : QueryResult<IEnumerable<Instrument>>.Fail($"cannot find any instrument for {venue}");
         }
 
         /// <summary>
@@ -168,7 +168,7 @@ namespace Nautilus.Redis.Data
 
             if (!this.redisDatabase.KeyExists(key))
             {
-                return QueryResult<Instrument>.Fail($"Cannot find {key}");
+                return QueryResult<Instrument>.Fail($"cannot find {key}");
             }
 
             var instrumentDict = this.redisDatabase.HashGetAll(key)
@@ -225,7 +225,7 @@ namespace Nautilus.Redis.Data
 
             this.redisDatabase.HashSet(KeyProvider.GetInstrumentKey(instrument.Symbol), hashEntry);
 
-            return CommandResult.Ok($"Added instrument {instrument}");
+            return CommandResult.Ok($"added instrument {instrument}");
         }
     }
 }

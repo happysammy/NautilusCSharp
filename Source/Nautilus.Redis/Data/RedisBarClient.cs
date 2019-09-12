@@ -117,7 +117,7 @@ namespace Nautilus.Redis.Data
         {
             if (this.KeysCount(barType) == 0)
             {
-                return QueryResult<List<string>>.Fail($"No market data found for {barType}.");
+                return QueryResult<List<string>>.Fail($"market data not found for {barType}");
             }
 
             var allKeys = this.redisServer.Keys(pattern: KeyProvider.GetBarWildcardKey(barType));
@@ -178,7 +178,7 @@ namespace Nautilus.Redis.Data
             var key = KeyProvider.GetBarKey(barType, new DateKey(bar.Timestamp));
             this.redisDatabase.ListRightPush(key, bar.ToString());
 
-            return CommandResult.Ok($"Added 1 bar to {barType}.");
+            return CommandResult.Ok($"Added 1 bar to {barType}");
         }
 
         /// <summary>
@@ -225,7 +225,7 @@ namespace Nautilus.Redis.Data
             }
 
             return CommandResult.Ok(
-                $"Added {barsAddedCounter} bars to {barType} (TotalCount={this.BarsCount(barType)}).");
+                $"Added {barsAddedCounter} bars to {barType}, TotalCount={this.BarsCount(barType)}");
         }
 
         /// <summary>
@@ -272,7 +272,7 @@ namespace Nautilus.Redis.Data
 
             if (this.KeysCount(barType) == 0)
             {
-                return QueryResult<BarDataFrame>.Fail($"No market data found for {barType}.");
+                return QueryResult<BarDataFrame>.Fail($"market data not found for {barType}");
             }
 
             var barKeys = KeyProvider.GetBarKeys(barType, fromDateTime, toDateTime);
@@ -287,9 +287,9 @@ namespace Nautilus.Redis.Data
             if (barsArray.Length == 0)
             {
                 return QueryResult<BarDataFrame>.Fail(
-                    $"No market data found for {barType} in time range from " +
+                    $"market data not complete for {barType} in time range from " +
                     $"{fromDateTime.ToIsoString()} to " +
-                    $"{toDateTime.ToIsoString()}.");
+                    $"{toDateTime.ToIsoString()}");
             }
 
             return QueryResult<BarDataFrame>.Ok(new BarDataFrame(barType, barsArray));
@@ -323,8 +323,8 @@ namespace Nautilus.Redis.Data
                 }
             }
 
-            return QueryResult<Bar>.Fail($"No market data found for {barType} " +
-                                         $"at {timestamp.ToIsoString()}.");
+            return QueryResult<Bar>.Fail($"market data not found for {barType} " +
+                                         $"at {timestamp.ToIsoString()}");
         }
 
         /// <summary>
@@ -338,7 +338,7 @@ namespace Nautilus.Redis.Data
 
             if (!this.KeyExists(key))
             {
-                return QueryResult<Bar[]>.Fail($"No market data found for {key}.");
+                return QueryResult<Bar[]>.Fail($"market data not found for {key}");
             }
 
             var values = this.redisDatabase.ListRange(key);
@@ -380,12 +380,12 @@ namespace Nautilus.Redis.Data
 
             if (!this.KeyExists(key))
             {
-                return CommandResult.Fail($"Cannot find {key} to delete in the database.");
+                return CommandResult.Fail($"cannot find {key} to delete in the database");
             }
 
             this.redisDatabase.KeyDelete(key);
 
-            return CommandResult.Ok($"Removed {key} from the database.");
+            return CommandResult.Ok($"removed {key} from the database");
         }
     }
 }

@@ -69,7 +69,7 @@ namespace Nautilus.Data.Providers
                     var dataType = request.Query["DataType"];
                     if (dataType != "Tick[]")
                     {
-                        this.SendQueryFailure($"Incorrect DataType requested (was {dataType})", request.Id, envelope.Sender);
+                        this.SendQueryFailure($"incorrect DataType requested, was {dataType}", request.Id, envelope.Sender);
                         return;
                     }
 

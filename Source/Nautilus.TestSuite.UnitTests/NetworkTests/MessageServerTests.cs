@@ -59,7 +59,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
-            Assert.Equal("tcp://127.0.0.1:55555", server.ServerAddress.ToString());
+            Assert.Equal("tcp://127.0.0.1:55555", server.NetworkAddress.ToString());
             Assert.Equal(State.Initialized, server.State);
             Assert.Equal(0, server.ReceivedCount);
             Assert.Equal(0, server.SentCount);

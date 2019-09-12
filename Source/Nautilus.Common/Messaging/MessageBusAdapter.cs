@@ -119,7 +119,8 @@ namespace Nautilus.Common.Messaging
                 return;
             }
 
-            throw ExceptionFactory.InvalidSwitchArgument(type, nameof(type));  // Design time error
+            // Design time error
+            throw ExceptionFactory.InvalidSwitchArgument(type, nameof(type));
         }
 
         private void WrapAndSend<T>(
@@ -143,6 +144,7 @@ namespace Nautilus.Common.Messaging
                     this.docBus.Send(envelope);
                     break;
                 default:
+                    // Design time error
                     throw ExceptionFactory.InvalidSwitchArgument(message, nameof(message));
             }
         }

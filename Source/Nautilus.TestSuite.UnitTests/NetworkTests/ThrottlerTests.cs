@@ -60,13 +60,13 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             var count1 = this.receiver.Messages.Count;
 
             // Wait for the throttle duration interval
-            Task.Delay(90).Wait();
+            Task.Delay(100).Wait();
 
             // Should receive the next 10 messages
             var count2 = this.receiver.Messages.Count;
 
             // Should receive the final message
-            Task.Delay(90).Wait();
+            Task.Delay(100).Wait();
             var count3 = this.receiver.Messages.Count;
 
             LogDumper.DumpWithDelay(this.loggingAdapter, this.output);

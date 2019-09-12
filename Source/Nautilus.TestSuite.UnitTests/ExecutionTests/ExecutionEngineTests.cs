@@ -475,7 +475,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             this.engine.Endpoint.Send(modify1);
             this.engine.Endpoint.Send(modify2);
 
-            LogDumper.DumpWithDelay(this.logger, this.output, 200);
+            LogDumper.DumpWithDelay(this.logger, this.output, 300);
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());

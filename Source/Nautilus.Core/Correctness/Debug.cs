@@ -11,6 +11,7 @@ namespace Nautilus.Core.Correctness
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using Nautilus.Core.Exceptions;
 
     /// <summary>
     /// Provides condition checking methods which are executed in debug configuration.

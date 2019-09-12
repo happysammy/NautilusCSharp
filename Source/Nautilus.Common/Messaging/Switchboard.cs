@@ -12,6 +12,7 @@ namespace Nautilus.Common.Messaging
     using System.Collections.Generic;
     using System.Collections.Immutable;
     using Nautilus.Core.Correctness;
+    using Nautilus.Core.Exceptions;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
 
@@ -92,8 +93,7 @@ namespace Nautilus.Common.Messaging
 
         private static void DoNothing(object message)
         {
-            // Design time error
-            throw new InvalidOperationException("A dead letter handler has not been implemented.");
+            throw new DesignTimeException("A dead letter handler has not been implemented.");
         }
     }
 }

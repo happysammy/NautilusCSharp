@@ -58,7 +58,7 @@ namespace Nautilus.Network
 
             this.serializer = serializer;
 
-            this.ServerAddress = new ZmqServerAddress(host, port);
+            this.NetworkAddress = new ZmqNetworkAddress(host, port);
             this.PublishedCount = 0;
 
             this.RegisterHandler<Envelope<Start>>(this.OnMessage);
@@ -66,9 +66,9 @@ namespace Nautilus.Network
         }
 
         /// <summary>
-        /// Gets the server address for the publisher.
+        /// Gets the network address for the publisher.
         /// </summary>
-        public ZmqServerAddress ServerAddress { get; }
+        public ZmqNetworkAddress NetworkAddress { get; }
 
         /// <summary>
         /// Gets the server received message count.
@@ -86,15 +86,15 @@ namespace Nautilus.Network
         /// <inheritdoc />
         protected override void OnStart(Start start)
         {
-            this.socket.Bind(this.ServerAddress.Value);
-            this.Log.Debug($"Bound {this.socket.GetType().Name} to {this.ServerAddress}");
+            this.socket.Bind(this.NetworkAddress.Value);
+            this.Log.Debug($"Bound {this.socket.GetType().Name} to {this.NetworkAddress}");
         }
 
         /// <inheritdoc />
         protected override void OnStop(Stop stop)
         {
-            this.socket.Unbind(this.ServerAddress.Value);
-            this.Log.Debug($"Unbound {this.socket.GetType().Name} from {this.ServerAddress}");
+            this.socket.Unbind(this.NetworkAddress.Value);
+            this.Log.Debug($"Unbound {this.socket.GetType().Name} from {this.NetworkAddress}");
         }
 
         /// <summary>

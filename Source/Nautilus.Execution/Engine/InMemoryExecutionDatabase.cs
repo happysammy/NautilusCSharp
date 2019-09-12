@@ -12,6 +12,7 @@ namespace Nautilus.Execution.Engine
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.CQS;
+    using Nautilus.Core.Exceptions;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Identifiers;

@@ -114,7 +114,7 @@ namespace Nautilus.Data.Providers
                     }
 
                     default:
-                        this.SendQueryFailure($"Incorrect DataType requested (was {dataType})", request.Id, envelope.Sender);
+                        this.SendQueryFailure($"incorrect DataType requested, was {dataType}", request.Id, envelope.Sender);
                         return;
                 }
             }
