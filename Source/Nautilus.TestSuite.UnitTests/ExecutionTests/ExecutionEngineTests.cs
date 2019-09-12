@@ -241,7 +241,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             var cancel = new CancelOrder(
                 traderId,
                 accountId,
-                strategyId,
                 order.Id,
                 "TEST",
                 Guid.NewGuid(),
@@ -278,7 +277,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             var command = new CancelOrder(
                 traderId,
                 accountId,
-                strategyId,
                 order.Id,
                 "TEST",
                 Guid.NewGuid(),
@@ -319,7 +317,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             var modify = new ModifyOrder(
                 traderId,
                 accountId,
-                strategyId,
                 order.Id,
                 Price.Create(1.00010m, 5),
                 Guid.NewGuid(),
@@ -367,7 +364,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             var modify = new ModifyOrder(
                 traderId,
                 accountId,
-                strategyId,
                 order.Id,
                 Price.Create(1.00010m, 5),
                 Guid.NewGuid(),
@@ -410,7 +406,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             var modify = new ModifyOrder(
                 traderId,
                 accountId,
-                strategyId,
                 order.Id,
                 Price.Create(1.00010m, 5),
                 Guid.NewGuid(),
@@ -453,7 +448,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             var modify1 = new ModifyOrder(
                 traderId,
                 accountId,
-                strategyId,
                 order.Id,
                 Price.Create(1.00010m, 5),
                 Guid.NewGuid(),
@@ -462,7 +456,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             var modify2 = new ModifyOrder(
                 traderId,
                 accountId,
-                strategyId,
                 order.Id,
                 Price.Create(1.00010m, 5),
                 Guid.NewGuid(),
@@ -632,7 +625,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             var modify = new ModifyOrder(
                 traderId,
                 accountId,
-                strategyId,
                 order.Id,
                 Price.Create(1.00010m, 5),
                 Guid.NewGuid(),
@@ -715,7 +707,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             var modify = new ModifyOrder(
                 traderId,
                 accountId,
-                strategyId,
                 order.Id,
                 Price.Create(1.00010m, 5),
                 Guid.NewGuid(),

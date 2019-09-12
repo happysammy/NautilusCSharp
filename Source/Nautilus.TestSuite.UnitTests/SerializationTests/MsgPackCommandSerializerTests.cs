@@ -124,7 +124,6 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var command = new CancelOrder(
                 new TraderId("TESTER", "000"),
                 new AccountId("FXCM", "028999999", "SIMULATED"),
-                new StrategyId("EMACross", "001"),
                 new OrderId("O-123456"),
                 "EXPIRED",
                 Guid.NewGuid(),
@@ -148,7 +147,6 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var command = new ModifyOrder(
                 new TraderId("TESTER", "000"),
                 new AccountId("FXCM", "028999999", "SIMULATED"),
-                new StrategyId("EMACross", "001"),
                 new OrderId("O-123456"),
                 Price.Create(1.50000m, 5),
                 Guid.NewGuid(),

@@ -349,12 +349,9 @@ namespace Nautilus.Execution.Engine
                     return;
                 }
 
-                var strategyId = StrategyId.Nil();
-
                 var cancelOrder = new CancelOrder(
                     traderId,
                     accountId,
-                    strategyId,
                     order.Id,
                     "GTD_EXPIRY_BACKUP",
                     this.NewGuid(),
@@ -363,7 +360,7 @@ namespace Nautilus.Execution.Engine
                 var delay = TimingProvider.GetDurationToNextUtc(order.ExpireTime.Value, this.InstantNow());
                 this.scheduler.ScheduleSendOnce(delay, this.Endpoint, cancelOrder, this.Endpoint);
 
-                this.Log.Debug($"Scheduled GTD CancelOrder backup for {order.ExpireTime.Value.ToIsoString()}.");
+                this.Log.Information($"Scheduled GTD CancelOrder backup for {order.ExpireTime.Value.ToIsoString()}.");
             }
             else
             {
