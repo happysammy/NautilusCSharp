@@ -27,10 +27,11 @@ namespace Nautilus.Common.Configuration
         {
             Condition.NotEmptyOrWhiteSpace(serviceTitle, nameof(serviceTitle));
 
-            log.Information("---------------------------------------------------------------------------");
-            log.Information($"{serviceTitle} (version " + Assembly.GetExecutingAssembly().GetName().Version + ")");
-            log.Information("Copyright (C) 2015-2019 by Nautech Systems Pty Ltd. All rights reserved.");
-            log.Information("---------------------------------------------------------------------------");
+            log.Information("#---------------------------------------------------------------------------#");
+            log.Information($" {serviceTitle}");
+            log.Information($" v{Assembly.GetExecutingAssembly().GetName().Version} by Nautech Systems Pty Ltd.");
+            log.Information(" Copyright (C) 2015-2019. All rights reserved.");
+            log.Information("#---------------------------------------------------------------------------#");
             log.Information($"OS {Environment.OSVersion}");
             log.Information($"Is64BitOperatingSystem={Environment.Is64BitOperatingSystem}");
             log.Information($"Is64BitProcess={Environment.Is64BitProcess}");
