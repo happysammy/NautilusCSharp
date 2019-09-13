@@ -31,6 +31,11 @@ namespace Nautilus.Execution.Engine
     /// </summary>
     public class ExecutionEngine : MessageBusConnected
     {
+        private const string SENT = "-->";
+        private const string RECV = "<--";
+        private const string CMD = nameof(CMD);
+        private const string EVT = nameof(EVT);
+
         private readonly IScheduler scheduler;
         private readonly IExecutionDatabase database;
         private readonly ITradingGateway gateway;
@@ -118,13 +123,13 @@ namespace Nautilus.Execution.Engine
 
         private void IncrementCounter(Command command)
         {
-            this.Log.Information($"Received command {command}.");
+            this.Log.Information($"{CMD}{RECV} {command}.");
             this.CommandCount++;
         }
 
         private void IncrementCounter(Event @event)
         {
-            this.Log.Information($"Received event {@event}.");
+            this.Log.Information($"{EVT}{RECV} {@event}.");
             this.EventCount++;
         }
 
@@ -510,7 +515,7 @@ namespace Nautilus.Execution.Engine
                 if (!(order.Price is null) && order.Price != modifyOrder.ModifiedPrice)
                 {
                     this.gateway.ModifyOrder(order, modifyOrder.ModifiedPrice);
-                    this.Log.Debug($"Sent command {modifyOrder} to TradingGateway.");
+                    this.Log.Debug($"{CMD}{SENT} {modifyOrder} to TradingGateway.");
                 }
 
                 this.bufferModify.Remove(order.Id);
@@ -542,7 +547,7 @@ namespace Nautilus.Execution.Engine
         private void SendToEventPublisher(Event @event)
         {
             this.eventPublisher.Send(@event);
-            this.Log.Debug($"Sent event {@event} to EventPublisher.");
+            this.Log.Debug($"{EVT}{SENT} {@event} to EventPublisher.");
         }
     }
 }

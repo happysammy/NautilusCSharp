@@ -173,7 +173,7 @@ namespace Nautilus.Execution.Engine
 
             this.CachedAccounts[account.Id] = account;
 
-            this.Log.Debug($"Added new {account.Id}.");
+            this.Log.Debug($"Added Account(Id={account.Id.Value}).");
 
             return CommandResult.Ok();
         }
@@ -242,7 +242,7 @@ namespace Nautilus.Execution.Engine
             this.indexOrders.Add(order.Id);
             this.CachedOrders[order.Id] = order;
 
-            this.Log.Debug($"Added new {order.Id}.");
+            this.Log.Debug($"Added Order(Id={order.Id.Value}).");
 
             return CommandResult.Ok();
         }
@@ -263,7 +263,7 @@ namespace Nautilus.Execution.Engine
             this.indexPositionsOpen.Add(position.Id);
             this.CachedPositions[position.Id] = position;
 
-            this.Log.Debug($"Added new {position.Id}.");
+            this.Log.Debug($"Added Position(Id={position.Id.Value}).");
 
             return CommandResult.Ok();
         }
