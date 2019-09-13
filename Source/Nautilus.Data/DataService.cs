@@ -34,8 +34,8 @@ namespace Nautilus.Data
         private readonly IDataGateway dataGateway;
         private readonly IReadOnlyCollection<Symbol> subscribingSymbols;
         private readonly IReadOnlyCollection<BarSpecification> barSpecifications;
-        private readonly (IsoDayOfWeek Day, LocalTime Time) fixConnectTime;
-        private readonly (IsoDayOfWeek Day, LocalTime Time) fixDisconnectTime;
+        private readonly (IsoDayOfWeek Day, LocalTime Time) connectTime;
+        private readonly (IsoDayOfWeek Day, LocalTime Time) disconnectTime;
         private readonly (IsoDayOfWeek Day, LocalTime Time) tickDataTrimTime;
         private readonly (IsoDayOfWeek Day, LocalTime Time) barDataTrimTime;
         private readonly int tickRollingWindowDays;
@@ -71,8 +71,8 @@ namespace Nautilus.Data
             this.subscribingSymbols = config.SubscribingSymbols;
             this.barSpecifications = config.BarSpecifications;
 
-            this.fixConnectTime = config.FixConfiguration.ConnectTime;
-            this.fixDisconnectTime = config.FixConfiguration.DisconnectTime;
+            this.connectTime = config.FixConfiguration.ConnectTime;
+            this.disconnectTime = config.FixConfiguration.DisconnectTime;
             this.tickDataTrimTime = config.TickDataTrimTime;
             this.tickRollingWindowDays = config.TickDataTrimWindowDays;
             this.barDataTrimTime = config.BarDataTrimTime;
@@ -84,15 +84,19 @@ namespace Nautilus.Data
                 this.NewGuid(),
                 this.TimeNow()));
 
+            // Commands
             this.RegisterHandler<Connect>(this.OnMessage);
             this.RegisterHandler<Disconnect>(this.OnMessage);
+            this.RegisterHandler<TrimTickData>(this.OnMessage);
+            this.RegisterHandler<TrimBarData>(this.OnMessage);
+
+            // Events
             this.RegisterHandler<FixSessionConnected>(this.OnMessage);
             this.RegisterHandler<FixSessionDisconnected>(this.OnMessage);
             this.RegisterHandler<MarketOpened>(this.OnMessage);
             this.RegisterHandler<MarketClosed>(this.OnMessage);
-            this.RegisterHandler<TrimTickData>(this.OnMessage);
-            this.RegisterHandler<TrimBarData>(this.OnMessage);
 
+            // Event Subscriptions
             this.Subscribe<FixSessionConnected>();
             this.Subscribe<FixSessionDisconnected>();
         }
@@ -103,8 +107,8 @@ namespace Nautilus.Data
             this.Execute(() =>
             {
                 if (TimingProvider.IsOutsideWeeklyInterval(
-                    this.fixDisconnectTime,
-                    this.fixConnectTime,
+                    this.disconnectTime,
+                    this.connectTime,
                     this.InstantNow()))
                 {
                     this.Send(start, ServiceAddress.DataGateway);
@@ -253,8 +257,8 @@ namespace Nautilus.Data
             {
                 var now = this.InstantNow();
                 var nextTime = TimingProvider.GetNextUtc(
-                    this.fixConnectTime.Day,
-                    this.fixConnectTime.Time,
+                    this.connectTime.Day,
+                    this.connectTime.Time,
                     now);
                 var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, now);
 
@@ -281,8 +285,8 @@ namespace Nautilus.Data
             {
                 var now = this.InstantNow();
                 var nextTime = TimingProvider.GetNextUtc(
-                    this.fixDisconnectTime.Day,
-                    this.fixDisconnectTime.Time,
+                    this.disconnectTime.Day,
+                    this.disconnectTime.Time,
                     now);
                 var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, now);
 

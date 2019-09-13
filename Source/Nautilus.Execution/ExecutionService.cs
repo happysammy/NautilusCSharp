@@ -29,8 +29,8 @@ namespace Nautilus.Execution
     {
         private readonly IScheduler scheduler;
         private readonly ITradingGateway tradingGateway;
-        private readonly (IsoDayOfWeek Day, LocalTime Time) fixConnectTime;
-        private readonly (IsoDayOfWeek Day, LocalTime Time) fixDisconnectTime;
+        private readonly (IsoDayOfWeek Day, LocalTime Time) connectTime;
+        private readonly (IsoDayOfWeek Day, LocalTime Time) disconnectTime;
 
         private ZonedDateTime? nextConnectTime;
         private ZonedDateTime? nextDisconnectTime;
@@ -64,15 +64,18 @@ namespace Nautilus.Execution
 
             this.scheduler = scheduler;
             this.tradingGateway = tradingGateway;
-            this.fixConnectTime = config.FixConfiguration.ConnectTime;
-            this.fixDisconnectTime = config.FixConfiguration.DisconnectTime;
+            this.connectTime = config.FixConfiguration.ConnectTime;
+            this.disconnectTime = config.FixConfiguration.DisconnectTime;
 
-            this.RegisterHandler<FixSessionConnected>(this.OnMessage);
-            this.RegisterHandler<FixSessionDisconnected>(this.OnMessage);
+            // Commands
             this.RegisterHandler<Connect>(this.OnMessage);
             this.RegisterHandler<Disconnect>(this.OnMessage);
 
-            // Subscribe to connection events
+            // Events
+            this.RegisterHandler<FixSessionConnected>(this.OnMessage);
+            this.RegisterHandler<FixSessionDisconnected>(this.OnMessage);
+
+            // Event Subscriptions
             this.Subscribe<FixSessionConnected>();
             this.Subscribe<FixSessionDisconnected>();
         }
@@ -81,8 +84,8 @@ namespace Nautilus.Execution
         protected override void OnStart(Start start)
         {
             if (TimingProvider.IsOutsideWeeklyInterval(
-                this.fixDisconnectTime,
-                this.fixConnectTime,
+                this.disconnectTime,
+                this.connectTime,
                 this.InstantNow()))
             {
                 var receivers = new List<Address>
@@ -154,8 +157,8 @@ namespace Nautilus.Execution
         {
             var now = this.InstantNow();
             var nextTime = TimingProvider.GetNextUtc(
-                this.fixConnectTime.Day,
-                this.fixConnectTime.Time,
+                this.connectTime.Day,
+                this.connectTime.Time,
                 now);
             var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, now);
 
@@ -179,8 +182,8 @@ namespace Nautilus.Execution
         {
             var now = this.InstantNow();
             var nextTime = TimingProvider.GetNextUtc(
-                this.fixDisconnectTime.Day,
-                this.fixDisconnectTime.Time,
+                this.disconnectTime.Day,
+                this.disconnectTime.Time,
                 now);
             var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, now);
 
