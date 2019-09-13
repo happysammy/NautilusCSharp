@@ -63,11 +63,6 @@ namespace Nautilus.Core.Types
         /// <returns>A <see cref="bool"/>.</returns>
         public static bool operator ==(Message left, Message right)
         {
-            if (left is null && right is null)
-            {
-                return true;
-            }
-
             if (left is null || right is null)
             {
                 return false;

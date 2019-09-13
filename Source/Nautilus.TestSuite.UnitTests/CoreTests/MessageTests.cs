@@ -21,23 +21,29 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
         internal void Equal_WithDifferentMessagesOfTheSameContent_CanEquateById()
         {
             // Arrange
-            var message1 = new Start(
-                Guid.NewGuid(),
-                StubZonedDateTime.UnixEpoch());
+            var message1 = new Start(Guid.NewGuid(), StubZonedDateTime.UnixEpoch());
 
-            var message2 = new Start(
-                Guid.NewGuid(),
-                StubZonedDateTime.UnixEpoch());
+            var message2 = new Start(Guid.NewGuid(), StubZonedDateTime.UnixEpoch());
 
             // Act
-            var result1 = message1 == message2;
-            var result2 = message1.Equals(message2);
-            var result3 = message1.Equals(message1);
-
             // Assert
-            Assert.False(result1);
-            Assert.False(result2);
-            Assert.True(result3);
+            Assert.NotNull(message1);
+            Assert.False(message1 == null);
+            Assert.False(message1 == message2);
+            Assert.True(message1 != message2);
+            Assert.True(message1.Equals(message1));
+            Assert.False(message1.Equals(message2));
+        }
+
+        [Fact]
+        internal void GetHashCode_ReturnsExpectedInteger()
+        {
+            // Arrange
+            var message = new Start(Guid.NewGuid(), StubZonedDateTime.UnixEpoch());
+
+            // Act
+            // Assert
+            Assert.IsType<int>(message.GetHashCode());
         }
 
         [Fact]
@@ -51,8 +57,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
             var result = message.ToString();
 
             // Assert
-            Assert.StartsWith("Start(", result);
-            Assert.EndsWith(")", result);
+            Assert.Equal($"Start(Id={guid})", result);
         }
     }
 }

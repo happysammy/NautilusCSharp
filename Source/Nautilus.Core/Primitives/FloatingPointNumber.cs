@@ -312,11 +312,6 @@ namespace Nautilus.Core.Primitives
         /// <returns>The result of the equality check.</returns>
         public static bool operator ==(FloatingPointNumber left, FloatingPointNumber right)
         {
-            if (left is null && right is null)
-            {
-                return true;
-            }
-
             if (left is null || right is null)
             {
                 return false;

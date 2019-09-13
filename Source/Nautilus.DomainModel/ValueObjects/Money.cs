@@ -48,11 +48,6 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>The result of the equality check.</returns>
         public static bool operator ==(Money left, Money right)
         {
-            if (left is null && right is null)
-            {
-                return true;
-            }
-
             if (left is null || right is null)
             {
                 return false;
