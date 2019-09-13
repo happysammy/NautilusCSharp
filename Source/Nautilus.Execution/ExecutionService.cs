@@ -32,6 +32,9 @@ namespace Nautilus.Execution
         private readonly (IsoDayOfWeek Day, LocalTime Time) fixConnectTime;
         private readonly (IsoDayOfWeek Day, LocalTime Time) fixDisconnectTime;
 
+        private ZonedDateTime? nextConnectTime;
+        private ZonedDateTime? nextDisconnectTime;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ExecutionService"/> class.
         /// </summary>
@@ -129,13 +132,22 @@ namespace Nautilus.Execution
 
             this.tradingGateway.AccountInquiry();
 
-            this.CreateDisconnectFixJob();
-            this.CreateConnectFixJob();
+            if (this.nextDisconnectTime is null || this.nextDisconnectTime.Value.IsLessThanOrEqualTo(this.TimeNow()))
+            {
+                this.CreateDisconnectFixJob();
+            }
+
+            this.Log.Information($"{message.SessionId} session connected.");
         }
 
         private void OnMessage(FixSessionDisconnected message)
         {
-            this.Log.Warning($"{message.SessionId} session has been disconnected.");
+            if (this.nextConnectTime is null || this.nextConnectTime.Value.IsLessThanOrEqualTo(this.TimeNow()))
+            {
+                this.CreateConnectFixJob();
+            }
+
+            this.Log.Warning($"{message.SessionId} session disconnected.");
         }
 
         private void CreateConnectFixJob()
@@ -157,6 +169,8 @@ namespace Nautilus.Execution
                 this.Endpoint,
                 job,
                 this.Endpoint);
+
+            this.nextConnectTime = nextTime;
 
             this.Log.Information($"Created scheduled job {job} for {nextTime.ToIsoString()}.");
         }
@@ -180,6 +194,8 @@ namespace Nautilus.Execution
                 this.Endpoint,
                 job,
                 this.Endpoint);
+
+            this.nextDisconnectTime = nextTime;
 
             this.Log.Information($"Created scheduled job {job} for {nextTime.ToIsoString()}.");
         }
