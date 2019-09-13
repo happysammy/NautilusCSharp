@@ -106,7 +106,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             }
 
             // Wait for all messages to send
-            Task.Delay(400).Wait();
+            Task.Delay(500).Wait();
 
             // Receives the next 100 messages
             var count2 = this.receiver.Messages.Count;
