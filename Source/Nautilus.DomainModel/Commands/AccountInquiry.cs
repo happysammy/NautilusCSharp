@@ -24,10 +24,12 @@ namespace Nautilus.DomainModel.Commands
         /// <summary>
         /// Initializes a new instance of the <see cref="AccountInquiry"/> class.
         /// </summary>
-        /// <param name="accountId">The account identifier.</param>
+        /// <param name="traderId">The trader identifier.</param>
+        /// <param name="accountId">The account identifier for the inquiry.</param>
         /// <param name="commandId">The command identifier.</param>
         /// <param name="commandTimestamp">The command timestamp.</param>
         public AccountInquiry(
+            TraderId traderId,
             AccountId accountId,
             Guid commandId,
             ZonedDateTime commandTimestamp)
@@ -39,8 +41,14 @@ namespace Nautilus.DomainModel.Commands
             Debug.NotDefault(commandId, nameof(commandId));
             Debug.NotDefault(commandTimestamp, nameof(commandTimestamp));
 
+            this.TraderId = traderId;
             this.AccountId = accountId;
         }
+
+        /// <summary>
+        /// Gets the commands trader identifier.
+        /// </summary>
+        public TraderId TraderId { get; }
 
         /// <summary>
         /// Gets the commands account identifier.
@@ -51,6 +59,6 @@ namespace Nautilus.DomainModel.Commands
         /// Returns a string representation of this object.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{nameof(AccountInquiry)}(AccountId={this.AccountId.Value})";
+        public override string ToString() => $"{nameof(AccountInquiry)}(TraderId={this.TraderId.Value}, AccountId={this.AccountId.Value})";
     }
 }

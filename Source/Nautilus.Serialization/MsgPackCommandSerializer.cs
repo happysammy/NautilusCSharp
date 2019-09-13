@@ -47,6 +47,7 @@ namespace Nautilus.Serialization
             switch (command)
             {
                 case AccountInquiry cmd:
+                    package.Add(nameof(cmd.TraderId), cmd.TraderId.Value);
                     package.Add(nameof(cmd.AccountId), cmd.AccountId.Value);
                     break;
                 case SubmitOrder cmd:
@@ -97,6 +98,7 @@ namespace Nautilus.Serialization
             {
                 case nameof(AccountInquiry):
                     return new AccountInquiry(
+                        this.identifierCache.TraderId(unpacked),
                         this.identifierCache.AccountId(unpacked),
                         id,
                         timestamp);

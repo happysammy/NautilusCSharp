@@ -167,6 +167,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         {
             // Arrange
             var command = new AccountInquiry(
+                TraderId.FromString("TESTER-000"),
                 new AccountId("FXCM", "028999999", "SIMULATED"),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -185,7 +186,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         internal void Deserialize_AccountInquiry_FromPythonMsgPack_ReturnsExpectedCommand()
         {
             // Arrange
-            var hexString = "hKRUeXBlrkFjY291bnRJbnF1aXJ5oklk2gAkNThhMTU2MjAtNzhhMS00MTBiLWJiODAtYjk5NjQzYTg4MjEwqVRpbWVzdGFtcLgxOTcwLTAxLTAxVDAwOjAwOjAwLjAwMFqpQWNjb3VudElktk5BVVRJTFVTLTAwMC1TSU1VTEFURUQ=";
+            var hexString = "haRUeXBlrkFjY291bnRJbnF1aXJ5oklk2gAkOTJkZWZjNTMtM2M4YS00NWFkLThjMjItZDdiNmUzYmJiNzJlqVRpbWVzdGFtcLgxOTcwLTAxLTAxVDAwOjAwOjAwLjAwMFqoVHJhZGVySWSqVEVTVEVSLTAwMKlBY2NvdW50SWS2TkFVVElMVVMtMDAwLVNJTVVMQVRFRA==";
             var commandBytes = Convert.FromBase64String(hexString);
 
             // Act

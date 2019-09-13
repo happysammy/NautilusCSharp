@@ -64,6 +64,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
         {
             // Arrange
             var command = new AccountInquiry(
+                TraderId.FromString("TESTER-000"),
                 AccountId.FromString("NAUTILUS-000-SIMULATED"),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
