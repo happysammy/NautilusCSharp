@@ -71,7 +71,6 @@ namespace NautilusData
                 new BsonInstrumentSerializer(),
                 config.InstrumentSubscribePort);
 
-            var venue = new Venue(config.FixConfiguration.Broker.Value);
             var symbolConverter = new SymbolConverter(config.SymbolIndex);
 
             var fixClient = CreateFixClient(
@@ -132,6 +131,7 @@ namespace NautilusData
                 { ServiceAddress.DataGateway, dataGateway.Endpoint },
                 { ServiceAddress.DatabaseTaskManager, databaseTaskManager.Endpoint },
                 { ServiceAddress.BarAggregationController, barAggregationController.Endpoint },
+                { ServiceAddress.TickStore, tickRepository.Endpoint },
                 { ServiceAddress.TickProvider, tickProvider.Endpoint },
                 { ServiceAddress.TickPublisher, tickPublisher.Endpoint },
                 { ServiceAddress.BarProvider, barProvider.Endpoint },

@@ -42,6 +42,8 @@ namespace Nautilus.Data
         private readonly int barRollingWindowDays;
 
         private bool hasSentBarSubscriptions;
+        private ZonedDateTime? nextConnectTime;
+        private ZonedDateTime? nextDisconnectTime;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataService"/> class.
@@ -115,9 +117,9 @@ namespace Nautilus.Data
                 this.CreateMarketOpenedJob();
                 this.CreateMarketClosedJob();
 
-                // TODO: Below is crashing the service
-                // this.CreateTrimTickDataJob();
-                // this.CreateTrimBarDataJob();
+                this.CreateTrimTickDataJob();
+                this.CreateTrimBarDataJob();
+
                 var receivers = new List<Address>
                 {
                     ServiceAddress.TickProvider,
@@ -187,13 +189,22 @@ namespace Nautilus.Data
                 this.hasSentBarSubscriptions = true;
             }
 
-            this.CreateDisconnectFixJob();
-            this.CreateConnectFixJob();
+            if (this.nextDisconnectTime is null || this.nextDisconnectTime.Value.IsLessThanOrEqualTo(this.TimeNow()))
+            {
+                this.CreateDisconnectFixJob();
+            }
+
+            this.Log.Information($"{message.SessionId} session connected.");
         }
 
         private void OnMessage(FixSessionDisconnected message)
         {
-            this.Log.Warning($"{message.SessionId} session has been disconnected.");
+            if (this.nextConnectTime is null || this.nextConnectTime.Value.IsLessThanOrEqualTo(this.TimeNow()))
+            {
+                this.CreateConnectFixJob();
+            }
+
+            this.Log.Warning($"{message.SessionId} session disconnected.");
         }
 
         private void OnMessage(MarketOpened message)
@@ -258,6 +269,8 @@ namespace Nautilus.Data
                     job,
                     this.Endpoint);
 
+                this.nextConnectTime = nextTime;
+
                 this.Log.Information($"Created scheduled job {job} for {nextTime.ToIsoString()}");
             });
         }
@@ -283,6 +296,8 @@ namespace Nautilus.Data
                     this.Endpoint,
                     job,
                     this.Endpoint);
+
+                this.nextDisconnectTime = nextTime;
 
                 this.Log.Information($"Created scheduled job {job} for {nextTime.ToIsoString()}");
             });

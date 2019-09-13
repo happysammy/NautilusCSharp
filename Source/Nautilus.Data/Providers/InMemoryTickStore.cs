@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Data
+namespace Nautilus.Data.Providers
 {
     using System.Collections.Generic;
     using System.Linq;
