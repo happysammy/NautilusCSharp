@@ -358,7 +358,7 @@ namespace Nautilus.Brokerage.Fxcm
             {
                 this.Log.Verbose($"Received {message}");
 
-                var orderId = message.ClOrdID.ToString();
+                var orderId = message.OrigClOrdID.ToString();
                 var fxcmCode = message.GetField(9025);
                 var cancelRejectResponseTo = message.CxlRejResponseTo.ToString();
                 var cancelRejectReason = $"{message.CxlRejReason}, {message.Text.ToString().TrimEnd('.')}, FXCMCode={fxcmCode}";
