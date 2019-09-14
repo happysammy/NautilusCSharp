@@ -19,22 +19,22 @@ namespace Nautilus.DomainModel.Enums
         NONE = 0,
 
         /// <summary>
-        /// The order purpose is specified as entry.
+        /// The order purpose is specified as an entry.
         /// </summary>
         ENTRY = 1,
 
         /// <summary>
-        /// The order purpose is specified as exit.
+        /// The order purpose is specified as an exit.
         /// </summary>
         EXIT = 2,
 
         /// <summary>
-        /// The order purpose is specified as stop-loss.
+        /// The order purpose is specified as a stop-loss.
         /// </summary>
         STOP_LOSS = 3,
 
         /// <summary>
-        /// The order purpose is specified as take_profit.
+        /// The order purpose is specified as a take_profit.
         /// </summary>
         TAKE_PROFIT = 4,
     }

@@ -16,13 +16,13 @@ namespace Nautilus.DomainModel.Enums
     public enum OrderState
     {
         /// <summary>
-        /// The unknown order state (invalid value).
+        /// The order state is unknown (invalid value).
         /// </summary>
         [InvalidValue]
         Unknown = 0,
 
         /// <summary>
-        /// Initialized order state.
+        /// The initialized order state.
         /// </summary>
         Initialized = 1,
 

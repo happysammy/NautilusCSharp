@@ -17,18 +17,18 @@ namespace Nautilus.DomainModel.Enums
     public enum OrderSide
     {
         /// <summary>
-        /// An undefined order side (invalid value).
+        /// The order side is unknown (invalid value).
         /// </summary>
         [InvalidValue]
         UNKNOWN = 0,
 
         /// <summary>
-        /// A buy order side.
+        /// The buy order side.
         /// </summary>
         BUY = 1,
 
         /// <summary>
-        /// A sell order side.
+        /// The sell order side.
         /// </summary>
         SELL = 2,
     }

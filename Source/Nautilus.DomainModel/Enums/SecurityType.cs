@@ -8,39 +8,52 @@
 
 namespace Nautilus.DomainModel.Enums
 {
+    using Nautilus.Core.Annotations;
+
     /// <summary>
     /// The type of security.
     /// </summary>
     public enum SecurityType
     {
         /// <summary>
+        /// The security type is unknown (invalid value).
+        /// </summary>
+        [InvalidValue]
+        UNKNOWN = 0,
+
+        /// <summary>
         /// The foreign exchange security type.
         /// </summary>
-        FOREX = 0,
+        FOREX = 1,
 
         /// <summary>
         /// The bond security type.
         /// </summary>
-        BOND = 1,
+        BOND = 2,
 
         /// <summary>
         /// The equity security type.
         /// </summary>
-        EQUITY = 2,
+        EQUITY = 3,
 
         /// <summary>
         /// The futures security type.
         /// </summary>
-        FUTURE = 3,
+        FUTURE = 4,
 
         /// <summary>
-        /// The contract For Difference security type.
+        /// The contract for difference security type.
         /// </summary>
-        CFD = 4,
+        CFD = 5,
 
         /// <summary>
         /// The option security type.
         /// </summary>
-        OPTION = 5,
+        OPTION = 6,
+
+        /// <summary>
+        /// The crypto security type.
+        /// </summary>
+        CRYPTO = 7,
     }
 }

@@ -16,23 +16,23 @@ namespace Nautilus.DomainModel.Enums
     public enum MarketPosition
     {
         /// <summary>
-        /// An unknown market position.
+        /// The market position is unknown (invalid value).
         /// </summary>
         [InvalidValue]
         Unknown = -1,
 
         /// <summary>
-        /// A flat market position.
+        /// The market position is flat.
         /// </summary>
         Flat = 0,
 
         /// <summary>
-        /// A long market position.
+        /// The market position is long.
         /// </summary>
         Long = 1,
 
         /// <summary>
-        /// A short market position.
+        /// The market position is short.
         /// </summary>
         Short = 2,
     }

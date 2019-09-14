@@ -16,7 +16,7 @@ namespace Nautilus.DomainModel.Enums
     public enum AccountType
     {
         /// <summary>
-        /// An undefined account type (invalid value).
+        /// The account type is undefined (invalid value).
         /// </summary>
         [InvalidValue]
         UNKNOWN = 0,

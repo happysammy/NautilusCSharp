@@ -9,8 +9,8 @@
 namespace Nautilus.DomainModel.Enums
 {
     /// <summary>
-    /// The uniqueness level of an identifier. An identifier is unique if there are no duplicates
-    /// of its value.
+    /// The uniqueness context of an identifier. An identifier is unique if there are no duplicates
+    /// of its value within the context.
     /// </summary>
     public enum Uniqueness
     {
