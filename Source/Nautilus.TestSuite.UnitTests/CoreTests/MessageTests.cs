@@ -14,6 +14,10 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;
 
+    // Required for equality testing
+    #pragma warning disable 8602
+    #pragma warning disable 8604
+    #pragma warning disable 8625
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public sealed class MessageTests
     {

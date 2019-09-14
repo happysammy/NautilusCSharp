@@ -9,6 +9,7 @@
 namespace Nautilus.Brokerage.Fxcm
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
@@ -43,6 +44,7 @@ namespace Nautilus.Brokerage.Fxcm
         private readonly Venue venue = new Venue("FXCM");
         private readonly SymbolConverter symbolConverter;
         private readonly ObjectCache<string, Symbol> symbolCache;
+        private readonly ConcurrentDictionary<OrderID, OrderId> orderIdIndex;
 
         private IDataGateway? dataGateway;
         private IEndpoint? tradingGateway;
@@ -65,6 +67,7 @@ namespace Nautilus.Brokerage.Fxcm
             this.accountCurrency = accountCurrency;
             this.symbolConverter = symbolConverter;
             this.symbolCache = new ObjectCache<string, Symbol>(Symbol.FromString);
+            this.orderIdIndex = new ConcurrentDictionary<OrderID, OrderId>();
         }
 
         /// <summary>
@@ -92,14 +95,14 @@ namespace Nautilus.Brokerage.Fxcm
         [SystemBoundary]
         public void OnMessage(CollateralInquiryAck message)
         {
-            Debug.NotNull(this.tradingGateway, nameof(this.tradingGateway));
-
             this.Execute(() =>
             {
+                Debug.NotNull(this.tradingGateway, nameof(this.tradingGateway));
+
                 var inquiryId = message.GetField(Tags.CollInquiryID);
                 var accountNumber = Convert.ToInt32(message.GetField(Tags.Account)).ToString();
 
-                this.Log.Verbose($"Received {message}");
+                this.Log.Debug($"<-- {message}(InquiryId={inquiryId}, AccountNumber={accountNumber}).");
             });
         }
 
@@ -112,7 +115,7 @@ namespace Nautilus.Brokerage.Fxcm
         {
             this.Execute(() =>
             {
-                this.Log.Verbose($"Received {message}");
+                this.Log.Debug($"<-- {message}");
             });
         }
 
@@ -127,7 +130,7 @@ namespace Nautilus.Brokerage.Fxcm
             {
                 Condition.NotEmptyOrWhiteSpace(message.Account.ToString(), nameof(message.Account));
 
-                this.Log.Debug($"PositionReport: ({message.Account})");
+                this.Log.Debug($"<-- PositionReport({message.Account})");
             });
         }
 
@@ -140,11 +143,11 @@ namespace Nautilus.Brokerage.Fxcm
         [SystemBoundary]
         public void OnMessage(RequestForPositionsAck message)
         {
-            Debug.NotNull(this.tradingGateway, nameof(this.tradingGateway));
-
             this.Execute(() =>
             {
-                this.Log.Verbose($"Received {message}");
+                Debug.NotNull(this.tradingGateway, nameof(this.tradingGateway));
+
+                this.Log.Debug($"<-- {message}");
             });
         }
 
@@ -156,10 +159,14 @@ namespace Nautilus.Brokerage.Fxcm
         [PerformanceOptimized]
         public void OnMessage(SecurityList message)
         {
-            Debug.NotNull(this.dataGateway, nameof(this.dataGateway));
-
             this.Execute(() =>
             {
+                Debug.NotNull(this.dataGateway, nameof(this.dataGateway));
+
+                var responseId = message.GetField(Tags.SecurityResponseID);
+                var result = FixMessageHelper.GetSecurityRequestResult(message.SecurityRequestResult);
+                this.Log.Debug($"<-- SecurityList(ResponseId={responseId}, Result={result}).");
+
                 var instruments = new List<Instrument>();
                 var groupCount = Convert.ToInt32(message.NoRelatedSym.ToString());
                 var group = new SecurityList.NoRelatedSymGroup();
@@ -215,10 +222,6 @@ namespace Nautilus.Brokerage.Fxcm
                     instruments.Add(instrument);
                 }
 
-                var responseId = message.GetField(Tags.SecurityResponseID);
-                var result = FixMessageHelper.GetSecurityRequestResult(message.SecurityRequestResult);
-
-                this.Log.Verbose($"Received {message} (ResponseID={responseId}, Result={result})");
                 this.dataGateway?.OnInstrumentsUpdate(instruments);
             });
         }
@@ -230,12 +233,13 @@ namespace Nautilus.Brokerage.Fxcm
         [SystemBoundary]
         public void OnMessage(CollateralReport message)
         {
-            Debug.NotNull(this.tradingGateway, nameof(this.tradingGateway));
-
             this.Execute(() =>
             {
+                Debug.NotNull(this.tradingGateway, nameof(this.tradingGateway));
+
                 var inquiryId = message.GetField(Tags.CollRptID);
                 var accountNumber = message.GetField(Tags.Account);
+                this.Log.Debug($"<-- {nameof(CollateralReport)}(InquiryId={inquiryId}, AccountNumber={accountNumber}).");
 
                 var cashBalance = Convert.ToDecimal(message.GetField(Tags.CashOutstanding));
                 var cashStartDay = Convert.ToDecimal(message.GetField(Tags.StartCash));
@@ -258,7 +262,6 @@ namespace Nautilus.Brokerage.Fxcm
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.Log.Verbose($"Received {message}");
                 this.tradingGateway?.Send(accountEvent);
             });
         }
@@ -272,7 +275,7 @@ namespace Nautilus.Brokerage.Fxcm
         {
             this.Execute(() =>
             {
-                this.Log.Verbose($"Received {message}");
+                this.Log.Verbose($"<-- {message}");
                 this.Log.Information(message.Product.ToString());
             });
         }
@@ -286,7 +289,7 @@ namespace Nautilus.Brokerage.Fxcm
         {
             this.Execute(() =>
             {
-                this.Log.Warning($"MarketDataRequestReject: {message.GetField(Tags.Text)}");
+                this.Log.Warning($"<-- MarketDataRequestReject(Text={message.GetField(Tags.Text)}).");
             });
         }
 
@@ -298,10 +301,10 @@ namespace Nautilus.Brokerage.Fxcm
         [PerformanceOptimized]
         public void OnMessage(MarketDataSnapshotFullRefresh message)
         {
-            Debug.NotNull(this.dataGateway, nameof(this.dataGateway));
-
             this.Execute(() =>
             {
+                Debug.NotNull(this.dataGateway, nameof(this.dataGateway));
+
                 var symbol = this.GetSymbol(GetField(message, Tags.Symbol));
                 if (symbol is null)
                 {
@@ -352,24 +355,29 @@ namespace Nautilus.Brokerage.Fxcm
         [SystemBoundary]
         public void OnMessage(QuickFix.FIX44.OrderCancelReject message)
         {
-            Debug.NotNull(this.tradingGateway, nameof(this.tradingGateway));
-
             this.Execute(() =>
             {
-                this.Log.Verbose($"Received {message}");
+                Debug.NotNull(this.tradingGateway, nameof(this.tradingGateway));
 
-                var orderId = GetField(message, Tags.OrigClOrdID);
+                this.Log.Debug($"<-- {message}");
+
+                var orderId = this.GetOrderId(message.OrderID);
+                if (orderId is null)
+                {
+                    return; // Error logged
+                }
+
                 var rejectReasonCode = GetField(message, 9025);
                 var fxcmRejectCode = message.GetField(9029);
                 var rejectResponseTo = FixMessageHelper.GetCxlRejResponseTo(message.CxlRejResponseTo);
                 var rejectReasonText = GetField(message, Tags.CxlRejReason);
                 var rejectReason = $"Code({rejectReasonCode})={FixMessageHelper.GetCancelRejectReasonString(rejectReasonCode)}, FXCM({fxcmRejectCode})={rejectReasonText}";
-                var timestamp = FixMessageHelper.ConvertExecutionReportString(GetField(message, Tags.TransactTime));
+                var rejectedTime = FixMessageHelper.ConvertExecutionReportString(GetField(message, Tags.TransactTime));
 
                 var orderCancelReject = new OrderCancelReject(
-                    new OrderId(orderId),
+                    orderId,
                     this.accountId,
-                    timestamp,
+                    rejectedTime,
                     rejectResponseTo,
                     rejectReason,
                     this.NewGuid(),
@@ -386,167 +394,287 @@ namespace Nautilus.Brokerage.Fxcm
         [SystemBoundary]
         public void OnMessage(ExecutionReport message)
         {
-            Debug.NotNull(this.tradingGateway, nameof(this.tradingGateway));
-
-            var orderId = GetField(message, Tags.OrigClOrdID);
-            var orderIdBroker = GetField(message, Tags.OrderID);
-            var orderLabel = GetField(message, Tags.SecondaryClOrdID);
-            var orderSide = FixMessageHelper.GetOrderSide(GetField(message, Tags.Side));
-            var orderType = FixMessageHelper.GetOrderType(GetField(message, Tags.OrdType));
-            var price = FixMessageHelper.GetOrderPrice(
-                orderType,
-                Convert.ToDecimal(GetField(message, Tags.StopPx)),
-                Convert.ToDecimal(GetField(message, Tags.Price)));
-            var timeInForce = FixMessageHelper.GetTimeInForce(GetField(message, Tags.TimeInForce));
-            var timestamp = FixMessageHelper.ConvertExecutionReportString(GetField(message, Tags.TransactTime));
-            var orderQty = Convert.ToInt32(GetField(message, Tags.OrderQty));
-
-            var orderStatus = message.GetField(Tags.OrdStatus);
-            if (orderStatus == OrdStatus.REJECTED.ToString())
+            this.Execute(() =>
             {
-                var rejectReasonCode = message.GetField(9025);
-                var fxcmRejectCode = message.GetField(9029);
-                var rejectReasonText = GetField(message, Tags.CxlRejReason);
-                var rejectReason = $"Code({rejectReasonCode})={FixMessageHelper.GetCancelRejectReasonString(rejectReasonCode)}, FXCM({fxcmRejectCode})={rejectReasonText}";
+                Debug.NotNull(this.tradingGateway, nameof(this.tradingGateway));
 
-                var orderRejected = new OrderRejected(
-                    new OrderId(orderId),
-                    this.accountId,
-                    timestamp,
-                    rejectReason,
-                    this.NewGuid(),
-                    this.TimeNow());
+                this.Log.Debug($"<-- {message}");
 
-                this.tradingGateway?.Send(orderRejected);
-            }
-            else if (orderStatus == OrdStatus.CANCELED.ToString())
-            {
-                var orderCancelled = new OrderCancelled(
-                    new OrderId(orderId),
-                    this.accountId,
-                    timestamp,
-                    this.NewGuid(),
-                    this.TimeNow());
+                var orderIdBroker = new OrderIdBroker(GetField(message, Tags.OrderID));
+                var orderLabel = new Label(GetField(message, Tags.SecondaryClOrdID));
+                var orderSide = FixMessageHelper.GetOrderSide(GetField(message, Tags.Side));
+                var orderType = FixMessageHelper.GetOrderType(GetField(message, Tags.OrdType));
+                var timeInForce = FixMessageHelper.GetTimeInForce(GetField(message, Tags.TimeInForce));
+                var timestamp = FixMessageHelper.ConvertExecutionReportString(GetField(message, Tags.TransactTime));
+                var orderQty = Quantity.Create(Convert.ToInt32(GetField(message, Tags.OrderQty)));
 
-                this.tradingGateway?.Send(orderCancelled);
-            }
-            else if (orderStatus == OrdStatus.REPLACED.ToString())
-            {
-                var orderModified = new OrderModified(
-                    new OrderId(orderId),
-                    new OrderIdBroker(orderIdBroker),
-                    this.accountId,
-                    Price.Create(price, price.GetDecimalPlaces()),
-                    timestamp,
-                    this.NewGuid(),
-                    this.TimeNow());
-
-                this.tradingGateway?.Send(orderModified);
-            }
-            else if (orderStatus == OrdStatus.NEW.ToString())
-            {
-                var expireTime = message.IsSetField(Tags.ExpireTime)
-                    ? FixMessageHelper.ConvertExecutionReportString(message.GetField(Tags.ExpireTime))
-                    : (ZonedDateTime?)null;
-
-                var symbol = this.GetSymbol(message.GetField(Tags.Symbol));
-                if (symbol is null)
+                var orderStatus = message.GetField(Tags.OrdStatus);
+                switch (orderStatus)
                 {
-                    this.Log.Error("Could not get symbol for event.");
-                    return;
+                    case nameof(OrdStatus.REJECTED):
+                    {
+                        var orderId = this.GetOrderId(message.OrderID);
+                        if (orderId is null)
+                        {
+                            return; // Error logged
+                        }
+
+                        var rejectReasonCode = message.GetField(9025);
+                        var fxcmRejectCode = message.GetField(9029);
+                        var rejectReasonText = GetField(message, Tags.CxlRejReason);
+                        var rejectReason = $"Code({rejectReasonCode})={FixMessageHelper.GetCancelRejectReasonString(rejectReasonCode)}, FXCM({fxcmRejectCode})={rejectReasonText}";
+
+                        var orderRejected = new OrderRejected(
+                            orderId,
+                            this.accountId,
+                            timestamp,
+                            rejectReason,
+                            this.NewGuid(),
+                            this.TimeNow());
+
+                        this.tradingGateway?.Send(orderRejected);
+                        break;
+                    }
+
+                    case nameof(OrdStatus.CANCELED):
+                    {
+                        var orderId = this.GetOrderId(message.OrderID);
+                        if (orderId is null)
+                        {
+                            return; // Error logged
+                        }
+
+                        var orderCancelled = new OrderCancelled(
+                            orderId,
+                            this.accountId,
+                            timestamp,
+                            this.NewGuid(),
+                            this.TimeNow());
+
+                        this.tradingGateway?.Send(orderCancelled);
+                        break;
+                    }
+
+                    case nameof(OrdStatus.REPLACED):
+                    {
+                        var orderId = this.GetOrderId(message.OrderID);
+                        if (orderId is null)
+                        {
+                            return; // Error logged
+                        }
+
+                        var price = Price.Create(FixMessageHelper.GetOrderPrice(
+                            orderType,
+                            Convert.ToDecimal(GetField(message, Tags.StopPx)),
+                            Convert.ToDecimal(GetField(message, Tags.Price))));
+
+                        var orderModified = new OrderModified(
+                            orderId,
+                            orderIdBroker,
+                            this.accountId,
+                            price,
+                            timestamp,
+                            this.NewGuid(),
+                            this.TimeNow());
+
+                        this.tradingGateway?.Send(orderModified);
+                        break;
+                    }
+
+                    case nameof(OrdStatus.NEW):
+                    {
+                        var orderId = new OrderId(message.OrigClOrdID.ToString());
+                        this.orderIdIndex[message.OrderID] = orderId;
+
+                        var symbol = this.GetSymbol(message.GetField(Tags.Symbol));
+                        if (symbol is null)
+                        {
+                            return;  // Error logged
+                        }
+
+                        var price = Price.Create(FixMessageHelper.GetOrderPrice(
+                            orderType,
+                            Convert.ToDecimal(GetField(message, Tags.StopPx)),
+                            Convert.ToDecimal(GetField(message, Tags.Price))));
+
+                        var expireTime = message.IsSetField(Tags.ExpireTime)
+                            ? FixMessageHelper.ConvertExecutionReportString(message.GetField(Tags.ExpireTime))
+                            : (ZonedDateTime?)null;
+
+                        var orderWorking = new OrderWorking(
+                            orderId,
+                            orderIdBroker,
+                            this.accountId,
+                            symbol,
+                            orderLabel,
+                            orderSide,
+                            orderType,
+                            orderQty,
+                            price,
+                            timeInForce,
+                            expireTime,
+                            timestamp,
+                            this.NewGuid(),
+                            this.TimeNow());
+
+                        this.tradingGateway?.Send(orderWorking);
+                        break;
+                    }
+
+                    case nameof(OrdStatus.EXPIRED):
+                    {
+                        var orderId = this.GetOrderId(message.OrderID);
+                        if (orderId is null)
+                        {
+                            return; // Error logged
+                        }
+
+                        var orderExpired = new OrderExpired(
+                            orderId,
+                            this.accountId,
+                            timestamp,
+                            this.NewGuid(),
+                            this.TimeNow());
+
+                        this.tradingGateway?.Send(orderExpired);
+                        break;
+                    }
+
+                    case nameof(OrdStatus.FILLED):
+                    {
+                        var orderId = this.GetOrderId(message.OrderID);
+                        if (orderId is null)
+                        {
+                            return; // Error logged
+                        }
+
+                        var executionId = new ExecutionId(GetField(message, Tags.ExecID));
+                        var executionTicket = new ExecutionTicket(GetField(message, 9041));
+
+                        var symbol = this.GetSymbol(message.GetField(Tags.Symbol));
+                        if (symbol is null)
+                        {
+                            return;  // Error logged
+                        }
+
+                        var filledQuantity = Quantity.Create(Convert.ToInt32(GetField(message, Tags.CumQty)));
+                        var averagePrice = Price.Create(Convert.ToDecimal(GetField(message, Tags.AvgPx)));
+
+                        var orderFilled = new OrderFilled(
+                            orderId,
+                            this.accountId,
+                            executionId,
+                            executionTicket,
+                            symbol,
+                            orderSide,
+                            filledQuantity,
+                            averagePrice,
+                            timestamp,
+                            this.NewGuid(),
+                            this.TimeNow());
+
+                        this.tradingGateway?.Send(orderFilled);
+                        break;
+                    }
+
+                    case nameof(OrdStatus.PARTIALLY_FILLED):
+                    {
+                        var orderId = this.GetOrderId(message.OrderID);
+                        if (orderId is null)
+                        {
+                            return; // Error logged
+                        }
+
+                        var executionId = new ExecutionId(GetField(message, Tags.ExecID));
+                        var executionTicket = new ExecutionTicket(GetField(message, 9041));
+
+                        var symbol = this.GetSymbol(message.GetField(Tags.Symbol));
+                        if (symbol is null)
+                        {
+                            return;  // Error logged
+                        }
+
+                        var filledQuantity = Quantity.Create(Convert.ToInt32(GetField(message, Tags.CumQty)));
+                        var averagePrice = Price.Create(Convert.ToDecimal(GetField(message, Tags.AvgPx)));
+                        var leavesQuantity = Quantity.Create(Convert.ToInt32(GetField(message, Tags.LeavesQty)));
+
+                        var orderPartiallyFilled = new OrderPartiallyFilled(
+                            orderId,
+                            this.accountId,
+                            executionId,
+                            executionTicket,
+                            symbol,
+                            orderSide,
+                            filledQuantity,
+                            leavesQuantity,
+                            averagePrice,
+                            timestamp,
+                            this.NewGuid(),
+                            this.TimeNow());
+
+                        this.tradingGateway?.Send(orderPartiallyFilled);
+                        break;
+                    }
+
+                    case nameof(OrdStatus.STOPPED):
+                    {
+                        this.Log.Warning($"<-- Unhandled Case STOPPED({message}).");
+                        break;
+                    }
+
+                    case nameof(OrdStatus.SUSPENDED):
+                    {
+                        this.Log.Warning($"<-- Unhandled Case SUSPENDED({message}).");
+                        break;
+                    }
+
+                    case nameof(OrdStatus.CALCULATED):
+                    {
+                        this.Log.Warning($"<-- Unhandled Case CALCULATED({message}).");
+                        break;
+                    }
+
+                    case nameof(OrdStatus.DONE_FOR_DAY):
+                    {
+                        this.Log.Warning($"<-- Unhandled Case DONE_FOR_DAY({message}).");
+                        break;
+                    }
+
+                    case nameof(OrdStatus.PENDING_NEW):
+                    {
+                        this.Log.Warning($"<-- Unhandled Case PENDING_NEW({message}).");
+                        break;
+                    }
+
+                    case nameof(OrdStatus.PENDING_CANCEL):
+                    {
+                        this.Log.Warning($"<-- Unhandled Case PENDING_CANCEL({message}).");
+                        break;
+                    }
+
+                    case nameof(OrdStatus.PENDING_REPLACE):
+                    {
+                        this.Log.Warning($"<-- Unhandled Case PENDING_REPLACE({message}).");
+                        break;
+                    }
+
+                    case nameof(OrdStatus.ACCEPTED_FOR_BIDDING):
+                    {
+                        this.Log.Warning($"<-- Unhandled Case ACCEPTED_FOR_BIDDING({message}).");
+                        break;
+                    }
+
+                    case nameof(OrdStatus.PENDING_CANCELREPLACE):
+                    {
+                        this.Log.Warning($"<-- Unhandled Case PENDING_CANCELREPLACE({message}).");
+                        break;
+                    }
+
+                    default:
+                        ExceptionFactory.InvalidSwitchArgument(orderStatus, nameof(message.OrdStatus));
+                        break;
                 }
-
-                var orderWorking = new OrderWorking(
-                    new OrderId(orderId),
-                    new OrderIdBroker(orderIdBroker),
-                    this.accountId,
-                    symbol,
-                    new Label(orderLabel),
-                    orderSide,
-                    orderType,
-                    Quantity.Create(orderQty),
-                    Price.Create(price, price.GetDecimalPlaces()),
-                    timeInForce,
-                    expireTime,
-                    timestamp,
-                    this.NewGuid(),
-                    this.TimeNow());
-
-                this.tradingGateway?.Send(orderWorking);
-            }
-            else if (orderStatus == OrdStatus.EXPIRED.ToString())
-            {
-                var orderExpired = new OrderExpired(
-                    new OrderId(orderId),
-                    this.accountId,
-                    timestamp,
-                    this.NewGuid(),
-                    this.TimeNow());
-
-                this.tradingGateway?.Send(orderExpired);
-            }
-            else if (orderStatus == OrdStatus.FILLED.ToString())
-            {
-                var symbol = this.GetSymbol(message.GetField(Tags.Symbol));
-                if (symbol is null)
-                {
-                    this.Log.Error("Could not get symbol for event.");
-                    return;
-                }
-
-                var executionId = GetField(message, Tags.ExecID);
-                var executionTicket = GetField(message, 9041);
-                var filledQuantity = Convert.ToInt32(GetField(message, Tags.CumQty));
-                var averagePrice = Convert.ToDecimal(GetField(message, Tags.AvgPx));
-
-                var orderFilled = new OrderFilled(
-                    new OrderId(OrderIdPostfixRemover.Remove(orderId)),
-                    this.accountId,
-                    new ExecutionId(executionId),
-                    new ExecutionTicket(executionTicket),
-                    symbol,
-                    orderSide,
-                    Quantity.Create(filledQuantity),
-                    Price.Create(averagePrice, averagePrice.GetDecimalPlaces()),
-                    timestamp,
-                    this.NewGuid(),
-                    this.TimeNow());
-
-                this.tradingGateway?.Send(orderFilled);
-            }
-            else if (orderStatus == OrdStatus.PARTIALLY_FILLED.ToString())
-            {
-                var symbol = this.GetSymbol(message.GetField(Tags.Symbol));
-                if (symbol is null)
-                {
-                    this.Log.Error("Could not get symbol for event.");
-                    return;
-                }
-
-                var executionId = GetField(message, Tags.ExecID);
-                var executionTicket = GetField(message, 9041);
-                var filledQuantity = Convert.ToInt32(GetField(message, Tags.CumQty));
-                var leavesQuantity = Convert.ToInt32(GetField(message, Tags.LeavesQty));
-                var averagePrice = Convert.ToDecimal(GetField(message, Tags.AvgPx));
-
-                var orderPartiallyFilled = new OrderPartiallyFilled(
-                    new OrderId(OrderIdPostfixRemover.Remove(orderId)),
-                    this.accountId,
-                    new ExecutionId(executionId),
-                    new ExecutionTicket(executionTicket),
-                    symbol,
-                    orderSide,
-                    Quantity.Create(filledQuantity),
-                    Quantity.Create(leavesQuantity),
-                    Price.Create(averagePrice, averagePrice.GetDecimalPlaces()),
-                    timestamp,
-                    this.NewGuid(),
-                    this.TimeNow());
-
-                this.tradingGateway?.Send(orderPartiallyFilled);
-            }
-
-            this.Log.Debug($"<-- ExecutionReport(OrigClOrdID={orderId}, Status={orderStatus}).");
+            });
         }
 
         private static string GetField(FieldMap map, int tag)
@@ -554,6 +682,17 @@ namespace Nautilus.Brokerage.Fxcm
             return map.IsSetField(tag)
                 ? map.GetField(tag)
                 : string.Empty;
+        }
+
+        private OrderId? GetOrderId(OrderID orderIdBroker)
+        {
+            if (this.orderIdIndex.TryGetValue(orderIdBroker, out var orderId))
+            {
+                return orderId;
+            }
+
+            this.Log.Error($"Could not find OrderId for OrderIdBroker({orderIdBroker}).");
+            return null;
         }
 
         private Symbol? GetSymbol(string brokerSymbolCode)

@@ -66,7 +66,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             var count2 = this.receiver.Messages.Count;
 
             // Should receive the final message
-            Task.Delay(100).Wait();
+            Task.Delay(120).Wait();
             var count3 = this.receiver.Messages.Count;
 
             LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
