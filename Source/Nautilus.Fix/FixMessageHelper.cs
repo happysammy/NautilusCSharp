@@ -143,13 +143,13 @@ namespace Nautilus.Fix
         /// <returns>A <see cref="SecurityType"/>.</returns>
         public static SecurityType GetSecurityType(string type)
         {
-            // TODO
-            if (type == "1")
+            switch (type)
             {
-                return SecurityType.FOREX;
+                case "1":
+                    return SecurityType.FOREX;
+                default:
+                    return SecurityType.CFD;
             }
-
-            return SecurityType.CFD;
         }
 
         /// <summary>

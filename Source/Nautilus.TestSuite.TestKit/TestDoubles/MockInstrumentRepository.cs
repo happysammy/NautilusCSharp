@@ -29,22 +29,22 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
         public void ResetCache()
         {
-            throw new System.NotImplementedException();
+            // Not implemented
         }
 
         public void CacheAll()
         {
-            throw new System.NotImplementedException();
+            // Not implemented
         }
 
         public void DeleteAll()
         {
-            throw new System.NotImplementedException();
+            this.instruments.Clear();
         }
 
         public void Delete(Symbol symbol)
         {
-            throw new System.NotImplementedException();
+            this.instruments.Remove(symbol);
         }
 
         public CommandResult Add(Instrument instrument, ZonedDateTime timeNow)

@@ -355,7 +355,7 @@ namespace Nautilus.Fix
         /// <param name="sessionId">The session identifier.</param>
         public void OnMessage(TradingSessionStatus message, SessionID sessionId)
         {
-            // TODO
+            // Not implemented
         }
 
         /// <summary>

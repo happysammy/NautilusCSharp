@@ -89,12 +89,14 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
         public CommandResult TrimToDays(Resolution resolution, int trimToDays)
         {
-            throw new System.NotImplementedException();
+            // Not implemented
+            return CommandResult.Ok();
         }
 
         public CommandResult SnapshotDatabase()
         {
-            throw new System.NotImplementedException();
+            // Not implemented
+            return CommandResult.Ok();
         }
     }
 }

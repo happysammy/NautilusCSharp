@@ -109,7 +109,7 @@ namespace NautilusData
         {
             this.dataService.Stop();
 
-            Task.Delay(2000).Wait(); // TODO: Graceful stop.
+            Task.Delay(2000).Wait();
         }
     }
 }

@@ -8,7 +8,6 @@
 
 namespace Nautilus.Serialization
 {
-    using System;
     using System.Text;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -29,7 +28,7 @@ namespace Nautilus.Serialization
         /// <inheritdoc />
         public Tick Deserialize(byte[] bytes)
         {
-            throw new NotImplementedException();
+            return Tick.FromStringWithSymbol(Encoding.UTF8.GetString(bytes));
         }
     }
 }

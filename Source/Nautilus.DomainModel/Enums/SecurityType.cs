@@ -14,32 +14,32 @@ namespace Nautilus.DomainModel.Enums
     public enum SecurityType
     {
         /// <summary>
-        /// Foreign Exchange security type.
+        /// The foreign exchange security type.
         /// </summary>
         FOREX = 0,
 
         /// <summary>
-        /// Bond security type.
+        /// The bond security type.
         /// </summary>
         BOND = 1,
 
         /// <summary>
-        /// Equity security type.
+        /// The equity security type.
         /// </summary>
         EQUITY = 2,
 
         /// <summary>
-        /// Futures security type.
+        /// The futures security type.
         /// </summary>
         FUTURE = 3,
 
         /// <summary>
-        /// Contract For Difference security type.
+        /// The contract For Difference security type.
         /// </summary>
         CFD = 4,
 
         /// <summary>
-        /// Option security type.
+        /// The option security type.
         /// </summary>
         OPTION = 5,
     }
