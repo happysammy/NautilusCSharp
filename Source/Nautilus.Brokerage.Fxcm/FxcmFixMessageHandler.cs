@@ -358,18 +358,20 @@ namespace Nautilus.Brokerage.Fxcm
             {
                 this.Log.Verbose($"Received {message}");
 
-                var orderId = message.OrigClOrdID.ToString();
-                var fxcmCode = message.GetField(9025);
-                var cancelRejectResponseTo = message.CxlRejResponseTo.ToString();
-                var cancelRejectReason = $"{message.CxlRejReason}, {message.Text.ToString().TrimEnd('.')}, FXCMCode={fxcmCode}";
+                var orderId = GetField(message, Tags.OrigClOrdID);
+                var rejectReasonCode = GetField(message, 9025);
+                var fxcmRejectCode = message.GetField(9029);
+                var rejectResponseTo = FixMessageHelper.GetCxlRejResponseTo(message.CxlRejResponseTo);
+                var rejectReasonText = GetField(message, Tags.CxlRejReason);
+                var rejectReason = $"Code({rejectReasonCode})={FixMessageHelper.GetCancelRejectReasonString(rejectReasonCode)}, FXCM({fxcmRejectCode})={rejectReasonText}";
                 var timestamp = FixMessageHelper.ConvertExecutionReportString(GetField(message, Tags.TransactTime));
 
                 var orderCancelReject = new OrderCancelReject(
-                    new OrderId(OrderIdPostfixRemover.Remove(orderId)),
+                    new OrderId(orderId),
                     this.accountId,
                     timestamp,
-                    cancelRejectResponseTo,
-                    cancelRejectReason,
+                    rejectResponseTo,
+                    rejectReason,
                     this.NewGuid(),
                     this.TimeNow());
 
@@ -386,7 +388,7 @@ namespace Nautilus.Brokerage.Fxcm
         {
             Debug.NotNull(this.tradingGateway, nameof(this.tradingGateway));
 
-            var orderId = GetField(message, Tags.ClOrdID);
+            var orderId = GetField(message, Tags.OrigClOrdID);
             var orderIdBroker = GetField(message, Tags.OrderID);
             var orderLabel = GetField(message, Tags.SecondaryClOrdID);
             var orderSide = FixMessageHelper.GetOrderSide(GetField(message, Tags.Side));
@@ -408,7 +410,7 @@ namespace Nautilus.Brokerage.Fxcm
                 var rejectReason = $"Code({rejectReasonCode})={FixMessageHelper.GetCancelRejectReasonString(rejectReasonCode)}, FXCM({fxcmRejectCode})={rejectReasonText}";
 
                 var orderRejected = new OrderRejected(
-                    new OrderId(OrderIdPostfixRemover.Remove(orderId)),
+                    new OrderId(orderId),
                     this.accountId,
                     timestamp,
                     rejectReason,
@@ -420,7 +422,7 @@ namespace Nautilus.Brokerage.Fxcm
             else if (orderStatus == OrdStatus.CANCELED.ToString())
             {
                 var orderCancelled = new OrderCancelled(
-                    new OrderId(OrderIdPostfixRemover.Remove(orderId)),
+                    new OrderId(orderId),
                     this.accountId,
                     timestamp,
                     this.NewGuid(),
@@ -431,7 +433,7 @@ namespace Nautilus.Brokerage.Fxcm
             else if (orderStatus == OrdStatus.REPLACED.ToString())
             {
                 var orderModified = new OrderModified(
-                    new OrderId(OrderIdPostfixRemover.Remove(orderId)),
+                    new OrderId(orderId),
                     new OrderIdBroker(orderIdBroker),
                     this.accountId,
                     Price.Create(price, price.GetDecimalPlaces()),
@@ -455,7 +457,7 @@ namespace Nautilus.Brokerage.Fxcm
                 }
 
                 var orderWorking = new OrderWorking(
-                    new OrderId(OrderIdPostfixRemover.Remove(orderId)),
+                    new OrderId(orderId),
                     new OrderIdBroker(orderIdBroker),
                     this.accountId,
                     symbol,
@@ -475,7 +477,7 @@ namespace Nautilus.Brokerage.Fxcm
             else if (orderStatus == OrdStatus.EXPIRED.ToString())
             {
                 var orderExpired = new OrderExpired(
-                    new OrderId(OrderIdPostfixRemover.Remove(orderId)),
+                    new OrderId(orderId),
                     this.accountId,
                     timestamp,
                     this.NewGuid(),
@@ -544,7 +546,7 @@ namespace Nautilus.Brokerage.Fxcm
                 this.tradingGateway?.Send(orderPartiallyFilled);
             }
 
-            this.Log.Debug($"Received ExecutionReport(ClOrdID={orderId}, Status={orderStatus}).");
+            this.Log.Debug($"<-- ExecutionReport(OrigClOrdID={orderId}, Status={orderStatus}).");
         }
 
         private static string GetField(FieldMap map, int tag)
