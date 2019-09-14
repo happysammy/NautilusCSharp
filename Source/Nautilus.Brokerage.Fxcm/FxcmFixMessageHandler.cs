@@ -618,55 +618,55 @@ namespace Nautilus.Brokerage.Fxcm
 
                     case nameof(OrdStatus.STOPPED):
                     {
-                        this.Log.Warning($"<-- Unhandled Case STOPPED({message}).");
+                        this.Log.Warning($"<-- Unhandled OrderStatus STOPPED({message}).");
                         break;
                     }
 
                     case nameof(OrdStatus.SUSPENDED):
                     {
-                        this.Log.Warning($"<-- Unhandled Case SUSPENDED({message}).");
+                        this.Log.Warning($"<-- Unhandled OrderStatus SUSPENDED({message}).");
                         break;
                     }
 
                     case nameof(OrdStatus.CALCULATED):
                     {
-                        this.Log.Warning($"<-- Unhandled Case CALCULATED({message}).");
+                        this.Log.Warning($"<-- Unhandled OrderStatus CALCULATED({message}).");
                         break;
                     }
 
                     case nameof(OrdStatus.DONE_FOR_DAY):
                     {
-                        this.Log.Warning($"<-- Unhandled Case DONE_FOR_DAY({message}).");
+                        this.Log.Warning($"<-- Unhandled OrderStatus DONE_FOR_DAY({message}).");
                         break;
                     }
 
                     case nameof(OrdStatus.PENDING_NEW):
                     {
-                        this.Log.Warning($"<-- Unhandled Case PENDING_NEW({message}).");
+                        this.Log.Warning($"<-- Unhandled OrderStatus PENDING_NEW({message}).");
                         break;
                     }
 
                     case nameof(OrdStatus.PENDING_CANCEL):
                     {
-                        this.Log.Warning($"<-- Unhandled Case PENDING_CANCEL({message}).");
+                        this.Log.Warning($"<-- Unhandled OrderStatus PENDING_CANCEL({message}).");
                         break;
                     }
 
                     case nameof(OrdStatus.PENDING_REPLACE):
                     {
-                        this.Log.Warning($"<-- Unhandled Case PENDING_REPLACE({message}).");
+                        this.Log.Warning($"<-- Unhandled OrderStatus PENDING_REPLACE({message}).");
                         break;
                     }
 
                     case nameof(OrdStatus.ACCEPTED_FOR_BIDDING):
                     {
-                        this.Log.Warning($"<-- Unhandled Case ACCEPTED_FOR_BIDDING({message}).");
+                        this.Log.Warning($"<-- Unhandled OrderStatus ACCEPTED_FOR_BIDDING({message}).");
                         break;
                     }
 
                     case nameof(OrdStatus.PENDING_CANCELREPLACE):
                     {
-                        this.Log.Warning($"<-- Unhandled Case PENDING_CANCELREPLACE({message}).");
+                        this.Log.Warning($"<-- Unhandled OrderStatus PENDING_CANCELREPLACE({message}).");
                         break;
                     }
 
