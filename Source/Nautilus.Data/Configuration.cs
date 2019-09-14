@@ -59,10 +59,12 @@ namespace Nautilus.Data
             var fixSettings = ConfigReader.LoadConfig(configPath);
             var broker = new Brokerage(fixSettings["Brokerage"]);
             var accountType = fixSettings["AccountType"].ToEnum<AccountType>();
+            var accountCurrency = fixSettings["AccountCurrency"].ToEnum<Currency>();
             var credentials = new FixCredentials(
                 fixSettings["Account"],
                 fixSettings["Username"],
                 fixSettings["Password"]);
+            var sendAccountTag = Convert.ToBoolean(fixSettings["SendAccountTag"]);
 
             var connectDay = configJson[ConfigSection.Fix44]["connectDay"].ToString().ToEnum<IsoDayOfWeek>();
             var connectHour = (int)configJson[ConfigSection.Fix44]["connectHour"];
@@ -77,9 +79,10 @@ namespace Nautilus.Data
             this.FixConfiguration = new FixConfiguration(
                 broker,
                 accountType,
+                accountCurrency,
                 configPath,
                 credentials,
-                Convert.ToBoolean(fixSettings["SendAccountTag"]),
+                sendAccountTag,
                 connectTime,
                 disconnectTime);
 

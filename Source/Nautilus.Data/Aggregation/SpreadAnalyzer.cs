@@ -24,7 +24,7 @@ namespace Nautilus.Data.Aggregation
         private readonly List<(ZonedDateTime, decimal)> negativeSpreads;
         private readonly List<(ZonedDateTime, decimal)> averageSpreads;
 
-        // Initialized on first tick.
+        // Initialized on first tick
         private bool isInitialized;
         private int decimalPrecision;
 
@@ -36,8 +36,6 @@ namespace Nautilus.Data.Aggregation
             this.thisBarsSpreads = new List<decimal>();
             this.negativeSpreads = new List<(ZonedDateTime, decimal)>();
             this.averageSpreads = new List<(ZonedDateTime, decimal)>();
-            this.CurrentBid = Price.Create(decimal.One);  // TODO: Refactor this logic
-            this.CurrentAsk = Price.Create(decimal.One);  // TODO: Refactor this logic
             this.MaxSpread = ValueTuple.Create(default(ZonedDateTime), decimal.MinValue);
             this.MinSpread = ValueTuple.Create(default(ZonedDateTime), decimal.MaxValue);
         }
@@ -45,12 +43,12 @@ namespace Nautilus.Data.Aggregation
         /// <summary>
         /// Gets the spread analyzers current bid.
         /// </summary>
-        public Price CurrentBid { get; private set; }
+        public Price? CurrentBid { get; private set; }
 
         /// <summary>
         /// Gets the spread analyzers current ask.
         /// </summary>
-        public Price CurrentAsk { get; private set; }
+        public Price? CurrentAsk { get; private set; }
 
         /// <summary>
         /// Gets the spread analyzers current spread.

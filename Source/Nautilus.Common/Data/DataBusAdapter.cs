@@ -48,7 +48,6 @@ namespace Nautilus.Common.Data
         {
             this.endpoints = endpoints.ToImmutableDictionary();
 
-            // TODO: Make more generic
             this.tickBus = tickBus;
             this.barBus = barBus;
             this.instrumentBus = instrumentBus;

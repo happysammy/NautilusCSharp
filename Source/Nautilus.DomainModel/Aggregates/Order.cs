@@ -260,9 +260,9 @@ namespace Nautilus.DomainModel.Aggregates
             {
                 { new StateTransition<OrderState>(OrderState.Initialized, Trigger.Event(typeof(OrderSubmitted))), OrderState.Submitted },
                 { new StateTransition<OrderState>(OrderState.Initialized, Trigger.Event(typeof(OrderCancelled))), OrderState.Cancelled },
-                { new StateTransition<OrderState>(OrderState.Initialized, Trigger.Event(typeof(OrderWorking))), OrderState.Working },  // TODO: Find out correct states
+                { new StateTransition<OrderState>(OrderState.Initialized, Trigger.Event(typeof(OrderWorking))), OrderState.Working },
                 { new StateTransition<OrderState>(OrderState.Submitted, Trigger.Event(typeof(OrderRejected))), OrderState.Rejected },
-                { new StateTransition<OrderState>(OrderState.Submitted, Trigger.Event(typeof(OrderWorking))), OrderState.Working },  // TODO: Find out correct states
+                { new StateTransition<OrderState>(OrderState.Submitted, Trigger.Event(typeof(OrderWorking))), OrderState.Working },
                 { new StateTransition<OrderState>(OrderState.Submitted, Trigger.Event(typeof(OrderAccepted))), OrderState.Accepted },
                 { new StateTransition<OrderState>(OrderState.Submitted, Trigger.Event(typeof(OrderCancelled))), OrderState.Cancelled },
                 { new StateTransition<OrderState>(OrderState.Accepted, Trigger.Event(typeof(OrderCancelReject))), OrderState.Accepted }, // OrderCancelReject (state should remain unchanged).
@@ -270,7 +270,7 @@ namespace Nautilus.DomainModel.Aggregates
                 { new StateTransition<OrderState>(OrderState.Accepted, Trigger.Event(typeof(OrderFilled))), OrderState.Filled },
                 { new StateTransition<OrderState>(OrderState.Accepted, Trigger.Event(typeof(OrderPartiallyFilled))), OrderState.PartiallyFilled },
                 { new StateTransition<OrderState>(OrderState.Working, Trigger.Event(typeof(OrderCancelReject))), OrderState.Working }, // OrderCancelReject (state should remain unchanged).
-                { new StateTransition<OrderState>(OrderState.Working, Trigger.Event(typeof(OrderWorking))), OrderState.Working }, // TODO: Find out correct states
+                { new StateTransition<OrderState>(OrderState.Working, Trigger.Event(typeof(OrderWorking))), OrderState.Working },
                 { new StateTransition<OrderState>(OrderState.Working, Trigger.Event(typeof(OrderCancelled))), OrderState.Cancelled },
                 { new StateTransition<OrderState>(OrderState.Working, Trigger.Event(typeof(OrderModified))), OrderState.Working },
                 { new StateTransition<OrderState>(OrderState.Working, Trigger.Event(typeof(OrderExpired))), OrderState.Expired },

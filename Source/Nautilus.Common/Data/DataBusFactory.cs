@@ -27,7 +27,6 @@ namespace Nautilus.Common.Data
         /// <returns>The messaging adapter.</returns>
         public static DataBusAdapter Create(IComponentryContainer container)
         {
-            // TODO: Make more generic
             var tickBus = new DataBus<Tick>(container);
             var barBus = new DataBus<BarData>(container);
             var instrumentBus = new DataBus<Instrument>(container);

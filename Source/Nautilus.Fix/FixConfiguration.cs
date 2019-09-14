@@ -25,6 +25,7 @@ namespace Nautilus.Fix
         /// </summary>
         /// <param name="broker">The FIX brokerage name.</param>
         /// <param name="accountType">The FIX account type.</param>
+        /// <param name="accountCurrency">The FIX account currency.</param>
         /// <param name="configPath">The FIX configuration file path.</param>
         /// <param name="credentials">The FIX credentials.</param>
         /// <param name="sendAccountTag">The option flag to send account tags with messages.</param>
@@ -33,6 +34,7 @@ namespace Nautilus.Fix
         public FixConfiguration(
             Brokerage broker,
             AccountType accountType,
+            Currency accountCurrency,
             string configPath,
             FixCredentials credentials,
             bool sendAccountTag,
@@ -44,6 +46,7 @@ namespace Nautilus.Fix
             this.AccountId = new AccountId(broker, credentials.AccountNumber, accountType);
             this.Broker = broker;
             this.AccountType = accountType;
+            this.AccountCurrency = accountCurrency;
             this.ConfigPath = configPath;
             this.Credentials = credentials;
             this.SendAccountTag = sendAccountTag;
@@ -65,6 +68,11 @@ namespace Nautilus.Fix
         /// Gets the FIX account type.
         /// </summary>
         public AccountType AccountType { get; }
+
+        /// <summary>
+        /// Gets the FIX account currency.
+        /// </summary>
+        public Currency AccountCurrency { get; }
 
         /// <summary>
         /// Gets the FIX configuration file path.
