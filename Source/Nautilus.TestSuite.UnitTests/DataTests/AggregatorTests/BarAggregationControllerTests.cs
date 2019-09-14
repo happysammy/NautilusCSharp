@@ -73,7 +73,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.controller.Endpoint.Send(subscribe1);
             this.controller.Endpoint.Send(subscribe2);
 
-            LogDumper.DumpWithDelay(this.logger, this.output, 200);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Equal(1, this.controller.BarAggregators.Count);
@@ -107,7 +107,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.controller.Endpoint.Send(subscribe2);
             this.controller.Endpoint.Send(subscribe2);
 
-            LogDumper.DumpWithDelay(this.logger, this.output, 200);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Equal(1, this.controller.BarAggregators.Count);
@@ -158,7 +158,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.controller.Endpoint.Send(subscribe3);
             this.controller.Endpoint.Send(subscribe4);
 
-            LogDumper.DumpWithDelay(this.logger, this.output, 200);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Equal(2, this.controller.BarAggregators.Count);
@@ -202,7 +202,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
 
             this.controller.Endpoint.Send(unsubscribe);
 
-            LogDumper.DumpWithDelay(this.logger, this.output, 200);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Equal(1, this.controller.Subscriptions.Count);
@@ -245,7 +245,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.controller.Endpoint.Send(unsubscribe);
             this.controller.Endpoint.Send(unsubscribe);
 
-            LogDumper.DumpWithDelay(this.logger, this.output, 200);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Equal(1, this.controller.Subscriptions.Count);
