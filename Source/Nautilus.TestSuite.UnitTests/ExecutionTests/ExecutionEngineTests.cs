@@ -72,7 +72,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             // Act
             this.engine.Endpoint.Send(command);
 
-            LogDumper.DumpWithDelay(this.logger, this.output, 200);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
@@ -104,7 +104,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             // Act
             this.engine.Endpoint.Send(command);
 
-            LogDumper.DumpWithDelay(this.logger, this.output, 200);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
@@ -139,7 +139,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             this.engine.Endpoint.Send(command);
             this.engine.Endpoint.Send(command);
 
-            LogDumper.DumpWithDelay(this.logger, this.output, 200);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
@@ -173,7 +173,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             // Act
             this.engine.Endpoint.Send(command);
 
-            LogDumper.DumpWithDelay(this.logger, this.output, 200);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
@@ -208,7 +208,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             this.engine.Endpoint.Send(command);
             this.engine.Endpoint.Send(command);
 
-            LogDumper.DumpWithDelay(this.logger, this.output, 200);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
@@ -253,7 +253,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             this.engine.Endpoint.Send(StubEventMessageProvider.OrderWorkingEvent(order));
             this.engine.Endpoint.Send(cancel);
 
-            LogDumper.DumpWithDelay(this.logger, this.output, 200);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
@@ -286,7 +286,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             // Act
             this.engine.Endpoint.Send(command);
 
-            LogDumper.DumpWithDelay(this.logger, this.output, 200);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
@@ -329,7 +329,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             this.engine.Endpoint.Send(StubEventMessageProvider.OrderWorkingEvent(order));
             this.engine.Endpoint.Send(modify);
 
-            LogDumper.DumpWithDelay(this.logger, this.output, 200);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
@@ -373,7 +373,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             // Act
             this.engine.Endpoint.Send(modify);
 
-            LogDumper.DumpWithDelay(this.logger, this.output, 200);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
@@ -416,7 +416,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             this.engine.Endpoint.Send(submit);
             this.engine.Endpoint.Send(modify);
 
-            LogDumper.DumpWithDelay(this.logger, this.output, 200);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
@@ -469,7 +469,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             this.engine.Endpoint.Send(modify1);
             this.engine.Endpoint.Send(modify2);
 
-            LogDumper.DumpWithDelay(this.logger, this.output, 300);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
@@ -493,7 +493,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             this.engine.Endpoint.Send(@event);
             this.engine.Endpoint.Send(@event);
 
-            LogDumper.DumpWithDelay(this.logger, this.output, 200);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
