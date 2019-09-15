@@ -83,13 +83,13 @@ namespace Nautilus.Execution.Engine
             foreach (var orderId in this.GetOrderWorkingIds())
             {
                 this.GetOrder(orderId);  // Check working
-                this.Log.Warning($"The {orderId} is still working.");
+                this.Log.Warning($"Residual working order {orderId}.");
             }
 
             foreach (var positionId in this.GetPositionOpenIds())
             {
                 this.GetPosition(positionId);  // Check open
-                this.Log.Warning($"The {positionId} is still open.");
+                this.Log.Warning($"Residual open position {positionId}.");
             }
         }
 

@@ -33,8 +33,8 @@ namespace Nautilus.Execution.Engine
     {
         private const string SENT = "-->";
         private const string RECV = "<--";
-        private const string CMD = nameof(CMD);
-        private const string EVT = nameof(EVT);
+        private const string CMD = "[CMD]";
+        private const string EVT = "[EVT]";
 
         private readonly IScheduler scheduler;
         private readonly IExecutionDatabase database;

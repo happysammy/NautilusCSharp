@@ -121,9 +121,8 @@ namespace Nautilus.Data
                 this.CreateMarketOpenedJob();
                 this.CreateMarketClosedJob();
 
-                this.CreateTrimTickDataJob();
-                this.CreateTrimBarDataJob();
-
+                // this.CreateTrimTickDataJob();
+                // this.CreateTrimBarDataJob();
                 var receivers = new List<Address>
                 {
                     ServiceAddress.TickProvider,
