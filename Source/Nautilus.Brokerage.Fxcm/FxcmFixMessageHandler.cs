@@ -95,14 +95,14 @@ namespace Nautilus.Brokerage.Fxcm
         [SystemBoundary]
         public void OnMessage(CollateralInquiryAck message)
         {
-            this.Execute(() =>
+            this.Execute<ArgumentException>(() =>
             {
                 Debug.NotNull(this.tradingGateway, nameof(this.tradingGateway));
 
                 var inquiryId = message.GetField(Tags.CollInquiryID);
                 var accountNumber = Convert.ToInt32(message.GetField(Tags.Account)).ToString();
 
-                this.Log.Debug($"<-- {message}(InquiryId={inquiryId}, AccountNumber={accountNumber}).");
+                this.Log.Debug($"<-- {nameof(CollateralInquiryAck)}(InquiryId={inquiryId}, AccountNumber={accountNumber}).");
             });
         }
 
@@ -113,9 +113,9 @@ namespace Nautilus.Brokerage.Fxcm
         [SystemBoundary]
         public void OnMessage(BusinessMessageReject message)
         {
-            this.Execute(() =>
+            this.Execute<ArgumentException>(() =>
             {
-                this.Log.Debug($"<-- {message}");
+                this.Log.Debug($"<-- {nameof(BusinessMessageReject)}");
             });
         }
 
@@ -126,11 +126,11 @@ namespace Nautilus.Brokerage.Fxcm
         [SystemBoundary]
         public void OnMessage(PositionReport message)
         {
-            this.Execute(() =>
+            this.Execute<ArgumentException>(() =>
             {
                 Condition.NotEmptyOrWhiteSpace(message.Account.ToString(), nameof(message.Account));
 
-                this.Log.Debug($"<-- PositionReport({message.Account})");
+                this.Log.Debug($"<-- {nameof(PositionReport)}({message.Account})");
             });
         }
 
@@ -143,11 +143,11 @@ namespace Nautilus.Brokerage.Fxcm
         [SystemBoundary]
         public void OnMessage(RequestForPositionsAck message)
         {
-            this.Execute(() =>
+            this.Execute<ArgumentException>(() =>
             {
                 Debug.NotNull(this.tradingGateway, nameof(this.tradingGateway));
 
-                this.Log.Debug($"<-- {message}");
+                this.Log.Debug($"<-- {nameof(RequestForPositionsAck)}");
             });
         }
 
@@ -159,13 +159,13 @@ namespace Nautilus.Brokerage.Fxcm
         [PerformanceOptimized]
         public void OnMessage(SecurityList message)
         {
-            this.Execute(() =>
+            this.Execute<ArgumentException>(() =>
             {
                 Debug.NotNull(this.dataGateway, nameof(this.dataGateway));
 
                 var responseId = message.GetField(Tags.SecurityResponseID);
                 var result = FixMessageHelper.GetSecurityRequestResult(message.SecurityRequestResult);
-                this.Log.Debug($"<-- SecurityList(ResponseId={responseId}, Result={result}).");
+                this.Log.Debug($"<-- {nameof(SecurityList)}(ResponseId={responseId}, Result={result}).");
 
                 var instruments = new List<Instrument>();
                 var groupCount = Convert.ToInt32(message.NoRelatedSym.ToString());
@@ -233,7 +233,7 @@ namespace Nautilus.Brokerage.Fxcm
         [SystemBoundary]
         public void OnMessage(CollateralReport message)
         {
-            this.Execute(() =>
+            this.Execute<ArgumentException>(() =>
             {
                 Debug.NotNull(this.tradingGateway, nameof(this.tradingGateway));
 
@@ -273,9 +273,9 @@ namespace Nautilus.Brokerage.Fxcm
         [SystemBoundary]
         public void OnMessage(QuoteStatusReport message)
         {
-            this.Execute(() =>
+            this.Execute<ArgumentException>(() =>
             {
-                this.Log.Verbose($"<-- {message}");
+                this.Log.Verbose($"<-- {nameof(QuoteStatusReport)}");
                 this.Log.Information(message.Product.ToString());
             });
         }
@@ -289,7 +289,7 @@ namespace Nautilus.Brokerage.Fxcm
         {
             this.Execute(() =>
             {
-                this.Log.Warning($"<-- MarketDataRequestReject(Text={message.GetField(Tags.Text)}).");
+                this.Log.Warning($"<-- {nameof(BusinessMessageReject)}(Text={message.GetField(Tags.Text)}).");
             });
         }
 
@@ -301,7 +301,7 @@ namespace Nautilus.Brokerage.Fxcm
         [PerformanceOptimized]
         public void OnMessage(MarketDataSnapshotFullRefresh message)
         {
-            this.Execute(() =>
+            this.Execute<ArgumentException>(() =>
             {
                 Debug.NotNull(this.dataGateway, nameof(this.dataGateway));
 
@@ -355,11 +355,11 @@ namespace Nautilus.Brokerage.Fxcm
         [SystemBoundary]
         public void OnMessage(QuickFix.FIX44.OrderCancelReject message)
         {
-            this.Execute(() =>
+            this.Execute<ArgumentException>(() =>
             {
                 Debug.NotNull(this.tradingGateway, nameof(this.tradingGateway));
 
-                this.Log.Debug($"<-- {message}");
+                this.Log.Debug($"<-- {nameof(OrderCancelReject)}");
 
                 var orderId = this.GetOrderId(message.OrderID);
                 if (orderId is null)
@@ -394,11 +394,9 @@ namespace Nautilus.Brokerage.Fxcm
         [SystemBoundary]
         public void OnMessage(ExecutionReport message)
         {
-            this.Execute(() =>
+            this.Execute<ArgumentException>(() =>
             {
                 Debug.NotNull(this.tradingGateway, nameof(this.tradingGateway));
-
-                this.Log.Debug($"<-- {message}");
 
                 var orderIdBroker = new OrderIdBroker(GetField(message, Tags.OrderID));
                 var orderLabel = new Label(GetField(message, Tags.SecondaryClOrdID));
@@ -408,11 +406,13 @@ namespace Nautilus.Brokerage.Fxcm
                 var timestamp = FixMessageHelper.ConvertExecutionReportString(GetField(message, Tags.TransactTime));
                 var orderQty = Quantity.Create(Convert.ToInt32(GetField(message, Tags.OrderQty)));
 
-                var orderStatus = message.GetField(Tags.OrdStatus);
-                switch (orderStatus)
+                this.Log.Debug($"<-- {nameof(ExecutionReport)}(heading into switch)");
+                switch (message.OrdStatus.Obj)
                 {
-                    case nameof(OrdStatus.REJECTED):
+                    case OrdStatus.REJECTED:
                     {
+                        this.Log.Debug($"<-- {nameof(ExecutionReport)}({nameof(OrdStatus.REJECTED)})");
+
                         var orderId = this.GetOrderId(message.OrderID);
                         if (orderId is null)
                         {
@@ -436,8 +436,10 @@ namespace Nautilus.Brokerage.Fxcm
                         break;
                     }
 
-                    case nameof(OrdStatus.CANCELED):
+                    case OrdStatus.CANCELED:
                     {
+                        this.Log.Debug($"<-- {nameof(ExecutionReport)}({nameof(OrdStatus.CANCELED)})");
+
                         var orderId = this.GetOrderId(message.OrderID);
                         if (orderId is null)
                         {
@@ -455,8 +457,10 @@ namespace Nautilus.Brokerage.Fxcm
                         break;
                     }
 
-                    case nameof(OrdStatus.REPLACED):
+                    case OrdStatus.REPLACED:
                     {
+                        this.Log.Debug($"<-- {nameof(ExecutionReport)}({nameof(OrdStatus.REPLACED)})");
+
                         var orderId = this.GetOrderId(message.OrderID);
                         if (orderId is null)
                         {
@@ -481,8 +485,10 @@ namespace Nautilus.Brokerage.Fxcm
                         break;
                     }
 
-                    case nameof(OrdStatus.NEW):
+                    case OrdStatus.NEW:
                     {
+                        this.Log.Debug($"<-- {nameof(ExecutionReport)}({nameof(OrdStatus.NEW)})");
+
                         var orderId = new OrderId(message.OrigClOrdID.ToString());
                         this.orderIdIndex[message.OrderID] = orderId;
 
@@ -521,8 +527,10 @@ namespace Nautilus.Brokerage.Fxcm
                         break;
                     }
 
-                    case nameof(OrdStatus.EXPIRED):
+                    case OrdStatus.EXPIRED:
                     {
+                        this.Log.Debug($"<-- {nameof(ExecutionReport)}({nameof(OrdStatus.EXPIRED)})");
+
                         var orderId = this.GetOrderId(message.OrderID);
                         if (orderId is null)
                         {
@@ -540,8 +548,10 @@ namespace Nautilus.Brokerage.Fxcm
                         break;
                     }
 
-                    case nameof(OrdStatus.FILLED):
+                    case OrdStatus.FILLED:
                     {
+                        this.Log.Debug($"<-- {nameof(ExecutionReport)}({nameof(OrdStatus.EXPIRED)})");
+
                         var orderId = this.GetOrderId(message.OrderID);
                         if (orderId is null)
                         {
@@ -577,8 +587,10 @@ namespace Nautilus.Brokerage.Fxcm
                         break;
                     }
 
-                    case nameof(OrdStatus.PARTIALLY_FILLED):
+                    case OrdStatus.PARTIALLY_FILLED:
                     {
+                        this.Log.Debug($"<-- {nameof(ExecutionReport)}({nameof(OrdStatus.PARTIALLY_FILLED)})");
+
                         var orderId = this.GetOrderId(message.OrderID);
                         if (orderId is null)
                         {
@@ -616,62 +628,56 @@ namespace Nautilus.Brokerage.Fxcm
                         break;
                     }
 
-                    case nameof(OrdStatus.STOPPED):
+                    case OrdStatus.STOPPED:
                     {
-                        this.Log.Warning($"<-- Unhandled OrderStatus STOPPED({message}).");
+                        this.Log.Warning($"<-- Unhandled ExecutionReport({nameof(OrdStatus.STOPPED)}).");
                         break;
                     }
 
-                    case nameof(OrdStatus.SUSPENDED):
+                    case OrdStatus.SUSPENDED:
                     {
-                        this.Log.Warning($"<-- Unhandled OrderStatus SUSPENDED({message}).");
+                        this.Log.Warning($"<-- Unhandled ExecutionReport({nameof(OrdStatus.SUSPENDED)}).");
                         break;
                     }
 
-                    case nameof(OrdStatus.CALCULATED):
+                    case OrdStatus.CALCULATED:
                     {
-                        this.Log.Warning($"<-- Unhandled OrderStatus CALCULATED({message}).");
+                        this.Log.Warning($"<-- Unhandled ExecutionReport({nameof(OrdStatus.CALCULATED)}).");
                         break;
                     }
 
-                    case nameof(OrdStatus.DONE_FOR_DAY):
+                    case OrdStatus.DONE_FOR_DAY:
                     {
-                        this.Log.Warning($"<-- Unhandled OrderStatus DONE_FOR_DAY({message}).");
+                        this.Log.Warning($"<-- Unhandled ExecutionReport({nameof(OrdStatus.DONE_FOR_DAY)}).");
                         break;
                     }
 
-                    case nameof(OrdStatus.PENDING_NEW):
+                    case OrdStatus.PENDING_NEW:
                     {
-                        this.Log.Warning($"<-- Unhandled OrderStatus PENDING_NEW({message}).");
+                        this.Log.Warning($"<-- Unhandled ExecutionReport({nameof(OrdStatus.PENDING_NEW)}).");
                         break;
                     }
 
-                    case nameof(OrdStatus.PENDING_CANCEL):
+                    case OrdStatus.PENDING_CANCEL:
                     {
-                        this.Log.Warning($"<-- Unhandled OrderStatus PENDING_CANCEL({message}).");
+                        this.Log.Warning($"<-- Unhandled ExecutionReport({nameof(OrdStatus.PENDING_CANCEL)}).");
                         break;
                     }
 
-                    case nameof(OrdStatus.PENDING_REPLACE):
+                    case OrdStatus.PENDING_REPLACE:
                     {
-                        this.Log.Warning($"<-- Unhandled OrderStatus PENDING_REPLACE({message}).");
+                        this.Log.Warning($"<-- Unhandled ExecutionReport({nameof(OrdStatus.PENDING_REPLACE)}).");
                         break;
                     }
 
-                    case nameof(OrdStatus.ACCEPTED_FOR_BIDDING):
+                    case OrdStatus.ACCEPTED_FOR_BIDDING:
                     {
-                        this.Log.Warning($"<-- Unhandled OrderStatus ACCEPTED_FOR_BIDDING({message}).");
-                        break;
-                    }
-
-                    case nameof(OrdStatus.PENDING_CANCELREPLACE):
-                    {
-                        this.Log.Warning($"<-- Unhandled OrderStatus PENDING_CANCELREPLACE({message}).");
+                        this.Log.Warning($"<-- Unhandled ExecutionReport({nameof(OrdStatus.ACCEPTED_FOR_BIDDING)}).");
                         break;
                     }
 
                     default:
-                        ExceptionFactory.InvalidSwitchArgument(orderStatus, nameof(message.OrdStatus));
+                        ExceptionFactory.InvalidSwitchArgument(message.OrdStatus, nameof(message.OrdStatus));
                         break;
                 }
             });

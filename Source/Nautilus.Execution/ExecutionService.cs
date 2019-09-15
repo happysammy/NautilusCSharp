@@ -34,6 +34,7 @@ namespace Nautilus.Execution
 
         private ZonedDateTime? nextConnectTime;
         private ZonedDateTime? nextDisconnectTime;
+        private bool reconnect;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExecutionService"/> class.
@@ -66,6 +67,7 @@ namespace Nautilus.Execution
             this.tradingGateway = tradingGateway;
             this.connectTime = config.FixConfiguration.ConnectTime;
             this.disconnectTime = config.FixConfiguration.DisconnectTime;
+            this.reconnect = true;
 
             // Commands
             this.RegisterHandler<Connect>(this.OnMessage);
@@ -126,6 +128,7 @@ namespace Nautilus.Execution
         private void OnMessage(Disconnect message)
         {
             // Forward message
+            this.reconnect = false;  // Avoid immediate reconnection
             this.Send(message, ServiceAddress.TradingGateway);
         }
 
@@ -145,12 +148,13 @@ namespace Nautilus.Execution
 
         private void OnMessage(FixSessionDisconnected message)
         {
-            if (this.nextConnectTime is null || this.nextConnectTime.Value.IsLessThanOrEqualTo(this.TimeNow()))
+            if (this.reconnect && (this.nextConnectTime is null || this.nextConnectTime.Value.IsLessThanOrEqualTo(this.TimeNow())))
             {
                 this.CreateConnectFixJob();
             }
 
             this.Log.Warning($"{message.SessionId} session disconnected.");
+            this.reconnect = true; // Reset flag to default true
         }
 
         private void CreateConnectFixJob()

@@ -255,7 +255,14 @@ namespace Nautilus.Brokerage.Fxcm
             }
 
             this.fixSession.Send(message);
-            this.Log.Verbose($"Sent => {message}");
+
+            this.LogMessageSent(message);
+        }
+
+        [System.Diagnostics.Conditional("DEBUG")]
+        private void LogMessageSent(Message message)
+        {
+            this.Log.Debug($"--> {message.GetType().Name}");
         }
     }
 }
