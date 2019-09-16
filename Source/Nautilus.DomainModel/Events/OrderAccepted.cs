@@ -58,5 +58,13 @@ namespace Nautilus.DomainModel.Events
         /// Gets the events order accepted time.
         /// </summary>
         public ZonedDateTime AcceptedTime { get; }
+
+        /// <summary>
+        /// Returns a string representation of this object.
+        /// </summary>
+        /// <returns>A <see cref="string"/>.</returns>
+        public override string ToString() => $"{this.Type.Name}(" +
+                                             $"AccountId={this.AccountId.Value}, " +
+                                             $"OrderId={this.OrderId.Value})";
     }
 }

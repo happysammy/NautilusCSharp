@@ -11,6 +11,7 @@ namespace Nautilus.DomainModel.Events
     using System;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
+    using Nautilus.Core.Extensions;
     using Nautilus.Core.Types;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events.Base;
@@ -136,5 +137,24 @@ namespace Nautilus.DomainModel.Events
         /// Gets the events order working time.
         /// </summary>
         public ZonedDateTime WorkingTime { get; }
+
+        /// <summary>
+        /// Returns a string representation of this object.
+        /// </summary>
+        /// <returns>A <see cref="string"/>.</returns>
+        public override string ToString()
+        {
+            var expireTimeString = this.ExpireTime.HasValue
+                ? this.ExpireTime.Value.ToIsoString()
+                : string.Empty;
+
+            return $"{this.Type.Name}(" +
+                   $"AccountId={this.AccountId.Value},  " +
+                   $"OrderId={this.OrderId.Value}, " +
+                   $"OrderIdBroker={this.OrderIdBroker.Value}, " +
+                   $"Label={this.Label.Value}, " +
+                   $"{this.OrderSide} {this.Quantity} {this.Symbol} {this.OrderType} {this.Price} " +
+                   $"{this.TimeInForce} {expireTimeString})";
+        }
     }
 }

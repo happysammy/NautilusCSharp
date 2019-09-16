@@ -86,7 +86,7 @@ namespace Nautilus.DomainModel.Commands
         /// Returns a string representation of this object.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{nameof(SubmitOrder)}(" +
+        public override string ToString() => $"{this.Type.Name}(" +
                                              $"TraderId={this.TraderId.Value}, " +
                                              $"AccountId={this.AccountId.Value}, " +
                                              $"StrategyId={this.StrategyId.Value}, " +

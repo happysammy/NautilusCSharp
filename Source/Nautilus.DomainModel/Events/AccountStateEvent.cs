@@ -109,9 +109,13 @@ namespace Nautilus.DomainModel.Events
         public string MarginCallStatus { get; }
 
         /// <summary>
-        /// Returns a string representation of this <see cref="AccountStateEvent"/>.
+        /// Returns a string representation of this object.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{this.Type.Name}({this.AccountId.Value})";
+        public override string ToString() => $"{this.Type.Name}(" +
+                                             $"AccountId={this.AccountId.Value}, " +
+                                             $"Cash={this.CashBalance}, " +
+                                             $"MarginUsedMaintenance={this.MarginUsedMaintenance}, " +
+                                             $"MarginUsedLiquidation={this.MarginUsedLiquidation})";
     }
 }

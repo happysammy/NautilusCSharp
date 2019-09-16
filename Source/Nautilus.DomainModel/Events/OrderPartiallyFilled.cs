@@ -71,5 +71,17 @@ namespace Nautilus.DomainModel.Events
         /// Gets the events leaves quantity.
         /// </summary>
         public Quantity LeavesQuantity { get; }
+
+        /// <summary>
+        /// Returns a string representation of this object.
+        /// </summary>
+        /// <returns>A <see cref="string"/>.</returns>
+        public override string ToString() => $"{this.Type.Name}(" +
+                                             $"AccountId={this.AccountId.Value}, " +
+                                             $"OrderId={this.OrderId.Value}, " +
+                                             $"ExecutionId={this.ExecutionId.Value}," +
+                                             $"ExecutionTicket={this.ExecutionTicket}, " +
+                                             $"{this.OrderSide} {this.FilledQuantity} {this.Symbol} @ {this.AveragePrice}, " +
+                                             $"LeavesQty={this.LeavesQuantity})";
     }
 }

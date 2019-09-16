@@ -119,5 +119,11 @@ namespace Nautilus.DomainModel.Events
         /// Gets the events order expire time.
         /// </summary>
         public ZonedDateTime? ExpireTime { get; }
+
+        /// <summary>
+        /// Returns a string representation of this object.
+        /// </summary>
+        /// <returns>A <see cref="string"/>.</returns>
+        public override string ToString() => $"{this.Type.Name}(OrderId={this.OrderId.Value})";
     }
 }
