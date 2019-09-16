@@ -43,5 +43,11 @@ namespace Nautilus.DomainModel.Events
         /// Gets the trade event.
         /// </summary>
         public OrderEvent Event { get; }
+
+        /// <summary>
+        /// Returns a string representation of this <see cref="TradeEvent"/>.
+        /// </summary>
+        /// <returns>A <see cref="string"/>.</returns>
+        public override string ToString() => $"{nameof(TradeEvent)}({this.Event.Type.Name}, OrderId=({this.Event.OrderId.Value})";
     }
 }
