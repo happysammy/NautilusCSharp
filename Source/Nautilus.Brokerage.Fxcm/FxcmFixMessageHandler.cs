@@ -320,9 +320,6 @@ namespace Nautilus.Brokerage.Fxcm
             {
                 Debug.NotNull(this.dataGateway, nameof(this.dataGateway));
 
-                var symbol = this.GetSymbol(message.GetField(Tags.Symbol));
-                Condition.NotNull(symbol, nameof(symbol));
-
                 // Commented out code below is to capture the brokers tick timestamp although this has a lower
                 // resolution than .TimeNow().
                 // var dateTimeString = group.GetField(Tags.MDEntryDate) + group.GetField(Tags.MDEntryTime);
@@ -333,7 +330,7 @@ namespace Nautilus.Brokerage.Fxcm
                     message.GetGroup(2, this.mdAskGroup);
 
                     this.dataGateway?.OnTick(new Tick(
-                        symbol,
+                        this.GetSymbol(message.GetField(Tags.Symbol)),
                         Price.Create(Convert.ToDecimal(this.mdBidGroup.GetField(Tags.MDEntryPx))),
                         Price.Create(Convert.ToDecimal(this.mdAskGroup.GetField(Tags.MDEntryPx))),
                         this.TimeNow()));
