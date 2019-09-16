@@ -307,7 +307,7 @@ namespace Nautilus.Fix
         /// </summary>
         /// <param name="dateTime">The date time.</param>
         /// <returns>The converted <see cref="ZonedDateTime"/>.</returns>
-        public static ZonedDateTime ConvertMarketDataString(string dateTime) =>
+        public static ZonedDateTime ParseMarketDataTimestamp(string dateTime) =>
             MarketDataParsePattern.Parse(dateTime).Value;
 
         private static readonly ZonedDateTimePattern ExecutionReportParsePattern =
@@ -320,7 +320,7 @@ namespace Nautilus.Fix
         /// </summary>
         /// <param name="dateTime">The date time.</param>
         /// <returns>The converted <see cref="ZonedDateTime"/>.</returns>
-        public static ZonedDateTime GetTransactionTime(string dateTime) =>
+        public static ZonedDateTime ParseTransactionTime(string dateTime) =>
             ExecutionReportParsePattern.Parse(dateTime).Value;
     }
 }
