@@ -65,6 +65,11 @@ namespace Nautilus.Common.Componentry
             {
                 action.Invoke();
             }
+            catch (NullReferenceException ex)
+            {
+                // TODO: Temporary catch
+                this.log.Error(ex.Message, ex);
+            }
             catch (ArgumentException ex)
             {
                 this.log.Error(ex.Message, ex);

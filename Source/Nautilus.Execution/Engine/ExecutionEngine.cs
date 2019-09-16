@@ -123,13 +123,13 @@ namespace Nautilus.Execution.Engine
 
         private void IncrementCounter(Command command)
         {
-            this.Log.Information($"{CMD}{RECV} {command}.");
+            this.Log.Information($"{RECV}{CMD} {command}.");
             this.CommandCount++;
         }
 
         private void IncrementCounter(Event @event)
         {
-            this.Log.Information($"{EVT}{RECV} {@event}.");
+            this.Log.Information($"{RECV}{EVT} {@event}.");
             this.EventCount++;
         }
 
@@ -465,7 +465,7 @@ namespace Nautilus.Execution.Engine
             if (order is null)
             {
                 // This should never happen
-                this.Log.Error($"Cannot process event {@event} ({@event.OrderId} was not found in the cache).");
+                this.Log.Error($"Cannot process event {@event} as {@event.OrderId} was not found in the cache.");
             }
             else
             {
@@ -489,7 +489,7 @@ namespace Nautilus.Execution.Engine
             var positionId = this.database.GetPositionId(@event.OrderId);
             if (positionId is null)
             {
-                this.Log.Error($"Cannot process event {@event} (no PositionId found for {@event.OrderId}).");
+                this.Log.Error($"Cannot process event {@event} as no PositionId found for {@event.OrderId}.");
                 this.SendToEventPublisher(@event);
                 return;
             }

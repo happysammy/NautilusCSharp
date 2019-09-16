@@ -294,16 +294,9 @@ namespace Nautilus.Fix
         /// <param name="sessionId">The session id.</param>
         public void FromApp(Message message, SessionID sessionId)
         {
-            this.commandHandler.Execute(() =>
+            this.commandHandler.Execute<UnsupportedMessageType>(() =>
             {
-                try
-                {
-                    this.Crack(message, sessionId);
-                }
-                catch (UnsupportedMessageType)
-                {
-                    this.Log.Warning($"Received unsupported message type {message.GetType()}");
-                }
+                this.Crack(message, sessionId);
             });
         }
 
@@ -315,7 +308,7 @@ namespace Nautilus.Fix
         /// <exception cref="DoNotSend">If possible duplication flag is true.</exception>
         public void ToApp(Message message, SessionID sessionId)
         {
-            this.commandHandler.Execute<FieldNotFoundException>(() =>
+            this.commandHandler.Execute<FieldNotFoundException, DoNotSend>(() =>
             {
                 if (this.sendAccountTag)
                 {

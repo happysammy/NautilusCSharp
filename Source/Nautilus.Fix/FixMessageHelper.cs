@@ -206,19 +206,32 @@ namespace Nautilus.Fix
         /// <returns>The <see cref="OrderType"/>.</returns>
         public static OrderType GetOrderType(string fixType)
         {
-            switch (fixType)
+            if (fixType == OrdType.MARKET.ToString())
             {
-                case nameof(OrdType.MARKET):
-                    return OrderType.MARKET;
-                case nameof(OrdType.STOP):
-                    return OrderType.STOP_MARKET;
-                case nameof(OrdType.STOP_LIMIT):
-                    return OrderType.STOP_LIMIT;
-                case nameof(OrdType.MARKET_IF_TOUCHED):
-                    return OrderType.MIT;
-                default:
-                    return OrderType.UNKNOWN;
+                return OrderType.MARKET;
             }
+
+            if (fixType == OrdType.STOP.ToString())
+            {
+                return OrderType.STOP_MARKET;
+            }
+
+            if (fixType == OrdType.STOP_LIMIT.ToString())
+            {
+                return OrderType.STOP_LIMIT;
+            }
+
+            if (fixType == OrdType.LIMIT.ToString())
+            {
+                return OrderType.LIMIT;
+            }
+
+            if (fixType == OrdType.MARKET_IF_TOUCHED.ToString())
+            {
+                return OrderType.MIT;
+            }
+
+            return OrderType.UNKNOWN;
         }
 
         /// <summary>

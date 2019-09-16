@@ -28,6 +28,7 @@ namespace Nautilus.Brokerage.Fxcm
     using QuickFix;
     using QuickFix.Fields;
     using QuickFix.FIX44;
+
     using Currency = Nautilus.DomainModel.Enums.Currency;
     using OrderCancelReject = Nautilus.DomainModel.Events.OrderCancelReject;
     using Price = Nautilus.DomainModel.ValueObjects.Price;
@@ -403,7 +404,7 @@ namespace Nautilus.Brokerage.Fxcm
 
                     case OrdStatus.CANCELED:
                     {
-                        this.Log.Debug($"<-- {nameof(ExecutionReport)}({nameof(OrdStatus.CANCELED)})");
+                        this.Log.Debug($"{RECV}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.CANCELED)})");
 
                         this.tradingGateway?.Send(this.GenerateOrderCancelledEvent(message));
                         break;
@@ -411,7 +412,7 @@ namespace Nautilus.Brokerage.Fxcm
 
                     case OrdStatus.REPLACED:
                     {
-                        this.Log.Debug($"<-- {nameof(ExecutionReport)}({nameof(OrdStatus.REPLACED)})");
+                        this.Log.Debug($"{RECV}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.REPLACED)})");
 
                         this.tradingGateway?.Send(this.GenerateOrderModifiedEvent(message));
                         break;
@@ -419,7 +420,7 @@ namespace Nautilus.Brokerage.Fxcm
 
                     case OrdStatus.NEW:
                     {
-                        this.Log.Debug($"<-- {nameof(ExecutionReport)}({nameof(OrdStatus.NEW)})");
+                        this.Log.Debug($"{RECV}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.NEW)})");
 
                         this.tradingGateway?.Send(this.GenerateOrderWorkingEvent(message));
                         break;
@@ -427,7 +428,7 @@ namespace Nautilus.Brokerage.Fxcm
 
                     case OrdStatus.EXPIRED:
                     {
-                        this.Log.Debug($"<-- {nameof(ExecutionReport)}({nameof(OrdStatus.EXPIRED)})");
+                        this.Log.Debug($"{RECV}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.EXPIRED)})");
 
                         this.tradingGateway?.Send(this.GenerateOrderExpiredEvent(message));
                         break;
@@ -435,7 +436,7 @@ namespace Nautilus.Brokerage.Fxcm
 
                     case OrdStatus.FILLED:
                     {
-                        this.Log.Debug($"<-- {nameof(ExecutionReport)}({nameof(OrdStatus.EXPIRED)})");
+                        this.Log.Debug($"{RECV}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.EXPIRED)})");
 
                         this.tradingGateway?.Send(this.GenerateOrderFilledEvent(message));
                         break;
@@ -443,7 +444,7 @@ namespace Nautilus.Brokerage.Fxcm
 
                     case OrdStatus.PARTIALLY_FILLED:
                     {
-                        this.Log.Debug($"<-- {nameof(ExecutionReport)}({nameof(OrdStatus.PARTIALLY_FILLED)})");
+                        this.Log.Debug($"{RECV}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.PARTIALLY_FILLED)})");
 
                         this.tradingGateway?.Send(this.GenerateOrderPartiallyFilledEvent(message));
                         break;
@@ -451,49 +452,49 @@ namespace Nautilus.Brokerage.Fxcm
 
                     case OrdStatus.STOPPED:
                     {
-                        this.Log.Warning($"<-- Unhandled ExecutionReport({nameof(OrdStatus.STOPPED)}).");
+                        this.Log.Warning($"{RECV}{FIX} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.STOPPED)}).");
                         break;
                     }
 
                     case OrdStatus.SUSPENDED:
                     {
-                        this.Log.Warning($"<-- Unhandled ExecutionReport({nameof(OrdStatus.SUSPENDED)}).");
+                        this.Log.Warning($"{RECV}{FIX} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.SUSPENDED)}).");
                         break;
                     }
 
                     case OrdStatus.CALCULATED:
                     {
-                        this.Log.Warning($"<-- Unhandled ExecutionReport({nameof(OrdStatus.CALCULATED)}).");
+                        this.Log.Warning($"{RECV}{FIX} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.CALCULATED)}).");
                         break;
                     }
 
                     case OrdStatus.DONE_FOR_DAY:
                     {
-                        this.Log.Warning($"<-- Unhandled ExecutionReport({nameof(OrdStatus.DONE_FOR_DAY)}).");
+                        this.Log.Warning($"{RECV}{FIX} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.DONE_FOR_DAY)}).");
                         break;
                     }
 
                     case OrdStatus.PENDING_NEW:
                     {
-                        this.Log.Warning($"<-- Unhandled ExecutionReport({nameof(OrdStatus.PENDING_NEW)}).");
+                        this.Log.Warning($"{RECV}{FIX} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.PENDING_NEW)}).");
                         break;
                     }
 
                     case OrdStatus.PENDING_CANCEL:
                     {
-                        this.Log.Warning($"<-- Unhandled ExecutionReport({nameof(OrdStatus.PENDING_CANCEL)}).");
+                        this.Log.Warning($"{RECV}{FIX} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.PENDING_CANCEL)}).");
                         break;
                     }
 
                     case OrdStatus.PENDING_REPLACE:
                     {
-                        this.Log.Warning($"<-- Unhandled ExecutionReport({nameof(OrdStatus.PENDING_REPLACE)}).");
+                        this.Log.Warning($"{RECV}{FIX} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.PENDING_REPLACE)}).");
                         break;
                     }
 
                     case OrdStatus.ACCEPTED_FOR_BIDDING:
                     {
-                        this.Log.Warning($"<-- Unhandled ExecutionReport({nameof(OrdStatus.ACCEPTED_FOR_BIDDING)}).");
+                        this.Log.Warning($"{RECV}{FIX} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.ACCEPTED_FOR_BIDDING)}).");
                         break;
                     }
 
@@ -561,10 +562,10 @@ namespace Nautilus.Brokerage.Fxcm
 
         private OrderWorking GenerateOrderWorkingEvent(ExecutionReport message)
         {
-            var orderId = new OrderId(message.OrigClOrdID.ToString());
+            var orderId = new OrderId(message.GetField(Tags.ClOrdID));
             this.orderIdIndex[message.OrderID] = orderId;
 
-            var orderIdBroker = new OrderIdBroker(message.OrderID.ToString());
+            var orderIdBroker = new OrderIdBroker(message.GetField(Tags.OrderID));
             var symbol = this.GetSymbol(message.GetField(Tags.Symbol));
             var orderLabel = new Label(message.GetField(Tags.SecondaryClOrdID));
             var orderSide = FixMessageHelper.GetOrderSide(message.GetField(Tags.Side));
