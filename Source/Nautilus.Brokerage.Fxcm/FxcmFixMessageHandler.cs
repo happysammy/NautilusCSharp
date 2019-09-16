@@ -18,7 +18,6 @@ namespace Nautilus.Brokerage.Fxcm
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Types;
     using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
@@ -547,7 +546,7 @@ namespace Nautilus.Brokerage.Fxcm
             var orderId = this.GetOrderId(message.OrderID);
             var orderIdBroker = new OrderIdBroker(message.OrderID.ToString());
             var orderType = FixMessageHelper.GetOrderType(message.GetField(Tags.OrdType));
-            var price = this.GetPrice(orderType, message);
+            var price = FixMessageHelper.GetOrderPrice(orderType, message);
             var modifiedTime = FixMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
 
             return new OrderModified(
@@ -571,9 +570,9 @@ namespace Nautilus.Brokerage.Fxcm
             var orderSide = FixMessageHelper.GetOrderSide(message.GetField(Tags.Side));
             var orderType = FixMessageHelper.GetOrderType(message.GetField(Tags.OrdType));
             var orderQty = Quantity.Create(Convert.ToInt32(message.GetField(Tags.OrderQty)));
-            var price = this.GetPrice(orderType, message);
+            var price = FixMessageHelper.GetOrderPrice(orderType, message);
             var timeInForce = FixMessageHelper.GetTimeInForce(message.GetField(Tags.TimeInForce));
-            var expireTime = this.GetExpireTime(message);
+            var expireTime = FixMessageHelper.GetExpireTime(message);
             var workingTime = FixMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
 
             return new OrderWorking(
@@ -677,23 +676,6 @@ namespace Nautilus.Brokerage.Fxcm
             }
 
             return this.symbolCache.Get($"{symbolCodeQuery}.{this.venue.Value}");
-        }
-
-        private Price GetPrice(OrderType orderType, ExecutionReport message)
-        {
-            if (orderType == OrderType.STOP_MARKET || orderType == OrderType.MIT)
-            {
-                return Price.Create(Convert.ToDecimal(message.GetField(Tags.StopPx)));
-            }
-
-            return Price.Create(Convert.ToDecimal(message.GetField(Tags.Price)));
-        }
-
-        private ZonedDateTime? GetExpireTime(ExecutionReport message)
-        {
-            return message.IsSetField(Tags.ExpireTime)
-                ? FixMessageHelper.ParseTransactionTime(message.GetField(Tags.ExpireTime))
-                : (ZonedDateTime?)null;
         }
     }
 }

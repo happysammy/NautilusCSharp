@@ -35,7 +35,7 @@ namespace Nautilus.DomainModel.Identifiers
         }
 
         /// <summary>
-        /// Return a new <see cref="PositionId"/> parsed from the given string value.
+        /// Returns a new <see cref="PositionId"/> parsed from the given string value.
         /// </summary>
         /// <param name="value">The position identifier value.</param>
         /// <returns>The position identifier.</returns>

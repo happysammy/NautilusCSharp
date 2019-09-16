@@ -17,7 +17,7 @@ namespace Nautilus.Fix
     public static class OrderIdPostfixRemover
     {
         /// <summary>
-        /// Return a modified order identifier from the given order identifier.
+        /// Returns a modified order identifier from the given order identifier.
         /// Removes any characters after and including '_R'.
         /// </summary>
         /// <param name="orderId">The order identifier.</param>

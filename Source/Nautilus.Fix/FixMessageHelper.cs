@@ -8,6 +8,7 @@
 
 namespace Nautilus.Fix
 {
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core.Correctness;
@@ -15,11 +16,13 @@ namespace Nautilus.Fix
     using NodaTime;
     using NodaTime.Text;
     using QuickFix.Fields;
+    using QuickFix.FIX44;
+    using Price = Nautilus.DomainModel.ValueObjects.Price;
     using SecurityType = Nautilus.DomainModel.Enums.SecurityType;
     using TimeInForce = Nautilus.DomainModel.Enums.TimeInForce;
 
     /// <summary>
-    /// Provides useful methods for assisting with FIX messages.
+    /// Provides useful methods for assisting with parsing FIX messages.
     /// </summary>
     [SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1201:ElementsMustAppearInTheCorrectOrder", Justification = "Reviewed. Suppression is OK here.")]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK here.")]
@@ -36,7 +39,7 @@ namespace Nautilus.Fix
         };
 
         /// <summary>
-        /// The get security request result.
+        /// Returns the security request result string.
         /// </summary>
         /// <param name="result">The result.</param>
         /// <returns>A <see cref="string"/>.</returns>
@@ -60,7 +63,7 @@ namespace Nautilus.Fix
         };
 
         /// <summary>
-        /// The get cancel reject reason string.
+        /// Returns the cancel reject reason string.
         /// </summary>
         /// <param name="rejectCode">The reject code.</param>
         /// <returns>A <see cref="string"/>.</returns>
@@ -78,7 +81,7 @@ namespace Nautilus.Fix
         };
 
         /// <summary>
-        /// Returns the cancel reject response to.
+        /// Returns the cancel reject response to string.
         /// </summary>
         /// <param name="response">The response.</param>
         /// <returns>A <see cref="string"/>.</returns>
@@ -113,7 +116,7 @@ namespace Nautilus.Fix
         };
 
         /// <summary>
-        /// The get fix time in force.
+        /// Returns the FIX time in force from the given enum.
         /// </summary>
         /// <param name="timeInForce">The time in force.</param>
         /// <returns>A <see cref="TimeInForce"/>.</returns>
@@ -125,7 +128,7 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// The get nautilus time in force.
+        /// Returns the time in force parsed from the given string..
         /// </summary>
         /// <param name="timeInForce">The time in force.</param>
         /// <returns>A <see cref="TimeInForce"/>.</returns>
@@ -137,7 +140,7 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// The get security type.
+        /// Returns the security type enum from the given string.
         /// </summary>
         /// <param name="type">The type.</param>
         /// <returns>A <see cref="SecurityType"/>.</returns>
@@ -153,7 +156,7 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// The get nautilus order side.
+        /// Returns the domain order side from the given string.
         /// </summary>
         /// <param name="side">The side.</param>
         /// <returns>The <see cref="OrderSide"/>.</returns>
@@ -173,7 +176,7 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// The get fix order side.
+        /// Returns the FIX order side from the given enum.
         /// </summary>
         /// <param name="orderSide">The order side.</param>
         /// <returns>A <see cref="Side"/>.</returns>
@@ -185,7 +188,7 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// The get opposite fix order side.
+        /// Returns the opposite FIX order side from the given enum.
         /// </summary>
         /// <param name="orderSide">The order side.</param>
         /// <returns>A <see cref="Side"/>.</returns>
@@ -197,7 +200,7 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// The get nautilus order type.
+        /// Returns the domain order type from the given string.
         /// </summary>
         /// <param name="fixType">The fix type.</param>
         /// <returns>The <see cref="OrderType"/>.</returns>
@@ -219,7 +222,7 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// The get fix order type.
+        /// Returns the FIX order type from the given enum.
         /// </summary>
         /// <param name="orderType">The order type.</param>
         /// <returns>The <see cref="OrdType"/>.</returns>
@@ -245,7 +248,7 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// The get fxcm order status.
+        /// Returns the FXCM order status from the given string.
         /// </summary>
         /// <param name="orderStatus">The order status.</param>
         /// <returns>A <see cref="string"/>.</returns>
@@ -281,20 +284,31 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// The get order price.
+        /// Returns the domain price for the given order type parsed from the given message.
         /// </summary>
         /// <param name="orderType">The order type.</param>
-        /// <param name="stopPrice">The stop price.</param>
-        /// <param name="limitPrice">The limit price.</param>
+        /// <param name="message">The execution report FIX message.</param>
         /// <returns>A <see cref="decimal"/>.</returns>
-        public static decimal GetOrderPrice(OrderType orderType, decimal stopPrice, decimal limitPrice)
+        public static Price GetOrderPrice(OrderType orderType, ExecutionReport message)
         {
             if (orderType == OrderType.STOP_MARKET || orderType == OrderType.MIT)
             {
-                return stopPrice;
+                return Price.Create(Convert.ToDecimal(message.GetField(Tags.StopPx)));
             }
 
-            return limitPrice;
+            return Price.Create(Convert.ToDecimal(message.GetField(Tags.Price)));
+        }
+
+        /// <summary>
+        /// Returns the order expiry time if the given FIX message contains the tag (else null).
+        /// </summary>
+        /// <param name="message">The execution report FIX message.</param>
+        /// <returns>A <see cref="decimal"/>.</returns>
+        public static ZonedDateTime? GetExpireTime(ExecutionReport message)
+        {
+            return message.IsSetField(Tags.ExpireTime)
+                ? ParseTransactionTime(message.GetField(Tags.ExpireTime))
+                : (ZonedDateTime?)null;
         }
 
         private static readonly ZonedDateTimePattern MarketDataParsePattern =
@@ -303,7 +317,7 @@ namespace Nautilus.Fix
                 DateTimeZoneProviders.Tzdb);
 
         /// <summary>
-        /// The get date time from market data string.
+        /// Returns the date time parsed from the given string.
         /// </summary>
         /// <param name="dateTime">The date time.</param>
         /// <returns>The converted <see cref="ZonedDateTime"/>.</returns>
@@ -316,7 +330,7 @@ namespace Nautilus.Fix
                 DateTimeZoneProviders.Tzdb);
 
         /// <summary>
-        /// The get date time from execution string.
+        /// Returns the date time parsed from the given string.
         /// </summary>
         /// <param name="dateTime">The date time.</param>
         /// <returns>The converted <see cref="ZonedDateTime"/>.</returns>

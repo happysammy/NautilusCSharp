@@ -67,7 +67,7 @@ namespace Nautilus.DomainModel.Identifiers
         public AccountType AccountType { get; }
 
         /// <summary>
-        /// Return a new <see cref="AccountId"/> from the given string.
+        /// Returns a new <see cref="AccountId"/> from the given string.
         /// </summary>
         /// <param name="value">The account identifier value.</param>
         /// <returns>The account identifier.</returns>

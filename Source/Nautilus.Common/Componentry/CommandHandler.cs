@@ -10,7 +10,6 @@ namespace Nautilus.Common.Componentry
 {
     using System;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Exceptions;
 
     /// <summary>
     /// A class which provides encapsulated execution of <see cref="Action"/>(s)
