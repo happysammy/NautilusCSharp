@@ -365,7 +365,7 @@ namespace Nautilus.Brokerage.Fxcm
                 var fxcmRejectCode = message.GetField(9029);
                 var rejectResponseTo = FixMessageHelper.GetCxlRejResponseTo(message.CxlRejResponseTo);
                 var rejectReasonText = message.GetField(Tags.CxlRejReason);
-                var rejectReason = $"RejectReasonCode({rejectReasonCode})={FixMessageHelper.GetCancelRejectReasonString(rejectReasonCode)}, FXCM({fxcmRejectCode})={rejectReasonText}";
+                var rejectReason = $"FXCM({fxcmRejectCode}) {FixMessageHelper.GetCancelRejectReasonString(rejectReasonCode)} ({rejectReasonText})";
                 var rejectedTime = FixMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
 
                 var orderCancelReject = new OrderCancelReject(
