@@ -58,12 +58,12 @@ namespace Nautilus.Redis.Execution
 
             if (this.OptionLoadCaches)
             {
-                this.Log.Information($"The OptionLoadCache is {this.OptionLoadCaches}");
+                this.Log.Information($"{nameof(this.OptionLoadCaches)} is {this.OptionLoadCaches}");
                 this.LoadCaches();
             }
             else
             {
-                this.Log.Warning($"The OptionLoadCache is {this.OptionLoadCaches} " +
+                this.Log.Warning($"{nameof(this.OptionLoadCaches)} is {this.OptionLoadCaches} " +
                                  $"(this should only be done in a testing environment).");
             }
         }

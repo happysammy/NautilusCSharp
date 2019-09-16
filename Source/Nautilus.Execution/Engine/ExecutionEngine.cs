@@ -107,7 +107,7 @@ namespace Nautilus.Execution.Engine
             this.Subscribe<OrderFilled>();
             this.Subscribe<AccountStateEvent>();
 
-            this.Log.Information($"The OptionGtdExpiryBackups is {this.OptionGtdExpiryBackups}");
+            this.Log.Information($"{nameof(this.OptionGtdExpiryBackups)} is {this.OptionGtdExpiryBackups}");
         }
 
         /// <summary>
