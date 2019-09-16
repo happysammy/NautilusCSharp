@@ -69,7 +69,7 @@ namespace Nautilus.Brokerage.Fxcm
             AccountId accountId,
             Currency accountCurrency,
             SymbolConverter symbolConverter,
-            bool useBrokerTimestampForTicks = true)
+            bool useBrokerTimestampForTicks = false)
             : base(container)
         {
             this.accountId = accountId;
@@ -82,6 +82,7 @@ namespace Nautilus.Brokerage.Fxcm
 
             if (useBrokerTimestampForTicks)
             {
+                // FXCM market data timestamp has a lower resolution than .TimeNow()
                 this.tickTimestampProvider = this.GetMarketDataTimestamp;
             }
             else
@@ -204,29 +205,20 @@ namespace Nautilus.Brokerage.Fxcm
 
                     var brokerSymbolCode = group.GetField(Tags.Symbol);
                     var symbol = this.GetSymbol(brokerSymbolCode);
-                    if (symbol is null)
-                    {
-                        continue; // Symbol not set or convertible (error already logged)
-                    }
-
                     var brokerSymbol = new BrokerSymbol(brokerSymbolCode);
                     var quoteCurrency = group.GetField(15).ToEnum<Nautilus.DomainModel.Enums.Currency>();
-
                     var securityType = FixMessageHelper.GetSecurityType(group.GetField(9080));
-                    var roundLot = Convert.ToInt32(group.GetField(561));
                     var tickPrecision = Convert.ToInt32(group.GetField(9001));
-
-                    // Field 9002 gives 'point' size. Multiply by 0.1 to get tick size.
-                    var tickSize = Convert.ToDecimal(group.GetField(9002)) * 0.1m;
-
+                    var tickSize = Convert.ToDecimal(group.GetField(9002)) * 0.1m;  // Field 9002 gives 'point' size (* 0.1m to get tick size)
+                    var roundLot = Convert.ToInt32(group.GetField(561));
                     var minStopDistanceEntry = Convert.ToInt32(group.GetField(9092));
                     var minLimitDistanceEntry = Convert.ToInt32(group.GetField(9093));
                     var minStopDistance = Convert.ToInt32(group.GetField(9090));
                     var minLimitDistance = Convert.ToInt32(group.GetField(9091));
-                    var rolloverInterestBuy = Convert.ToDecimal(group.GetField(9003));
-                    var rolloverInterestSell = Convert.ToDecimal(group.GetField(9004));
                     var minTradeSize = Convert.ToInt32(group.GetField(9095));
                     var maxTradeSize = Convert.ToInt32(group.GetField(9094));
+                    var rolloverInterestBuy = Convert.ToDecimal(group.GetField(9003));
+                    var rolloverInterestSell = Convert.ToDecimal(group.GetField(9004));
 
                     var instrument = new Instrument(
                         symbol,
@@ -332,10 +324,6 @@ namespace Nautilus.Brokerage.Fxcm
             {
                 Debug.NotNull(this.dataGateway, nameof(this.dataGateway));
 
-                // Commented out code below is to capture the brokers tick timestamp although this has a lower
-                // resolution than .TimeNow().
-                // var dateTimeString = group.GetField(Tags.MDEntryDate) + group.GetField(Tags.MDEntryTime);
-                // var timestamp = FixMessageHelper.GetZonedDateTimeUtcFromMarketDataString(dateTimeString);
                 try
                 {
                     message.GetGroup(1, this.mdBidGroup);
