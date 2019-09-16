@@ -40,13 +40,13 @@ namespace Nautilus.Redis.Execution
         /// <param name="connection">The redis connection multiplexer.</param>
         /// <param name="commandSerializer">The command serializer.</param>
         /// <param name="eventSerializer">The event serializer.</param>
-        /// <param name="optionLoadCache">The option flag to load caches from Redis on instantiation.</param>
+        /// <param name="loadCaches">The option flag to load caches from Redis on instantiation.</param>
         public RedisExecutionDatabase(
             IComponentryContainer container,
             ConnectionMultiplexer connection,
             ISerializer<Command> commandSerializer,
             ISerializer<Event> eventSerializer,
-            bool optionLoadCache = true)
+            bool loadCaches = true)
             : base(container)
         {
             this.redisServer = connection.GetServer(RedisConstants.LocalHost, RedisConstants.DefaultPort);
@@ -54,16 +54,16 @@ namespace Nautilus.Redis.Execution
             this.commandSerializer = commandSerializer;
             this.eventSerializer = eventSerializer;
 
-            this.OptionLoadCache = optionLoadCache;
+            this.OptionLoadCaches = loadCaches;
 
-            if (this.OptionLoadCache)
+            if (this.OptionLoadCaches)
             {
-                this.Log.Information($"The OptionLoadCache is {this.OptionLoadCache}");
+                this.Log.Information($"The OptionLoadCache is {this.OptionLoadCaches}");
                 this.LoadCaches();
             }
             else
             {
-                this.Log.Warning($"The OptionLoadCache is {this.OptionLoadCache} " +
+                this.Log.Warning($"The OptionLoadCache is {this.OptionLoadCaches} " +
                                  $"(this should only be done in a testing environment).");
             }
         }
@@ -71,7 +71,7 @@ namespace Nautilus.Redis.Execution
         /// <summary>
         /// Gets a value indicating whether the execution database will load the caches on instantiation.
         /// </summary>
-        public bool OptionLoadCache { get; }
+        public bool OptionLoadCaches { get; }
 
         /// <inheritdoc />
         public override void LoadAccountsCache()
