@@ -24,6 +24,9 @@ namespace Nautilus.Brokerage.Fxcm
     /// </summary>
     public sealed class FxcmFixMessageRouter : Component, IFixMessageRouter
     {
+        private const string SENT = "-->";
+        private const string FIX = "[FIX]";
+
         private readonly SymbolConverter symbolConverter;
         private readonly AccountId accountId;
 
@@ -250,7 +253,7 @@ namespace Nautilus.Brokerage.Fxcm
         {
             if (this.fixSession is null)
             {
-                this.Log.Error($"Cannot send {message} (the FIX session is null).");
+                this.Log.Error($"Cannot send FIX message (the session is null).");
                 return;
             }
 
@@ -262,7 +265,7 @@ namespace Nautilus.Brokerage.Fxcm
         [System.Diagnostics.Conditional("DEBUG")]
         private void LogMessageSent(Message message)
         {
-            this.Log.Debug($"--> {message.GetType().Name}");
+            this.Log.Debug($"{FIX}{SENT} {message.GetType().Name}");
         }
     }
 }

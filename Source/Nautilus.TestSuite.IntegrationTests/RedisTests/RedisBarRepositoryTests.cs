@@ -165,7 +165,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             Assert.True(result.IsFailure);
             Assert.Equal(0, this.repository.AllBarsCount());
             Assert.Equal(0, this.repository.BarsCount(barType));
-            Assert.Equal("market data not found for AUDUSD.FXCM-1-MINUTE[ASK]", result.Message);
+            Assert.Equal("Market data not found for AUDUSD.FXCM-1-MINUTE[ASK]", result.Message);
         }
 
         [Fact]
@@ -187,7 +187,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             Assert.Equal(1, this.repository.AllBarsCount());
             Assert.Equal(1, this.repository.BarsCount(barType1));
             Assert.Equal(0, this.repository.BarsCount(barType2));
-            Assert.Equal("market data not found for GBPUSD.FXCM-1-MINUTE[BID]", result.Message);
+            Assert.Equal("Market data not found for GBPUSD.FXCM-1-MINUTE[BID]", result.Message);
         }
 
         [Fact]

@@ -117,7 +117,7 @@ namespace Nautilus.Redis.Data
         {
             if (this.KeysCount(barType) == 0)
             {
-                return QueryResult<List<string>>.Fail($"market data not found for {barType}");
+                return QueryResult<List<string>>.Fail($"Market data not found for {barType}");
             }
 
             var allKeys = this.redisServer.Keys(pattern: KeyProvider.GetBarWildcardKey(barType));
@@ -272,7 +272,7 @@ namespace Nautilus.Redis.Data
 
             if (this.KeysCount(barType) == 0)
             {
-                return QueryResult<BarDataFrame>.Fail($"market data not found for {barType}");
+                return QueryResult<BarDataFrame>.Fail($"Market data not found for {barType}");
             }
 
             var barKeys = KeyProvider.GetBarKeys(barType, fromDateTime, toDateTime);
@@ -287,7 +287,7 @@ namespace Nautilus.Redis.Data
             if (barsArray.Length == 0)
             {
                 return QueryResult<BarDataFrame>.Fail(
-                    $"market data not complete for {barType} in time range from " +
+                    $"Market data not complete for {barType} in time range from " +
                     $"{fromDateTime.ToIsoString()} to " +
                     $"{toDateTime.ToIsoString()}");
             }
@@ -323,7 +323,7 @@ namespace Nautilus.Redis.Data
                 }
             }
 
-            return QueryResult<Bar>.Fail($"market data not found for {barType} " +
+            return QueryResult<Bar>.Fail($"Market data not found for {barType} " +
                                          $"at {timestamp.ToIsoString()}");
         }
 
@@ -338,7 +338,7 @@ namespace Nautilus.Redis.Data
 
             if (!this.KeyExists(key))
             {
-                return QueryResult<Bar[]>.Fail($"market data not found for {key}");
+                return QueryResult<Bar[]>.Fail($"Market data not found for {key}");
             }
 
             var values = this.redisDatabase.ListRange(key);
@@ -380,12 +380,12 @@ namespace Nautilus.Redis.Data
 
             if (!this.KeyExists(key))
             {
-                return CommandResult.Fail($"cannot find {key} to delete in the database");
+                return CommandResult.Fail($"Cannot find {key} to delete in the database");
             }
 
             this.redisDatabase.KeyDelete(key);
 
-            return CommandResult.Ok($"removed {key} from the database");
+            return CommandResult.Ok($"Removed {key} from the database");
         }
     }
 }

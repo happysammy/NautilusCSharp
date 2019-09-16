@@ -36,6 +36,12 @@ namespace Nautilus.Fix.Interfaces
         void OnMessage(BusinessMessageReject message);
 
         /// <summary>
+        /// Handles email message.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        void OnMessage(Email message);
+
+        /// <summary>
         /// Handles security list messages.
         /// </summary>
         /// <param name="message">The message.</param>

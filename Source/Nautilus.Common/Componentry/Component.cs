@@ -182,6 +182,19 @@ namespace Nautilus.Common.Componentry
         }
 
         /// <summary>
+        /// Passes the given <see cref="Action"/> to the <see cref="commandHandler"/> for execution.
+        /// </summary>
+        /// <typeparam name="T1">The first exception type.</typeparam>
+        /// <typeparam name="T2">The second exception type.</typeparam>
+        /// <param name="action">The action to execute.</param>
+        protected void Execute<T1, T2>(Action action)
+            where T1 : Exception
+            where T2 : Exception
+        {
+            this.commandHandler.Execute<T1, T2>(action);
+        }
+
+        /// <summary>
         /// Opens the envelope and sends the contained message to self.
         /// </summary>
         /// <param name="envelope">The envelope to open.</param>

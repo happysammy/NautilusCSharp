@@ -41,7 +41,7 @@ namespace Nautilus.Common.Componentry
             {
                 action.Invoke();
             }
-            catch (ConditionFailedException ex)
+            catch (ArgumentException ex)
             {
                 this.log.Error(ex.Message, ex);
             }
@@ -55,9 +55,9 @@ namespace Nautilus.Common.Componentry
 
         /// <summary>
         /// Executes the given action. Will catch and log all exceptions, will rethrow exceptions
-        /// other than the specified exception type or validation exceptions.
+        /// other than <see cref="ArgumentException"/>(s) and the specified <see cref="Exception"/> type.
         /// </summary>
-        /// <typeparam name="T">The exception type.</typeparam>
+        /// <typeparam name="T">The expected exception type.</typeparam>
         /// <param name="action">The action to invoke.</param>
         public void Execute<T>(Action action)
             where T : Exception
@@ -66,7 +66,46 @@ namespace Nautilus.Common.Componentry
             {
                 action.Invoke();
             }
+            catch (ArgumentException ex)
+            {
+                this.log.Error(ex.Message, ex);
+            }
             catch (T ex)
+            {
+                this.log.Error(ex.Message, ex);
+            }
+            catch (Exception ex)
+            {
+                this.log.Fatal(ex.Message, ex);
+
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Executes the given action. Will catch and log all exceptions, will rethrow exceptions
+        /// other than <see cref="ArgumentException"/>(s) and the specified expected <see cref="Exception"/> types.
+        /// </summary>
+        /// <typeparam name="T1">The first expected <see cref="Exception"/> type.</typeparam>
+        /// <typeparam name="T2">The second expected <see cref="Exception"/> type.</typeparam>
+        /// <param name="action">The action to invoke.</param>
+        public void Execute<T1, T2>(Action action)
+            where T1 : Exception
+            where T2 : Exception
+        {
+            try
+            {
+                action.Invoke();
+            }
+            catch (ArgumentException ex)
+            {
+                this.log.Error(ex.Message, ex);
+            }
+            catch (T1 ex)
+            {
+                this.log.Error(ex.Message, ex);
+            }
+            catch (T2 ex)
             {
                 this.log.Error(ex.Message, ex);
             }

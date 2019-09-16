@@ -349,6 +349,16 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
+        /// Handles the <see cref="Email"/> message.
+        /// </summary>
+        /// <param name="message">The FIX message.</param>
+        /// <param name="sessionId">The session identifier.</param>
+        public void OnMessage(Email message, SessionID sessionId)
+        {
+            this.FixMessageHandler.OnMessage(message);
+        }
+
+        /// <summary>
         /// Handles the trading session status message.
         /// </summary>
         /// <param name="message">The FIX message.</param>

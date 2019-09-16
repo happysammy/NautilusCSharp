@@ -364,7 +364,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             // Assert
             this.output.WriteLine(result.Message);
             Assert.True(result.IsFailure);
-            Assert.Equal("market data not found for AUDUSD.FXCM-1-MINUTE[ASK]", result.Message);
+            Assert.Equal("Market data not found for AUDUSD.FXCM-1-MINUTE[ASK]", result.Message);
         }
 
         [Fact]
@@ -382,7 +382,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             // Assert
             this.output.WriteLine(result.Message);
             Assert.True(result.IsFailure);
-            Assert.Equal("market data not complete for AUDUSD.FXCM-1-MINUTE[ASK] in time range from 1970-01-01T00:00:00.000Z to 1970-01-01T00:02:00.000Z", result.Message);
+            Assert.Equal("Market data not complete for AUDUSD.FXCM-1-MINUTE[ASK] in time range from 1970-01-01T00:00:00.000Z to 1970-01-01T00:02:00.000Z", result.Message);
         }
 
         [Fact]

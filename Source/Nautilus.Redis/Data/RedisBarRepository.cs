@@ -124,7 +124,6 @@ namespace Nautilus.Redis.Data
             }
 
             var lastKey = barKeysQuery.Value.Last();
-
             var barsQuery = this.barClient.GetBarsByDay(lastKey);
 
             return barsQuery.IsSuccess
@@ -142,7 +141,6 @@ namespace Nautilus.Redis.Data
         {
             var results = new List<CommandResult>();
             var keys = this.barClient.GetSortedKeysBySymbolResolution(resolution);
-
             foreach (var value in keys.Values)
             {
                 var keyCount = value.Count;

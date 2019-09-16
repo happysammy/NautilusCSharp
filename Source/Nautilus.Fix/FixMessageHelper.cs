@@ -203,32 +203,19 @@ namespace Nautilus.Fix
         /// <returns>The <see cref="OrderType"/>.</returns>
         public static OrderType GetOrderType(string fixType)
         {
-            if (fixType == OrdType.MARKET.ToString())
+            switch (fixType)
             {
-                return OrderType.MARKET;
+                case nameof(OrdType.MARKET):
+                    return OrderType.MARKET;
+                case nameof(OrdType.STOP):
+                    return OrderType.STOP_MARKET;
+                case nameof(OrdType.STOP_LIMIT):
+                    return OrderType.STOP_LIMIT;
+                case nameof(OrdType.MARKET_IF_TOUCHED):
+                    return OrderType.MIT;
+                default:
+                    return OrderType.UNKNOWN;
             }
-
-            if (fixType == OrdType.STOP.ToString())
-            {
-                return OrderType.STOP_MARKET;
-            }
-
-            if (fixType == OrdType.STOP_LIMIT.ToString())
-            {
-                return OrderType.STOP_LIMIT;
-            }
-
-            if (fixType == OrdType.LIMIT.ToString())
-            {
-                return OrderType.LIMIT;
-            }
-
-            if (fixType == OrdType.MARKET_IF_TOUCHED.ToString())
-            {
-                return OrderType.MIT;
-            }
-
-            return OrderType.UNKNOWN;
         }
 
         /// <summary>
@@ -255,86 +242,6 @@ namespace Nautilus.Fix
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(orderType, nameof(orderType));
             }
-        }
-
-        /// <summary>
-        /// The get fix order status.
-        /// </summary>
-        /// <param name="orderStatus">The order status.</param>
-        /// <returns>A <see cref="string"/>.</returns>
-        public static string GetFixOrderStatus(string orderStatus)
-        {
-            if (orderStatus == OrdStatus.PARTIALLY_FILLED.ToString())
-            {
-                return "PARTIALLY_FILLED";
-            }
-
-            if (orderStatus == OrdStatus.ACCEPTED_FOR_BIDDING.ToString())
-            {
-                return "ACCEPTED_FOR_BIDDING";
-            }
-
-            if (orderStatus == OrdStatus.CANCELED.ToString())
-            {
-                return "CANCELED";
-            }
-
-            if (orderStatus == OrdStatus.DONE_FOR_DAY.ToString())
-            {
-                return "DONE_FOR_DAY";
-            }
-
-            if (orderStatus == OrdStatus.EXPIRED.ToString())
-            {
-                return "EXPIRED";
-            }
-
-            if (orderStatus == OrdStatus.CALCULATED.ToString())
-            {
-                return "CALCULATED";
-            }
-
-            if (orderStatus == OrdStatus.FILLED.ToString())
-            {
-                return "FILLED";
-            }
-
-            if (orderStatus == OrdStatus.NEW.ToString())
-            {
-                return "NEW";
-            }
-
-            if (orderStatus == OrdStatus.PENDING_CANCEL.ToString())
-            {
-                return "PENDING_CANCEL";
-            }
-
-            if (orderStatus == OrdStatus.PENDING_CANCELREPLACE.ToString())
-            {
-                return "PENDING_CANCEL_REPLACE";
-            }
-
-            if (orderStatus == OrdStatus.REJECTED.ToString())
-            {
-                return "REJECTED";
-            }
-
-            if (orderStatus == OrdStatus.REPLACED.ToString())
-            {
-                return "REPLACED";
-            }
-
-            if (orderStatus == OrdStatus.STOPPED.ToString())
-            {
-                return "STOPPED";
-            }
-
-            if (orderStatus == OrdStatus.SUSPENDED.ToString())
-            {
-                return "SUSPENDED";
-            }
-
-            return "UNKNOWN?";
         }
 
         /// <summary>
@@ -413,7 +320,7 @@ namespace Nautilus.Fix
         /// </summary>
         /// <param name="dateTime">The date time.</param>
         /// <returns>The converted <see cref="ZonedDateTime"/>.</returns>
-        public static ZonedDateTime ConvertExecutionReportString(string dateTime) =>
+        public static ZonedDateTime GetTransactionTime(string dateTime) =>
             ExecutionReportParsePattern.Parse(dateTime).Value;
     }
 }
