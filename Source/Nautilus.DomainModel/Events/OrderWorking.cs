@@ -9,7 +9,6 @@
 namespace Nautilus.DomainModel.Events
 {
     using System;
-    using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
@@ -24,7 +23,6 @@ namespace Nautilus.DomainModel.Events
     /// Represents an event where an order is working with the broker.
     /// </summary>
     [Immutable]
-    [SuppressMessage("ReSharper", "InterpolatedStringExpressionIsNotIFormattable", Justification = "Format Quantity")]
     public sealed class OrderWorking : OrderEvent
     {
         /// <summary>
@@ -155,7 +153,11 @@ namespace Nautilus.DomainModel.Events
                    $"OrderId={this.OrderId.Value}, " +
                    $"OrderIdBroker={this.OrderIdBroker.Value}, " +
                    $"Label={this.Label.Value}, " +
-                   $"{this.OrderSide} {this.Quantity:N0} {this.Symbol.Value} {this.OrderType} {this.Price} " +
+                   $"{this.OrderSide} " +
+                   $"{this.Quantity.ToFormattedString()} " +
+                   $"{this.Symbol.Value} " +
+                   $"{this.OrderType} @ " +
+                   $"{this.Price} " +
                    $"{this.TimeInForce}{expireTimeString})";
         }
     }

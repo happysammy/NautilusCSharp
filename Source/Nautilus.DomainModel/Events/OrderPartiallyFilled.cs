@@ -81,7 +81,10 @@ namespace Nautilus.DomainModel.Events
                                              $"OrderId={this.OrderId.Value}, " +
                                              $"ExecutionId={this.ExecutionId.Value}," +
                                              $"ExecutionTicket={this.ExecutionTicket}, " +
-                                             $"{this.OrderSide} {this.FilledQuantity:N0} {this.Symbol.Value} @ {this.AveragePrice}, " +
-                                             $"LeavesQty={this.LeavesQuantity})";
+                                             $"{this.OrderSide} " +
+                                             $"{this.FilledQuantity.ToFormattedString()} " +
+                                             $"{this.Symbol.Value} @ " +
+                                             $"{this.AveragePrice}, " +
+                                             $"LeavesQty={this.LeavesQuantity.ToFormattedString()})";
     }
 }

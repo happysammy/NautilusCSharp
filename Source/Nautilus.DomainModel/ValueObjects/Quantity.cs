@@ -8,6 +8,7 @@
 
 namespace Nautilus.DomainModel.ValueObjects
 {
+    using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Primitives;
@@ -16,6 +17,7 @@ namespace Nautilus.DomainModel.ValueObjects
     /// Represents a non-negative quantity.
     /// </summary>
     [Immutable]
+    [SuppressMessage("ReSharper", "InterpolatedStringExpressionIsNotIFormattable", Justification = "Formatting.")]
     public sealed class Quantity : IntegerNumber
     {
         private static readonly Quantity ZeroQuantity = new Quantity(0);
@@ -83,5 +85,11 @@ namespace Nautilus.DomainModel.ValueObjects
 
             return new Quantity(this.Value * multiplier);
         }
+
+        /// <summary>
+        /// Returns the formatted string representation of this object.
+        /// </summary>
+        /// <returns>The formatted string.</returns>
+        public string ToFormattedString() => $"{this:N0}";
     }
 }

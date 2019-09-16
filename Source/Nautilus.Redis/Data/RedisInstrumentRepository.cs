@@ -118,7 +118,7 @@ namespace Nautilus.Redis.Data
 
             if (instrumentBuilder.Changes.Count == 0)
             {
-                return CommandResult.Ok($"Instrument {symbol} unchanged in cache");
+                return CommandResult.Ok($"Instrument {symbol.Value} unchanged in cache");
             }
 
             var changesString = new StringBuilder();
@@ -133,7 +133,7 @@ namespace Nautilus.Redis.Data
             this.cache[symbol] = updatedInstrument;
             this.Write(instrument);
 
-            return CommandResult.Ok($"Updated instrument {symbol}" + changesString);
+            return CommandResult.Ok($"Updated instrument {symbol.Value}" + changesString);
         }
 
         /// <inheritdoc />
@@ -141,7 +141,7 @@ namespace Nautilus.Redis.Data
         {
             return this.cache.ContainsKey(symbol)
                 ? QueryResult<Instrument>.Ok(this.cache[symbol])
-                : QueryResult<Instrument>.Fail($"Cannot find instrument {symbol}");
+                : QueryResult<Instrument>.Fail($"Cannot find instrument {symbol.Value}");
         }
 
         /// <inheritdoc />

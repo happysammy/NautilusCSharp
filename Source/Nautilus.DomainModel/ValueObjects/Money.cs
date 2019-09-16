@@ -153,7 +153,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A <see cref="string"/>.</returns>
         public override string ToString()
         {
-            return $"{this.Value:N2} {this.Currency}";
+            return $"{this.Value:N2}{this.Currency}";
         }
     }
 }
