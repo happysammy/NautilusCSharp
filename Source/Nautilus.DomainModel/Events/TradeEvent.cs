@@ -48,6 +48,6 @@ namespace Nautilus.DomainModel.Events
         /// Returns a string representation of this <see cref="TradeEvent"/>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{nameof(TradeEvent)}({this.Event.Type.Name}, OrderId=({this.Event.OrderId.Value})";
+        public override string ToString() => $"{nameof(TradeEvent)}({this.Event.Type.Name}, TraderId={this.TraderId.Value}, OrderId={this.Event.OrderId.Value})";
     }
 }
