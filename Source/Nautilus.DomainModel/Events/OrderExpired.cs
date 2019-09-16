@@ -16,7 +16,7 @@ namespace Nautilus.DomainModel.Events
     using NodaTime;
 
     /// <summary>
-    /// Represents an event where an order had expired at the broker.
+    /// Represents an event where an order has expired with the broker.
     /// </summary>
     [Immutable]
     public sealed class OrderExpired : OrderEvent

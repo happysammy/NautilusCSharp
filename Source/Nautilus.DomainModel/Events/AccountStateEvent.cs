@@ -18,7 +18,7 @@ namespace Nautilus.DomainModel.Events
     using NodaTime;
 
     /// <summary>
-    /// Represents an account change event.
+    /// Represents an event where an account state has changed or been updated.
     /// </summary>
     [Immutable]
     public sealed class AccountStateEvent : AccountEvent

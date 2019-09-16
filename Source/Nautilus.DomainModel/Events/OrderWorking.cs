@@ -20,7 +20,7 @@ namespace Nautilus.DomainModel.Events
     using NodaTime;
 
     /// <summary>
-    /// Represents an event where an order had been working at the broker.
+    /// Represents an event where an order is working with the broker.
     /// </summary>
     [Immutable]
     public sealed class OrderWorking : OrderEvent

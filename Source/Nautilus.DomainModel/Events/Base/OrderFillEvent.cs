@@ -17,7 +17,7 @@ namespace Nautilus.DomainModel.Events.Base
     using NodaTime;
 
     /// <summary>
-    /// Represents an event where an order had been completely filled.
+    /// The base class for all order fill events.
     /// </summary>
     [Immutable]
     public abstract class OrderFillEvent : OrderEvent

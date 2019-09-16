@@ -16,7 +16,7 @@ namespace Nautilus.DomainModel.Events
     using NodaTime;
 
     /// <summary>
-    /// Represents an account change event.
+    /// Represents an event where a market has opened.
     /// </summary>
     [Immutable]
     public sealed class MarketOpened : Event

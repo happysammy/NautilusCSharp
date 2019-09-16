@@ -16,7 +16,7 @@ namespace Nautilus.DomainModel.Events.Base
     using NodaTime;
 
     /// <summary>
-    /// The base class for all order events.
+    /// The base class for all account events.
     /// </summary>
     [Immutable]
     public abstract class AccountEvent : Event

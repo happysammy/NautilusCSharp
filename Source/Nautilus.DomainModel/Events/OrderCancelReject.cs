@@ -16,7 +16,7 @@ namespace Nautilus.DomainModel.Events
     using NodaTime;
 
     /// <summary>
-    /// Represents an event where a request to cancel an order had been rejected by the broker.
+    /// Represents an event where a command to cancel or modify an order has been rejected by the broker.
     /// </summary>
     [Immutable]
     public sealed class OrderCancelReject : OrderEvent

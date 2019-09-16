@@ -17,7 +17,7 @@ namespace Nautilus.DomainModel.Events
     using NodaTime;
 
     /// <summary>
-    /// Represents an event where an order had been partially filled.
+    /// Represents an event where an order has been partially filled.
     /// </summary>
     [Immutable]
     public sealed class OrderPartiallyFilled : OrderFillEvent
