@@ -163,7 +163,7 @@ namespace Nautilus.Execution.Engine
             }
             else
             {
-                this.Log.Error($"Cannot execute command {command} {result.Message}");
+                this.Log.Error($"Cannot execute command {command} ({result.Message}).");
             }
         }
 
@@ -232,13 +232,13 @@ namespace Nautilus.Execution.Engine
             var order = this.database.GetOrder(command.OrderId);
             if (order is null)
             {
-                this.Log.Error($"Cannot execute command {command} - {command.OrderId} was not found in the memory cache.");
+                this.Log.Error($"Cannot execute command {command} (order was not found in the memory cache).");
                 return;
             }
 
             if (order.IsCompleted)
             {
-                this.Log.Warning($"{RECV}{CMD} {command} and {command.OrderId} is already completed.");
+                this.Log.Warning($"{RECV}{CMD} {command} and (order is already completed).");
             }
 
             this.gateway.CancelOrder(order);
@@ -251,21 +251,21 @@ namespace Nautilus.Execution.Engine
             var order = this.database.GetOrder(command.OrderId);
             if (order is null)
             {
-                this.Log.Error($"Cannot execute command {command} - {command.OrderId} was not found in the memory cache.");
+                this.Log.Error($"Cannot execute command {command} (order was not found in the memory cache).");
                 return;
             }
 
             if (!order.IsWorking)
             {
                 this.bufferModify[command.OrderId] = command;
-                this.Log.Warning($"Buffering command {command} - order not yet working.");
+                this.Log.Warning($"Buffering command {command} (order not yet working).");
                 return;
             }
 
             if (this.bufferModify.ContainsKey(command.OrderId))
             {
                 this.bufferModify[command.OrderId] = command;
-                this.Log.Debug($"Buffering command {command} - order already being modified.");
+                this.Log.Debug($"Buffering command {command} (order already being modified).");
                 return;
             }
 
@@ -341,7 +341,7 @@ namespace Nautilus.Execution.Engine
                 if (traderId is null)
                 {
                     // This should never happen
-                    this.Log.Error($"Cannot schedule backup CancelOrder command - cannot find TraderId for {order.Id}.");
+                    this.Log.Error($"Cannot schedule backup CancelOrder command (cannot find TraderId for {order.Id}).");
                     return;
                 }
 
@@ -349,7 +349,7 @@ namespace Nautilus.Execution.Engine
                 if (accountId is null)
                 {
                     // This should never happen
-                    this.Log.Error($"Cannot schedule backup CancelOrder command - cannot find AccountId for {order.Id}.");
+                    this.Log.Error($"Cannot schedule backup CancelOrder command (cannot find AccountId for {order.Id}).");
                     return;
                 }
 
@@ -369,7 +369,7 @@ namespace Nautilus.Execution.Engine
             else
             {
                 // This should never happen
-                this.Log.Error($"Cannot schedule backup CancelOrder - no expire time set for GTD order {order.Id}");
+                this.Log.Error($"Cannot schedule backup CancelOrder (no expire time set for GTD order {order.Id}).");
             }
         }
 
@@ -489,7 +489,7 @@ namespace Nautilus.Execution.Engine
             var positionId = this.database.GetPositionId(@event.OrderId);
             if (positionId is null)
             {
-                this.Log.Error($"Cannot process event {@event} - no PositionId found for {@event.OrderId}.");
+                this.Log.Error($"Cannot process event {@event} (no PositionId found for order).");
                 this.SendToEventPublisher(@event);
                 return;
             }
@@ -537,7 +537,7 @@ namespace Nautilus.Execution.Engine
             var traderId = this.database.GetTraderId(@event.OrderId);
             if (traderId is null)
             {
-                this.Log.Error($"Cannot send event {@event} to publisher - no TraderId for {@event.OrderId}.");
+                this.Log.Error($"Cannot send event {@event} to publisher (no TraderId found for order).");
                 return;
             }
 

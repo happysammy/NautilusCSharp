@@ -358,7 +358,6 @@ namespace Nautilus.DomainModel.Aggregates
 
         private void When(OrderWorking @event)
         {
-            Debug.True(!(this.Price is null), "An order with a null price can never be working.");
             Debug.EqualTo(@event.Symbol, this.Symbol, nameof(@event.Symbol));
             Debug.EqualTo(@event.Label, this.Label, nameof(@event.Label));
             Debug.EqualTo(@event.OrderSide, this.OrderSide, nameof(@event.OrderSide));
