@@ -415,7 +415,7 @@ namespace Nautilus.Execution.Engine
             if (order is null)
             {
                 // This should never happen
-                this.Log.Error($"Cannot process event {@event} as {@event.OrderId} was not found in the cache.");
+                this.Log.Error($"Cannot process event {@event} (order not found in the cache.");
             }
             else
             {
