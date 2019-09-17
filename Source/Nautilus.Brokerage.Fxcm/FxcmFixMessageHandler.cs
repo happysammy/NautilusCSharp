@@ -402,6 +402,38 @@ namespace Nautilus.Brokerage.Fxcm
                         break;
                     }
 
+                    case OrdStatus.STOPPED:
+                    {
+                        this.Log.Debug($"{RECV}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.STOPPED)}).");
+
+                        this.tradingGateway?.Send(this.GenerateOrderAcceptedEvent(message));
+                        break;
+                    }
+
+                    case OrdStatus.PENDING_NEW:
+                    {
+                        this.Log.Debug($"{RECV}{FIX} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.PENDING_NEW)}).");
+
+                        // Do nothing
+                        break;
+                    }
+
+                    case OrdStatus.NEW:
+                    {
+                        this.Log.Debug($"{RECV}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.NEW)})");
+
+                        this.tradingGateway?.Send(this.GenerateOrderWorkingEvent(message));
+                        break;
+                    }
+
+                    case OrdStatus.PENDING_CANCEL:
+                    {
+                        this.Log.Debug($"{RECV}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.PENDING_CANCEL)}).");
+
+                        // Do nothing
+                        break;
+                    }
+
                     case OrdStatus.CANCELED:
                     {
                         this.Log.Debug($"{RECV}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.CANCELED)})");
@@ -415,14 +447,6 @@ namespace Nautilus.Brokerage.Fxcm
                         this.Log.Debug($"{RECV}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.REPLACED)})");
 
                         this.tradingGateway?.Send(this.GenerateOrderModifiedEvent(message));
-                        break;
-                    }
-
-                    case OrdStatus.NEW:
-                    {
-                        this.Log.Debug($"{RECV}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.NEW)})");
-
-                        this.tradingGateway?.Send(this.GenerateOrderWorkingEvent(message));
                         break;
                     }
 
@@ -450,12 +474,6 @@ namespace Nautilus.Brokerage.Fxcm
                         break;
                     }
 
-                    case OrdStatus.STOPPED:
-                    {
-                        this.Log.Warning($"{RECV}{FIX} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.STOPPED)}).");
-                        break;
-                    }
-
                     case OrdStatus.SUSPENDED:
                     {
                         this.Log.Warning($"{RECV}{FIX} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.SUSPENDED)}).");
@@ -471,18 +489,6 @@ namespace Nautilus.Brokerage.Fxcm
                     case OrdStatus.DONE_FOR_DAY:
                     {
                         this.Log.Warning($"{RECV}{FIX} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.DONE_FOR_DAY)}).");
-                        break;
-                    }
-
-                    case OrdStatus.PENDING_NEW:
-                    {
-                        this.Log.Warning($"{RECV}{FIX} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.PENDING_NEW)}).");
-                        break;
-                    }
-
-                    case OrdStatus.PENDING_CANCEL:
-                    {
-                        this.Log.Warning($"{RECV}{FIX} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.PENDING_CANCEL)}).");
                         break;
                     }
 
@@ -518,13 +524,26 @@ namespace Nautilus.Brokerage.Fxcm
             var rejectReasonCode = message.GetField(9025);
             var fxcmRejectCode = message.GetField(9029);
             var rejectReasonText = message.GetField(Tags.CxlRejReason);
-            var rejectReason = $"Code({rejectReasonCode})={FixMessageHelper.GetCancelRejectReasonString(rejectReasonCode)}, FXCM({fxcmRejectCode})={rejectReasonText}";
+            var rejectReason = $"FXCM({fxcmRejectCode}) {FixMessageHelper.GetCancelRejectReasonString(rejectReasonCode)} ({rejectReasonText})";
 
             return new OrderRejected(
                 orderId,
                 this.accountId,
                 rejectedTime,
                 rejectReason,
+                this.NewGuid(),
+                this.TimeNow());
+        }
+
+        private OrderAccepted GenerateOrderAcceptedEvent(ExecutionReport message)
+        {
+            var orderId = this.GetOrderId(message.OrderID);
+            var acceptedTime = FixMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
+
+            return new OrderAccepted(
+                orderId,
+                this.accountId,
+                acceptedTime,
                 this.NewGuid(),
                 this.TimeNow());
         }
@@ -563,8 +582,7 @@ namespace Nautilus.Brokerage.Fxcm
         private OrderWorking GenerateOrderWorkingEvent(ExecutionReport message)
         {
             var orderId = new OrderId(message.GetField(Tags.ClOrdID));
-            this.orderIdIndex[message.OrderID] = orderId;
-
+            this.orderIdIndex[message.OrderID] = orderId;  // Index order identifiers
             var orderIdBroker = new OrderIdBroker(message.GetField(Tags.OrderID));
             var symbol = this.GetSymbol(message.GetField(Tags.Symbol));
             var orderLabel = new Label(message.GetField(Tags.SecondaryClOrdID));

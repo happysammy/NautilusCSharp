@@ -115,7 +115,6 @@ namespace Nautilus.DomainModel.Events
         public override string ToString() => $"{this.Type.Name}(" +
                                              $"AccountId={this.AccountId.Value}, " +
                                              $"Cash={this.CashBalance}, " +
-                                             $"MarginUsedMaintenance={this.MarginUsedMaintenance}, " +
-                                             $"MarginUsedLiquidation={this.MarginUsedLiquidation})";
+                                             $"MarginUsed={this.MarginUsedMaintenance})";
     }
 }
