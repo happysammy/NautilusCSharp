@@ -125,22 +125,11 @@ namespace Nautilus.Execution.Engine
         /// </summary>
         public int EventCount { get; private set; }
 
-        private void IncrementCounter(Command command)
-        {
-            this.Log.Information($"{RECV}{CMD} {command}.");
-            this.CommandCount++;
-        }
-
-        private void IncrementCounter(Event @event)
-        {
-            this.Log.Information($"{RECV}{EVT} {@event}.");
-            this.EventCount++;
-        }
-
         //-- COMMANDS ------------------------------------------------------------------------------------------------//
         private void OnMessage(SubmitOrder command)
         {
-            this.IncrementCounter(command);
+            this.CommandCount++;
+            this.Log.Information($"{RECV}{CMD} {command}.");
 
             var result = this.database.AddOrder(
                 command.Order,
@@ -173,7 +162,8 @@ namespace Nautilus.Execution.Engine
 
         private void OnMessage(SubmitAtomicOrder command)
         {
-            this.IncrementCounter(command);
+            this.CommandCount++;
+            this.Log.Information($"{RECV}{CMD} {command}.");
 
             var result = this.database.AddAtomicOrder(
                 command.AtomicOrder,
@@ -231,7 +221,8 @@ namespace Nautilus.Execution.Engine
 
         private void OnMessage(CancelOrder command)
         {
-            this.IncrementCounter(command);
+            this.CommandCount++;
+            this.Log.Information($"{RECV}{CMD} {command}.");
 
             var order = this.database.GetOrder(command.OrderId);
             if (order is null)
@@ -250,7 +241,8 @@ namespace Nautilus.Execution.Engine
 
         private void OnMessage(ModifyOrder command)
         {
-            this.IncrementCounter(command);
+            this.CommandCount++;
+            this.Log.Information($"{RECV}{CMD} {command}.");
 
             var order = this.database.GetOrder(command.OrderId);
             if (order is null)
@@ -280,7 +272,8 @@ namespace Nautilus.Execution.Engine
 
         private void OnMessage(AccountInquiry command)
         {
-            this.IncrementCounter(command);
+            this.CommandCount++;
+            this.Log.Information($"{RECV}{CMD} {command}.");
 
             this.gateway.AccountInquiry();
         }
@@ -288,21 +281,27 @@ namespace Nautilus.Execution.Engine
         //-- EVENTS --------------------------------------------------------------------------------------------------//
         private void OnMessage(OrderSubmitted @event)
         {
-            this.IncrementCounter(@event);
+            this.EventCount++;
+            this.Log.Information($"{RECV}{EVT} {@event}.");
+
             this.ProcessOrderEvent(@event);
             this.SendToEventPublisher(@event);
         }
 
         private void OnMessage(OrderAccepted @event)
         {
-            this.IncrementCounter(@event);
+            this.EventCount++;
+            this.Log.Information($"{RECV}{EVT} {@event}.");
+
             this.ProcessOrderEvent(@event);
             this.SendToEventPublisher(@event);
         }
 
         private void OnMessage(OrderRejected @event)
         {
-            this.IncrementCounter(@event);
+            this.EventCount++;
+            this.Log.Warning($"{RECV}{EVT} {@event}.");
+
             this.ProcessOrderEvent(@event);
             this.ClearModifyBuffer(@event.OrderId);
             this.ClearExpiryBackup(@event.OrderId);
@@ -311,14 +310,15 @@ namespace Nautilus.Execution.Engine
 
         private void OnMessage(OrderWorking @event)
         {
-            this.IncrementCounter(@event);
+            this.EventCount++;
+            this.Log.Information($"{RECV}{EVT} {@event}.");
 
             var order = this.ProcessOrderEvent(@event);
             if (order != null)
             {
                 this.ProcessModifyBuffer(order);
 
-                if (this.OptionGtdExpiryBackups && this.IsValidGoodTillDateOrder(order))
+                if (this.OptionGtdExpiryBackups && this.IsExpiredGtdOrder(order))
                 {
                     // Creates a scheduled CancelOrder backup command for the expiry time
                     this.CreateGtdCancelBackup(order);
@@ -330,7 +330,8 @@ namespace Nautilus.Execution.Engine
 
         private void OnMessage(OrderModified @event)
         {
-            this.IncrementCounter(@event);
+            this.EventCount++;
+            this.Log.Information($"{RECV}{EVT} {@event}.");
 
             var order = this.ProcessOrderEvent(@event);
             if (order != null)
@@ -343,20 +344,17 @@ namespace Nautilus.Execution.Engine
 
         private void OnMessage(OrderCancelReject @event)
         {
-            this.IncrementCounter(@event);
-
-            var order = this.ProcessOrderEvent(@event);
-            if (order != null)
-            {
-                this.ProcessModifyBuffer(order);
-            }
+            this.EventCount++;
+            this.Log.Warning($"{RECV}{EVT} {@event}.");
 
             this.SendToEventPublisher(@event);
         }
 
         private void OnMessage(OrderExpired @event)
         {
-            this.IncrementCounter(@event);
+            this.EventCount++;
+            this.Log.Information($"{RECV}{EVT} {@event}.");
+
             this.ProcessOrderEvent(@event);
             this.ClearModifyBuffer(@event.OrderId);
             this.ClearExpiryBackup(@event.OrderId);
@@ -365,7 +363,9 @@ namespace Nautilus.Execution.Engine
 
         private void OnMessage(OrderCancelled @event)
         {
-            this.IncrementCounter(@event);
+            this.EventCount++;
+            this.Log.Information($"{RECV}{EVT} {@event}.");
+
             this.ProcessOrderEvent(@event);
             this.ClearModifyBuffer(@event.OrderId);
             this.ClearExpiryBackup(@event.OrderId);
@@ -374,7 +374,9 @@ namespace Nautilus.Execution.Engine
 
         private void OnMessage(OrderPartiallyFilled @event)
         {
-            this.IncrementCounter(@event);
+            this.EventCount++;
+            this.Log.Warning($"{RECV}{EVT} {@event}.");
+
             this.ProcessOrderEvent(@event);
             this.HandleOrderFillEvent(@event);
             this.SendToEventPublisher(@event);
@@ -382,7 +384,9 @@ namespace Nautilus.Execution.Engine
 
         private void OnMessage(OrderFilled @event)
         {
-            this.IncrementCounter(@event);
+            this.EventCount++;
+            this.Log.Information($"{RECV}{EVT} {@event}.");
+
             this.ProcessOrderEvent(@event);
             this.HandleOrderFillEvent(@event);
             this.ClearModifyBuffer(@event.OrderId);
@@ -392,7 +396,8 @@ namespace Nautilus.Execution.Engine
 
         private void OnMessage(AccountStateEvent @event)
         {
-            this.IncrementCounter(@event);
+            this.EventCount++;
+            this.Log.Information($"{RECV}{EVT} {@event}.");
 
             var account = this.database.GetAccount(@event.AccountId);
             if (account is null)
@@ -482,7 +487,7 @@ namespace Nautilus.Execution.Engine
             }
         }
 
-        private bool IsValidGoodTillDateOrder(Order order)
+        private bool IsExpiredGtdOrder(Order order)
         {
             return order.TimeInForce == TimeInForce.GTD &&
                    order.ExpireTime != null &&
@@ -521,7 +526,7 @@ namespace Nautilus.Execution.Engine
                 var token = this.scheduler.ScheduleSendOnceCancelable(delay, this.Endpoint, cancelOrder, this.Endpoint);
                 this.gtdExpiryBackupTokens[order.Id] = token;
 
-                this.Log.Information($"Scheduled GTD CancelOrder backup for {order.ExpireTime.Value.ToIsoString()}.");
+                this.Log.Debug($"Scheduled GTD CancelOrder backup for {order.ExpireTime.Value.ToIsoString()}.");
             }
             else
             {

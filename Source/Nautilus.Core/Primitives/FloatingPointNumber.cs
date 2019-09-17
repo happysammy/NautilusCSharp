@@ -18,7 +18,9 @@ namespace Nautilus.Core.Primitives
     /// </summary>
     [Immutable]
     public abstract class FloatingPointNumber
-        : IEquatable<object>, IEquatable<double>, IEquatable<FloatingPointNumber>, IComparable<double>, IComparable<FloatingPointNumber>
+        : IEquatable<object>, IEquatable<double>, IEquatable<FloatingPointNumber>,
+            IComparable<double>, IComparable<FloatingPointNumber>,
+            IFormattable
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FloatingPointNumber" /> class.
@@ -417,5 +419,16 @@ namespace Nautilus.Core.Primitives
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
         public override string ToString() => this.Value.ToString(CultureInfo.InvariantCulture);
+
+        /// <summary>
+        /// Returns a formatted string representation of this object.
+        /// </summary>
+        /// <param name="format">The format for the string.</param>
+        /// <param name="formatProvider">The format provider for the string.</param>
+        /// <returns>A <see cref="string"/>.</returns>
+        public string ToString(string format, IFormatProvider formatProvider)
+        {
+            return this.Value.ToString(format, formatProvider);
+        }
     }
 }

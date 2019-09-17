@@ -10,7 +10,6 @@ namespace Nautilus.DomainModel.Aggregates
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using Nautilus.Core.Collections;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
@@ -265,28 +264,19 @@ namespace Nautilus.DomainModel.Aggregates
                 { new StateTransition<OrderState>(OrderState.Submitted, Trigger.Event(typeof(OrderWorking))), OrderState.Working },
                 { new StateTransition<OrderState>(OrderState.Submitted, Trigger.Event(typeof(OrderAccepted))), OrderState.Accepted },
                 { new StateTransition<OrderState>(OrderState.Submitted, Trigger.Event(typeof(OrderCancelled))), OrderState.Cancelled },
-                { new StateTransition<OrderState>(OrderState.Accepted, Trigger.Event(typeof(OrderCancelReject))), OrderState.Accepted }, // OrderCancelReject (state should remain unchanged).
                 { new StateTransition<OrderState>(OrderState.Accepted, Trigger.Event(typeof(OrderWorking))), OrderState.Working },
                 { new StateTransition<OrderState>(OrderState.Accepted, Trigger.Event(typeof(OrderFilled))), OrderState.Filled },
                 { new StateTransition<OrderState>(OrderState.Accepted, Trigger.Event(typeof(OrderPartiallyFilled))), OrderState.PartiallyFilled },
-                { new StateTransition<OrderState>(OrderState.Working, Trigger.Event(typeof(OrderCancelReject))), OrderState.Working }, // OrderCancelReject (state should remain unchanged).
                 { new StateTransition<OrderState>(OrderState.Working, Trigger.Event(typeof(OrderWorking))), OrderState.Working },
                 { new StateTransition<OrderState>(OrderState.Working, Trigger.Event(typeof(OrderCancelled))), OrderState.Cancelled },
                 { new StateTransition<OrderState>(OrderState.Working, Trigger.Event(typeof(OrderModified))), OrderState.Working },
                 { new StateTransition<OrderState>(OrderState.Working, Trigger.Event(typeof(OrderExpired))), OrderState.Expired },
                 { new StateTransition<OrderState>(OrderState.Working, Trigger.Event(typeof(OrderFilled))), OrderState.Filled },
                 { new StateTransition<OrderState>(OrderState.Working, Trigger.Event(typeof(OrderPartiallyFilled))), OrderState.PartiallyFilled },
-                { new StateTransition<OrderState>(OrderState.PartiallyFilled, Trigger.Event(typeof(OrderCancelReject))), OrderState.PartiallyFilled }, // OrderCancelReject (state should remain unchanged).
                 { new StateTransition<OrderState>(OrderState.PartiallyFilled, Trigger.Event(typeof(OrderPartiallyFilled))), OrderState.PartiallyFilled },
                 { new StateTransition<OrderState>(OrderState.PartiallyFilled, Trigger.Event(typeof(OrderCancelled))), OrderState.Cancelled },
                 { new StateTransition<OrderState>(OrderState.PartiallyFilled, Trigger.Event(typeof(OrderFilled))), OrderState.Filled },
             };
-
-            // Check that all OrderCancelReject events leave the state unchanged
-            Debug.True(
-                stateTransitionTable
-                .Where(kvp => kvp.Key.Trigger.ToString().Equals(nameof(OrderCancelReject)))
-                .All(kvp => kvp.Key.CurrentState.ToString().Equals(kvp.Value.ToString())), nameof(stateTransitionTable));
 
             return new FiniteStateMachine<OrderState>(stateTransitionTable, OrderState.Initialized);
         }
@@ -311,9 +301,6 @@ namespace Nautilus.DomainModel.Aggregates
                     this.When(@event);
                     break;
                 case OrderWorking @event:
-                    this.When(@event);
-                    break;
-                case OrderCancelReject @event:
                     this.When(@event);
                     break;
                 case OrderCancelled @event:
@@ -367,11 +354,6 @@ namespace Nautilus.DomainModel.Aggregates
 
             this.IdBroker = @event.OrderIdBroker;
             this.SetStateToWorking();
-        }
-
-        private void When(OrderCancelReject @event)
-        {
-            // Do nothing
         }
 
         private void When(OrderCancelled @event)

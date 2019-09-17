@@ -147,15 +147,15 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
             var result = money.ToString();
 
             // Assert
-            Assert.Equal("0.00(AUD)", result);
+            Assert.Equal("0.00AUD", result);
         }
 
         [Theory]
-        [InlineData(1, "1.00(AUD)")]
-        [InlineData(0.1, "0.10(AUD)")]
-        [InlineData(0.01, "0.01(AUD)")]
-        [InlineData(10, "10.00(AUD)")]
-        [InlineData(100000, "100,000.00(AUD)")]
+        [InlineData(1, "1.00AUD")]
+        [InlineData(0.1, "0.10AUD")]
+        [InlineData(0.01, "0.01AUD")]
+        [InlineData(10, "10.00AUD")]
+        [InlineData(100000, "100,000.00AUD")]
         internal void ToString_VariousValues_ReturnsExpectedString(decimal amount, string expected)
         {
             // Arrange

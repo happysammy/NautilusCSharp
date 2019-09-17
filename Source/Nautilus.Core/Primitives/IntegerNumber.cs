@@ -18,7 +18,9 @@ namespace Nautilus.Core.Primitives
     /// </summary>
     [Immutable]
     public abstract class IntegerNumber
-        : IEquatable<object>, IEquatable<int>, IEquatable<IntegerNumber>, IComparable<int>, IComparable<IntegerNumber>
+        : IEquatable<object>, IEquatable<int>, IEquatable<IntegerNumber>,
+            IComparable<int>, IComparable<IntegerNumber>,
+            IFormattable
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="IntegerNumber" /> class.
@@ -413,9 +415,20 @@ namespace Nautilus.Core.Primitives
         public override int GetHashCode() => this.Value.GetHashCode();
 
         /// <summary>
-        /// Returns a string representation of the <see cref="IntegerNumber"></see>.
+        /// Returns a string representation of this object.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
         public override string ToString() => this.Value.ToString(CultureInfo.InvariantCulture);
+
+        /// <summary>
+        /// Returns a formatted string representation of this object.
+        /// </summary>
+        /// <param name="format">The format for the string.</param>
+        /// <param name="formatProvider">The format provider for the string.</param>
+        /// <returns>A <see cref="string"/>.</returns>
+        public string ToString(string format, IFormatProvider formatProvider)
+        {
+            return this.Value.ToString(format, formatProvider);
+        }
     }
 }

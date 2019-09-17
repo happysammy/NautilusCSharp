@@ -183,5 +183,21 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
             // Assert
             Assert.Equal(100000, result);
         }
+
+        [Fact]
+        internal void ToFormattedString_ReturnsExpectedResult()
+        {
+            // Arrange
+            var quantity1 = Quantity.Create(1000);
+            var quantity2 = Quantity.Create(100000);
+
+            // Act
+            var result1 = quantity1.ToFormattedString();
+            var result2 = quantity2.ToFormattedString();
+
+            // Assert
+            Assert.Equal("1,000", result1);
+            Assert.Equal("100,000", result2);
+        }
     }
 }
