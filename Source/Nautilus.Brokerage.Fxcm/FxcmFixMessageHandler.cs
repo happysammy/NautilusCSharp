@@ -402,17 +402,9 @@ namespace Nautilus.Brokerage.Fxcm
                         break;
                     }
 
-                    case OrdStatus.STOPPED:
-                    {
-                        this.Log.Debug($"{RECV}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.STOPPED)}).");
-
-                        this.tradingGateway?.Send(this.GenerateOrderAcceptedEvent(message));
-                        break;
-                    }
-
                     case OrdStatus.PENDING_NEW:
                     {
-                        this.Log.Debug($"{RECV}{FIX} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.PENDING_NEW)}).");
+                        this.Log.Debug($"{RECV}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.PENDING_NEW)}).");
 
                         // Do nothing
                         break;
@@ -455,6 +447,14 @@ namespace Nautilus.Brokerage.Fxcm
                         this.Log.Debug($"{RECV}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.EXPIRED)})");
 
                         this.tradingGateway?.Send(this.GenerateOrderExpiredEvent(message));
+                        break;
+                    }
+
+                    case OrdStatus.STOPPED:
+                    {
+                        this.Log.Debug($"{RECV}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.STOPPED)}).");
+
+                        // Order is executing
                         break;
                     }
 
