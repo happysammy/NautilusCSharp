@@ -78,7 +78,7 @@ namespace Nautilus.Data.Providers
 
             if (ticks.Count == 0)
             {
-                return CommandResult.Fail("no ticks were add");
+                return CommandResult.Fail("No ticks were add");
             }
 
             var symbol = ticks[0].Symbol;
@@ -109,7 +109,7 @@ namespace Nautilus.Data.Providers
                         .ToList());
             }
 
-            return QueryResult<List<Tick>>.Fail($"tick data not found for {symbol}");
+            return QueryResult<List<Tick>>.Fail($"Tick data not found for {symbol}");
         }
 
         /// <inheritdoc />
@@ -117,7 +117,7 @@ namespace Nautilus.Data.Providers
         {
             return this.tickStore.TryGetValue(symbol, out var tickList)
                 ? QueryResult<ZonedDateTime>.Ok(tickList.Last().Timestamp)
-                : QueryResult<ZonedDateTime>.Fail($"tick data not found for {symbol}");
+                : QueryResult<ZonedDateTime>.Fail($"Tick data not found for {symbol}");
         }
 
         /// <inheritdoc />

@@ -87,7 +87,7 @@ namespace Nautilus.Data.Providers
                 if (query.IsFailure)
                 {
                     this.SendQueryFailure(query.Message, request.Id, envelope.Sender);
-                    this.Log.Warning($"{envelope.Message} query failed ({query.Message}).");
+                    this.Log.Warning($"{envelope.Message} QueryFailure({query.Message}).");
                     return;
                 }
 

@@ -75,7 +75,7 @@ namespace Nautilus.Data.Providers
                         if (query.IsFailure)
                         {
                             this.SendQueryFailure(query.Message, request.Id, envelope.Sender);
-                            this.Log.Warning($"{envelope.Message} query failed ({query.Message}).");
+                            this.Log.Warning($"{envelope.Message} QueryFailure({query.Message}).");
                             return;
                         }
 
@@ -98,7 +98,7 @@ namespace Nautilus.Data.Providers
                         if (query.IsFailure)
                         {
                             this.SendQueryFailure(query.Message, request.Id, envelope.Sender);
-                            this.Log.Warning($"{envelope.Message} query failed ({query.Message}).");
+                            this.Log.Warning($"{envelope.Message} QueryFailure({query.Message}).");
                             return;
                         }
 
@@ -114,7 +114,7 @@ namespace Nautilus.Data.Providers
                     }
 
                     default:
-                        this.SendQueryFailure($"incorrect DataType requested, was {dataType}", request.Id, envelope.Sender);
+                        this.SendQueryFailure($"Incorrect DataType requested, was {dataType}", request.Id, envelope.Sender);
                         return;
                 }
             }
