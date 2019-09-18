@@ -47,7 +47,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
                 Money.Zero(Currency.USD),
                 Money.Zero(Currency.USD),
                 0m,
-                string.Empty,
+                "N",
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
