@@ -82,9 +82,9 @@ namespace Nautilus.DomainModel.Events
                                              $"ExecutionId={this.ExecutionId.Value}," +
                                              $"ExecutionTicket={this.ExecutionTicket}, " +
                                              $"{this.OrderSide} " +
-                                             $"{this.FilledQuantity.ToFormattedString()} " +
+                                             $"{this.FilledQuantity.ToStringFormatted()} " +
                                              $"{this.Symbol.Value} @ " +
                                              $"{this.AveragePrice}, " +
-                                             $"LeavesQty={this.LeavesQuantity.ToFormattedString()})";
+                                             $"LeavesQty={this.LeavesQuantity.ToStringFormatted()})";
     }
 }

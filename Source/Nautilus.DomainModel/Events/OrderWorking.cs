@@ -154,7 +154,7 @@ namespace Nautilus.DomainModel.Events
                    $"OrderIdBroker={this.OrderIdBroker.Value}, " +
                    $"Label={this.Label.Value}, " +
                    $"{this.OrderSide} " +
-                   $"{this.Quantity.ToFormattedString()} " +
+                   $"{this.Quantity.ToStringFormatted()} " +
                    $"{this.Symbol.Value} " +
                    $"{this.OrderType} @ " +
                    $"{this.Price} " +

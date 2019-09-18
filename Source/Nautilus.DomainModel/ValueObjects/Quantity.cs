@@ -90,6 +90,6 @@ namespace Nautilus.DomainModel.ValueObjects
         /// Returns the formatted string representation of this object.
         /// </summary>
         /// <returns>The formatted string.</returns>
-        public string ToFormattedString() => $"{this.Value:N0}";
+        public string ToStringFormatted() => $"{this.Value:N0}";
     }
 }

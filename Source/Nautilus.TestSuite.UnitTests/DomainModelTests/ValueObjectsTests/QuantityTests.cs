@@ -185,15 +185,15 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         }
 
         [Fact]
-        internal void ToFormattedString_ReturnsExpectedResult()
+        internal void ToStringFormatted_ReturnsExpectedResult()
         {
             // Arrange
             var quantity1 = Quantity.Create(1000);
             var quantity2 = Quantity.Create(100000);
 
             // Act
-            var result1 = quantity1.ToFormattedString();
-            var result2 = quantity2.ToFormattedString();
+            var result1 = quantity1.ToStringFormatted();
+            var result2 = quantity2.ToStringFormatted();
 
             // Assert
             Assert.Equal("1,000", result1);
