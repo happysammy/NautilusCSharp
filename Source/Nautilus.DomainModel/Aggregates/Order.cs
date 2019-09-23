@@ -29,7 +29,6 @@ namespace Nautilus.DomainModel.Aggregates
     public sealed class Order : Aggregate<OrderId, OrderEvent, Order>
     {
         private readonly FiniteStateMachine<OrderState> orderFiniteStateMachine;
-        private readonly UniqueList<OrderId> orderIds;
         private readonly UniqueList<ExecutionId> executionIds;
 
         /// <summary>
@@ -40,7 +39,6 @@ namespace Nautilus.DomainModel.Aggregates
             : base(initial.OrderId, initial)
         {
             this.orderFiniteStateMachine = CreateOrderFiniteStateMachine();
-            this.orderIds = new UniqueList<OrderId>(this.Id);
             this.executionIds = new UniqueList<ExecutionId>();
 
             this.Symbol = initial.Symbol;
@@ -67,11 +65,6 @@ namespace Nautilus.DomainModel.Aggregates
         public Guid InitId => this.InitialEvent.Id;
 
         /// <summary>
-        /// Gets the orders last identifier.
-        /// </summary>
-        public OrderId IdLast => this.orderIds.Last();
-
-        /// <summary>
         /// Gets the orders last identifier for the broker.
         /// </summary>
         public OrderIdBroker? IdBroker { get; private set; }
@@ -85,11 +78,6 @@ namespace Nautilus.DomainModel.Aggregates
         /// Gets the orders last execution identifier.
         /// </summary>
         public ExecutionId? ExecutionId => this.executionIds.LastOrNull();
-
-        /// <summary>
-        /// Gets the orders identifier count.
-        /// </summary>
-        public int IdCount => this.orderIds.Count;
 
         /// <summary>
         /// Gets the orders symbol.
@@ -227,21 +215,6 @@ namespace Nautilus.DomainModel.Aggregates
 
             return new Order(initial);
         }
-
-        /// <summary>
-        /// Adds the modified order identifier to the order identifiers.
-        /// </summary>
-        /// <param name="modified">The modified order identifier.</param>
-        public void AddModifiedOrderId(OrderId modified)
-        {
-            this.orderIds.Add(modified);
-        }
-
-        /// <summary>
-        /// Returns the order identifiers.
-        /// </summary>
-        /// <returns>A read only collection.</returns>
-        public UniqueList<OrderId> GetOrderIds() => this.orderIds.Copy();
 
         /// <summary>
         /// Returns the execution identifiers.
@@ -433,7 +406,6 @@ namespace Nautilus.DomainModel.Aggregates
         [System.Diagnostics.Conditional("DEBUG")]
         private void CheckInitialization()
         {
-            Debug.True(this.orderIds.First() == this.Id, "this.orderIds[0] == this.Id");
             Debug.True(this.InitialEvent is OrderInitialized, "this.Events[0] is OrderInitialized");
         }
     }

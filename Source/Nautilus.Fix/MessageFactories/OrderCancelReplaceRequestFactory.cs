@@ -41,7 +41,7 @@ namespace Nautilus.Fix.MessageFactories
 
             message.SetField(new OrigClOrdID(order.Id.Value));
             message.SetField(new OrderID(order.IdBroker?.Value));
-            message.SetField(new ClOrdID(order.IdLast.Value));
+            message.SetField(new ClOrdID(order.Id.Value));
             message.SetField(new Symbol(brokerSymbol));
             message.SetField(new Quantity(order.Quantity.Value));
             message.SetField(FixMessageHelper.GetFixOrderSide(order.OrderSide));
