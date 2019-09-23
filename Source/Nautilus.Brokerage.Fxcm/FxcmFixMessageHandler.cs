@@ -414,8 +414,25 @@ namespace Nautilus.Brokerage.Fxcm
                     {
                         this.Log.Debug($"{RECV}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.NEW)})");
 
-                        this.tradingGateway?.Send(this.GenerateOrderAcceptedEvent(message));
-                        this.tradingGateway?.Send(this.GenerateOrderWorkingEvent(message));
+                        var fxcmOrdStatus = message.GetField(9051);
+                        switch (fxcmOrdStatus)
+                        {
+                            case "P": // In Process
+                                this.tradingGateway?.Send(this.GenerateOrderAcceptedEvent(message));
+                                this.tradingGateway?.Send(this.GenerateOrderWorkingEvent(message));
+                                break;
+                            case "I": // Dealer Intervention
+                                this.tradingGateway?.Send(this.GenerateOrderAcceptedEvent(message));
+                                this.tradingGateway?.Send(this.GenerateOrderWorkingEvent(message));
+                                break;
+                            case "W": // Waiting (conditional order inactive state)
+                                this.tradingGateway?.Send(this.GenerateOrderAcceptedEvent(message));
+                                break;
+                            default:
+                                this.Log.Error($"Cannot process event (FXCMOrdStatus {fxcmOrdStatus} not recognized).");
+                                break;
+                        }
+
                         break;
                     }
 

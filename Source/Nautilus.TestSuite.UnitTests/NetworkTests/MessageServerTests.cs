@@ -80,8 +80,6 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 Guid.NewGuid());
             server.Start();
 
-            Task.Delay(100).Wait(); // Allow server to start
-
             LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
