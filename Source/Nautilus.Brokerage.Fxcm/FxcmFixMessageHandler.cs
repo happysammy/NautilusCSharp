@@ -565,7 +565,7 @@ namespace Nautilus.Brokerage.Fxcm
         private OrderAccepted GenerateOrderAcceptedEvent(ExecutionReport message)
         {
             var orderId = this.GetOrderId(message);
-            var orderIdBroker = new OrderIdBroker(message.OrderID.ToString());
+            var orderIdBroker = new OrderIdBroker(message.GetField(Tags.OrderID));
             var orderLabel = new Label(message.GetField(Tags.SecondaryClOrdID));
             var acceptedTime = FixMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
 
