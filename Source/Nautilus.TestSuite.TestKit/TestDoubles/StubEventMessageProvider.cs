@@ -39,8 +39,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public static OrderSubmitted OrderSubmittedEvent(Order order)
         {
             return new OrderSubmitted(
-                order.Id,
                 AccountId.FromString("FXCM-02851908-DEMO"),
+                order.Id,
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -49,8 +49,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public static OrderRejected OrderRejectedEvent(Order order)
         {
             return new OrderRejected(
-                order.Id,
                 AccountId.FromString("FXCM-02851908-DEMO"),
+                order.Id,
                 StubZonedDateTime.UnixEpoch(),
                 "some_rejected_reason",
                 Guid.NewGuid(),
@@ -60,8 +60,10 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public static OrderAccepted OrderAcceptedEvent(Order order)
         {
             return new OrderAccepted(
-                order.Id,
                 AccountId.FromString("FXCM-02851908-DEMO"),
+                order.Id,
+                new OrderIdBroker("B" + order.Id.Value),
+                order.Label,
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -75,9 +77,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             }
 
             return new OrderWorking(
+                AccountId.FromString("FXCM-02851908-DEMO"),
                 order.Id,
                 new OrderIdBroker("B" + order.Id.Value),
-                AccountId.FromString("FXCM-02851908-DEMO"),
                 order.Symbol,
                 order.Label,
                 order.OrderSide,
@@ -94,9 +96,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public static OrderModified OrderModifiedEvent(Order order, Price newPrice)
         {
             return new OrderModified(
+                AccountId.FromString("FXCM-02851908-DEMO"),
                 order.Id,
                 new OrderIdBroker("B" + order.Id.Value),
-                AccountId.FromString("FXCM-02851908-DEMO"),
                 newPrice,
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
@@ -106,8 +108,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public static OrderCancelled OrderCancelledEvent(Order order)
         {
             return new OrderCancelled(
-                order.Id,
                 AccountId.FromString("FXCM-02851908-DEMO"),
+                order.Id,
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -116,8 +118,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public static OrderCancelReject OrderCancelRejectEvent(Order order)
         {
             return new OrderCancelReject(
-                order.Id,
                 AccountId.FromString("FXCM-02851908-DEMO"),
+                order.Id,
                 StubZonedDateTime.UnixEpoch(),
                 "NONE",
                 "TEST",
@@ -128,8 +130,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public static OrderExpired OrderExpiredEvent(Order order)
         {
             return new OrderExpired(
-                order.Id,
                 AccountId.FromString("FXCM-02851908-DEMO"),
+                order.Id,
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -147,8 +149,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             }
 
             return new OrderPartiallyFilled(
-                order.Id,
                 AccountId.FromString("FXCM-02851908-DEMO"),
+                order.Id,
                 new ExecutionId("NONE"),
                 new ExecutionTicket("NONE"),
                 order.Symbol,
@@ -169,8 +171,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             }
 
             return new OrderFilled(
-                order.Id,
                 AccountId.FromString("FXCM-02851908-DEMO"),
+                order.Id,
                 new ExecutionId("NONE"),
                 new ExecutionTicket("NONE"),
                 order.Symbol,

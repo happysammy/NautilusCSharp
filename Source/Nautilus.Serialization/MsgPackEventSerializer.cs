@@ -69,25 +69,27 @@ namespace Nautilus.Serialization
                     package.Add(nameof(evt.ExpireTime), ObjectPacker.Pack(evt.ExpireTime));
                     break;
                 case OrderSubmitted evt:
-                    package.Add(nameof(evt.OrderId), evt.OrderId.Value);
                     package.Add(nameof(evt.AccountId), evt.AccountId.Value);
+                    package.Add(nameof(evt.OrderId), evt.OrderId.Value);
                     package.Add(nameof(evt.SubmittedTime), evt.SubmittedTime.ToIsoString());
                     break;
                 case OrderAccepted evt:
-                    package.Add(nameof(evt.OrderId), evt.OrderId.Value);
                     package.Add(nameof(evt.AccountId), evt.AccountId.Value);
+                    package.Add(nameof(evt.OrderId), evt.OrderId.Value);
+                    package.Add(nameof(evt.OrderIdBroker), evt.OrderIdBroker.Value);
+                    package.Add(nameof(evt.Label), evt.Label.Value);
                     package.Add(nameof(evt.AcceptedTime), evt.AcceptedTime.ToIsoString());
                     break;
                 case OrderRejected evt:
-                    package.Add(nameof(evt.OrderId), evt.OrderId.Value);
                     package.Add(nameof(evt.AccountId), evt.AccountId.Value);
+                    package.Add(nameof(evt.OrderId), evt.OrderId.Value);
                     package.Add(nameof(evt.RejectedTime), evt.RejectedTime.ToIsoString());
                     package.Add(nameof(evt.RejectedReason), evt.RejectedReason);
                     break;
                 case OrderWorking evt:
+                    package.Add(nameof(evt.AccountId), evt.AccountId.Value);
                     package.Add(nameof(evt.OrderId), evt.OrderId.Value);
                     package.Add(nameof(evt.OrderIdBroker), evt.OrderIdBroker.Value);
-                    package.Add(nameof(evt.AccountId), evt.AccountId.Value);
                     package.Add(nameof(evt.Symbol), evt.Symbol.Value);
                     package.Add(nameof(evt.Label), evt.Label.Value);
                     package.Add(nameof(evt.OrderSide), evt.OrderSide.ToString());
@@ -99,32 +101,32 @@ namespace Nautilus.Serialization
                     package.Add(nameof(evt.WorkingTime), evt.WorkingTime.ToIsoString());
                     break;
                 case OrderCancelled evt:
-                    package.Add(nameof(evt.OrderId), evt.OrderId.Value);
                     package.Add(nameof(evt.AccountId), evt.AccountId.Value);
+                    package.Add(nameof(evt.OrderId), evt.OrderId.Value);
                     package.Add(nameof(evt.CancelledTime), evt.CancelledTime.ToIsoString());
                     break;
                 case OrderCancelReject evt:
-                    package.Add(nameof(evt.OrderId), evt.OrderId.Value);
                     package.Add(nameof(evt.AccountId), evt.AccountId.Value);
+                    package.Add(nameof(evt.OrderId), evt.OrderId.Value);
                     package.Add(nameof(evt.RejectedTime), evt.RejectedTime.ToIsoString());
                     package.Add(nameof(evt.RejectedResponseTo), evt.RejectedResponseTo);
                     package.Add(nameof(evt.RejectedReason), evt.RejectedReason);
                     break;
                 case OrderModified evt:
+                    package.Add(nameof(evt.AccountId), evt.AccountId.Value);
                     package.Add(nameof(evt.OrderId), evt.OrderId.Value);
                     package.Add(nameof(evt.OrderIdBroker), evt.OrderIdBroker.Value);
-                    package.Add(nameof(evt.AccountId), evt.AccountId.Value);
                     package.Add(nameof(evt.ModifiedPrice), evt.ModifiedPrice.Value.ToString(CultureInfo.InvariantCulture));
                     package.Add(nameof(evt.ModifiedTime), evt.ModifiedTime.ToIsoString());
                     break;
                 case OrderExpired evt:
-                    package.Add(nameof(evt.OrderId), evt.OrderId.Value);
                     package.Add(nameof(evt.AccountId), evt.AccountId.Value);
+                    package.Add(nameof(evt.OrderId), evt.OrderId.Value);
                     package.Add(nameof(evt.ExpiredTime), evt.ExpiredTime.ToIsoString());
                     break;
                 case OrderPartiallyFilled evt:
-                    package.Add(nameof(evt.OrderId), evt.OrderId.Value);
                     package.Add(nameof(evt.AccountId), evt.AccountId.Value);
+                    package.Add(nameof(evt.OrderId), evt.OrderId.Value);
                     package.Add(nameof(evt.ExecutionId), evt.ExecutionId.Value);
                     package.Add(nameof(evt.ExecutionTicket), evt.ExecutionTicket.Value);
                     package.Add(nameof(evt.Symbol), evt.Symbol.Value);
@@ -135,8 +137,8 @@ namespace Nautilus.Serialization
                     package.Add(nameof(evt.ExecutionTime), evt.ExecutionTime.ToIsoString());
                     break;
                 case OrderFilled evt:
-                    package.Add(nameof(evt.OrderId), evt.OrderId.Value);
                     package.Add(nameof(evt.AccountId), evt.AccountId.Value);
+                    package.Add(nameof(evt.OrderId), evt.OrderId.Value);
                     package.Add(nameof(evt.ExecutionId), evt.ExecutionId.Value);
                     package.Add(nameof(evt.ExecutionTicket), evt.ExecutionTicket.Value);
                     package.Add(nameof(evt.Symbol), evt.Symbol.Value);
@@ -193,31 +195,33 @@ namespace Nautilus.Serialization
                         timestamp);
                 case nameof(OrderSubmitted):
                     return new OrderSubmitted(
-                        ObjectExtractor.OrderId(unpacked),
                         this.identifierCache.AccountId(unpacked),
+                        ObjectExtractor.OrderId(unpacked),
                         ObjectExtractor.ZonedDateTime(unpacked[nameof(OrderSubmitted.SubmittedTime)]),
                         id,
                         timestamp);
                 case nameof(OrderAccepted):
                     return new OrderAccepted(
-                        ObjectExtractor.OrderId(unpacked),
                         this.identifierCache.AccountId(unpacked),
+                        ObjectExtractor.OrderId(unpacked),
+                        ObjectExtractor.OrderIdBroker(unpacked),
+                        ObjectExtractor.Label(unpacked),
                         ObjectExtractor.ZonedDateTime(unpacked[nameof(OrderAccepted.AcceptedTime)]),
                         id,
                         timestamp);
                 case nameof(OrderRejected):
                     return new OrderRejected(
-                        ObjectExtractor.OrderId(unpacked),
                         this.identifierCache.AccountId(unpacked),
+                        ObjectExtractor.OrderId(unpacked),
                         ObjectExtractor.ZonedDateTime(unpacked[nameof(OrderRejected.RejectedTime)]),
                         unpacked[nameof(OrderRejected.RejectedReason)].ToString(),
                         id,
                         timestamp);
                 case nameof(OrderWorking):
                     return new OrderWorking(
+                        this.identifierCache.AccountId(unpacked),
                         ObjectExtractor.OrderId(unpacked),
                         ObjectExtractor.OrderIdBroker(unpacked),
-                        this.identifierCache.AccountId(unpacked),
                         this.identifierCache.Symbol(unpacked),
                         ObjectExtractor.Label(unpacked),
                         ObjectExtractor.Enum<OrderSide>(unpacked[nameof(OrderWorking.OrderSide)]),
@@ -231,15 +235,15 @@ namespace Nautilus.Serialization
                         timestamp);
                 case nameof(OrderCancelled):
                     return new OrderCancelled(
-                        ObjectExtractor.OrderId(unpacked),
                         this.identifierCache.AccountId(unpacked),
+                        ObjectExtractor.OrderId(unpacked),
                         ObjectExtractor.ZonedDateTime(unpacked[nameof(OrderCancelled.CancelledTime)]),
                         id,
                         timestamp);
                 case nameof(OrderCancelReject):
                     return new OrderCancelReject(
-                        ObjectExtractor.OrderId(unpacked),
                         this.identifierCache.AccountId(unpacked),
+                        ObjectExtractor.OrderId(unpacked),
                         ObjectExtractor.ZonedDateTime(unpacked[nameof(OrderCancelReject.RejectedTime)]),
                         unpacked[nameof(OrderCancelReject.RejectedResponseTo)].ToString(),
                         unpacked[nameof(OrderCancelReject.RejectedReason)].ToString(),
@@ -247,24 +251,24 @@ namespace Nautilus.Serialization
                         timestamp);
                 case nameof(OrderModified):
                     return new OrderModified(
+                        this.identifierCache.AccountId(unpacked),
                         ObjectExtractor.OrderId(unpacked),
                         ObjectExtractor.OrderIdBroker(unpacked),
-                        this.identifierCache.AccountId(unpacked),
                         ObjectExtractor.Price(unpacked[nameof(OrderModified.ModifiedPrice)]),
                         ObjectExtractor.ZonedDateTime(unpacked[nameof(OrderModified.ModifiedTime)]),
                         id,
                         timestamp);
                 case nameof(OrderExpired):
                     return new OrderExpired(
-                        ObjectExtractor.OrderId(unpacked),
                         this.identifierCache.AccountId(unpacked),
+                        ObjectExtractor.OrderId(unpacked),
                         ObjectExtractor.ZonedDateTime(unpacked[nameof(OrderExpired.ExpiredTime)]),
                         id,
                         timestamp);
                 case nameof(OrderPartiallyFilled):
                     return new OrderPartiallyFilled(
-                        ObjectExtractor.OrderId(unpacked),
                         this.identifierCache.AccountId(unpacked),
+                        ObjectExtractor.OrderId(unpacked),
                         ObjectExtractor.ExecutionId(unpacked),
                         ObjectExtractor.ExecutionTicket(unpacked),
                         this.identifierCache.Symbol(unpacked),
@@ -277,8 +281,8 @@ namespace Nautilus.Serialization
                         timestamp);
                 case nameof(OrderFilled):
                     return new OrderFilled(
-                        ObjectExtractor.OrderId(unpacked),
                         this.identifierCache.AccountId(unpacked),
+                        ObjectExtractor.OrderId(unpacked),
                         ObjectExtractor.ExecutionId(unpacked),
                         ObjectExtractor.ExecutionTicket(unpacked),
                         this.identifierCache.Symbol(unpacked),

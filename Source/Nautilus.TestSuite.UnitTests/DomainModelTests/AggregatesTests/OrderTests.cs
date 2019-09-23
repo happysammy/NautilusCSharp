@@ -14,7 +14,6 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core.Types;
     using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
@@ -281,21 +280,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             var event1 = StubEventMessageProvider.OrderSubmittedEvent(order);
             var event2 = StubEventMessageProvider.OrderAcceptedEvent(order);
-            var event3 = new OrderWorking(
-                order.Id,
-                new OrderIdBroker("B" + order.Id),
-                AccountId.FromString("FXCM-02851908-DEMO"),
-                new Symbol("AUDUSD", "FXCM"),
-                order.Label,
-                order.OrderSide,
-                order.OrderType,
-                order.Quantity,
-                order.Price,
-                order.TimeInForce,
-                order.ExpireTime,
-                StubZonedDateTime.UnixEpoch(),
-                Guid.NewGuid(),
-                StubZonedDateTime.UnixEpoch());
+            var event3 = StubEventMessageProvider.OrderWorkingEvent(order);
 
             // Act
             order.Apply(event1);
@@ -324,19 +309,11 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var event1 = StubEventMessageProvider.OrderSubmittedEvent(order);
             var event2 = StubEventMessageProvider.OrderAcceptedEvent(order);
             var event3 = StubEventMessageProvider.OrderWorkingEvent(order, order.Price);
-            var event4 = new OrderPartiallyFilled(
-                order.Id,
-                AccountId.FromString("FXCM-02851908-DEMO"),
-                new ExecutionId("some_execution_id"),
-                new ExecutionTicket("some_execution_ticket"),
-                order.Symbol,
-                order.OrderSide,
-                Quantity.Create(order.Quantity.Value / 2),
-                Quantity.Create(order.Quantity.Value / 2),
-                order.Price,
-                StubZonedDateTime.UnixEpoch(),
-                Guid.NewGuid(),
-                StubZonedDateTime.UnixEpoch());
+            var event4 = StubEventMessageProvider.OrderPartiallyFilledEvent(
+                order,
+                50000,
+                50000,
+                order.Price);
 
             order.Apply(event1);
             order.Apply(event2);
@@ -364,18 +341,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var event1 = StubEventMessageProvider.OrderSubmittedEvent(order);
             var event2 = StubEventMessageProvider.OrderAcceptedEvent(order);
             var event3 = StubEventMessageProvider.OrderWorkingEvent(order, order.Price);
-            var event4 = new OrderFilled(
-                order.Id,
-                AccountId.FromString("FXCM-02851908-DEMO"),
-                new ExecutionId("some_execution_id"),
-                new ExecutionTicket("some_execution_ticket"),
-                order.Symbol,
-                order.OrderSide,
-                order.Quantity,
-                order.Price,
-                StubZonedDateTime.UnixEpoch(),
-                Guid.NewGuid(),
-                StubZonedDateTime.UnixEpoch());
+            var event4 = StubEventMessageProvider.OrderFilledEvent(order, order.Price);
 
             // Act
             order.Apply(event1);
@@ -431,18 +397,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var event1 = StubEventMessageProvider.OrderSubmittedEvent(order);
             var event2 = StubEventMessageProvider.OrderAcceptedEvent(order);
             var event3 = StubEventMessageProvider.OrderWorkingEvent(order, order.Price);
-            var event4 = new OrderFilled(
-                order.Id,
-                AccountId.FromString("FXCM-02851908-DEMO"),
-                new ExecutionId("some_execution_id"),
-                new ExecutionTicket("some_execution_ticket"),
-                order.Symbol,
-                order.OrderSide,
-                order.Quantity,
-                Price.Create(averagePrice, 5),
-                StubZonedDateTime.UnixEpoch(),
-                Guid.NewGuid(),
-                StubZonedDateTime.UnixEpoch());
+            var event4 = StubEventMessageProvider.OrderFilledEvent(order, Price.Create(averagePrice, 5));
 
             order.Apply(event1);
             order.Apply(event2);
@@ -472,18 +427,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var event1 = StubEventMessageProvider.OrderSubmittedEvent(order);
             var event2 = StubEventMessageProvider.OrderAcceptedEvent(order);
             var event3 = StubEventMessageProvider.OrderWorkingEvent(order, order.Price);
-            var event4 = new OrderFilled(
-                order.Id,
-                AccountId.FromString("FXCM-02851908-DEMO"),
-                new ExecutionId("some_execution_id"),
-                new ExecutionTicket("some_execution_ticket"),
-                order.Symbol,
-                order.OrderSide,
-                order.Quantity,
-                Price.Create(averagePrice, 5),
-                StubZonedDateTime.UnixEpoch(),
-                Guid.NewGuid(),
-                StubZonedDateTime.UnixEpoch());
+            var event4 = StubEventMessageProvider.OrderFilledEvent(order, Price.Create(averagePrice, 5));
 
             order.Apply(event1);
             order.Apply(event2);

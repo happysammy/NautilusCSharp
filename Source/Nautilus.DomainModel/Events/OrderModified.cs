@@ -25,17 +25,17 @@ namespace Nautilus.DomainModel.Events
         /// <summary>
         /// Initializes a new instance of the <see cref="OrderModified"/> class.
         /// </summary>
+        /// <param name="accountId">The event account identifier.</param>
         /// <param name="orderId">The event order identifier.</param>
         /// <param name="orderIdBroker">The event broker order identifier.</param>
-        /// <param name="accountId">The event account identifier.</param>
         /// <param name="modifiedPrice">The event order modified price.</param>
         /// <param name="modifiedTime">The event order modification accepted time.</param>
         /// <param name="eventId">The event identifier.</param>
         /// <param name="eventTimestamp">The event timestamp.</param>
         public OrderModified(
+            AccountId accountId,
             OrderId orderId,
             OrderIdBroker orderIdBroker,
-            AccountId accountId,
             Price modifiedPrice,
             ZonedDateTime modifiedTime,
             Guid eventId,
@@ -50,21 +50,21 @@ namespace Nautilus.DomainModel.Events
             Debug.NotDefault(eventId, nameof(eventId));
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
 
-            this.OrderIdBroker = orderIdBroker;
             this.AccountId = accountId;
+            this.OrderIdBroker = orderIdBroker;
             this.ModifiedPrice = modifiedPrice;
             this.ModifiedTime = modifiedTime;
         }
 
         /// <summary>
-        /// Gets the events broker order identifier.
-        /// </summary>
-        public OrderIdBroker OrderIdBroker { get; }
-
-        /// <summary>
         /// Gets the events account identifier.
         /// </summary>
         public AccountId AccountId { get; }
+
+        /// <summary>
+        /// Gets the events broker order identifier.
+        /// </summary>
+        public OrderIdBroker OrderIdBroker { get; }
 
         /// <summary>
         /// Gets the events order modified price.

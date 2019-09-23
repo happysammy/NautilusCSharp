@@ -24,15 +24,15 @@ namespace Nautilus.DomainModel.Events
         /// <summary>
         /// Initializes a new instance of the <see cref="OrderRejected"/> class.
         /// </summary>
-        /// <param name="orderId">The event order identifier.</param>
         /// <param name="accountId">The event account identifier.</param>
+        /// <param name="orderId">The event order identifier.</param>
         /// <param name="rejectedTime">The event order rejected time.</param>
         /// <param name="rejectedReason">The event order rejected reason.</param>
         /// <param name="eventId">The event identifier.</param>
         /// <param name="eventTimestamp">The event timestamp.</param>
         public OrderRejected(
-            OrderId orderId,
             AccountId accountId,
+            OrderId orderId,
             ZonedDateTime rejectedTime,
             string rejectedReason,
             Guid eventId,

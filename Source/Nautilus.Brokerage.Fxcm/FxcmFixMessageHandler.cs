@@ -9,7 +9,6 @@
 namespace Nautilus.Brokerage.Fxcm
 {
     using System;
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
@@ -48,7 +47,7 @@ namespace Nautilus.Brokerage.Fxcm
         private readonly Venue venue = new Venue("FXCM");
         private readonly SymbolConverter symbolConverter;
         private readonly ObjectCache<string, Symbol> symbolCache;
-        private readonly ConcurrentDictionary<string, OrderId> orderIdIndex;
+        private readonly Dictionary<string, OrderId> orderIdIndex;
         private readonly MarketDataIncrementalRefresh.NoMDEntriesGroup mdBidGroup;
         private readonly MarketDataIncrementalRefresh.NoMDEntriesGroup mdAskGroup;
         private readonly Func<ZonedDateTime> tickTimestampProvider;
@@ -76,7 +75,7 @@ namespace Nautilus.Brokerage.Fxcm
             this.accountCurrency = accountCurrency;
             this.symbolConverter = symbolConverter;
             this.symbolCache = new ObjectCache<string, Symbol>(Symbol.FromString);
-            this.orderIdIndex = new ConcurrentDictionary<string, OrderId>();
+            this.orderIdIndex = new Dictionary<string, OrderId>();
             this.mdBidGroup = new MarketDataIncrementalRefresh.NoMDEntriesGroup();
             this.mdAskGroup = new MarketDataIncrementalRefresh.NoMDEntriesGroup();
 
@@ -369,8 +368,8 @@ namespace Nautilus.Brokerage.Fxcm
                 var rejectedTime = FixMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
 
                 var orderCancelReject = new OrderCancelReject(
-                    orderId,
                     this.accountId,
+                    orderId,
                     rejectedTime,
                     rejectResponseTo,
                     rejectReason,
@@ -412,9 +411,9 @@ namespace Nautilus.Brokerage.Fxcm
 
                     case OrdStatus.NEW:
                     {
-                        this.Log.Debug($"{RECV}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.NEW)})");
-
                         var fxcmOrdStatus = message.GetField(9051);
+                        this.Log.Debug($"{RECV}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.NEW)}-{fxcmOrdStatus})");
+
                         switch (fxcmOrdStatus)
                         {
                             case "P": // In Process
@@ -426,7 +425,17 @@ namespace Nautilus.Brokerage.Fxcm
                                 this.tradingGateway?.Send(this.GenerateOrderWorkingEvent(message));
                                 break;
                             case "W": // Waiting (conditional order inactive state)
-                                this.tradingGateway?.Send(this.GenerateOrderAcceptedEvent(message));
+                                if (message.IsSetField(Tags.SecondaryOrderID))
+                                {
+                                    // Accepted Conditional Order
+                                    this.tradingGateway?.Send(this.GenerateOrderAcceptedEvent(message));
+                                }
+                                else
+                                {
+                                    // Working Primary Order
+                                    this.tradingGateway?.Send(this.GenerateOrderWorkingEvent(message));
+                                }
+
                                 break;
                             default:
                                 this.Log.Error($"Cannot process event (FXCMOrdStatus {fxcmOrdStatus} not recognized).");
@@ -545,8 +554,8 @@ namespace Nautilus.Brokerage.Fxcm
             var rejectReason = $"FXCM({fxcmRejectCode}) {FixMessageHelper.GetCancelRejectReasonString(rejectReasonCode)} ({rejectReasonText})";
 
             return new OrderRejected(
-                orderId,
                 this.accountId,
+                orderId,
                 rejectedTime,
                 rejectReason,
                 this.NewGuid(),
@@ -556,11 +565,15 @@ namespace Nautilus.Brokerage.Fxcm
         private OrderAccepted GenerateOrderAcceptedEvent(ExecutionReport message)
         {
             var orderId = this.GetOrderId(message);
+            var orderIdBroker = new OrderIdBroker(message.OrderID.ToString());
+            var orderLabel = new Label(message.GetField(Tags.SecondaryClOrdID));
             var acceptedTime = FixMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
 
             return new OrderAccepted(
-                orderId,
                 this.accountId,
+                orderId,
+                orderIdBroker,
+                orderLabel,
                 acceptedTime,
                 this.NewGuid(),
                 this.TimeNow());
@@ -572,8 +585,8 @@ namespace Nautilus.Brokerage.Fxcm
             var cancelledTime = FixMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
 
             return new OrderCancelled(
-                orderId,
                 this.accountId,
+                orderId,
                 cancelledTime,
                 this.NewGuid(),
                 this.TimeNow());
@@ -588,9 +601,9 @@ namespace Nautilus.Brokerage.Fxcm
             var modifiedTime = FixMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
 
             return new OrderModified(
+                this.accountId,
                 orderId,
                 orderIdBroker,
-                this.accountId,
                 price,
                 modifiedTime,
                 this.NewGuid(),
@@ -612,9 +625,9 @@ namespace Nautilus.Brokerage.Fxcm
             var workingTime = FixMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
 
             return new OrderWorking(
+                this.accountId,
                 orderId,
                 orderIdBroker,
-                this.accountId,
                 symbol,
                 orderLabel,
                 orderSide,
@@ -634,8 +647,8 @@ namespace Nautilus.Brokerage.Fxcm
             var expiredTime = FixMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
 
             return new OrderExpired(
-                orderId,
                 this.accountId,
+                orderId,
                 expiredTime,
                 this.NewGuid(),
                 this.TimeNow());
@@ -653,8 +666,8 @@ namespace Nautilus.Brokerage.Fxcm
             var executionTime = FixMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
 
             return new OrderFilled(
-                orderId,
                 this.accountId,
+                orderId,
                 executionId,
                 executionTicket,
                 symbol,
@@ -679,8 +692,8 @@ namespace Nautilus.Brokerage.Fxcm
             var executionTime = FixMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
 
             return new OrderPartiallyFilled(
-                orderId,
                 this.accountId,
+                orderId,
                 executionId,
                 executionTicket,
                 symbol,

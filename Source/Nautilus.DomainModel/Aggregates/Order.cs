@@ -262,17 +262,19 @@ namespace Nautilus.DomainModel.Aggregates
                 { new StateTransition<OrderState>(OrderState.Initialized, Trigger.Event(typeof(OrderWorking))), OrderState.Working },
                 { new StateTransition<OrderState>(OrderState.Submitted, Trigger.Event(typeof(OrderRejected))), OrderState.Rejected },
                 { new StateTransition<OrderState>(OrderState.Submitted, Trigger.Event(typeof(OrderAccepted))), OrderState.Accepted },
+                { new StateTransition<OrderState>(OrderState.Submitted, Trigger.Event(typeof(OrderWorking))), OrderState.Working },
                 { new StateTransition<OrderState>(OrderState.Submitted, Trigger.Event(typeof(OrderCancelled))), OrderState.Cancelled },
+                { new StateTransition<OrderState>(OrderState.Accepted, Trigger.Event(typeof(OrderCancelled))), OrderState.Cancelled },
                 { new StateTransition<OrderState>(OrderState.Accepted, Trigger.Event(typeof(OrderWorking))), OrderState.Working },
-                { new StateTransition<OrderState>(OrderState.Accepted, Trigger.Event(typeof(OrderFilled))), OrderState.Filled },
                 { new StateTransition<OrderState>(OrderState.Accepted, Trigger.Event(typeof(OrderPartiallyFilled))), OrderState.PartiallyFilled },
+                { new StateTransition<OrderState>(OrderState.Accepted, Trigger.Event(typeof(OrderFilled))), OrderState.Filled },
                 { new StateTransition<OrderState>(OrderState.Working, Trigger.Event(typeof(OrderCancelled))), OrderState.Cancelled },
                 { new StateTransition<OrderState>(OrderState.Working, Trigger.Event(typeof(OrderModified))), OrderState.Working },
                 { new StateTransition<OrderState>(OrderState.Working, Trigger.Event(typeof(OrderExpired))), OrderState.Expired },
-                { new StateTransition<OrderState>(OrderState.Working, Trigger.Event(typeof(OrderFilled))), OrderState.Filled },
                 { new StateTransition<OrderState>(OrderState.Working, Trigger.Event(typeof(OrderPartiallyFilled))), OrderState.PartiallyFilled },
-                { new StateTransition<OrderState>(OrderState.PartiallyFilled, Trigger.Event(typeof(OrderPartiallyFilled))), OrderState.PartiallyFilled },
+                { new StateTransition<OrderState>(OrderState.Working, Trigger.Event(typeof(OrderFilled))), OrderState.Filled },
                 { new StateTransition<OrderState>(OrderState.PartiallyFilled, Trigger.Event(typeof(OrderCancelled))), OrderState.Cancelled },
+                { new StateTransition<OrderState>(OrderState.PartiallyFilled, Trigger.Event(typeof(OrderPartiallyFilled))), OrderState.PartiallyFilled },
                 { new StateTransition<OrderState>(OrderState.PartiallyFilled, Trigger.Event(typeof(OrderFilled))), OrderState.Filled },
             };
 
@@ -333,12 +335,14 @@ namespace Nautilus.DomainModel.Aggregates
 
         private void When(OrderRejected @event)
         {
-            this.SetStateToCompleted();
+            this.SetIsCompleteTrue();
         }
 
         private void When(OrderAccepted @event)
         {
-            // Do nothing
+            Debug.EqualTo(@event.Label, this.Label, nameof(@event.Label));
+
+            this.IdBroker = @event.OrderIdBroker;
         }
 
         private void When(OrderWorking @event)
@@ -351,17 +355,17 @@ namespace Nautilus.DomainModel.Aggregates
             Debug.EqualTo(@event.TimeInForce, this.TimeInForce, nameof(@event.TimeInForce));
 
             this.IdBroker = @event.OrderIdBroker;
-            this.SetStateToWorking();
+            this.SetIsWorkingTrue();
         }
 
         private void When(OrderCancelled @event)
         {
-            this.SetStateToCompleted();
+            this.SetIsCompleteTrue();
         }
 
         private void When(OrderExpired @event)
         {
-            this.SetStateToCompleted();
+            this.SetIsCompleteTrue();
         }
 
         private void When(OrderModified @event)
@@ -383,7 +387,7 @@ namespace Nautilus.DomainModel.Aggregates
             this.FilledQuantity = @event.FilledQuantity;
             this.AveragePrice = @event.AveragePrice;
             this.Slippage = this.CalculateSlippage();
-            this.SetStateToCompleted();
+            this.SetIsCompleteTrue();
         }
 
         private ZonedDateTime? ValidateExpireTime(ZonedDateTime? expireTime)
@@ -402,13 +406,13 @@ namespace Nautilus.DomainModel.Aggregates
             return expireTime;
         }
 
-        private void SetStateToWorking()
+        private void SetIsWorkingTrue()
         {
             this.IsWorking = true;
             this.IsCompleted = false;
         }
 
-        private void SetStateToCompleted()
+        private void SetIsCompleteTrue()
         {
             this.IsWorking = false;
             this.IsCompleted = true;

@@ -25,8 +25,8 @@ namespace Nautilus.DomainModel.Events.Base
         /// <summary>
         /// Initializes a new instance of the <see cref="OrderFillEvent"/> class.
         /// </summary>
-        /// <param name="orderId">The event order identifier.</param>
         /// <param name="accountId">The event account identifier.</param>
+        /// <param name="orderId">The event order identifier.</param>
         /// <param name="executionId">The event order execution identifier.</param>
         /// <param name="executionTicket">The event order execution ticket.</param>
         /// <param name="symbol">The event order symbol.</param>
@@ -38,8 +38,8 @@ namespace Nautilus.DomainModel.Events.Base
         /// <param name="eventId">The event identifier.</param>
         /// <param name="eventTimestamp">The event timestamp.</param>
         protected OrderFillEvent(
-            OrderId orderId,
             AccountId accountId,
+            OrderId orderId,
             ExecutionId executionId,
             ExecutionTicket executionTicket,
             Symbol symbol,

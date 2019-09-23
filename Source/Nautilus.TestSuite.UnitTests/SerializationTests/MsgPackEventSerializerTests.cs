@@ -95,8 +95,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             // Arrange
             var order = new StubOrderBuilder().BuildMarketOrder();
             var submitted = new OrderSubmitted(
-                order.Id,
                 AccountId.FromString("FXCM-02851908-DEMO"),
+                order.Id,
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -116,8 +116,10 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             // Arrange
             var order = new StubOrderBuilder().BuildMarketOrder();
             var accepted = new OrderAccepted(
-                order.Id,
                 AccountId.FromString("FXCM-02851908-DEMO"),
+                order.Id,
+                new OrderIdBroker("B" + order.Id.Value),
+                order.Label,
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -137,8 +139,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             // Arrange
             var order = new StubOrderBuilder().BuildMarketOrder();
             var rejected = new OrderRejected(
-                order.Id,
                 AccountId.FromString("FXCM-02851908-DEMO"),
+                order.Id,
                 StubZonedDateTime.UnixEpoch(),
                 "INVALID_ORDER",
                 Guid.NewGuid(),
@@ -164,9 +166,9 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             }
 
             var working = new OrderWorking(
+                AccountId.FromString("FXCM-02851908-DEMO"),
                 order.Id,
                 new OrderIdBroker("B" + order.Id.Value),
-                AccountId.FromString("FXCM-02851908-DEMO"),
                 order.Symbol,
                 new Label("E"),
                 order.OrderSide,
@@ -202,9 +204,9 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             }
 
             var working = new OrderWorking(
+                AccountId.FromString("FXCM-02851908-DEMO"),
                 order.Id,
                 new OrderIdBroker("B" + order.Id.Value),
-                AccountId.FromString("FXCM-02851908-DEMO"),
                 order.Symbol,
                 new Label("E"),
                 order.OrderSide,
@@ -232,8 +234,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             // Arrange
             var order = new StubOrderBuilder().BuildStopLimitOrder();
             var cancelled = new OrderCancelled(
-                order.Id,
                 AccountId.FromString("FXCM-02851908-DEMO"),
+                order.Id,
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -253,8 +255,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             // Arrange
             var order = new StubOrderBuilder().BuildStopLimitOrder();
             var cancelReject = new OrderCancelReject(
-                order.Id,
                 AccountId.FromString("FXCM-02851908-DEMO"),
+                order.Id,
                 StubZonedDateTime.UnixEpoch(),
                 "REJECT_RESPONSE?",
                 "ORDER_NOT_FOUND",
@@ -276,9 +278,9 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             // Arrange
             var order = new StubOrderBuilder().BuildStopLimitOrder();
             var modified = new OrderModified(
+                AccountId.FromString("FXCM-02851908-DEMO"),
                 order.Id,
                 new OrderIdBroker("B" + order.Id.Value),
-                AccountId.FromString("FXCM-02851908-DEMO"),
                 Price.Create(2, 1),
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
@@ -299,8 +301,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             // Arrange
             var order = new StubOrderBuilder().BuildStopMarketOrder();
             var expired = new OrderExpired(
-                order.Id,
                 AccountId.FromString("FXCM-02851908-DEMO"),
+                order.Id,
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -322,8 +324,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
                 .WithQuantity(Quantity.Create(100000))
                 .BuildStopLimitOrder();
             var partiallyFilled = new OrderPartiallyFilled(
-                order.Id,
                 AccountId.FromString("FXCM-02851908-DEMO"),
+                order.Id,
                 new ExecutionId("E123456"),
                 new ExecutionTicket("P123456"),
                 order.Symbol,
@@ -353,8 +355,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
                 .BuildStopLimitOrder();
 
             var filled = new OrderFilled(
-                order.Id,
                 AccountId.FromString("FXCM-02851908-DEMO"),
+                order.Id,
                 new ExecutionId("E123456"),
                 new ExecutionTicket("P123456"),
                 order.Symbol,

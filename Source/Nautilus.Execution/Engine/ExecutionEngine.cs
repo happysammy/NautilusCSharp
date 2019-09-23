@@ -143,8 +143,8 @@ namespace Nautilus.Execution.Engine
                 this.gateway.SubmitOrder(command.Order);
 
                 var submitted = new OrderSubmitted(
-                    command.Order.Id,
                     command.AccountId,
+                    command.Order.Id,
                     this.TimeNow(),
                     this.NewGuid(),
                     this.TimeNow());
@@ -177,15 +177,15 @@ namespace Nautilus.Execution.Engine
                 this.gateway.SubmitOrder(command.AtomicOrder);
 
                 var submitted1 = new OrderSubmitted(
-                    command.AtomicOrder.Entry.Id,
                     command.AccountId,
+                    command.AtomicOrder.Entry.Id,
                     this.TimeNow(),
                     this.NewGuid(),
                     this.TimeNow());
 
                 var submitted2 = new OrderSubmitted(
-                    command.AtomicOrder.StopLoss.Id,
                     command.AccountId,
+                    command.AtomicOrder.StopLoss.Id,
                     this.TimeNow(),
                     this.NewGuid(),
                     this.TimeNow());
@@ -201,8 +201,8 @@ namespace Nautilus.Execution.Engine
                 if (command.AtomicOrder.TakeProfit != null)
                 {
                     var submitted3 = new OrderSubmitted(
-                        command.AtomicOrder.TakeProfit.Id,
                         command.AccountId,
+                        command.AtomicOrder.TakeProfit.Id,
                         this.TimeNow(),
                         this.NewGuid(),
                         this.TimeNow());
