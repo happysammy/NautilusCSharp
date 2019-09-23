@@ -68,7 +68,7 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
             // Act
             processor.Endpoint.Send(1);
 
-            Task.Delay(100).Wait();
+            Task.Delay(200).Wait();
 
             // Assert
             Assert.Contains(1, receiver);
@@ -87,7 +87,7 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
             // Act
             processor.Endpoint.Send(1);
 
-            Task.Delay(100).Wait();
+            Task.Delay(200).Wait();
 
             // Assert
             Assert.Contains(1, receiver);
@@ -104,7 +104,7 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
             // Act
             processor.Endpoint.Send("test");
 
-            Task.Delay(100).Wait();
+            Task.Delay(200).Wait();
 
             // Assert
             Assert.Contains("test", processor.UnhandledMessages);
@@ -123,7 +123,7 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
             // Act
             processor.Endpoint.Send("test");
 
-            Task.Delay(100).Wait();
+            Task.Delay(200).Wait();
 
             // Assert
             Assert.Single(processor.HandlerTypes);
@@ -146,7 +146,7 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
             receiver.Endpoint.Send("test");
             receiver.Endpoint.Send(2);
 
-            Task.Delay(100).Wait();
+            Task.Delay(200).Wait();
 
             // Assert
             Assert.Contains(typeof(string), receiver.HandlerTypes);
@@ -203,7 +203,7 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
             receiver.Endpoint.Send("test");
             receiver.Endpoint.Send(2);
 
-            Task.Delay(100).Wait();
+            Task.Delay(200).Wait();
 
             // Assert
             Assert.Contains("test", receiver.Messages);
@@ -225,8 +225,9 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
             receiver.Endpoint.Send("3");
             receiver.Endpoint.Send("4");
 
-            Task.Delay(100).Wait();
+            Task.Delay(200).Wait();
 
+            // Assert
             Assert.Contains("1", receiver.Messages);
             Assert.Single(receiver.Messages);
             Assert.Equal(3, receiver.InputCount);
@@ -259,6 +260,8 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
 
             this.output.WriteLine(stopwatch.ElapsedMilliseconds.ToString());
             this.output.WriteLine(receiver.Messages.Count.ToString());
+
+            // Assert
             Assert.Equal(0, receiver.InputCount);
             Assert.Equal(2000000, receiver.ProcessedCount);
         }
