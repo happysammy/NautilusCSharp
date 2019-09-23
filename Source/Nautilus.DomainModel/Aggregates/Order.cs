@@ -9,12 +9,12 @@
 namespace Nautilus.DomainModel.Aggregates
 {
     using System;
-    using System.Collections.Generic;
     using Nautilus.Core.Collections;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Types;
     using Nautilus.DomainModel.Aggregates.Base;
+    using Nautilus.DomainModel.Aggregates.Internal;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Events.Base;
@@ -38,7 +38,7 @@ namespace Nautilus.DomainModel.Aggregates
         public Order(OrderInitialized initial)
             : base(initial.OrderId, initial)
         {
-            this.orderFiniteStateMachine = CreateOrderFiniteStateMachine();
+            this.orderFiniteStateMachine = OrderFsmFactory.Create();
             this.executionIds = new UniqueList<ExecutionId>();
 
             this.Symbol = initial.Symbol;
@@ -226,38 +226,6 @@ namespace Nautilus.DomainModel.Aggregates
         /// </summary>
         /// <returns>A read only collection.</returns>
         public UniqueList<ExecutionId> GetExecutionIds() => this.executionIds.Copy();
-
-        /// <summary>
-        /// Returns a new order finite state machine.
-        /// </summary>
-        /// <returns>The finite state machine.</returns>
-        internal static FiniteStateMachine<OrderState> CreateOrderFiniteStateMachine()
-        {
-            var stateTransitionTable = new Dictionary<StateTransition<OrderState>, OrderState>
-            {
-                { new StateTransition<OrderState>(OrderState.Initialized, Trigger.Event(typeof(OrderSubmitted))), OrderState.Submitted },
-                { new StateTransition<OrderState>(OrderState.Initialized, Trigger.Event(typeof(OrderCancelled))), OrderState.Cancelled },
-                { new StateTransition<OrderState>(OrderState.Initialized, Trigger.Event(typeof(OrderWorking))), OrderState.Working },
-                { new StateTransition<OrderState>(OrderState.Submitted, Trigger.Event(typeof(OrderRejected))), OrderState.Rejected },
-                { new StateTransition<OrderState>(OrderState.Submitted, Trigger.Event(typeof(OrderAccepted))), OrderState.Accepted },
-                { new StateTransition<OrderState>(OrderState.Submitted, Trigger.Event(typeof(OrderWorking))), OrderState.Working },
-                { new StateTransition<OrderState>(OrderState.Submitted, Trigger.Event(typeof(OrderCancelled))), OrderState.Cancelled },
-                { new StateTransition<OrderState>(OrderState.Accepted, Trigger.Event(typeof(OrderCancelled))), OrderState.Cancelled },
-                { new StateTransition<OrderState>(OrderState.Accepted, Trigger.Event(typeof(OrderWorking))), OrderState.Working },
-                { new StateTransition<OrderState>(OrderState.Accepted, Trigger.Event(typeof(OrderPartiallyFilled))), OrderState.PartiallyFilled },
-                { new StateTransition<OrderState>(OrderState.Accepted, Trigger.Event(typeof(OrderFilled))), OrderState.Filled },
-                { new StateTransition<OrderState>(OrderState.Working, Trigger.Event(typeof(OrderCancelled))), OrderState.Cancelled },
-                { new StateTransition<OrderState>(OrderState.Working, Trigger.Event(typeof(OrderModified))), OrderState.Working },
-                { new StateTransition<OrderState>(OrderState.Working, Trigger.Event(typeof(OrderExpired))), OrderState.Expired },
-                { new StateTransition<OrderState>(OrderState.Working, Trigger.Event(typeof(OrderPartiallyFilled))), OrderState.PartiallyFilled },
-                { new StateTransition<OrderState>(OrderState.Working, Trigger.Event(typeof(OrderFilled))), OrderState.Filled },
-                { new StateTransition<OrderState>(OrderState.PartiallyFilled, Trigger.Event(typeof(OrderCancelled))), OrderState.Cancelled },
-                { new StateTransition<OrderState>(OrderState.PartiallyFilled, Trigger.Event(typeof(OrderPartiallyFilled))), OrderState.PartiallyFilled },
-                { new StateTransition<OrderState>(OrderState.PartiallyFilled, Trigger.Event(typeof(OrderFilled))), OrderState.Filled },
-            };
-
-            return new FiniteStateMachine<OrderState>(stateTransitionTable, OrderState.Initialized);
-        }
 
         /// <inheritdoc />
         protected override void OnEvent(OrderEvent orderEvent)

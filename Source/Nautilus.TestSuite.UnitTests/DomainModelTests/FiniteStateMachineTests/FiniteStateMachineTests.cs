@@ -10,7 +10,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FiniteStateMachineTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
-    using Nautilus.DomainModel.Aggregates;
+    using Nautilus.DomainModel.Aggregates.Internal;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.FiniteStateMachine;
@@ -23,7 +23,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FiniteStateMachineTests
         public void State_WithNewStateMachine_EqualsStartingState()
         {
             // Arrange
-            var stateMachine = Order.CreateOrderFiniteStateMachine();
+            var stateMachine = OrderFsmFactory.Create();
 
             // Act
             var result = stateMachine.State;
@@ -36,7 +36,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FiniteStateMachineTests
         public void Process_WithValidTrigger_ReturnsExpectedState()
         {
             // Arrange
-            var stateMachine = Order.CreateOrderFiniteStateMachine();
+            var stateMachine = OrderFsmFactory.Create();
 
             // Act
             stateMachine.Process(Trigger.Event(typeof(OrderSubmitted)));
@@ -49,7 +49,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FiniteStateMachineTests
         public void Process_WithInvalidTrigger_ReturnsFailure()
         {
             // Arrange
-            var stateMachine = Order.CreateOrderFiniteStateMachine();
+            var stateMachine = OrderFsmFactory.Create();
 
             // Act
             // Assert
@@ -60,7 +60,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FiniteStateMachineTests
         public void Process_ThroughFullCycle_ReturnsExpectedState()
         {
             // Arrange
-            var stateMachine = Order.CreateOrderFiniteStateMachine();
+            var stateMachine = OrderFsmFactory.Create();
 
             // Act
             stateMachine.Process(Trigger.Event(typeof(OrderSubmitted)));
@@ -77,7 +77,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FiniteStateMachineTests
         public void Process_MultipleValidTriggersThenInvalidTrigger_ReturnsFailure()
         {
             // Arrange
-            var stateMachine = Order.CreateOrderFiniteStateMachine();
+            var stateMachine = OrderFsmFactory.Create();
 
             // Act
             stateMachine.Process(Trigger.Event(typeof(OrderSubmitted)));

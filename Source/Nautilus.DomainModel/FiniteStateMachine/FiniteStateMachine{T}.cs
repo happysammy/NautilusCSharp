@@ -9,7 +9,6 @@
 namespace Nautilus.DomainModel.FiniteStateMachine
 {
     using System;
-    using System.Collections.Generic;
     using System.Collections.Immutable;
     using Nautilus.Core.Correctness;
 
@@ -29,11 +28,11 @@ namespace Nautilus.DomainModel.FiniteStateMachine
         /// <param name="stateTransitionTable">The state transition table.</param>
         /// <param name="startingState">The starting state.</param>
         /// <exception cref="ArgumentException">Throws if the state transition table is empty.</exception>
-        internal FiniteStateMachine(Dictionary<StateTransition<T>, T> stateTransitionTable, T startingState)
+        internal FiniteStateMachine(ImmutableDictionary<StateTransition<T>, T> stateTransitionTable, T startingState)
         {
             Condition.NotEmpty(stateTransitionTable, nameof(stateTransitionTable));
 
-            this.stateTransitionTable = stateTransitionTable.ToImmutableDictionary();
+            this.stateTransitionTable = stateTransitionTable;
             this.State = startingState;
         }
 
