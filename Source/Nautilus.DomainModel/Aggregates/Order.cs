@@ -80,6 +80,11 @@ namespace Nautilus.DomainModel.Aggregates
         public ExecutionId? ExecutionId => this.executionIds.LastOrNull();
 
         /// <summary>
+        /// Gets the orders execution ticket.
+        /// </summary>
+        public ExecutionTicket? ExecutionTicket { get; private set; }
+
+        /// <summary>
         /// Gets the orders symbol.
         /// </summary>
         public Symbol Symbol { get; }
@@ -349,6 +354,7 @@ namespace Nautilus.DomainModel.Aggregates
         private void When(OrderPartiallyFilled @event)
         {
             this.executionIds.Add(@event.ExecutionId);
+            this.ExecutionTicket = @event.ExecutionTicket;
             this.FilledQuantity = @event.FilledQuantity;
             this.AveragePrice = @event.AveragePrice;
             this.Slippage = this.CalculateSlippage();
@@ -357,6 +363,7 @@ namespace Nautilus.DomainModel.Aggregates
         private void When(OrderFilled @event)
         {
             this.executionIds.Add(@event.ExecutionId);
+            this.ExecutionTicket = @event.ExecutionTicket;
             this.FilledQuantity = @event.FilledQuantity;
             this.AveragePrice = @event.AveragePrice;
             this.Slippage = this.CalculateSlippage();
