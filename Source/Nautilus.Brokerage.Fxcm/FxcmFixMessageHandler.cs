@@ -48,7 +48,7 @@ namespace Nautilus.Brokerage.Fxcm
         private readonly Venue venue = new Venue("FXCM");
         private readonly SymbolConverter symbolConverter;
         private readonly ObjectCache<string, Symbol> symbolCache;
-        private readonly ConcurrentDictionary<OrderID, OrderId> orderIdIndex;
+        private readonly ConcurrentDictionary<string, OrderId> orderIdIndex;
         private readonly MarketDataIncrementalRefresh.NoMDEntriesGroup mdBidGroup;
         private readonly MarketDataIncrementalRefresh.NoMDEntriesGroup mdAskGroup;
         private readonly Func<ZonedDateTime> tickTimestampProvider;
@@ -76,7 +76,7 @@ namespace Nautilus.Brokerage.Fxcm
             this.accountCurrency = accountCurrency;
             this.symbolConverter = symbolConverter;
             this.symbolCache = new ObjectCache<string, Symbol>(Symbol.FromString);
-            this.orderIdIndex = new ConcurrentDictionary<OrderID, OrderId>();
+            this.orderIdIndex = new ConcurrentDictionary<string, OrderId>();
             this.mdBidGroup = new MarketDataIncrementalRefresh.NoMDEntriesGroup();
             this.mdAskGroup = new MarketDataIncrementalRefresh.NoMDEntriesGroup();
 
@@ -360,7 +360,7 @@ namespace Nautilus.Brokerage.Fxcm
 
                 this.Log.Debug($"{RECV}{FIX} {nameof(OrderCancelReject)}");
 
-                var orderId = this.GetOrderId(message.OrderID);
+                var orderId = this.GetOrderId(message);
                 var rejectReasonCode = message.GetField(9025);
                 var fxcmRejectCode = message.GetField(9029);
                 var rejectResponseTo = FixMessageHelper.GetCxlRejResponseTo(message.CxlRejResponseTo);
@@ -414,6 +414,7 @@ namespace Nautilus.Brokerage.Fxcm
                     {
                         this.Log.Debug($"{RECV}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.NEW)})");
 
+                        this.tradingGateway?.Send(this.GenerateOrderAcceptedEvent(message));
                         this.tradingGateway?.Send(this.GenerateOrderWorkingEvent(message));
                         break;
                     }
@@ -519,7 +520,7 @@ namespace Nautilus.Brokerage.Fxcm
 
         private OrderRejected GenerateOrderRejectedEvent(ExecutionReport message)
         {
-            var orderId = this.GetOrderId(message.OrderID);
+            var orderId = this.GetOrderId(message);
             var rejectedTime = FixMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
             var rejectReasonCode = message.GetField(9025);
             var fxcmRejectCode = message.GetField(9029);
@@ -537,7 +538,7 @@ namespace Nautilus.Brokerage.Fxcm
 
         private OrderAccepted GenerateOrderAcceptedEvent(ExecutionReport message)
         {
-            var orderId = this.GetOrderId(message.OrderID);
+            var orderId = this.GetOrderId(message);
             var acceptedTime = FixMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
 
             return new OrderAccepted(
@@ -550,7 +551,7 @@ namespace Nautilus.Brokerage.Fxcm
 
         private OrderCancelled GenerateOrderCancelledEvent(ExecutionReport message)
         {
-            var orderId = this.GetOrderId(message.OrderID);
+            var orderId = this.GetOrderId(message);
             var cancelledTime = FixMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
 
             return new OrderCancelled(
@@ -563,7 +564,7 @@ namespace Nautilus.Brokerage.Fxcm
 
         private OrderModified GenerateOrderModifiedEvent(ExecutionReport message)
         {
-            var orderId = this.GetOrderId(message.OrderID);
+            var orderId = this.GetOrderId(message);
             var orderIdBroker = new OrderIdBroker(message.OrderID.ToString());
             var orderType = FixMessageHelper.GetOrderType(message.GetField(Tags.OrdType));
             var price = FixMessageHelper.GetOrderPrice(orderType, message);
@@ -581,8 +582,7 @@ namespace Nautilus.Brokerage.Fxcm
 
         private OrderWorking GenerateOrderWorkingEvent(ExecutionReport message)
         {
-            var orderId = new OrderId(message.GetField(Tags.ClOrdID));
-            this.orderIdIndex[message.OrderID] = orderId;  // Index order identifiers
+            var orderId = this.GetOrderId(message);
             var orderIdBroker = new OrderIdBroker(message.GetField(Tags.OrderID));
             var symbol = this.GetSymbol(message.GetField(Tags.Symbol));
             var orderLabel = new Label(message.GetField(Tags.SecondaryClOrdID));
@@ -613,7 +613,7 @@ namespace Nautilus.Brokerage.Fxcm
 
         private OrderExpired GenerateOrderExpiredEvent(ExecutionReport message)
         {
-            var orderId = this.GetOrderId(message.OrderID);
+            var orderId = this.GetOrderId(message);
             var expiredTime = FixMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
 
             return new OrderExpired(
@@ -626,7 +626,7 @@ namespace Nautilus.Brokerage.Fxcm
 
         private OrderFilled GenerateOrderFilledEvent(ExecutionReport message)
         {
-            var orderId = this.GetOrderId(message.OrderID);
+            var orderId = this.GetOrderId(message);
             var executionId = new ExecutionId(message.GetField(Tags.ExecID));
             var executionTicket = new ExecutionTicket(message.GetField(9041));
             var symbol = this.GetSymbol(message.GetField(Tags.Symbol));
@@ -651,7 +651,7 @@ namespace Nautilus.Brokerage.Fxcm
 
         private OrderPartiallyFilled GenerateOrderPartiallyFilledEvent(ExecutionReport message)
         {
-            var orderId = this.orderIdIndex[message.OrderID];
+            var orderId = this.GetOrderId(message);
             var executionId = new ExecutionId(message.GetField(Tags.ExecID));
             var executionTicket = new ExecutionTicket(message.GetField(9041));
             var symbol = this.GetSymbol(message.GetField(Tags.Symbol));
@@ -676,14 +676,17 @@ namespace Nautilus.Brokerage.Fxcm
                 this.TimeNow());
         }
 
-        private OrderId GetOrderId(OrderID orderIdBroker)
+        private OrderId GetOrderId(QuickFix.FIX44.Message message)
         {
-            if (this.orderIdIndex.TryGetValue(orderIdBroker, out var orderId))
+            var brokerOrderId = message.GetField(Tags.OrderID);
+            if (this.orderIdIndex.TryGetValue(brokerOrderId, out var orderId))
             {
                 return orderId;
             }
 
-            throw new ArgumentException($"Could not find OrderId for FIX OrderID({orderIdBroker}).");
+            var newOrderId = new OrderId(message.GetField(Tags.ClOrdID));
+            this.orderIdIndex[brokerOrderId] = newOrderId;
+            return newOrderId;
         }
 
         private Symbol GetSymbol(string brokerSymbolCode)
