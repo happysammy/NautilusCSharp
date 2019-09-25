@@ -68,7 +68,8 @@ namespace Nautilus.Fix.Interfaces
         /// Submits an order.
         /// </summary>
         /// <param name="order">The order.</param>
-        void SubmitOrder(Order order);
+        /// <param name="positionIdBroker">The optional broker position identifier for the order.</param>
+        void SubmitOrder(Order order, PositionIdBroker? positionIdBroker);
 
         /// <summary>
         /// Submits an atomic order.

@@ -28,6 +28,7 @@ namespace Nautilus.Execution.Engine
         private readonly Dictionary<OrderId, PositionId> indexOrderPosition;
         private readonly Dictionary<PositionId, TraderId> indexPositionTrader;
         private readonly Dictionary<PositionId, AccountId> indexPositionAccount;
+        private readonly Dictionary<PositionIdBroker, PositionId> indexBrokerPosition;
         private readonly Dictionary<PositionId, HashSet<OrderId>> indexPositionOrders;
         private readonly Dictionary<AccountId, HashSet<OrderId>> indexAccountOrders;
         private readonly Dictionary<AccountId, HashSet<PositionId>> indexAccountPositions;
@@ -53,6 +54,7 @@ namespace Nautilus.Execution.Engine
             this.indexOrderPosition = new Dictionary<OrderId, PositionId>();
             this.indexPositionTrader = new Dictionary<PositionId, TraderId>();
             this.indexPositionAccount = new Dictionary<PositionId, AccountId>();
+            this.indexBrokerPosition = new Dictionary<PositionIdBroker, PositionId>();
             this.indexPositionOrders = new Dictionary<PositionId, HashSet<OrderId>>();
             this.indexAccountOrders = new Dictionary<AccountId, HashSet<OrderId>>();
             this.indexAccountPositions = new Dictionary<AccountId, HashSet<PositionId>>();
@@ -102,6 +104,7 @@ namespace Nautilus.Execution.Engine
             this.indexOrderPosition.Clear();
             this.indexPositionTrader.Clear();
             this.indexPositionAccount.Clear();
+            this.indexBrokerPosition.Clear();
             this.indexPositionOrders.Clear();
             this.indexAccountOrders.Clear();
             this.indexAccountPositions.Clear();
@@ -261,6 +264,7 @@ namespace Nautilus.Execution.Engine
 
             this.indexPositions.Add(position.Id);
             this.indexPositionsOpen.Add(position.Id);
+            this.indexBrokerPosition[position.IdBroker] = position.Id;
             this.CachedPositions[position.Id] = position;
 
             this.Log.Debug($"Added Position(Id={position.Id.Value}).");
@@ -356,6 +360,18 @@ namespace Nautilus.Execution.Engine
             }
 
             this.Log.Warning($"Cannot find PositionId for {orderId} in the database.");
+            return null;
+        }
+
+        /// <inheritdoc />
+        public override PositionId? GetPositionId(AccountId accountId, PositionIdBroker positionIdBroker)
+        {
+            if (this.indexBrokerPosition.TryGetValue(positionIdBroker, out var positionId))
+            {
+                return positionId;
+            }
+
+            this.Log.Warning($"Cannot find PositionId for {positionIdBroker} in the database.");
             return null;
         }
 

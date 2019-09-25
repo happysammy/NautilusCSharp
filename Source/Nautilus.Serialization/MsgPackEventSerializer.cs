@@ -128,7 +128,7 @@ namespace Nautilus.Serialization
                     package.Add(nameof(evt.AccountId), evt.AccountId.Value);
                     package.Add(nameof(evt.OrderId), evt.OrderId.Value);
                     package.Add(nameof(evt.ExecutionId), evt.ExecutionId.Value);
-                    package.Add(nameof(evt.ExecutionTicket), evt.ExecutionTicket.Value);
+                    package.Add(nameof(evt.PositionIdBroker), evt.PositionIdBroker.Value);
                     package.Add(nameof(evt.Symbol), evt.Symbol.Value);
                     package.Add(nameof(evt.OrderSide), evt.OrderSide.ToString());
                     package.Add(nameof(evt.FilledQuantity), evt.FilledQuantity.Value);
@@ -140,7 +140,7 @@ namespace Nautilus.Serialization
                     package.Add(nameof(evt.AccountId), evt.AccountId.Value);
                     package.Add(nameof(evt.OrderId), evt.OrderId.Value);
                     package.Add(nameof(evt.ExecutionId), evt.ExecutionId.Value);
-                    package.Add(nameof(evt.ExecutionTicket), evt.ExecutionTicket.Value);
+                    package.Add(nameof(evt.PositionIdBroker), evt.PositionIdBroker.Value);
                     package.Add(nameof(evt.Symbol), evt.Symbol.Value);
                     package.Add(nameof(evt.OrderSide), evt.OrderSide.ToString());
                     package.Add(nameof(evt.FilledQuantity), evt.FilledQuantity.Value);
@@ -270,7 +270,7 @@ namespace Nautilus.Serialization
                         this.identifierCache.AccountId(unpacked),
                         ObjectExtractor.OrderId(unpacked),
                         ObjectExtractor.ExecutionId(unpacked),
-                        ObjectExtractor.ExecutionTicket(unpacked),
+                        ObjectExtractor.PositionIdBroker(unpacked),
                         this.identifierCache.Symbol(unpacked),
                         ObjectExtractor.Enum<OrderSide>(unpacked[nameof(OrderPartiallyFilled.OrderSide)]),
                         ObjectExtractor.Quantity(unpacked[nameof(OrderPartiallyFilled.FilledQuantity)]),
@@ -284,7 +284,7 @@ namespace Nautilus.Serialization
                         this.identifierCache.AccountId(unpacked),
                         ObjectExtractor.OrderId(unpacked),
                         ObjectExtractor.ExecutionId(unpacked),
-                        ObjectExtractor.ExecutionTicket(unpacked),
+                        ObjectExtractor.PositionIdBroker(unpacked),
                         this.identifierCache.Symbol(unpacked),
                         ObjectExtractor.Enum<OrderSide>(unpacked[nameof(OrderFilled.OrderSide)]),
                         ObjectExtractor.Quantity(unpacked[nameof(OrderFilled.FilledQuantity)]),

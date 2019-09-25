@@ -9,7 +9,7 @@
 namespace Nautilus.TestSuite.UnitTests.FixTests
 {
     using System.Diagnostics.CodeAnalysis;
-    using Nautilus.Fix.MessageFactories;
+    using Nautilus.Brokerage.Fxcm.MessageFactories;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;
 

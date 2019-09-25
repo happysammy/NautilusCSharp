@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Fix.MessageFactories
+namespace Nautilus.Brokerage.Fxcm.MessageFactories
 {
     using Nautilus.Core.Correctness;
     using NodaTime;

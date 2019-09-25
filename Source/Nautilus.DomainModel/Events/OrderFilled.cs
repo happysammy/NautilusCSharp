@@ -28,7 +28,7 @@ namespace Nautilus.DomainModel.Events
         /// <param name="accountId">The event account identifier.</param>
         /// <param name="orderId">The event order identifier.</param>
         /// <param name="executionId">The event order execution identifier.</param>
-        /// <param name="executionTicket">The event order execution ticket.</param>
+        /// <param name="positionIdBroker">The event order execution ticket.</param>
         /// <param name="symbol">The event order symbol.</param>
         /// <param name="orderSide">The event order side.</param>
         /// <param name="filledQuantity">The event order filled quantity.</param>
@@ -40,7 +40,7 @@ namespace Nautilus.DomainModel.Events
             AccountId accountId,
             OrderId orderId,
             ExecutionId executionId,
-            ExecutionTicket executionTicket,
+            PositionIdBroker positionIdBroker,
             Symbol symbol,
             OrderSide orderSide,
             Quantity filledQuantity,
@@ -52,7 +52,7 @@ namespace Nautilus.DomainModel.Events
                 accountId,
                 orderId,
                 executionId,
-                executionTicket,
+                positionIdBroker,
                 symbol,
                 orderSide,
                 filledQuantity,
@@ -72,7 +72,7 @@ namespace Nautilus.DomainModel.Events
                                              $"AccountId={this.AccountId.Value}, " +
                                              $"OrderId={this.OrderId.Value}, " +
                                              $"ExecutionId={this.ExecutionId.Value}," +
-                                             $"ExecutionTicket={this.ExecutionTicket}, " +
+                                             $"ExecutionTicket={this.PositionIdBroker}, " +
                                              $"{this.OrderSide} " +
                                              $"{this.FilledQuantity.ToStringFormatted()} " +
                                              $"{this.Symbol.Value} @ " +

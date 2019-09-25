@@ -18,6 +18,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\Nautilus.Brokerage.Fxcm\Nautilus.Brokerage.Fxcm.csproj" />
         <ProjectReference Include="..\Nautilus.Common\Nautilus.Common.csproj" />
         <ProjectReference Include="..\Nautilus.Data\Nautilus.Data.csproj" />
         <ProjectReference Include="..\Nautilus.DomainModel\Nautilus.DomainModel.csproj" />

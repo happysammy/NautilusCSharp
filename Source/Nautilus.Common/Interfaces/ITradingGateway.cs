@@ -10,6 +10,7 @@ namespace Nautilus.Common.Interfaces
 {
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging;
 
@@ -32,7 +33,8 @@ namespace Nautilus.Common.Interfaces
         /// Sends a message to submit the given order.
         /// </summary>
         /// <param name="order">The new order.</param>
-        void SubmitOrder(Order order);
+        /// <param name="positionIdBroker">The optional broker position identifier for the order.</param>
+        void SubmitOrder(Order order, PositionIdBroker? positionIdBroker);
 
         /// <summary>
         /// Sends a message to submit the given atomic order.

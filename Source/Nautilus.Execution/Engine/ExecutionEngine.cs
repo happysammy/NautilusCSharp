@@ -140,7 +140,7 @@ namespace Nautilus.Execution.Engine
 
             if (result.IsSuccess)
             {
-                this.gateway.SubmitOrder(command.Order);
+                this.gateway.SubmitOrder(command.Order, null);
 
                 var submitted = new OrderSubmitted(
                     command.AccountId,
@@ -420,7 +420,7 @@ namespace Nautilus.Execution.Engine
             if (order is null)
             {
                 // This should never happen
-                this.Log.Error($"Cannot process event {@event} (order not found in the cache.");
+                this.Log.Warning($"Cannot apply event {@event} (order not found in the cache.");
             }
             else
             {
@@ -441,11 +441,10 @@ namespace Nautilus.Execution.Engine
 
         private void HandleOrderFillEvent(OrderFillEvent @event)
         {
-            var positionId = this.database.GetPositionId(@event.OrderId);
+            var positionId = this.database.GetPositionId(@event.OrderId) ?? this.database.GetPositionId(@event.AccountId, @event.PositionIdBroker);
             if (positionId is null)
             {
-                this.Log.Error($"Cannot process event {@event} (no PositionId found for order).");
-                this.SendToEventPublisher(@event);
+                this.Log.Error($"Cannot process event {@event} (no PositionId found for event).");
                 return;
             }
 

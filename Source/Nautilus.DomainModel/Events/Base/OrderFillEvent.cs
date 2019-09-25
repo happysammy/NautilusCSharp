@@ -28,7 +28,7 @@ namespace Nautilus.DomainModel.Events.Base
         /// <param name="accountId">The event account identifier.</param>
         /// <param name="orderId">The event order identifier.</param>
         /// <param name="executionId">The event order execution identifier.</param>
-        /// <param name="executionTicket">The event order execution ticket.</param>
+        /// <param name="positionIdBroker">The event broker position identifier.</param>
         /// <param name="symbol">The event order symbol.</param>
         /// <param name="orderSide">The event order side.</param>
         /// <param name="filledQuantity">The event order filled quantity.</param>
@@ -41,7 +41,7 @@ namespace Nautilus.DomainModel.Events.Base
             AccountId accountId,
             OrderId orderId,
             ExecutionId executionId,
-            ExecutionTicket executionTicket,
+            PositionIdBroker positionIdBroker,
             Symbol symbol,
             OrderSide orderSide,
             Quantity filledQuantity,
@@ -62,8 +62,8 @@ namespace Nautilus.DomainModel.Events.Base
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
 
             this.AccountId = accountId;
+            this.PositionIdBroker = positionIdBroker;
             this.ExecutionId = executionId;
-            this.ExecutionTicket = executionTicket;
             this.Symbol = symbol;
             this.OrderSide = orderSide;
             this.FilledQuantity = filledQuantity;
@@ -77,14 +77,14 @@ namespace Nautilus.DomainModel.Events.Base
         public AccountId AccountId { get; }
 
         /// <summary>
+        /// Gets the events broker position identifier.
+        /// </summary>
+        public PositionIdBroker PositionIdBroker { get; }
+
+        /// <summary>
         /// Gets the events order execution identifier.
         /// </summary>
         public ExecutionId ExecutionId { get; }
-
-        /// <summary>
-        /// Gets the events order execution ticket.
-        /// </summary>
-        public ExecutionTicket ExecutionTicket { get; }
 
         /// <summary>
         /// Gets the events order symbol.

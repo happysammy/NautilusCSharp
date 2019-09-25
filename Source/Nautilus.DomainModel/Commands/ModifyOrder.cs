@@ -28,6 +28,7 @@ namespace Nautilus.DomainModel.Commands
         /// <param name="traderId">The trader identifier.</param>
         /// <param name="accountId">The account identifier.</param>
         /// <param name="orderId">The order identifier.</param>
+        /// <param name="modifiedQuantity">The modified quantity.</param>
         /// <param name="modifiedPrice">The modified price.</param>
         /// <param name="commandId">The command identifier.</param>
         /// <param name="commandTimestamp">The command timestamp.</param>
@@ -35,6 +36,7 @@ namespace Nautilus.DomainModel.Commands
             TraderId traderId,
             AccountId accountId,
             OrderId orderId,
+            Quantity modifiedQuantity,
             Price modifiedPrice,
             Guid commandId,
             ZonedDateTime commandTimestamp)
@@ -49,6 +51,7 @@ namespace Nautilus.DomainModel.Commands
             this.TraderId = traderId;
             this.AccountId = accountId;
             this.OrderId = orderId;
+            this.ModifiedQuantity = modifiedQuantity;
             this.ModifiedPrice = modifiedPrice;
         }
 
@@ -68,6 +71,11 @@ namespace Nautilus.DomainModel.Commands
         public OrderId OrderId { get; }
 
         /// <summary>
+        /// Gets the commands modified order quantity.
+        /// </summary>
+        public Quantity ModifiedQuantity { get; }
+
+        /// <summary>
         /// Gets the commands modified order price.
         /// </summary>
         public Price ModifiedPrice { get; }
@@ -80,6 +88,7 @@ namespace Nautilus.DomainModel.Commands
                                              $"TraderId={this.TraderId.Value}, " +
                                              $"AccountId={this.AccountId.Value}, " +
                                              $"OrderId={this.OrderId.Value}, " +
+                                             $"Quantity={this.ModifiedQuantity})" +
                                              $"Price={this.ModifiedPrice})";
     }
 }

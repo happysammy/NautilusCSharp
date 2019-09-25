@@ -8,6 +8,7 @@
 
 namespace Nautilus.Brokerage.Fxcm
 {
+    using Nautilus.Brokerage.Fxcm.MessageFactories;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Aggregates;
@@ -16,7 +17,6 @@ namespace Nautilus.Brokerage.Fxcm
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Fix;
     using Nautilus.Fix.Interfaces;
-    using Nautilus.Fix.MessageFactories;
     using QuickFix;
 
     /// <summary>
@@ -152,7 +152,8 @@ namespace Nautilus.Brokerage.Fxcm
         /// Submits an order.
         /// </summary>
         /// <param name="order">The order to submit.</param>
-        public void SubmitOrder(Order order)
+        /// <param name="positionIdBroker">The optional broker position identifier for the order.</param>
+        public void SubmitOrder(Order order, PositionIdBroker? positionIdBroker)
         {
             var brokerSymbolCode = this.symbolConverter.GetBrokerSymbolCode(order.Symbol.Code);
             if (brokerSymbolCode is null)
@@ -165,6 +166,7 @@ namespace Nautilus.Brokerage.Fxcm
                 brokerSymbolCode,
                 this.accountId.AccountNumber,
                 order,
+                positionIdBroker,
                 this.TimeNow());
 
             this.SendFixMessage(message);

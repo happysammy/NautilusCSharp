@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="ExecutionTicket.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="PositionIdBroker.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  https://nautechsystems.io
@@ -13,16 +13,16 @@ namespace Nautilus.DomainModel.Identifiers
     using Nautilus.Core.Types;
 
     /// <summary>
-    /// Represents a valid execution ticket.
+    /// Represents a valid broker position identifier.
     /// </summary>
     [Immutable]
-    public sealed class ExecutionTicket : Identifier<ExecutionTicket>
+    public sealed class PositionIdBroker : Identifier<PositionIdBroker>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ExecutionTicket"/> class.
+        /// Initializes a new instance of the <see cref="PositionIdBroker"/> class.
         /// </summary>
         /// <param name="value">The execution ticket identifier value.</param>
-        public ExecutionTicket(string value)
+        public PositionIdBroker(string value)
             : base(value)
         {
             Debug.NotEmptyOrWhiteSpace(value, nameof(value));

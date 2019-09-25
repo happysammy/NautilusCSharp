@@ -6,11 +6,12 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Fix.MessageFactories
+namespace Nautilus.Brokerage.Fxcm.MessageFactories
 {
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Identifiers;
+    using Nautilus.Fix;
     using NodaTime;
     using QuickFix.Fields;
     using QuickFix.FIX44;

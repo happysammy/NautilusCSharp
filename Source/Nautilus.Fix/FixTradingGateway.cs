@@ -14,6 +14,7 @@ namespace Nautilus.Fix
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Events;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
@@ -62,9 +63,9 @@ namespace Nautilus.Fix
         }
 
         /// <inheritdoc />
-        public void SubmitOrder(Order order)
+        public void SubmitOrder(Order order, PositionIdBroker? positionIdBroker)
         {
-            this.fixClient.SubmitOrder(order);
+            this.fixClient.SubmitOrder(order, positionIdBroker);
         }
 
         /// <inheritdoc />

@@ -658,7 +658,7 @@ namespace Nautilus.Brokerage.Fxcm
         {
             var orderId = this.GetOrderId(message);
             var executionId = new ExecutionId(message.GetField(Tags.ExecID));
-            var executionTicket = new ExecutionTicket(message.GetField(9041));
+            var executionTicket = new PositionIdBroker(message.GetField(9041));
             var symbol = this.GetSymbol(message.GetField(Tags.Symbol));
             var orderSide = FixMessageHelper.GetOrderSide(message.GetField(Tags.Side));
             var filledQuantity = Quantity.Create(Convert.ToInt32(message.GetField(Tags.CumQty)));
@@ -683,7 +683,7 @@ namespace Nautilus.Brokerage.Fxcm
         {
             var orderId = this.GetOrderId(message);
             var executionId = new ExecutionId(message.GetField(Tags.ExecID));
-            var executionTicket = new ExecutionTicket(message.GetField(9041));
+            var executionTicket = new PositionIdBroker(message.GetField(9041));
             var symbol = this.GetSymbol(message.GetField(Tags.Symbol));
             var orderSide = FixMessageHelper.GetOrderSide(message.GetField(Tags.Side));
             var filledQuantity = Quantity.Create(Convert.ToInt32(message.GetField(Tags.CumQty)));

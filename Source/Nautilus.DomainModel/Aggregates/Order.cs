@@ -65,24 +65,24 @@ namespace Nautilus.DomainModel.Aggregates
         public Guid InitId => this.InitialEvent.Id;
 
         /// <summary>
-        /// Gets the orders last identifier for the broker.
-        /// </summary>
-        public OrderIdBroker? IdBroker { get; private set; }
-
-        /// <summary>
         /// Gets the orders account identifier.
         /// </summary>
         public AccountId? AccountId { get; private set; }
 
         /// <summary>
-        /// Gets the orders last execution identifier.
+        /// Gets the orders last identifier for the broker.
         /// </summary>
-        public ExecutionId? ExecutionId => this.executionIds.LastOrNull();
+        public OrderIdBroker? IdBroker { get; private set; }
 
         /// <summary>
         /// Gets the orders execution ticket.
         /// </summary>
-        public ExecutionTicket? ExecutionTicket { get; private set; }
+        public PositionIdBroker? PositionIdBroker { get; private set; }
+
+        /// <summary>
+        /// Gets the orders last execution identifier.
+        /// </summary>
+        public ExecutionId? ExecutionId => this.executionIds.LastOrNull();
 
         /// <summary>
         /// Gets the orders symbol.
@@ -322,7 +322,7 @@ namespace Nautilus.DomainModel.Aggregates
         private void When(OrderPartiallyFilled @event)
         {
             this.executionIds.Add(@event.ExecutionId);
-            this.ExecutionTicket = @event.ExecutionTicket;
+            this.PositionIdBroker = @event.PositionIdBroker;
             this.FilledQuantity = @event.FilledQuantity;
             this.AveragePrice = @event.AveragePrice;
             this.Slippage = this.CalculateSlippage();
@@ -331,7 +331,7 @@ namespace Nautilus.DomainModel.Aggregates
         private void When(OrderFilled @event)
         {
             this.executionIds.Add(@event.ExecutionId);
-            this.ExecutionTicket = @event.ExecutionTicket;
+            this.PositionIdBroker = @event.PositionIdBroker;
             this.FilledQuantity = @event.FilledQuantity;
             this.AveragePrice = @event.AveragePrice;
             this.Slippage = this.CalculateSlippage();

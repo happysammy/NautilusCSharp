@@ -319,6 +319,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 traderId,
                 accountId,
                 order.Id,
+                order.Quantity,
                 Price.Create(1.00010m, 5),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -366,6 +367,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 traderId,
                 accountId,
                 order.Id,
+                order.Quantity,
                 Price.Create(1.00010m, 5),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -408,6 +410,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 traderId,
                 accountId,
                 order.Id,
+                order.Quantity,
                 Price.Create(1.00010m, 5),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -450,6 +453,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 traderId,
                 accountId,
                 order.Id,
+                order.Quantity,
                 Price.Create(1.00010m, 5),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -458,6 +462,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 traderId,
                 accountId,
                 order.Id,
+                order.Quantity,
                 Price.Create(1.00010m, 5),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -627,6 +632,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 traderId,
                 accountId,
                 order.Id,
+                order.Quantity,
                 Price.Create(1.00010m, 5),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -709,6 +715,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 traderId,
                 accountId,
                 order.Id,
+                order.Quantity,
                 Price.Create(1.00010m, 5),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());

@@ -29,6 +29,7 @@ namespace Nautilus.Redis.Execution
         private const string POSITIONS = "Positions";
         private const string STRATEGY = "Strategy";
         private const string STRATEGIES = "Strategies";
+        private const string BROKER_ID = "BrokerId";
         private const string WORKING = "Working";
         private const string COMPLETED = "Completed";
         private const string OPEN = "Open";
@@ -47,6 +48,7 @@ namespace Nautilus.Redis.Execution
         private const string KEY_INDEX_TRADER_STRATEGY_POSITIONS = INDEX + TRADER + STRATEGY + POSITIONS + ":";  // + TraderId : StrategyId -> Set{PositionId}
         private const string KEY_INDEX_ACCOUNT_ORDERS = INDEX + ACCOUNT + ORDERS + ":";        // + AccountId -> Set{OrderId}
         private const string KEY_INDEX_ACCOUNT_POSITIONS = INDEX + ACCOUNT + POSITIONS + ":";  // + AccountId -> Set{PositionId}
+        private const string KEY_INDEX_BROKER_POSITION = INDEX + BROKER_ID + POSITION + ":";   // + AccountId -> HashSet[PositionIdBroker, PositionId]
         private const string KEY_INDEX_ORDER_TRADER = INDEX + ORDER + TRADER;                  // -> HashSet[OrderId, TraderId]
         private const string KEY_INDEX_ORDER_ACCOUNT = INDEX + ORDER + ACCOUNT;                // -> HashSet[OrderId, AccountId]
         private const string KEY_INDEX_ORDER_POSITION = INDEX + ORDER + POSITION;              // -> HashSet[OrderId, PositionId]
@@ -241,6 +243,13 @@ namespace Nautilus.Redis.Execution
         /// <param name="accountId">The account identifier.</param>
         /// <returns>The key string.</returns>
         internal static string IndexAccountPositions(AccountId accountId) => KEY_INDEX_ACCOUNT_POSITIONS + accountId.Value;
+
+        /// <summary>
+        /// Returns the Redis key.
+        /// </summary>
+        /// <param name="accountId">The account identifier.</param>
+        /// <returns>The key string.</returns>
+        internal static string IndexBrokerIdPosition(AccountId accountId) => KEY_INDEX_BROKER_POSITION + accountId.Value;
 
         /// <summary>
         /// Returns the Redis key.

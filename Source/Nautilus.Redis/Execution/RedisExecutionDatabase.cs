@@ -329,6 +329,7 @@ namespace Nautilus.Redis.Execution
                 this.Log.Error($"The added {position} was not open.");
             }
 
+            this.redisDatabase.HashSet(Key.IndexBrokerIdPosition(position.AccountId), new[] { new HashEntry(position.IdBroker.Value, position.Id.Value) }, CommandFlags.FireAndForget);
             this.redisDatabase.ListRightPush(Key.Position(position.Id), this.eventSerializer.Serialize(position.LastEvent), When.Always, CommandFlags.FireAndForget);
 
             this.CachedPositions[position.Id] = position;
@@ -418,6 +419,15 @@ namespace Nautilus.Redis.Execution
         public override PositionId? GetPositionId(OrderId orderId)
         {
             var idValue = this.redisDatabase.HashGet(Key.IndexOrderPosition, orderId.Value);
+            return idValue == RedisValue.Null
+                ? null
+                : new PositionId(idValue);
+        }
+
+        /// <inheritdoc />
+        public override PositionId? GetPositionId(AccountId accountId, PositionIdBroker positionIdBroker)
+        {
+            var idValue = this.redisDatabase.HashGet(Key.IndexBrokerIdPosition(accountId), positionIdBroker.Value);
             return idValue == RedisValue.Null
                 ? null
                 : new PositionId(idValue);

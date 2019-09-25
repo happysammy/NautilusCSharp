@@ -25,7 +25,6 @@ namespace Nautilus.DomainModel.Aggregates
     {
         private readonly UniqueList<OrderId> orderIds;
         private readonly UniqueList<ExecutionId> executionIds;
-        private readonly UniqueList<ExecutionTicket> executionTickets;
 
         private int relativeQuantity;
 
@@ -39,9 +38,9 @@ namespace Nautilus.DomainModel.Aggregates
         {
             this.orderIds = new UniqueList<OrderId>(initial.OrderId);
             this.executionIds = new UniqueList<ExecutionId>(initial.ExecutionId);
-            this.executionTickets = new UniqueList<ExecutionTicket>(initial.ExecutionTicket);
 
             this.AccountId = initial.AccountId;
+            this.IdBroker = initial.PositionIdBroker;
             this.FromOrderId = initial.OrderId;
             this.Symbol = initial.Symbol;
             this.EntryDirection = initial.OrderSide;
@@ -63,6 +62,11 @@ namespace Nautilus.DomainModel.Aggregates
         public AccountId AccountId { get; }
 
         /// <summary>
+        /// Gets the positions broker position identifier.
+        /// </summary>
+        public PositionIdBroker IdBroker { get; }
+
+        /// <summary>
         /// Gets the positions initial entry order identifier.
         /// </summary>
         public OrderId FromOrderId { get; }
@@ -76,11 +80,6 @@ namespace Nautilus.DomainModel.Aggregates
         /// Gets the positions last execution identifier.
         /// </summary>
         public ExecutionId LastExecutionId => this.LastEvent.ExecutionId;
-
-        /// <summary>
-        /// Gets the positions last execution ticket.
-        /// </summary>
-        public ExecutionTicket LastExecutionTicket => this.LastEvent.ExecutionTicket;
 
         /// <summary>
         /// Gets the positions symbol.
@@ -164,18 +163,13 @@ namespace Nautilus.DomainModel.Aggregates
         /// <returns>The events collection.</returns>
         public UniqueList<ExecutionId> GetExecutionIds() => this.executionIds.Copy();
 
-        /// <summary>
-        /// Returns a collection of the positions execution tickets.
-        /// </summary>
-        /// <returns>The events collection.</returns>
-        public UniqueList<ExecutionTicket> GetExecutionTickets() => this.executionTickets.Copy();
-
         /// <inheritdoc />
         protected override void OnEvent(OrderFillEvent @event)
         {
+            Debug.EqualTo(this.IdBroker, @event.PositionIdBroker, nameof(@event.PositionIdBroker));
+
             this.orderIds.Add(@event.OrderId);
             this.executionIds.Add(@event.ExecutionId);
-            this.executionTickets.Add(@event.ExecutionTicket);
 
             this.SetState(@event);
         }
@@ -227,7 +221,6 @@ namespace Nautilus.DomainModel.Aggregates
         {
             Debug.True(this.orderIds.Count == 1, "this.orderIds.Count == 1");
             Debug.True(this.executionIds.Count == 1, "this.executionIds.Count == 1");
-            Debug.True(this.executionTickets.Count == 1, "this.executionTickets.Count == 1");
             Debug.True(this.EventCount == 1, "this.Events.Count == 1");
         }
     }

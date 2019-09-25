@@ -70,9 +70,9 @@ namespace Nautilus.Fix
         }
 
         /// <inheritdoc />
-        public void SubmitOrder(Order order)
+        public void SubmitOrder(Order order, PositionIdBroker? positionIdBroker)
         {
-            this.FixMessageRouter.SubmitOrder(order);
+            this.FixMessageRouter.SubmitOrder(order, positionIdBroker);
         }
 
         /// <inheritdoc />

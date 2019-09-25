@@ -6,12 +6,13 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Fix.MessageFactories
+namespace Nautilus.Brokerage.Fxcm.MessageFactories
 {
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
+    using Nautilus.Fix;
     using NodaTime;
     using QuickFix.Fields;
     using QuickFix.FIX44;
@@ -29,12 +30,14 @@ namespace Nautilus.Fix.MessageFactories
         /// <param name="brokerSymbol">The brokers symbol.</param>
         /// <param name="accountNumber">The account number.</param>
         /// <param name="order">The order to submit.</param>
+        /// <param name="positionIdBroker">The optional broker position identifier.</param>
         /// <param name="timeNow">The time now.</param>
         /// <returns>The FIX message.</returns>
         public static QuickFix.FIX44.NewOrderSingle Create(
             string brokerSymbol,
             AccountNumber accountNumber,
             Order order,
+            PositionIdBroker? positionIdBroker,
             ZonedDateTime timeNow)
         {
             Debug.NotEmptyOrWhiteSpace(brokerSymbol, nameof(brokerSymbol));
@@ -50,6 +53,11 @@ namespace Nautilus.Fix.MessageFactories
             message.SetField(new TransactTime(timeNow.ToDateTimeUtc()));
             message.SetField(FixMessageHelper.GetFixOrderType(order.OrderType));
             message.SetField(FixMessageHelper.GetFixTimeInForce(order.TimeInForce));
+
+            if (!(positionIdBroker is null))
+            {
+                message.SetField(new StringField(9041, positionIdBroker.Value));
+            }
 
             if (order.ExpireTime.HasValue)
             {

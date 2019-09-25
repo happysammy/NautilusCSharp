@@ -140,9 +140,9 @@ namespace Nautilus.Serialization.Internal
         /// </summary>
         /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <returns>The extracted ExecutionTicket.</returns>
-        internal static ExecutionTicket ExecutionTicket(MessagePackObjectDictionary unpacked)
+        internal static PositionIdBroker PositionIdBroker(MessagePackObjectDictionary unpacked)
         {
-            return new ExecutionTicket(unpacked[nameof(ExecutionTicket)].AsString());
+            return new PositionIdBroker(unpacked[nameof(PositionIdBroker)].AsString());
         }
 
         /// <summary>

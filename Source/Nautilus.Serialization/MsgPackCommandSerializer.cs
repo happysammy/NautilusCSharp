@@ -70,6 +70,7 @@ namespace Nautilus.Serialization
                     package.Add(nameof(cmd.TraderId), cmd.TraderId.Value);
                     package.Add(nameof(cmd.AccountId), cmd.AccountId.Value);
                     package.Add(nameof(cmd.OrderId), cmd.OrderId.Value);
+                    package.Add(nameof(cmd.ModifiedQuantity), cmd.ModifiedQuantity.Value);
                     package.Add(nameof(cmd.ModifiedPrice), cmd.ModifiedPrice.ToString());
                     break;
                 case CancelOrder cmd:
@@ -128,7 +129,8 @@ namespace Nautilus.Serialization
                         this.identifierCache.TraderId(unpacked),
                         this.identifierCache.AccountId(unpacked),
                         ObjectExtractor.OrderId(unpacked),
-                        ObjectExtractor.Price(unpacked[nameof(ModifyOrder.ModifiedPrice)].AsString()),
+                        ObjectExtractor.Quantity(unpacked[nameof(ModifyOrder.ModifiedQuantity)]),
+                        ObjectExtractor.Price(unpacked[nameof(ModifyOrder.ModifiedPrice)]),
                         id,
                         timestamp);
                 case nameof(CancelOrder):

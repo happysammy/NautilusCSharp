@@ -15,6 +15,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Events;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
@@ -67,10 +68,16 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         }
 
         /// <inheritdoc/>
-        public void SubmitOrder(Order order)
+        public void SubmitOrder(Order order, PositionIdBroker? positionIdBroker)
         {
             this.CalledMethods.Add(nameof(this.SubmitOrder));
+
             this.ReceivedObjects.Add(order);
+
+            if (!(positionIdBroker is null))
+            {
+                this.ReceivedObjects.Add(positionIdBroker);
+            }
         }
 
         /// <inheritdoc/>

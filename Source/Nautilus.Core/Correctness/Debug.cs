@@ -23,13 +23,13 @@ namespace Nautilus.Core.Correctness
         /// <summary>
         /// The condition check passes if the condition predicate is true.
         /// </summary>
-        /// <param name="condition">The condition under check.</param>
-        /// <param name="failedMessage">The condition failed message.</param>
+        /// <param name="condition">The condition predicate under check.</param>
+        /// <param name="description">The condition description.</param>
         /// <exception cref="ConditionFailedException">If the condition is false.</exception>
         [Conditional("DEBUG")]
-        public static void True(bool condition, string failedMessage)
+        public static void True(bool condition, string description)
         {
-            Condition.True(condition, failedMessage);
+            Condition.True(condition, description);
         }
 
         /// <summary>
