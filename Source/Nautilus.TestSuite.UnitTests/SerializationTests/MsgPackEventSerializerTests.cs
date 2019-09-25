@@ -281,6 +281,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
                 AccountId.FromString("FXCM-02851908-DEMO"),
                 order.Id,
                 new OrderIdBroker("B" + order.Id.Value),
+                order.Quantity,
                 Price.Create(2, 1),
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),

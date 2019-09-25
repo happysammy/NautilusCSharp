@@ -28,6 +28,7 @@ namespace Nautilus.DomainModel.Events
         /// <param name="accountId">The event account identifier.</param>
         /// <param name="orderId">The event order identifier.</param>
         /// <param name="orderIdBroker">The event broker order identifier.</param>
+        /// <param name="modifiedQuantity">The event order modified quantity.</param>
         /// <param name="modifiedPrice">The event order modified price.</param>
         /// <param name="modifiedTime">The event order modification accepted time.</param>
         /// <param name="eventId">The event identifier.</param>
@@ -36,6 +37,7 @@ namespace Nautilus.DomainModel.Events
             AccountId accountId,
             OrderId orderId,
             OrderIdBroker orderIdBroker,
+            Quantity modifiedQuantity,
             Price modifiedPrice,
             ZonedDateTime modifiedTime,
             Guid eventId,
@@ -52,6 +54,7 @@ namespace Nautilus.DomainModel.Events
 
             this.AccountId = accountId;
             this.OrderIdBroker = orderIdBroker;
+            this.ModifiedQuantity = modifiedQuantity;
             this.ModifiedPrice = modifiedPrice;
             this.ModifiedTime = modifiedTime;
         }
@@ -65,6 +68,11 @@ namespace Nautilus.DomainModel.Events
         /// Gets the events broker order identifier.
         /// </summary>
         public OrderIdBroker OrderIdBroker { get; }
+
+        /// <summary>
+        /// Gets the events order modified quantity.
+        /// </summary>
+        public Quantity ModifiedQuantity { get; }
 
         /// <summary>
         /// Gets the events order modified price.
@@ -84,6 +92,7 @@ namespace Nautilus.DomainModel.Events
                                              $"AccountId={this.AccountId.Value}, " +
                                              $"OrderId={this.OrderId.Value}, " +
                                              $"OrderIdBroker={this.OrderIdBroker.Value}, " +
+                                             $"ModifiedQuantity={this.ModifiedPrice}, " +
                                              $"ModifiedPrice={this.ModifiedPrice})";
     }
 }

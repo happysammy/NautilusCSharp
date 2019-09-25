@@ -116,6 +116,7 @@ namespace Nautilus.Serialization
                     package.Add(nameof(evt.AccountId), evt.AccountId.Value);
                     package.Add(nameof(evt.OrderId), evt.OrderId.Value);
                     package.Add(nameof(evt.OrderIdBroker), evt.OrderIdBroker.Value);
+                    package.Add(nameof(evt.ModifiedQuantity), evt.ModifiedQuantity.Value);
                     package.Add(nameof(evt.ModifiedPrice), evt.ModifiedPrice.Value.ToString(CultureInfo.InvariantCulture));
                     package.Add(nameof(evt.ModifiedTime), evt.ModifiedTime.ToIsoString());
                     break;
@@ -254,6 +255,7 @@ namespace Nautilus.Serialization
                         this.identifierCache.AccountId(unpacked),
                         ObjectExtractor.OrderId(unpacked),
                         ObjectExtractor.OrderIdBroker(unpacked),
+                        ObjectExtractor.Quantity(unpacked[nameof(OrderModified.ModifiedQuantity)]),
                         ObjectExtractor.Price(unpacked[nameof(OrderModified.ModifiedPrice)]),
                         ObjectExtractor.ZonedDateTime(unpacked[nameof(OrderModified.ModifiedTime)]),
                         id,

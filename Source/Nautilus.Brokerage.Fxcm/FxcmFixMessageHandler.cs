@@ -597,6 +597,7 @@ namespace Nautilus.Brokerage.Fxcm
             var orderId = this.GetOrderId(message);
             var orderIdBroker = new OrderIdBroker(message.OrderID.ToString());
             var orderType = FixMessageHelper.GetOrderType(message.GetField(Tags.OrdType));
+            var quantity = Quantity.Create(Convert.ToInt32(message.GetField(Tags.OrderQty)));
             var price = FixMessageHelper.GetOrderPrice(orderType, message);
             var modifiedTime = FixMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
 
@@ -604,6 +605,7 @@ namespace Nautilus.Brokerage.Fxcm
                 this.accountId,
                 orderId,
                 orderIdBroker,
+                quantity,
                 price,
                 modifiedTime,
                 this.NewGuid(),
@@ -618,7 +620,7 @@ namespace Nautilus.Brokerage.Fxcm
             var orderLabel = new Label(message.GetField(Tags.SecondaryClOrdID));
             var orderSide = FixMessageHelper.GetOrderSide(message.GetField(Tags.Side));
             var orderType = FixMessageHelper.GetOrderType(message.GetField(Tags.OrdType));
-            var orderQty = Quantity.Create(Convert.ToInt32(message.GetField(Tags.OrderQty)));
+            var quantity = Quantity.Create(Convert.ToInt32(message.GetField(Tags.OrderQty)));
             var price = FixMessageHelper.GetOrderPrice(orderType, message);
             var timeInForce = FixMessageHelper.GetTimeInForce(message.GetField(Tags.TimeInForce));
             var expireTime = FixMessageHelper.GetExpireTime(message);
@@ -632,7 +634,7 @@ namespace Nautilus.Brokerage.Fxcm
                 orderLabel,
                 orderSide,
                 orderType,
-                orderQty,
+                quantity,
                 price,
                 timeInForce,
                 expireTime,

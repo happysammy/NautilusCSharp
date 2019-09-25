@@ -65,14 +65,14 @@ namespace Nautilus.DomainModel.Aggregates
         public Guid InitId => this.InitialEvent.Id;
 
         /// <summary>
-        /// Gets the orders account identifier.
-        /// </summary>
-        public AccountId? AccountId { get; private set; }
-
-        /// <summary>
         /// Gets the orders last identifier for the broker.
         /// </summary>
         public OrderIdBroker? IdBroker { get; private set; }
+
+        /// <summary>
+        /// Gets the orders account identifier.
+        /// </summary>
+        public AccountId? AccountId { get; private set; }
 
         /// <summary>
         /// Gets the orders execution ticket.
@@ -112,7 +112,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the orders quantity.
         /// </summary>
-        public Quantity Quantity { get; }
+        public Quantity Quantity { get; private set; }
 
         /// <summary>
         /// Gets the orders filled quantity.
@@ -316,6 +316,7 @@ namespace Nautilus.DomainModel.Aggregates
 
         private void When(OrderModified @event)
         {
+            this.Quantity = @event.ModifiedQuantity;
             this.Price = @event.ModifiedPrice;
         }
 

@@ -39,8 +39,8 @@ namespace Nautilus.DomainModel.Aggregates
             this.orderIds = new UniqueList<OrderId>(initial.OrderId);
             this.executionIds = new UniqueList<ExecutionId>(initial.ExecutionId);
 
-            this.AccountId = initial.AccountId;
             this.IdBroker = initial.PositionIdBroker;
+            this.AccountId = initial.AccountId;
             this.FromOrderId = initial.OrderId;
             this.Symbol = initial.Symbol;
             this.EntryDirection = initial.OrderSide;
@@ -57,14 +57,14 @@ namespace Nautilus.DomainModel.Aggregates
         }
 
         /// <summary>
-        /// Gets the positions account identifier.
-        /// </summary>
-        public AccountId AccountId { get; }
-
-        /// <summary>
         /// Gets the positions broker position identifier.
         /// </summary>
         public PositionIdBroker IdBroker { get; }
+
+        /// <summary>
+        /// Gets the positions account identifier.
+        /// </summary>
+        public AccountId AccountId { get; }
 
         /// <summary>
         /// Gets the positions initial entry order identifier.
