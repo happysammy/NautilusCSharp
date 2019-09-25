@@ -466,7 +466,9 @@ namespace Nautilus.Execution.Engine
         {
             if (this.bufferModify.TryGetValue(order.Id, out var modifyOrder))
             {
-                if (!(order.Price is null) && order.Price != modifyOrder.ModifiedPrice)
+                // If the commands modified price or quantity is different then send command
+                if ((!(order.Price is null) && order.Price != modifyOrder.ModifiedPrice)
+                    || order.Quantity != modifyOrder.ModifiedQuantity)
                 {
                     this.gateway.ModifyOrder(order, modifyOrder.ModifiedPrice);
                     this.Log.Debug($"{CMD}{SENT} {modifyOrder} to TradingGateway.");

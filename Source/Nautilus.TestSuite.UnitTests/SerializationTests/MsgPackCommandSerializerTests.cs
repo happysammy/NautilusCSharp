@@ -243,7 +243,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         internal void Deserialize_GivenModifyOrder_FromPythonMsgPack_ReturnsExpectedCommand()
         {
             // Arrange
-            var base64 = "iKRUeXBlq01vZGlmeU9yZGVyoklk2gAkZmNmNWI0ZDEtYzUxNS00YmNkLTg4NWEtY2U3MzNkMGNjNzM1qVRpbWVzdGFtcLgxOTcwLTAxLTAxVDAwOjAwOjAwLjAwMFqoVHJhZGVySWSqVEVTVEVSLTAwMKpTdHJhdGVneUlkqlNDQUxQRVItMDGpQWNjb3VudElktk5BVVRJTFVTLTAwMC1TSU1VTEFURUSnT3JkZXJJZKhPLTEyMzQ1Nq1Nb2RpZmllZFByaWNlpzEuMDAwMDE=";
+            var base64 = "iKRUeXBlq01vZGlmeU9yZGVyoklk2gAkYmNmODhlN2EtYjA4ZC00ZmFmLTg4ZjEtNGZjNmZjYjk5ZWM1qVRpbWVzdGFtcLgxOTcwLTAxLTAxVDAwOjAwOjAwLjAwMFqoVHJhZGVySWSqVEVTVEVSLTAwMKlBY2NvdW50SWS2TkFVVElMVVMtMDAwLVNJTVVMQVRFRKdPcmRlcklkqE8tMTIzNDU2sE1vZGlmaWVkUXVhbnRpdHnOAAGGoK1Nb2RpZmllZFByaWNlpzEuMDAwMDE=";
             var commandBytes = Convert.FromBase64String(base64);
 
             // Act

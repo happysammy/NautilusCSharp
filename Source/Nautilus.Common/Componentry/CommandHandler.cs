@@ -40,6 +40,10 @@ namespace Nautilus.Common.Componentry
             {
                 action.Invoke();
             }
+            catch (NullReferenceException ex)
+            {
+                this.log.Error(ex.Message, ex);
+            }
             catch (ArgumentException ex)
             {
                 this.log.Error(ex.Message, ex);
@@ -65,11 +69,11 @@ namespace Nautilus.Common.Componentry
             {
                 action.Invoke();
             }
-            catch (ArgumentException ex)
+            catch (T ex)
             {
                 this.log.Error(ex.Message, ex);
             }
-            catch (T ex)
+            catch (ArgumentException ex)
             {
                 this.log.Error(ex.Message, ex);
             }
@@ -96,15 +100,15 @@ namespace Nautilus.Common.Componentry
             {
                 action.Invoke();
             }
-            catch (ArgumentException ex)
-            {
-                this.log.Error(ex.Message, ex);
-            }
             catch (T1 ex)
             {
                 this.log.Error(ex.Message, ex);
             }
             catch (T2 ex)
+            {
+                this.log.Error(ex.Message, ex);
+            }
+            catch (ArgumentException ex)
             {
                 this.log.Error(ex.Message, ex);
             }
