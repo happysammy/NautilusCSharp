@@ -420,7 +420,7 @@ namespace Nautilus.Execution.Engine
             if (order is null)
             {
                 // This should never happen
-                this.Log.Warning($"Cannot apply event {@event} (order not found in the cache.");
+                this.Log.Warning($"Cannot apply event {@event} to any order ({@event.OrderId} not found in the cache.");
             }
             else
             {
