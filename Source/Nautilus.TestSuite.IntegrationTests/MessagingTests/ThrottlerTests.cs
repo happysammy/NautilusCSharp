@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.UnitTests.CommonTests
+namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
 {
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
