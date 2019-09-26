@@ -213,7 +213,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
             var result = Money.Create(1, Currency.AUD);
 
             // Assert
-            Assert.Equal(1043347453, result.GetHashCode());
+            Assert.Equal(14362, result.GetHashCode());
         }
     }
 }

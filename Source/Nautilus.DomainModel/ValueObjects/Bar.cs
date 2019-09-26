@@ -150,7 +150,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// </summary>
         /// <param name="other">The other.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public override bool Equals(object other) => other is Bar bar && this.Equals(bar);
+        public override bool Equals(object? other) => other is Bar bar && this.Equals(bar);
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="Bar"/> is equal

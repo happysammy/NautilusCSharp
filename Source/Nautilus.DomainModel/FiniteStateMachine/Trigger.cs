@@ -53,7 +53,7 @@ namespace Nautilus.DomainModel.FiniteStateMachine
         /// </summary>
         /// <param name="obj">The object.</param>
         /// <returns>A boolean.</returns>
-        public override bool Equals(object obj) => obj is Trigger trigger && this.Equals(trigger);
+        public override bool Equals(object? obj) => obj is Trigger trigger && this.Equals(trigger);
 
         /// <summary>
         /// Returns a value indicating whether this instance is equal to the specified <see cref="Trigger"/>.

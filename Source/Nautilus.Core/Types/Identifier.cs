@@ -66,7 +66,7 @@ namespace Nautilus.Core.Types
         /// </summary>
         /// <param name="other">The other.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public override bool Equals(object other) => other is Identifier<T> identifier && this.Equals(identifier);
+        public override bool Equals(object? other) => other is Identifier<T> identifier && this.Equals(identifier);
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="Identifier{T}"/> is equal

@@ -40,6 +40,8 @@ namespace Nautilus.Common.Configuration
 
         private static string GetNetCoreVersion()
         {
+            // TODO: Fix this warning?
+            #pragma warning disable 8714, 8602
             var assembly = typeof(System.Runtime.GCSettings).GetTypeInfo().Assembly;
             var assemblyPath = assembly.CodeBase.Split(new[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries);
             var netCoreAppIndex = Array.IndexOf(assemblyPath, "Microsoft.NETCore.App");

@@ -63,7 +63,7 @@ namespace Nautilus.DomainModel.FiniteStateMachine
         /// </summary>
         /// <param name="other">The other object.</param>
         /// <returns>A boolean.</returns>
-        public override bool Equals(object other) => other is StateTransition<T> transition && this.Equals(transition);
+        public override bool Equals(object? other) => other is StateTransition<T> transition && this.Equals(transition);
 
         /// <summary>
         /// Returns a value indicating whether this instance is equal to the specified <see cref="StateTransition{T}"/>.

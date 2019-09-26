@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.UnitTests.MessagingTests
+namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
 {
     using System;
     using System.Collections.Generic;

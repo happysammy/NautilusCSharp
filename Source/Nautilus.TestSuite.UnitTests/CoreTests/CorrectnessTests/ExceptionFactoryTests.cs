@@ -30,7 +30,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
             // Assert
             Assert.Equal(typeof(ArgumentOutOfRangeException), exception.GetType());
             Assert.Equal(someArgument, exception.ActualValue);
-            Assert.Equal("The value of argument 'someArgument' of type String was invalid out of range for this switch.\nParameter name: someArgument\nActual value was -1.", exception.Message);
+            Assert.Equal("The value of argument 'someArgument' of type String was invalid out of range for this switch. (Parameter 'someArgument')\nActual value was -1.", exception.Message);
         }
 
         [Fact]
@@ -44,7 +44,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
 
             // Assert
             Assert.Equal(typeof(InvalidEnumArgumentException), exception.GetType());
-            Assert.Equal("The value of argument 'someArgument' (3) is invalid for Enum type 'QuoteType'.\nParameter name: someArgument", exception.Message);
+            Assert.Equal("The value of argument 'someArgument' (3) is invalid for Enum type 'QuoteType'. (Parameter 'someArgument')", exception.Message);
         }
     }
 }

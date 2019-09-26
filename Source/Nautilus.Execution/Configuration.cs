@@ -48,7 +48,7 @@ namespace Nautilus.Execution
 
             // FIX Settings
             var fixConfigFile = (string)configJson[ConfigSection.Fix44]["configFile"];
-            var assemblyDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location);
+            var assemblyDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location) !;
             var configPath = Path.GetFullPath(Path.Combine(assemblyDirectory, fixConfigFile));
 
             var fixSettings = ConfigReader.LoadConfig(configPath);

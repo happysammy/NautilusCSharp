@@ -57,7 +57,7 @@ namespace Nautilus.DomainModel.Entities.Base
         /// </summary>
         /// <param name="other">The other object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public override bool Equals(object other) => other is Entity<TId, T> entity && this.Equals(entity);
+        public override bool Equals(object? other) => other is Entity<TId, T> entity && this.Equals(entity);
 
         /// <summary>
         /// Returns a value indicating whether this object is equal to the given object.

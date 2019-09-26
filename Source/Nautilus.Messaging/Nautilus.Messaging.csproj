@@ -1,19 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp2.2</TargetFramework>
+        <TargetFramework>netcoreapp3.0</TargetFramework>
         <LangVersion>8</LangVersion>
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-        <DocumentationFile>bin\Debug\netcoreapp2.2\Nautilus.Messaging.xml</DocumentationFile>
+        <DocumentationFile>bin\Debug\netcoreapp3.0\Nautilus.Messaging.xml</DocumentationFile>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <WarningsAsErrors />
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU' ">
-        <DocumentationFile>bin\Release\netcoreapp2.1\Nautilus.Messaging.xml</DocumentationFile>
+        <DocumentationFile>bin\Release\netcoreapp3.0\Nautilus.Messaging.xml</DocumentationFile>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <WarningsAsErrors />
     </PropertyGroup>
@@ -23,7 +23,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="System.Threading.Tasks.Dataflow" Version="4.9.0" />
+        <PackageReference Include="System.Threading.Tasks.Dataflow" Version="4.10.0" />
     </ItemGroup>
 
     <ItemGroup>

@@ -35,7 +35,7 @@ namespace Nautilus.Messaging
             ZonedDateTime timestamp)
         {
             var typedEnvelope = GenericEnvelope.MakeGenericType(message.Type);
-            return (IEnvelope)Activator.CreateInstance(typedEnvelope, message, receiver, sender, timestamp);
+            return (IEnvelope)Activator.CreateInstance(typedEnvelope, message, receiver, sender, timestamp) !;
         }
     }
 }

@@ -34,6 +34,8 @@ namespace Nautilus.Execution.Engine
             var set = new HashSet<TOutput>(valuesLength);
             for (var i = 0; i < valuesLength; i++)
             {
+                // TODO: Fix below warning?
+                #pragma warning disable 8604
                 set.Add(create(values[i] !.ToString()));
             }
 

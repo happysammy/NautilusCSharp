@@ -1,19 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp2.2</TargetFramework>
+        <TargetFramework>netcoreapp3.0</TargetFramework>
         <IsPackable>false</IsPackable>
         <LangVersion>8</LangVersion>
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-        <DocumentationFile>bin\Debug\netcoreapp2.2\Nautilus.TestSuite.UnitTests.xml</DocumentationFile>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <DocumentationFile>bin\Debug\netcoreapp3.0\Nautilus.TestSuite.UnitTests.xml</DocumentationFile>
         <NoWarn>1591</NoWarn>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-        <DocumentationFile>bin\Debug\netcoreapp2.2\Nautilus.TestSuite.UnitTests.xml</DocumentationFile>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <DocumentationFile>bin\Debug\netcoreapp3.0\Nautilus.TestSuite.UnitTests.xml</DocumentationFile>
         <NoWarn>1591</NoWarn>
     </PropertyGroup>
 

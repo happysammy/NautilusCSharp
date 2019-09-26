@@ -9,3 +9,4 @@
 using System.Runtime.CompilerServices;
 
 [assembly:InternalsVisibleTo("Nautilus.TestSuite.UnitTests")]
+[assembly:InternalsVisibleTo("Nautilus.TestSuite.IntegrationTests")]

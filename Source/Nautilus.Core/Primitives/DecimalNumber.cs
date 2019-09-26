@@ -374,7 +374,7 @@ namespace Nautilus.Core.Primitives
         /// </summary>
         /// <param name="other">The other.</param>
         /// <returns>The result of the equality check.</returns>
-        public override bool Equals(object other) => other is DecimalNumber number && this.Equals(number);
+        public override bool Equals(object? other) => other is DecimalNumber number && this.Equals(number);
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="DecimalNumber"/> is equal to the
@@ -426,7 +426,7 @@ namespace Nautilus.Core.Primitives
         /// <param name="format">The format for the string.</param>
         /// <param name="formatProvider">The format provider for the string.</param>
         /// <returns>A <see cref="string"/>.</returns>
-        public string ToString(string format, IFormatProvider formatProvider)
+        public string ToString(string? format, IFormatProvider? formatProvider)
         {
             return this.Value.ToString(format, formatProvider);
         }

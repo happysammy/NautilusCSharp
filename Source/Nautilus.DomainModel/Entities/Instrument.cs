@@ -169,7 +169,7 @@ namespace Nautilus.DomainModel.Entities
         /// </summary>
         /// <param name="other">The other object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public override bool Equals(object other) => other is Instrument instrument && this.Equals(instrument);
+        public override bool Equals(object? other) => other is Instrument instrument && this.Equals(instrument);
 
         /// <summary>
         /// Returns the hash code of the <see cref="Instrument"/>.

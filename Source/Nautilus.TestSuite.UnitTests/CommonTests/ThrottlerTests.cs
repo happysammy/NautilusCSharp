@@ -6,12 +6,12 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.UnitTests.NetworkTests
+namespace Nautilus.TestSuite.UnitTests.CommonTests
 {
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Network;
+    using Nautilus.Common.Messaging;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NodaTime;

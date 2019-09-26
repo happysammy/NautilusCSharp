@@ -62,7 +62,7 @@ namespace Nautilus.DomainModel.FiniteStateMachine
         /// </summary>
         /// <param name="obj">The object.</param>
         /// <returns>A boolean.</returns>
-        public override bool Equals(object obj) => obj is State state && this.Equals(state);
+        public override bool Equals(object? obj) => obj is State state && this.Equals(state);
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="State"/> is equal to the
