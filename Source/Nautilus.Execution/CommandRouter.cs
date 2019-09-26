@@ -15,7 +15,6 @@ namespace Nautilus.Execution
     using Nautilus.DomainModel.Commands;
     using Nautilus.Execution.Network;
     using Nautilus.Messaging.Interfaces;
-    using Nautilus.Network;
     using NodaTime;
 
     /// <summary>

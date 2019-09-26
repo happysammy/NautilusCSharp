@@ -1,16 +1,17 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="FixMessageHelper.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="FxcmMessageHelper.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  https://nautechsystems.io
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Fix
+namespace Nautilus.Brokerage.Fxcm
 {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Enums;
     using NodaTime;
@@ -26,7 +27,7 @@ namespace Nautilus.Fix
     /// </summary>
     [SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1201:ElementsMustAppearInTheCorrectOrder", Justification = "Reviewed. Suppression is OK here.")]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK here.")]
-    public static class FixMessageHelper
+    public static class FxcmMessageHelper
     {
         private static readonly Dictionary<string, string> SecurityRequestResults = new Dictionary<string, string>
         {
@@ -349,5 +350,15 @@ namespace Nautilus.Fix
         /// <returns>The converted <see cref="ZonedDateTime"/>.</returns>
         public static ZonedDateTime ParseTransactionTime(string dateTime) =>
             ExecutionReportParsePattern.Parse(dateTime).Value;
+
+        /// <summary>
+        /// Returns the date time parsed from the given string.
+        /// </summary>
+        /// <param name="expireTime">The expire time.</param>
+        /// <returns>The converted <see cref="ZonedDateTime"/>.</returns>
+        public static string ToExpireTimeFormat(ZonedDateTime expireTime)
+        {
+            return expireTime.ToString("MMddyyyyHHmmss", CultureInfo.InvariantCulture.DateTimeFormat);
+        }
     }
 }

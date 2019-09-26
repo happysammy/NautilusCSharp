@@ -11,7 +11,6 @@ namespace Nautilus.Brokerage.Fxcm.MessageFactories
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
-    using Nautilus.Fix;
     using NodaTime;
     using QuickFix.Fields;
     using QuickFix.FIX44;
@@ -45,9 +44,9 @@ namespace Nautilus.Brokerage.Fxcm.MessageFactories
             message.SetField(new ClOrdID(order.Id.Value));
             message.SetField(new Symbol(brokerSymbol));
             message.SetField(new Quantity(order.Quantity.Value));
-            message.SetField(FixMessageHelper.GetFixOrderSide(order.OrderSide));
+            message.SetField(FxcmMessageHelper.GetFixOrderSide(order.OrderSide));
             message.SetField(new TransactTime(transactionTime.ToDateTimeUtc()));
-            message.SetField(FixMessageHelper.GetFixOrderType(order.OrderType));
+            message.SetField(FxcmMessageHelper.GetFixOrderType(order.OrderType));
 
             // Set the order price depending on order type.
             switch (order.OrderType)

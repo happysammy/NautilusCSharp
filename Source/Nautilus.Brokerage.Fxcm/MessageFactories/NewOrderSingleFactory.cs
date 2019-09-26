@@ -12,7 +12,6 @@ namespace Nautilus.Brokerage.Fxcm.MessageFactories
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
-    using Nautilus.Fix;
     using NodaTime;
     using QuickFix.Fields;
     using QuickFix.FIX44;
@@ -49,10 +48,10 @@ namespace Nautilus.Brokerage.Fxcm.MessageFactories
             message.SetField(new SecondaryClOrdID(order.Label.Value));
             message.SetField(new Account(accountNumber.Value));
             message.SetField(new Symbol(brokerSymbol));
-            message.SetField(FixMessageHelper.GetFixOrderSide(order.OrderSide));
+            message.SetField(FxcmMessageHelper.GetFixOrderSide(order.OrderSide));
             message.SetField(new TransactTime(timeNow.ToDateTimeUtc()));
-            message.SetField(FixMessageHelper.GetFixOrderType(order.OrderType));
-            message.SetField(FixMessageHelper.GetFixTimeInForce(order.TimeInForce));
+            message.SetField(FxcmMessageHelper.GetFixOrderType(order.OrderType));
+            message.SetField(FxcmMessageHelper.GetFixTimeInForce(order.TimeInForce));
 
             if (!(positionIdBroker is null))
             {
@@ -61,8 +60,8 @@ namespace Nautilus.Brokerage.Fxcm.MessageFactories
 
             if (order.ExpireTime.HasValue)
             {
-                var expireTime = order.ExpireTime.Value.ToDateTimeUtc();
-                message.SetField(new ExpireTime(expireTime));
+                var expireTime = FxcmMessageHelper.ToExpireTimeFormat(order.ExpireTime.Value);
+                message.SetField(new StringField(126, expireTime));
             }
 
             message.SetField(new OrderQty(order.Quantity.Value));

@@ -191,7 +191,7 @@ namespace Nautilus.Brokerage.Fxcm
                 Debug.NotNull(this.dataGateway, nameof(this.dataGateway));
 
                 var responseId = message.GetField(Tags.SecurityResponseID);
-                var result = FixMessageHelper.GetSecurityRequestResult(message.SecurityRequestResult);
+                var result = FxcmMessageHelper.GetSecurityRequestResult(message.SecurityRequestResult);
                 this.Log.Debug($"{RECV}{FIX} {nameof(SecurityList)}(ResponseId={responseId}, Result={result}).");
 
                 var instruments = new List<Instrument>();
@@ -206,7 +206,7 @@ namespace Nautilus.Brokerage.Fxcm
                     var symbol = this.GetSymbol(brokerSymbolCode);
                     var brokerSymbol = new BrokerSymbol(brokerSymbolCode);
                     var quoteCurrency = group.GetField(15).ToEnum<Nautilus.DomainModel.Enums.Currency>();
-                    var securityType = FixMessageHelper.GetSecurityType(group.GetField(9080));
+                    var securityType = FxcmMessageHelper.GetSecurityType(group.GetField(9080));
                     var tickPrecision = Convert.ToInt32(group.GetField(9001));
                     var tickSize = Convert.ToDecimal(group.GetField(9002)) * 0.1m;  // Field 9002 gives 'point' size (* 0.1m to get tick size)
                     var roundLot = Convert.ToInt32(group.GetField(561));
@@ -362,10 +362,10 @@ namespace Nautilus.Brokerage.Fxcm
                 var orderId = this.GetOrderId(message);
                 var rejectReasonCode = message.GetField(9025);
                 var fxcmRejectCode = message.GetField(9029);
-                var rejectResponseTo = FixMessageHelper.GetCxlRejResponseTo(message.CxlRejResponseTo);
+                var rejectResponseTo = FxcmMessageHelper.GetCxlRejResponseTo(message.CxlRejResponseTo);
                 var rejectReasonText = message.GetField(Tags.CxlRejReason);
-                var rejectReason = $"FXCM({fxcmRejectCode}) {FixMessageHelper.GetCancelRejectReasonString(rejectReasonCode)} ({rejectReasonText})";
-                var rejectedTime = FixMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
+                var rejectReason = $"FXCM({fxcmRejectCode}) {FxcmMessageHelper.GetCancelRejectReasonString(rejectReasonCode)} ({rejectReasonText})";
+                var rejectedTime = FxcmMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
 
                 var orderCancelReject = new OrderCancelReject(
                     this.accountId,
@@ -541,13 +541,13 @@ namespace Nautilus.Brokerage.Fxcm
         private ZonedDateTime GetMarketDataTimestamp()
         {
             var dateTimeString = this.mdBidGroup.GetField(Tags.MDEntryDate) + this.mdBidGroup.GetField(Tags.MDEntryTime);
-            return FixMessageHelper.ParseMarketDataTimestamp(dateTimeString);
+            return FxcmMessageHelper.ParseMarketDataTimestamp(dateTimeString);
         }
 
         private OrderRejected GenerateOrderRejectedEvent(ExecutionReport message)
         {
             var orderId = this.GetOrderId(message);
-            var rejectedTime = FixMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
+            var rejectedTime = FxcmMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
             var rejectReason = message.GetField(9029);
 
             return new OrderRejected(
@@ -564,7 +564,7 @@ namespace Nautilus.Brokerage.Fxcm
             var orderId = this.GetOrderId(message);
             var orderIdBroker = new OrderIdBroker(message.GetField(Tags.OrderID));
             var orderLabel = new Label(message.GetField(Tags.SecondaryClOrdID));
-            var acceptedTime = FixMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
+            var acceptedTime = FxcmMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
 
             return new OrderAccepted(
                 this.accountId,
@@ -579,7 +579,7 @@ namespace Nautilus.Brokerage.Fxcm
         private OrderCancelled GenerateOrderCancelledEvent(ExecutionReport message)
         {
             var orderId = this.GetOrderId(message);
-            var cancelledTime = FixMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
+            var cancelledTime = FxcmMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
 
             return new OrderCancelled(
                 this.accountId,
@@ -593,10 +593,10 @@ namespace Nautilus.Brokerage.Fxcm
         {
             var orderId = this.GetOrderId(message);
             var orderIdBroker = new OrderIdBroker(message.OrderID.ToString());
-            var orderType = FixMessageHelper.GetOrderType(message.GetField(Tags.OrdType));
+            var orderType = FxcmMessageHelper.GetOrderType(message.GetField(Tags.OrdType));
             var quantity = Quantity.Create(Convert.ToInt32(message.GetField(Tags.OrderQty)));
-            var price = FixMessageHelper.GetOrderPrice(orderType, message);
-            var modifiedTime = FixMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
+            var price = FxcmMessageHelper.GetOrderPrice(orderType, message);
+            var modifiedTime = FxcmMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
 
             return new OrderModified(
                 this.accountId,
@@ -615,13 +615,13 @@ namespace Nautilus.Brokerage.Fxcm
             var orderIdBroker = new OrderIdBroker(message.GetField(Tags.OrderID));
             var symbol = this.GetSymbol(message.GetField(Tags.Symbol));
             var orderLabel = new Label(message.GetField(Tags.SecondaryClOrdID));
-            var orderSide = FixMessageHelper.GetOrderSide(message.GetField(Tags.Side));
-            var orderType = FixMessageHelper.GetOrderType(message.GetField(Tags.OrdType));
+            var orderSide = FxcmMessageHelper.GetOrderSide(message.GetField(Tags.Side));
+            var orderType = FxcmMessageHelper.GetOrderType(message.GetField(Tags.OrdType));
             var quantity = Quantity.Create(Convert.ToInt32(message.GetField(Tags.OrderQty)));
-            var price = FixMessageHelper.GetOrderPrice(orderType, message);
-            var timeInForce = FixMessageHelper.GetTimeInForce(message.GetField(Tags.TimeInForce));
-            var expireTime = FixMessageHelper.GetExpireTime(message);
-            var workingTime = FixMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
+            var price = FxcmMessageHelper.GetOrderPrice(orderType, message);
+            var timeInForce = FxcmMessageHelper.GetTimeInForce(message.GetField(Tags.TimeInForce));
+            var expireTime = FxcmMessageHelper.GetExpireTime(message);
+            var workingTime = FxcmMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
 
             return new OrderWorking(
                 this.accountId,
@@ -643,7 +643,7 @@ namespace Nautilus.Brokerage.Fxcm
         private OrderExpired GenerateOrderExpiredEvent(ExecutionReport message)
         {
             var orderId = this.GetOrderId(message);
-            var expiredTime = FixMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
+            var expiredTime = FxcmMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
 
             return new OrderExpired(
                 this.accountId,
@@ -659,10 +659,10 @@ namespace Nautilus.Brokerage.Fxcm
             var executionId = new ExecutionId(message.GetField(Tags.ExecID));
             var executionTicket = new PositionIdBroker(message.GetField(9041));
             var symbol = this.GetSymbol(message.GetField(Tags.Symbol));
-            var orderSide = FixMessageHelper.GetOrderSide(message.GetField(Tags.Side));
+            var orderSide = FxcmMessageHelper.GetOrderSide(message.GetField(Tags.Side));
             var filledQuantity = Quantity.Create(Convert.ToInt32(message.GetField(Tags.CumQty)));
             var averagePrice = Price.Create(Convert.ToDecimal(message.GetField(Tags.AvgPx)));
-            var executionTime = FixMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
+            var executionTime = FxcmMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
 
             return new OrderFilled(
                 this.accountId,
@@ -684,11 +684,11 @@ namespace Nautilus.Brokerage.Fxcm
             var executionId = new ExecutionId(message.GetField(Tags.ExecID));
             var executionTicket = new PositionIdBroker(message.GetField(9041));
             var symbol = this.GetSymbol(message.GetField(Tags.Symbol));
-            var orderSide = FixMessageHelper.GetOrderSide(message.GetField(Tags.Side));
+            var orderSide = FxcmMessageHelper.GetOrderSide(message.GetField(Tags.Side));
             var filledQuantity = Quantity.Create(Convert.ToInt32(message.GetField(Tags.CumQty)));
             var averagePrice = Price.Create(Convert.ToDecimal(message.GetField(Tags.AvgPx)));
             var leavesQuantity = Quantity.Create(Convert.ToInt32(message.GetField(Tags.LeavesQty)));
-            var executionTime = FixMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
+            var executionTime = FxcmMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
 
             return new OrderPartiallyFilled(
                 this.accountId,
