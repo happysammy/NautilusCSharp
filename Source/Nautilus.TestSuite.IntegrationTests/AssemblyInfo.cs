@@ -10,7 +10,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using Xunit;
 
-[assembly: CollectionBehavior(CollectionBehavior.CollectionPerClass, DisableTestParallelization = true)]
+[assembly: CollectionBehavior(CollectionBehavior.CollectionPerAssembly, DisableTestParallelization = true)]
 [assembly: AssemblyTitle("Nautilus.TestSuite.IntegrationTests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]

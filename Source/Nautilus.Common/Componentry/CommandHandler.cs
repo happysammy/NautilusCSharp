@@ -73,6 +73,10 @@ namespace Nautilus.Common.Componentry
             {
                 this.log.Error(ex.Message, ex);
             }
+            catch (NullReferenceException ex)
+            {
+                this.log.Error(ex.Message, ex);
+            }
             catch (ArgumentException ex)
             {
                 this.log.Error(ex.Message, ex);
@@ -105,6 +109,10 @@ namespace Nautilus.Common.Componentry
                 this.log.Error(ex.Message, ex);
             }
             catch (T2 ex)
+            {
+                this.log.Error(ex.Message, ex);
+            }
+            catch (NullReferenceException ex)
             {
                 this.log.Error(ex.Message, ex);
             }
