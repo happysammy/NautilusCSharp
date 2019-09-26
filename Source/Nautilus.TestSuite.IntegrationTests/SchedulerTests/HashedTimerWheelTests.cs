@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.UnitTests.SchedulerTests
+namespace Nautilus.TestSuite.IntegrationTests.SchedulerTests
 {
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;

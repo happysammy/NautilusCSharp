@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.UnitTests.ExecutionTests
+namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 {
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
