@@ -17,8 +17,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     public static class StubTickProvider
     {
         private static readonly IList<Bar> StubBarList = StubBarProvider.BuildList();
-        private static readonly decimal LastAsk = StubBarList[StubBarList.Count - 1].Close + 0.00001m;
-        private static readonly decimal LastBid = StubBarList[StubBarList.Count - 1].Close.Value;
+        private static readonly decimal LastAsk = StubBarList[^1].Close + 0.00001m;
+        private static readonly decimal LastBid = StubBarList[^1].Close.Value;
 
         public static Tick Create(Symbol symbol)
         {
