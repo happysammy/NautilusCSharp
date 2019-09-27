@@ -23,9 +23,9 @@ namespace Nautilus.DomainModel.Aggregates.Internal
             new Dictionary<StateTransition<OrderState>, OrderState>
             {
                 { new StateTransition<OrderState>(OrderState.Initialized, Trigger.Event(typeof(OrderCancelled))), OrderState.Cancelled },
-                { new StateTransition<OrderState>(OrderState.Initialized, Trigger.Event(typeof(OrderSubmitted))), OrderState.Submitted },
                 { new StateTransition<OrderState>(OrderState.Initialized, Trigger.Event(typeof(OrderInvalid))), OrderState.Invalid },
                 { new StateTransition<OrderState>(OrderState.Initialized, Trigger.Event(typeof(OrderDenied))), OrderState.Denied },
+                { new StateTransition<OrderState>(OrderState.Initialized, Trigger.Event(typeof(OrderSubmitted))), OrderState.Submitted },
                 { new StateTransition<OrderState>(OrderState.Submitted, Trigger.Event(typeof(OrderCancelled))), OrderState.Cancelled },
                 { new StateTransition<OrderState>(OrderState.Submitted, Trigger.Event(typeof(OrderRejected))), OrderState.Rejected },
                 { new StateTransition<OrderState>(OrderState.Submitted, Trigger.Event(typeof(OrderAccepted))), OrderState.Accepted },
