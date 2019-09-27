@@ -47,7 +47,7 @@ namespace Nautilus.DomainModel.Aggregates.Base
         /// <summary>
         /// Gets the last event applied.
         /// </summary>
-        public TEvt LastEvent => this.events[this.events.Count - 1];
+        public TEvt LastEvent => this.events[^1];
 
         /// <summary>
         /// Gets the last updated time.

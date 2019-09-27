@@ -359,8 +359,8 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             Assert.Equal(1000, server.ReceivedMessages.Count);
             Assert.Equal(1000, server.ReceivedCount);
             Assert.Equal(1000, server.SentCount);
-            Assert.Equal("TEST-999", server.ReceivedMessages[server.ReceivedMessages.Count - 1].Payload);
-            Assert.Equal("TEST-998", server.ReceivedMessages[server.ReceivedMessages.Count - 2].Payload);
+            Assert.Equal("TEST-999", server.ReceivedMessages[^1].Payload);
+            Assert.Equal("TEST-998", server.ReceivedMessages[^2].Payload);
 
             // Tear Down
             requester.Disconnect(testAddress);
@@ -413,10 +413,10 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             Assert.Equal(2000, server.ReceivedMessages.Count);
             Assert.Equal(2000, server.ReceivedCount);
             Assert.Equal(2000, server.SentCount);
-            Assert.Equal("TEST-999 from 2", server.ReceivedMessages[server.ReceivedMessages.Count - 1].Payload);
-            Assert.Equal("TEST-999 from 1", server.ReceivedMessages[server.ReceivedMessages.Count - 2].Payload);
-            Assert.Equal("TEST-998 from 2", server.ReceivedMessages[server.ReceivedMessages.Count - 3].Payload);
-            Assert.Equal("TEST-998 from 1", server.ReceivedMessages[server.ReceivedMessages.Count - 4].Payload);
+            Assert.Equal("TEST-999 from 2", server.ReceivedMessages[^1].Payload);
+            Assert.Equal("TEST-999 from 1", server.ReceivedMessages[^2].Payload);
+            Assert.Equal("TEST-998 from 2", server.ReceivedMessages[^3].Payload);
+            Assert.Equal("TEST-998 from 1", server.ReceivedMessages[^4].Payload);
 
             // Tear Down
             requester1.Disconnect(testAddress);

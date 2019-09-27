@@ -147,7 +147,7 @@ namespace Nautilus.Core.Collections
         /// <exception cref="ArgumentOutOfRangeException">If the list is empty.</exception>
         public T Last()
         {
-            return base[this.Count - 1];
+            return base[^1];
         }
 
         /// <summary>
@@ -158,7 +158,7 @@ namespace Nautilus.Core.Collections
         {
             return this.Count == 0
                 ? null
-                : base[this.Count - 1];
+                : base[^1];
         }
 
         /// <summary>
