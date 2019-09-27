@@ -159,6 +159,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 Quantity.Create(filledQuantity),
                 Quantity.Create(leavesQuantity),
                 averagePrice,
+                Currency.USD,
                 StubZonedDateTime.UnixEpoch() + Period.FromMinutes(1).ToDuration(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -180,6 +181,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 order.OrderSide,
                 order.Quantity,
                 averagePrice,
+                Currency.USD,
                 StubZonedDateTime.UnixEpoch() + Period.FromMinutes(1).ToDuration(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());

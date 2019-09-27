@@ -661,6 +661,7 @@ namespace Nautilus.Fxcm
             var orderSide = FxcmMessageHelper.GetOrderSide(message.GetField(Tags.Side));
             var filledQuantity = Quantity.Create(Convert.ToInt32(message.GetField(Tags.CumQty)));
             var averagePrice = Price.Create(Convert.ToDecimal(message.GetField(Tags.AvgPx)));
+            var quoteCurrency = message.GetField(Tags.Currency).ToEnum<Currency>();
             var executionTime = FxcmMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
 
             return new OrderFilled(
@@ -672,6 +673,7 @@ namespace Nautilus.Fxcm
                 orderSide,
                 filledQuantity,
                 averagePrice,
+                quoteCurrency,
                 executionTime,
                 this.NewGuid(),
                 this.TimeNow());
@@ -686,6 +688,7 @@ namespace Nautilus.Fxcm
             var orderSide = FxcmMessageHelper.GetOrderSide(message.GetField(Tags.Side));
             var filledQuantity = Quantity.Create(Convert.ToInt32(message.GetField(Tags.CumQty)));
             var averagePrice = Price.Create(Convert.ToDecimal(message.GetField(Tags.AvgPx)));
+            var quoteCurrency = message.GetField(Tags.Currency).ToEnum<Currency>();
             var leavesQuantity = Quantity.Create(Convert.ToInt32(message.GetField(Tags.LeavesQty)));
             var executionTime = FxcmMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
 
@@ -699,6 +702,7 @@ namespace Nautilus.Fxcm
                 filledQuantity,
                 leavesQuantity,
                 averagePrice,
+                quoteCurrency,
                 executionTime,
                 this.NewGuid(),
                 this.TimeNow());

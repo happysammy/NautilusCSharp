@@ -28,7 +28,6 @@ namespace Nautilus.DomainModel.ValueObjects
         private Money(decimal amount, Currency currency)
             : base(amount)
         {
-            Debug.NotNegativeDecimal(amount, nameof(amount));
             Debug.True(amount % 0.01m == 0, nameof(amount));
             Debug.NotDefault(currency, nameof(currency));
 
@@ -153,7 +152,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A <see cref="string"/>.</returns>
         public override string ToString()
         {
-            return $"{this.Value:N2}{this.Currency}";
+            return $"{this.Value:N2} {this.Currency}";
         }
     }
 }

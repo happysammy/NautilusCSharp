@@ -33,6 +33,7 @@ namespace Nautilus.DomainModel.Events
         /// <param name="orderSide">The event order side.</param>
         /// <param name="filledQuantity">The event order filled quantity.</param>
         /// <param name="averagePrice">The event order average price.</param>
+        /// <param name="quoteCurrency">The event order quote currency.</param>
         /// <param name="executionTime">The event order execution time.</param>
         /// <param name="eventId">The event identifier.</param>
         /// <param name="eventTimestamp">The event timestamp.</param>
@@ -45,6 +46,7 @@ namespace Nautilus.DomainModel.Events
             OrderSide orderSide,
             Quantity filledQuantity,
             Price averagePrice,
+            Currency quoteCurrency,
             ZonedDateTime executionTime,
             Guid eventId,
             ZonedDateTime eventTimestamp)
@@ -57,6 +59,7 @@ namespace Nautilus.DomainModel.Events
                 orderSide,
                 filledQuantity,
                 averagePrice,
+                quoteCurrency,
                 executionTime,
                 typeof(OrderFilled),
                 eventId,
@@ -76,6 +79,6 @@ namespace Nautilus.DomainModel.Events
                                              $"{this.OrderSide} " +
                                              $"{this.FilledQuantity.ToStringFormatted()} " +
                                              $"{this.Symbol.Value} @ " +
-                                             $"{this.AveragePrice})";
+                                             $"{this.AveragePrice} {this.QuoteCurrency})";
     }
 }

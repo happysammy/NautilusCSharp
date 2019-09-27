@@ -374,6 +374,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
                 Quantity.Create(order.Quantity / 2),
                 Quantity.Create(order.Quantity / 2),
                 Price.Create(2, 1),
+                Currency.USD,
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -404,6 +405,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
                 order.OrderSide,
                 order.Quantity,
                 Price.Create(2, 1),
+                Currency.USD,
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
