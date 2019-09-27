@@ -25,30 +25,30 @@ namespace Nautilus.DomainModel.Events
         /// Initializes a new instance of the <see cref="OrderDenied"/> class.
         /// </summary>
         /// <param name="orderId">The event order identifier.</param>
-        /// <param name="message">The event message.</param>
+        /// <param name="deniedReason">The event denied reason.</param>
         /// <param name="eventId">The event identifier.</param>
         /// <param name="eventTimestamp">The event timestamp.</param>
         public OrderDenied(
             OrderId orderId,
-            string message,
+            string deniedReason,
             Guid eventId,
             ZonedDateTime eventTimestamp)
             : base(
                 orderId,
-                typeof(OrderAccepted),
+                typeof(OrderDenied),
                 eventId,
                 eventTimestamp)
         {
             Debug.NotDefault(eventId, nameof(eventId));
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
 
-            this.Message = message;
+            this.DeniedReason = deniedReason;
         }
 
         /// <summary>
         /// Gets the events message.
         /// </summary>
-        public string Message { get; }
+        public string DeniedReason { get; }
 
         /// <summary>
         /// Returns a string representation of this object.
@@ -56,6 +56,6 @@ namespace Nautilus.DomainModel.Events
         /// <returns>A <see cref="string"/>.</returns>
         public override string ToString() => $"{this.Type.Name}(" +
                                              $"OrderId={this.OrderId.Value}, " +
-                                             $"Message={this.Message})";
+                                             $"DeniedReason={this.DeniedReason})";
     }
 }

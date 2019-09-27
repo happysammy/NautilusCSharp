@@ -68,6 +68,14 @@ namespace Nautilus.Serialization
                     package.Add(nameof(evt.TimeInForce), evt.TimeInForce.ToString());
                     package.Add(nameof(evt.ExpireTime), ObjectPacker.Pack(evt.ExpireTime));
                     break;
+                case OrderInvalid evt:
+                    package.Add(nameof(evt.OrderId), evt.OrderId.Value);
+                    package.Add(nameof(evt.InvalidReason), evt.InvalidReason);
+                    break;
+                case OrderDenied evt:
+                    package.Add(nameof(evt.OrderId), evt.OrderId.Value);
+                    package.Add(nameof(evt.DeniedReason), evt.DeniedReason);
+                    break;
                 case OrderSubmitted evt:
                     package.Add(nameof(evt.AccountId), evt.AccountId.Value);
                     package.Add(nameof(evt.OrderId), evt.OrderId.Value);
@@ -192,6 +200,18 @@ namespace Nautilus.Serialization
                         ObjectExtractor.NullablePrice(unpacked[nameof(OrderInitialized.Price)]),
                         ObjectExtractor.Enum<TimeInForce>(unpacked[nameof(OrderInitialized.TimeInForce)]),
                         ObjectExtractor.NullableZonedDateTime(unpacked[nameof(OrderInitialized.ExpireTime)]),
+                        id,
+                        timestamp);
+                case nameof(OrderInvalid):
+                    return new OrderInvalid(
+                        ObjectExtractor.OrderId(unpacked),
+                        unpacked[nameof(OrderInvalid.InvalidReason)].AsString(),
+                        id,
+                        timestamp);
+                case nameof(OrderDenied):
+                    return new OrderDenied(
+                        ObjectExtractor.OrderId(unpacked),
+                        unpacked[nameof(OrderDenied.DeniedReason)].AsString(),
                         id,
                         timestamp);
                 case nameof(OrderSubmitted):

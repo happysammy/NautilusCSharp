@@ -90,6 +90,46 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         }
 
         [Fact]
+        internal void CanSerializeAndDeserialize_OrderInvalidEvents()
+        {
+            // Arrange
+            var order = new StubOrderBuilder().BuildMarketOrder();
+            var invalid = new OrderInvalid(
+                order.Id,
+                "OrderId already exists.",
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            // Act
+            var packed = this.serializer.Serialize(invalid);
+            var unpacked = (OrderInvalid)this.serializer.Deserialize(packed);
+
+            // Assert
+            Assert.Equal(invalid, unpacked);
+            this.output.WriteLine(Convert.ToBase64String(packed));
+        }
+
+        [Fact]
+        internal void CanSerializeAndDeserialize_OrderDeniedEvents()
+        {
+            // Arrange
+            var order = new StubOrderBuilder().BuildMarketOrder();
+            var denied = new OrderDenied(
+                order.Id,
+                "Exceeds risk for FX.",
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            // Act
+            var packed = this.serializer.Serialize(denied);
+            var unpacked = (OrderDenied)this.serializer.Deserialize(packed);
+
+            // Assert
+            Assert.Equal(denied, unpacked);
+            this.output.WriteLine(Convert.ToBase64String(packed));
+        }
+
+        [Fact]
         internal void CanSerializeAndDeserialize_OrderSubmittedEvents()
         {
             // Arrange

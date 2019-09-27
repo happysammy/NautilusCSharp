@@ -289,8 +289,6 @@ namespace Nautilus.DomainModel.Aggregates
 
                     this.relativeQuantity -= @event.FilledQuantity.Value;
                     break;
-                default:
-                    throw new DesignTimeException($"Cannot process event as order side is {@event.OrderSide}.");
             }
 
             this.Quantity = Quantity.Create(Math.Abs(this.relativeQuantity));
