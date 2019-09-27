@@ -173,8 +173,6 @@ namespace Nautilus.Serialization.Internal
                         ObjectExtractor.NullableZonedDateTime(unpacked[nameof(Order.ExpireTime)]),
                         timestamp,
                         initialId);
-                case OrderType.UNKNOWN:
-                    goto default;
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(type, nameof(type));
             }

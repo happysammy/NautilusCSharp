@@ -9,7 +9,6 @@
 namespace Nautilus.DomainModel.Aggregates
 {
     using System;
-    using System.Security.Permissions;
     using Nautilus.Core.Collections;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Exceptions;
@@ -224,8 +223,6 @@ namespace Nautilus.DomainModel.Aggregates
                     return openedPrice - closedPrice;
                 case MarketPosition.Flat:
                     return decimal.Zero;
-                case MarketPosition.Unknown:
-                    goto default;
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(this.MarketPosition, nameof(this.MarketPosition));
             }
@@ -241,8 +238,6 @@ namespace Nautilus.DomainModel.Aggregates
                     return ((double)openedPrice - (double)closedPrice) / (double)openedPrice;
                 case MarketPosition.Flat:
                     return 0;
-                case MarketPosition.Unknown:
-                    goto default;
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(this.MarketPosition, nameof(this.MarketPosition));
             }
@@ -294,8 +289,6 @@ namespace Nautilus.DomainModel.Aggregates
 
                     this.relativeQuantity -= @event.FilledQuantity.Value;
                     break;
-                case OrderSide.UNKNOWN:
-                    goto default;
                 default:
                     throw new DesignTimeException($"Cannot process event as order side is {@event.OrderSide}.");
             }

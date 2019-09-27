@@ -8,19 +8,11 @@
 
 namespace Nautilus.DomainModel.Enums
 {
-    using Nautilus.Core.Annotations;
-
     /// <summary>
     /// Represents an ISO 4217 currency code.
     /// </summary>
     public enum Currency
     {
-        /// <summary>
-        /// Unknown currency code (invalid value).
-        /// </summary>
-        [InvalidValue]
-        Unknown = 0,
-
         /// <summary>
         /// Australian dollar.
         /// </summary>

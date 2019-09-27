@@ -163,17 +163,9 @@ namespace Nautilus.Fxcm
         /// <returns>The <see cref="OrderSide"/>.</returns>
         public static OrderSide GetOrderSide(string side)
         {
-            if (side == Side.BUY.ToString())
-            {
-                return OrderSide.BUY;
-            }
-
-            if (side == Side.SELL.ToString())
-            {
-                return OrderSide.SELL;
-            }
-
-            return OrderSide.UNKNOWN;
+            return side == Side.BUY.ToString()
+                ? OrderSide.BUY
+                : OrderSide.SELL;
         }
 
         /// <summary>

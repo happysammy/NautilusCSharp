@@ -8,32 +8,24 @@
 
 namespace Nautilus.DomainModel.Enums
 {
-    using Nautilus.Core.Annotations;
-
     /// <summary>
     /// Represents the type of account.
     /// </summary>
     public enum AccountType
     {
         /// <summary>
-        /// The account type is undefined (invalid value).
-        /// </summary>
-        [InvalidValue]
-        UNKNOWN = 0,
-
-        /// <summary>
         /// The simulated account type.
         /// </summary>
-        SIMULATED = 1,
+        SIMULATED = 0,
 
         /// <summary>
         /// The demo account type.
         /// </summary>
-        DEMO = 2,
+        DEMO = 1,
 
         /// <summary>
         /// The real account type.
         /// </summary>
-        REAL = 3,
+        REAL = 2,
     }
 }

@@ -8,33 +8,25 @@
 
 namespace Nautilus.DomainModel.Enums
 {
-    using Nautilus.Core.Annotations;
-
     /// <summary>
     /// Represents the state of an order at the brokerage.
     /// </summary>
     public enum OrderState
     {
         /// <summary>
-        /// The order state is unknown (invalid value).
-        /// </summary>
-        [InvalidValue]
-        Unknown = 0,
-
-        /// <summary>
         /// The initialized order state.
         /// </summary>
         Initialized = 1,
 
         /// <summary>
-        /// The denied order state.
-        /// </summary>
-        Denied = 2,
-
-        /// <summary>
         /// The invalid order state.
         /// </summary>
-        Invalid = 3,
+        Invalid = 2,
+
+        /// <summary>
+        /// The denied order state.
+        /// </summary>
+        Denied = 3,
 
         /// <summary>
         /// The submitted order state.

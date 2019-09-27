@@ -22,13 +22,14 @@ namespace Nautilus.DomainModel.Aggregates.Internal
         private static readonly ImmutableDictionary<StateTransition<OrderState>, OrderState> StateTransitionTable =
             new Dictionary<StateTransition<OrderState>, OrderState>
             {
-                { new StateTransition<OrderState>(OrderState.Initialized, Trigger.Event(typeof(OrderSubmitted))), OrderState.Submitted },
                 { new StateTransition<OrderState>(OrderState.Initialized, Trigger.Event(typeof(OrderCancelled))), OrderState.Cancelled },
-                { new StateTransition<OrderState>(OrderState.Initialized, Trigger.Event(typeof(OrderWorking))), OrderState.Working },
+                { new StateTransition<OrderState>(OrderState.Initialized, Trigger.Event(typeof(OrderSubmitted))), OrderState.Submitted },
+                { new StateTransition<OrderState>(OrderState.Initialized, Trigger.Event(typeof(OrderInvalid))), OrderState.Invalid },
+                { new StateTransition<OrderState>(OrderState.Initialized, Trigger.Event(typeof(OrderDenied))), OrderState.Denied },
+                { new StateTransition<OrderState>(OrderState.Submitted, Trigger.Event(typeof(OrderCancelled))), OrderState.Cancelled },
                 { new StateTransition<OrderState>(OrderState.Submitted, Trigger.Event(typeof(OrderRejected))), OrderState.Rejected },
                 { new StateTransition<OrderState>(OrderState.Submitted, Trigger.Event(typeof(OrderAccepted))), OrderState.Accepted },
                 { new StateTransition<OrderState>(OrderState.Submitted, Trigger.Event(typeof(OrderWorking))), OrderState.Working },
-                { new StateTransition<OrderState>(OrderState.Submitted, Trigger.Event(typeof(OrderCancelled))), OrderState.Cancelled },
                 { new StateTransition<OrderState>(OrderState.Accepted, Trigger.Event(typeof(OrderCancelled))), OrderState.Cancelled },
                 { new StateTransition<OrderState>(OrderState.Accepted, Trigger.Event(typeof(OrderWorking))), OrderState.Working },
                 { new StateTransition<OrderState>(OrderState.Accepted, Trigger.Event(typeof(OrderPartiallyFilled))), OrderState.PartiallyFilled },

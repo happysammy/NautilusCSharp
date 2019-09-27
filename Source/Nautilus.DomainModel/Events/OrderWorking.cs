@@ -63,8 +63,6 @@ namespace Nautilus.DomainModel.Events
                 eventId,
                 eventTimestamp)
         {
-            Debug.NotEqualTo(orderSide, OrderSide.UNKNOWN, nameof(orderSide));
-            Debug.NotEqualTo(orderType, OrderType.UNKNOWN, nameof(orderType));
             Debug.NotDefault(timeInForce, nameof(timeInForce));
             Debug.NotDefault(workingTime, nameof(workingTime));
             Debug.NotDefault(eventId, nameof(eventId));
