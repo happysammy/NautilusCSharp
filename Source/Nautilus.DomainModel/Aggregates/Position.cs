@@ -9,8 +9,10 @@
 namespace Nautilus.DomainModel.Aggregates
 {
     using System;
+    using System.Security.Permissions;
     using Nautilus.Core.Collections;
     using Nautilus.Core.Correctness;
+    using Nautilus.Core.Exceptions;
     using Nautilus.DomainModel.Aggregates.Base;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events.Base;
@@ -26,6 +28,8 @@ namespace Nautilus.DomainModel.Aggregates
         private readonly UniqueList<OrderId> orderIds;
         private readonly UniqueList<ExecutionId> executionIds;
 
+        private int filledQuantityBuys;
+        private int filledQuantitySells;
         private int relativeQuantity;
 
         /// <summary>
@@ -44,9 +48,14 @@ namespace Nautilus.DomainModel.Aggregates
             this.FromOrderId = initial.OrderId;
             this.Symbol = initial.Symbol;
             this.EntryDirection = initial.OrderSide;
-            this.EntryTime = initial.ExecutionTime;
-            this.AverageEntryPrice = initial.AveragePrice;
+            this.OpenedTime = initial.ExecutionTime;
+            this.AverageOpenPrice = decimal.Zero;       // Initialized in SetState
+            this.AverageClosePrice = decimal.Zero;
+            this.RealizedPoints = decimal.Zero;
+            this.RealizedReturn = 0;
 
+            this.filledQuantityBuys = 0;                // Initialized in SetState
+            this.filledQuantitySells = 0;               // Initialized in SetState
             this.relativeQuantity = 0;                  // Initialized in SetState
             this.Quantity = Quantity.Zero();            // Initialized in SetState
             this.PeakQuantity = Quantity.Zero();        // Initialized in SetState
@@ -87,29 +96,19 @@ namespace Nautilus.DomainModel.Aggregates
         public Symbol Symbol { get; }
 
         /// <summary>
-        /// Gets the positions entry direction.
+        /// Gets the positions initial entry direction.
         /// </summary>
         public OrderSide EntryDirection { get; }
 
         /// <summary>
-        /// Gets the positions entry time.
+        /// Gets the positions opened time.
         /// </summary>
-        public ZonedDateTime EntryTime { get; }
+        public ZonedDateTime OpenedTime { get; }
 
         /// <summary>
-        /// Gets the positions exit time.
+        /// Gets the positions closed time.
         /// </summary>
-        public ZonedDateTime? ExitTime { get; private set; }
-
-        /// <summary>
-        /// Gets the positions average entry price.
-        /// </summary>
-        public Price AverageEntryPrice { get; }
-
-        /// <summary>
-        /// Gets the positions average exit price.
-        /// </summary>
-        public Price? AverageExitPrice { get; private set; }
+        public ZonedDateTime? ClosedTime { get; private set; }
 
         /// <summary>
         /// Gets the positions current quantity.
@@ -127,6 +126,26 @@ namespace Nautilus.DomainModel.Aggregates
         public MarketPosition MarketPosition { get; private set; }
 
         /// <summary>
+        /// Gets the positions average open price.
+        /// </summary>
+        public decimal AverageOpenPrice { get; private set; }
+
+        /// <summary>
+        /// Gets the positions average close price.
+        /// </summary>
+        public decimal AverageClosePrice { get; private set; }
+
+        /// <summary>
+        /// Gets the positions points realized.
+        /// </summary>
+        public decimal RealizedPoints { get; private set; }
+
+        /// <summary>
+        /// Gets the positions return realized.
+        /// </summary>
+        public double RealizedReturn { get; private set; }
+
+        /// <summary>
         /// Gets a value indicating whether the position is open.
         /// </summary>
         public bool IsOpen => this.MarketPosition != MarketPosition.Flat;
@@ -135,11 +154,6 @@ namespace Nautilus.DomainModel.Aggregates
         /// Gets a value indicating whether the position is closed.
         /// </summary>
         public bool IsClosed => this.MarketPosition == MarketPosition.Flat;
-
-        /// <summary>
-        /// Gets a value indicating whether the market position is flat.
-        /// </summary>
-        public bool IsFlat => this.MarketPosition == MarketPosition.Flat;
 
         /// <summary>
         /// Gets a value indicating whether the market position is long.
@@ -163,6 +177,26 @@ namespace Nautilus.DomainModel.Aggregates
         /// <returns>The events collection.</returns>
         public UniqueList<ExecutionId> GetExecutionIds() => this.executionIds.Copy();
 
+        /// <summary>
+        /// Return the positions unrealized points.
+        /// </summary>
+        /// <param name="currentPrice">The position instruments current market price.</param>
+        /// <returns>The points as a decimal.</returns>
+        public decimal UnrealizedPoints(Price currentPrice)
+        {
+            return this.CalculatePoints(this.AverageOpenPrice, currentPrice.Value);
+        }
+
+        /// <summary>
+        /// Return the positions unrealized return.
+        /// </summary>
+        /// <param name="currentPrice">The position instruments current market price.</param>
+        /// <returns>The return as a double.</returns>
+        public double UnrealizedReturn(Price currentPrice)
+        {
+            return this.CalculateReturn(this.AverageOpenPrice, currentPrice.Value);
+        }
+
         /// <inheritdoc />
         protected override void OnEvent(OrderFillEvent @event)
         {
@@ -174,32 +208,104 @@ namespace Nautilus.DomainModel.Aggregates
             this.SetState(@event);
         }
 
-        private static int CalculateFilledRelativeQuantity(OrderFillEvent @event)
+        private decimal CalculateAveragePrice(OrderFillEvent @event, decimal currentAveragePrice, int totalFills)
         {
-            switch (@event.OrderSide)
+            return ((this.Quantity.Value * currentAveragePrice) + (@event.FilledQuantity.Value * @event.AveragePrice.Value))
+                   / totalFills;
+        }
+
+        private decimal CalculatePoints(decimal openedPrice, decimal closedPrice)
+        {
+            switch (this.MarketPosition)
             {
-                case OrderSide.BUY:
-                    return @event.FilledQuantity.Value;
-                case OrderSide.SELL:
-                    return -@event.FilledQuantity.Value;
-                case OrderSide.UNKNOWN:
+                case MarketPosition.Long:
+                    return closedPrice - openedPrice;
+                case MarketPosition.Short:
+                    return openedPrice - closedPrice;
+                case MarketPosition.Flat:
+                    return decimal.Zero;
+                case MarketPosition.Unknown:
                     goto default;
                 default:
-                    throw ExceptionFactory.InvalidSwitchArgument(@event.OrderSide, nameof(@event.OrderSide));
+                    throw ExceptionFactory.InvalidSwitchArgument(this.MarketPosition, nameof(this.MarketPosition));
+            }
+        }
+
+        private double CalculateReturn(decimal openedPrice, decimal closedPrice)
+        {
+            switch (this.MarketPosition)
+            {
+                case MarketPosition.Long:
+                    return ((double)closedPrice - (double)openedPrice) / (double)openedPrice;
+                case MarketPosition.Short:
+                    return ((double)openedPrice - (double)closedPrice) / (double)openedPrice;
+                case MarketPosition.Flat:
+                    return 0;
+                case MarketPosition.Unknown:
+                    goto default;
+                default:
+                    throw ExceptionFactory.InvalidSwitchArgument(this.MarketPosition, nameof(this.MarketPosition));
             }
         }
 
         private void SetState(OrderFillEvent @event)
         {
-            // Set quantities
-            this.relativeQuantity += CalculateFilledRelativeQuantity(@event);
+            switch (@event.OrderSide)
+            {
+                case OrderSide.BUY:
+                    this.filledQuantityBuys += @event.FilledQuantity.Value;
+                    if (this.relativeQuantity > 0)
+                    {
+                        // LONG POSITION
+                        this.AverageOpenPrice = this.CalculateAveragePrice(@event, this.AverageOpenPrice, this.filledQuantityBuys);
+                    }
+                    else if (this.relativeQuantity < 0)
+                    {
+                        // SHORT POSITION
+                        this.AverageClosePrice = this.CalculateAveragePrice(@event, this.AverageClosePrice, this.filledQuantityBuys);
+                        this.RealizedPoints = this.CalculatePoints(this.AverageOpenPrice, @event.AveragePrice.Value);
+                        this.RealizedReturn = this.CalculateReturn(this.AverageOpenPrice, @event.AveragePrice.Value);
+                    }
+                    else
+                    {
+                        this.AverageOpenPrice = @event.AveragePrice.Value;
+                    }
+
+                    this.relativeQuantity += @event.FilledQuantity.Value;
+                    break;
+                case OrderSide.SELL:
+                    this.filledQuantitySells += @event.FilledQuantity.Value;
+                    if (this.relativeQuantity < 0)
+                    {
+                        // SHORT POSITION
+                        this.AverageOpenPrice = this.CalculateAveragePrice(@event, this.AverageOpenPrice, this.filledQuantitySells);
+                    }
+                    else if (this.relativeQuantity > 0)
+                    {
+                        // LONG POSITION
+                        this.AverageClosePrice = this.CalculateAveragePrice(@event, this.AverageClosePrice, this.filledQuantitySells);
+                        this.RealizedPoints = this.CalculatePoints(this.AverageOpenPrice, @event.AveragePrice.Value);
+                        this.RealizedReturn = this.CalculateReturn(this.AverageOpenPrice, @event.AveragePrice.Value);
+                    }
+                    else
+                    {
+                        this.AverageOpenPrice = @event.AveragePrice.Value;
+                    }
+
+                    this.relativeQuantity -= @event.FilledQuantity.Value;
+                    break;
+                case OrderSide.UNKNOWN:
+                    goto default;
+                default:
+                    throw new DesignTimeException($"Cannot process event as order side is {@event.OrderSide}.");
+            }
+
             this.Quantity = Quantity.Create(Math.Abs(this.relativeQuantity));
             if (this.Quantity > this.PeakQuantity)
             {
                 this.PeakQuantity = this.Quantity;
             }
 
-            // Set market position
             if (this.relativeQuantity > 0)
             {
                 this.MarketPosition = MarketPosition.Long;
@@ -211,8 +317,7 @@ namespace Nautilus.DomainModel.Aggregates
             else
             {
                 this.MarketPosition = MarketPosition.Flat;
-                this.ExitTime = @event.ExecutionTime;
-                this.AverageExitPrice = @event.AveragePrice;
+                this.ClosedTime = @event.ExecutionTime;
             }
         }
 

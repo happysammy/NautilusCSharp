@@ -48,9 +48,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.Equal(Quantity.Create(1000), position.Quantity);
             Assert.Equal(Quantity.Create(1000), position.PeakQuantity);
             Assert.Equal(MarketPosition.Long, position.MarketPosition);
-            Assert.Equal(StubZonedDateTime.UnixEpoch(), position.EntryTime);
+            Assert.Equal(StubZonedDateTime.UnixEpoch(), position.OpenedTime);
             Assert.Equal(1, position.EventCount);
-            Assert.Equal(Price.Create(2000, 2), position.AverageEntryPrice);
+            Assert.Equal(2000, position.AverageOpenPrice);
             Assert.Equal(new ExecutionId("E-123456"), position.LastExecutionId);
             Assert.Equal(new PositionIdBroker("ET-123456"), position.IdBroker);
             Assert.Equal(OrderSide.BUY, position.EntryDirection);
@@ -59,7 +59,6 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.True(position.IsLong);
             Assert.False(position.IsClosed);
             Assert.False(position.IsShort);
-            Assert.False(position.IsFlat);
         }
 
         [Fact]
@@ -119,7 +118,6 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.True(position.IsShort);
             Assert.False(position.IsClosed);
             Assert.False(position.IsLong);
-            Assert.False(position.IsFlat);
         }
 
         [Fact]
@@ -188,14 +186,13 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Assert
             Assert.Equal(MarketPosition.Flat, position.MarketPosition);
             Assert.Equal(Quantity.Zero(), position.Quantity);
-            Assert.Equal(StubZonedDateTime.UnixEpoch(), position.ExitTime);
-            Assert.Equal(Price.Create(1.00000m, 5), position.AverageExitPrice);
+            Assert.Equal(StubZonedDateTime.UnixEpoch(), position.ClosedTime);
+            Assert.Equal(1.6666666666666666666666666667m, position.AverageClosePrice);
             Assert.Equal(orderFill4, position.LastEvent);
             Assert.False(position.IsShort);
             Assert.False(position.IsOpen);
             Assert.True(position.IsClosed);
             Assert.False(position.IsLong);
-            Assert.True(position.IsFlat);
         }
 
         [Fact]
