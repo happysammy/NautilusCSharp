@@ -7,5 +7,5 @@ To cleanup after migrating to a new .NET SDK version - run the bellow commands w
 
 WARNING: Run these commands from the /Nautilus/Source directory otherwise it will destory the OS.
 
-	find -type d -name bin -exec rm -rf {} \;
-	find -type d -name obj -exec rm -rf {} \;
+	sudo find -type d -name bin -exec rm -rf {} \;
+	sudo find -type d -name obj -exec rm -rf {} \;
