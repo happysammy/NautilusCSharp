@@ -68,6 +68,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.True(position.IsLong);
             Assert.False(position.IsClosed);
             Assert.False(position.IsShort);
+            Assert.Equal(StubZonedDateTime.UnixEpoch(), position.LastUpdated);
+            Assert.Equal(orderFill, position.LastEvent);
+            Assert.Equal(orderFill, position.InitialEvent);
         }
 
         [Fact]
@@ -117,6 +120,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.True(position.IsShort);
             Assert.False(position.IsClosed);
             Assert.False(position.IsLong);
+            Assert.Equal(StubZonedDateTime.UnixEpoch(), position.LastUpdated);
+            Assert.Equal(orderFill, position.LastEvent);
+            Assert.Equal(orderFill, position.InitialEvent);
         }
 
         [Fact]
