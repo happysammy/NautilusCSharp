@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Brokerage.Fxcm
+namespace Nautilus.Fxcm
 {
     using System;
     using System.Collections.Generic;
@@ -27,7 +27,6 @@ namespace Nautilus.Brokerage.Fxcm
     using QuickFix;
     using QuickFix.Fields;
     using QuickFix.FIX44;
-
     using Currency = Nautilus.DomainModel.Enums.Currency;
     using OrderCancelReject = Nautilus.DomainModel.Events.OrderCancelReject;
     using Price = Nautilus.DomainModel.ValueObjects.Price;

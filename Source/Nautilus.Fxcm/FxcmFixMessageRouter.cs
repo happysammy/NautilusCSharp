@@ -6,9 +6,8 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Brokerage.Fxcm
+namespace Nautilus.Fxcm
 {
-    using Nautilus.Brokerage.Fxcm.MessageFactories;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Aggregates;
@@ -17,6 +16,7 @@ namespace Nautilus.Brokerage.Fxcm
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Fix;
     using Nautilus.Fix.Interfaces;
+    using Nautilus.Fxcm.MessageFactories;
     using QuickFix;
 
     /// <summary>

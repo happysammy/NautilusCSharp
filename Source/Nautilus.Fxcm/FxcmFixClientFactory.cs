@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Brokerage.Fxcm
+namespace Nautilus.Fxcm
 {
     using Nautilus.Common.Interfaces;
     using Nautilus.Fix;

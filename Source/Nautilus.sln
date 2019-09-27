@@ -15,9 +15,9 @@ ProjectSection(SolutionItems) = preProject
 	fix_fxcm4_md.cfg = Configuration\fix_fxcm4_md.cfg
 EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Applications", "Applications", "{A4A5BDFD-FAD5-46AA-B36E-33A6675CF888}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Adapters", "Adapters", "{EF67F7D5-84AB-4AEA-A8E4-323B4BC9EBB9}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Brokerages", "Brokerages", "{EF67F7D5-84AB-4AEA-A8E4-323B4BC9EBB9}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Applications", "Applications", "{A4A5BDFD-FAD5-46AA-B36E-33A6675CF888}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Framework", "Framework", "{594EE890-8228-4812-AC7E-9E55610EDF59}"
 EndProject
@@ -63,7 +63,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Execution", "Nauti
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Redis", "Nautilus.Redis\Nautilus.Redis.csproj", "{679E1404-AC41-4842-AA83-0F4091503A79}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Brokerage.Fxcm", "Nautilus.Brokerage.Fxcm\Nautilus.Brokerage.Fxcm.csproj", "{3E299DAE-B6DB-4BF6-ABE0-CCC1F9E33CB2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Fxcm", "Nautilus.Fxcm\Nautilus.Fxcm.csproj", "{3E299DAE-B6DB-4BF6-ABE0-CCC1F9E33CB2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.TestSuite.TestKit", "Nautilus.TestSuite.TestKit\Nautilus.TestSuite.TestKit.csproj", "{5C57208C-5B4D-4413-A632-0159D379BC34}"
 EndProject

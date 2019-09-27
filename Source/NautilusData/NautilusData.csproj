@@ -20,9 +20,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Nautilus.Brokerage.Fxcm\Nautilus.Brokerage.Fxcm.csproj" />
         <ProjectReference Include="..\Nautilus.Data\Nautilus.Data.csproj" />
         <ProjectReference Include="..\Nautilus.Execution\Nautilus.Execution.csproj" />
+        <ProjectReference Include="..\Nautilus.Fxcm\Nautilus.Fxcm.csproj" />
         <ProjectReference Include="..\Nautilus.Logging\Nautilus.Logging.csproj" />
         <ProjectReference Include="..\Nautilus.Redis\Nautilus.Redis.csproj" />
         <ProjectReference Include="..\Nautilus.Scheduler\Nautilus.Scheduler.csproj" />

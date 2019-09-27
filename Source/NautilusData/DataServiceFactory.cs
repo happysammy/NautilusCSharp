@@ -9,7 +9,6 @@
 namespace NautilusData
 {
     using System.Collections.Generic;
-    using Nautilus.Brokerage.Fxcm;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Data;
     using Nautilus.Common.Interfaces;
@@ -21,6 +20,7 @@ namespace NautilusData
     using Nautilus.Data.Providers;
     using Nautilus.Data.Publishers;
     using Nautilus.Fix;
+    using Nautilus.Fxcm;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Redis.Data;

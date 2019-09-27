@@ -9,7 +9,6 @@
 namespace NautilusExecutor
 {
     using System.Collections.Generic;
-    using Nautilus.Brokerage.Fxcm;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Logging;
@@ -20,6 +19,7 @@ namespace NautilusExecutor
     using Nautilus.Execution.Engine;
     using Nautilus.Execution.Network;
     using Nautilus.Fix;
+    using Nautilus.Fxcm;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Redis.Execution;
