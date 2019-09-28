@@ -115,6 +115,11 @@ namespace Nautilus.DomainModel.Aggregates
         public ZonedDateTime? ClosedTime { get; private set; }
 
         /// <summary>
+        /// Gets the positions opened duration.
+        /// </summary>
+        public Duration? OpenDuration { get; private set; }
+
+        /// <summary>
         /// Gets the positions current quantity.
         /// </summary>
         public Quantity Quantity { get; private set; }
@@ -342,6 +347,7 @@ namespace Nautilus.DomainModel.Aggregates
             {
                 this.MarketPosition = MarketPosition.Flat;
                 this.ClosedTime = @event.ExecutionTime;
+                this.OpenDuration = this.ClosedTime - this.OpenedTime;
             }
         }
 

@@ -16,6 +16,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit.TestDoubles;
+    using NodaTime;
     using Xunit;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
@@ -53,6 +54,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.Equal(2000, position.AverageOpenPrice);
             Assert.Null(position.AverageClosePrice);
             Assert.Null(position.ClosedTime);
+            Assert.Null(position.OpenDuration);
             Assert.Equal(OrderSide.BUY, position.EntryDirection);
             Assert.Equal(Quantity.Create(1000), position.Quantity);
             Assert.Equal(Quantity.Create(1000), position.PeakOpenQuantity);
@@ -106,6 +108,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.Equal(2000, position.AverageOpenPrice);
             Assert.Null(position.AverageClosePrice);
             Assert.Null(position.ClosedTime);
+            Assert.Null(position.OpenDuration);
             Assert.Equal(OrderSide.SELL, position.EntryDirection);
             Assert.Equal(Quantity.Create(1000), position.Quantity);
             Assert.Equal(Quantity.Create(1000), position.PeakOpenQuantity);
@@ -157,35 +160,21 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 Quantity.Create(5000),
                 Price.Create(1.00000m, 5),
                 Currency.USD,
-                StubZonedDateTime.UnixEpoch(),
-                Guid.NewGuid(),
-                StubZonedDateTime.UnixEpoch());
-
-            var orderFill3 = new OrderFilled(
-                AccountId.FromString("FXCM-02851908-DEMO"),
-                new OrderId("O-123456"),
-                new ExecutionId("E-123456"),
-                new PositionIdBroker("ET-123456"),
-                position.Symbol,
-                OrderSide.SELL,
-                Quantity.Create(7000),
-                Price.Create(1.00000m, 5),
-                Currency.USD,
-                StubZonedDateTime.UnixEpoch(),
+                StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             // Act
             position.Apply(orderFill2);
-            position.Apply(orderFill3);
 
             // Assert
-            Assert.Equal(MarketPosition.Short, position.MarketPosition);
-            Assert.Equal(Quantity.Create(7000), position.Quantity);
-            Assert.Equal(orderFill3, position.LastEvent);
-            Assert.True(position.IsOpen);
-            Assert.True(position.IsShort);
-            Assert.False(position.IsClosed);
+            Assert.Equal(MarketPosition.Flat, position.MarketPosition);
+            Assert.Equal(Duration.FromMinutes(1), position.OpenDuration);
+            Assert.Equal(Quantity.Create(0), position.Quantity);
+            Assert.Equal(orderFill2, position.LastEvent);
+            Assert.True(position.IsClosed);
+            Assert.False(position.IsOpen);
+            Assert.False(position.IsShort);
             Assert.False(position.IsLong);
         }
 
