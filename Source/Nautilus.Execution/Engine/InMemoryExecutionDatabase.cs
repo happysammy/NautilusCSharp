@@ -29,6 +29,7 @@ namespace Nautilus.Execution.Engine
         private readonly Dictionary<PositionId, TraderId> indexPositionTrader;
         private readonly Dictionary<PositionId, AccountId> indexPositionAccount;
         private readonly Dictionary<PositionIdBroker, PositionId> indexBrokerPosition;
+        private readonly Dictionary<PositionId, PositionIdBroker> indexPositionBroker;
         private readonly Dictionary<PositionId, HashSet<OrderId>> indexPositionOrders;
         private readonly Dictionary<AccountId, HashSet<OrderId>> indexAccountOrders;
         private readonly Dictionary<AccountId, HashSet<PositionId>> indexAccountPositions;
@@ -54,6 +55,7 @@ namespace Nautilus.Execution.Engine
             this.indexOrderPosition = new Dictionary<OrderId, PositionId>();
             this.indexPositionTrader = new Dictionary<PositionId, TraderId>();
             this.indexPositionAccount = new Dictionary<PositionId, AccountId>();
+            this.indexPositionBroker = new Dictionary<PositionId, PositionIdBroker>();
             this.indexBrokerPosition = new Dictionary<PositionIdBroker, PositionId>();
             this.indexPositionOrders = new Dictionary<PositionId, HashSet<OrderId>>();
             this.indexAccountOrders = new Dictionary<AccountId, HashSet<OrderId>>();
@@ -265,6 +267,7 @@ namespace Nautilus.Execution.Engine
             this.indexPositions.Add(position.Id);
             this.indexPositionsOpen.Add(position.Id);
             this.indexBrokerPosition[position.IdBroker] = position.Id;
+            this.indexPositionBroker[position.Id] = position.IdBroker;
             this.CachedPositions[position.Id] = position;
 
             this.Log.Debug($"Added Position(Id={position.Id.Value}).");
@@ -372,6 +375,22 @@ namespace Nautilus.Execution.Engine
             }
 
             this.Log.Warning($"Cannot find PositionId for {positionIdBroker} in the database.");
+            return null;
+        }
+
+        /// <inheritdoc />
+        public override PositionIdBroker? GetPositionIdBroker(PositionId positionId, bool ifNotFoundWarning = false)
+        {
+            if (this.indexPositionBroker.TryGetValue(positionId, out var positionIdBroker))
+            {
+                return positionIdBroker;
+            }
+
+            if (ifNotFoundWarning)
+            {
+                this.Log.Warning($"Cannot find PositionIdBroker for {positionId} in the database.");
+            }
+
             return null;
         }
 

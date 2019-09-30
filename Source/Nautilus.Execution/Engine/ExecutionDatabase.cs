@@ -115,6 +115,9 @@ namespace Nautilus.Execution.Engine
         public abstract PositionId? GetPositionId(AccountId accountId, PositionIdBroker positionIdBroker);
 
         /// <inheritdoc />
+        public abstract PositionIdBroker? GetPositionIdBroker(PositionId positionId, bool ifNotFoundWarning = false);
+
+        /// <inheritdoc />
         public abstract ICollection<TraderId> GetTraderIds();
 
         /// <inheritdoc />

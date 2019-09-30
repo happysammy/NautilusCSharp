@@ -92,7 +92,7 @@ namespace Nautilus.DomainModel.Events
                                              $"AccountId={this.AccountId.Value}, " +
                                              $"OrderId={this.OrderId.Value}, " +
                                              $"OrderIdBroker={this.OrderIdBroker.Value}, " +
-                                             $"ModifiedQuantity={this.ModifiedPrice}, " +
-                                             $"ModifiedPrice={this.ModifiedPrice})";
+                                             $"Quantity={this.ModifiedQuantity}, " +
+                                             $"Price={this.ModifiedPrice})";
     }
 }

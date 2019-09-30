@@ -61,6 +61,14 @@ namespace Nautilus.Execution.Interfaces
         PositionId? GetPositionId(AccountId accountId, PositionIdBroker positionIdBroker);
 
         /// <summary>
+        /// Return the broker position identifier for the given position identifier (if found else null).
+        /// </summary>
+        /// <param name="positionId">The position identifier for the broker position.</param>
+        /// <param name="ifNotFoundWarning">The flag indicating whether a warning should be logged if not found.</param>
+        /// <returns>The broker position identifier (if found else null).</returns>
+        PositionIdBroker? GetPositionIdBroker(PositionId positionId, bool ifNotFoundWarning = false);
+
+        /// <summary>
         /// Return all trader identifiers.
         /// </summary>
         /// <returns>The trader identifiers.</returns>

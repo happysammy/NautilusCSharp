@@ -140,7 +140,8 @@ namespace Nautilus.Execution.Engine
 
             if (result.IsSuccess)
             {
-                this.gateway.SubmitOrder(command.Order, null);
+                var positionIdBroker = this.database.GetPositionIdBroker(command.PositionId);
+                this.gateway.SubmitOrder(command.Order, positionIdBroker);
 
                 var submitted = new OrderSubmitted(
                     command.AccountId,

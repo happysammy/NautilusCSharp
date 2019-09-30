@@ -56,6 +56,7 @@ namespace Nautilus.Redis.Execution
         private const string KEY_INDEX_POSITION_TRADER = INDEX + POSITION + TRADER;            // -> HashSet[PositionId, TraderId]
         private const string KEY_INDEX_POSITION_ACCOUNT = INDEX + POSITION + ACCOUNT;          // -> HashSet[PositionId, AccountId]
         private const string KEY_INDEX_POSITION_STRATEGY = INDEX + POSITION + STRATEGY;        // -> HashSet[PositionId, StrategyId]
+        private const string KEY_INDEX_POSITION_BROKER = INDEX + POSITION + BROKER_ID;         // -> HashSet[PositionId, PositionIdBroker]
         private const string KEY_INDEX_POSITION_ORDERS = INDEX + POSITION + ORDERS + ":";      // + PositionId -> Set{OrderId}
 
         private const string KEY_INDEX_ORDERS = INDEX + ORDERS;                                // Set{OrderId}
@@ -128,6 +129,11 @@ namespace Nautilus.Redis.Execution
         /// Gets the Redis key.
         /// </summary>
         internal static string IndexPositionStrategy => KEY_INDEX_POSITION_STRATEGY;
+
+        /// <summary>
+        /// Gets the Redis key.
+        /// </summary>
+        internal static string IndexPositionBrokerId => KEY_INDEX_POSITION_BROKER;
 
         /// <summary>
         /// Gets the Redis key.

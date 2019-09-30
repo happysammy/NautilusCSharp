@@ -319,6 +319,7 @@ namespace Nautilus.Redis.Execution
             }
 
             this.redisDatabase.SetAdd(Key.IndexPositions, position.Id.Value, CommandFlags.FireAndForget);
+            this.redisDatabase.HashSet(Key.IndexPositionBrokerId, new[] { new HashEntry(position.Id.Value, position.IdBroker.Value) }, CommandFlags.FireAndForget);
             if (position.IsOpen)
             {
                 this.redisDatabase.SetAdd(Key.IndexPositionsOpen, position.Id.Value, CommandFlags.FireAndForget);
@@ -431,6 +432,23 @@ namespace Nautilus.Redis.Execution
             return idValue == RedisValue.Null
                 ? null
                 : new PositionId(idValue);
+        }
+
+        /// <inheritdoc />
+        public override PositionIdBroker? GetPositionIdBroker(PositionId positionId, bool ifNotFoundWarning = false)
+        {
+            var idValue = this.redisDatabase.HashGet(Key.IndexPositionBrokerId, positionId.Value);
+            if (idValue == RedisValue.Null)
+            {
+                if (ifNotFoundWarning)
+                {
+                    this.Log.Warning($"Cannot find PositionIdBroker for {positionId} in the database.");
+                }
+
+                return null;
+            }
+
+            return new PositionIdBroker(idValue);
         }
 
         /// <inheritdoc />
