@@ -88,7 +88,7 @@ namespace Nautilus.DomainModel.Commands
                                              $"TraderId={this.TraderId.Value}, " +
                                              $"AccountId={this.AccountId.Value}, " +
                                              $"OrderId={this.OrderId.Value}, " +
-                                             $"Quantity={this.ModifiedQuantity}, " +
+                                             $"Quantity={this.ModifiedQuantity.ToStringFormatted()}, " +
                                              $"Price={this.ModifiedPrice})";
     }
 }
