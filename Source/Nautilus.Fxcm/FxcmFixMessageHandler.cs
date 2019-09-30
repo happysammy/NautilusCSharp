@@ -359,12 +359,9 @@ namespace Nautilus.Fxcm
                 this.Log.Debug($"{RECV}{FIX} {nameof(OrderCancelReject)}");
 
                 var orderId = this.GetOrderId(message);
-                var rejectReasonCode = message.GetField(9025);
-                var fxcmRejectCode = message.GetField(9029);
-                var rejectResponseTo = FxcmMessageHelper.GetCxlRejResponseTo(message.CxlRejResponseTo);
-                var rejectReasonText = message.GetField(Tags.CxlRejReason);
-                var rejectReason = $"FXCM({fxcmRejectCode}) {FxcmMessageHelper.GetCancelRejectReasonString(rejectReasonCode)} ({rejectReasonText})";
                 var rejectedTime = FxcmMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
+                var rejectResponseTo = FxcmMessageHelper.GetCxlRejResponseTo(message.CxlRejResponseTo);
+                var rejectReason = message.GetField(9029);
 
                 var orderCancelReject = new OrderCancelReject(
                     this.accountId,

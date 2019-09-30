@@ -82,8 +82,8 @@ namespace Nautilus.DomainModel.Events
         public override string ToString() => $"{this.Type.Name}(" +
                                              $"AccountId={this.AccountId.Value}, " +
                                              $"OrderId={this.OrderId.Value}, " +
-                                             $"ExecutionId={this.ExecutionId.Value}," +
-                                             $"ExecutionTicket={this.PositionIdBroker}, " +
+                                             $"ExecutionId={this.ExecutionId.Value}, " +
+                                             $"PositionIdBroker={this.PositionIdBroker}, " +
                                              $"{this.OrderSide} " +
                                              $"{this.FilledQuantity.ToStringFormatted()} " +
                                              $"{this.Symbol.Value} @ " +
