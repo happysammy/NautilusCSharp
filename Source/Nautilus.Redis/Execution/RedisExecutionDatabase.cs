@@ -435,20 +435,12 @@ namespace Nautilus.Redis.Execution
         }
 
         /// <inheritdoc />
-        public override PositionIdBroker? GetPositionIdBroker(PositionId positionId, bool ifNotFoundWarning = false)
+        public override PositionIdBroker? GetPositionIdBroker(PositionId positionId)
         {
             var idValue = this.redisDatabase.HashGet(Key.IndexPositionBrokerId, positionId.Value);
-            if (idValue == RedisValue.Null)
-            {
-                if (ifNotFoundWarning)
-                {
-                    this.Log.Warning($"Cannot find PositionIdBroker for {positionId} in the database.");
-                }
-
-                return null;
-            }
-
-            return new PositionIdBroker(idValue);
+            return idValue == RedisValue.Null
+                ? null
+                : new PositionIdBroker(idValue);
         }
 
         /// <inheritdoc />

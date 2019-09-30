@@ -379,19 +379,11 @@ namespace Nautilus.Execution.Engine
         }
 
         /// <inheritdoc />
-        public override PositionIdBroker? GetPositionIdBroker(PositionId positionId, bool ifNotFoundWarning = false)
+        public override PositionIdBroker? GetPositionIdBroker(PositionId positionId)
         {
-            if (this.indexPositionBroker.TryGetValue(positionId, out var positionIdBroker))
-            {
-                return positionIdBroker;
-            }
-
-            if (ifNotFoundWarning)
-            {
-                this.Log.Warning($"Cannot find PositionIdBroker for {positionId} in the database.");
-            }
-
-            return null;
+            return this.indexPositionBroker.TryGetValue(positionId, out var positionIdBroker)
+                ? positionIdBroker
+                : null;
         }
 
         /// <inheritdoc />

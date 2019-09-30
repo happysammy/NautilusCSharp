@@ -115,7 +115,7 @@ namespace Nautilus.Execution.Engine
         public abstract PositionId? GetPositionId(AccountId accountId, PositionIdBroker positionIdBroker);
 
         /// <inheritdoc />
-        public abstract PositionIdBroker? GetPositionIdBroker(PositionId positionId, bool ifNotFoundWarning = false);
+        public abstract PositionIdBroker? GetPositionIdBroker(PositionId positionId);
 
         /// <inheritdoc />
         public abstract ICollection<TraderId> GetTraderIds();
@@ -226,7 +226,6 @@ namespace Nautilus.Execution.Engine
         public Position? GetPositionForOrder(OrderId orderId)
         {
             var positionId = this.GetPositionId(orderId);
-
             return positionId is null
                 ? null
                 : this.GetPosition(positionId);
