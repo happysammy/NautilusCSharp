@@ -33,7 +33,7 @@ namespace Nautilus.DomainModel.Events
         /// <param name="orderSide">The event order side.</param>
         /// <param name="filledQuantity">The event order filled quantity.</param>
         /// <param name="averagePrice">The event order average price.</param>
-        /// <param name="quoteCurrency">The event order quote currency.</param>
+        /// <param name="currency">The event order transaction currency.</param>
         /// <param name="executionTime">The event order execution time.</param>
         /// <param name="eventId">The event identifier.</param>
         /// <param name="eventTimestamp">The event timestamp.</param>
@@ -46,7 +46,7 @@ namespace Nautilus.DomainModel.Events
             OrderSide orderSide,
             Quantity filledQuantity,
             Price averagePrice,
-            Currency quoteCurrency,
+            Currency currency,
             ZonedDateTime executionTime,
             Guid eventId,
             ZonedDateTime eventTimestamp)
@@ -59,7 +59,7 @@ namespace Nautilus.DomainModel.Events
                 orderSide,
                 filledQuantity,
                 averagePrice,
-                quoteCurrency,
+                currency,
                 executionTime,
                 typeof(OrderFilled),
                 eventId,
@@ -75,10 +75,10 @@ namespace Nautilus.DomainModel.Events
                                              $"AccountId={this.AccountId.Value}, " +
                                              $"OrderId={this.OrderId.Value}, " +
                                              $"ExecutionId={this.ExecutionId.Value}, " +
-                                             $"PositionIdBroker={this.PositionIdBroker}, " +
+                                             $"PositionIdBroker={this.PositionIdBroker.Value}, " +
                                              $"{this.OrderSide} " +
                                              $"{this.FilledQuantity.ToStringFormatted()} " +
                                              $"{this.Symbol.Value} @ " +
-                                             $"{this.AveragePrice} {this.QuoteCurrency})";
+                                             $"{this.AveragePrice} {this.Currency})";
     }
 }

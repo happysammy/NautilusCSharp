@@ -204,7 +204,7 @@ namespace Nautilus.Fxcm
                     var brokerSymbolCode = group.GetField(Tags.Symbol);
                     var symbol = this.GetSymbol(brokerSymbolCode);
                     var brokerSymbol = new BrokerSymbol(brokerSymbolCode);
-                    var quoteCurrency = group.GetField(15).ToEnum<Nautilus.DomainModel.Enums.Currency>();
+                    var baseCurrency = group.GetField(15).ToEnum<Nautilus.DomainModel.Enums.Currency>();
                     var securityType = FxcmMessageHelper.GetSecurityType(group.GetField(9080));
                     var tickPrecision = Convert.ToInt32(group.GetField(9001));
                     var tickSize = Convert.ToDecimal(group.GetField(9002)) * 0.1m;  // Field 9002 gives 'point' size (* 0.1m to get tick size)
@@ -221,7 +221,7 @@ namespace Nautilus.Fxcm
                     var instrument = new Instrument(
                         symbol,
                         brokerSymbol,
-                        quoteCurrency,
+                        baseCurrency,
                         securityType,
                         tickPrecision,
                         tickSize,
@@ -653,24 +653,24 @@ namespace Nautilus.Fxcm
         {
             var orderId = this.GetOrderId(message);
             var executionId = new ExecutionId(message.GetField(Tags.ExecID));
-            var executionTicket = new PositionIdBroker(message.GetField(9041));
+            var positionIdBroker = new PositionIdBroker(message.GetField(9041));
             var symbol = this.GetSymbol(message.GetField(Tags.Symbol));
             var orderSide = FxcmMessageHelper.GetOrderSide(message.GetField(Tags.Side));
             var filledQuantity = Quantity.Create(Convert.ToInt32(message.GetField(Tags.CumQty)));
             var averagePrice = Price.Create(Convert.ToDecimal(message.GetField(Tags.AvgPx)));
-            var quoteCurrency = message.GetField(Tags.Currency).ToEnum<Currency>();
+            var transactionCurrency = message.GetField(Tags.Currency).ToEnum<Currency>();
             var executionTime = FxcmMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
 
             return new OrderFilled(
                 this.accountId,
                 orderId,
                 executionId,
-                executionTicket,
+                positionIdBroker,
                 symbol,
                 orderSide,
                 filledQuantity,
                 averagePrice,
-                quoteCurrency,
+                transactionCurrency,
                 executionTime,
                 this.NewGuid(),
                 this.TimeNow());
@@ -680,12 +680,12 @@ namespace Nautilus.Fxcm
         {
             var orderId = this.GetOrderId(message);
             var executionId = new ExecutionId(message.GetField(Tags.ExecID));
-            var executionTicket = new PositionIdBroker(message.GetField(9041));
+            var positionIdBroker = new PositionIdBroker(message.GetField(9041));
             var symbol = this.GetSymbol(message.GetField(Tags.Symbol));
             var orderSide = FxcmMessageHelper.GetOrderSide(message.GetField(Tags.Side));
             var filledQuantity = Quantity.Create(Convert.ToInt32(message.GetField(Tags.CumQty)));
             var averagePrice = Price.Create(Convert.ToDecimal(message.GetField(Tags.AvgPx)));
-            var quoteCurrency = message.GetField(Tags.Currency).ToEnum<Currency>();
+            var transactionCurrency = message.GetField(Tags.Currency).ToEnum<Currency>();
             var leavesQuantity = Quantity.Create(Convert.ToInt32(message.GetField(Tags.LeavesQty)));
             var executionTime = FxcmMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
 
@@ -693,13 +693,13 @@ namespace Nautilus.Fxcm
                 this.accountId,
                 orderId,
                 executionId,
-                executionTicket,
+                positionIdBroker,
                 symbol,
                 orderSide,
                 filledQuantity,
                 leavesQuantity,
                 averagePrice,
-                quoteCurrency,
+                transactionCurrency,
                 executionTime,
                 this.NewGuid(),
                 this.TimeNow());

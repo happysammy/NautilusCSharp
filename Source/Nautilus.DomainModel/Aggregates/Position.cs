@@ -45,13 +45,13 @@ namespace Nautilus.DomainModel.Aggregates
             this.AccountId = initial.AccountId;
             this.FromOrderId = initial.OrderId;
             this.Symbol = initial.Symbol;
-            this.QuoteCurrency = initial.QuoteCurrency;
+            this.BaseCurrency = initial.Currency;
             this.EntryDirection = initial.OrderSide;
             this.OpenedTime = initial.ExecutionTime;
             this.AverageOpenPrice = initial.AveragePrice.Value;
             this.RealizedPoints = decimal.Zero;
             this.RealizedReturn = 0;
-            this.RealizedPnl = Money.Zero(this.QuoteCurrency);
+            this.RealizedPnl = Money.Zero(this.BaseCurrency);
 
             this.relativeQuantity = 0;                   // Initialized in this.Update()
             this.filledQuantityBuys = 0;                 // Initialized in this.Update()
@@ -95,9 +95,9 @@ namespace Nautilus.DomainModel.Aggregates
         public Symbol Symbol { get; }
 
         /// <summary>
-        /// Gets the positions quote currency.
+        /// Gets the positions base currency.
         /// </summary>
-        public Currency QuoteCurrency { get; }
+        public Currency BaseCurrency { get; }
 
         /// <summary>
         /// Gets the positions initial entry direction.
@@ -261,7 +261,7 @@ namespace Nautilus.DomainModel.Aggregates
                 case MarketPosition.Short:
                     return this.CalculatePnl(this.AverageOpenPrice, last.Ask.Value, this.Quantity.Value);
                 case MarketPosition.Flat:
-                    return Money.Zero(this.QuoteCurrency);
+                    return Money.Zero(this.BaseCurrency);
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(this.MarketPosition, nameof(this.MarketPosition));
             }
@@ -439,7 +439,7 @@ namespace Nautilus.DomainModel.Aggregates
 
         private Money CalculatePnl(decimal openedPrice, decimal closedPrice, int filledQuantity)
         {
-            return Money.Create(Math.Round(this.CalculatePoints(openedPrice, closedPrice) * filledQuantity, 2), this.QuoteCurrency);
+            return Money.Create(Math.Round(this.CalculatePoints(openedPrice, closedPrice) * filledQuantity, 2), this.BaseCurrency);
         }
 
         [System.Diagnostics.Conditional("DEBUG")]

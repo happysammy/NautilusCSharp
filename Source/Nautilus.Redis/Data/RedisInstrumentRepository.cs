@@ -179,7 +179,7 @@ namespace Nautilus.Redis.Data
             var instrument = new Instrument(
                 Symbol.FromString(instrumentDict[nameof(Instrument.Symbol)]),
                 new BrokerSymbol(instrumentDict[nameof(Instrument.BrokerSymbol)]),
-                instrumentDict[nameof(Instrument.QuoteCurrency)].ToEnum<Currency>(),
+                instrumentDict[nameof(Instrument.BaseCurrency)].ToEnum<Currency>(),
                 instrumentDict[nameof(Instrument.SecurityType)].ToEnum<SecurityType>(),
                 Convert.ToInt32(instrumentDict[nameof(Instrument.TickPrecision)]),
                 Convert.ToDecimal(instrumentDict[nameof(Instrument.TickSize)]),
@@ -207,7 +207,7 @@ namespace Nautilus.Redis.Data
                 new HashEntry(nameof(Instrument.Symbol), instrument.Symbol.Value),
                 new HashEntry(nameof(Instrument.Id), instrument.Id.Value),
                 new HashEntry(nameof(Instrument.BrokerSymbol), instrument.BrokerSymbol.Value),
-                new HashEntry(nameof(Instrument.QuoteCurrency), instrument.QuoteCurrency.ToString()),
+                new HashEntry(nameof(Instrument.BaseCurrency), instrument.BaseCurrency.ToString()),
                 new HashEntry(nameof(Instrument.SecurityType), instrument.SecurityType.ToString()),
                 new HashEntry(nameof(Instrument.TickPrecision), instrument.TickPrecision),
                 new HashEntry(nameof(Instrument.TickSize), instrument.TickSize.ToString(CultureInfo.InvariantCulture)),

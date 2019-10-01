@@ -31,7 +31,7 @@ namespace Nautilus.Redis.Data.Builders
         {
             this.Symbol = startingInstrument.Symbol;
             this.BrokerSymbol = startingInstrument.BrokerSymbol;
-            this.QuoteCurrency = startingInstrument.QuoteCurrency;
+            this.BaseCurrency = startingInstrument.BaseCurrency;
             this.SecurityType = startingInstrument.SecurityType;
             this.TickPrecision = startingInstrument.TickPrecision;
             this.TickSize = startingInstrument.TickSize;
@@ -55,7 +55,7 @@ namespace Nautilus.Redis.Data.Builders
 
         private BrokerSymbol BrokerSymbol { get; }
 
-        private Currency QuoteCurrency { get; }
+        private Currency BaseCurrency { get; }
 
         private SecurityType SecurityType { get; }
 
@@ -183,7 +183,7 @@ namespace Nautilus.Redis.Data.Builders
             return new Instrument(
                 this.Symbol,
                 this.BrokerSymbol,
-                this.QuoteCurrency,
+                this.BaseCurrency,
                 this.SecurityType,
                 this.TickPrecision,
                 this.TickSize,

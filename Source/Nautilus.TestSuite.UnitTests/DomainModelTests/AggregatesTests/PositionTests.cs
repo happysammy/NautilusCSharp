@@ -66,7 +66,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.Equal(orderFill, position.LastEvent);
             Assert.Equal(0m, position.RealizedPoints);
             Assert.Equal(0, position.RealizedReturn);
-            Assert.Equal(Money.Zero(position.QuoteCurrency), position.RealizedPnl);
+            Assert.Equal(Money.Zero(position.BaseCurrency), position.RealizedPnl);
             Assert.True(position.IsOpen);
             Assert.True(position.IsLong);
             Assert.False(position.IsClosed);
@@ -120,7 +120,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.Equal(orderFill, position.LastEvent);
             Assert.Equal(0m, position.RealizedPoints);
             Assert.Equal(0, position.RealizedReturn);
-            Assert.Equal(Money.Zero(position.QuoteCurrency), position.RealizedPnl);
+            Assert.Equal(Money.Zero(position.BaseCurrency), position.RealizedPnl);
             Assert.True(position.IsOpen);
             Assert.True(position.IsShort);
             Assert.False(position.IsClosed);
@@ -303,13 +303,13 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.Equal(Quantity.Create(200000), position.FilledQuantitySells);
             Assert.Equal(decimal.Zero, position.RealizedPoints);
             Assert.Equal(0, position.RealizedReturn);
-            Assert.Equal(Money.Zero(position.QuoteCurrency), position.RealizedPnl);
+            Assert.Equal(Money.Zero(position.BaseCurrency), position.RealizedPnl);
             Assert.Equal(0.199945m, position.UnrealizedPoints(tick));
             Assert.Equal(0.19994400027999865, position.UnrealizedReturn(tick));
-            Assert.Equal(Money.Create(39989m, position.QuoteCurrency), position.UnrealizedPnl(tick));
+            Assert.Equal(Money.Create(39989m, position.BaseCurrency), position.UnrealizedPnl(tick));
             Assert.Equal(0.199945m, position.TotalPoints(tick));
             Assert.Equal(0.19994400027999865, position.TotalReturn(tick));
-            Assert.Equal(Money.Create(39989m, position.QuoteCurrency), position.TotalPnl(tick));
+            Assert.Equal(Money.Create(39989m, position.BaseCurrency), position.TotalPnl(tick));
         }
 
         [Fact]
@@ -376,13 +376,13 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.Equal(Quantity.Create(100000), position.FilledQuantitySells);
             Assert.Equal(0.00010m, position.RealizedPoints);
             Assert.Equal(9.999999999998899E-05, position.RealizedReturn);
-            Assert.Equal(Money.Create(5m, position.QuoteCurrency), position.RealizedPnl);
+            Assert.Equal(Money.Create(5m, position.BaseCurrency), position.RealizedPnl);
             Assert.Equal(decimal.Zero, position.UnrealizedPoints(tick));
             Assert.Equal(0, position.UnrealizedReturn(tick));
-            Assert.Equal(Money.Zero(position.QuoteCurrency), position.UnrealizedPnl(tick));
+            Assert.Equal(Money.Zero(position.BaseCurrency), position.UnrealizedPnl(tick));
             Assert.Equal(0.00010m, position.TotalPoints(tick));
             Assert.Equal(9.999999999998899E-05, position.TotalReturn(tick));
-            Assert.Equal(Money.Create(5m, position.QuoteCurrency), position.TotalPnl(tick));
+            Assert.Equal(Money.Create(5m, position.BaseCurrency), position.TotalPnl(tick));
         }
 
         [Fact]

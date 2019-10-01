@@ -143,7 +143,7 @@ namespace Nautilus.Serialization
                     package.Add(nameof(evt.FilledQuantity), evt.FilledQuantity.Value);
                     package.Add(nameof(evt.LeavesQuantity), evt.LeavesQuantity.Value);
                     package.Add(nameof(evt.AveragePrice), evt.AveragePrice.ToString());
-                    package.Add(nameof(evt.QuoteCurrency), evt.QuoteCurrency.ToString());
+                    package.Add(nameof(evt.Currency), evt.Currency.ToString());
                     package.Add(nameof(evt.ExecutionTime), evt.ExecutionTime.ToIsoString());
                     break;
                 case OrderFilled evt:
@@ -155,7 +155,7 @@ namespace Nautilus.Serialization
                     package.Add(nameof(evt.OrderSide), evt.OrderSide.ToString());
                     package.Add(nameof(evt.FilledQuantity), evt.FilledQuantity.Value);
                     package.Add(nameof(evt.AveragePrice), evt.AveragePrice.ToString());
-                    package.Add(nameof(evt.QuoteCurrency), evt.QuoteCurrency.ToString());
+                    package.Add(nameof(evt.Currency), evt.Currency.ToString());
                     package.Add(nameof(evt.ExecutionTime), evt.ExecutionTime.ToIsoString());
                     break;
                 default:
@@ -300,7 +300,7 @@ namespace Nautilus.Serialization
                         ObjectExtractor.Quantity(unpacked[nameof(OrderPartiallyFilled.FilledQuantity)]),
                         ObjectExtractor.Quantity(unpacked[nameof(OrderPartiallyFilled.LeavesQuantity)]),
                         ObjectExtractor.Price(unpacked[nameof(OrderPartiallyFilled.AveragePrice)]),
-                        ObjectExtractor.Enum<Currency>(unpacked[nameof(OrderPartiallyFilled.QuoteCurrency)]),
+                        ObjectExtractor.Enum<Currency>(unpacked[nameof(OrderPartiallyFilled.Currency)]),
                         ObjectExtractor.ZonedDateTime(unpacked[nameof(OrderPartiallyFilled.ExecutionTime)]),
                         id,
                         timestamp);
@@ -314,7 +314,7 @@ namespace Nautilus.Serialization
                         ObjectExtractor.Enum<OrderSide>(unpacked[nameof(OrderFilled.OrderSide)]),
                         ObjectExtractor.Quantity(unpacked[nameof(OrderFilled.FilledQuantity)]),
                         ObjectExtractor.Price(unpacked[nameof(OrderFilled.AveragePrice)]),
-                        ObjectExtractor.Enum<Currency>(unpacked[nameof(OrderFilled.QuoteCurrency)]),
+                        ObjectExtractor.Enum<Currency>(unpacked[nameof(OrderFilled.Currency)]),
                         ObjectExtractor.ZonedDateTime(unpacked[nameof(OrderFilled.ExecutionTime)]),
                         id,
                         timestamp);
