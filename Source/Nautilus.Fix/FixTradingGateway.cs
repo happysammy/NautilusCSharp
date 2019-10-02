@@ -63,27 +63,33 @@ namespace Nautilus.Fix
         }
 
         /// <inheritdoc />
+        public void SubscribeToPositionEvents()
+        {
+            this.fixClient.RequestForAllPositionsSubscribe();
+        }
+
+        /// <inheritdoc />
         public void SubmitOrder(Order order, PositionIdBroker? positionIdBroker)
         {
-            this.fixClient.SubmitOrder(order, positionIdBroker);
+            this.fixClient.NewOrderSingle(order, positionIdBroker);
         }
 
         /// <inheritdoc />
         public void SubmitOrder(AtomicOrder atomicOrder)
         {
-            this.fixClient.SubmitOrder(atomicOrder);
+            this.fixClient.NewOrderList(atomicOrder);
         }
 
         /// <inheritdoc />
         public void ModifyOrder(Order order, Quantity modifiedQuantity, Price modifiedPrice)
         {
-            this.fixClient.ModifyOrder(order, modifiedQuantity, modifiedPrice);
+            this.fixClient.OrderCancelReplaceRequest(order, modifiedQuantity, modifiedPrice);
         }
 
         /// <inheritdoc />
         public void CancelOrder(Order order)
         {
-            this.fixClient.CancelOrder(order);
+            this.fixClient.OrderCancelRequest(order);
         }
 
         /// <inheritdoc />

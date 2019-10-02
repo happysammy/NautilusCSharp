@@ -30,6 +30,11 @@ namespace Nautilus.Common.Interfaces
         void AccountInquiry();
 
         /// <summary>
+        /// Subscribes to position events.
+        /// </summary>
+        void SubscribeToPositionEvents();
+
+        /// <summary>
         /// Sends a message to submit the given order.
         /// </summary>
         /// <param name="order">The new order.</param>

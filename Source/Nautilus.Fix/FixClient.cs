@@ -70,61 +70,68 @@ namespace Nautilus.Fix
         }
 
         /// <inheritdoc />
-        public void SubmitOrder(Order order, PositionIdBroker? positionIdBroker)
-        {
-            this.FixMessageRouter.NewOrderSingle(order, positionIdBroker);
-        }
-
-        /// <inheritdoc />
-        public void SubmitOrder(AtomicOrder atomicOrder)
-        {
-            this.FixMessageRouter.NewOrderList(atomicOrder);
-        }
-
-        /// <inheritdoc />
-        public void ModifyOrder(Order order, Quantity modifiedQuantity, Price modifiedPrice)
-        {
-            this.FixMessageRouter.OrderCancelReplaceRequest(order, modifiedQuantity, modifiedPrice);
-        }
-
-        /// <inheritdoc />
-        public void CancelOrder(Order command)
-        {
-            this.FixMessageRouter.OrderCancelRequest(command);
-        }
-
-        /// <inheritdoc />
         public void CollateralInquiry()
         {
             this.FixMessageRouter.CollateralInquiry();
         }
 
         /// <inheritdoc />
-        public void TradingSessionStatus()
+        public void RequestForAllPositionsSubscribe()
+        {
+            this.FixMessageRouter.RequestForOpenPositionsSubscribe();
+            this.FixMessageRouter.RequestForClosedPositionsSubscribe();
+        }
+
+        /// <inheritdoc />
+        public void NewOrderSingle(Order order, PositionIdBroker? positionIdBroker)
+        {
+            this.FixMessageRouter.NewOrderSingle(order, positionIdBroker);
+        }
+
+        /// <inheritdoc />
+        public void NewOrderList(AtomicOrder atomicOrder)
+        {
+            this.FixMessageRouter.NewOrderList(atomicOrder);
+        }
+
+        /// <inheritdoc />
+        public void OrderCancelReplaceRequest(Order order, Quantity modifiedQuantity, Price modifiedPrice)
+        {
+            this.FixMessageRouter.OrderCancelReplaceRequest(order, modifiedQuantity, modifiedPrice);
+        }
+
+        /// <inheritdoc />
+        public void OrderCancelRequest(Order command)
+        {
+            this.FixMessageRouter.OrderCancelRequest(command);
+        }
+
+        /// <inheritdoc />
+        public void TradingSessionStatusRequest()
         {
             this.FixMessageRouter.TradingSessionStatusRequest();
         }
 
         /// <inheritdoc />
-        public void UpdateInstrumentSubscribe(Symbol symbol)
+        public void SecurityListRequestSubscribe(Symbol symbol)
         {
             this.FixMessageRouter.SecurityListRequestSubscribe(symbol);
         }
 
         /// <inheritdoc />
-        public void UpdateInstrumentsSubscribeAll()
+        public void SecurityListRequestSubscribeAll()
         {
             this.FixMessageRouter.SecurityListRequestSubscribeAll();
         }
 
         /// <inheritdoc />
-        public void RequestMarketDataSubscribe(Symbol symbol)
+        public void MarketDataRequestSubscribe(Symbol symbol)
         {
             this.FixMessageRouter.MarketDataRequestSubscribe(symbol);
         }
 
         /// <inheritdoc />
-        public void RequestMarketDataSubscribeAll()
+        public void MarketDataRequestSubscribeAll()
         {
             this.FixMessageRouter.MarketDataRequestSubscribeAll();
         }

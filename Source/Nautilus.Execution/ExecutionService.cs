@@ -140,6 +140,9 @@ namespace Nautilus.Execution
             {
                 this.CreateDisconnectFixJob();
             }
+
+            this.tradingGateway.AccountInquiry();
+            this.tradingGateway.SubscribeToPositionEvents();
         }
 
         private void OnMessage(FixSessionDisconnected message)

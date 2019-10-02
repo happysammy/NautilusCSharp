@@ -65,23 +65,23 @@ namespace Nautilus.Common.Interfaces
         /// Request an update on the instrument corresponding to the given symbol from the brokerage.
         /// </summary>
         /// <param name="symbol">The symbol.</param>
-        void UpdateInstrumentSubscribe(Symbol symbol);
+        void SecurityListRequestSubscribe(Symbol symbol);
 
         /// <summary>
         /// Send an update and subscribe request message for all instruments.
         /// </summary>
-        void UpdateInstrumentsSubscribeAll();
+        void SecurityListRequestSubscribeAll();
 
         /// <summary>
         /// Sends an update and subscribe request message for the instrument of the given symbol.
         /// </summary>
         /// <param name="symbol">The symbol of the instrument to update.</param>
-        void RequestMarketDataSubscribe(Symbol symbol);
+        void MarketDataRequestSubscribe(Symbol symbol);
 
         /// <summary>
         /// Sends a market data subscribe request message for all symbols.
         /// </summary>
-        void RequestMarketDataSubscribeAll();
+        void MarketDataRequestSubscribeAll();
 
         /// <summary>
         /// Requests a collateral inquiry.
@@ -89,22 +89,27 @@ namespace Nautilus.Common.Interfaces
         void CollateralInquiry();
 
         /// <summary>
+        /// Requests all positions and subscribes to position reports.
+        /// </summary>
+        void RequestForAllPositionsSubscribe();
+
+        /// <summary>
         /// Requests the trading session status.
         /// </summary>
-        void TradingSessionStatus();
+        void TradingSessionStatusRequest();
 
         /// <summary>
         /// Submits an order.
         /// </summary>
         /// <param name="order">The order.</param>
         /// <param name="positionIdBroker">The optional broker position identifier for the order.</param>
-        void SubmitOrder(Order order, PositionIdBroker? positionIdBroker);
+        void NewOrderSingle(Order order, PositionIdBroker? positionIdBroker);
 
         /// <summary>
         /// Submits an atomic order.
         /// </summary>
         /// <param name="atomicOrder">The atomic order to submit.</param>
-        void SubmitOrder(AtomicOrder atomicOrder);
+        void NewOrderList(AtomicOrder atomicOrder);
 
         /// <summary>
         /// Submits a request to modify an order to a new price.
@@ -112,12 +117,12 @@ namespace Nautilus.Common.Interfaces
         /// <param name="order">The order to modify.</param>
         /// <param name="modifiedQuantity">The modified order quantity.</param>
         /// <param name="modifiedPrice">The modified order price.</param>
-        void ModifyOrder(Order order, Quantity modifiedQuantity, Price modifiedPrice);
+        void OrderCancelReplaceRequest(Order order, Quantity modifiedQuantity, Price modifiedPrice);
 
         /// <summary>
         /// Submits a request to cancel an order.
         /// </summary>
         /// <param name="order">The order to cancel.</param>
-        void CancelOrder(Order order);
+        void OrderCancelRequest(Order order);
     }
 }

@@ -230,10 +230,6 @@ namespace Nautilus.Fix
 
                 this.messageBusAdapter.SendToBus(connected, null, this.TimeNow());
                 this.Log.Debug($"Connected to FIX session {sessionId}");
-
-                this.FixMessageRouter.CollateralInquiry();
-                this.FixMessageRouter.RequestForOpenPositionsSubscribe();
-                this.FixMessageRouter.RequestForClosedPositionsSubscribe();
             });
         }
 

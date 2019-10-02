@@ -50,25 +50,25 @@ namespace Nautilus.Fix
         /// <inheritdoc />
         public void MarketDataSubscribe(Symbol symbol)
         {
-            this.fixClient.RequestMarketDataSubscribe(symbol);
+            this.fixClient.MarketDataRequestSubscribe(symbol);
         }
 
         /// <inheritdoc />
         public void MarketDataSubscribeAll()
         {
-            this.fixClient.RequestMarketDataSubscribeAll();
+            this.fixClient.MarketDataRequestSubscribeAll();
         }
 
         /// <inheritdoc />
         public void UpdateInstrumentSubscribe(Symbol symbol)
         {
-            this.fixClient.UpdateInstrumentSubscribe(symbol);
+            this.fixClient.SecurityListRequestSubscribe(symbol);
         }
 
         /// <inheritdoc />
         public void UpdateInstrumentsSubscribeAll()
         {
-            this.fixClient.UpdateInstrumentsSubscribeAll();
+            this.fixClient.SecurityListRequestSubscribeAll();
         }
 
         /// <inheritdoc />

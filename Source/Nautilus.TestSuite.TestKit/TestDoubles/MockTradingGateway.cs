@@ -68,6 +68,12 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         }
 
         /// <inheritdoc/>
+        public void SubscribeToPositionEvents()
+        {
+            this.CalledMethods.Add(nameof(this.SubscribeToPositionEvents));
+        }
+
+        /// <inheritdoc/>
         public void SubmitOrder(Order order, PositionIdBroker? positionIdBroker)
         {
             this.CalledMethods.Add(nameof(this.SubmitOrder));
