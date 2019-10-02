@@ -8,7 +8,6 @@
 
 namespace Nautilus.Fxcm
 {
-    using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
@@ -299,10 +298,10 @@ namespace Nautilus.Fxcm
         {
             if (orderType == OrderType.STOP_MARKET || orderType == OrderType.MIT)
             {
-                return Price.Create(Convert.ToDecimal(message.GetField(Tags.StopPx)));
+                return Price.Create(message.GetDecimal(Tags.StopPx));
             }
 
-            return Price.Create(Convert.ToDecimal(message.GetField(Tags.Price)));
+            return Price.Create(message.GetDecimal(Tags.Price));
         }
 
         /// <summary>

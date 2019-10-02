@@ -55,7 +55,7 @@ namespace Nautilus.Fxcm.MessageFactories
 
             if (!(positionIdBroker is null))
             {
-                message.SetField(new StringField(9041, positionIdBroker.Value));
+                message.SetField(new StringField(FxcmTags.PosID, positionIdBroker.Value));
             }
 
             if (order.ExpireTime.HasValue)
@@ -69,7 +69,7 @@ namespace Nautilus.Fxcm.MessageFactories
             switch (order.OrderType)
             {
                 case OrderType.MARKET:
-                    // Do nothing.
+                    // Do nothing
                     break;
                 case OrderType.LIMIT:
                 case OrderType.STOP_LIMIT:
