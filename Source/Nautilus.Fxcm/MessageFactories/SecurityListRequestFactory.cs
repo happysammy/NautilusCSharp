@@ -14,34 +14,38 @@ namespace Nautilus.Fxcm.MessageFactories
     using QuickFix.FIX44;
 
     /// <summary>
-    /// Provides security list request FIX messages.
+    /// Provides <see cref="SecurityListRequest"/> FIX messages.
     /// </summary>
     public static class SecurityListRequestFactory
     {
         /// <summary>
-        /// Creates and returns a new security list request message for all symbols.
+        /// Creates and returns a new <see cref="SecurityListRequest"/> FIX message for all symbols.
         /// </summary>
         /// <param name="timeNow">The time now.</param>
+        /// <param name="subscribe">The flag indicating whether updates should be subscribed to.</param>
         /// <returns>The FIX message.</returns>
-        public static SecurityListRequest Create(ZonedDateTime timeNow)
+        public static SecurityListRequest Create(ZonedDateTime timeNow, bool subscribe = true)
         {
             Debug.NotDefault(timeNow, nameof(timeNow));
 
             var message = new SecurityListRequest();
             message.SetField(new SecurityReqID($"SLR_{timeNow.TickOfDay}"));
             message.SetField(new SecurityListRequestType(SecurityListRequestType.ALL_SECURITIES));
-            message.SetField(new SubscriptionRequestType(SubscriptionRequestType.SNAPSHOT_PLUS_UPDATES));
+            message.SetField(subscribe is true
+                ? new SubscriptionRequestType(SubscriptionRequestType.SNAPSHOT_PLUS_UPDATES)
+                : new SubscriptionRequestType(SubscriptionRequestType.SNAPSHOT));
 
             return message;
         }
 
         /// <summary>
-        /// Creates and returns a new security list request message for the given symbol.
+        /// Creates and returns a new <see cref="SecurityListRequest"/> FIX message for the given symbol.
         /// </summary>
         /// <param name="symbol">The symbol.</param>
         /// <param name="timeNow">The time now.</param>
+        /// <param name="subscribe">The flag indicating whether updates should be subscribed to.</param>
         /// <returns>The FIX message.</returns>
-        public static SecurityListRequest Create(string symbol, ZonedDateTime timeNow)
+        public static SecurityListRequest Create(string symbol, ZonedDateTime timeNow, bool subscribe = true)
         {
             Debug.NotDefault(timeNow, nameof(timeNow));
 
@@ -49,7 +53,9 @@ namespace Nautilus.Fxcm.MessageFactories
             message.SetField(new SecurityReqID($"SLR_{timeNow.TickOfDay}"));
             message.SetField(new SecurityListRequestType(SecurityListRequestType.SYMBOL));
             message.SetField(new Symbol(symbol));
-            message.SetField(new SubscriptionRequestType(SubscriptionRequestType.SNAPSHOT_PLUS_UPDATES));
+            message.SetField(subscribe is true
+                ? new SubscriptionRequestType(SubscriptionRequestType.SNAPSHOT_PLUS_UPDATES)
+                : new SubscriptionRequestType(SubscriptionRequestType.SNAPSHOT));
 
             return message;
         }

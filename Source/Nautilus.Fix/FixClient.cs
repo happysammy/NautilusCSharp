@@ -72,25 +72,25 @@ namespace Nautilus.Fix
         /// <inheritdoc />
         public void SubmitOrder(Order order, PositionIdBroker? positionIdBroker)
         {
-            this.FixMessageRouter.SubmitOrder(order, positionIdBroker);
+            this.FixMessageRouter.NewOrderSingle(order, positionIdBroker);
         }
 
         /// <inheritdoc />
         public void SubmitOrder(AtomicOrder atomicOrder)
         {
-            this.FixMessageRouter.SubmitOrder(atomicOrder);
+            this.FixMessageRouter.NewOrderList(atomicOrder);
         }
 
         /// <inheritdoc />
-        public void ModifyOrder(Order order, Price modifiedPrice)
+        public void ModifyOrder(Order order, Quantity modifiedQuantity, Price modifiedPrice)
         {
-            this.FixMessageRouter.ModifyOrder(order, modifiedPrice);
+            this.FixMessageRouter.OrderCancelReplaceRequest(order, modifiedQuantity, modifiedPrice);
         }
 
         /// <inheritdoc />
         public void CancelOrder(Order command)
         {
-            this.FixMessageRouter.CancelOrder(command);
+            this.FixMessageRouter.OrderCancelRequest(command);
         }
 
         /// <inheritdoc />
@@ -102,19 +102,19 @@ namespace Nautilus.Fix
         /// <inheritdoc />
         public void TradingSessionStatus()
         {
-            this.FixMessageRouter.TradingSessionStatus();
+            this.FixMessageRouter.TradingSessionStatusRequest();
         }
 
         /// <inheritdoc />
         public void UpdateInstrumentSubscribe(Symbol symbol)
         {
-            this.FixMessageRouter.UpdateInstrumentSubscribe(symbol);
+            this.FixMessageRouter.SecurityListRequestSubscribe(symbol);
         }
 
         /// <inheritdoc />
         public void UpdateInstrumentsSubscribeAll()
         {
-            this.FixMessageRouter.UpdateInstrumentsSubscribeAll();
+            this.FixMessageRouter.SecurityListRequestSubscribeAll();
         }
 
         /// <inheritdoc />

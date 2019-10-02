@@ -30,75 +30,81 @@ namespace Nautilus.Fix.Interfaces
         void InitializeGateway(IEndpoint gateway);
 
         /// <summary>
-        /// Handles business message reject messages.
+        /// Handles <see cref="BusinessMessageReject"/> messages.
         /// </summary>
         /// <param name="message">The message.</param>
         void OnMessage(BusinessMessageReject message);
 
         /// <summary>
-        /// Handles email message.
+        /// Handles <see cref="Email"/> message.
         /// </summary>
         /// <param name="message">The message.</param>
         void OnMessage(Email message);
 
         /// <summary>
-        /// Handles security list messages.
+        /// Handles <see cref="SecurityList"/> messages.
         /// </summary>
         /// <param name="message">The message.</param>
         void OnMessage(SecurityList message);
 
         /// <summary>
-        /// Handles quote status report messages.
+        /// Handles <see cref="QuoteStatusReport"/> messages.
         /// </summary>
         /// <param name="message">The message.</param>
         void OnMessage(QuoteStatusReport message);
 
         /// <summary>
-        /// Handles collateral inquiry acknowledgement messages.
+        /// Handles <see cref="TradingSessionStatus"/> messages.
         /// </summary>
         /// <param name="message">The message.</param>
-        void OnMessage(CollateralInquiryAck message);
+        void OnMessage(TradingSessionStatus message);
 
         /// <summary>
-        /// Handles collateral report messages.
-        /// </summary>
-        /// <param name="message">The message.</param>
-        void OnMessage(CollateralReport message);
-
-        /// <summary>
-        /// Handles request for positions acknowledgement messages.
-        /// </summary>
-        /// <param name="message">The message.</param>
-        void OnMessage(RequestForPositionsAck message);
-
-        /// <summary>
-        /// Handles market data request reject messages.
+        /// Handles <see cref="MarketDataRequestReject"/> messages.
         /// </summary>
         /// <param name="message">The message.</param>
         void OnMessage(MarketDataRequestReject message);
 
         /// <summary>
-        /// Handles market data snapshot full refresh messages.
+        /// Handles <see cref="MarketDataSnapshotFullRefresh"/> messages.
         /// </summary>
         /// <param name="message">The message.</param>
         void OnMessage(MarketDataSnapshotFullRefresh message);
 
         /// <summary>
-        /// Handles order cancel reject messages.
+        /// Handles <see cref="CollateralInquiryAck"/> messages.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        void OnMessage(CollateralInquiryAck message);
+
+        /// <summary>
+        /// Handles <see cref="CollateralReport"/> messages.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        void OnMessage(CollateralReport message);
+
+        /// <summary>
+        /// Handles <see cref="RequestForPositionsAck"/> messages.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        void OnMessage(RequestForPositionsAck message);
+
+        /// <summary>
+        /// Handles <see cref="PositionReport"/> messages.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        void OnMessage(PositionReport message);
+
+        /// <summary>
+        /// Handles <see cref="OrderCancelReject"/> messages.
         /// </summary>
         /// <param name="message">The message.</param>
         void OnMessage(OrderCancelReject message);
 
         /// <summary>
-        /// Handles execution report messages.
+        /// Handles <see cref="ExecutionReport"/> messages.
         /// </summary>
         /// <param name="message">The report.</param>
         void OnMessage(ExecutionReport message);
-
-        /// <summary>
-        /// Handles position report messages.
-        /// </summary>
-        /// <param name="message">The message.</param>
-        void OnMessage(PositionReport message);
     }
 }

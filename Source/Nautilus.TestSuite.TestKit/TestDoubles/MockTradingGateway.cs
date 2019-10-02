@@ -88,10 +88,10 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         }
 
         /// <inheritdoc/>
-        public void ModifyOrder(Order order, Price modifiedPrice)
+        public void ModifyOrder(Order order, Quantity modifiedQuantity, Price modifiedPrice)
         {
             this.CalledMethods.Add(nameof(this.ModifyOrder));
-            this.ReceivedObjects.Add((order, modifiedPrice));
+            this.ReceivedObjects.Add((order, modifiedQuantity, modifiedPrice));
         }
 
         /// <inheritdoc/>

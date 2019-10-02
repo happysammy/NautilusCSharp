@@ -15,12 +15,12 @@ namespace Nautilus.Fxcm.MessageFactories
     using QuickFix.FIX44;
 
     /// <summary>
-    /// Provides collateral enquiry messages from the given inputs.
+    /// Provides <see cref="CollateralInquiry"/> FIX messages.
     /// </summary>
     public static class CollateralInquiryFactory
     {
         /// <summary>
-        /// Creates and returns a new collateral inquiry FIX message.
+        /// Creates and returns a new <see cref="CollateralInquiry"/> FIX message.
         /// </summary>
         /// <param name="timeNow">The time now.</param>
         /// <param name="broker">The brokers name.</param>

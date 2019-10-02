@@ -75,9 +75,9 @@ namespace Nautilus.Fix
         }
 
         /// <inheritdoc />
-        public void ModifyOrder(Order order, Price modifiedPrice)
+        public void ModifyOrder(Order order, Quantity modifiedQuantity, Price modifiedPrice)
         {
-            this.fixClient.ModifyOrder(order, modifiedPrice);
+            this.fixClient.ModifyOrder(order, modifiedQuantity, modifiedPrice);
         }
 
         /// <inheritdoc />

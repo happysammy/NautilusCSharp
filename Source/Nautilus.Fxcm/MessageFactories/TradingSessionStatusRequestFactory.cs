@@ -14,12 +14,12 @@ namespace Nautilus.Fxcm.MessageFactories
     using QuickFix.FIX44;
 
     /// <summary>
-    /// Provides trading session status request FIX messages.
+    /// Provides <see cref="TradingSessionStatusRequest"/> FIX messages.
     /// </summary>
     public static class TradingSessionStatusRequestFactory
     {
         /// <summary>
-        /// Creates and returns a new trading session status request message.
+        /// Creates and returns a new <see cref="TradingSessionStatusRequest"/> FIX message.
         /// </summary>
         /// <param name="timeNow">The time now.</param>
         /// <returns>The FIX message.</returns>

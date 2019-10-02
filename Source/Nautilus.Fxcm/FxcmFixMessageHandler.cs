@@ -38,12 +38,13 @@ namespace Nautilus.Fxcm
     /// </summary>
     public sealed class FxcmFixMessageHandler : Component, IFixMessageHandler
     {
+        private const string FXCM = "FXCM";
         private const string RECV = "<--";
         private const string FIX = "[FIX]";
 
         private readonly AccountId accountId;
         private readonly Currency accountCurrency;
-        private readonly Venue venue = new Venue("FXCM");
+        private readonly Venue venue = new Venue(FXCM);
         private readonly SymbolConverter symbolConverter;
         private readonly ObjectCache<string, Symbol> symbolCache;
         private readonly Dictionary<string, OrderId> orderIdIndex;
@@ -107,82 +108,28 @@ namespace Nautilus.Fxcm
             this.tradingGateway = gateway;
         }
 
-        /// <summary>
-        /// Handles collateral inquiry acknowledgement messages.
-        /// </summary>
-        /// <param name="message">The message.</param>
-        [SystemBoundary]
-        public void OnMessage(CollateralInquiryAck message)
-        {
-            this.Execute<FieldNotFoundException>(() =>
-            {
-                var inquiryId = message.GetField(Tags.CollInquiryID);
-                var accountNumber = message.GetField(Tags.Account);
-
-                this.Log.Debug($"{RECV}{FIX} {nameof(CollateralInquiryAck)}(InquiryId={inquiryId}, AccountNumber={accountNumber}).");
-            });
-        }
-
-        /// <summary>
-        /// Handles business message reject messages.
-        /// </summary>
-        /// <param name="message">The message.</param>
+        /// <inheritdoc />
         [SystemBoundary]
         public void OnMessage(BusinessMessageReject message)
         {
             this.Execute<FieldNotFoundException>(() =>
             {
-                this.Log.Debug($"{RECV}{FIX} {nameof(BusinessMessageReject)}");
+                this.Log.Warning($"{RECV}{FIX} {nameof(BusinessMessageReject)}");
             });
         }
 
-        /// <summary>
-        /// Handles business message reject messages.
-        /// </summary>
-        /// <param name="message">The message.</param>
+        /// <inheritdoc />
         [SystemBoundary]
         public void OnMessage(Email message)
         {
             this.Execute<FieldNotFoundException>(() =>
             {
-                this.Log.Debug($"{RECV}{FIX} {nameof(Email)}");
+                this.Log.Warning($"{RECV}{FIX} {nameof(Email)}");
             });
         }
 
-        /// <summary>
-        /// Handles position report messages.
-        /// </summary>
-        /// <param name="message">The message.</param>
+        /// <inheritdoc />
         [SystemBoundary]
-        public void OnMessage(PositionReport message)
-        {
-            this.Execute<FieldNotFoundException>(() =>
-            {
-                this.Log.Debug($"{RECV}{FIX} {nameof(PositionReport)}({message.Account})");
-            });
-        }
-
-        /// <summary>
-        /// Handles request for positions acknowledgement messages.
-        /// </summary>
-        /// <param name="message">
-        /// The message.
-        /// </param>
-        [SystemBoundary]
-        public void OnMessage(RequestForPositionsAck message)
-        {
-            this.Execute<FieldNotFoundException>(() =>
-            {
-                this.Log.Debug($"{RECV}{FIX} {nameof(RequestForPositionsAck)}");
-            });
-        }
-
-        /// <summary>
-        /// Handles security list messages.
-        /// </summary>
-        /// <param name="message">The message.</param>
-        [SystemBoundary]
-        [PerformanceOptimized]
         public void OnMessage(SecurityList message)
         {
             this.Execute<FieldNotFoundException>(() =>
@@ -243,10 +190,83 @@ namespace Nautilus.Fxcm
             });
         }
 
-        /// <summary>
-        /// Handles collateral report messages.
-        /// </summary>
-        /// <param name="message">The message.</param>
+        /// <inheritdoc />
+        [SystemBoundary]
+        public void OnMessage(QuoteStatusReport message)
+        {
+            this.Execute<FieldNotFoundException>(() =>
+            {
+                this.Log.Verbose($"{RECV}{FIX} {nameof(QuoteStatusReport)}");
+                this.Log.Information(message.Product.ToString());
+            });
+        }
+
+        /// <inheritdoc />
+        [SystemBoundary]
+        public void OnMessage(TradingSessionStatus message)
+        {
+            this.Execute<FieldNotFoundException>(() =>
+            {
+                this.Log.Warning($"{RECV}{FIX} Unhandled {nameof(TradingSessionStatus)}");
+            });
+        }
+
+        /// <inheritdoc />
+        [SystemBoundary]
+        public void OnMessage(MarketDataRequestReject message)
+        {
+            this.Execute<FieldNotFoundException>(() =>
+            {
+                this.Log.Warning($"{RECV}{FIX} {nameof(MarketDataRequestReject)}(Text={message.GetField(Tags.Text)}).");
+            });
+        }
+
+        /// <inheritdoc />
+        [SystemBoundary]
+        [PerformanceOptimized]
+        public void OnMessage(MarketDataSnapshotFullRefresh message)
+        {
+            this.Execute<FieldNotFoundException>(() =>
+            {
+                Debug.NotNull(this.dataGateway, nameof(this.dataGateway));
+
+                try
+                {
+                    message.GetGroup(1, this.mdBidGroup);
+                    message.GetGroup(2, this.mdAskGroup);
+
+                    this.dataGateway?.OnTick(new Tick(
+                        this.GetSymbol(message.GetField(Tags.Symbol)),
+                        Price.Create(this.mdBidGroup.GetDecimal(Tags.MDEntryPx)),
+                        Price.Create(this.mdAskGroup.GetDecimal(Tags.MDEntryPx)),
+                        this.tickTimestampProvider()));
+                }
+                catch (Exception ex)
+                {
+                    if (ex is FormatException || ex is OverflowException)
+                    {
+                        this.Log.Error("Could not parse decimal.");
+                    }
+
+                    this.Log.Fatal(ex.Message, ex);
+                }
+            });
+        }
+
+        /// <inheritdoc />
+        [SystemBoundary]
+        public void OnMessage(CollateralInquiryAck message)
+        {
+            this.Execute<FieldNotFoundException>(() =>
+            {
+                var inquiryId = message.GetField(Tags.CollInquiryID);
+                var accountNumber = message.GetField(Tags.Account);
+
+                this.Log.Debug($"{RECV}{FIX} {nameof(CollateralInquiryAck)}(InquiryId={inquiryId}, AccountNumber={accountNumber}).");
+            });
+        }
+
+        /// <inheritdoc />
         [SystemBoundary]
         public void OnMessage(CollateralReport message)
         {
@@ -283,72 +303,53 @@ namespace Nautilus.Fxcm
             });
         }
 
-        /// <summary>
-        /// Handles quote status report messages.
-        /// </summary>
-        /// <param name="message">The message.</param>
+        /// <inheritdoc />
         [SystemBoundary]
-        public void OnMessage(QuoteStatusReport message)
+        public void OnMessage(RequestForPositionsAck message)
         {
             this.Execute<FieldNotFoundException>(() =>
             {
-                this.Log.Verbose($"{RECV}{FIX} {nameof(QuoteStatusReport)}");
-                this.Log.Information(message.Product.ToString());
-            });
-        }
+                var accountNumber = message.GetField(Tags.Account);
+                var posRequestId = message.GetField(Tags.PosReqID);
+                var posRequestStatus = message.GetInt(Tags.PosReqStatus) == 0
+                    ? "Completed"
+                    : "Rejected";
 
-        /// <summary>
-        /// Handles market data request reject messages.
-        /// </summary>
-        /// <param name="message">The message.</param>
-        [SystemBoundary]
-        public void OnMessage(MarketDataRequestReject message)
-        {
-            this.Execute<FieldNotFoundException>(() =>
-            {
-                this.Log.Warning($"{RECV}{FIX} {nameof(MarketDataRequestReject)}(Text={message.GetField(Tags.Text)}).");
-            });
-        }
-
-        /// <summary>
-        /// Handles market data snapshot full refresh messages.
-        /// </summary>
-        /// <param name="message">The message.</param>
-        [SystemBoundary]
-        [PerformanceOptimized]
-        public void OnMessage(MarketDataSnapshotFullRefresh message)
-        {
-            this.Execute<FieldNotFoundException>(() =>
-            {
-                Debug.NotNull(this.dataGateway, nameof(this.dataGateway));
-
-                try
+                var posRequestResult = message.GetInt(Tags.PosReqResult);
+                string posRequestResultString;
+                switch (posRequestResult)
                 {
-                    message.GetGroup(1, this.mdBidGroup);
-                    message.GetGroup(2, this.mdAskGroup);
-
-                    this.dataGateway?.OnTick(new Tick(
-                        this.GetSymbol(message.GetField(Tags.Symbol)),
-                        Price.Create(this.mdBidGroup.GetDecimal(Tags.MDEntryPx)),
-                        Price.Create(this.mdAskGroup.GetDecimal(Tags.MDEntryPx)),
-                        this.tickTimestampProvider()));
+                    case 0:
+                        posRequestResultString = "Valid request";
+                        break;
+                    case 2:
+                        posRequestResultString = "No positions found";
+                        break;
+                    default:
+                        posRequestResultString = "Other";
+                        break;
                 }
-                catch (Exception ex)
-                {
-                    if (ex is FormatException || ex is OverflowException)
-                    {
-                        this.Log.Error("Could not parse decimal.");
-                    }
 
-                    this.Log.Fatal(ex.Message, ex);
-                }
+                this.Log.Information($"{RECV}{FIX} {nameof(RequestForPositionsAck)}(" +
+                                     $"Account={accountNumber}" +
+                                     $"PosRequestId={posRequestId}, " +
+                                     $"Account={accountNumber}" +
+                                     $"Status={posRequestStatus}, " +
+                                     $"Result={posRequestResultString}");
             });
         }
 
-        /// <summary>
-        /// Handles order cancel reject messages.
-        /// </summary>
-        /// <param name="message">The message.</param>
+        /// <inheritdoc />
+        [SystemBoundary]
+        public void OnMessage(PositionReport message)
+        {
+            this.Execute<FieldNotFoundException>(() =>
+            {
+                this.Log.Debug($"{RECV}{FIX} {nameof(PositionReport)}({message.Account})");
+            });
+        }
+
+        /// <inheritdoc />
         [SystemBoundary]
         public void OnMessage(QuickFix.FIX44.OrderCancelReject message)
         {
@@ -376,10 +377,7 @@ namespace Nautilus.Fxcm
             });
         }
 
-        /// <summary>
-        /// Handles execution report messages.
-        /// </summary>
-        /// <param name="message">The message.</param>
+        /// <inheritdoc />
         [SystemBoundary]
         public void OnMessage(ExecutionReport message)
         {
@@ -528,8 +526,7 @@ namespace Nautilus.Fxcm
                     }
 
                     default:
-                        ExceptionFactory.InvalidSwitchArgument(message.OrdStatus, nameof(message.OrdStatus));
-                        break;
+                        throw ExceptionFactory.InvalidSwitchArgument(message.OrdStatus, nameof(message.OrdStatus));
                 }
             });
         }

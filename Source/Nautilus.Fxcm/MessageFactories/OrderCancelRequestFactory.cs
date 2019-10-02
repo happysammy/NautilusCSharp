@@ -15,12 +15,12 @@ namespace Nautilus.Fxcm.MessageFactories
     using QuickFix.FIX44;
 
     /// <summary>
-    /// Provides order cancel request FIX messages.
+    /// Provides <see cref="OrderCancelRequest"/> FIX messages.
     /// </summary>
     public static class OrderCancelRequestFactory
     {
         /// <summary>
-        /// Creates and returns a new order cancel request message.
+        /// Creates and returns a new <see cref="OrderCancelRequest"/> FIX message.
         /// </summary>
         /// <param name="brokerSymbol">The brokers symbol.</param>
         /// <param name="order">The order.</param>

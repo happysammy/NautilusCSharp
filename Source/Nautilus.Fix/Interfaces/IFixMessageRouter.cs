@@ -26,68 +26,79 @@ namespace Nautilus.Fix.Interfaces
         void ConnectSession(Session session);
 
         /// <summary>
-        /// Sends a new collateral inquiry FIX message.
+        /// Sends a CollateralInquiry FIX message.
         /// </summary>
         void CollateralInquiry();
 
         /// <summary>
-        /// Send a new trading session status FIX message.
+        /// Sends a TradingSessionStatusRequest FIX message.
         /// </summary>
-        void TradingSessionStatus();
+        void TradingSessionStatusRequest();
 
         /// <summary>
-        /// The request all positions.
+        /// Sends a RequestForPositions FIX message for all open positions and subscription for
+        /// updates.
         /// </summary>
-        void RequestAllPositions();
+        void RequestForOpenPositionsSubscribe();
 
         /// <summary>
-        /// Updates the instrument from the given symbol via a security status request FIX message.
+        /// Sends a RequestForPositions FIX message for all closed positions and subscription for
+        /// updates.
+        /// </summary>
+        void RequestForClosedPositionsSubscribe();
+
+        /// <summary>
+        /// Sends a SecurityListRequest FIX message for the given symbol with subscription for
+        /// updates.
         /// </summary>
         /// <param name="symbol">
-        /// The symbol.
+        /// The symbol for the request.
         /// </param>
-        void UpdateInstrumentSubscribe(Symbol symbol);
+        void SecurityListRequestSubscribe(Symbol symbol);
 
         /// <summary>
-        /// Updates all instruments via a security status request FIX message.
+        /// Sends a SecurityListRequest FIX message for all broker instruments with subscription for
+        /// updates.
         /// </summary>
-        void UpdateInstrumentsSubscribeAll();
+        void SecurityListRequestSubscribeAll();
 
         /// <summary>
-        /// Subscribes to market data for the given symbol.
+        /// Sends a MarketDataRequest FIX message for the given symbol with subscription for updates.
         /// </summary>
         /// <param name="symbol">The symbol.</param>
         void MarketDataRequestSubscribe(Symbol symbol);
 
         /// <summary>
-        /// Subscribes to market data for all symbols.
+        /// Sends a MarketDataRequest FIX message for all broker instruments with subscription for
+        /// updates.
         /// </summary>
         void MarketDataRequestSubscribeAll();
 
         /// <summary>
-        /// Submits an order.
+        /// Sends a NewOrderSingle FIX message.
         /// </summary>
         /// <param name="order">The order.</param>
         /// <param name="positionIdBroker">The optional broker position identifier for the order.</param>
-        void SubmitOrder(Order order, PositionIdBroker? positionIdBroker);
+        void NewOrderSingle(Order order, PositionIdBroker? positionIdBroker);
 
         /// <summary>
-        /// Submits an atomic order.
+        /// Sends a NewOrderList FIX message.
         /// </summary>
         /// <param name="atomicOrder">The atomic order to submit.</param>
-        void SubmitOrder(AtomicOrder atomicOrder);
+        void NewOrderList(AtomicOrder atomicOrder);
 
         /// <summary>
-        /// Submits a modify stop-loss order.
+        /// Sends an OrderCancelReplaceRequest FIX message.
         /// </summary>
         /// <param name="order">The order to modify.</param>
+        /// <param name="modifiedQuantity">The modified order quantity.</param>
         /// <param name="modifiedPrice">The modified order price.</param>
-        void ModifyOrder(Order order, Price modifiedPrice);
+        void OrderCancelReplaceRequest(Order order, Quantity modifiedQuantity, Price modifiedPrice);
 
         /// <summary>
-        /// Submits a cancel order.
+        /// Sends an OrderCancelRequest FIX message.
         /// </summary>
         /// <param name="order">The order to cancel.</param>
-        void CancelOrder(Order order);
+        void OrderCancelRequest(Order order);
     }
 }

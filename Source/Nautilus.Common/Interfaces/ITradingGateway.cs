@@ -25,7 +25,7 @@ namespace Nautilus.Common.Interfaces
         Endpoint Endpoint { get; }
 
         /// <summary>
-        /// Sends a account inquiry request message.
+        /// Sends an account inquiry request message.
         /// </summary>
         void AccountInquiry();
 
@@ -43,14 +43,15 @@ namespace Nautilus.Common.Interfaces
         void SubmitOrder(AtomicOrder atomicOrder);
 
         /// <summary>
-        /// Sends a message to modify the given order with the given price.
+        /// Sends a message to modify the given order with the given modified quantity and price.
         /// </summary>
         /// <param name="order">The order to modify.</param>
+        /// <param name="modifiedQuantity">The modified order quantity.</param>
         /// <param name="modifiedPrice">The modified order price.</param>
-        void ModifyOrder(Order order, Price modifiedPrice);
+        void ModifyOrder(Order order, Quantity modifiedQuantity, Price modifiedPrice);
 
         /// <summary>
-        /// Submits a cancel order FIX message to the brokerage.
+        /// Submits a message to cancel the given order.
         /// </summary>
         /// <param name="order">The order to cancel.</param>
         void CancelOrder(Order order);

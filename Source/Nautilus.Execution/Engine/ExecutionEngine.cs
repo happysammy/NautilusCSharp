@@ -268,7 +268,10 @@ namespace Nautilus.Execution.Engine
 
             // Buffer the command to check in later processing
             this.bufferModify[command.OrderId] = command;
-            this.gateway.ModifyOrder(order, command.ModifiedPrice);
+            this.gateway.ModifyOrder(
+                order,
+                command.ModifiedQuantity,
+                command.ModifiedPrice);
         }
 
         private void OnMessage(AccountInquiry command)
@@ -471,7 +474,10 @@ namespace Nautilus.Execution.Engine
                 if ((!(order.Price is null) && order.Price != modifyOrder.ModifiedPrice)
                     || order.Quantity != modifyOrder.ModifiedQuantity)
                 {
-                    this.gateway.ModifyOrder(order, modifyOrder.ModifiedPrice);
+                    this.gateway.ModifyOrder(
+                        order,
+                        modifyOrder.ModifiedQuantity,
+                        modifyOrder.ModifiedPrice);
                     this.Log.Debug($"{CMD}{SENT} {modifyOrder} to TradingGateway.");
                 }
 

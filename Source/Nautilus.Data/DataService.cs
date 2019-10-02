@@ -41,6 +41,7 @@ namespace Nautilus.Data
         private readonly int tickRollingWindowDays;
         private readonly int barRollingWindowDays;
 
+        private bool reconnect;
         private bool hasSentBarSubscriptions;
         private ZonedDateTime? nextConnectTime;
         private ZonedDateTime? nextDisconnectTime;
@@ -77,6 +78,7 @@ namespace Nautilus.Data
             this.tickRollingWindowDays = config.TickDataTrimWindowDays;
             this.barDataTrimTime = config.BarDataTrimTime;
             this.barRollingWindowDays = config.BarDataTrimWindowDays;
+            this.reconnect = true;
 
             addresses.Add(ServiceAddress.DataService, this.Endpoint);
             messageBusAdapter.Send(new InitializeSwitchboard(
@@ -163,12 +165,13 @@ namespace Nautilus.Data
         private void OnMessage(Disconnect message)
         {
             // Forward message
+            this.reconnect = false;  // Avoid immediate reconnection
             this.Send(message, ServiceAddress.DataGateway);
         }
 
         private void OnMessage(FixSessionConnected message)
         {
-            this.Log.Information($"{message.SessionId} session is connected.");
+            this.Log.Information($"Connected to FIX session {message.SessionId}.");
 
             this.dataGateway.UpdateInstrumentsSubscribeAll();
             if (!this.hasSentBarSubscriptions)
@@ -202,12 +205,13 @@ namespace Nautilus.Data
 
         private void OnMessage(FixSessionDisconnected message)
         {
-            if (this.nextConnectTime is null || this.nextConnectTime.Value.IsLessThanOrEqualTo(this.TimeNow()))
+            if (this.reconnect && (this.nextConnectTime is null || this.nextConnectTime.Value.IsLessThanOrEqualTo(this.TimeNow())))
             {
                 this.CreateConnectFixJob();
             }
 
-            this.Log.Warning($"{message.SessionId} session disconnected.");
+            this.Log.Warning($"Disconnected from FIX session {message.SessionId}.");
+            this.reconnect = true; // Reset flag to default true
         }
 
         private void OnMessage(MarketOpened message)

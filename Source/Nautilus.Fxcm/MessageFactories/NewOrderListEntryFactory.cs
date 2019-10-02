@@ -17,12 +17,12 @@ namespace Nautilus.Fxcm.MessageFactories
     using Symbol = QuickFix.Fields.Symbol;
 
     /// <summary>
-    /// Provides order list entry stop FIX messages.
+    /// Provides <see cref="NewOrderList"/> FIX messages.
     /// </summary>
     public static class NewOrderListEntryFactory
     {
         /// <summary>
-        /// Creates and returns a new order list entry FIX message with entry and stop orders.
+        /// Creates and returns a new <see cref="NewOrderList"/> FIX message with contingency orders.
         /// </summary>
         /// <param name="brokerSymbol">The brokers symbol.</param>
         /// <param name="accountNumber">The account number.</param>

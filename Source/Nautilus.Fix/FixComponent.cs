@@ -229,8 +229,11 @@ namespace Nautilus.Fix
                     this.TimeNow());
 
                 this.messageBusAdapter.SendToBus(connected, null, this.TimeNow());
+                this.Log.Debug($"Connected to FIX session {sessionId}");
 
-                this.Log.Debug($"Connected to {sessionId}");
+                this.FixMessageRouter.CollateralInquiry();
+                this.FixMessageRouter.RequestForOpenPositionsSubscribe();
+                this.FixMessageRouter.RequestForClosedPositionsSubscribe();
             });
         }
 
@@ -250,7 +253,7 @@ namespace Nautilus.Fix
 
                 this.messageBusAdapter.SendToBus(disconnected, null, this.TimeNow());
 
-                this.Log.Debug($"Disconnected from {sessionId}");
+                this.Log.Debug($"Disconnected from FIX session {sessionId}");
             });
         }
 
@@ -332,7 +335,7 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// Handles the business message reject message.
+        /// Handles <see cref="BusinessMessageReject"/> messages.
         /// </summary>
         /// <param name="message">The FIX message.</param>
         /// <param name="sessionId">The session identifier.</param>
@@ -342,7 +345,7 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// Handles the <see cref="Email"/> message.
+        /// Handles <see cref="Email"/> messages.
         /// </summary>
         /// <param name="message">The FIX message.</param>
         /// <param name="sessionId">The session identifier.</param>
@@ -352,17 +355,17 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// Handles the trading session status message.
+        /// Handles <see cref="TradingSessionStatus"/> messages.
         /// </summary>
         /// <param name="message">The FIX message.</param>
         /// <param name="sessionId">The session identifier.</param>
         public void OnMessage(TradingSessionStatus message, SessionID sessionId)
         {
-            // Not implemented
+            this.FixMessageHandler.OnMessage(message);
         }
 
         /// <summary>
-        /// Handles security list messages.
+        /// Handles <see cref="SecurityList"/> messages.
         /// </summary>
         /// <param name="message">The FIX message.</param>
         /// <param name="sessionId">The session identifier.</param>
@@ -372,7 +375,7 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// Handles quote status report messages.
+        /// Handles <see cref="QuoteStatusReport"/> messages.
         /// </summary>
         /// <param name="message">The FIX message.</param>
         /// <param name="sessionId">The session identifier.</param>
@@ -382,37 +385,7 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// Handles the collateral inquiry acknowledgement message.
-        /// </summary>
-        /// <param name="message">The FIX message.</param>
-        /// <param name="sessionId">The session identifier.</param>
-        public void OnMessage(CollateralInquiryAck message, SessionID sessionId)
-        {
-            this.FixMessageHandler.OnMessage(message);
-        }
-
-        /// <summary>
-        /// Handles the collateral report message.
-        /// </summary>
-        /// <param name="message">The FIX message.</param>
-        /// <param name="sessionId">The session identifier.</param>
-        public void OnMessage(CollateralReport message, SessionID sessionId)
-        {
-            this.FixMessageHandler.OnMessage(message);
-        }
-
-        /// <summary>
-        /// Handles the request for positions acknowledgement message.
-        /// </summary>
-        /// <param name="message">The FIX message.</param>
-        /// <param name="sessionId">The session identifier.</param>
-        public void OnMessage(RequestForPositionsAck message, SessionID sessionId)
-        {
-            this.FixMessageHandler.OnMessage(message);
-        }
-
-        /// <summary>
-        /// Handles the market data request reject message.
+        /// Handles <see cref="MarketDataRequestReject"/> messages.
         /// </summary>
         /// <param name="message">The FIX message.</param>
         /// <param name="sessionId">The session identifier.</param>
@@ -422,7 +395,7 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// Handles the market data snapshot full refresh message.
+        /// Handles <see cref="MarketDataSnapshotFullRefresh"/> messages.
         /// </summary>
         /// <param name="message">The FIX message.</param>
         /// <param name="sessionId">The session identifier.</param>
@@ -432,7 +405,47 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// Handles the order cancel reject message.
+        /// Handles <see cref="CollateralInquiryAck"/> messages.
+        /// </summary>
+        /// <param name="message">The FIX message.</param>
+        /// <param name="sessionId">The session identifier.</param>
+        public void OnMessage(CollateralInquiryAck message, SessionID sessionId)
+        {
+            this.FixMessageHandler.OnMessage(message);
+        }
+
+        /// <summary>
+        /// Handles <see cref="CollateralReport"/> messages.
+        /// </summary>
+        /// <param name="message">The FIX message.</param>
+        /// <param name="sessionId">The session identifier.</param>
+        public void OnMessage(CollateralReport message, SessionID sessionId)
+        {
+            this.FixMessageHandler.OnMessage(message);
+        }
+
+        /// <summary>
+        /// Handles <see cref="RequestForPositionsAck"/> messages.
+        /// </summary>
+        /// <param name="message">The FIX message.</param>
+        /// <param name="sessionId">The session identifier.</param>
+        public void OnMessage(RequestForPositionsAck message, SessionID sessionId)
+        {
+            this.FixMessageHandler.OnMessage(message);
+        }
+
+        /// <summary>
+        /// Handles <see cref="PositionReport"/> messages.
+        /// </summary>
+        /// <param name="message">The FIX message.</param>
+        /// <param name="sessionId">The session identifier.</param>
+        public void OnMessage(PositionReport message, SessionID sessionId)
+        {
+            this.FixMessageHandler.OnMessage(message);
+        }
+
+        /// <summary>
+        /// Handles <see cref="OrderCancelReject"/> messages.
         /// </summary>
         /// <param name="message">The FIX message.</param>
         /// <param name="sessionId">The session identifier.</param>
@@ -442,21 +455,11 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// Handles the execution report message.
+        /// Handles <see cref="ExecutionReport"/> messages.
         /// </summary>
         /// <param name="message">The FIX message.</param>
         /// <param name="sessionId">The session identifier.</param>
         public void OnMessage(ExecutionReport message, SessionID sessionId)
-        {
-            this.FixMessageHandler.OnMessage(message);
-        }
-
-        /// <summary>
-        /// Handles the position report message.
-        /// </summary>
-        /// <param name="message">The FIX message.</param>
-        /// <param name="sessionId">The session identifier.</param>
-        public void OnMessage(PositionReport message, SessionID sessionId)
         {
             this.FixMessageHandler.OnMessage(message);
         }

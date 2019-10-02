@@ -48,46 +48,38 @@ namespace Nautilus.Fxcm
             this.symbolConverter = symbolConverter;
         }
 
-        /// <summary>
-        /// Connects the FIX session.
-        /// </summary>
-        /// <param name="session">The FIX session.</param>
+        /// <inheritdoc />
         public void ConnectSession(Session session)
         {
             this.fixSession = session;
         }
 
-        /// <summary>
-        /// Sends a new collateral inquiry FIX message.
-        /// </summary>
+        /// <inheritdoc />
         public void CollateralInquiry()
         {
             this.SendFixMessage(CollateralInquiryFactory.Create(this.TimeNow(), new Brokerage("FXCM")));
         }
 
-        /// <summary>
-        /// Send a new trading session status FIX message.
-        /// </summary>
-        public void TradingSessionStatus()
+        /// <inheritdoc />
+        public void TradingSessionStatusRequest()
         {
             this.SendFixMessage(TradingSessionStatusRequestFactory.Create(this.TimeNow()));
         }
 
-        /// <summary>
-        /// The request all positions.
-        /// </summary>
-        public void RequestAllPositions()
+        /// <inheritdoc />
+        public void RequestForOpenPositionsSubscribe()
         {
-            this.SendFixMessage(RequestForOpenPositionsFactory.Create(this.TimeNow()));
+            this.SendFixMessage(RequestForPositionsFactory.OpenAll(this.TimeNow()));
         }
 
-        /// <summary>
-        /// Updates the instrument from the given symbol via a security status request FIX message.
-        /// </summary>
-        /// <param name="symbol">
-        /// The symbol.
-        /// </param>
-        public void UpdateInstrumentSubscribe(Symbol symbol)
+        /// <inheritdoc />
+        public void RequestForClosedPositionsSubscribe()
+        {
+            this.SendFixMessage(RequestForPositionsFactory.ClosedAll(this.TimeNow()));
+        }
+
+        /// <inheritdoc />
+        public void SecurityListRequestSubscribe(Symbol symbol)
         {
             var brokerSymbolCode = this.symbolConverter.GetBrokerSymbolCode(symbol.Code);
             if (brokerSymbolCode is null)
@@ -101,20 +93,15 @@ namespace Nautilus.Fxcm
             this.SendFixMessage(message);
         }
 
-        /// <summary>
-        /// Updates all instruments via a security status request FIX message.
-        /// </summary>
-        public void UpdateInstrumentsSubscribeAll()
+        /// <inheritdoc />
+        public void SecurityListRequestSubscribeAll()
         {
             var message = SecurityListRequestFactory.Create(this.TimeNow());
 
             this.SendFixMessage(message);
         }
 
-        /// <summary>
-        /// Subscribes to market data for the given symbol.
-        /// </summary>
-        /// <param name="symbol">The symbol.</param>
+        /// <inheritdoc />
         public void MarketDataRequestSubscribe(Symbol symbol)
         {
             var brokerSymbolCode = this.symbolConverter.GetBrokerSymbolCode(symbol.Code);
@@ -132,9 +119,7 @@ namespace Nautilus.Fxcm
             this.SendFixMessage(message);
         }
 
-        /// <summary>
-        /// Subscribes to market data for all symbol.
-        /// </summary>
+        /// <inheritdoc />
         public void MarketDataRequestSubscribeAll()
         {
             foreach (var brokerSymbol in this.symbolConverter.BrokerSymbolCodes)
@@ -148,12 +133,8 @@ namespace Nautilus.Fxcm
             }
         }
 
-        /// <summary>
-        /// Submits an order.
-        /// </summary>
-        /// <param name="order">The order to submit.</param>
-        /// <param name="positionIdBroker">The optional broker position identifier for the order.</param>
-        public void SubmitOrder(Order order, PositionIdBroker? positionIdBroker)
+        /// <inheritdoc />
+        public void NewOrderSingle(Order order, PositionIdBroker? positionIdBroker)
         {
             var brokerSymbolCode = this.symbolConverter.GetBrokerSymbolCode(order.Symbol.Code);
             if (brokerSymbolCode is null)
@@ -172,11 +153,8 @@ namespace Nautilus.Fxcm
             this.SendFixMessage(message);
         }
 
-        /// <summary>
-        /// Submits a trade.
-        /// </summary>
-        /// <param name="atomicOrder">The atomic order to submit.</param>
-        public void SubmitOrder(AtomicOrder atomicOrder)
+        /// <inheritdoc />
+        public void NewOrderList(AtomicOrder atomicOrder)
         {
             var brokerSymbolCode = this.symbolConverter.GetBrokerSymbolCode(atomicOrder.Symbol.Code);
             if (brokerSymbolCode is null)
@@ -207,12 +185,8 @@ namespace Nautilus.Fxcm
             }
         }
 
-        /// <summary>
-        /// Submits a FIX order cancel replace request.
-        /// </summary>
-        /// <param name="order">The order to modify.</param>
-        /// <param name="modifiedPrice">The modified order price.</param>
-        public void ModifyOrder(Order order, Price modifiedPrice)
+        /// <inheritdoc />
+        public void OrderCancelReplaceRequest(Order order, Quantity modifiedQuantity, Price modifiedPrice)
         {
             var brokerSymbolCode = this.symbolConverter.GetBrokerSymbolCode(order.Symbol.Code);
             if (brokerSymbolCode is null)
@@ -224,17 +198,15 @@ namespace Nautilus.Fxcm
             var message = OrderCancelReplaceRequestFactory.Create(
                 brokerSymbolCode,
                 order,
+                modifiedQuantity.Value,
                 modifiedPrice.Value,
                 this.TimeNow());
 
             this.SendFixMessage(message);
         }
 
-        /// <summary>
-        /// Submits a cancel order.
-        /// </summary>
-        /// <param name="order">The order to cancel.</param>
-        public void CancelOrder(Order order)
+        /// <inheritdoc />
+        public void OrderCancelRequest(Order order)
         {
             var brokerSymbolCode = this.symbolConverter.GetBrokerSymbolCode(order.Symbol.Code);
             if (brokerSymbolCode is null)

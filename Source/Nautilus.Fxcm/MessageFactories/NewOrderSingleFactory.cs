@@ -19,12 +19,12 @@ namespace Nautilus.Fxcm.MessageFactories
     using Symbol = QuickFix.Fields.Symbol;
 
     /// <summary>
-    /// Provides new order single FIX messages.
+    /// Provides <see cref="NewOrderSingle"/> FIX messages.
     /// </summary>
     public static class NewOrderSingleFactory
     {
         /// <summary>
-        /// Creates and returns a new new order single message.
+        /// Creates and returns a new <see cref="NewOrderSingle"/> FIX message.
         /// </summary>
         /// <param name="brokerSymbol">The brokers symbol.</param>
         /// <param name="accountNumber">The account number.</param>
@@ -32,7 +32,7 @@ namespace Nautilus.Fxcm.MessageFactories
         /// <param name="positionIdBroker">The optional broker position identifier.</param>
         /// <param name="timeNow">The time now.</param>
         /// <returns>The FIX message.</returns>
-        public static QuickFix.FIX44.NewOrderSingle Create(
+        public static NewOrderSingle Create(
             string brokerSymbol,
             AccountNumber accountNumber,
             Order order,

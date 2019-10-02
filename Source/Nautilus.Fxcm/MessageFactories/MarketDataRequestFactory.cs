@@ -14,12 +14,12 @@ namespace Nautilus.Fxcm.MessageFactories
     using QuickFix.FIX44;
 
     /// <summary>
-    /// Provides market data request FIX messages.
+    /// Provides <see cref="MarketDataRequest"/> FIX messages.
     /// </summary>
     public static class MarketDataRequestFactory
     {
         /// <summary>
-        /// Creates and returns a new market data request FIX message.
+        /// Creates and returns a new <see cref="MarketDataRequest"/> FIX message.
         /// </summary>
         /// <param name="symbol">The symbol.</param>
         /// <param name="marketDepth">The market depth.</param>

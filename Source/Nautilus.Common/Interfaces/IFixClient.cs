@@ -110,8 +110,9 @@ namespace Nautilus.Common.Interfaces
         /// Submits a request to modify an order to a new price.
         /// </summary>
         /// <param name="order">The order to modify.</param>
+        /// <param name="modifiedQuantity">The modified order quantity.</param>
         /// <param name="modifiedPrice">The modified order price.</param>
-        void ModifyOrder(Order order, Price modifiedPrice);
+        void ModifyOrder(Order order, Quantity modifiedQuantity, Price modifiedPrice);
 
         /// <summary>
         /// Submits a request to cancel an order.

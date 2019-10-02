@@ -16,21 +16,23 @@ namespace Nautilus.Fxcm.MessageFactories
     using QuickFix.FIX44;
 
     /// <summary>
-    /// Provides order cancel replace request FIX messages.
+    /// Provides <see cref="OrderCancelReplaceRequest"/> FIX messages.
     /// </summary>
     public static class OrderCancelReplaceRequestFactory
     {
         /// <summary>
-        /// Creates and returns a new order cancel replace request message.
+        /// Creates and returns a new <see cref="OrderCancelReplaceRequest"/> FIX message.
         /// </summary>
         /// <param name="brokerSymbol">The brokers symbol.</param>
         /// <param name="order">The order.</param>
+        /// <param name="modifiedQuantity">The quantity to modify the order to.</param>
         /// <param name="modifiedPrice">The price to modify the order to.</param>
         /// <param name="transactionTime">The transaction time.</param>
         /// <returns>The FIX message.</returns>
         public static OrderCancelReplaceRequest Create(
             string brokerSymbol,
             Order order,
+            int modifiedQuantity,
             decimal modifiedPrice,
             ZonedDateTime transactionTime)
         {
@@ -43,7 +45,7 @@ namespace Nautilus.Fxcm.MessageFactories
             message.SetField(new OrderID(order.IdBroker?.Value));
             message.SetField(new ClOrdID(order.Id.Value));
             message.SetField(new Symbol(brokerSymbol));
-            message.SetField(new Quantity(order.Quantity.Value));
+            message.SetField(new Quantity(modifiedQuantity));
             message.SetField(FxcmMessageHelper.GetFixOrderSide(order.OrderSide));
             message.SetField(new TransactTime(transactionTime.ToDateTimeUtc()));
             message.SetField(FxcmMessageHelper.GetFixOrderType(order.OrderType));

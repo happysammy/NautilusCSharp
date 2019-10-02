@@ -134,14 +134,12 @@ namespace Nautilus.Execution
 
         private void OnMessage(FixSessionConnected message)
         {
-            this.tradingGateway.AccountInquiry();
+            this.Log.Information($"Connected to FIX session {message.SessionId}.");
 
             if (this.nextDisconnectTime is null || this.nextDisconnectTime.Value.IsLessThanOrEqualTo(this.TimeNow()))
             {
                 this.CreateDisconnectFixJob();
             }
-
-            this.Log.Information($"Connected to session {message.SessionId}.");
         }
 
         private void OnMessage(FixSessionDisconnected message)
@@ -151,7 +149,7 @@ namespace Nautilus.Execution
                 this.CreateConnectFixJob();
             }
 
-            this.Log.Warning($"Disconnected from session {message.SessionId}.");
+            this.Log.Warning($"Disconnected from FIX session {message.SessionId}.");
             this.reconnect = true; // Reset flag to default true
         }
 
