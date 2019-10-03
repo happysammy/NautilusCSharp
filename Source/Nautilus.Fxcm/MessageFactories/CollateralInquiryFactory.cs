@@ -9,7 +9,6 @@
 namespace Nautilus.Fxcm.MessageFactories
 {
     using Nautilus.Core.Correctness;
-    using Nautilus.DomainModel.Identifiers;
     using NodaTime;
     using QuickFix.Fields;
     using QuickFix.FIX44;
@@ -19,20 +18,21 @@ namespace Nautilus.Fxcm.MessageFactories
     /// </summary>
     public static class CollateralInquiryFactory
     {
+        private const string FXCM = "FXCM";
+
         /// <summary>
         /// Creates and returns a new <see cref="CollateralInquiry"/> FIX message.
         /// </summary>
         /// <param name="timeNow">The time now.</param>
-        /// <param name="broker">The brokers name.</param>
         /// <returns>The FIX message.</returns>
-        public static CollateralInquiry Create(ZonedDateTime timeNow, Brokerage broker)
+        public static CollateralInquiry Create(ZonedDateTime timeNow)
         {
             Debug.NotDefault(timeNow, nameof(timeNow));
 
             var message = new CollateralInquiry();
 
             message.SetField(new CollInquiryID($"CI_{timeNow.TickOfDay}"));
-            message.SetField(new TradingSessionID(broker.ToString()));
+            message.SetField(new TradingSessionID(FXCM));
             message.SetField(new SubscriptionRequestType(SubscriptionRequestType.SNAPSHOT_PLUS_UPDATES));
 
             return message;

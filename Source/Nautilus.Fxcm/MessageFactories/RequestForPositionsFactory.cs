@@ -18,6 +18,8 @@ namespace Nautilus.Fxcm.MessageFactories
     /// </summary>
     public static class RequestForPositionsFactory
     {
+        private const string FXCM = "FXCM";
+
         /// <summary>
         /// Creates and returns a new <see cref="RequestForPositions"/> FIX message.
         /// </summary>
@@ -51,10 +53,9 @@ namespace Nautilus.Fxcm.MessageFactories
             var message = new RequestForPositions();
             message.SetField(new PosReqID($"RP_{timeNow.TickOfDay}"));
             message.SetField(new PosReqType(reqType));
+            message.SetField(new Account("02851908"));
             message.SetField(new AccountType(AccountType.ACCOUNT_IS_CARRIED_ON_NON_CUSTOMER_SIDE_OF_BOOKS_AND_IS_CROSS_MARGINED));
-            message.SetField(new ClearingBusinessDate(timeNow.Date.ToString()));
-            message.SetField(new NoTradingSessions(1));
-            message.SetField(new TradingSessionID("FXCM"));
+            message.SetField(new TradingSessionID(FXCM));
             message.SetField(new TransactTime(timeNow.ToDateTimeUtc()));
             message.SetField(subscribe is true
                 ? new SubscriptionRequestType(SubscriptionRequestType.SNAPSHOT_PLUS_UPDATES)
