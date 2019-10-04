@@ -9,7 +9,6 @@
 namespace Nautilus.DomainModel.Factories
 {
     using System;
-    using Nautilus.Core.Correctness;
     using Nautilus.Core.Types;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
@@ -22,19 +21,6 @@ namespace Nautilus.DomainModel.Factories
     /// </summary>
     public static class OrderFactory
     {
-        /// <summary>
-        /// Creates and returns a new order modified <see cref="OrderId"/> from the given inputs.
-        /// </summary>
-        /// <param name="orderId">The modified order identifier.</param>
-        /// <param name="orderIdCount">The order identifier count.</param>
-        /// <returns>A <see cref="OrderId"/>.</returns>
-        public static OrderId ModifiedOrderId(OrderId orderId, int orderIdCount)
-        {
-            Debug.PositiveInt32(orderIdCount, nameof(orderIdCount));
-
-            return new OrderId($"{orderId.Value}_R{orderIdCount}");
-        }
-
         /// <summary>
         /// Creates and returns a new market order.
         /// </summary>
