@@ -46,38 +46,42 @@ namespace Nautilus.Fxcm.MessageFactories
             message.SetField(new BidType(3));
             message.SetField(new TransactTime(timeNow.ToDateTimeUtc()));
 
+            // Order 1
             var entry = atomicOrder.Entry;
             var order1 = new NewOrderList.NoOrdersGroup();
             order1.SetField(new ClOrdID(entry.Id.Value));
             order1.SetField(new ListSeqNo(0));
-            order1.SetField(new SecondaryClOrdID(entry.Label.Value));
+
+            if (entry.Label.NotNone())
+            {
+                order1.SetField(new SecondaryClOrdID(entry.Label.Value));
+            }
+
             order1.SetField(new ClOrdLinkID("1"));
             order1.SetField(new Account(accountNumber.Value));
             order1.SetField(new Symbol(brokerSymbol));
             order1.SetField(FxcmMessageHelper.GetFixOrderSide(entry.OrderSide));
-            order1.SetField(new OrdType(OrdType.STOP));
+            order1.SetField(FxcmMessageHelper.GetFixOrderType(entry.OrderType));
             order1.SetField(FxcmMessageHelper.GetFixTimeInForce(entry.TimeInForce));
+            order1.SetField(new OrderQty(entry.Quantity.Value));
 
+            // Optional tags
             if (entry.ExpireTime.HasValue)
             {
                 var expireTime = FxcmMessageHelper.ToExpireTimeFormat(entry.ExpireTime.Value);
                 order1.SetField(new StringField(126, expireTime));
             }
 
-            order1.SetField(new OrderQty(entry.Quantity.Value));
-
             if (entry.Price?.Value != null)
             {
                 order1.SetField(new StopPx(entry.Price.Value));
             }
 
-            message.AddGroup(order1);
-
+            // Order 2
             var stopLoss = atomicOrder.StopLoss;
             var order2 = new NewOrderList.NoOrdersGroup();
             order2.SetField(new ClOrdID(stopLoss.Id.Value));
             order2.SetField(new ListSeqNo(1));
-            order2.SetField(new SecondaryClOrdID(stopLoss.Label.Value));
             order2.SetField(new ClOrdLinkID("2"));
             order2.SetField(new Account(accountNumber.Value));
             order2.SetField(new Symbol(brokerSymbol));
@@ -86,11 +90,19 @@ namespace Nautilus.Fxcm.MessageFactories
             order2.SetField(FxcmMessageHelper.GetFixTimeInForce(stopLoss.TimeInForce));
             order2.SetField(new OrderQty(stopLoss.Quantity.Value));
 
+            // Optional tags
+            if (stopLoss.Label.NotNone())
+            {
+                order2.SetField(new SecondaryClOrdID(stopLoss.Label.Value));
+            }
+
+            // Stop-loss orders should always have a price
             if (stopLoss.Price?.Value != null)
             {
                 order2.SetField(new StopPx(stopLoss.Price.Value));
             }
 
+            message.AddGroup(order1);
             message.AddGroup(order2);
 
             return message;
@@ -120,17 +132,24 @@ namespace Nautilus.Fxcm.MessageFactories
             message.SetField(new NoOrders(3));
             message.SetField(new BidType(3));
 
+            // Order 1
             var entry = atomicOrder.Entry;
             var order1 = new NewOrderList.NoOrdersGroup();
             order1.SetField(new ClOrdID(entry.Id.Value));
             order1.SetField(new ListSeqNo(0));
-            order1.SetField(new SecondaryClOrdID(entry.Label.Value));
             order1.SetField(new ClOrdLinkID("1"));
             order1.SetField(new Account(accountNumber.Value));
             order1.SetField(new Symbol(brokerSymbol));
             order1.SetField(FxcmMessageHelper.GetFixOrderSide(entry.OrderSide));
-            order1.SetField(new OrdType(OrdType.STOP));
+            order1.SetField(FxcmMessageHelper.GetFixOrderType(entry.OrderType));
             order1.SetField(FxcmMessageHelper.GetFixTimeInForce(entry.TimeInForce));
+            order1.SetField(new OrderQty(entry.Quantity.Value));
+
+            // Optional tags
+            if (entry.Label.NotNone())
+            {
+                order1.SetField(new SecondaryClOrdID(entry.Label.Value));
+            }
 
             if (entry.ExpireTime.HasValue)
             {
@@ -138,51 +157,61 @@ namespace Nautilus.Fxcm.MessageFactories
                 order1.SetField(new ExpireTime(expireTime));
             }
 
-            order1.SetField(new OrderQty(entry.Quantity.Value));
-
             if (entry.Price?.Value != null)
             {
                 order1.SetField(new StopPx(entry.Price.Value));
             }
 
-            message.AddGroup(order1);
-
+            // Order 2
             var stopLoss = atomicOrder.StopLoss;
             var order2 = new NewOrderList.NoOrdersGroup();
             order2.SetField(new ClOrdID(stopLoss.Id.Value));
             order2.SetField(new ListSeqNo(1));
-            order2.SetField(new SecondaryClOrdID(stopLoss.Label.Value));
             order2.SetField(new ClOrdLinkID("2"));
             order2.SetField(new Account(accountNumber.Value));
             order2.SetField(new Symbol(brokerSymbol));
             order2.SetField(FxcmMessageHelper.GetFixOrderSide(stopLoss.OrderSide));
-            order2.SetField(new OrdType(OrdType.STOP));
+            order2.SetField(FxcmMessageHelper.GetFixOrderType(stopLoss.OrderType));
             order2.SetField(FxcmMessageHelper.GetFixTimeInForce(stopLoss.TimeInForce));
             order2.SetField(new OrderQty(stopLoss.Quantity.Value));
 
+            // Optional tags
+            if (stopLoss.Label.NotNone())
+            {
+                order2.SetField(new SecondaryClOrdID(entry.Label.Value));
+            }
+
+            // Stop-loss orders should always have a price
             if (stopLoss.Price?.Value != null)
             {
                 order2.SetField(new StopPx(stopLoss.Price.Value));
             }
 
+            message.AddGroup(order1);
             message.AddGroup(order2);
 
+            // Order 3 (optional)
             var takeProfit = atomicOrder.TakeProfit;
-
             if (takeProfit != null)
             {
                 var order3 = new NewOrderList.NoOrdersGroup();
                 order3.SetField(new ClOrdID(takeProfit.Id.Value));
                 order3.SetField(new ListSeqNo(2));
-                order3.SetField(new SecondaryClOrdID(takeProfit.Label.Value));
                 order3.SetField(new ClOrdLinkID("2"));
                 order3.SetField(new Account(accountNumber.Value));
                 order3.SetField(new Symbol(brokerSymbol));
                 order3.SetField(FxcmMessageHelper.GetFixOrderSide(takeProfit.OrderSide));
-                order3.SetField(new OrdType(OrdType.LIMIT));
+                order3.SetField(FxcmMessageHelper.GetFixOrderType(takeProfit.OrderType));
                 order3.SetField(FxcmMessageHelper.GetFixTimeInForce(takeProfit.TimeInForce));
                 order3.SetField(new OrderQty(takeProfit.Quantity.Value));
 
+                // Optional tags
+                if (takeProfit.Label.NotNone())
+                {
+                    order3.SetField(new SecondaryClOrdID(entry.Label.Value));
+                }
+
+                // Take-profit orders should always have a price
                 if (takeProfit.Price?.Value != null)
                 {
                     order3.SetField(new Price(takeProfit.Price.Value));

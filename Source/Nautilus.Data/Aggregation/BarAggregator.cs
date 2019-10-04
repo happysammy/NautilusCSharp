@@ -110,6 +110,7 @@ namespace Nautilus.Data.Aggregation
 
         private void CreateBuilders()
         {
+            // Add all pending builders to builders
             foreach (var barSpec in this.pendingBuilders.Keys)
             {
                 this.barBuilders[barSpec] = this.pendingBuilders[barSpec];
@@ -141,7 +142,7 @@ namespace Nautilus.Data.Aggregation
             }
             else
             {
-                this.Log.Warning($"Does not contain the bar specification {message.BarSpecification}");
+                this.Log.Warning($"Does not contain the {nameof(BarSpecification)}({message.BarSpecification}).");
             }
         }
 

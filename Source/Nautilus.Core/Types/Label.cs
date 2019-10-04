@@ -17,6 +17,8 @@ namespace Nautilus.Core.Types
     [Immutable]
     public sealed class Label : Identifier<Label>
     {
+        private const string NONE = "NONE";
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Label"/> class.
         /// </summary>
@@ -25,6 +27,24 @@ namespace Nautilus.Core.Types
             : base(value)
         {
             Debug.NotEmptyOrWhiteSpace(value, nameof(value));
+        }
+
+        /// <summary>
+        /// Returns a value indicating whether the label is equal to 'NONE'.
+        /// </summary>
+        /// <returns>True if the label value is 'NONE', else False.</returns>
+        public bool IsNone()
+        {
+            return this.Value == NONE;
+        }
+
+        /// <summary>
+        /// Returns a value indicating whether the label is not equal to 'NONE'.
+        /// </summary>
+        /// <returns>True if the label value is not 'NONE', else False.</returns>
+        public bool NotNone()
+        {
+            return this.Value != NONE;
         }
     }
 }

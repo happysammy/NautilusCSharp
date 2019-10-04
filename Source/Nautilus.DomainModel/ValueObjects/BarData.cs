@@ -41,6 +41,6 @@ namespace Nautilus.DomainModel.ValueObjects
         /// Returns a string representation of the <see cref="BarData"/>.
         /// </summary>
         /// <returns>A string.</returns>
-        public override string ToString() => $"({this.BarType}, {this.Bar})";
+        public override string ToString() => $"{nameof(BarData)}({this.BarType}, {this.Bar})";
     }
 }

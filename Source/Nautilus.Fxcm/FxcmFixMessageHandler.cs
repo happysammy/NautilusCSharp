@@ -223,7 +223,6 @@ namespace Nautilus.Fxcm
 
         /// <inheritdoc />
         [SystemBoundary]
-        [PerformanceOptimized]
         public void OnMessage(MarketDataSnapshotFullRefresh message)
         {
             this.Execute<FieldNotFoundException>(() =>

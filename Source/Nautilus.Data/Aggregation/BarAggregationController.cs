@@ -88,7 +88,6 @@ namespace Nautilus.Data.Aggregation
                 return;
             }
 
-            // Log for debugging purposes
             this.Log.Warning($"No bar aggregator for {tick.Symbol} ticks.");
         }
 
@@ -197,7 +196,7 @@ namespace Nautilus.Data.Aggregation
                     this.subscriptions[subscription.Key] = null;
                 }
 
-                // Create close bar job schedule.
+                // Create close bar job schedule
                 var barDuration = subscription.Key.Specification.Duration;
                 var initialDelay = TimingProvider.GetDelayToNextDuration(this.TimeNow(), barDuration);
                 var scheduledCancelable = this.scheduler.ScheduleRepeatedlyCancelable(

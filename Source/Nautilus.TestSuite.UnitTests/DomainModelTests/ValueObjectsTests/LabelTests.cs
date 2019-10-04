@@ -44,5 +44,31 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
             Assert.True(validString1.Equals(validString1));
             Assert.False(validString1.Equals(validString2));
         }
+
+        [Fact]
+        internal void IsNone_WithVariousValues_ReturnsCorrectValue()
+        {
+            // Arrange
+            var label1 = new Label("abc123");
+            var label2 = new Label("NONE");
+
+            // Act
+            // Assert
+            Assert.False(label1.IsNone());
+            Assert.True(label2.IsNone());
+        }
+
+        [Fact]
+        internal void NotNone_WithVariousValues_ReturnsCorrectValue()
+        {
+            // Arrange
+            var label1 = new Label("abc123");
+            var label2 = new Label("NONE");
+
+            // Act
+            // Assert
+            Assert.True(label1.NotNone());
+            Assert.False(label2.NotNone());
+        }
     }
 }
