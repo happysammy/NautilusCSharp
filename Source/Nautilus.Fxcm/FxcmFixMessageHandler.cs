@@ -587,7 +587,9 @@ namespace Nautilus.Fxcm
             var orderId = this.GetOrderId(message);
             var orderIdBroker = new OrderIdBroker(message.GetField(Tags.OrderID));
             var orderType = FxcmMessageHelper.GetOrderType(message.GetField(Tags.OrdType));
-            var quantity = Quantity.Create(message.GetInt(Tags.OrderQty));
+            var quantity = message.IsSetField(Tags.LeavesQty)
+                ? Quantity.Create(message.GetInt(Tags.LeavesQty))
+                : Quantity.Create(message.GetInt(Tags.OrderQty));
             var price = FxcmMessageHelper.GetOrderPrice(orderType, message);
             var modifiedTime = FxcmMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
 
