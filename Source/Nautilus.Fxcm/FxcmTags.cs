@@ -8,9 +8,12 @@
 
 namespace Nautilus.Fxcm
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Provides custom FXCM FIX message tags.
     /// </summary>
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Consistency with FIX conventions.")]
     public static class FxcmTags
     {
         /// <summary>
