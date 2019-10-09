@@ -9,6 +9,7 @@
 namespace Nautilus.DomainModel.Aggregates
 {
     using System;
+    using System.Collections.Generic;
     using Nautilus.Core.Collections;
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Aggregates.Base;
@@ -25,10 +26,11 @@ namespace Nautilus.DomainModel.Aggregates
     {
         private readonly UniqueList<OrderId> orderIds;
         private readonly UniqueList<ExecutionId> executionIds;
+        private readonly Dictionary<OrderId, int> buyQuantities;
+        private readonly Dictionary<OrderId, int> sellQuantities;
+        private readonly Dictionary<OrderId, decimal> fillPrices;
 
         private int relativeQuantity;
-        private int filledQuantityBuys;
-        private int filledQuantitySells;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Position"/> class.
@@ -40,6 +42,9 @@ namespace Nautilus.DomainModel.Aggregates
         {
             this.orderIds = new UniqueList<OrderId>(initial.OrderId);
             this.executionIds = new UniqueList<ExecutionId>(initial.ExecutionId);
+            this.buyQuantities = new Dictionary<OrderId, int>();
+            this.sellQuantities = new Dictionary<OrderId, int>();
+            this.fillPrices = new Dictionary<OrderId, decimal>();
 
             this.IdBroker = initial.PositionIdBroker;
             this.AccountId = initial.AccountId;
@@ -49,13 +54,13 @@ namespace Nautilus.DomainModel.Aggregates
             this.EntryDirection = initial.OrderSide;
             this.OpenedTime = initial.ExecutionTime;
             this.AverageOpenPrice = initial.AveragePrice.Value;
+            this.Commission = decimal.Zero;
+            this.Interest = decimal.Zero;
             this.RealizedPoints = decimal.Zero;
             this.RealizedReturn = 0;
             this.RealizedPnl = Money.Zero(this.BaseCurrency);
 
             this.relativeQuantity = 0;                   // Initialized in this.Update()
-            this.filledQuantityBuys = 0;                 // Initialized in this.Update()
-            this.filledQuantitySells = 0;                // Initialized in this.Update()
             this.Quantity = Quantity.Zero();             // Initialized in this.Update()
             this.PeakOpenQuantity = Quantity.Zero();     // Initialized in this.Update()
             this.MarketPosition = MarketPosition.Flat;   // Initialized in this.Update()
@@ -125,16 +130,6 @@ namespace Nautilus.DomainModel.Aggregates
         public Quantity Quantity { get; private set; }
 
         /// <summary>
-        /// Gets the positions filled quantity from buy side orders.
-        /// </summary>
-        public Quantity FilledQuantityBuys => Quantity.Create(this.filledQuantityBuys);
-
-        /// <summary>
-        /// Gets the positions filled quantity from sell side orders.
-        /// </summary>
-        public Quantity FilledQuantitySells => Quantity.Create(this.filledQuantitySells);
-
-        /// <summary>
         /// Gets the positions peak quantity.
         /// </summary>
         public Quantity PeakOpenQuantity { get; private set; }
@@ -143,6 +138,16 @@ namespace Nautilus.DomainModel.Aggregates
         /// Gets the positions market position.
         /// </summary>
         public MarketPosition MarketPosition { get; private set; }
+
+        /// <summary>
+        /// Gets the positions total commission.
+        /// </summary>
+        public decimal Commission { get; private set; }
+
+        /// <summary>
+        /// Gets the positions total interest.
+        /// </summary>
+        public decimal Interest { get; private set; }
 
         /// <summary>
         /// Gets the positions average open price.
@@ -200,6 +205,24 @@ namespace Nautilus.DomainModel.Aggregates
         /// </summary>
         /// <returns>The events collection.</returns>
         public UniqueList<ExecutionId> GetExecutionIds() => this.executionIds.Copy();
+
+        /// <summary>
+        /// Set the positions commission to the given value.
+        /// </summary>
+        /// <param name="value">The commission value to set.</param>
+        public void SetCommission(decimal value)
+        {
+            this.Commission = value;
+        }
+
+        /// <summary>
+        /// Set the positions interest to the given value.
+        /// </summary>
+        /// <param name="value">The interest value to set.</param>
+        public void SetInterest(decimal value)
+        {
+            this.Interest = value;
+        }
 
         /// <summary>
         /// Return the positions unrealized points.
@@ -353,58 +376,78 @@ namespace Nautilus.DomainModel.Aggregates
 
         private void HandleBuyOrderFill(OrderFillEvent @event)
         {
-            this.filledQuantityBuys += @event.FilledQuantity;
+            this.buyQuantities[@event.OrderId] = @event.FilledQuantity.Value;
+            this.fillPrices[@event.OrderId] = @event.AveragePrice.Value;
 
             // LONG POSITION
             if (this.relativeQuantity > 0)
             {
-                this.AverageOpenPrice = this.CalculateAveragePrice(@event, this.AverageOpenPrice, this.filledQuantityBuys);
+                this.AverageOpenPrice = this.CalculateAveragePrice(this.buyQuantities);
             }
 
             // SHORT POSITION
             else if (this.relativeQuantity < 0)
             {
-                this.AverageClosePrice = !this.AverageClosePrice.HasValue
-                    ? @event.AveragePrice.Value
-                    : this.CalculateAveragePrice(@event, this.AverageClosePrice.Value, this.filledQuantityBuys);
-
+                this.AverageClosePrice = this.CalculateAveragePrice(this.buyQuantities);
                 this.RealizedPoints = this.CalculatePoints(this.AverageOpenPrice, @event.AveragePrice.Value);
                 this.RealizedReturn = this.CalculateReturn(this.AverageOpenPrice, @event.AveragePrice.Value);
                 this.RealizedPnl = this.CalculatePnl(this.AverageOpenPrice, @event.AveragePrice.Value, @event.FilledQuantity.Value);
             }
 
-            this.relativeQuantity += @event.FilledQuantity;
+            this.relativeQuantity = this.CalculateRelativeQuantity();
         }
 
         private void HandleSellOrderFill(OrderFillEvent @event)
         {
-            this.filledQuantitySells += @event.FilledQuantity;
+            this.sellQuantities[@event.OrderId] = @event.FilledQuantity.Value;
+            this.fillPrices[@event.OrderId] = @event.AveragePrice.Value;
 
             // SHORT POSITION
             if (this.relativeQuantity < 0)
             {
-                this.AverageOpenPrice = this.CalculateAveragePrice(@event, this.AverageOpenPrice, this.filledQuantitySells);
+                this.AverageOpenPrice = this.CalculateAveragePrice(this.sellQuantities);
             }
 
             // LONG POSITION
             else if (this.relativeQuantity > 0)
             {
-                this.AverageClosePrice = !this.AverageClosePrice.HasValue
-                    ? @event.AveragePrice.Value
-                    : this.CalculateAveragePrice(@event, this.AverageClosePrice.Value, this.filledQuantitySells);
-
+                this.AverageClosePrice = this.CalculateAveragePrice(this.sellQuantities);
                 this.RealizedPoints = this.CalculatePoints(this.AverageOpenPrice, @event.AveragePrice.Value);
                 this.RealizedReturn = this.CalculateReturn(this.AverageOpenPrice, @event.AveragePrice.Value);
                 this.RealizedPnl = this.CalculatePnl(this.AverageOpenPrice, @event.AveragePrice.Value, @event.FilledQuantity.Value);
             }
 
-            this.relativeQuantity -= @event.FilledQuantity;
+            this.relativeQuantity = this.CalculateRelativeQuantity();
         }
 
-        private decimal CalculateAveragePrice(OrderFillEvent @event, decimal currentAveragePrice, int totalFills)
+        private int CalculateRelativeQuantity()
         {
-            return ((this.Quantity.Value * currentAveragePrice) + (@event.FilledQuantity.Value * @event.AveragePrice.Value))
-                   / totalFills;
+            var aggregateQuantity = 0;
+
+            foreach (var (_, quantity) in this.buyQuantities)
+            {
+                aggregateQuantity += quantity;
+            }
+
+            foreach (var (_, quantity) in this.sellQuantities)
+            {
+                aggregateQuantity -= quantity;
+            }
+
+            return aggregateQuantity;
+        }
+
+        private decimal CalculateAveragePrice(Dictionary<OrderId, int> fills)
+        {
+            var totalQuantity = 0;
+            var cumulativePrice = 0m;
+            foreach (var (orderId, quantity) in fills)
+            {
+                totalQuantity += quantity;
+                cumulativePrice += this.fillPrices[orderId] * quantity;
+            }
+
+            return cumulativePrice / totalQuantity;
         }
 
         private decimal CalculatePoints(decimal openedPrice, decimal closedPrice)
