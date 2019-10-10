@@ -382,95 +382,85 @@ namespace Nautilus.DomainModel.Aggregates
         {
             this.fillPrices[@event.OrderId] = @event.AveragePrice.Value;
             this.buyQuantities[@event.OrderId] = @event.FilledQuantity.Value;
-            this.SetQuantities();
+            this.buyQuantity = this.CalculateTotalQuantity(this.buyQuantities);
 
             // LONG POSITION
             if (this.relativeQuantity > 0)
             {
-                this.AverageOpenPrice = this.CalculateAveragePrice(this.buyQuantities);
+                this.AverageOpenPrice = this.CalculateAveragePrice(this.buyQuantities, this.buyQuantity);
             }
 
             // SHORT POSITION
             else if (this.relativeQuantity < 0)
             {
-                this.AverageClosePrice = this.CalculateAveragePrice(this.buyQuantities);
-                this.RealizedPoints = this.CalculatePoints(this.AverageOpenPrice, @event.AveragePrice.Value);
-                this.RealizedReturn = this.CalculateReturn(this.AverageOpenPrice, @event.AveragePrice.Value);
+                this.AverageClosePrice = this.CalculateAveragePrice(this.buyQuantities, this.buyQuantity);
+                this.RealizedPoints = this.CalculatePoints(this.AverageOpenPrice, this.AverageClosePrice);
+                this.RealizedReturn = this.CalculateReturn(this.AverageOpenPrice, this.AverageClosePrice);
                 this.RealizedPnl = this.CalculatePnl(this.AverageOpenPrice, this.AverageClosePrice, this.buyQuantity);
             }
 
-            this.SetRelativeQuantity();
+            this.relativeQuantity = this.buyQuantity - this.sellQuantity;
         }
 
         private void HandleSellOrderFill(OrderFillEvent @event)
         {
             this.fillPrices[@event.OrderId] = @event.AveragePrice.Value;
             this.sellQuantities[@event.OrderId] = @event.FilledQuantity.Value;
-            this.SetQuantities();
+            this.sellQuantity = this.CalculateTotalQuantity(this.sellQuantities);
 
             // SHORT POSITION
             if (this.relativeQuantity < 0)
             {
-                this.AverageOpenPrice = this.CalculateAveragePrice(this.sellQuantities);
+                this.AverageOpenPrice = this.CalculateAveragePrice(this.sellQuantities, this.sellQuantity);
             }
 
             // LONG POSITION
             else if (this.relativeQuantity > 0)
             {
-                this.AverageClosePrice = this.CalculateAveragePrice(this.sellQuantities);
-                this.RealizedPoints = this.CalculatePoints(this.AverageOpenPrice, @event.AveragePrice.Value);
-                this.RealizedReturn = this.CalculateReturn(this.AverageOpenPrice, @event.AveragePrice.Value);
+                this.AverageClosePrice = this.CalculateAveragePrice(this.sellQuantities, this.sellQuantity);
+                this.RealizedPoints = this.CalculatePoints(this.AverageOpenPrice, this.AverageClosePrice);
+                this.RealizedReturn = this.CalculateReturn(this.AverageOpenPrice, this.AverageClosePrice);
                 this.RealizedPnl = this.CalculatePnl(this.AverageOpenPrice, this.AverageClosePrice, this.sellQuantity);
             }
 
-            this.SetRelativeQuantity();
-        }
-
-        private void SetQuantities()
-        {
-            var buys = 0;
-            foreach (var (_, quantity) in this.buyQuantities)
-            {
-                buys += quantity;
-            }
-
-            this.buyQuantity = buys;
-
-            var sells = 0;
-            foreach (var (_, quantity) in this.sellQuantities)
-            {
-                sells += quantity;
-            }
-
-            this.sellQuantity = sells;
-        }
-
-        private void SetRelativeQuantity()
-        {
             this.relativeQuantity = this.buyQuantity - this.sellQuantity;
         }
 
-        private decimal CalculateAveragePrice(Dictionary<OrderId, int> fills)
+        private int CalculateTotalQuantity(Dictionary<OrderId, int> quantities)
         {
-            var totalQuantity = 0;
+            var total = 0;
+            foreach (var (_, quantity) in quantities)
+            {
+                total += quantity;
+            }
+
+            return total;
+        }
+
+        private decimal CalculateAveragePrice(Dictionary<OrderId, int> fills, int totalQuantity)
+        {
             var cumulativePrice = 0m;
             foreach (var (orderId, quantity) in fills)
             {
-                totalQuantity += quantity;
                 cumulativePrice += this.fillPrices[orderId] * quantity;
             }
 
             return cumulativePrice / totalQuantity;
         }
 
-        private decimal CalculatePoints(decimal openedPrice, decimal closedPrice)
+        private decimal CalculatePoints(decimal openPrice, decimal? closePrice)
         {
+            if (closePrice is null)
+            {
+                return 0;
+            }
+
             switch (this.MarketPosition)
             {
                 case MarketPosition.Long:
-                    return (decimal)closedPrice - openedPrice;
+                    return (decimal)closePrice - openPrice;
                 case MarketPosition.Short:
-                    return openedPrice - (decimal)closedPrice;
+                    return openPrice - (decimal)closePrice;
                 case MarketPosition.Flat:
                     return decimal.Zero;
                 default:
@@ -478,14 +468,19 @@ namespace Nautilus.DomainModel.Aggregates
             }
         }
 
-        private double CalculateReturn(decimal openedPrice, decimal closedPrice)
+        private double CalculateReturn(decimal openPrice, decimal? closePrice)
         {
+            if (closePrice is null)
+            {
+                return 0;
+            }
+
             switch (this.MarketPosition)
             {
                 case MarketPosition.Long:
-                    return ((double)closedPrice - (double)openedPrice) / (double)openedPrice;
+                    return ((double)closePrice - (double)openPrice) / (double)openPrice;
                 case MarketPosition.Short:
-                    return ((double)openedPrice - (double)closedPrice) / (double)openedPrice;
+                    return ((double)openPrice - (double)closePrice) / (double)openPrice;
                 case MarketPosition.Flat:
                     return 0;
                 default:
@@ -493,11 +488,11 @@ namespace Nautilus.DomainModel.Aggregates
             }
         }
 
-        private Money CalculatePnl(decimal openedPrice, decimal? closedPrice, int filledQuantity)
+        private Money CalculatePnl(decimal openPrice, decimal? closePrice, int filledQuantity)
         {
-            return closedPrice is null
+            return closePrice is null
                 ? Money.Zero(this.BaseCurrency)
-                : Money.Create(Math.Round(this.CalculatePoints(openedPrice, (decimal)closedPrice) * filledQuantity, 2), this.BaseCurrency);
+                : Money.Create(Math.Round(this.CalculatePoints(openPrice, closePrice) * filledQuantity, 2), this.BaseCurrency);
         }
 
         [System.Diagnostics.Conditional("DEBUG")]
