@@ -344,6 +344,8 @@ namespace Nautilus.DomainModel.Aggregates
 
         private void Update(OrderFillEvent @event)
         {
+            this.fillPrices[@event.OrderId] = @event.AveragePrice.Value;
+
             switch (@event.OrderSide)
             {
                 case OrderSide.BUY:
@@ -356,6 +358,7 @@ namespace Nautilus.DomainModel.Aggregates
                     throw ExceptionFactory.InvalidSwitchArgument(@event.OrderSide, nameof(@event.OrderSide));
             }
 
+            this.relativeQuantity = this.buyQuantity - this.sellQuantity;
             this.Quantity = Quantity.Create(Math.Abs(this.relativeQuantity));
             if (this.Quantity > this.PeakOpenQuantity)
             {
@@ -380,7 +383,6 @@ namespace Nautilus.DomainModel.Aggregates
 
         private void HandleBuyOrderFill(OrderFillEvent @event)
         {
-            this.fillPrices[@event.OrderId] = @event.AveragePrice.Value;
             this.buyQuantities[@event.OrderId] = @event.FilledQuantity.Value;
             this.buyQuantity = this.CalculateTotalQuantity(this.buyQuantities);
 
@@ -398,13 +400,10 @@ namespace Nautilus.DomainModel.Aggregates
                 this.RealizedReturn = this.CalculateReturn(this.AverageOpenPrice, this.AverageClosePrice);
                 this.RealizedPnl = this.CalculatePnl(this.AverageOpenPrice, this.AverageClosePrice, this.buyQuantity);
             }
-
-            this.relativeQuantity = this.buyQuantity - this.sellQuantity;
         }
 
         private void HandleSellOrderFill(OrderFillEvent @event)
         {
-            this.fillPrices[@event.OrderId] = @event.AveragePrice.Value;
             this.sellQuantities[@event.OrderId] = @event.FilledQuantity.Value;
             this.sellQuantity = this.CalculateTotalQuantity(this.sellQuantities);
 
@@ -422,8 +421,6 @@ namespace Nautilus.DomainModel.Aggregates
                 this.RealizedReturn = this.CalculateReturn(this.AverageOpenPrice, this.AverageClosePrice);
                 this.RealizedPnl = this.CalculatePnl(this.AverageOpenPrice, this.AverageClosePrice, this.sellQuantity);
             }
-
-            this.relativeQuantity = this.buyQuantity - this.sellQuantity;
         }
 
         private int CalculateTotalQuantity(Dictionary<OrderId, int> quantities)
