@@ -369,13 +369,13 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.Equal(Quantity.Create(100000), position.PeakOpenQuantity);
             Assert.Equal(0.00010m, position.RealizedPoints);
             Assert.Equal(9.999999999998899E-05, position.RealizedReturn);
-            Assert.Equal(Money.Create(5m, position.BaseCurrency), position.RealizedPnl);
+            Assert.Equal(Money.Create(10.50m, position.BaseCurrency), position.RealizedPnl);
             Assert.Equal(decimal.Zero, position.UnrealizedPoints(tick));
             Assert.Equal(0, position.UnrealizedReturn(tick));
             Assert.Equal(Money.Zero(position.BaseCurrency), position.UnrealizedPnl(tick));
             Assert.Equal(0.00010m, position.TotalPoints(tick));
             Assert.Equal(9.999999999998899E-05, position.TotalReturn(tick));
-            Assert.Equal(Money.Create(5m, position.BaseCurrency), position.TotalPnl(tick));
+            Assert.Equal(Money.Create(10.50m, position.BaseCurrency), position.TotalPnl(tick));
         }
 
         [Fact]
