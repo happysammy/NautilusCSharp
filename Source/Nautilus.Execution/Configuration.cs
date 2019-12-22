@@ -53,7 +53,6 @@ namespace Nautilus.Execution
 
             var commandsPort = configJson[ConfigSection.Network]["commandsPort"];
 
-
             // Network Settings
             this.CommandsPort = new NetworkPort((ushort)commandsPort);
             this.EventsPort = new NetworkPort((ushort)configJson[ConfigSection.Network]["eventsPort"]);
