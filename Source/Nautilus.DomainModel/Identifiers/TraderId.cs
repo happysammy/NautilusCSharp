@@ -63,7 +63,7 @@ namespace Nautilus.DomainModel.Identifiers
         /// <returns>The trader identifier.</returns>
         public static TraderId FromString(string value)
         {
-            var splitString = value.Split("-", 2);
+            var splitString = value.Split("-", 1);
 
             return new TraderId(splitString[0], splitString[1]);
         }
