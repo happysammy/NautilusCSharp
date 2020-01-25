@@ -24,6 +24,7 @@ namespace NautilusData
     using Serilog;
     using Serilog.Events;
 
+#pragma warning disable CS8602
     /// <summary>
     /// The main ASP.NET Core Startup class to configure and build the web hosting services.
     /// </summary>
@@ -46,7 +47,7 @@ namespace NautilusData
             this.Environment = environment;
 
             var configJson = JObject.Parse(File.ReadAllText("config.json"));
-            var logLevel = ((string)configJson[ConfigSection.Logging]["logLevel"]).ToEnum<LogEventLevel>();
+            var logLevel = ((string)configJson[ConfigSection.Logging]["logLevel"] !).ToEnum<LogEventLevel>() !;
             var loggingAdapter = new SerilogLogger(logLevel);
             var symbolIndex = File.ReadAllText("symbols.json");
 

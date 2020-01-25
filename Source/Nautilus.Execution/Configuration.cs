@@ -22,6 +22,7 @@ namespace Nautilus.Execution
     using Newtonsoft.Json.Linq;
     using NodaTime;
 
+#pragma warning disable CS8602, CS8604
     /// <summary>
     /// Represents an <see cref="ExecutionService"/> configuration.
     /// </summary>
@@ -40,27 +41,14 @@ namespace Nautilus.Execution
         {
             this.LoggingAdapter = loggingAdapter;
 
-            // Extract Variables
-            if (configJson[ConfigSection.Network] is null)
-            {
-                throw new InvalidOperationException("No network section in config file.");
-            }
-
-            if (configJson[ConfigSection.Network]["commandsPort"] is null)
-            {
-                throw new InvalidOperationException("The commandsPort was null.");
-            }
-
-            var commandsPort = configJson[ConfigSection.Network]["commandsPort"];
-
             // Network Settings
-            this.CommandsPort = new NetworkPort((ushort)commandsPort);
+            this.CommandsPort = new NetworkPort((ushort)configJson[ConfigSection.Network]["commandsPort"]);
             this.EventsPort = new NetworkPort((ushort)configJson[ConfigSection.Network]["eventsPort"]);
             this.CommandsPerSecond = (int)configJson[ConfigSection.Network]["commandsPerSecond"];
             this.NewOrdersPerSecond = (int)configJson[ConfigSection.Network]["newOrdersPerSecond"];
 
             // FIX Settings
-            var fixConfigFile = (string)configJson[ConfigSection.Fix44]["configFile"];
+            var fixConfigFile = (string)configJson[ConfigSection.Fix44]["configFile"] !;
             var assemblyDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location) !;
             var configPath = Path.GetFullPath(Path.Combine(assemblyDirectory, fixConfigFile));
 

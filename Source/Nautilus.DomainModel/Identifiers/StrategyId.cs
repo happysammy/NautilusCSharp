@@ -63,7 +63,7 @@ namespace Nautilus.DomainModel.Identifiers
         /// <returns>The strategy identifier.</returns>
         public static StrategyId FromString(string value)
         {
-            var splitString = value.Split("-", 1);
+            var splitString = value.Split("-", 2);
 
             return new StrategyId(splitString[0], splitString[1]);
         }

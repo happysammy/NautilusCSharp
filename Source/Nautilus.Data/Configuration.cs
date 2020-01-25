@@ -25,6 +25,7 @@ namespace Nautilus.Data
     using Newtonsoft.Json.Linq;
     using NodaTime;
 
+#pragma warning disable CS8602, CS8604
     /// <summary>
     /// Represents a <see cref="DataService"/> configuration.
     /// </summary>
@@ -52,7 +53,7 @@ namespace Nautilus.Data
             this.InstrumentSubscribePort = new NetworkPort((ushort)configJson[ConfigSection.Network]["instrumentSubPort"]);
 
             // FIX Settings
-            var fixConfigFile = (string)configJson[ConfigSection.Fix44]["configFile"];
+            var fixConfigFile = (string)configJson[ConfigSection.Fix44]["configFile"] !;
             var assemblyDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location) !;
             var configPath = Path.GetFullPath(Path.Combine(assemblyDirectory, fixConfigFile));
 
@@ -90,13 +91,13 @@ namespace Nautilus.Data
             this.SymbolIndex =
                 JsonConvert.DeserializeObject<ImmutableDictionary<string, string>>(symbolsIndex);
 
-            var symbols = (JArray)configJson[ConfigSection.Data]["symbols"];
+            var symbols = (JArray)configJson[ConfigSection.Data]["symbols"] !;
             this.SubscribingSymbols = symbols
                 .Select(s => new Symbol(s.ToString(), fixSettings["Brokerage"]))
                 .Distinct()
                 .ToImmutableList();
 
-            var barSpecs = (JArray)configJson[ConfigSection.Data]["barSpecifications"];
+            var barSpecs = (JArray)configJson[ConfigSection.Data]["barSpecifications"] !;
             this.BarSpecifications = barSpecs
                 .Select(bs => bs.ToString())
                 .Distinct()

@@ -29,7 +29,7 @@ namespace Nautilus.Messaging.Internal
         }
 
         /// <summary>
-        /// Gets the handlers type.
+        /// Gets the handlers message type.
         /// </summary>
         internal Type Type { get; }
 

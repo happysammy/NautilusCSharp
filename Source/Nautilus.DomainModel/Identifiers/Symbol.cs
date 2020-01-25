@@ -66,7 +66,7 @@ namespace Nautilus.DomainModel.Identifiers
         {
             Debug.NotEmptyOrWhiteSpace(symbolString, nameof(symbolString));
 
-            var symbolSplit = symbolString.Split('.', 1);
+            var symbolSplit = symbolString.Split('.', 2);
 
             return new Symbol(symbolSplit[0], new Venue(symbolSplit[1]));
         }
