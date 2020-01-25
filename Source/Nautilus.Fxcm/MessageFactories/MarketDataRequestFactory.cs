@@ -1,6 +1,6 @@
 ﻿//--------------------------------------------------------------------------------------------------
 // <copyright file="MarketDataRequestFactory.cs" company="Nautech Systems Pty Ltd">
-//  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
+//  Copyright (C) 2015-2020 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  https://nautechsystems.io
 // </copyright>
@@ -44,7 +44,7 @@ namespace Nautilus.Fxcm.MessageFactories
                 new MDReqID($"MD_{timeNow.TickOfDay}"),
                 new SubscriptionRequestType(SubscriptionRequestType.SNAPSHOT_PLUS_UPDATES),
                 new MarketDepth(marketDepth));
-            message.Set(new MDUpdateType(0));
+            message.Set(new MDUpdateType(1));  // Receive shortened message
             message.AddGroup(marketDataEntryGroup1);
             message.AddGroup(marketDataEntryGroup2);
             message.Set(new NoRelatedSym(1));
