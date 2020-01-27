@@ -16,7 +16,7 @@ namespace Nautilus.DomainModel.Entities
     using NodaTime;
 
     /// <summary>
-    /// Represents a tradeable financial market instrument.
+    /// Represents a tradeable FOREX currency pair.
     /// </summary>
     [Immutable]
     public sealed class ForexInstrument : Instrument
