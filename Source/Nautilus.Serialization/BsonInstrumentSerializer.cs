@@ -31,7 +31,7 @@ namespace Nautilus.Serialization
         /// <inheritdoc />
         public byte[] Serialize(Instrument instrument)
         {
-            var map = new BsonDocument
+            var bsonMap = new BsonDocument
             {
                 { nameof(Instrument.Symbol), instrument.Symbol.Value },
                 { nameof(Instrument.BrokerSymbol), instrument.BrokerSymbol.Value },
@@ -53,10 +53,10 @@ namespace Nautilus.Serialization
 
             if (instrument is ForexInstrument forexCcy)
             {
-                map.Add(nameof(ForexInstrument.BaseCurrency), forexCcy.BaseCurrency.ToString());
+                bsonMap.Add(nameof(ForexInstrument.BaseCurrency), forexCcy.BaseCurrency.ToString());
             }
 
-            return map.ToBson();
+            return bsonMap.ToBson();
         }
 
         /// <inheritdoc />
@@ -90,7 +90,7 @@ namespace Nautilus.Serialization
                 Symbol.FromString(unpacked[nameof(Instrument.Symbol)].AsString),
                 new BrokerSymbol(unpacked[nameof(Instrument.BrokerSymbol)].AsString),
                 unpacked[nameof(Instrument.QuoteCurrency)].AsString.ToEnum<Currency>(),
-                unpacked[nameof(Instrument.SecurityType)].AsString.ToEnum<SecurityType>(),
+                securityType,
                 unpacked[nameof(Instrument.TickPrecision)].AsInt32,
                 unpacked[nameof(Instrument.TickSize)].AsDecimal,
                 unpacked[nameof(Instrument.RoundLotSize)].AsInt32,
