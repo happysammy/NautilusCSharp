@@ -176,11 +176,33 @@ namespace Nautilus.Redis.Data
                     hashEntry => hashEntry.Name.ToString(),
                     hashEntry => hashEntry.Value.ToString());
 
+            var securityType = instrumentDict[nameof(Instrument.SecurityType)].ToEnum<SecurityType>();
+            if (securityType == SecurityType.FOREX)
+            {
+                var forexCcy = new ForexInstrument(
+                    Symbol.FromString(instrumentDict[nameof(Instrument.Symbol)]),
+                    new BrokerSymbol(instrumentDict[nameof(Instrument.BrokerSymbol)]),
+                    Convert.ToInt32(instrumentDict[nameof(Instrument.TickPrecision)]),
+                    Convert.ToDecimal(instrumentDict[nameof(Instrument.TickSize)]),
+                    Convert.ToInt32(instrumentDict[nameof(Instrument.RoundLotSize)]),
+                    Convert.ToInt32(instrumentDict[nameof(Instrument.MinStopDistanceEntry)]),
+                    Convert.ToInt32(instrumentDict[nameof(Instrument.MinLimitDistanceEntry)]),
+                    Convert.ToInt32(instrumentDict[nameof(Instrument.MinStopDistance)]),
+                    Convert.ToInt32(instrumentDict[nameof(Instrument.MinLimitDistance)]),
+                    Convert.ToInt32(instrumentDict[nameof(Instrument.MinTradeSize)]),
+                    Convert.ToInt32(instrumentDict[nameof(Instrument.MaxTradeSize)]),
+                    Convert.ToDecimal(instrumentDict[nameof(Instrument.RolloverInterestBuy)]),
+                    Convert.ToDecimal(instrumentDict[nameof(Instrument.RolloverInterestSell)]),
+                    instrumentDict[nameof(Instrument.Timestamp)].ToZonedDateTimeFromIso());
+
+                return QueryResult<Instrument>.Ok(forexCcy);
+            }
+
             var instrument = new Instrument(
                 Symbol.FromString(instrumentDict[nameof(Instrument.Symbol)]),
                 new BrokerSymbol(instrumentDict[nameof(Instrument.BrokerSymbol)]),
                 instrumentDict[nameof(Instrument.QuoteCurrency)].ToEnum<Currency>(),
-                instrumentDict[nameof(Instrument.SecurityType)].ToEnum<SecurityType>(),
+                securityType,
                 Convert.ToInt32(instrumentDict[nameof(Instrument.TickPrecision)]),
                 Convert.ToDecimal(instrumentDict[nameof(Instrument.TickSize)]),
                 Convert.ToInt32(instrumentDict[nameof(Instrument.RoundLotSize)]),
@@ -202,7 +224,36 @@ namespace Nautilus.Redis.Data
 
         private CommandResult Write(Instrument instrument)
         {
-            var hashEntry = new[]
+            if (instrument is ForexInstrument forexCcy)
+            {
+                var forexHash = new[]
+                {
+                    new HashEntry(nameof(ForexInstrument.Symbol), forexCcy.Symbol.Value),
+                    new HashEntry(nameof(ForexInstrument.Id), forexCcy.Id.Value),
+                    new HashEntry(nameof(ForexInstrument.BrokerSymbol), forexCcy.BrokerSymbol.Value),
+                    new HashEntry(nameof(ForexInstrument.BaseCurrency), forexCcy.BaseCurrency.ToString()),
+                    new HashEntry(nameof(ForexInstrument.QuoteCurrency), forexCcy.QuoteCurrency.ToString()),
+                    new HashEntry(nameof(ForexInstrument.SecurityType), forexCcy.SecurityType.ToString()),
+                    new HashEntry(nameof(ForexInstrument.TickPrecision), forexCcy.TickPrecision),
+                    new HashEntry(nameof(ForexInstrument.TickSize), forexCcy.TickSize.ToString(CultureInfo.InvariantCulture)),
+                    new HashEntry(nameof(ForexInstrument.RoundLotSize), forexCcy.RoundLotSize),
+                    new HashEntry(nameof(ForexInstrument.MinStopDistanceEntry), forexCcy.MinStopDistanceEntry),
+                    new HashEntry(nameof(ForexInstrument.MinLimitDistanceEntry), forexCcy.MinLimitDistanceEntry),
+                    new HashEntry(nameof(ForexInstrument.MinStopDistance), forexCcy.MinStopDistance),
+                    new HashEntry(nameof(ForexInstrument.MinLimitDistance), forexCcy.MinLimitDistance),
+                    new HashEntry(nameof(ForexInstrument.MinTradeSize), forexCcy.MinTradeSize),
+                    new HashEntry(nameof(ForexInstrument.MaxTradeSize), forexCcy.MaxTradeSize),
+                    new HashEntry(nameof(ForexInstrument.RolloverInterestBuy), forexCcy.RolloverInterestBuy.ToString(CultureInfo.InvariantCulture)),
+                    new HashEntry(nameof(ForexInstrument.RolloverInterestSell), forexCcy.RolloverInterestSell.ToString(CultureInfo.InvariantCulture)),
+                    new HashEntry(nameof(ForexInstrument.Timestamp), forexCcy.Timestamp.ToIsoString()),
+                };
+
+                this.redisDatabase.HashSet(KeyProvider.GetInstrumentKey(instrument.Symbol), forexHash);
+
+                return CommandResult.Ok($"Added instrument {instrument}");
+            }
+
+            var instrumentHash = new[]
             {
                 new HashEntry(nameof(Instrument.Symbol), instrument.Symbol.Value),
                 new HashEntry(nameof(Instrument.Id), instrument.Id.Value),
@@ -223,7 +274,7 @@ namespace Nautilus.Redis.Data
                 new HashEntry(nameof(Instrument.Timestamp), instrument.Timestamp.ToIsoString()),
             };
 
-            this.redisDatabase.HashSet(KeyProvider.GetInstrumentKey(instrument.Symbol), hashEntry);
+            this.redisDatabase.HashSet(KeyProvider.GetInstrumentKey(instrument.Symbol), instrumentHash);
 
             return CommandResult.Ok($"Added instrument {instrument}");
         }

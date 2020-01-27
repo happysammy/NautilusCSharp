@@ -31,7 +31,7 @@ namespace Nautilus.Serialization
         /// <inheritdoc />
         public byte[] Serialize(Instrument instrument)
         {
-            return new BsonDocument
+            var map = new BsonDocument
             {
                 { nameof(Instrument.Symbol), instrument.Symbol.Value },
                 { nameof(Instrument.BrokerSymbol), instrument.BrokerSymbol.Value },
@@ -49,7 +49,14 @@ namespace Nautilus.Serialization
                 { nameof(Instrument.RolloverInterestBuy), instrument.RolloverInterestBuy },
                 { nameof(Instrument.RolloverInterestSell), instrument.RolloverInterestSell },
                 { nameof(Instrument.Timestamp), instrument.Timestamp.ToIsoString() },
-            }.ToBson();
+            }.ToDictionary();
+
+            if (instrument is ForexInstrument forexCcy)
+            {
+                map.Add(nameof(ForexInstrument.BaseCurrency), forexCcy.BaseCurrency.ToString());
+            }
+
+            return map.ToBson();
         }
 
         /// <inheritdoc />
@@ -58,6 +65,26 @@ namespace Nautilus.Serialization
             Debug.NotEmpty(serialized, nameof(serialized));
 
             var unpacked = BsonSerializer.Deserialize<BsonDocument>(serialized);
+
+            var securityType = unpacked[nameof(Instrument.SecurityType)].AsString.ToEnum<SecurityType>();
+            if (securityType == SecurityType.FOREX)
+            {
+                return new ForexInstrument(
+                    Symbol.FromString(unpacked[nameof(Instrument.Symbol)].AsString),
+                    new BrokerSymbol(unpacked[nameof(Instrument.BrokerSymbol)].AsString),
+                    unpacked[nameof(Instrument.TickPrecision)].AsInt32,
+                    unpacked[nameof(Instrument.TickSize)].AsDecimal,
+                    unpacked[nameof(Instrument.RoundLotSize)].AsInt32,
+                    unpacked[nameof(Instrument.MinStopDistanceEntry)].AsInt32,
+                    unpacked[nameof(Instrument.MinLimitDistanceEntry)].AsInt32,
+                    unpacked[nameof(Instrument.MinStopDistance)].AsInt32,
+                    unpacked[nameof(Instrument.MinLimitDistance)].AsInt32,
+                    unpacked[nameof(Instrument.MinTradeSize)].AsInt32,
+                    unpacked[nameof(Instrument.MaxTradeSize)].AsInt32,
+                    unpacked[nameof(Instrument.RolloverInterestBuy)].AsDecimal,
+                    unpacked[nameof(Instrument.RolloverInterestSell)].AsDecimal,
+                    unpacked[nameof(Instrument.Timestamp)].AsString.ToZonedDateTimeFromIso());
+            }
 
             return new Instrument(
                 Symbol.FromString(unpacked[nameof(Instrument.Symbol)].AsString),

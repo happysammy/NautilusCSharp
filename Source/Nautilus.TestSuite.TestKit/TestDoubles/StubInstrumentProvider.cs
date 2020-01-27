@@ -10,20 +10,17 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
 
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public static class StubInstrumentProvider
     {
-        public static Instrument AUDUSD()
+        public static ForexInstrument AUDUSD()
         {
-            var instrument = new Instrument(
+            var instrument = new ForexInstrument(
                     new Symbol($"AUDUSD", new Venue("FXCM")),
                     new BrokerSymbol("AUD/USD"),
-                    Currency.AUD,
-                    SecurityType.FOREX,
                     5,
                     0.00001m,
                     1000,
@@ -40,13 +37,11 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             return instrument;
         }
 
-        public static Instrument EURUSD()
+        public static ForexInstrument EURUSD()
         {
-            var instrument = new Instrument(
+            var instrument = new ForexInstrument(
                     new Symbol($"EURUSD", new Venue("FXCM")),
                     new BrokerSymbol("EUR/USD"),
-                    Currency.EUR,
-                    SecurityType.FOREX,
                     5,
                     0.00001m,
                     1000,
@@ -63,13 +58,11 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             return instrument;
         }
 
-        public static Instrument USDJPY()
+        public static ForexInstrument USDJPY()
         {
-            var instrument = new Instrument(
+            var instrument = new ForexInstrument(
                     new Symbol("USDJPY", new Venue("FXCM")),
                     new BrokerSymbol("USD/JPY"),
-                    Currency.JPY,
-                    SecurityType.FOREX,
                     3,
                     0.001m,
                     1000,

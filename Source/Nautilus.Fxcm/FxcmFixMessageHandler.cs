@@ -31,6 +31,7 @@ namespace Nautilus.Fxcm
     using OrderCancelReject = Nautilus.DomainModel.Events.OrderCancelReject;
     using Price = Nautilus.DomainModel.ValueObjects.Price;
     using Quantity = Nautilus.DomainModel.ValueObjects.Quantity;
+    using SecurityType = Nautilus.DomainModel.Enums.SecurityType;
     using Symbol = Nautilus.DomainModel.Identifiers.Symbol;
 
     /// <summary>
@@ -151,7 +152,6 @@ namespace Nautilus.Fxcm
                     var brokerSymbolCode = group.GetField(Tags.Symbol);
                     var symbol = this.GetSymbol(brokerSymbolCode);
                     var brokerSymbol = new BrokerSymbol(brokerSymbolCode);
-                    var baseCurrency = group.GetField(Tags.Currency).ToEnum<Nautilus.DomainModel.Enums.Currency>();
                     var securityType = FxcmMessageHelper.GetSecurityType(group.GetString(FxcmTags.ProductID));
                     var tickPrecision = group.GetInt(FxcmTags.SymPrecision);
                     var tickSize = group.GetDecimal(FxcmTags.SymPointSize) * 0.1m;  // Field 9002 gives 'point' size (* 0.1m to get tick size)
@@ -165,25 +165,48 @@ namespace Nautilus.Fxcm
                     var rolloverInterestBuy = group.GetDecimal(FxcmTags.SymInterestBuy);
                     var rolloverInterestSell = group.GetDecimal(FxcmTags.SymInterestSell);
 
-                    var instrument = new Instrument(
-                        symbol,
-                        brokerSymbol,
-                        baseCurrency,
-                        securityType,
-                        tickPrecision,
-                        tickSize,
-                        roundLot,
-                        minStopDistanceEntry,
-                        minLimitDistanceEntry,
-                        minStopDistance,
-                        minLimitDistance,
-                        minTradeSize,
-                        maxTradeSize,
-                        rolloverInterestBuy,
-                        rolloverInterestSell,
-                        this.TimeNow());
+                    if (securityType == SecurityType.FOREX)
+                    {
+                        var forexCcy = new ForexInstrument(
+                            symbol,
+                            brokerSymbol,
+                            tickPrecision,
+                            tickSize,
+                            roundLot,
+                            minStopDistanceEntry,
+                            minLimitDistanceEntry,
+                            minStopDistance,
+                            minLimitDistance,
+                            minTradeSize,
+                            maxTradeSize,
+                            rolloverInterestBuy,
+                            rolloverInterestSell,
+                            this.TimeNow());
 
-                    instruments.Add(instrument);
+                        instruments.Add(forexCcy);
+                    }
+                    else
+                    {
+                        var instrument = new Instrument(
+                            symbol,
+                            brokerSymbol,
+                            group.GetField(Tags.Currency).ToEnum<Nautilus.DomainModel.Enums.Currency>(),
+                            securityType,
+                            tickPrecision,
+                            tickSize,
+                            roundLot,
+                            minStopDistanceEntry,
+                            minLimitDistanceEntry,
+                            minStopDistance,
+                            minLimitDistance,
+                            minTradeSize,
+                            maxTradeSize,
+                            rolloverInterestBuy,
+                            rolloverInterestSell,
+                            this.TimeNow());
+
+                        instruments.Add(instrument);
+                    }
                 }
 
                 this.dataGateway?.OnInstrumentsUpdate(instruments);

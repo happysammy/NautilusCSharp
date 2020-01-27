@@ -24,7 +24,7 @@ namespace Nautilus.TestSuite.UnitTests.FixTests
             var message = MarketDataRequestFactory.Create("AUD/USD", 1, StubZonedDateTime.UnixEpoch());
 
             // Assert
-            Assert.Equal("8=FIX.4.49=6735=V262=MD_0263=1264=1265=0267=2269=0269=1146=155=AUD/USD10=239", message.ToString());
+            Assert.Equal("8=FIX.4.49=6735=V262=MD_0263=1264=1265=0267=2269=0269=1146=155=AUD/USD10=238", message.ToString());
         }
     }
 }

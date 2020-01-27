@@ -19,7 +19,7 @@ namespace Nautilus.DomainModel.Entities
     /// Represents a tradeable financial market instrument.
     /// </summary>
     [Immutable]
-    public sealed class Instrument : Entity<InstrumentId, Instrument>
+    public class Instrument : Entity<InstrumentId, Instrument>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Instrument"/> class.
@@ -59,7 +59,6 @@ namespace Nautilus.DomainModel.Entities
             ZonedDateTime timestamp)
             : base(new InstrumentId(symbol.Value), timestamp)
         {
-            // Keep validation logic here
             Condition.NotNegativeInt32(tickPrecision, nameof(tickPrecision));
             Condition.PositiveDecimal(tickSize, nameof(tickSize));
             Condition.PositiveInt32(roundLotSize, nameof(roundLotSize));
@@ -99,7 +98,7 @@ namespace Nautilus.DomainModel.Entities
         public BrokerSymbol BrokerSymbol { get; }
 
         /// <summary>
-        /// Gets the instruments base currency.
+        /// Gets the instruments quote currency.
         /// </summary>
         public Currency QuoteCurrency { get; }
 

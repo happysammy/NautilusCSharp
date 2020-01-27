@@ -88,7 +88,8 @@ namespace Nautilus.Data.Aggregation
                 return;
             }
 
-            this.Log.Warning($"No bar aggregator for {tick.Symbol} ticks.");
+            // TODO: Subscribe on condition
+            // this.Log.Warning($"No bar aggregator for {tick.Symbol} ticks.");
         }
 
         private void OnMessage(BarData data)
