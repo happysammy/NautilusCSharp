@@ -229,7 +229,6 @@ namespace Nautilus.Redis.Data
                 var forexHash = new[]
                 {
                     new HashEntry(nameof(ForexInstrument.Symbol), forexCcy.Symbol.Value),
-                    new HashEntry(nameof(ForexInstrument.Id), forexCcy.Id.Value),
                     new HashEntry(nameof(ForexInstrument.BrokerSymbol), forexCcy.BrokerSymbol.Value),
                     new HashEntry(nameof(ForexInstrument.BaseCurrency), forexCcy.BaseCurrency.ToString()),
                     new HashEntry(nameof(ForexInstrument.QuoteCurrency), forexCcy.QuoteCurrency.ToString()),
@@ -256,7 +255,6 @@ namespace Nautilus.Redis.Data
             var instrumentHash = new[]
             {
                 new HashEntry(nameof(Instrument.Symbol), instrument.Symbol.Value),
-                new HashEntry(nameof(Instrument.Id), instrument.Id.Value),
                 new HashEntry(nameof(Instrument.BrokerSymbol), instrument.BrokerSymbol.Value),
                 new HashEntry(nameof(Instrument.QuoteCurrency), instrument.QuoteCurrency.ToString()),
                 new HashEntry(nameof(Instrument.SecurityType), instrument.SecurityType.ToString()),
