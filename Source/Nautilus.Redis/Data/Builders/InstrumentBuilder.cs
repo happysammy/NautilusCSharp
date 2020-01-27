@@ -31,7 +31,7 @@ namespace Nautilus.Redis.Data.Builders
         {
             this.Symbol = startingInstrument.Symbol;
             this.BrokerSymbol = startingInstrument.BrokerSymbol;
-            this.BaseCurrency = startingInstrument.BaseCurrency;
+            this.BaseCurrency = startingInstrument.QuoteCurrency;
             this.SecurityType = startingInstrument.SecurityType;
             this.TickPrecision = startingInstrument.TickPrecision;
             this.TickSize = startingInstrument.TickSize;

@@ -26,7 +26,7 @@ namespace Nautilus.DomainModel.Entities
         /// </summary>
         /// <param name="symbol">The instruments symbol.</param>
         /// <param name="brokerSymbol">The instruments broker symbol.</param>
-        /// <param name="baseCurrency">The instruments base currency.</param>
+        /// <param name="quoteCurrency">The instruments quote currency.</param>
         /// <param name="securityType">The instruments security type.</param>
         /// <param name="tickPrecision">The instruments tick decimal precision.</param>
         /// <param name="tickSize">The instruments tick size.</param>
@@ -43,7 +43,7 @@ namespace Nautilus.DomainModel.Entities
         public Instrument(
             Symbol symbol,
             BrokerSymbol brokerSymbol,
-            Currency baseCurrency,
+            Currency quoteCurrency,
             SecurityType securityType,
             int tickPrecision,
             decimal tickSize,
@@ -73,7 +73,7 @@ namespace Nautilus.DomainModel.Entities
 
             this.Symbol = symbol;
             this.BrokerSymbol = brokerSymbol;
-            this.BaseCurrency = baseCurrency;
+            this.QuoteCurrency = quoteCurrency;
             this.SecurityType = securityType;
             this.TickPrecision = tickPrecision;
             this.TickSize = tickSize;
@@ -101,7 +101,7 @@ namespace Nautilus.DomainModel.Entities
         /// <summary>
         /// Gets the instruments base currency.
         /// </summary>
-        public Currency BaseCurrency { get; }
+        public Currency QuoteCurrency { get; }
 
         /// <summary>
         /// Gets the instruments security type.

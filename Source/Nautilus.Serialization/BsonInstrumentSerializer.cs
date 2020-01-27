@@ -35,7 +35,7 @@ namespace Nautilus.Serialization
             {
                 { nameof(Instrument.Symbol), instrument.Symbol.Value },
                 { nameof(Instrument.BrokerSymbol), instrument.BrokerSymbol.Value },
-                { nameof(Instrument.BaseCurrency), instrument.BaseCurrency.ToString() },
+                { nameof(Instrument.QuoteCurrency), instrument.QuoteCurrency.ToString() },
                 { nameof(Instrument.SecurityType), instrument.SecurityType.ToString() },
                 { nameof(Instrument.TickPrecision), instrument.TickPrecision },
                 { nameof(Instrument.TickSize), instrument.TickSize },
@@ -62,7 +62,7 @@ namespace Nautilus.Serialization
             return new Instrument(
                 Symbol.FromString(unpacked[nameof(Instrument.Symbol)].AsString),
                 new BrokerSymbol(unpacked[nameof(Instrument.BrokerSymbol)].AsString),
-                unpacked[nameof(Instrument.BaseCurrency)].AsString.ToEnum<Currency>(),
+                unpacked[nameof(Instrument.QuoteCurrency)].AsString.ToEnum<Currency>(),
                 unpacked[nameof(Instrument.SecurityType)].AsString.ToEnum<SecurityType>(),
                 unpacked[nameof(Instrument.TickPrecision)].AsInt32,
                 unpacked[nameof(Instrument.TickSize)].AsDecimal,
