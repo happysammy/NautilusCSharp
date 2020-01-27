@@ -32,7 +32,6 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
-        <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.1" />
         <PackageReference Include="Serilog.AspNetCore" Version="3.2.0" />
     </ItemGroup>
 
