@@ -254,7 +254,6 @@ namespace Nautilus.Network
             this.Execute(() =>
             {
                 var msg = this.socket.ReceiveMultipartBytes(EXPECTED_FRAMES_COUNT);  // msg[1] should be empty byte array delimiter
-
                 if (msg.Count != EXPECTED_FRAMES_COUNT)
                 {
                     var error = $"Message was malformed (expected {EXPECTED_FRAMES_COUNT} frames, received {msg.Count}).";
