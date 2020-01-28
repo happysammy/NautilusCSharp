@@ -85,7 +85,7 @@ namespace Nautilus.Data.Aggregation
             {
                 aggregator.Endpoint.Send(tick);
 
-                return;
+                // return;
             }
 
             // TODO: Subscribe on condition

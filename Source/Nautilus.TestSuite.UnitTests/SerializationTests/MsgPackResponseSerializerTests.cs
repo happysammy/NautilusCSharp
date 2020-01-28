@@ -12,6 +12,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
     using Nautilus.Data.Messages.Responses;
+    using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Frames;
     using Nautilus.DomainModel.Identifiers;
@@ -195,7 +196,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var instrument = StubInstrumentProvider.AUDUSD();
             var correlationId = Guid.NewGuid();
 
-            var instruments = new[] { instrument };
+            Instrument[] instruments = { instrument };
             var data = dataSerializer.Serialize(instruments);
 
             var response = new DataResponse(

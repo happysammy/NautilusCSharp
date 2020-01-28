@@ -249,7 +249,7 @@ namespace Nautilus.Fix
 
                 this.messageBusAdapter.SendToBus(disconnected, null, this.TimeNow());
 
-                this.Log.Debug($"Disconnected from FIX session {sessionId}");
+                this.Log.Debug($"Disconnected from session {sessionId}");
             });
         }
 

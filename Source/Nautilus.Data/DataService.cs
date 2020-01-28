@@ -210,7 +210,7 @@ namespace Nautilus.Data
                 this.CreateConnectFixJob();
             }
 
-            this.Log.Warning($"Disconnected from FIX session {message.SessionId}.");
+            this.Log.Warning($"Disconnected from session {message.SessionId}.");
             this.reconnect = true; // Reset flag to default true
         }
 
