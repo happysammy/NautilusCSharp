@@ -19,17 +19,25 @@ namespace Nautilus.Core.Primitives
     [Immutable]
     public abstract class DecimalNumber
         : IEquatable<object>, IEquatable<decimal>, IEquatable<DecimalNumber>,
-            IComparable<decimal>, IComparable<DecimalNumber>,
-            IFormattable
+            IComparable<decimal>, IComparable<DecimalNumber>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DecimalNumber" /> class.
         /// </summary>
         /// <param name="value">The decimal value.</param>
-        protected DecimalNumber(decimal value)
+        /// <param name="precision">The decimal precision.</param>
+        protected DecimalNumber(decimal value, int precision)
         {
-            this.Value = value;
+            Debug.NotNegativeInt32(precision, nameof(precision));
+
+            this.Value = Math.Round(value, precision);
+            this.Precision = precision;
         }
+
+        /// <summary>
+        /// Gets the decimal precision.
+        /// </summary>
+        public int Precision { get; }
 
         /// <summary>
         /// Gets the value of the decimal number.
@@ -418,17 +426,12 @@ namespace Nautilus.Core.Primitives
         /// Returns a string representation of the <see cref="DecimalNumber"></see>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => this.Value.ToString(CultureInfo.InvariantCulture);
+        public override string ToString() => this.Value.ToString($"F{this.Precision}", CultureInfo.InvariantCulture);
 
         /// <summary>
-        /// Returns a formatted string representation of this object.
+        /// Returns the formatted string representation of this object.
         /// </summary>
-        /// <param name="format">The format for the string.</param>
-        /// <param name="formatProvider">The format provider for the string.</param>
-        /// <returns>A <see cref="string"/>.</returns>
-        public string ToString(string? format, IFormatProvider? formatProvider)
-        {
-            return this.Value.ToString(format, formatProvider);
-        }
+        /// <returns>The formatted string.</returns>
+        public string ToStringFormatted() => this.Value.ToString($"N{this.Precision}", CultureInfo.InvariantCulture);
     }
 }

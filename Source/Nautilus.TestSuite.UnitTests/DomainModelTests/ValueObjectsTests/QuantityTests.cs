@@ -114,10 +114,10 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
             var quantity = Quantity.Create(1000);
 
             // Act
-            var result = quantity.MultiplyBy(multiple);
+            var result = quantity * multiple;
 
             // Assert
-            Assert.Equal(expected, result.Value);
+            Assert.Equal(expected, result);
         }
 
         [Theory]

@@ -8,28 +8,30 @@
 
 namespace Nautilus.DomainModel.ValueObjects
 {
+    using System;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Primitives;
 
     /// <summary>
-    /// Represents a non-negative quantity.
+    /// Represents a non-negative decimal quantity.
     /// </summary>
     [Immutable]
     [SuppressMessage("ReSharper", "InterpolatedStringExpressionIsNotIFormattable", Justification = "Formatting.")]
-    public sealed class Quantity : IntegerNumber
+    public sealed class Quantity : DecimalNumber
     {
-        private static readonly Quantity ZeroQuantity = new Quantity(0);
+        private static readonly Quantity ZeroQuantity = new Quantity(decimal.Zero, 0);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Quantity"/> class.
         /// </summary>
-        /// <param name="amount">The quantity amount.</param>
-        private Quantity(int amount)
-            : base(amount)
+        /// <param name="value">The quantity value.</param>
+        /// <param name="precision">The precision of the quantity.</param>
+        private Quantity(decimal value, int precision)
+            : base(value, precision)
         {
-            Debug.NotNegativeInt32(amount, nameof(amount));
+            Debug.NotNegativeDecimal(value, nameof(value));
         }
 
         /// <summary>
@@ -41,11 +43,12 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <summary>
         /// Returns a new <see cref="Quantity"/> with the given amount.
         /// </summary>
-        /// <param name="amount">The amount.</param>
+        /// <param name="value">The value.</param>
         /// <returns>A <see cref="Quantity"/>.</returns>
-        public static Quantity Create(int amount)
+        /// <param name="precision">The precision of the quantity.</param>
+        public static Quantity Create(decimal value, int precision = 0)
         {
-            return new Quantity(amount);
+            return new Quantity(value, precision);
         }
 
         /// <summary>
@@ -56,7 +59,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A <see cref="Quantity"/>.</returns>
         public Quantity Add(Quantity other)
         {
-            return new Quantity(this.Value + other.Value);
+            return new Quantity(this.Value + other.Value, Math.Max(this.Precision, other.Precision));
         }
 
         /// <summary>
@@ -70,26 +73,31 @@ namespace Nautilus.DomainModel.ValueObjects
         {
             Debug.True(other.Value <= this.Value, nameof(other));
 
-            return new Quantity(this.Value - other.Value);
+            return new Quantity(this.Value - other.Value, Math.Max(this.Precision, other.Precision));
         }
 
         /// <summary>
-        /// Returns a new <see cref="Quantity"/> as the result of this <see cref="Quantity"/>
-        /// multiplied by the given multiple.
+        /// Returns a new <see cref="Quantity"/> as the result of the given <see cref="Quantity"/>
+        /// divided from this <see cref="Quantity"/> (cannot return a <see cref="Quantity"/>
+        /// with a negative value).
         /// </summary>
-        /// <param name="multiplier">The multiplier.</param>
+        /// <param name="other">The other quantity.</param>
         /// <returns>A <see cref="Quantity"/>.</returns>
-        public Quantity MultiplyBy(int multiplier)
+        public Quantity Divide(Quantity other)
         {
-            Debug.PositiveInt32(multiplier, nameof(multiplier));
-
-            return new Quantity(this.Value * multiplier);
+            return new Quantity(this.Value / other.Value, Math.Max(this.Precision, other.Precision));
         }
 
         /// <summary>
-        /// Returns the formatted string representation of this object.
+        /// Returns a new <see cref="Quantity"/> as the result of multiplying this <see cref="Quantity"/>
+        /// by a negative quantity (cannot return a <see cref="Quantity"/>
+        /// with a negative value).
         /// </summary>
-        /// <returns>The formatted string.</returns>
-        public string ToStringFormatted() => $"{this.Value:N0}";
+        /// <param name="other">The other quantity.</param>
+        /// <returns>A <see cref="Quantity"/>.</returns>
+        public Quantity Multiply(Quantity other)
+        {
+            return new Quantity(this.Value * other.Value, Math.Max(this.Precision, other.Precision));
+        }
     }
 }

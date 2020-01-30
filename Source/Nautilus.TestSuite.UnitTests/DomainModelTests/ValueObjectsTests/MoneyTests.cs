@@ -138,13 +138,13 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         }
 
         [Fact]
-        internal void ToString_UnknownSymbol()
+        internal void ToString_MoneyZero()
         {
             // Arrange
             var money = Money.Zero(Currency.AUD);
 
             // Act
-            var result = money.ToString();
+            var result = money.ToStringFormatted();
 
             // Assert
             Assert.Equal("0.00 AUD", result);
@@ -163,7 +163,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
             var result = Money.Create(amount, Currency.AUD);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, result.ToStringFormatted());
         }
 
         [Fact]

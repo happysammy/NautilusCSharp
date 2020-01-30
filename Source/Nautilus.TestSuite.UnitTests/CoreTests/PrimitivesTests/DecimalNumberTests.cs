@@ -128,7 +128,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.PrimitivesTests
         private class TestDecimal : DecimalNumber
         {
             public TestDecimal(decimal value)
-                : base(value)
+                : base(value, 1)
             {
             }
         }

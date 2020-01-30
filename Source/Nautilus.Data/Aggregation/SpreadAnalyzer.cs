@@ -88,7 +88,7 @@ namespace Nautilus.Data.Aggregation
         {
             if (!this.isInitialized)
             {
-                this.decimalPrecision = tick.Bid.DecimalPrecision;
+                this.decimalPrecision = tick.Bid.Precision;
                 this.isInitialized = true;
             }
 

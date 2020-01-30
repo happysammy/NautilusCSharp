@@ -26,9 +26,8 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <param name="amount">The amount.</param>
         /// <param name="currency">The currency.</param>
         private Money(decimal amount, Currency currency)
-            : base(amount)
+            : base(amount, 2)
         {
-            Debug.True(amount % 0.01m == 0, nameof(amount));
             Debug.NotDefault(currency, nameof(currency));
 
             this.Currency = currency;
@@ -150,9 +149,9 @@ namespace Nautilus.DomainModel.ValueObjects
         /// Returns a string representation of the <see cref="Money"/> object.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString()
+        public new string ToStringFormatted()
         {
-            return $"{this.Value:N2} {this.Currency}";
+            return $"{base.ToStringFormatted()} {this.Currency}";
         }
     }
 }

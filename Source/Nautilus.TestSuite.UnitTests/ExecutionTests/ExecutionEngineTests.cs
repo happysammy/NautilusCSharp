@@ -907,7 +907,10 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             // Act
             this.engine.Endpoint.Send(submitOrder);
             this.engine.Endpoint.Send(StubEventMessageProvider.OrderAcceptedEvent(order));
-            this.engine.Endpoint.Send(StubEventMessageProvider.OrderPartiallyFilledEvent(order, 50000, 50000));
+            this.engine.Endpoint.Send(StubEventMessageProvider.OrderPartiallyFilledEvent(
+                order,
+                Quantity.Create(50000),
+                Quantity.Create(50000)));
 
             LogDumper.DumpWithDelay(this.logger, this.output);
 

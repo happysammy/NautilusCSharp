@@ -234,8 +234,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var event3 = StubEventMessageProvider.OrderWorkingEvent(order, order.Price);
             var event4 = StubEventMessageProvider.OrderPartiallyFilledEvent(
                 order,
-                order.Quantity / 2,
-                order.Quantity / 2,
+                order.Quantity,
+                Quantity.Create(order.Quantity / 2),
                 order.Price);
 
             // Act
@@ -307,8 +307,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var event3 = StubEventMessageProvider.OrderWorkingEvent(order, order.Price);
             var event4 = StubEventMessageProvider.OrderPartiallyFilledEvent(
                 order,
-                50000,
-                50000,
+                Quantity.Create(50000),
+                Quantity.Create(50000),
                 order.Price);
 
             order.Apply(event1);

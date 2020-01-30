@@ -32,7 +32,7 @@ namespace Nautilus.Fxcm.MessageFactories
         public static OrderCancelReplaceRequest Create(
             string brokerSymbol,
             Order order,
-            int modifiedQuantity,
+            decimal modifiedQuantity,
             decimal modifiedPrice,
             ZonedDateTime transactionTime)
         {

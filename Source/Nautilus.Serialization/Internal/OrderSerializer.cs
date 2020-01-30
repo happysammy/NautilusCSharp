@@ -50,7 +50,7 @@ namespace Nautilus.Serialization.Internal
                 { nameof(OrderSide), order.OrderSide.ToString() },
                 { nameof(OrderType), order.OrderType.ToString() },
                 { nameof(OrderPurpose), order.OrderPurpose.ToString() },
-                { nameof(Order.Quantity), order.Quantity.Value },
+                { nameof(Order.Quantity), order.Quantity.ToString() },
                 { nameof(Order.Price), ObjectPacker.Pack(order.Price) },
                 { nameof(Order.TimeInForce), order.TimeInForce.ToString() },
                 { nameof(Order.ExpireTime), ObjectPacker.Pack(order.ExpireTime) },

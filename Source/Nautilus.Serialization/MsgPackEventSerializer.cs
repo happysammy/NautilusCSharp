@@ -63,7 +63,7 @@ namespace Nautilus.Serialization
                     package.Add(nameof(evt.OrderSide), evt.OrderSide.ToString());
                     package.Add(nameof(evt.OrderType), evt.OrderType.ToString());
                     package.Add(nameof(evt.OrderPurpose), evt.OrderPurpose.ToString());
-                    package.Add(nameof(evt.Quantity), evt.Quantity.Value);
+                    package.Add(nameof(evt.Quantity), evt.Quantity.ToString());
                     package.Add(nameof(evt.Price), ObjectPacker.Pack(evt.Price));
                     package.Add(nameof(evt.TimeInForce), evt.TimeInForce.ToString());
                     package.Add(nameof(evt.ExpireTime), ObjectPacker.Pack(evt.ExpireTime));
@@ -102,7 +102,7 @@ namespace Nautilus.Serialization
                     package.Add(nameof(evt.Label), evt.Label.Value);
                     package.Add(nameof(evt.OrderSide), evt.OrderSide.ToString());
                     package.Add(nameof(evt.OrderType), evt.OrderType.ToString());
-                    package.Add(nameof(evt.Quantity), evt.Quantity.Value);
+                    package.Add(nameof(evt.Quantity), evt.Quantity.ToString());
                     package.Add(nameof(evt.Price), evt.Price.ToString());
                     package.Add(nameof(evt.TimeInForce), evt.TimeInForce.ToString());
                     package.Add(nameof(evt.ExpireTime), ObjectPacker.Pack(evt.ExpireTime));
@@ -124,7 +124,7 @@ namespace Nautilus.Serialization
                     package.Add(nameof(evt.AccountId), evt.AccountId.Value);
                     package.Add(nameof(evt.OrderId), evt.OrderId.Value);
                     package.Add(nameof(evt.OrderIdBroker), evt.OrderIdBroker.Value);
-                    package.Add(nameof(evt.ModifiedQuantity), evt.ModifiedQuantity.Value);
+                    package.Add(nameof(evt.ModifiedQuantity), evt.ModifiedQuantity.ToString());
                     package.Add(nameof(evt.ModifiedPrice), evt.ModifiedPrice.Value.ToString(CultureInfo.InvariantCulture));
                     package.Add(nameof(evt.ModifiedTime), evt.ModifiedTime.ToIsoString());
                     break;
@@ -140,8 +140,8 @@ namespace Nautilus.Serialization
                     package.Add(nameof(evt.PositionIdBroker), evt.PositionIdBroker.Value);
                     package.Add(nameof(evt.Symbol), evt.Symbol.Value);
                     package.Add(nameof(evt.OrderSide), evt.OrderSide.ToString());
-                    package.Add(nameof(evt.FilledQuantity), evt.FilledQuantity.Value);
-                    package.Add(nameof(evt.LeavesQuantity), evt.LeavesQuantity.Value);
+                    package.Add(nameof(evt.FilledQuantity), evt.FilledQuantity.ToString());
+                    package.Add(nameof(evt.LeavesQuantity), evt.LeavesQuantity.ToString());
                     package.Add(nameof(evt.AveragePrice), evt.AveragePrice.ToString());
                     package.Add(nameof(evt.Currency), evt.Currency.ToString());
                     package.Add(nameof(evt.ExecutionTime), evt.ExecutionTime.ToIsoString());
@@ -153,7 +153,7 @@ namespace Nautilus.Serialization
                     package.Add(nameof(evt.PositionIdBroker), evt.PositionIdBroker.Value);
                     package.Add(nameof(evt.Symbol), evt.Symbol.Value);
                     package.Add(nameof(evt.OrderSide), evt.OrderSide.ToString());
-                    package.Add(nameof(evt.FilledQuantity), evt.FilledQuantity.Value);
+                    package.Add(nameof(evt.FilledQuantity), evt.FilledQuantity.ToString());
                     package.Add(nameof(evt.AveragePrice), evt.AveragePrice.ToString());
                     package.Add(nameof(evt.Currency), evt.Currency.ToString());
                     package.Add(nameof(evt.ExecutionTime), evt.ExecutionTime.ToIsoString());

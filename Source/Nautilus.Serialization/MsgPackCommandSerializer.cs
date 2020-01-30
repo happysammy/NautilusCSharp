@@ -70,7 +70,7 @@ namespace Nautilus.Serialization
                     package.Add(nameof(cmd.TraderId), cmd.TraderId.Value);
                     package.Add(nameof(cmd.AccountId), cmd.AccountId.Value);
                     package.Add(nameof(cmd.OrderId), cmd.OrderId.Value);
-                    package.Add(nameof(cmd.ModifiedQuantity), cmd.ModifiedQuantity.Value);
+                    package.Add(nameof(cmd.ModifiedQuantity), cmd.ModifiedQuantity.ToString());
                     package.Add(nameof(cmd.ModifiedPrice), cmd.ModifiedPrice.ToString());
                     break;
                 case CancelOrder cmd:

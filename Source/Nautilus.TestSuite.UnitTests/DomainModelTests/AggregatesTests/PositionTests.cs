@@ -57,7 +57,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.Null(position.OpenDuration);
             Assert.Equal(OrderSide.Buy, position.EntryDirection);
             Assert.Equal(Quantity.Create(1000), position.Quantity);
-            Assert.Equal(Quantity.Create(1000), position.PeakOpenQuantity);
+            Assert.Equal(Quantity.Create(1000), position.PeakQuantity);
             Assert.Equal(MarketPosition.Long, position.MarketPosition);
             Assert.Equal(StubZonedDateTime.UnixEpoch(), position.OpenedTime);
             Assert.Equal(1, position.EventCount);
@@ -109,7 +109,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.Null(position.OpenDuration);
             Assert.Equal(OrderSide.Sell, position.EntryDirection);
             Assert.Equal(Quantity.Create(1000), position.Quantity);
-            Assert.Equal(Quantity.Create(1000), position.PeakOpenQuantity);
+            Assert.Equal(Quantity.Create(1000), position.PeakQuantity);
             Assert.Equal(MarketPosition.Short, position.MarketPosition);
             Assert.Equal(StubZonedDateTime.UnixEpoch(), position.OpenedTime);
             Assert.Equal(1, position.EventCount);
@@ -366,7 +366,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.Equal(1.000105m, position.AverageClosePrice);
             Assert.Equal(MarketPosition.Flat, position.MarketPosition);
             Assert.Equal(Quantity.Create(0), position.Quantity);
-            Assert.Equal(Quantity.Create(100000), position.PeakOpenQuantity);
+            Assert.Equal(Quantity.Create(100000), position.PeakQuantity);
             Assert.Equal(0.000105m, position.RealizedPoints);
             Assert.Equal(0.00010500000000002174, position.RealizedReturn);
             Assert.Equal(Money.Create(10.50m, position.BaseCurrency), position.RealizedPnl);

@@ -33,7 +33,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
 
             // Assert
             Assert.Equal(expected, result.Value);
-            Assert.Equal(decimalPrecision, result.DecimalPrecision);
+            Assert.Equal(decimalPrecision, result.Precision);
         }
 
         [Theory]
@@ -54,7 +54,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
 
             // Assert
             Assert.Equal(expected, result.Value);
-            Assert.Equal(decimals, result.DecimalPrecision);
+            Assert.Equal(decimals, result.Precision);
         }
 
         [Theory]

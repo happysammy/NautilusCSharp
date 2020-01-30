@@ -491,7 +491,10 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             this.database.AddOrder(order, traderId, accountId, strategyId, positionId);
 
-            var position = new Position(positionId, StubEventMessageProvider.OrderPartiallyFilledEvent(order, 50000, 50000));
+            var position = new Position(positionId, StubEventMessageProvider.OrderPartiallyFilledEvent(
+                order,
+                Quantity.Create(50000),
+                Quantity.Create(50000)));
             this.database.AddPosition(position);
 
             position.Apply(StubEventMessageProvider.OrderFilledEvent(order));
@@ -520,7 +523,10 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             this.database.AddOrder(order, traderId, accountId, strategyId, positionId);
 
-            var position = new Position(positionId, StubEventMessageProvider.OrderPartiallyFilledEvent(order, 50000, 50000));
+            var position = new Position(positionId, StubEventMessageProvider.OrderPartiallyFilledEvent(
+                order,
+                Quantity.Create(50000),
+                Quantity.Create(50000)));
             this.database.AddPosition(position);
 
             position.Apply(StubEventMessageProvider.OrderFilledEvent(order));
@@ -766,7 +772,10 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             this.database.AddOrder(order, traderId, accountId, strategyId, positionId);
 
-            var position = new Position(positionId, StubEventMessageProvider.OrderPartiallyFilledEvent(order, 50000, 50000));
+            var position = new Position(positionId, StubEventMessageProvider.OrderPartiallyFilledEvent(
+                order,
+                Quantity.Create(50000),
+                Quantity.Create(50000)));
             this.database.AddPosition(position);
 
             // Act

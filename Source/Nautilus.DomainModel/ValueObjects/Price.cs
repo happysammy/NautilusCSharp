@@ -8,7 +8,6 @@
 
 namespace Nautilus.DomainModel.ValueObjects
 {
-    using System.Globalization;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
@@ -24,19 +23,12 @@ namespace Nautilus.DomainModel.ValueObjects
         /// Initializes a new instance of the <see cref="Price"/> class.
         /// </summary>
         /// <param name="value">The price value.</param>
-        /// <param name="decimalPrecision">The price decimal precision.</param>
-        private Price(decimal value, int decimalPrecision)
-            : base(value)
+        /// <param name="precision">The price decimal precision.</param>
+        private Price(decimal value, int precision)
+            : base(value, precision)
         {
-            Debug.PositiveDecimal(value, nameof(value));
-
-            this.DecimalPrecision = decimalPrecision;
+            Debug.NotNegativeDecimal(value, nameof(value));
         }
-
-        /// <summary>
-        /// Gets the prices number of decimal places.
-        /// </summary>
-        public int DecimalPrecision { get; }
 
         /// <summary>
         /// Returns a new <see cref="Price"/> with the given value and decimal places.
@@ -52,14 +44,11 @@ namespace Nautilus.DomainModel.ValueObjects
         /// Returns a new <see cref="Price"/> with the given value and decimal places.
         /// </summary>
         /// <param name="value">The price value.</param>
-        /// <param name="decimalPrecision">The price decimal precision.</param>
+        /// <param name="precision">The price precision.</param>
         /// <returns>A <see cref="Price"/>.</returns>
-        public static Price Create(decimal value, int decimalPrecision)
+        public static Price Create(decimal value, int precision)
         {
-            Debug.NotNegativeInt32(decimalPrecision, nameof(decimalPrecision));
-            Debug.True(value.GetDecimalPlaces() <= decimalPrecision, nameof(decimalPrecision));
-
-            return new Price(value, decimalPrecision);
+            return new Price(value, precision);
         }
 
         /// <summary>
@@ -70,7 +59,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A <see cref="Price"/>.</returns>
         public Price Add(Price other)
         {
-            return new Price(this.Value + other.Value, this.DecimalPrecision);
+            return new Price(this.Value + other.Value, this.Precision);
         }
 
         /// <summary>
@@ -82,13 +71,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A <see cref="Price"/>.</returns>
         public Price Subtract(Price other)
         {
-            return new Price(this.Value - other.Value, this.DecimalPrecision);
+            return new Price(this.Value - other.Value, this.Precision);
         }
-
-        /// <summary>
-        /// Returns a string representation of the <see cref="Price"/>.
-        /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{this.Value.ToString($"F{this.DecimalPrecision}", CultureInfo.InvariantCulture)}";
     }
 }

@@ -140,8 +140,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
         public static OrderPartiallyFilled OrderPartiallyFilledEvent(
             Order order,
-            int filledQuantity,
-            int leavesQuantity,
+            Quantity filledQuantity,
+            Quantity leavesQuantity,
             Price? averagePrice = null)
         {
             if (averagePrice is null)
@@ -156,8 +156,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 new PositionIdBroker("NONE"),
                 order.Symbol,
                 order.OrderSide,
-                Quantity.Create(filledQuantity),
-                Quantity.Create(leavesQuantity),
+                filledQuantity,
+                leavesQuantity,
                 averagePrice,
                 Currency.USD,
                 StubZonedDateTime.UnixEpoch() + Period.FromMinutes(1).ToDuration(),
