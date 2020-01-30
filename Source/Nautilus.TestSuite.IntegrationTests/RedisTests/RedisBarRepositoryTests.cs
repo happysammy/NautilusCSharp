@@ -252,8 +252,8 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             this.repository.Add(marketData);
 
             // Act
-            this.repository.TrimToDays(Resolution.SECOND, 1);
-            this.repository.TrimToDays(Resolution.MINUTE, 10);
+            this.repository.TrimToDays(BarStructure.Second, 1);
+            this.repository.TrimToDays(BarStructure.Minute, 10);
 
             // Assert
             Assert.Equal(6, this.repository.BarsCount(barType));
@@ -275,8 +275,8 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             this.repository.Add(marketData);
 
             // Act
-            this.repository.TrimToDays(Resolution.SECOND, 1);
-            this.repository.TrimToDays(Resolution.MINUTE, 5);
+            this.repository.TrimToDays(BarStructure.Second, 1);
+            this.repository.TrimToDays(BarStructure.Minute, 5);
 
             // Assert
             Assert.Equal(5, this.repository.BarsCount(barType));
@@ -302,7 +302,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             this.repository.Add(barData2);
 
             // Act
-            this.repository.TrimToDays(Resolution.MINUTE, 5);
+            this.repository.TrimToDays(BarStructure.Minute, 5);
 
             // Assert
             this.PrintRepositoryStatus(barType1);

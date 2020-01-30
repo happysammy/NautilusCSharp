@@ -8,24 +8,32 @@
 
 namespace Nautilus.DomainModel.Enums
 {
+    using Nautilus.Core.Annotations;
+
     /// <summary>
     /// The relative historic impact on a financial market of a particular news event type.
     /// </summary>
     public enum NewsImpact
     {
         /// <summary>
+        /// The enumerator value is undefined (invalid).
+        /// </summary>
+        [InvalidValue]
+        Undefined = 0,
+
+        /// <summary>
         /// The low news impact.
         /// </summary>
-        Low = 0,
+        Low = 1,
 
         /// <summary>
         /// The medium news impact.
         /// </summary>
-        Medium = 1,
+        Medium = 2,
 
         /// <summary>
         /// The high news impact.
         /// </summary>
-        High = 2,
+        High = 3,
     }
 }

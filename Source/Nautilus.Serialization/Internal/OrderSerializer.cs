@@ -111,7 +111,7 @@ namespace Nautilus.Serialization.Internal
 
             switch (type)
             {
-                case OrderType.MARKET:
+                case OrderType.Market:
                     return OrderFactory.Market(
                         id,
                         symbol,
@@ -121,7 +121,7 @@ namespace Nautilus.Serialization.Internal
                         quantity,
                         timestamp,
                         initialId);
-                case OrderType.LIMIT:
+                case OrderType.Limit:
                     return OrderFactory.Limit(
                         id,
                         symbol,
@@ -134,7 +134,7 @@ namespace Nautilus.Serialization.Internal
                         ObjectExtractor.NullableZonedDateTime(unpacked[nameof(Order.ExpireTime)]),
                         timestamp,
                         initialId);
-                case OrderType.STOP_LIMIT:
+                case OrderType.StopLimit:
                     return OrderFactory.StopLimit(
                         id,
                         symbol,
@@ -147,7 +147,7 @@ namespace Nautilus.Serialization.Internal
                         ObjectExtractor.NullableZonedDateTime(unpacked[nameof(Order.ExpireTime)]),
                         timestamp,
                         initialId);
-                case OrderType.STOP_MARKET:
+                case OrderType.StopMarket:
                     return OrderFactory.StopMarket(
                         id,
                         symbol,

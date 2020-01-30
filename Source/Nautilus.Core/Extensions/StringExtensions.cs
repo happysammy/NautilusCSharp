@@ -9,6 +9,7 @@
 namespace Nautilus.Core.Extensions
 {
     using System;
+    using System.Linq;
 
     /// <summary>
     /// Provides useful generic <see cref="string"/> extension methods.
@@ -16,20 +17,38 @@ namespace Nautilus.Core.Extensions
     public static class StringExtensions
     {
         /// <summary>
-        /// Returns an enumerator of the given type (parsed from the given string).
+        /// Returns an enumerator of the given type parsed from this string.
         /// </summary>
-        /// <param name="input">The input string.</param>
+        /// <param name="input">This string.</param>
         /// <typeparam name="T">The enumerator type.</typeparam>
-        /// <returns>An enumerator type.</returns>
+        /// <returns>The parsed enumerator.</returns>
+        /// <exception cref="ArgumentException">If the input cannot be parsed.</exception>
         public static T ToEnum<T>(this string input)
             where T : struct
         {
-            if (string.IsNullOrWhiteSpace(input))
+            var stripped = input.Replace("_", string.Empty);  // Strip snake case of underscores
+            if (Enum.TryParse<T>(stripped, true, out var result))
             {
-                return default;
+                return result;
             }
 
-            return (T)Enum.Parse(typeof(T), input);
+            return Enum.Parse<T>("Undefined");
+        }
+
+        /// <summary>
+        /// Returns an upper case SNAKE_CASE string from this string.
+        /// </summary>
+        /// <param name="input">This string.</param>
+        /// <param name="upperCase">If the parsed string should be upper case.</param>
+        /// <returns>The parsed string.</returns>
+        public static string ToSnakeCase(this string input, bool upperCase = true)
+        {
+            var snaked = string.Concat(input.Select((x, i) => i > 0 && char.IsUpper(x)
+                ? "_" + x
+                : x.ToString()));
+            return upperCase
+                ? snaked.ToUpper()
+                : snaked.ToLower();
         }
 
         /// <summary>

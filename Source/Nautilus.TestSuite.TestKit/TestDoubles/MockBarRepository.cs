@@ -87,7 +87,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 : QueryResult<ZonedDateTime>.Ok(this.bars[barType].Last().Timestamp);
         }
 
-        public CommandResult TrimToDays(Resolution resolution, int trimToDays)
+        public CommandResult TrimToDays(BarStructure barStructure, int trimToDays)
         {
             // Not implemented
             return CommandResult.Ok();

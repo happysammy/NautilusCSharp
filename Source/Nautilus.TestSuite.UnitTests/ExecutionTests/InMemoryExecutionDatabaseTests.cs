@@ -547,7 +547,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             var order2 = new StubOrderBuilder()
                 .WithOrderId("O-123456-2")
-                .WithOrderSide(OrderSide.SELL)
+                .WithOrderSide(OrderSide.Sell)
                 .BuildMarketOrder();
 
             var traderId = TraderId.FromString("TESTER-000");
@@ -798,7 +798,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             var order2 = new StubOrderBuilder()
                 .WithOrderId("O-123456-2")
-                .WithOrderSide(OrderSide.SELL)
+                .WithOrderSide(OrderSide.Sell)
                 .BuildMarketOrder();
 
             var traderId = TraderId.FromString("TESTER-000");

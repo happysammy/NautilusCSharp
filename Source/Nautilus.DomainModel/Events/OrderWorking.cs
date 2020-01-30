@@ -63,7 +63,6 @@ namespace Nautilus.DomainModel.Events
                 eventId,
                 eventTimestamp)
         {
-            Debug.NotDefault(timeInForce, nameof(timeInForce));
             Debug.NotDefault(workingTime, nameof(workingTime));
             Debug.NotDefault(eventId, nameof(eventId));
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));

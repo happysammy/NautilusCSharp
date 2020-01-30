@@ -28,7 +28,7 @@ namespace Nautilus.DomainModel.Identifiers
         /// <param name="accountNumber">The account number identifier.</param>
         /// <param name="accountType">The account type identifier value.</param>
         public AccountId(Brokerage broker, AccountNumber accountNumber, AccountType accountType)
-            : base($"{broker.Value}-{accountNumber.Value}-{accountType}")
+            : base($"{broker.Value}-{accountNumber.Value}-{accountType.ToString().ToUpper()}")
         {
             this.Broker = broker;
             this.AccountNumber = accountNumber;

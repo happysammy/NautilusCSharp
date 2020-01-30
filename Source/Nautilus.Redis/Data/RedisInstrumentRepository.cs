@@ -177,7 +177,7 @@ namespace Nautilus.Redis.Data
                     hashEntry => hashEntry.Value.ToString());
 
             var securityType = instrumentDict[nameof(Instrument.SecurityType)].ToEnum<SecurityType>();
-            if (securityType == SecurityType.FOREX)
+            if (securityType == SecurityType.Forex)
             {
                 var forexCcy = new ForexInstrument(
                     Symbol.FromString(instrumentDict[nameof(Instrument.Symbol)]),

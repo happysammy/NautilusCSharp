@@ -69,7 +69,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
                 new Symbol("SPX500", new Venue("FXCM")),
                 new BrokerSymbol("SPX500"),
                 Currency.CAD,
-                SecurityType.BOND,
+                SecurityType.Bond,
                 2,
                 0.01m,
                 1,

@@ -159,7 +159,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             // Arrange
             var dataSerializer = new BsonBarDataFrameSerializer();
             var symbol = new Symbol("AUDUSD", new Venue("FXCM"));
-            var barSpec = new BarSpecification(1, Resolution.MINUTE, QuoteType.BID);
+            var barSpec = new BarSpecification(1, BarStructure.Minute, PriceType.Bid);
             var correlationId = Guid.NewGuid();
 
             var bars = new[] { StubBarProvider.Build(), StubBarProvider.Build() };

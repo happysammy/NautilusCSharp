@@ -32,7 +32,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new ExecutionId("E-123456"),
                 new PositionIdBroker("ET-123456"),
                 new Symbol("AUDUSD", new Venue("FXCM")),
-                OrderSide.BUY,
+                OrderSide.Buy,
                 Quantity.Create(1000),
                 Price.Create(2000, 2),
                 Currency.USD,
@@ -55,7 +55,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.Null(position.AverageClosePrice);
             Assert.Null(position.ClosedTime);
             Assert.Null(position.OpenDuration);
-            Assert.Equal(OrderSide.BUY, position.EntryDirection);
+            Assert.Equal(OrderSide.Buy, position.EntryDirection);
             Assert.Equal(Quantity.Create(1000), position.Quantity);
             Assert.Equal(Quantity.Create(1000), position.PeakOpenQuantity);
             Assert.Equal(MarketPosition.Long, position.MarketPosition);
@@ -84,7 +84,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new ExecutionId("E-123456"),
                 new PositionIdBroker("ET-123456"),
                 new Symbol("AUDUSD", new Venue("FXCM")),
-                OrderSide.SELL,
+                OrderSide.Sell,
                 Quantity.Create(1000),
                 Price.Create(2000, 2),
                 Currency.USD,
@@ -107,7 +107,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.Null(position.AverageClosePrice);
             Assert.Null(position.ClosedTime);
             Assert.Null(position.OpenDuration);
-            Assert.Equal(OrderSide.SELL, position.EntryDirection);
+            Assert.Equal(OrderSide.Sell, position.EntryDirection);
             Assert.Equal(Quantity.Create(1000), position.Quantity);
             Assert.Equal(Quantity.Create(1000), position.PeakOpenQuantity);
             Assert.Equal(MarketPosition.Short, position.MarketPosition);
@@ -136,7 +136,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new ExecutionId("E-123456"),
                 new PositionIdBroker("ET-123456"),
                 new Symbol("AUDUSD", new Venue("FXCM")),
-                OrderSide.SELL,
+                OrderSide.Sell,
                 Quantity.Create(5000),
                 Price.Create(1.00000m, 5),
                 Currency.USD,
@@ -152,7 +152,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new ExecutionId("E-123456"),
                 new PositionIdBroker("ET-123456"),
                 position.Symbol,
-                OrderSide.BUY,
+                OrderSide.Buy,
                 Quantity.Create(5000),
                 Price.Create(1.00000m, 5),
                 Currency.USD,
@@ -184,7 +184,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new ExecutionId("E-123456"),
                 new PositionIdBroker("ET-123456"),
                 new Symbol("AUDUSD", new Venue("FXCM")),
-                OrderSide.BUY,
+                OrderSide.Buy,
                 Quantity.Create(100000),
                 Price.Create(1.00000m, 5),
                 Currency.USD,
@@ -200,7 +200,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new ExecutionId("E-123456"),
                 new PositionIdBroker("ET-123456"),
                 position.Symbol,
-                OrderSide.BUY,
+                OrderSide.Buy,
                 Quantity.Create(200000),
                 Price.Create(1.00000m, 5),
                 Currency.USD,
@@ -214,7 +214,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new ExecutionId("E-123456"),
                 new PositionIdBroker("ET-123456"),
                 position.Symbol,
-                OrderSide.SELL,
+                OrderSide.Sell,
                 Quantity.Create(50000),
                 Price.Create(1.00000m, 5),
                 Currency.USD,
@@ -228,7 +228,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new ExecutionId("E-123456"),
                 new PositionIdBroker("ET-123456"),
                 position.Symbol,
-                OrderSide.SELL,
+                OrderSide.Sell,
                 Quantity.Create(250000),
                 Price.Create(1.00000m, 5),
                 Currency.USD,
@@ -263,7 +263,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new ExecutionId("E-123456"),
                 new PositionIdBroker("ET-123456"),
                 new Symbol("AUDUSD", new Venue("FXCM")),
-                OrderSide.SELL,
+                OrderSide.Sell,
                 Quantity.Create(100000),
                 Price.Create(1.00000m, 5),
                 Currency.USD,
@@ -277,7 +277,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new ExecutionId("E-1234561"),
                 new PositionIdBroker("ET-123456"),
                 new Symbol("AUDUSD", new Venue("FXCM")),
-                OrderSide.SELL,
+                OrderSide.Sell,
                 Quantity.Create(100000),
                 Price.Create(1.00001m, 5),
                 Currency.USD,
@@ -317,7 +317,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new ExecutionId("E-123456"),
                 new PositionIdBroker("ET-123456"),
                 new Symbol("AUDUSD", new Venue("FXCM")),
-                OrderSide.BUY,
+                OrderSide.Buy,
                 Quantity.Create(100000),
                 Price.Create(1.00000m, 5),
                 Currency.USD,
@@ -331,7 +331,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new ExecutionId("E-1234561"),
                 new PositionIdBroker("ET-123456"),
                 new Symbol("AUDUSD", new Venue("FXCM")),
-                OrderSide.SELL,
+                OrderSide.Sell,
                 Quantity.Create(50000),
                 Price.Create(1.00011m, 5),
                 Currency.USD,
@@ -345,7 +345,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new ExecutionId("E-1234562"),
                 new PositionIdBroker("ET-123456"),
                 new Symbol("AUDUSD", new Venue("FXCM")),
-                OrderSide.SELL,
+                OrderSide.Sell,
                 Quantity.Create(50000),
                 Price.Create(1.00010m, 5),
                 Currency.USD,
@@ -388,7 +388,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new ExecutionId("E-123456"),
                 new PositionIdBroker("ET-123456"),
                 new Symbol("AUDUSD", new Venue("FXCM")),
-                OrderSide.SELL,
+                OrderSide.Sell,
                 Quantity.Create(1000000),
                 Price.Create(1.00000m, 5),
                 Currency.USD,
@@ -404,7 +404,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new ExecutionId("E-123456"),
                 new PositionIdBroker("ET-123456"),
                 position.Symbol,
-                OrderSide.BUY,
+                OrderSide.Buy,
                 Quantity.Create(500000),
                 Price.Create(1.00001m, 5),
                 Currency.USD,
@@ -418,7 +418,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new ExecutionId("E-123456"),
                 new PositionIdBroker("ET-123456"),
                 position.Symbol,
-                OrderSide.BUY,
+                OrderSide.Buy,
                 Quantity.Create(1000000),
                 Price.Create(1.00000m, 5),
                 Currency.USD,

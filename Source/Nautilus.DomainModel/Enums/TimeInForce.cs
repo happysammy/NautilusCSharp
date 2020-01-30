@@ -8,21 +8,23 @@
 
 namespace Nautilus.DomainModel.Enums
 {
+    using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core.Annotations;
 
     /// <summary>
     /// The time in force for an order.
     /// </summary>
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed")]
     public enum TimeInForce
     {
         /// <summary>
-        /// The time in force is unknown (invalid value).
+        /// The enumerator value is undefined (invalid).
         /// </summary>
         [InvalidValue]
-        UNKNOWN = 0,
+        Undefined = 0,
 
         /// <summary>
-        /// The order is in force for that trading day.
+        /// The order is in force for that trading day (default).
         /// </summary>
         DAY = 1,
 

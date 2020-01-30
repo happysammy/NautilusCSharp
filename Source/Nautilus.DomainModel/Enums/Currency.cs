@@ -8,11 +8,21 @@
 
 namespace Nautilus.DomainModel.Enums
 {
+    using System.Diagnostics.CodeAnalysis;
+    using Nautilus.Core.Annotations;
+
     /// <summary>
     /// Represents an ISO 4217 currency code.
     /// </summary>
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed")]
     public enum Currency
     {
+        /// <summary>
+        /// The enumerator value is undefined (invalid).
+        /// </summary>
+        [InvalidValue]
+        Undefined = 0,
+
         /// <summary>
         /// Australian dollar.
         /// </summary>

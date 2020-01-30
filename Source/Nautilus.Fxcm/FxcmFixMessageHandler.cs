@@ -165,7 +165,7 @@ namespace Nautilus.Fxcm
                     var rolloverInterestBuy = group.GetDecimal(FxcmTags.SymInterestBuy);
                     var rolloverInterestSell = group.GetDecimal(FxcmTags.SymInterestSell);
 
-                    if (securityType == SecurityType.FOREX)
+                    if (securityType == SecurityType.Forex)
                     {
                         var forexCcy = new ForexInstrument(
                             symbol,

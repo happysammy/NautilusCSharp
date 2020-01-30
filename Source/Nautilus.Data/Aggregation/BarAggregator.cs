@@ -62,23 +62,23 @@ namespace Nautilus.Data.Aggregation
         /// </summary>
         public IReadOnlyCollection<BarSpecification> Specifications => this.specifications.AsReadOnly();
 
-        private static Price GetUpdateQuote(QuoteType quoteType, Tick tick)
+        private static Price GetUpdateQuote(PriceType priceType, Tick tick)
         {
-            switch (quoteType)
+            switch (priceType)
             {
-                case QuoteType.BID:
+                case PriceType.Bid:
                     return tick.Bid;
-                case QuoteType.ASK:
+                case PriceType.Ask:
                     return tick.Ask;
-                case QuoteType.MID:
+                case PriceType.Mid:
                     var decimalsPlusOne = tick.Bid.DecimalPrecision + 1;
                     return Price.Create(
                         Math.Round((tick.Bid + tick.Ask) / 2, decimalsPlusOne),
                         decimalsPlusOne);
-                case QuoteType.LAST:
+                case PriceType.Last:
                     goto default;
                 default:
-                    throw ExceptionFactory.InvalidSwitchArgument(quoteType, nameof(quoteType));
+                    throw ExceptionFactory.InvalidSwitchArgument(priceType, nameof(priceType));
             }
         }
 
@@ -88,7 +88,7 @@ namespace Nautilus.Data.Aggregation
 
             foreach (var barSpec in this.barBuilders.Keys)
             {
-                var quote = GetUpdateQuote(barSpec.QuoteType, tick);
+                var quote = GetUpdateQuote(barSpec.PriceType, tick);
 
                 if (this.barBuilders.TryGetValue(barSpec, out var builder))
                 {

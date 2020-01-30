@@ -136,7 +136,7 @@ namespace Nautilus.Fxcm
         {
             return TimeInForceStringIndex.TryGetValue(timeInForce, out var value)
                 ? value
-                : TimeInForce.UNKNOWN;
+                : TimeInForce.Undefined;
         }
 
         /// <summary>
@@ -149,7 +149,7 @@ namespace Nautilus.Fxcm
             switch (type)
             {
                 case "1":
-                    return SecurityType.FOREX;
+                    return SecurityType.Forex;
                 default:
                     return SecurityType.CFD;
             }
@@ -162,9 +162,17 @@ namespace Nautilus.Fxcm
         /// <returns>The <see cref="OrderSide"/>.</returns>
         public static OrderSide GetOrderSide(string side)
         {
-            return side == Side.BUY.ToString()
-                ? OrderSide.BUY
-                : OrderSide.SELL;
+            if (side == Side.BUY.ToString())
+            {
+                return OrderSide.Buy;
+            }
+
+            if (side == Side.SELL.ToString())
+            {
+                return OrderSide.Sell;
+            }
+
+            return OrderSide.Undefined;
         }
 
         /// <summary>
@@ -174,7 +182,7 @@ namespace Nautilus.Fxcm
         /// <returns>A <see cref="Side"/>.</returns>
         public static Side GetFixOrderSide(OrderSide orderSide)
         {
-            return orderSide == OrderSide.BUY
+            return orderSide == OrderSide.Buy
                 ? new Side(Side.BUY)
                 : new Side(Side.SELL);
         }
@@ -186,7 +194,7 @@ namespace Nautilus.Fxcm
         /// <returns>A <see cref="Side"/>.</returns>
         public static Side GetOppositeFixOrderSide(OrderSide orderSide)
         {
-            return orderSide == OrderSide.BUY
+            return orderSide == OrderSide.Buy
                 ? new Side(Side.SELL)
                 : new Side(Side.BUY);
         }
@@ -200,22 +208,22 @@ namespace Nautilus.Fxcm
         {
             if (fixType == OrdType.MARKET.ToString())
             {
-                return OrderType.MARKET;
+                return OrderType.Market;
             }
 
             if (fixType == OrdType.STOP.ToString())
             {
-                return OrderType.STOP_MARKET;
+                return OrderType.StopMarket;
             }
 
             if (fixType == OrdType.STOP_LIMIT.ToString())
             {
-                return OrderType.STOP_LIMIT;
+                return OrderType.StopLimit;
             }
 
             if (fixType == OrdType.LIMIT.ToString())
             {
-                return OrderType.LIMIT;
+                return OrderType.Limit;
             }
 
             if (fixType == OrdType.MARKET_IF_TOUCHED.ToString())
@@ -223,7 +231,7 @@ namespace Nautilus.Fxcm
                 return OrderType.MIT;
             }
 
-            return OrderType.UNKNOWN;
+            return OrderType.Undefined;
         }
 
         /// <summary>
@@ -235,17 +243,17 @@ namespace Nautilus.Fxcm
         {
             switch (orderType)
             {
-                case OrderType.MARKET:
+                case OrderType.Market:
                     return new OrdType(OrdType.MARKET);
-                case OrderType.STOP_MARKET:
+                case OrderType.StopMarket:
                     return new OrdType(OrdType.STOP);
-                case OrderType.STOP_LIMIT:
+                case OrderType.StopLimit:
                     return new OrdType(OrdType.STOP_LIMIT);
-                case OrderType.LIMIT:
+                case OrderType.Limit:
                     return new OrdType(OrdType.LIMIT);
                 case OrderType.MIT:
                     return new OrdType(OrdType.MARKET_IF_TOUCHED);
-                case OrderType.UNKNOWN:
+                case OrderType.Undefined:
                     goto default;
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(orderType, nameof(orderType));
@@ -296,7 +304,7 @@ namespace Nautilus.Fxcm
         /// <returns>A <see cref="decimal"/>.</returns>
         public static Price GetOrderPrice(OrderType orderType, ExecutionReport message)
         {
-            if (orderType == OrderType.STOP_MARKET || orderType == OrderType.MIT)
+            if (orderType == OrderType.StopMarket || orderType == OrderType.MIT)
             {
                 return Price.Create(message.GetDecimal(Tags.StopPx));
             }

@@ -70,10 +70,10 @@ namespace Nautilus.Data.Interfaces
         /// <summary>
         /// Removes the difference in date keys for each symbol from the repository.
         /// </summary>
-        /// <param name="resolution">The bar resolution to trim.</param>
+        /// <param name="barStructure">The bar resolution to trim.</param>
         /// <param name="trimToDays">The number of days (keys) to trim to.</param>
         /// <returns>The result of the operation.</returns>
-        CommandResult TrimToDays(Resolution resolution, int trimToDays);
+        CommandResult TrimToDays(BarStructure barStructure, int trimToDays);
 
         /// <summary>
         /// Save a snapshot of the database to disk.

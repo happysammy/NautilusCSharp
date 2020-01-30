@@ -133,10 +133,10 @@ namespace Nautilus.Redis.Data
         /// <summary>
         /// Returns a list of all market data keys based on the given bar specification.
         /// </summary>
-        /// <param name="resolution">The bar resolution keys.</param>
+        /// <param name="barStructure">The bar resolution keys.</param>
         /// <returns>The result of the query.</returns>
         [PerformanceOptimized]
-        public Dictionary<string, List<string>> GetSortedKeysBySymbolResolution(Resolution resolution)
+        public Dictionary<string, List<string>> GetSortedKeysBySymbolResolution(BarStructure barStructure)
         {
             var allKeysBytes = this.redisServer.Keys(pattern: KeyProvider.GetBarWildcardKey());
 
@@ -145,7 +145,7 @@ namespace Nautilus.Redis.Data
 
             foreach (var key in keysCollection)
             {
-                if (!key.Contains(resolution.ToString()))
+                if (!key.Contains(barStructure.ToString()))
                 {
                     // Found resolution not applicable.
                     continue;

@@ -57,7 +57,7 @@ namespace Nautilus.DomainModel.Entities
                 symbol,
                 brokerSymbol,
                 symbol.Code.Substring(3, 3).ToEnum<Currency>(),
-                SecurityType.FOREX,
+                SecurityType.Forex,
                 tickPrecision,
                 tickSize,
                 roundLotSize,

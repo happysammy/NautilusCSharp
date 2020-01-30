@@ -51,8 +51,8 @@ namespace Nautilus.DomainModel.Aggregates
             this.Price = initial.Price;
             this.TimeInForce = initial.TimeInForce;
             this.ExpireTime = this.ValidateExpireTime(initial.ExpireTime);
-            this.IsBuy = this.OrderSide == OrderSide.BUY;
-            this.IsSell = this.OrderSide == OrderSide.SELL;
+            this.IsBuy = this.OrderSide == OrderSide.Buy;
+            this.IsSell = this.OrderSide == OrderSide.Sell;
             this.IsWorking = false;
             this.IsCompleted = false;
 
@@ -200,8 +200,6 @@ namespace Nautilus.DomainModel.Aggregates
             Guid initId)
         {
             Debug.NotDefault(side, nameof(side));
-            Debug.NotDefault(type, nameof(type));
-            Debug.NotDefault(timeInForce, nameof(timeInForce));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
             var initial = new OrderInitialized(
@@ -344,12 +342,12 @@ namespace Nautilus.DomainModel.Aggregates
             if (expireTime.HasValue)
             {
                 var expireTimeValue = expireTime.Value;
-                Condition.True(this.TimeInForce == TimeInForce.GTD, nameof(this.TimeInForce));
+                Condition.EqualTo(this.TimeInForce, TimeInForce.GTD, nameof(this.TimeInForce));
                 Condition.True(expireTimeValue.IsGreaterThanOrEqualTo(this.Timestamp), nameof(expireTime));
             }
             else
             {
-                Condition.True(this.TimeInForce != TimeInForce.GTD, nameof(this.TimeInForce));
+                Condition.NotEqualTo(this.TimeInForce, TimeInForce.GTD, nameof(this.TimeInForce));
             }
 
             return expireTime;
@@ -374,7 +372,7 @@ namespace Nautilus.DomainModel.Aggregates
                 return decimal.Zero;
             }
 
-            return this.OrderSide == OrderSide.BUY
+            return this.OrderSide == OrderSide.Buy
                 ? this.AveragePrice.Value - this.Price.Value
                 : this.Price.Value - this.AveragePrice.Value;
         }

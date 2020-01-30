@@ -73,18 +73,18 @@ namespace Nautilus.Fxcm.MessageFactories
             // Add price
             switch (order.OrderType)
             {
-                case OrderType.MARKET:
+                case OrderType.Market:
                     // Do nothing
                     break;
-                case OrderType.LIMIT:
-                case OrderType.STOP_LIMIT:
+                case OrderType.Limit:
+                case OrderType.StopLimit:
                     if (order.Price?.Value != null)
                     {
                         message.SetField(new Price(order.Price.Value));
                     }
 
                     break;
-                case OrderType.STOP_MARKET:
+                case OrderType.StopMarket:
                 case OrderType.MIT:
                     if (order.Price?.Value != null)
                     {
@@ -92,7 +92,7 @@ namespace Nautilus.Fxcm.MessageFactories
                     }
 
                     break;
-                case OrderType.UNKNOWN:
+                case OrderType.Undefined:
                     goto default;
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(order.OrderType, nameof(order.OrderType));

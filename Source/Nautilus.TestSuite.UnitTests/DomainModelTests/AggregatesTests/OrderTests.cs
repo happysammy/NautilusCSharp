@@ -39,8 +39,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new OrderId("O-123456-S1"),
                 new Symbol("SYMBOL", "LMAX"),
                 new Label("S1-E"),
-                OrderSide.BUY,
-                OrderPurpose.ENTRY,
+                OrderSide.Buy,
+                OrderPurpose.Entry,
                 Quantity.Create(10),
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid());
@@ -49,9 +49,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.Equal(new Symbol("SYMBOL", "LMAX"), order.Symbol);
             Assert.Equal("O-123456-S1", order.Id.Value);
             Assert.Equal("S1-E", order.Label.Value);
-            Assert.Equal(OrderSide.BUY, order.OrderSide);
-            Assert.Equal(OrderType.MARKET, order.OrderType);
-            Assert.Equal(OrderPurpose.ENTRY, order.OrderPurpose);
+            Assert.Equal(OrderSide.Buy, order.OrderSide);
+            Assert.Equal(OrderType.Market, order.OrderType);
+            Assert.Equal(OrderPurpose.Entry, order.OrderPurpose);
             Assert.Equal(10, order.Quantity.Value);
             Assert.Null(order.AveragePrice);
             Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEvent.Timestamp);
@@ -67,8 +67,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new OrderId("O-123456"),
                 new Symbol("SYMBOL", "LMAX"),
                 new Label("S1_SL"),
-                OrderSide.BUY,
-                OrderPurpose.ENTRY,
+                OrderSide.Buy,
+                OrderPurpose.Entry,
                 Quantity.Create(10),
                 Price.Create(2000, 1),
                 TimeInForce.GTD,
@@ -80,9 +80,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.Equal(new Symbol("SYMBOL", "LMAX"), order.Symbol);
             Assert.Equal("O-123456", order.Id.Value);
             Assert.Equal("S1_SL", order.Label.Value);
-            Assert.Equal(OrderSide.BUY, order.OrderSide);
-            Assert.Equal(OrderType.STOP_MARKET, order.OrderType);
-            Assert.Equal(OrderPurpose.ENTRY, order.OrderPurpose);
+            Assert.Equal(OrderSide.Buy, order.OrderSide);
+            Assert.Equal(OrderType.StopMarket, order.OrderType);
+            Assert.Equal(OrderPurpose.Entry, order.OrderPurpose);
             Assert.Equal(10, order.Quantity.Value);
             Assert.Equal(Price.Create(2000, 1), order.Price);
             Assert.Null(order.AveragePrice);
@@ -371,7 +371,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var order = new StubOrderBuilder()
-               .WithOrderSide(OrderSide.BUY)
+               .WithOrderSide(OrderSide.Buy)
                .WithPrice(Price.Create(0.80000m, 5))
                .BuildStopMarketOrder();
 
@@ -401,7 +401,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var order = new StubOrderBuilder()
-               .WithOrderSide(OrderSide.SELL)
+               .WithOrderSide(OrderSide.Sell)
                .WithPrice(Price.Create(1.20000m, 5))
                .BuildStopMarketOrder();
 

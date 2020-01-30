@@ -37,14 +37,14 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
         internal void InvalidSwitchArgument_WithEnumArgument_ReturnsExpectedException()
         {
             // Arrange
-            var someArgument = QuoteType.LAST;
+            var someArgument = PriceType.Last;
 
             // Act
             var exception = ExceptionFactory.InvalidSwitchArgument(someArgument, nameof(someArgument));
 
             // Assert
             Assert.Equal(typeof(InvalidEnumArgumentException), exception.GetType());
-            Assert.Equal("The value of argument 'someArgument' (3) is invalid for Enum type 'QuoteType'. (Parameter 'someArgument')", exception.Message);
+            Assert.Equal("The value of argument 'someArgument' (4) is invalid for Enum type 'PriceType'. (Parameter 'someArgument')", exception.Message);
         }
     }
 }

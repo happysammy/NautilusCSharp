@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="Resolution.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="PriceType.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2020 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  https://nautechsystems.io
@@ -8,34 +8,37 @@
 
 namespace Nautilus.DomainModel.Enums
 {
+    using Nautilus.Core.Annotations;
+
     /// <summary>
-    /// Represents the granularity of a time resolution.
+    /// Represents a price type.
     /// </summary>
-    public enum Resolution
+    public enum PriceType
     {
         /// <summary>
-        /// The tick resolution value.
+        /// The enumerator value is undefined (invalid).
         /// </summary>
-        TICK = 0,
+        [InvalidValue]
+        Undefined = 0,
 
         /// <summary>
-        /// The second resolution value.
+        /// The price is based on the bid.
         /// </summary>
-        SECOND = 1,
+        Bid = 1,
 
         /// <summary>
-        /// The minute resolution value.
+        /// The price is based on the ask.
         /// </summary>
-        MINUTE = 2,
+        Ask = 2,
 
         /// <summary>
-        /// The hourly resolution value.
+        /// The price is based on the mid point between bid and ask.
         /// </summary>
-        HOUR = 3,
+        Mid = 3,
 
         /// <summary>
-        /// The daily resolution value.
+        /// The price is based on the last quote change.
         /// </summary>
-        DAY = 4,
+        Last = 4,
     }
 }

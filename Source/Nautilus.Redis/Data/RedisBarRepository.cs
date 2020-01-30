@@ -134,13 +134,13 @@ namespace Nautilus.Redis.Data
         /// <summary>
         /// Removes the difference in date keys for each symbol from the database.
         /// </summary>
-        /// <param name="resolution">The resolution to trim.</param>
+        /// <param name="barStructure">The resolution to trim.</param>
         /// <param name="trimToDays">The number of days (keys) to trim to.</param>
         /// <returns>The result of the operation.</returns>
-        public CommandResult TrimToDays(Resolution resolution, int trimToDays)
+        public CommandResult TrimToDays(BarStructure barStructure, int trimToDays)
         {
             var results = new List<CommandResult>();
-            var keys = this.barClient.GetSortedKeysBySymbolResolution(resolution);
+            var keys = this.barClient.GetSortedKeysBySymbolResolution(barStructure);
             foreach (var value in keys.Values)
             {
                 var keyCount = value.Count;

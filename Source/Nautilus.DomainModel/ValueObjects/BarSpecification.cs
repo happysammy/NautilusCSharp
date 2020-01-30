@@ -26,20 +26,20 @@ namespace Nautilus.DomainModel.ValueObjects
         /// Initializes a new instance of the <see cref="BarSpecification"/> structure.
         /// </summary>
         /// <param name="period">The specification period.</param>
-        /// <param name="resolution">The specification resolution.</param>
-        /// <param name="quoteType">The specification quote type.</param>
+        /// <param name="barStructure">The specification resolution.</param>
+        /// <param name="priceType">The specification quote type.</param>
         /// <exception cref="ArgumentOutOfRangeException">If the period is not positive (> 0).</exception>
         public BarSpecification(
             int period,
-            Resolution resolution,
-            QuoteType quoteType)
+            BarStructure barStructure,
+            PriceType priceType)
         {
             Debug.PositiveInt32(period, nameof(period));
 
             this.Period = period;
-            this.Resolution = resolution;
-            this.QuoteType = quoteType;
-            this.Duration = CalculateDuration(period, resolution);
+            this.BarStructure = barStructure;
+            this.PriceType = priceType;
+            this.Duration = CalculateDuration(period, barStructure);
         }
 
         /// <summary>
@@ -50,12 +50,12 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <summary>
         /// Gets the bars specifications resolution.
         /// </summary>
-        public Resolution Resolution { get; }
+        public BarStructure BarStructure { get; }
 
         /// <summary>
         /// Gets the bar specifications quote type.
         /// </summary>
-        public QuoteType QuoteType { get; }
+        public PriceType PriceType { get; }
 
         /// <summary>
         /// Gets the bar time duration.
@@ -98,8 +98,8 @@ namespace Nautilus.DomainModel.ValueObjects
 
             return new BarSpecification(
                 period,
-                resolution.ToEnum<Resolution>(),
-                quoteType.ToEnum<QuoteType>());
+                resolution.ToEnum<BarStructure>(),
+                quoteType.ToEnum<PriceType>());
         }
 
         /// <summary>
@@ -119,8 +119,8 @@ namespace Nautilus.DomainModel.ValueObjects
         public bool Equals(BarSpecification other)
         {
             return this.Period == other.Period &&
-                   this.Resolution == other.Resolution &&
-                   this.QuoteType == other.QuoteType;
+                   this.BarStructure == other.BarStructure &&
+                   this.PriceType == other.PriceType;
         }
 
         /// <summary>
@@ -130,33 +130,37 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A <see cref="int"/>.</returns>
         public override int GetHashCode()
         {
-            return Hash.GetCode(this.Period, this.Resolution, this.QuoteType);
+            return Hash.GetCode(this.Period, this.BarStructure, this.PriceType);
         }
 
         /// <summary>
         /// Returns a string representation of the <see cref="BarSpecification"/>.
         /// </summary>
         /// <returns>A string.</returns>
-        public override string ToString() => $"{this.Period}-{this.Resolution}[{this.QuoteType}]";
+        public override string ToString() => $"{this.Period}-" +
+                                             $"{this.BarStructure.ToString().ToUpper()}" +
+                                             $"[{this.PriceType.ToString().ToUpper()}]";
 
-        private static Duration CalculateDuration(int barPeriod, Resolution resolution)
+        private static Duration CalculateDuration(int barPeriod, BarStructure barStructure)
         {
             Debug.PositiveInt32(barPeriod, nameof(barPeriod));
 
-            switch (resolution)
+            switch (barStructure)
             {
-                case Resolution.TICK:
+                case BarStructure.Tick:
                     return Duration.Zero;
-                case Resolution.SECOND:
+                case BarStructure.Second:
                     return Duration.FromSeconds(barPeriod);
-                case Resolution.MINUTE:
+                case BarStructure.Minute:
                     return Duration.FromMinutes(barPeriod);
-                case Resolution.HOUR:
+                case BarStructure.Hour:
                     return Duration.FromHours(barPeriod);
-                case Resolution.DAY:
+                case BarStructure.Day:
                     return Duration.FromDays(barPeriod);
+                case BarStructure.Undefined:
+                    goto default;
                 default:
-                    throw ExceptionFactory.InvalidSwitchArgument(resolution, nameof(resolution));
+                    throw ExceptionFactory.InvalidSwitchArgument(barStructure, nameof(barStructure));
             }
         }
     }

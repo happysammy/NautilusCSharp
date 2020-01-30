@@ -8,6 +8,7 @@
 
 namespace Nautilus.DomainModel.Enums
 {
+    using Nautilus.Core.Annotations;
     using Nautilus.DomainModel.Aggregates;
 
     /// <summary>
@@ -16,13 +17,19 @@ namespace Nautilus.DomainModel.Enums
     public enum OrderSide
     {
         /// <summary>
+        /// The enumerator value is undefined (invalid).
+        /// </summary>
+        [InvalidValue]
+        Undefined = 0,
+
+        /// <summary>
         /// The buy order side.
         /// </summary>
-        BUY = 1,
+        Buy = 1,
 
         /// <summary>
         /// The sell order side.
         /// </summary>
-        SELL = -1,
+        Sell = 2,
     }
 }

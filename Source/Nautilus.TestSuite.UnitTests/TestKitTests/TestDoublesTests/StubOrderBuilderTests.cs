@@ -30,8 +30,8 @@ namespace Nautilus.TestSuite.UnitTests.TestKitTests.TestDoublesTests
             Assert.Equal(new Symbol("AUDUSD", new Venue("FXCM")), order.Symbol);
             Assert.Equal("O-123456", order.Id.Value);
             Assert.Equal("TEST_ORDER", order.Label.Value);
-            Assert.Equal(OrderSide.BUY, order.OrderSide);
-            Assert.Equal(OrderType.STOP_MARKET, order.OrderType);
+            Assert.Equal(OrderSide.Buy, order.OrderSide);
+            Assert.Equal(OrderType.StopMarket, order.OrderType);
             Assert.Equal(Quantity.Create(100000), order.Quantity);
             Assert.Equal(Price.Create(1, 1), order.Price);
             Assert.Equal(TimeInForce.DAY, order.TimeInForce);
@@ -48,7 +48,7 @@ namespace Nautilus.TestSuite.UnitTests.TestKitTests.TestDoublesTests
                .WithSymbol(new Symbol("AUDUSD", new Venue("FXCM")))
                .WithOrderId("O-678910")
                .WithLabel("TEST_ORDER2")
-               .WithOrderSide(OrderSide.SELL)
+               .WithOrderSide(OrderSide.Sell)
                .WithQuantity(Quantity.Create(100000))
                .WithPrice(Price.Create(1.00000m, 5))
                .WithTimeInForce(TimeInForce.GTD)
@@ -60,8 +60,8 @@ namespace Nautilus.TestSuite.UnitTests.TestKitTests.TestDoublesTests
             Assert.Equal(new Symbol("AUDUSD", new Venue("FXCM")), order.Symbol);
             Assert.Equal("O-678910", order.Id.Value);
             Assert.Equal("TEST_ORDER2", order.Label.Value);
-            Assert.Equal(OrderSide.SELL, order.OrderSide);
-            Assert.Equal(OrderType.STOP_MARKET, order.OrderType);
+            Assert.Equal(OrderSide.Sell, order.OrderSide);
+            Assert.Equal(OrderType.StopMarket, order.OrderType);
             Assert.Equal(Quantity.Create(100000), order.Quantity);
             Assert.Equal(Price.Create(1.00000m, 5), order.Price);
             Assert.Equal(TimeInForce.GTD, order.TimeInForce);
@@ -77,7 +77,7 @@ namespace Nautilus.TestSuite.UnitTests.TestKitTests.TestDoublesTests
             var order = new StubOrderBuilder().BuildMarketOrder();
 
             // Assert
-            Assert.Equal(OrderType.MARKET, order.OrderType);
+            Assert.Equal(OrderType.Market, order.OrderType);
         }
 
         [Fact]
@@ -88,7 +88,7 @@ namespace Nautilus.TestSuite.UnitTests.TestKitTests.TestDoublesTests
             var order = new StubOrderBuilder().BuildStopMarketOrder();
 
             // Assert
-            Assert.Equal(OrderType.STOP_MARKET, order.OrderType);
+            Assert.Equal(OrderType.StopMarket, order.OrderType);
         }
 
         [Fact]
@@ -99,7 +99,7 @@ namespace Nautilus.TestSuite.UnitTests.TestKitTests.TestDoublesTests
             var order = new StubOrderBuilder().BuildStopLimitOrder();
 
             // Assert
-            Assert.Equal(OrderType.STOP_LIMIT, order.OrderType);
+            Assert.Equal(OrderType.StopLimit, order.OrderType);
         }
     }
 }

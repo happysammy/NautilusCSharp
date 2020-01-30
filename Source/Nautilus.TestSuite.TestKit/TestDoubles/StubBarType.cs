@@ -23,8 +23,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 new Symbol("AUDUSD", new Venue("FXCM")),
                 new BarSpecification(
                     1,
-                    Resolution.MINUTE,
-                    QuoteType.ASK));
+                    BarStructure.Minute,
+                    PriceType.Ask));
         }
 
         public static BarType GBPUSD()
@@ -33,8 +33,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 new Symbol("GBPUSD", new Venue("FXCM")),
                 new BarSpecification(
                     1,
-                    Resolution.MINUTE,
-                    QuoteType.BID));
+                    BarStructure.Minute,
+                    PriceType.Bid));
         }
 
         public static BarType GBPUSD_Second()
@@ -43,8 +43,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 new Symbol("GBPUSD", new Venue("FXCM")),
                 new BarSpecification(
                     1,
-                    Resolution.SECOND,
-                    QuoteType.MID));
+                    BarStructure.Second,
+                    PriceType.Mid));
         }
 
         public static BarType USDJPY()
@@ -53,8 +53,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 new Symbol("USDJPY", new Venue("FXCM")),
                 new BarSpecification(
                     1,
-                    Resolution.MINUTE,
-                    QuoteType.BID));
+                    BarStructure.Minute,
+                    PriceType.Bid));
         }
 
         public static BarType CADHKD()
@@ -63,8 +63,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 new Symbol("CADHKD", new Venue("FXCM")),
                 new BarSpecification(
                     1,
-                    Resolution.MINUTE,
-                    QuoteType.BID));
+                    BarStructure.Minute,
+                    PriceType.Bid));
         }
     }
 }

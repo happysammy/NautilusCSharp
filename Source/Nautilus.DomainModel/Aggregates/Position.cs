@@ -348,10 +348,10 @@ namespace Nautilus.DomainModel.Aggregates
 
             switch (@event.OrderSide)
             {
-                case OrderSide.BUY:
+                case OrderSide.Buy:
                     this.HandleBuyOrderFill(@event);
                     break;
-                case OrderSide.SELL:
+                case OrderSide.Sell:
                     this.HandleSellOrderFill(@event);
                     break;
                 default:

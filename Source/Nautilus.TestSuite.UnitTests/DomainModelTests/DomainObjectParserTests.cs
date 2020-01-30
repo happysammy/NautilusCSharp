@@ -64,8 +64,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests
         internal void Create_WithValidString_ReturnsExpectedBarSpec()
         {
             // Arrange
-            var barSpec1 = new BarSpecification(1, Resolution.MINUTE, QuoteType.BID);
-            var barSpec2 = new BarSpecification(1, Resolution.HOUR, QuoteType.MID);
+            var barSpec1 = new BarSpecification(1, BarStructure.Minute, PriceType.Bid);
+            var barSpec2 = new BarSpecification(1, BarStructure.Hour, PriceType.Mid);
 
             var string1 = barSpec1.ToString();
             var string2 = barSpec2.ToString();

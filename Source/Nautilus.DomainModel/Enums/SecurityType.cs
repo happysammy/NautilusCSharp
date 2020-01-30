@@ -8,52 +8,54 @@
 
 namespace Nautilus.DomainModel.Enums
 {
+    using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core.Annotations;
 
     /// <summary>
     /// The type of security.
-    /// </summary>
+    /// </summary>.
     public enum SecurityType
     {
         /// <summary>
-        /// The security type is unknown (invalid value).
+        /// The enumerator value is undefined (invalid).
         /// </summary>
         [InvalidValue]
-        UNKNOWN = 0,
+        Undefined = 0,
 
         /// <summary>
         /// The foreign exchange security type.
         /// </summary>
-        FOREX = 1,
+        Forex = 1,
 
         /// <summary>
         /// The bond security type.
         /// </summary>
-        BOND = 2,
+        Bond = 2,
 
         /// <summary>
         /// The equity security type.
         /// </summary>
-        EQUITY = 3,
+        Equity = 3,
 
         /// <summary>
         /// The futures security type.
         /// </summary>
-        FUTURE = 4,
+        Futures = 4,
 
         /// <summary>
         /// The contract for difference security type.
         /// </summary>
+        [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed")]
         CFD = 5,
 
         /// <summary>
         /// The option security type.
         /// </summary>
-        OPTION = 6,
+        Option = 6,
 
         /// <summary>
         /// The crypto security type.
         /// </summary>
-        CRYPTO = 7,
+        Crypto = 7,
     }
 }

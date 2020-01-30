@@ -54,8 +54,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
         {
             // Arrange
             var symbol = new Symbol("AUDUSD", new Venue("FXCM"));
-            var barType1 = new BarType(symbol, new BarSpecification(1, Resolution.SECOND, QuoteType.BID));
-            var barType2 = new BarType(symbol, new BarSpecification(1, Resolution.MINUTE, QuoteType.BID));
+            var barType1 = new BarType(symbol, new BarSpecification(1, BarStructure.Second, PriceType.Bid));
+            var barType2 = new BarType(symbol, new BarSpecification(1, BarStructure.Minute, PriceType.Bid));
 
             var subscribe1 = new Subscribe<BarType>(
                 barType1,
@@ -87,8 +87,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
         {
             // Arrange
             var symbol = new Symbol("AUDUSD", new Venue("FXCM"));
-            var barType1 = new BarType(symbol, new BarSpecification(1, Resolution.SECOND, QuoteType.BID));
-            var barType2 = new BarType(symbol, new BarSpecification(1, Resolution.MINUTE, QuoteType.BID));
+            var barType1 = new BarType(symbol, new BarSpecification(1, BarStructure.Second, PriceType.Bid));
+            var barType2 = new BarType(symbol, new BarSpecification(1, BarStructure.Minute, PriceType.Bid));
 
             var subscribe1 = new Subscribe<BarType>(
                 barType1,
@@ -121,12 +121,12 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
         {
             // Arrange
             var symbol1 = new Symbol("AUDUSD", new Venue("FXCM"));
-            var barType1 = new BarType(symbol1, new BarSpecification(1, Resolution.SECOND, QuoteType.BID));
-            var barType2 = new BarType(symbol1, new BarSpecification(1, Resolution.MINUTE, QuoteType.BID));
+            var barType1 = new BarType(symbol1, new BarSpecification(1, BarStructure.Second, PriceType.Bid));
+            var barType2 = new BarType(symbol1, new BarSpecification(1, BarStructure.Minute, PriceType.Bid));
 
             var symbol2 = new Symbol("GBPUSD", new Venue("FXCM"));
-            var barType3 = new BarType(symbol2, new BarSpecification(1, Resolution.SECOND, QuoteType.BID));
-            var barType4 = new BarType(symbol2, new BarSpecification(1, Resolution.MINUTE, QuoteType.BID));
+            var barType3 = new BarType(symbol2, new BarSpecification(1, BarStructure.Second, PriceType.Bid));
+            var barType4 = new BarType(symbol2, new BarSpecification(1, BarStructure.Minute, PriceType.Bid));
 
             var subscribe1 = new Subscribe<BarType>(
                 barType1,
@@ -173,8 +173,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
         {
             // Arrange
             var symbol = new Symbol("AUDUSD", new Venue("FXCM"));
-            var barType1 = new BarType(symbol, new BarSpecification(1, Resolution.SECOND, QuoteType.BID));
-            var barType2 = new BarType(symbol, new BarSpecification(1, Resolution.MINUTE, QuoteType.BID));
+            var barType1 = new BarType(symbol, new BarSpecification(1, BarStructure.Second, PriceType.Bid));
+            var barType2 = new BarType(symbol, new BarSpecification(1, BarStructure.Minute, PriceType.Bid));
 
             var subscribe1 = new Subscribe<BarType>(
                 barType1,
@@ -215,8 +215,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
         {
             // Arrange
             var symbol = new Symbol("AUDUSD", new Venue("FXCM"));
-            var barType1 = new BarType(symbol, new BarSpecification(1, Resolution.SECOND, QuoteType.BID));
-            var barType2 = new BarType(symbol, new BarSpecification(1, Resolution.MINUTE, QuoteType.BID));
+            var barType1 = new BarType(symbol, new BarSpecification(1, BarStructure.Second, PriceType.Bid));
+            var barType2 = new BarType(symbol, new BarSpecification(1, BarStructure.Minute, PriceType.Bid));
 
             var subscribe1 = new Subscribe<BarType>(
                 barType1,
@@ -258,12 +258,12 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
         {
             // Arrange
             var symbol1 = new Symbol("AUDUSD", new Venue("FXCM"));
-            var barType1 = new BarType(symbol1, new BarSpecification(1, Resolution.SECOND, QuoteType.BID));
-            var barType2 = new BarType(symbol1, new BarSpecification(1, Resolution.MINUTE, QuoteType.BID));
+            var barType1 = new BarType(symbol1, new BarSpecification(1, BarStructure.Second, PriceType.Bid));
+            var barType2 = new BarType(symbol1, new BarSpecification(1, BarStructure.Minute, PriceType.Bid));
 
             var symbol2 = new Symbol("GBPUSD", new Venue("FXCM"));
-            var barType3 = new BarType(symbol2, new BarSpecification(1, Resolution.SECOND, QuoteType.BID));
-            var barType4 = new BarType(symbol2, new BarSpecification(1, Resolution.MINUTE, QuoteType.BID));
+            var barType3 = new BarType(symbol2, new BarSpecification(1, BarStructure.Second, PriceType.Bid));
+            var barType4 = new BarType(symbol2, new BarSpecification(1, BarStructure.Minute, PriceType.Bid));
 
             var subscribe1 = new Subscribe<BarType>(
                 barType1,

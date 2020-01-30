@@ -125,8 +125,8 @@ namespace Nautilus.Data.Keys
             return BarsNamespace +
                    $":{barType.Symbol.Venue.Value}" +
                    $":{barType.Symbol.Code}" +
-                   $":{barType.Specification.Resolution}" +
-                   $":{barType.Specification.QuoteType}" + "*";
+                   $":{barType.Specification.BarStructure}" +
+                   $":{barType.Specification.PriceType}" + "*";
         }
 
         /// <summary>
@@ -140,8 +140,8 @@ namespace Nautilus.Data.Keys
             return BarsNamespace +
                    $":{barType.Symbol.Venue.Value}" +
                    $":{barType.Symbol.Code}" +
-                   $":{barType.Specification.Resolution}" +
-                   $":{barType.Specification.QuoteType}" +
+                   $":{barType.Specification.BarStructure}" +
+                   $":{barType.Specification.PriceType}" +
                    $":{dateKey}";
         }
 

@@ -67,7 +67,7 @@ namespace Nautilus.Serialization
             var unpacked = BsonSerializer.Deserialize<BsonDocument>(serialized);
 
             var securityType = unpacked[nameof(Instrument.SecurityType)].AsString.ToEnum<SecurityType>();
-            if (securityType == SecurityType.FOREX)
+            if (securityType == SecurityType.Forex)
             {
                 return new ForexInstrument(
                     Symbol.FromString(unpacked[nameof(Instrument.Symbol)].AsString),

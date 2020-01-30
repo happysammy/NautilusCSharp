@@ -8,11 +8,19 @@
 
 namespace Nautilus.DomainModel.Enums
 {
+    using Nautilus.Core.Annotations;
+
     /// <summary>
     /// The country an economic news event effects.
     /// </summary>
     public enum Country
     {
+        /// <summary>
+        /// The enumerator value is undefined (invalid).
+        /// </summary>
+        [InvalidValue]
+        Undefined = 0,
+
         /// <summary>
         /// The United States country type.
         /// </summary>

@@ -8,34 +8,42 @@
 
 namespace Nautilus.DomainModel.Enums
 {
+    using Nautilus.Core.Annotations;
+
     /// <summary>
     /// Represents a specified order purpose.
     /// </summary>
     public enum OrderPurpose
     {
         /// <summary>
-        /// The order has no specified purpose.
+        /// The enumerator value is undefined (invalid).
         /// </summary>
-        NONE = 0,
+        [InvalidValue]
+        Undefined = 0,
+
+        /// <summary>
+        /// The order has no specified purpose (default).
+        /// </summary>
+        None = 1,
 
         /// <summary>
         /// The order purpose is specified as an entry.
         /// </summary>
-        ENTRY = 1,
+        Entry = 2,
 
         /// <summary>
         /// The order purpose is specified as an exit.
         /// </summary>
-        EXIT = 2,
+        Exit = 3,
 
         /// <summary>
         /// The order purpose is specified as a stop-loss.
         /// </summary>
-        STOP_LOSS = 3,
+        StopLoss = 4,
 
         /// <summary>
         /// The order purpose is specified as a take_profit.
         /// </summary>
-        TAKE_PROFIT = 4,
+        TakeProfit = 5,
     }
 }

@@ -50,7 +50,7 @@ namespace Nautilus.Data.Messages.Commands
 
             this.ScheduledTime = scheduledTime;
             this.RollingWindowDays = rollingWindowDays;
-            this.Resolutions = barSpecifications.Select(b => b.Resolution).Distinct();
+            this.Resolutions = barSpecifications.Select(b => b.BarStructure).Distinct();
         }
 
         /// <inheritdoc />
@@ -64,6 +64,6 @@ namespace Nautilus.Data.Messages.Commands
         /// <summary>
         /// Gets the commands bar resolutions to trim.
         /// </summary>
-        public IEnumerable<Resolution> Resolutions { get;  }
+        public IEnumerable<BarStructure> Resolutions { get;  }
     }
 }

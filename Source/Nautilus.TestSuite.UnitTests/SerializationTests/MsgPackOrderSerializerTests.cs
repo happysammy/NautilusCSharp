@@ -179,7 +179,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var order = this.serializer.Deserialize(orderBytes);
 
             // Assert
-            Assert.Equal(OrderType.MARKET, order.OrderType);
+            Assert.Equal(OrderType.Market, order.OrderType);
         }
 
         [Fact]
@@ -193,7 +193,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var order = this.serializer.Deserialize(orderBytes);
 
             // Assert
-            Assert.Equal(OrderType.LIMIT, order.OrderType);
+            Assert.Equal(OrderType.Limit, order.OrderType);
         }
 
         [Fact]
@@ -207,7 +207,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var order = this.serializer.Deserialize(orderBytes);
 
             // Assert
-            Assert.Equal(OrderType.STOP_LIMIT, order.OrderType);
+            Assert.Equal(OrderType.StopLimit, order.OrderType);
         }
     }
 }

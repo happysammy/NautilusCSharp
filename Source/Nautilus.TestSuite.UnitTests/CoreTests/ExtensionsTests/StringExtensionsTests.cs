@@ -8,6 +8,7 @@
 
 namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
 {
+    using System;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core.Extensions;
     using Xunit;
@@ -17,34 +18,63 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
     {
         private enum TestEnum
         {
-            Unknown = 0,
-            Test = 1,
+            Undefined = -1,
+            Success = 0,
+            Failure = 1,
+            SomethingElse = 2,
         }
 
-        [Fact]
-        internal void ToEnum_WhenWhiteSpaceString_ReturnsDefaultEnum()
+        [Theory]
+        [InlineData("", TestEnum.Undefined)]
+        [InlineData(" ", TestEnum.Undefined)]
+        [InlineData("_", TestEnum.Undefined)]
+        [InlineData("Other", TestEnum.Undefined)]
+        internal void ToEnum_WhenDegenerateStrings_ReturnsUndefinedEnum(string input, Enum result)
         {
             // Arrange
-            const string someString = " ";
-
             // Act
-            var result = someString.ToEnum<TestEnum>();
-
             // Assert
-            Assert.Equal(TestEnum.Unknown, result);
+            Assert.Equal(result, input.ToEnum<TestEnum>());
         }
 
-        [Fact]
-        internal void ToEnum_WhenString_ReturnsExpectedEnum()
+        [Theory]
+        [InlineData("Undefined", TestEnum.Undefined)]
+        [InlineData("UNDEFINED", TestEnum.Undefined)]
+        [InlineData("Success", TestEnum.Success)]
+        [InlineData("SUCCESS", TestEnum.Success)]
+        [InlineData("0", TestEnum.Success)]
+        [InlineData("SomethingElse", TestEnum.SomethingElse)]
+        [InlineData("SOMETHING_ELSE", TestEnum.SomethingElse)]
+        internal void ToEnum_WhenValidStrings_ReturnsExpectedEnum(string input, Enum result)
         {
             // Arrange
-            const string someString = "Test";
-
             // Act
-            var result = someString.ToEnum<TestEnum>();
-
             // Assert
-            Assert.Equal(TestEnum.Test, result);
+            Assert.Equal(result, input.ToEnum<TestEnum>());
+        }
+
+        [Theory]
+        [InlineData("easy", "EASY")]
+        [InlineData("camelCase", "CAMEL_CASE")]
+        [InlineData("CamelCase", "CAMEL_CASE")]
+        internal void ToSnakeCase_WhenValidStrings_ReturnsExpectedString(string input, string result)
+        {
+            // Arrange
+            // Act
+            // Assert
+            Assert.Equal(result, input.ToSnakeCase());
+        }
+
+        [Theory]
+        [InlineData("easy", "easy")]
+        [InlineData("camelCase", "camel_case")]
+        [InlineData("CamelCase", "camel_case")]
+        internal void ToSnakeCaseWithLowerCase_WhenValidStrings_ReturnsExpectedString(string input, string result)
+        {
+            // Arrange
+            // Act
+            // Assert
+            Assert.Equal(result, input.ToSnakeCase(false));
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="OrderState.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="BarStructure.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2020 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  https://nautechsystems.io
@@ -11,9 +11,9 @@ namespace Nautilus.DomainModel.Enums
     using Nautilus.Core.Annotations;
 
     /// <summary>
-    /// Represents the state of an order at the brokerage.
+    /// Represents the granularity of a time resolution.
     /// </summary>
-    public enum OrderState
+    public enum BarStructure
     {
         /// <summary>
         /// The enumerator value is undefined (invalid).
@@ -22,63 +22,53 @@ namespace Nautilus.DomainModel.Enums
         Undefined = 0,
 
         /// <summary>
-        /// The initialized order state.
+        /// The bar structure is based on ticks.
         /// </summary>
-        Initialized = 1,
+        Tick = 1,
 
         /// <summary>
-        /// The invalid order state.
+        /// The bar structure is based on tick imbalance.
         /// </summary>
-        Invalid = 2,
+        TickImbalance = 2,
 
         /// <summary>
-        /// The denied order state.
+        /// The bar structure is based on volume.
         /// </summary>
-        Denied = 3,
+        Volume = 3,
 
         /// <summary>
-        /// The submitted order state.
+        /// The bar structure is based on volume imbalance.
         /// </summary>
-        Submitted = 4,
+        VolumeImbalance = 4,
 
         /// <summary>
-        /// The accepted order state.
+        /// The bar structure is based on dollars.
         /// </summary>
-        Accepted = 5,
+        Dollar = 5,
 
         /// <summary>
-        /// The rejected order state.
+        /// The bar structure is based on dollar imbalance.
         /// </summary>
-        Rejected = 6,
+        DollarImbalance = 6,
 
         /// <summary>
-        /// The working order state.
+        /// The bar structure is based on seconds.
         /// </summary>
-        Working = 7,
+        Second = 7,
 
         /// <summary>
-        /// The cancelled order state.
+        /// The bar structure is based on minutes.
         /// </summary>
-        Cancelled = 8,
+        Minute = 8,
 
         /// <summary>
-        /// Expired order state.
+        /// The bar structure is based on hours.
         /// </summary>
-        Expired = 9,
+        Hour = 9,
 
         /// <summary>
-        /// The over filled order state.
+        /// The bar structure is based on days.
         /// </summary>
-        OverFilled = 10,
-
-        /// <summary>
-        /// The partially filled order state.
-        /// </summary>
-        PartiallyFilled = 11,
-
-        /// <summary>
-        /// The completely filled order state.
-        /// </summary>
-        Filled = 12,
+        Day = 10,
     }
 }

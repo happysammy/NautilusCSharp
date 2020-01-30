@@ -29,8 +29,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         internal void Equals_WithEqualObject_ReturnsTrue()
         {
             // Arrange
-            var barSpec1 = new BarSpecification(1, Resolution.MINUTE, QuoteType.BID);
-            var barSpec2 = new BarSpecification(1, Resolution.MINUTE, QuoteType.BID);
+            var barSpec1 = new BarSpecification(1, BarStructure.Minute, PriceType.Bid);
+            var barSpec2 = new BarSpecification(1, BarStructure.Minute, PriceType.Bid);
 
             // Act
             var result1 = barSpec1.Equals(barSpec2);
@@ -45,8 +45,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         internal void Equals_WithUnequalObject_ReturnsTrue()
         {
             // Arrange
-            var barSpec1 = new BarSpecification(1, Resolution.MINUTE, QuoteType.BID);
-            var barSpec2 = new BarSpecification(1, Resolution.HOUR, QuoteType.ASK);
+            var barSpec1 = new BarSpecification(1, BarStructure.Minute, PriceType.Bid);
+            var barSpec2 = new BarSpecification(1, BarStructure.Hour, PriceType.Ask);
 
             // Act
             var result1 = barSpec1.Equals(barSpec2);
@@ -61,7 +61,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         internal void GetHashCode_ReturnsExpectedInt32()
         {
             // Arrange
-            var barSpec = new BarSpecification(1, Resolution.MINUTE, QuoteType.BID);
+            var barSpec = new BarSpecification(1, BarStructure.Minute, PriceType.Bid);
 
             // Act
             var result = barSpec.GetHashCode();
@@ -74,7 +74,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         internal void ToString_ReturnsExpectedString()
         {
             // Arrange
-            var barSpec = new BarSpecification(1, Resolution.MINUTE, QuoteType.BID);
+            var barSpec = new BarSpecification(1, BarStructure.Minute, PriceType.Bid);
 
             // Act
             var result = barSpec.ToString();

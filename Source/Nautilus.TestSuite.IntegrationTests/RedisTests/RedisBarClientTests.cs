@@ -463,7 +463,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             this.client.AddBars(barType2, new[] { bar1, bar2, bar3, bar4, bar5, bar6 });
 
             // Act
-            var result = this.client.GetSortedKeysBySymbolResolution(Resolution.MINUTE);
+            var result = this.client.GetSortedKeysBySymbolResolution(BarStructure.Minute);
 
             foreach (var symbol in result)
             {
