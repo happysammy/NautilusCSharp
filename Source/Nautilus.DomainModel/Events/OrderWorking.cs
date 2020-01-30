@@ -63,6 +63,9 @@ namespace Nautilus.DomainModel.Events
                 eventId,
                 eventTimestamp)
         {
+            Condition.NotDefault(orderSide, nameof(orderSide));
+            Condition.NotDefault(orderType, nameof(orderType));
+            Condition.NotDefault(timeInForce, nameof(timeInForce));
             Debug.NotDefault(workingTime, nameof(workingTime));
             Debug.NotDefault(eventId, nameof(eventId));
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));

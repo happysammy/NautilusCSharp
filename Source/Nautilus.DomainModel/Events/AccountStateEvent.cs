@@ -55,6 +55,7 @@ namespace Nautilus.DomainModel.Events
                 eventId,
                 eventTimestamp)
         {
+            Condition.NotDefault(currency, nameof(currency));
             Debug.NotDefault(eventId, nameof(eventId));
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
 
