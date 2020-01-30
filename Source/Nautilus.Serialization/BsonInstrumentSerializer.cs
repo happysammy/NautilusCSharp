@@ -8,7 +8,9 @@
 
 namespace Nautilus.Serialization
 {
+    using System;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
     using MongoDB.Bson;
     using MongoDB.Bson.Serialization;
     using Nautilus.Common.Enums;
@@ -39,7 +41,7 @@ namespace Nautilus.Serialization
                 { nameof(Instrument.QuoteCurrency), instrument.QuoteCurrency.ToString() },
                 { nameof(Instrument.SecurityType), instrument.SecurityType.ToString() },
                 { nameof(Instrument.PricePrecision), instrument.PricePrecision },
-                { nameof(Instrument.SizePrecision), instrument.PricePrecision },
+                { nameof(Instrument.SizePrecision), instrument.SizePrecision },
                 { nameof(Instrument.MinStopDistanceEntry), instrument.MinStopDistanceEntry },
                 { nameof(Instrument.MinStopDistance), instrument.MinStopDistance },
                 { nameof(Instrument.MinLimitDistanceEntry), instrument.MinLimitDistanceEntry },
@@ -48,8 +50,8 @@ namespace Nautilus.Serialization
                 { nameof(Instrument.RoundLotSize), instrument.RoundLotSize.ToString() },
                 { nameof(Instrument.MinTradeSize), instrument.MinTradeSize.ToString() },
                 { nameof(Instrument.MaxTradeSize), instrument.MaxTradeSize.ToString() },
-                { nameof(Instrument.RolloverInterestBuy), instrument.RolloverInterestBuy },
-                { nameof(Instrument.RolloverInterestSell), instrument.RolloverInterestSell },
+                { nameof(Instrument.RolloverInterestBuy), instrument.RolloverInterestBuy.ToString(CultureInfo.InvariantCulture) },
+                { nameof(Instrument.RolloverInterestSell), instrument.RolloverInterestSell.ToString(CultureInfo.InvariantCulture) },
                 { nameof(Instrument.Timestamp), instrument.Timestamp.ToIsoString() },
             }.ToDictionary();
 
@@ -84,8 +86,8 @@ namespace Nautilus.Serialization
                     Quantity.Create(unpacked[nameof(Instrument.RoundLotSize)].AsString),
                     Quantity.Create(unpacked[nameof(Instrument.MinTradeSize)].AsString),
                     Quantity.Create(unpacked[nameof(Instrument.MaxTradeSize)].AsString),
-                    unpacked[nameof(Instrument.RolloverInterestBuy)].AsDecimal,
-                    unpacked[nameof(Instrument.RolloverInterestSell)].AsDecimal,
+                    Convert.ToDecimal(unpacked[nameof(Instrument.RolloverInterestBuy)].AsString),
+                    Convert.ToDecimal(unpacked[nameof(Instrument.RolloverInterestSell)].AsString),
                     unpacked[nameof(Instrument.Timestamp)].AsString.ToZonedDateTimeFromIso());
             }
 
@@ -104,8 +106,8 @@ namespace Nautilus.Serialization
                 Quantity.Create(unpacked[nameof(Instrument.RoundLotSize)].AsString),
                 Quantity.Create(unpacked[nameof(Instrument.MinTradeSize)].AsString),
                 Quantity.Create(unpacked[nameof(Instrument.MaxTradeSize)].AsString),
-                unpacked[nameof(Instrument.RolloverInterestBuy)].AsDecimal,
-                unpacked[nameof(Instrument.RolloverInterestSell)].AsDecimal,
+                Convert.ToDecimal(unpacked[nameof(Instrument.RolloverInterestBuy)].AsString),
+                Convert.ToDecimal(unpacked[nameof(Instrument.RolloverInterestSell)].AsString),
                 unpacked[nameof(Instrument.Timestamp)].AsString.ToZonedDateTimeFromIso());
         }
     }

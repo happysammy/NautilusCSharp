@@ -36,7 +36,7 @@ namespace Nautilus.Core.Extensions
         public static ZonedDateTime ToZonedDateTimeFromIso(this string dateTime)
         {
             Condition.NotEmptyOrWhiteSpace(dateTime, nameof(dateTime));
-
+            dateTime = dateTime.Replace(" ", "T");  // ISO 8601
             return NodaIsoStringParsePattern.Parse(dateTime.Replace("Z", string.Empty)).Value;
         }
 
@@ -48,7 +48,7 @@ namespace Nautilus.Core.Extensions
         public static ZonedDateTime? ToNullableZonedDateTimeFromIso(this string dateTime)
         {
             Condition.NotEmptyOrWhiteSpace(dateTime, nameof(dateTime));
-
+            dateTime = dateTime.Replace(" ", "T");  // ISO 8601
             return NodaIsoStringParsePattern.Parse(dateTime.Replace("Z", string.Empty)).Value;
         }
 
