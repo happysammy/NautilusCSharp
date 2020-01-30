@@ -35,7 +35,7 @@ namespace Nautilus.DomainModel.ValueObjects
             Price high,
             Price low,
             Price close,
-            Quantity volume,
+            Volume volume,
             ZonedDateTime timestamp)
         {
             Debug.NotDefault(timestamp, nameof(timestamp));
@@ -45,33 +45,6 @@ namespace Nautilus.DomainModel.ValueObjects
             this.Low = low;
             this.Close = close;
             this.Volume = volume;
-            this.Timestamp = timestamp;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Bar"/> structure.
-        /// </summary>
-        /// <param name="open">The open price.</param>
-        /// <param name="high">The high price.</param>
-        /// <param name="low">The low price.</param>
-        /// <param name="close">The close price.</param>
-        /// <param name="volume">The volume.</param>
-        /// <param name="timestamp">The timestamp.</param>
-        public Bar(
-            decimal open,
-            decimal high,
-            decimal low,
-            decimal close,
-            int volume,
-            ZonedDateTime timestamp)
-        {
-            Debug.NotDefault(timestamp, nameof(timestamp));
-
-            this.Open = Price.Create(open);
-            this.High = Price.Create(high);
-            this.Low = Price.Create(low);
-            this.Close = Price.Create(close);
-            this.Volume = Quantity.Create(volume);
             this.Timestamp = timestamp;
         }
 
@@ -98,7 +71,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <summary>
         /// Gets the bars volume.
         /// </summary>
-        public Quantity Volume { get; }
+        public Volume Volume { get; }
 
         /// <summary>
         /// Gets the bars timestamp.
@@ -140,7 +113,7 @@ namespace Nautilus.DomainModel.ValueObjects
                 Price.Create(Convert.ToDecimal(values[1])),
                 Price.Create(Convert.ToDecimal(values[2])),
                 Price.Create(Convert.ToDecimal(values[3])),
-                Quantity.Create(Convert.ToInt32(Convert.ToDecimal(values[4]))),
+                Volume.Create(Convert.ToDecimal(values[4])),
                 values[5].ToZonedDateTimeFromIso());
         }
 

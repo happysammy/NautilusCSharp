@@ -13,6 +13,7 @@ namespace Nautilus.DomainModel.Entities
     using Nautilus.DomainModel.Entities.Base;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
+    using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
     /// <summary>
@@ -28,13 +29,14 @@ namespace Nautilus.DomainModel.Entities
         /// <param name="brokerSymbol">The instruments broker symbol.</param>
         /// <param name="quoteCurrency">The instruments quote currency.</param>
         /// <param name="securityType">The instruments security type.</param>
-        /// <param name="tickPrecision">The instruments tick decimal precision.</param>
-        /// <param name="tickSize">The instruments tick size.</param>
-        /// <param name="roundLotSize">The instruments rounded lot size.</param>
+        /// <param name="pricePrecision">The instruments tick decimal precision.</param>
+        /// <param name="sizePrecision">The instruments quantity size precision.</param>
         /// <param name="minStopDistanceEntry">The instruments minimum stop distance for entry.</param>
         /// <param name="minLimitDistanceEntry">The instruments minimum limit distance for entry.</param>
         /// <param name="minStopDistance">The instruments minimum stop distance.</param>
         /// <param name="minLimitDistance">The instruments minimum limit distance.</param>
+        /// <param name="tickSize">The instruments tick size.</param>
+        /// <param name="roundLotSize">The instruments rounded lot size.</param>
         /// <param name="minTradeSize">The instruments minimum trade size.</param>
         /// <param name="maxTradeSize">The instruments maximum trade size.</param>
         /// <param name="rolloverInterestBuy">The instruments rollover interest for long positions.</param>
@@ -45,42 +47,41 @@ namespace Nautilus.DomainModel.Entities
             BrokerSymbol brokerSymbol,
             Currency quoteCurrency,
             SecurityType securityType,
-            int tickPrecision,
-            decimal tickSize,
-            int roundLotSize,
+            int pricePrecision,
+            int sizePrecision,
             int minStopDistanceEntry,
             int minLimitDistanceEntry,
             int minStopDistance,
             int minLimitDistance,
-            int minTradeSize,
-            int maxTradeSize,
+            Price tickSize,
+            Quantity roundLotSize,
+            Quantity minTradeSize,
+            Quantity maxTradeSize,
             decimal rolloverInterestBuy,
             decimal rolloverInterestSell,
             ZonedDateTime timestamp)
             : base(new InstrumentId(symbol.Value), timestamp)
         {
-            Condition.NotNegativeInt32(tickPrecision, nameof(tickPrecision));
-            Condition.PositiveDecimal(tickSize, nameof(tickSize));
-            Condition.PositiveInt32(roundLotSize, nameof(roundLotSize));
+            Condition.NotNegativeInt32(pricePrecision, nameof(pricePrecision));
+            Condition.NotNegativeInt32(sizePrecision, nameof(pricePrecision));
             Condition.NotNegativeInt32(minStopDistanceEntry, nameof(minStopDistanceEntry));
             Condition.NotNegativeInt32(minLimitDistanceEntry, nameof(minLimitDistanceEntry));
             Condition.NotNegativeInt32(minStopDistance, nameof(minStopDistance));
             Condition.NotNegativeInt32(minLimitDistance, nameof(minLimitDistance));
-            Condition.PositiveInt32(minTradeSize, nameof(minTradeSize));
-            Condition.PositiveInt32(maxTradeSize, nameof(maxTradeSize));
             Condition.NotDefault(timestamp, nameof(timestamp));
 
             this.Symbol = symbol;
             this.BrokerSymbol = brokerSymbol;
             this.QuoteCurrency = quoteCurrency;
             this.SecurityType = securityType;
-            this.TickPrecision = tickPrecision;
-            this.TickSize = tickSize;
-            this.RoundLotSize = roundLotSize;
+            this.PricePrecision = pricePrecision;
+            this.SizePrecision = sizePrecision;
             this.MinStopDistanceEntry = minStopDistanceEntry;
             this.MinLimitDistanceEntry = minLimitDistanceEntry;
             this.MinStopDistance = minStopDistance;
             this.MinLimitDistance = minLimitDistance;
+            this.TickSize = tickSize;
+            this.RoundLotSize = roundLotSize;
             this.MinTradeSize = minTradeSize;
             this.MaxTradeSize = maxTradeSize;
             this.RolloverInterestBuy = rolloverInterestBuy;
@@ -108,19 +109,14 @@ namespace Nautilus.DomainModel.Entities
         public SecurityType SecurityType { get; }
 
         /// <summary>
-        /// Gets the instruments tick decimal precision.
+        /// Gets the instruments price decimal precision.
         /// </summary>
-        public int TickPrecision { get; }
+        public int PricePrecision { get; }
 
         /// <summary>
-        /// Gets the instruments tick size.
+        /// Gets the instruments quantity decimal precision.
         /// </summary>
-        public decimal TickSize { get; }
-
-        /// <summary>
-        /// Gets the instruments rounded lot size.
-        /// </summary>
-        public int RoundLotSize { get; }
+        public int SizePrecision { get; }
 
         /// <summary>
         /// Gets the instruments minimum stop distance for entry.
@@ -143,14 +139,24 @@ namespace Nautilus.DomainModel.Entities
         public int MinLimitDistance { get; }
 
         /// <summary>
+        /// Gets the instruments tick size.
+        /// </summary>
+        public Price TickSize { get; }
+
+        /// <summary>
+        /// Gets the instruments rounded lot size.
+        /// </summary>
+        public Quantity RoundLotSize { get; }
+
+        /// <summary>
         /// Gets the instruments minimum trade size.
         /// </summary>
-        public int MinTradeSize { get; }
+        public Quantity MinTradeSize { get; }
 
         /// <summary>
         /// Gets the instruments maximum trade size.
         /// </summary>
-        public int MaxTradeSize { get; }
+        public Quantity MaxTradeSize { get; }
 
         /// <summary>
         /// Gets the instruments rollover interest for long positions.

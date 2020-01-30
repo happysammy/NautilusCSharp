@@ -174,7 +174,7 @@ namespace Nautilus.Serialization.Internal
         /// <returns>The extracted Quantity.</returns>
         internal static Quantity Quantity(MessagePackObject unpacked)
         {
-            return DomainModel.ValueObjects.Quantity.Create(unpacked.AsInt32());
+            return DomainModel.ValueObjects.Quantity.Create(unpacked.AsString());
         }
 
         /// <summary>

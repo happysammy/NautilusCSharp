@@ -121,8 +121,20 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var datetimeTo = datetimeFrom + Duration.FromMinutes(1);
 
             var symbol = new Symbol("AUDUSD", new Venue("FXCM"));
-            var tick1 = new Tick(symbol, 1.00000m, 1.00000m, datetimeFrom);
-            var tick2 = new Tick(symbol, 1.00010m, 1.00020m, datetimeTo);
+            var tick1 = new Tick(
+                symbol,
+                Price.Create(1.00000m),
+                Price.Create(1.00000m),
+                Volume.One(),
+                Volume.One(),
+                datetimeFrom);
+            var tick2 = new Tick(
+                symbol,
+                Price.Create(1.00010m),
+                Price.Create(1.00020m),
+                Volume.One(),
+                Volume.One(),
+                datetimeFrom);
 
             var ticks = new[] { tick1, tick2 };
 

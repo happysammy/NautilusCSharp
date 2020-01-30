@@ -12,6 +12,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
+    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Redis.Data.Builders;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;
@@ -71,14 +72,15 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
                 Currency.CAD,
                 SecurityType.Bond,
                 2,
-                0.01m,
+                0,
                 1,
                 1,
                 1,
                 1,
-                1,
-                10,
-                10000,
+                Price.Create(0.01m, 2),
+                Quantity.Create(1m),
+                Quantity.Create(10m),
+                Quantity.Create(10000m),
                 45,
                 45,
                 StubZonedDateTime.UnixEpoch());

@@ -14,6 +14,7 @@ namespace Nautilus.Redis.Data.Builders
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
+    using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
     /// <summary>
@@ -33,13 +34,14 @@ namespace Nautilus.Redis.Data.Builders
             this.BrokerSymbol = startingInstrument.BrokerSymbol;
             this.BaseCurrency = startingInstrument.QuoteCurrency;
             this.SecurityType = startingInstrument.SecurityType;
-            this.TickPrecision = startingInstrument.TickPrecision;
-            this.TickSize = startingInstrument.TickSize;
-            this.RoundLotSize = startingInstrument.RoundLotSize;
+            this.PricePrecision = startingInstrument.PricePrecision;
+            this.SizePrecision = startingInstrument.SizePrecision;
             this.MinStopDistanceEntry = startingInstrument.MinStopDistanceEntry;
             this.MinLimitDistanceEntry = startingInstrument.MinLimitDistanceEntry;
             this.MinStopDistance = startingInstrument.MinStopDistance;
             this.MinLimitDistance = startingInstrument.MinLimitDistance;
+            this.TickSize = startingInstrument.TickSize;
+            this.RoundLotSize = startingInstrument.RoundLotSize;
             this.MinTradeSize = startingInstrument.MinTradeSize;
             this.MaxTradeSize = startingInstrument.MaxTradeSize;
             this.RolloverInterestBuy = startingInstrument.RolloverInterestBuy;
@@ -59,11 +61,9 @@ namespace Nautilus.Redis.Data.Builders
 
         private SecurityType SecurityType { get; }
 
-        private int TickPrecision { get; }
+        private int PricePrecision { get; }
 
-        private decimal TickSize { get; }
-
-        private int RoundLotSize { get; }
+        private int SizePrecision { get; }
 
         private int MinStopDistanceEntry { get; set; }
 
@@ -73,9 +73,13 @@ namespace Nautilus.Redis.Data.Builders
 
         private int MinLimitDistance { get; set; }
 
-        private int MinTradeSize { get; set; }
+        private Price TickSize { get; }
 
-        private int MaxTradeSize { get; set; }
+        private Quantity RoundLotSize { get; }
+
+        private Quantity MinTradeSize { get; set; }
+
+        private Quantity MaxTradeSize { get; set; }
 
         private decimal RolloverInterestBuy { get; set; }
 
@@ -133,8 +137,8 @@ namespace Nautilus.Redis.Data.Builders
             {
                 this.AddChange(
                     nameof(this.MinTradeSize),
-                    this.MinTradeSize.ToString(CultureInfo.InvariantCulture),
-                    updateInstrument.MinTradeSize.ToString(CultureInfo.InvariantCulture));
+                    this.MinTradeSize.ToString(),
+                    updateInstrument.MinTradeSize.ToString());
 
                 this.MinTradeSize = updateInstrument.MinTradeSize;
             }
@@ -143,8 +147,8 @@ namespace Nautilus.Redis.Data.Builders
             {
                 this.AddChange(
                     nameof(this.MaxTradeSize),
-                    this.MaxTradeSize.ToString(CultureInfo.InvariantCulture),
-                    updateInstrument.MaxTradeSize.ToString(CultureInfo.InvariantCulture));
+                    this.MaxTradeSize.ToString(),
+                    updateInstrument.MaxTradeSize.ToString());
 
                 this.MaxTradeSize = updateInstrument.MaxTradeSize;
             }
@@ -185,13 +189,14 @@ namespace Nautilus.Redis.Data.Builders
                 this.BrokerSymbol,
                 this.BaseCurrency,
                 this.SecurityType,
-                this.TickPrecision,
-                this.TickSize,
-                this.RoundLotSize,
+                this.PricePrecision,
+                this.SizePrecision,
                 this.MinStopDistanceEntry,
                 this.MinLimitDistanceEntry,
                 this.MinStopDistance,
                 this.MinLimitDistance,
+                this.TickSize,
+                this.RoundLotSize,
                 this.MinTradeSize,
                 this.MaxTradeSize,
                 this.RolloverInterestBuy,

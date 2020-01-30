@@ -18,22 +18,22 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public static Bar Create(int offsetMinutes = 0)
         {
             return new Bar(
-                1.00000m,
-                1.00000m,
-                1.00000m,
-                1.00000m,
-                1000000,
+                Price.Create(1.00000m),
+                Price.Create(1.00000m),
+                Price.Create(1.00000m),
+                Price.Create(1.00000m),
+                Volume.Create(1000000),
                 StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(offsetMinutes));
         }
 
         public static Bar Create(Duration offset)
         {
             return new Bar(
-                1.00000m,
-                1.00000m,
-                1.00000m,
-                1.00000m,
-                1000000,
+                Price.Create(1.00000m),
+                Price.Create(1.00000m),
+                Price.Create(1.00000m),
+                Price.Create(1.00000m),
+                Volume.Create(1000000),
                 StubZonedDateTime.UnixEpoch() + offset);
         }
     }

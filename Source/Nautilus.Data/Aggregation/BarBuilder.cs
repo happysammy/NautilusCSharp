@@ -22,7 +22,7 @@ namespace Nautilus.Data.Aggregation
         private Price high;
         private Price low;
         private Price close;
-        private int volume;
+        private decimal volume;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BarBuilder"/> class.
@@ -72,7 +72,7 @@ namespace Nautilus.Data.Aggregation
                 this.high,
                 this.low,
                 this.close,
-                Quantity.Create(this.volume),
+                Volume.Create(this.volume),
                 closeTime);
         }
     }

@@ -34,7 +34,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             Assert.Equal(quote, bar.High);
             Assert.Equal(quote, bar.Low);
             Assert.Equal(quote, bar.Close);
-            Assert.Equal(Quantity.Create(1), bar.Volume);
+            Assert.Equal(Volume.One(), bar.Volume);
             Assert.Equal(StubZonedDateTime.UnixEpoch(), bar.Timestamp);
         }
 
@@ -62,7 +62,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             Assert.Equal(quote1, bar.High);
             Assert.Equal(quote4, bar.Low);
             Assert.Equal(quote4, bar.Close);
-            Assert.Equal(Quantity.Create(4), bar.Volume);
+            Assert.Equal(Volume.Create(4), bar.Volume);
             Assert.Equal(timestamp + Period.FromSeconds(1).ToDuration(), bar.Timestamp);
         }
 
@@ -90,7 +90,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             Assert.Equal(quote3, bar.High);
             Assert.Equal(quote4, bar.Low);
             Assert.Equal(quote4, bar.Close);
-            Assert.Equal(Quantity.Create(4), bar.Volume);
+            Assert.Equal(Volume.Create(4), bar.Volume);
             Assert.Equal(timestamp + Period.FromMinutes(5).ToDuration(), bar.Timestamp);
         }
 
@@ -118,7 +118,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             Assert.Equal(quote2, bar.High);
             Assert.Equal(quote1, bar.Low);
             Assert.Equal(quote4, bar.Close);
-            Assert.Equal(Quantity.Create(4), bar.Volume);
+            Assert.Equal(Volume.Create(4), bar.Volume);
             Assert.Equal(StubZonedDateTime.UnixEpoch(), bar.Timestamp);
         }
     }

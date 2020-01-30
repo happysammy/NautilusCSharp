@@ -30,7 +30,13 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests
         internal void Create_WithValidString_ReturnsExpectedTick()
         {
             // Arrange
-            var tick = new Tick(this.symbol, 1.00000m, 1.00000m, StubZonedDateTime.UnixEpoch());
+            var tick = new Tick(
+                this.symbol,
+                Price.Create(1.00000m),
+                Price.Create(1.00000m),
+                Volume.One(),
+                Volume.One(),
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             var tickString = tick.ToString();
@@ -49,7 +55,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests
                 Price.Create(0.80010m, 5),
                 Price.Create(0.79990m, 5),
                 Price.Create(0.80001m, 5),
-                Quantity.Create(1000000),
+                Volume.Create(1000000),
                 StubZonedDateTime.UnixEpoch());
 
             // Act

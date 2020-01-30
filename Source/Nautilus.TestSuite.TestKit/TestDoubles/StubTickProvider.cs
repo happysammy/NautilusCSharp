@@ -24,8 +24,10 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             return new Tick(
                 symbol,
-                Price.Create(LastBid, 5),
-                Price.Create(LastAsk, 5),
+                Price.Create(LastBid),
+                Price.Create(LastAsk),
+                Volume.One(),
+                Volume.One(),
                 StubZonedDateTime.UnixEpoch());
         }
 
@@ -38,6 +40,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 symbol,
                 bid,
                 ask,
+                Volume.One(),
+                Volume.One(),
                 StubZonedDateTime.UnixEpoch());
         }
 
@@ -48,8 +52,10 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             return new Tick(
                 symbol,
-                Price.Create(bid, 5),
-                Price.Create(ask, 5),
+                Price.Create(bid),
+                Price.Create(ask),
+                Volume.One(),
+                Volume.One(),
                 StubZonedDateTime.UnixEpoch());
         }
     }

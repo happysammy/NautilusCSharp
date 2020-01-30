@@ -13,6 +13,7 @@ namespace Nautilus.DomainModel.Entities
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
+    using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
     /// <summary>
@@ -26,7 +27,8 @@ namespace Nautilus.DomainModel.Entities
         /// </summary>
         /// <param name="symbol">The instruments symbol.</param>
         /// <param name="brokerSymbol">The instruments broker symbol.</param>
-        /// <param name="tickPrecision">The instruments tick decimal precision.</param>
+        /// <param name="pricePrecision">The instruments tick decimal precision.</param>
+        /// <param name="sizePrecision">The instruments quantity size precision.</param>
         /// <param name="tickSize">The instruments tick size.</param>
         /// <param name="roundLotSize">The instruments rounded lot size.</param>
         /// <param name="minStopDistanceEntry">The instruments minimum stop distance for entry.</param>
@@ -41,15 +43,16 @@ namespace Nautilus.DomainModel.Entities
         public ForexInstrument(
             Symbol symbol,
             BrokerSymbol brokerSymbol,
-            int tickPrecision,
-            decimal tickSize,
-            int roundLotSize,
+            int pricePrecision,
+            int sizePrecision,
             int minStopDistanceEntry,
             int minLimitDistanceEntry,
             int minStopDistance,
             int minLimitDistance,
-            int minTradeSize,
-            int maxTradeSize,
+            Price tickSize,
+            Quantity roundLotSize,
+            Quantity minTradeSize,
+            Quantity maxTradeSize,
             decimal rolloverInterestBuy,
             decimal rolloverInterestSell,
             ZonedDateTime timestamp)
@@ -58,13 +61,14 @@ namespace Nautilus.DomainModel.Entities
                 brokerSymbol,
                 symbol.Code.Substring(3, 3).ToEnum<Currency>(),
                 SecurityType.Forex,
-                tickPrecision,
-                tickSize,
-                roundLotSize,
+                pricePrecision,
+                sizePrecision,
                 minStopDistanceEntry,
                 minLimitDistanceEntry,
                 minStopDistance,
                 minLimitDistance,
+                tickSize,
+                roundLotSize,
                 minTradeSize,
                 maxTradeSize,
                 rolloverInterestBuy,

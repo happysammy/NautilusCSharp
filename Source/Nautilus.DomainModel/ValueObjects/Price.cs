@@ -8,13 +8,14 @@
 
 namespace Nautilus.DomainModel.ValueObjects
 {
+    using System;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Primitives;
 
     /// <summary>
-    /// Represents a financial market price.
+    /// Represents a non-negative financial market price.
     /// </summary>
     [Immutable]
     public sealed class Price : DecimalNumber
@@ -31,7 +32,19 @@ namespace Nautilus.DomainModel.ValueObjects
         }
 
         /// <summary>
-        /// Returns a new <see cref="Price"/> with the given value and decimal places.
+        /// Returns a new <see cref="Price"/> parsed from the given string value.
+        /// The decimal precision is inferred.
+        /// </summary>
+        /// <param name="value">The price value.</param>
+        /// <returns>A <see cref="Price"/>.</returns>
+        public static Price Create(string value)
+        {
+            return Create(Convert.ToDecimal(value));
+        }
+
+        /// <summary>
+        /// Returns a new <see cref="Price"/> with the given value.
+        /// The decimal precision is inferred.
         /// </summary>
         /// <param name="value">The price value.</param>
         /// <returns>A <see cref="Price"/>.</returns>
@@ -59,6 +72,8 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A <see cref="Price"/>.</returns>
         public Price Add(Price other)
         {
+            Debug.True(this.Precision >= other.Precision, "this.Precision >= other.Precision");
+
             return new Price(this.Value + other.Value, this.Precision);
         }
 
@@ -71,6 +86,8 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A <see cref="Price"/>.</returns>
         public Price Subtract(Price other)
         {
+            Debug.True(this.Precision >= other.Precision, "this.Precision >= other.Precision");
+
             return new Price(this.Value - other.Value, this.Precision);
         }
     }

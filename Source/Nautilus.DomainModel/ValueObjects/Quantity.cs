@@ -9,16 +9,15 @@
 namespace Nautilus.DomainModel.ValueObjects
 {
     using System;
-    using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
+    using Nautilus.Core.Extensions;
     using Nautilus.Core.Primitives;
 
     /// <summary>
     /// Represents a non-negative decimal quantity.
     /// </summary>
     [Immutable]
-    [SuppressMessage("ReSharper", "InterpolatedStringExpressionIsNotIFormattable", Justification = "Formatting.")]
     public sealed class Quantity : DecimalNumber
     {
         private static readonly Quantity ZeroQuantity = new Quantity(decimal.Zero, 0);
@@ -41,12 +40,34 @@ namespace Nautilus.DomainModel.ValueObjects
         public static Quantity Zero() => ZeroQuantity;
 
         /// <summary>
+        /// Returns a new <see cref="Quantity"/> parsed from the given string value.
+        /// The decimal precision is inferred.
+        /// </summary>
+        /// <param name="value">The quantity value.</param>
+        /// <returns>A <see cref="Quantity"/>.</returns>
+        public static Quantity Create(string value)
+        {
+            return Create(Convert.ToDecimal(value));
+        }
+
+        /// <summary>
+        /// Returns a new <see cref="Quantity"/> with the given amount.
+        /// The decimal precision is inferred.
+        /// </summary>
+        /// <param name="value">The quantity value.</param>
+        /// <returns>A <see cref="Quantity"/>.</returns>
+        public static Quantity Create(decimal value)
+        {
+            return new Quantity(value, value.GetDecimalPlaces());
+        }
+
+        /// <summary>
         /// Returns a new <see cref="Quantity"/> with the given amount.
         /// </summary>
-        /// <param name="value">The value.</param>
+        /// <param name="value">The quantity value.</param>
         /// <returns>A <see cref="Quantity"/>.</returns>
         /// <param name="precision">The precision of the quantity.</param>
-        public static Quantity Create(decimal value, int precision = 0)
+        public static Quantity Create(decimal value, int precision)
         {
             return new Quantity(value, precision);
         }
@@ -74,30 +95,6 @@ namespace Nautilus.DomainModel.ValueObjects
             Debug.True(other.Value <= this.Value, nameof(other));
 
             return new Quantity(this.Value - other.Value, Math.Max(this.Precision, other.Precision));
-        }
-
-        /// <summary>
-        /// Returns a new <see cref="Quantity"/> as the result of the given <see cref="Quantity"/>
-        /// divided from this <see cref="Quantity"/> (cannot return a <see cref="Quantity"/>
-        /// with a negative value).
-        /// </summary>
-        /// <param name="other">The other quantity.</param>
-        /// <returns>A <see cref="Quantity"/>.</returns>
-        public Quantity Divide(Quantity other)
-        {
-            return new Quantity(this.Value / other.Value, Math.Max(this.Precision, other.Precision));
-        }
-
-        /// <summary>
-        /// Returns a new <see cref="Quantity"/> as the result of multiplying this <see cref="Quantity"/>
-        /// by a negative quantity (cannot return a <see cref="Quantity"/>
-        /// with a negative value).
-        /// </summary>
-        /// <param name="other">The other quantity.</param>
-        /// <returns>A <see cref="Quantity"/>.</returns>
-        public Quantity Multiply(Quantity other)
-        {
-            return new Quantity(this.Value * other.Value, Math.Max(this.Precision, other.Precision));
         }
     }
 }

@@ -134,7 +134,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void Test_can_cache_multiple_instruments()
         {
             // Arrange
-            this.output.WriteLine(nameof(Instrument.TickPrecision));
+            this.output.WriteLine(nameof(Instrument.PricePrecision));
             var instrument1 = StubInstrumentProvider.AUDUSD();
             var instrument2 = StubInstrumentProvider.EURUSD();
             var instrument3 = StubInstrumentProvider.USDJPY();
@@ -154,7 +154,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             Assert.Equal(instrument2, result2.Value);
             Assert.Equal(instrument3, result3.Value);
 
-            this.output.WriteLine(nameof(Instrument.TickPrecision));
+            this.output.WriteLine(nameof(Instrument.PricePrecision));
         }
     }
 }

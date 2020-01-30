@@ -31,7 +31,13 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         {
             // Arrange
             // Act
-            var tick = new Tick(this.symbol, 1.00000m, 1.00000m, StubZonedDateTime.UnixEpoch());
+            var tick = new Tick(
+                this.symbol,
+                Price.Create(1.00000m),
+                Price.Create(1.00000m),
+                Volume.One(),
+                Volume.One(),
+                StubZonedDateTime.UnixEpoch());
 
             // Assert
             Assert.Equal("AUDUSD", tick.Symbol.Code);
@@ -47,8 +53,21 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         internal void CompareTo_WithVariousTicks_ReturnsExpectedResult(int millisecondsOffset, int expected)
         {
             // Arrange
-            var tick1 = new Tick(this.symbol, 1.00000m, 1.00000m, StubZonedDateTime.UnixEpoch());
-            var tick2 = new Tick(this.symbol, 1.00000m, 1.00000m, StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(millisecondsOffset));
+            var tick1 = new Tick(
+                this.symbol,
+                Price.Create(1.00000m),
+                Price.Create(1.00000m),
+                Volume.One(),
+                Volume.One(),
+                StubZonedDateTime.UnixEpoch());
+
+            var tick2 = new Tick(
+                this.symbol,
+                Price.Create(1.00000m),
+                Price.Create(1.00000m),
+                Volume.One(),
+                Volume.One(),
+                StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(millisecondsOffset));
 
             // Act
             var result = tick1.CompareTo(tick2);
@@ -62,10 +81,16 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         {
             // Arrange
             // Act
-            var tick = new Tick(this.symbol, 1.00010m, 1.00000m, StubZonedDateTime.UnixEpoch());
+            var tick = new Tick(
+                this.symbol,
+                Price.Create(1.00000m),
+                Price.Create(1.00010m),
+                Volume.One(),
+                Volume.One(),
+                StubZonedDateTime.UnixEpoch());
 
             // Assert
-            Assert.Equal("1.00010,1.00000,1970-01-01T00:00:00.000Z", tick.ToString());
+            Assert.Equal("1.00000,1.00010,1,1,1970-01-01T00:00:00.000Z", tick.ToString());
         }
 
         [Theory]
@@ -75,8 +100,21 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         internal void Equals_VariousValues_ReturnsExpectedResult(decimal price1, decimal price2, int millisecondsOffset, bool expected)
         {
             // Arrange
-            var tick1 = new Tick(this.symbol, price1, 5, StubZonedDateTime.UnixEpoch());
-            var tick2 = new Tick(this.symbol, price2, 5, StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(millisecondsOffset));
+            var tick1 = new Tick(
+                this.symbol,
+                Price.Create(price1),
+                Price.Create(5),
+                Volume.One(),
+                Volume.One(),
+                StubZonedDateTime.UnixEpoch());
+
+            var tick2 = new Tick(
+                this.symbol,
+                Price.Create(price2),
+                Price.Create(5),
+                Volume.One(),
+                Volume.One(),
+                StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(millisecondsOffset));
 
             // Act
             var result1 = tick1.Equals(tick2);

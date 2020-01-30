@@ -33,6 +33,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 new Symbol("AUDUSD", new Venue("FXCM")),
                 Price.Create(0.80000m, 5),
                 Price.Create(0.80005m, 5),
+                Volume.One(),
+                Volume.One(),
                 StubZonedDateTime.UnixEpoch());
 
             // Act
@@ -55,18 +57,24 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 new Symbol("AUDUSD", new Venue("FXCM")),
                 Price.Create(0.80000m, 5),
                 Price.Create(0.80005m, 5),
+                Volume.One(),
+                Volume.One(),
                 StubZonedDateTime.UnixEpoch());
 
             var tick2 = new Tick(
                 new Symbol("AUDUSD", new Venue("FXCM")),
                 Price.Create(0.80001m, 5),
                 Price.Create(0.80006m, 5),
+                Volume.One(),
+                Volume.One(),
                 StubZonedDateTime.UnixEpoch());
 
             var tick3 = new Tick(
                 new Symbol("AUDUSD", new Venue("FXCM")),
                 Price.Create(0.80001m, 5),
                 Price.Create(0.80004m, 5),
+                Volume.One(),
+                Volume.One(),
                 StubZonedDateTime.UnixEpoch());
 
             // Act
@@ -86,6 +94,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 new Symbol("AUDUSD", new Venue("FXCM")),
                 Price.Create(0.80000m, 5),
                 Price.Create(0.80005m, 5),
+                Volume.One(),
+                Volume.One(),
                 StubZonedDateTime.UnixEpoch());
 
             this.spreadAnalyzer.Update(tick1);
@@ -95,12 +105,16 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 new Symbol("AUDUSD", new Venue("FXCM")),
                 Price.Create(0.80001m, 5),
                 Price.Create(0.80006m, 5),
+                Volume.One(),
+                Volume.One(),
                 StubZonedDateTime.UnixEpoch());
 
             var tick3 = new Tick(
                 new Symbol("AUDUSD", new Venue("FXCM")),
                 Price.Create(0.80001m, 5),
                 Price.Create(0.80004m, 5),
+                Volume.One(),
+                Volume.One(),
                 StubZonedDateTime.UnixEpoch());
 
             this.spreadAnalyzer.Update(tick2);

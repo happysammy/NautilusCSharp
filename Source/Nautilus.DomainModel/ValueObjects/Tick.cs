@@ -28,35 +28,22 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <param name="symbol">The quoted symbol.</param>
         /// <param name="bid">The quoted bid price.</param>
         /// <param name="ask">The quoted ask price.</param>
+        /// <param name="bidSize">The ticks bid size.</param>
+        /// <param name="askSize">The ticks ask size.</param>
         /// <param name="timestamp">The quote timestamp.</param>
         public Tick(
             Symbol symbol,
             Price bid,
             Price ask,
+            Volume bidSize,
+            Volume askSize,
             ZonedDateTime timestamp)
         {
             this.Symbol = symbol;
             this.Bid = bid;
             this.Ask = ask;
-            this.Timestamp = timestamp;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Tick"/> structure.
-        /// </summary>
-        /// <param name="symbol">The quoted symbol.</param>
-        /// <param name="bid">The quoted bid price.</param>
-        /// <param name="ask">The quoted ask price.</param>
-        /// <param name="timestamp">The quote timestamp.</param>
-        public Tick(
-            Symbol symbol,
-            decimal bid,
-            decimal ask,
-            ZonedDateTime timestamp)
-        {
-            this.Symbol = symbol;
-            this.Bid = Price.Create(bid, bid.GetDecimalPlaces());
-            this.Ask = Price.Create(ask, ask.GetDecimalPlaces());
+            this.BidSize = bidSize;
+            this.AskSize = askSize;
             this.Timestamp = timestamp;
         }
 
@@ -74,6 +61,16 @@ namespace Nautilus.DomainModel.ValueObjects
         /// Gets the ticks ask price.
         /// </summary>
         public Price Ask { get; }
+
+        /// <summary>
+        /// Gets the ticks bid size.
+        /// </summary>
+        public Volume BidSize { get; }
+
+        /// <summary>
+        /// Gets the ticks ask size.
+        /// </summary>
+        public Volume AskSize { get; }
 
         /// <summary>
         /// Gets the ticks timestamp.
@@ -108,7 +105,7 @@ namespace Nautilus.DomainModel.ValueObjects
         {
             Debug.NotEmptyOrWhiteSpace(tickString, nameof(tickString));
 
-            var values = tickString.Split(',', 1);
+            var values = tickString.Split(',');
             return FromString(Symbol.FromString(values[0]), values[1]);
         }
 
@@ -126,9 +123,11 @@ namespace Nautilus.DomainModel.ValueObjects
 
             return new Tick(
                 symbol,
-                Convert.ToDecimal(values[0]),
-                Convert.ToDecimal(values[1]),
-                values[2].ToZonedDateTimeFromIso());
+                Price.Create(values[0]),
+                Price.Create(values[1]),
+                Volume.Create(values[2]),
+                Volume.Create(values[3]),
+                values[4].ToZonedDateTimeFromIso());
         }
 
         /// <summary>
@@ -150,6 +149,8 @@ namespace Nautilus.DomainModel.ValueObjects
             return this.Symbol == other.Symbol &&
                    this.Bid == other.Bid &&
                    this.Ask == other.Ask &&
+                   this.BidSize == other.BidSize &&
+                   this.AskSize == other.AskSize &&
                    this.Timestamp == other.Timestamp;
         }
 
@@ -174,6 +175,10 @@ namespace Nautilus.DomainModel.ValueObjects
         /// Returns a string representation of the <see cref="Tick"/>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{this.Bid},{this.Ask},{this.Timestamp.ToIsoString()}";
+        public override string ToString() => $"{this.Bid}," +
+                                             $"{this.Ask}," +
+                                             $"{this.BidSize}," +
+                                             $"{this.AskSize}," +
+                                             $"{this.Timestamp.ToIsoString()}";
     }
 }

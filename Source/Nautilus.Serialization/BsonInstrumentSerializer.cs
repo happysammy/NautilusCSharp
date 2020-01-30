@@ -18,6 +18,7 @@ namespace Nautilus.Serialization
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
+    using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
     /// Provides a data serializer for the BSON specification.
@@ -37,15 +38,16 @@ namespace Nautilus.Serialization
                 { nameof(Instrument.BrokerSymbol), instrument.BrokerSymbol.Value },
                 { nameof(Instrument.QuoteCurrency), instrument.QuoteCurrency.ToString() },
                 { nameof(Instrument.SecurityType), instrument.SecurityType.ToString() },
-                { nameof(Instrument.TickPrecision), instrument.TickPrecision },
-                { nameof(Instrument.TickSize), instrument.TickSize },
-                { nameof(Instrument.RoundLotSize), instrument.RoundLotSize },
+                { nameof(Instrument.PricePrecision), instrument.PricePrecision },
+                { nameof(Instrument.SizePrecision), instrument.PricePrecision },
                 { nameof(Instrument.MinStopDistanceEntry), instrument.MinStopDistanceEntry },
                 { nameof(Instrument.MinStopDistance), instrument.MinStopDistance },
                 { nameof(Instrument.MinLimitDistanceEntry), instrument.MinLimitDistanceEntry },
                 { nameof(Instrument.MinLimitDistance), instrument.MinLimitDistance },
-                { nameof(Instrument.MinTradeSize), instrument.MinTradeSize },
-                { nameof(Instrument.MaxTradeSize), instrument.MaxTradeSize },
+                { nameof(Instrument.TickSize), instrument.TickSize.ToString() },
+                { nameof(Instrument.RoundLotSize), instrument.RoundLotSize.ToString() },
+                { nameof(Instrument.MinTradeSize), instrument.MinTradeSize.ToString() },
+                { nameof(Instrument.MaxTradeSize), instrument.MaxTradeSize.ToString() },
                 { nameof(Instrument.RolloverInterestBuy), instrument.RolloverInterestBuy },
                 { nameof(Instrument.RolloverInterestSell), instrument.RolloverInterestSell },
                 { nameof(Instrument.Timestamp), instrument.Timestamp.ToIsoString() },
@@ -72,15 +74,16 @@ namespace Nautilus.Serialization
                 return new ForexInstrument(
                     Symbol.FromString(unpacked[nameof(Instrument.Symbol)].AsString),
                     new BrokerSymbol(unpacked[nameof(Instrument.BrokerSymbol)].AsString),
-                    unpacked[nameof(Instrument.TickPrecision)].AsInt32,
-                    unpacked[nameof(Instrument.TickSize)].AsDecimal,
-                    unpacked[nameof(Instrument.RoundLotSize)].AsInt32,
+                    unpacked[nameof(Instrument.PricePrecision)].AsInt32,
+                    unpacked[nameof(Instrument.SizePrecision)].AsInt32,
                     unpacked[nameof(Instrument.MinStopDistanceEntry)].AsInt32,
                     unpacked[nameof(Instrument.MinLimitDistanceEntry)].AsInt32,
                     unpacked[nameof(Instrument.MinStopDistance)].AsInt32,
                     unpacked[nameof(Instrument.MinLimitDistance)].AsInt32,
-                    unpacked[nameof(Instrument.MinTradeSize)].AsInt32,
-                    unpacked[nameof(Instrument.MaxTradeSize)].AsInt32,
+                    Price.Create(unpacked[nameof(Instrument.TickSize)].AsString),
+                    Quantity.Create(unpacked[nameof(Instrument.RoundLotSize)].AsString),
+                    Quantity.Create(unpacked[nameof(Instrument.MinTradeSize)].AsString),
+                    Quantity.Create(unpacked[nameof(Instrument.MaxTradeSize)].AsString),
                     unpacked[nameof(Instrument.RolloverInterestBuy)].AsDecimal,
                     unpacked[nameof(Instrument.RolloverInterestSell)].AsDecimal,
                     unpacked[nameof(Instrument.Timestamp)].AsString.ToZonedDateTimeFromIso());
@@ -91,15 +94,16 @@ namespace Nautilus.Serialization
                 new BrokerSymbol(unpacked[nameof(Instrument.BrokerSymbol)].AsString),
                 unpacked[nameof(Instrument.QuoteCurrency)].AsString.ToEnum<Currency>(),
                 securityType,
-                unpacked[nameof(Instrument.TickPrecision)].AsInt32,
-                unpacked[nameof(Instrument.TickSize)].AsDecimal,
-                unpacked[nameof(Instrument.RoundLotSize)].AsInt32,
+                unpacked[nameof(Instrument.PricePrecision)].AsInt32,
+                unpacked[nameof(Instrument.SizePrecision)].AsInt32,
                 unpacked[nameof(Instrument.MinStopDistanceEntry)].AsInt32,
                 unpacked[nameof(Instrument.MinLimitDistanceEntry)].AsInt32,
                 unpacked[nameof(Instrument.MinStopDistance)].AsInt32,
                 unpacked[nameof(Instrument.MinLimitDistance)].AsInt32,
-                unpacked[nameof(Instrument.MinTradeSize)].AsInt32,
-                unpacked[nameof(Instrument.MaxTradeSize)].AsInt32,
+                Price.Create(unpacked[nameof(Instrument.TickSize)].AsString),
+                Quantity.Create(unpacked[nameof(Instrument.RoundLotSize)].AsString),
+                Quantity.Create(unpacked[nameof(Instrument.MinTradeSize)].AsString),
+                Quantity.Create(unpacked[nameof(Instrument.MaxTradeSize)].AsString),
                 unpacked[nameof(Instrument.RolloverInterestBuy)].AsDecimal,
                 unpacked[nameof(Instrument.RolloverInterestSell)].AsDecimal,
                 unpacked[nameof(Instrument.Timestamp)].AsString.ToZonedDateTimeFromIso());

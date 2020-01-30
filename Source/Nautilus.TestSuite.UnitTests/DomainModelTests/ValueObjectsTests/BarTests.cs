@@ -35,7 +35,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
                 Price.Create(0.80010m, 5),
                 Price.Create(0.79990m, 5),
                 Price.Create(0.80001m, 5),
-                Quantity.Create(1000000),
+                Volume.Create(1000000),
                 StubZonedDateTime.UnixEpoch());
 
             var bar2 = new Bar(
@@ -43,7 +43,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
                 Price.Create(0.80010m, 5),
                 Price.Create(0.79990m, 5),
                 Price.Create(0.80001m, 5),
-                Quantity.Create(1000000),
+                Volume.Create(1000000),
                 StubZonedDateTime.UnixEpoch());
 
             // Act
@@ -64,7 +64,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
                 Price.Create(0.80010m, 5),
                 Price.Create(0.79990m, 5),
                 Price.Create(0.80001m, 5),
-                Quantity.Create(1000000),
+                Volume.Create(1000000),
                 StubZonedDateTime.UnixEpoch());
 
             var bar2 = new Bar(
@@ -72,7 +72,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
                 Price.Create(0.80010m, 5),
                 Price.Create(0.79990m, 5),
                 Price.Create(0.80001m, 5),
-                Quantity.Create(1000000),
+                Volume.Create(1000000),
                 StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1));
 
             // Act
@@ -93,7 +93,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
                 Price.Create(0.80010m, 5),
                 Price.Create(0.79990m, 5),
                 Price.Create(0.80001m, 5),
-                Quantity.Create(1000000),
+                Volume.Create(1000000),
                 StubZonedDateTime.UnixEpoch());
 
             // Act
@@ -113,7 +113,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
                 Price.Create(0.80010m, 5),
                 Price.Create(0.79990m, 5),
                 Price.Create(0.80001m, 5),
-                Quantity.Create(1000000),
+                Volume.Create(1000000),
                 StubZonedDateTime.UnixEpoch());
 
             // Act
