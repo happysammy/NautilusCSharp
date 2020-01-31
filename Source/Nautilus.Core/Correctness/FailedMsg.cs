@@ -16,6 +16,26 @@ namespace Nautilus.Core.Correctness
         /// <summary>
         /// Return the check failed message.
         /// </summary>
+        /// <param name="description">The condition predicate description.</param>
+        /// <returns>The string.</returns>
+        public static string WasFalse(string description)
+        {
+            return $"The condition predicate {description} was true.";
+        }
+
+        /// <summary>
+        /// Return the check failed message.
+        /// </summary>
+        /// <param name="description">The condition predicate description.</param>
+        /// <returns>The string.</returns>
+        public static string WasTrue(string description)
+        {
+            return $"The condition predicate {description} was false.";
+        }
+
+        /// <summary>
+        /// Return the check failed message.
+        /// </summary>
         /// <param name="paramName">The parameter being checked.</param>
         /// <returns>The string.</returns>
         public static string WasNull(string paramName)
@@ -41,7 +61,7 @@ namespace Nautilus.Core.Correctness
         /// <returns>The string.</returns>
         public static string WasDefault(object value, string paramName)
         {
-            return $"The {paramName} was default, value = {value}.";
+            return $"The {paramName} was default, was {value}.";
         }
 
         /// <summary>
@@ -53,7 +73,7 @@ namespace Nautilus.Core.Correctness
         /// <returns>The string.</returns>
         public static string WasEqualTo(object value, object toEqual, string paramName)
         {
-            return $"The {paramName} was equal to {toEqual}.";
+            return $"The {paramName} was equal to {toEqual}, was {value}.";
         }
 
         /// <summary>
@@ -65,7 +85,7 @@ namespace Nautilus.Core.Correctness
         /// <returns>The string.</returns>
         public static string WasNotEqualTo(object value, object toEqual, string paramName)
         {
-            return $"The {paramName} was not equal to {toEqual}, value = {value}.";
+            return $"The {paramName} was not equal to {toEqual}, was {value}.";
         }
 
         /// <summary>
@@ -144,7 +164,7 @@ namespace Nautilus.Core.Correctness
         /// <returns>The string.</returns>
         public static string WasNotPositive(object value, string paramName)
         {
-            return $"The {paramName} was not positive (> 0), value = {value}.";
+            return $"The {paramName} was not positive (> 0), was {value}.";
         }
 
         /// <summary>
@@ -155,7 +175,7 @@ namespace Nautilus.Core.Correctness
         /// <returns>The string.</returns>
         public static string WasNegative(object value, string paramName)
         {
-            return $"The {paramName} was negative, value = {value}.";
+            return $"The {paramName} was not greater than or equal to zero (>= 0), was {value}.";
         }
 
         /// <summary>
@@ -172,7 +192,7 @@ namespace Nautilus.Core.Correctness
             object upperBound,
             string paramName)
         {
-            return $"The {paramName} was out of range [{lowerBound}, {upperBound}], value = {value}.";
+            return $"The {paramName} was out of range [{lowerBound}, {upperBound}], was {value}.";
         }
     }
 }

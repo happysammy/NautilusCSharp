@@ -18,7 +18,6 @@ namespace Nautilus.Network
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core.Correctness;
-    using Nautilus.Core.Exceptions;
     using Nautilus.Core.Message;
     using Nautilus.Core.Types;
     using Nautilus.Messaging;
@@ -173,7 +172,7 @@ namespace Nautilus.Network
                 if (received is null)
                 {
                     // This should never happen due to generic type constraints
-                    throw new DesignTimeException($"The message was not of type {typeof(TOutbound)}.");
+                    throw new InvalidOperationException($"The message was not of type {typeof(TOutbound)}.");
                 }
 
                 this.SendMessage(received, receiver);
@@ -202,7 +201,7 @@ namespace Nautilus.Network
                 if (failure is null)
                 {
                     // This should never happen due to generic type constraints
-                    throw new DesignTimeException($"The message was not of type {typeof(TOutbound)}.");
+                    throw new InvalidOperationException($"The message was not of type {typeof(TOutbound)}.");
                 }
 
                 this.SendMessage(failure, receiver);
@@ -231,7 +230,7 @@ namespace Nautilus.Network
                 if (rejected is null)
                 {
                     // This should never happen due to generic type constraints
-                    throw new DesignTimeException($"The message was not of type {typeof(TOutbound)}.");
+                    throw new InvalidOperationException($"The message was not of type {typeof(TOutbound)}.");
                 }
 
                 this.SendMessage(rejected, receiver);

@@ -8,8 +8,8 @@
 
 namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
 {
+    using System;
     using System.Diagnostics.CodeAnalysis;
-    using Nautilus.Core.Exceptions;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using Xunit;
@@ -102,7 +102,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
 
             // Act
             // Assert
-            Assert.Throws<ConditionFailedException>(() => money.DivideBy(0));
+            Assert.Throws<DivideByZeroException>(() => money.DivideBy(0));
         }
 
         [Theory]

@@ -8,11 +8,11 @@
 
 namespace Nautilus.Execution.Engine
 {
+    using System;
     using System.Collections.Generic;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.CQS;
-    using Nautilus.Core.Exceptions;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Identifiers;
@@ -253,7 +253,7 @@ namespace Nautilus.Execution.Engine
         }
 
         /// <inheritdoc />
-        /// <exception cref="ConditionFailedException">If the position identifier is already indexed.</exception>
+        /// <exception cref="ArgumentException">If the position identifier is already indexed.</exception>
         public CommandResult AddPosition(Position position)
         {
             if (this.CachedPositions.ContainsKey(position.Id))

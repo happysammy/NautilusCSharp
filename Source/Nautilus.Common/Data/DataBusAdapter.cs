@@ -14,7 +14,6 @@ namespace Nautilus.Common.Data
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Exceptions;
     using Nautilus.Core.Types;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.ValueObjects;
@@ -105,7 +104,7 @@ namespace Nautilus.Common.Data
             }
             else
             {
-                throw new DesignTimeException($"Invalid data type for subscription ({subscription}).");
+                throw new InvalidOperationException($"Invalid data type for subscription ({subscription}).");
             }
         }
     }
