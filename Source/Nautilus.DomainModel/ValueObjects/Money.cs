@@ -144,7 +144,7 @@ namespace Nautilus.DomainModel.ValueObjects
         public override int GetHashCode() => Hash.GetCode(this.Value, this.Currency);
 
         /// <summary>
-        /// Returns a string representation of the <see cref="Money"/> object.
+        /// Returns a formatted string representation of the <see cref="Money"/> object including currency.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
         public new string ToStringFormatted()

@@ -9,6 +9,7 @@
 namespace Nautilus.DomainModel.ValueObjects
 {
     using System;
+    using System.Security.Permissions;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
@@ -95,6 +96,30 @@ namespace Nautilus.DomainModel.ValueObjects
             Debug.True(other.Value <= this.Value, nameof(other));
 
             return new Quantity(this.Value - other.Value, Math.Max(this.Precision, other.Precision));
+        }
+
+        /// <summary>
+        /// Returns a formatted string representation of this <see cref="Quantity"/>.
+        /// </summary>
+        /// <returns>A <see cref="string"/>.</returns>
+        public new string ToStringFormatted()
+        {
+            if (this.Precision > 0)
+            {
+                return this.ToString();
+            }
+
+            if (this.Value < 1000m || this.Value % 1000 != 0)
+            {
+                return this.ToString();
+            }
+
+            if (this.Value < 1000000m)
+            {
+                return (this.Value / 1000m).ToString("F0") + "K";
+            }
+
+            return (this.Value / 1000000m).ToString("F3").TrimEnd('0').TrimEnd('.') + "M";
         }
     }
 }

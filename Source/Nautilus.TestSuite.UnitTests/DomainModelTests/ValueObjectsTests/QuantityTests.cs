@@ -188,16 +188,37 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         internal void ToStringFormatted_ReturnsExpectedResult()
         {
             // Arrange
-            var quantity1 = Quantity.Create(1000);
-            var quantity2 = Quantity.Create(100000);
+            var quantity1 = Quantity.Create(10.05m, 2);
+            var quantity2 = Quantity.Create(1000);
+            var quantity3 = Quantity.Create(100000);
+            var quantity4 = Quantity.Create(120100);
+            var quantity5 = Quantity.Create(1000000);
+            var quantity6 = Quantity.Create(2500000);
+            var quantity7 = Quantity.Create(1111111);
+            var quantity8 = Quantity.Create(2523000);
+            var quantity9 = Quantity.Create(100000000);
 
             // Act
             var result1 = quantity1.ToStringFormatted();
             var result2 = quantity2.ToStringFormatted();
+            var result3 = quantity3.ToStringFormatted();
+            var result4 = quantity4.ToStringFormatted();
+            var result5 = quantity5.ToStringFormatted();
+            var result6 = quantity6.ToStringFormatted();
+            var result7 = quantity7.ToStringFormatted();
+            var result8 = quantity8.ToStringFormatted();
+            var result9 = quantity9.ToStringFormatted();
 
             // Assert
-            Assert.Equal("1,000", result1);
-            Assert.Equal("100,000", result2);
+            Assert.Equal("10.05", result1);
+            Assert.Equal("1K", result2);
+            Assert.Equal("100K", result3);
+            Assert.Equal("120100", result4);
+            Assert.Equal("1M", result5);
+            Assert.Equal("2.5M", result6);
+            Assert.Equal("1111111", result7);
+            Assert.Equal("2.523M", result8);
+            Assert.Equal("100M", result9);
         }
     }
 }
