@@ -34,7 +34,7 @@ namespace Nautilus.Core.Correctness
         /// <summary>
         /// Check the condition predicate is false.
         /// </summary>
-        /// <param name="condition">The condition predicate under check.</param>
+        /// <param name="condition">The condition predicate to check.</param>
         /// <param name="description">The condition description.</param>
         /// <exception cref="ArgumentException">If the condition is true.</exception>
         [Conditional("DEBUG")]
@@ -46,7 +46,7 @@ namespace Nautilus.Core.Correctness
         /// <summary>
         /// Check the argument is not null.
         /// </summary>
-        /// <param name="argument">The argument under check.</param>
+        /// <param name="argument">The argument to check.</param>
         /// <param name="paramName">The parameter name.</param>
         /// <typeparam name="T">The arguments type.</typeparam>
         /// <exception cref="ArgumentNullException">If the argument is null.</exception>
@@ -59,7 +59,7 @@ namespace Nautilus.Core.Correctness
         /// <summary>
         /// Check the argument is not null, empty or whitespace.
         /// </summary>
-        /// <param name="argument">The argument under check.</param>
+        /// <param name="argument">The argument to check.</param>
         /// <param name="paramName">The parameter name.</param>
         /// <exception cref="ArgumentNullException">If the string argument is null, empty or white space.</exception>
         [Conditional("DEBUG")]
@@ -72,7 +72,7 @@ namespace Nautilus.Core.Correctness
         /// Check the argument is not the default value.
         /// </summary>
         /// <typeparam name="T">The argument type.</typeparam>
-        /// <param name="argument">The argument under check.</param>
+        /// <param name="argument">The argument to check.</param>
         /// <param name="paramName">The parameter name.</param>
         /// <exception cref="ArgumentException">If the argument is the default value.</exception>
         [Conditional("DEBUG")]
@@ -85,7 +85,7 @@ namespace Nautilus.Core.Correctness
         /// <summary>
         /// Check the argument is not equal to the notToEqual object.
         /// </summary>
-        /// <param name="argument">The argument under check.</param>
+        /// <param name="argument">The argument to check.</param>
         /// <param name="notToEqual">The object not to be equal to.</param>
         /// <param name="paramName">The parameter name.</param>
         /// <exception cref="ArgumentException">If the argument equals notToEqual.</exception>
@@ -98,7 +98,7 @@ namespace Nautilus.Core.Correctness
         /// <summary>
         /// Check the argument is equal to the toEqual object.
         /// </summary>
-        /// <param name="argument">The argument under check.</param>
+        /// <param name="argument">The argument to check.</param>
         /// <param name="toEqual">The object to be equal to.</param>
         /// <param name="paramName">The parameter name.</param>
         /// <exception cref="ArgumentException">If the argument does not equal toEqual.</exception>
@@ -112,7 +112,7 @@ namespace Nautilus.Core.Correctness
         /// Check the collection is not empty.
         /// </summary>
         /// <typeparam name="T">The collection type.</typeparam>
-        /// <param name="collection">The collection under check.</param>
+        /// <param name="collection">The collection to check.</param>
         /// <param name="paramName">The parameter name.</param>
         /// <exception cref="ArgumentNullException">If the collection is null.</exception>
         /// <exception cref="ArgumentException">If the collection is empty.</exception>
@@ -126,7 +126,7 @@ namespace Nautilus.Core.Correctness
         /// Check the collection is empty.
         /// </summary>
         /// <typeparam name="T">The collection type.</typeparam>
-        /// <param name="collection">The collection under check.</param>
+        /// <param name="collection">The collection to check.</param>
         /// <param name="paramName">The parameter name.</param>
         /// <exception cref="ArgumentNullException">If the collection is null.</exception>
         /// <exception cref="ArgumentException">If the collection is not empty.</exception>
@@ -141,7 +141,7 @@ namespace Nautilus.Core.Correctness
         /// </summary>
         /// <typeparam name="TKey">The key type.</typeparam>
         /// <typeparam name="TValue">The value type.</typeparam>
-        /// <param name="dictionary">The dictionary under check.</param>
+        /// <param name="dictionary">The dictionary to check.</param>
         /// <param name="paramName">The parameter name.</param>
         /// <exception cref="ArgumentNullException">If the dictionary is null.</exception>
         /// <exception cref="ArgumentException">If the dictionary is empty.</exception>
@@ -157,7 +157,7 @@ namespace Nautilus.Core.Correctness
         /// </summary>
         /// <typeparam name="TKey">The key type.</typeparam>
         /// <typeparam name="TValue">The value type.</typeparam>
-        /// <param name="dictionary">The dictionary under check.</param>
+        /// <param name="dictionary">The dictionary to check.</param>
         /// <param name="paramName">The parameter name.</param>
         /// <exception cref="ArgumentNullException">If the dictionary is null.</exception>
         /// <exception cref="ArgumentException">If the dictionary is not empty.</exception>
@@ -173,7 +173,7 @@ namespace Nautilus.Core.Correctness
         /// </summary>
         /// <typeparam name="T">The collection type.</typeparam>
         /// <param name="element">The element for the collection to contain.</param>
-        /// <param name="collection">The collection under check.</param>
+        /// <param name="collection">The collection to check.</param>
         /// <param name="paramName">The element parameter name.</param>
         /// <param name="collectionName">The collection name.</param>
         /// <exception cref="ArgumentNullException">If the element is null.</exception>
@@ -190,7 +190,7 @@ namespace Nautilus.Core.Correctness
         /// </summary>
         /// <typeparam name="T">The collection type.</typeparam>
         /// <param name="element">The element for the collection not to contain.</param>
-        /// <param name="collection">The collection under check.</param>
+        /// <param name="collection">The collection to check.</param>
         /// <param name="paramName">The element parameter name.</param>
         /// <param name="collectionName">The collection name.</param>
         /// <exception cref="ArgumentNullException">If the element is null.</exception>
@@ -208,7 +208,7 @@ namespace Nautilus.Core.Correctness
         /// <typeparam name="TKey">The key type.</typeparam>
         /// <typeparam name="TValue">The value type.</typeparam>
         /// <param name="key">The key for the dictionary to contain.</param>
-        /// <param name="dictionary">The dictionary under check.</param>
+        /// <param name="dictionary">The dictionary to check.</param>
         /// <param name="paramName">The key parameter name.</param>
         /// <param name="dictName">The dictionary name.</param>
         /// <exception cref="ArgumentNullException">If the key is null.</exception>
@@ -227,7 +227,7 @@ namespace Nautilus.Core.Correctness
         /// <typeparam name="TKey">The key type.</typeparam>
         /// <typeparam name="TValue">The value type.</typeparam>
         /// <param name="key">The key for the dictionary not to contain.</param>
-        /// <param name="dictionary">The dictionary under check.</param>
+        /// <param name="dictionary">The dictionary to check.</param>
         /// <param name="paramName">The key parameter name.</param>
         /// <param name="dictName">The dictionary name.</param>
         /// <exception cref="ArgumentNullException">If the key is null.</exception>
