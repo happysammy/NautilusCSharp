@@ -157,7 +157,7 @@ namespace Nautilus.Fix
         /// <returns>A <see cref="Guid"/>.</returns>
         public Guid NewGuid()
         {
-            return this.guidFactory.NewGuid();
+            return this.guidFactory.Generate();
         }
 
         /// <summary>

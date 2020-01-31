@@ -16,9 +16,9 @@ namespace Nautilus.Common.Interfaces
     public interface IGuidFactory
     {
         /// <summary>
-        /// Creates and returns a new <see cref="Guid"/>.
+        /// Generates and returns a new <see cref="Guid"/>.
         /// </summary>
         /// <returns>A <see cref="Guid"/>.</returns>
-        Guid NewGuid();
+        Guid Generate();
     }
 }

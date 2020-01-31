@@ -17,7 +17,7 @@ namespace Nautilus.Common.Componentry
     public sealed class GuidFactory : IGuidFactory
     {
         /// <inheritdoc />
-        public Guid NewGuid()
+        public Guid Generate()
         {
             return Guid.NewGuid();
         }

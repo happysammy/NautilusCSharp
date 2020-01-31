@@ -13,8 +13,6 @@ namespace Nautilus.Core.Correctness
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core.Exceptions;
 
-    // Rider currently doesn't support 'notnull' generic constraints
-#pragma warning disable 8714
     /// <summary>
     /// Provides condition checking methods which are executed in debug and release
     /// configurations. If the check passes then the method does nothing. If the check fails a type
@@ -164,6 +162,7 @@ namespace Nautilus.Core.Correctness
         /// <exception cref="ConditionFailedException">If the dictionary is null.</exception>
         /// <exception cref="ConditionFailedException">If the dictionary is empty.</exception>
         public static void NotEmpty<TKey, TValue>(Dictionary<TKey, TValue>? dictionary, string paramName)
+            where TKey : class
         {
             if (dictionary is null)
             {
@@ -186,6 +185,7 @@ namespace Nautilus.Core.Correctness
         /// <exception cref="ConditionFailedException">If the dictionary is null.</exception>
         /// <exception cref="ConditionFailedException">If the dictionary is not empty.</exception>
         public static void Empty<TKey, TValue>(Dictionary<TKey, TValue>? dictionary, string paramName)
+            where TKey : class
         {
             if (dictionary is null)
             {
@@ -269,6 +269,7 @@ namespace Nautilus.Core.Correctness
         /// <exception cref="ConditionFailedException">If the dictionary is null.</exception>
         /// <exception cref="ConditionFailedException">If the dictionary does not contain the key.</exception>
         public static void KeyIn<TKey, TValue>(TKey key, Dictionary<TKey, TValue>? dictionary, string paramName, string dictName)
+            where TKey : class
         {
             if (key is null)
             {
@@ -299,6 +300,7 @@ namespace Nautilus.Core.Correctness
         /// <exception cref="ConditionFailedException">If the dictionary is null.</exception>
         /// <exception cref="ConditionFailedException">If the dictionary already contains the key.</exception>
         public static void KeyNotIn<TKey, TValue>(TKey key, Dictionary<TKey, TValue> dictionary, string paramName, string dictName)
+            where TKey : class
         {
             if (key is null)
             {

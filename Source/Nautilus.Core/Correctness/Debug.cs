@@ -13,9 +13,6 @@ namespace Nautilus.Core.Correctness
     using System.Diagnostics;
     using Nautilus.Core.Exceptions;
 
-    // Rider currently doesn't support 'notnull' generic constraints
-#pragma warning disable 8714
-
     /// <summary>
     /// Provides condition checking methods which are executed in debug configuration.
     /// If the check passes then the method does nothing. If the check fails a type of
@@ -139,6 +136,7 @@ namespace Nautilus.Core.Correctness
         /// <exception cref="ConditionFailedException">If the dictionary is empty.</exception>
         [Conditional("DEBUG")]
         public static void NotEmpty<TKey, TValue>(Dictionary<TKey, TValue> dictionary, string paramName)
+            where TKey : class
         {
             Condition.NotEmpty(dictionary, paramName);
         }
@@ -154,6 +152,7 @@ namespace Nautilus.Core.Correctness
         /// <exception cref="ConditionFailedException">If the dictionary is not empty.</exception>
         [Conditional("DEBUG")]
         public static void Empty<TKey, TValue>(Dictionary<TKey, TValue> dictionary, string paramName)
+            where TKey : class
         {
             Condition.Empty(dictionary, paramName);
         }
@@ -206,6 +205,7 @@ namespace Nautilus.Core.Correctness
         /// <exception cref="ConditionFailedException">If the dictionary does not contain the key.</exception>
         [Conditional("DEBUG")]
         public static void KeyIn<TKey, TValue>(TKey key, Dictionary<TKey, TValue> dictionary, string paramName, string dictName)
+            where TKey : class
         {
             Condition.KeyIn(key, dictionary, paramName, dictName);
         }
@@ -224,6 +224,7 @@ namespace Nautilus.Core.Correctness
         /// <exception cref="ConditionFailedException">If the dictionary already contains the key.</exception>
         [Conditional("DEBUG")]
         public static void KeyNotIn<TKey, TValue>(TKey key, Dictionary<TKey, TValue> dictionary, string paramName, string dictName)
+            where TKey : class
         {
             Condition.KeyNotIn(key, dictionary, paramName, dictName);
         }

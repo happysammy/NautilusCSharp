@@ -159,7 +159,7 @@ namespace Nautilus.Common.Componentry
         /// Returns a new <see cref="Guid"/> from the systems <see cref="Guid"/> factory.
         /// </summary>
         /// <returns>A <see cref="Guid"/>.</returns>
-        protected Guid NewGuid() => this.guidFactory.NewGuid();
+        protected Guid NewGuid() => this.guidFactory.Generate();
 
         /// <summary>
         /// Passes the given <see cref="Action"/> to the <see cref="commandHandler"/> for execution.

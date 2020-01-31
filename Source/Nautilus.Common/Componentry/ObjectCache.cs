@@ -12,15 +12,13 @@ namespace Nautilus.Common.Componentry
     using System.Collections.Generic;
     using System.Linq;
 
-    // Rider currently doesn't support 'notnull' generic constraints
-#pragma warning disable 8714
-
     /// <summary>
     /// Provides an object cache and factory. Note this is not thread-safe.
     /// </summary>
     /// <typeparam name="TKey">The key type for the cache.</typeparam>
     /// <typeparam name="TValue">The value type for the cache.</typeparam>
     public class ObjectCache<TKey, TValue>
+        where TKey : class
     {
         private readonly Dictionary<TKey, TValue> index;
         private readonly Func<TKey, TValue> creator;
