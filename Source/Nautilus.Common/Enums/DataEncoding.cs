@@ -16,10 +16,10 @@ namespace Nautilus.Common.Enums
     public enum DataEncoding
     {
         /// <summary>
-        /// The encoding is unknown (this is an invalid value).
+        /// The enumerator value is undefined (invalid).
         /// </summary>
         [InvalidValue]
-        Unknown = 0,
+        Undefined = 0,
 
         /// <summary>
         /// The UTF-8 encoding specification.

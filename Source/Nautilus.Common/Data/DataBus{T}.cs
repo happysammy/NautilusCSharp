@@ -16,6 +16,7 @@ namespace Nautilus.Common.Data
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
     using Nautilus.Messaging;
 
     /// <summary>
@@ -66,7 +67,7 @@ namespace Nautilus.Common.Data
             if (this.subscriptions.Contains(subscriber))
             {
                 this.Log.Warning($"The {subscriber} is already subscribed to {this.BusType.Name} data.");
-                return; // Design time error
+                return;  // Design time error
             }
 
             this.subscriptions.Add(subscriber);
@@ -97,19 +98,18 @@ namespace Nautilus.Common.Data
         [PerformanceOptimized]
         private void Publish(T data)
         {
+            Debug.NotNull(data, nameof(data));  // This should never happen
+
             if (data is null)
             {
-                return; // This should never happen.
+                return;  // This should never happen
             }
 
-            if (this.subscriptions.Count == 0)
-            {
-                return; // No subscribers.
-            }
-
-            for (var i = 0; i < this.subscriptions.Count; i++)
+            var i = 0;
+            while (this.subscriptions.Count > i)
             {
                 this.subscriptions[i].Endpoint.Send(data);
+                i++;
             }
         }
     }

@@ -41,7 +41,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
         private sealed class MockSerializer : ISerializer<string>, IDataSerializer<string>
         {
-            public DataEncoding DataEncoding => DataEncoding.Unknown;
+            public DataEncoding DataEncoding => DataEncoding.Undefined;
 
             public byte[] Serialize(string message)
             {

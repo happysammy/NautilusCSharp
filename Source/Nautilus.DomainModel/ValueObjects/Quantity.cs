@@ -9,7 +9,6 @@
 namespace Nautilus.DomainModel.ValueObjects
 {
     using System;
-    using System.Security.Permissions;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
