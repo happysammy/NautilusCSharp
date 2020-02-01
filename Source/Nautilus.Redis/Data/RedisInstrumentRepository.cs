@@ -13,6 +13,8 @@ namespace Nautilus.Redis.Data
     using System.Globalization;
     using System.Linq;
     using System.Text;
+    using Nautilus.Common.Componentry;
+    using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.CQS;
@@ -24,14 +26,13 @@ namespace Nautilus.Redis.Data
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Redis.Data.Builders;
-    using NodaTime;
     using StackExchange.Redis;
     using Venue = Nautilus.DomainModel.Identifiers.Venue;
 
     /// <summary>
-    /// Provides a Redis implementation for an instrument repository.
+    /// Provides a repository for handling <see cref="Instrument"/>s with Redis.
     /// </summary>
-    public sealed class RedisInstrumentRepository : IInstrumentRepository
+    public sealed class RedisInstrumentRepository : Component, IInstrumentRepository
     {
         private readonly IServer redisServer;
         private readonly IDatabase redisDatabase;
@@ -40,8 +41,10 @@ namespace Nautilus.Redis.Data
         /// <summary>
         /// Initializes a new instance of the <see cref="RedisInstrumentRepository"/> class.
         /// </summary>
+        /// <param name="container">The componentry container.</param>
         /// <param name="connection">The redis connection multiplexer.</param>
-        public RedisInstrumentRepository(ConnectionMultiplexer connection)
+        public RedisInstrumentRepository(IComponentryContainer container, ConnectionMultiplexer connection)
+            : base(container)
         {
             this.redisServer = connection.GetServer(RedisConstants.LocalHost, RedisConstants.DefaultPort);
             this.redisDatabase = connection.GetDatabase();
@@ -77,6 +80,8 @@ namespace Nautilus.Redis.Data
         public void Delete(Symbol symbol)
         {
             this.redisDatabase.KeyDelete(KeyProvider.GetInstrumentKey(symbol));
+
+            this.Log.Information($"Instrument {symbol.Value} deleted.");
         }
 
         /// <inheritdoc />
@@ -103,23 +108,21 @@ namespace Nautilus.Redis.Data
 
         /// <inheritdoc />
         [PerformanceOptimized]
-        public CommandResult Add(Instrument instrument, ZonedDateTime timeNow)
+        public void Add(Instrument instrument)
         {
-            Debug.NotDefault(timeNow, nameof(timeNow));
-
             var symbol = instrument.Symbol;
 
             if (!this.cache.ContainsKey(symbol))
             {
                 this.cache.Add(symbol, instrument);
-                return this.Write(instrument);
+                this.Write(instrument);
             }
 
             var instrumentBuilder = new InstrumentBuilder(this.cache[symbol]).Update(instrument);
 
             if (instrumentBuilder.Changes.Count == 0)
             {
-                return CommandResult.Ok($"Instrument {symbol.Value} unchanged in cache");
+                this.Log.Information($"Instrument {symbol.Value} unchanged in cache.");
             }
 
             var changesString = new StringBuilder();
@@ -129,12 +132,18 @@ namespace Nautilus.Redis.Data
                 changesString.Append(change);
             }
 
-            var updatedInstrument = instrumentBuilder.Build(timeNow);
+            var updatedInstrument = instrumentBuilder.Build(this.TimeNow());
 
             this.cache[symbol] = updatedInstrument;
             this.Write(instrument);
 
-            return CommandResult.Ok($"Updated instrument {symbol.Value}" + changesString);
+            this.Log.Information($"Updated instrument {symbol.Value}" + changesString + ".");
+        }
+
+        /// <inheritdoc />
+        public void SnapshotDatabase()
+        {
+            // Not implemented yet
         }
 
         /// <inheritdoc />
@@ -225,7 +234,7 @@ namespace Nautilus.Redis.Data
         /// <inheritdoc />
         public IReadOnlyCollection<Symbol> GetInstrumentSymbols() => this.cache.Keys.ToArray();
 
-        private CommandResult Write(Instrument instrument)
+        private void Write(Instrument instrument)
         {
             if (instrument is ForexInstrument forexCcy)
             {
@@ -253,7 +262,7 @@ namespace Nautilus.Redis.Data
 
                 this.redisDatabase.HashSet(KeyProvider.GetInstrumentKey(instrument.Symbol), forexHash);
 
-                return CommandResult.Ok($"Added instrument {instrument}");
+                this.Log.Information($"Added instrument {instrument}.");
             }
 
             var instrumentHash = new[]
@@ -279,7 +288,7 @@ namespace Nautilus.Redis.Data
 
             this.redisDatabase.HashSet(KeyProvider.GetInstrumentKey(instrument.Symbol), instrumentHash);
 
-            return CommandResult.Ok($"Added instrument {instrument}");
+            this.Log.Information($"Added instrument {instrument}.");
         }
     }
 }

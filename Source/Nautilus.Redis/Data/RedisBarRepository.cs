@@ -8,8 +8,9 @@
 
 namespace Nautilus.Redis.Data
 {
-    using System.Collections.Generic;
     using System.Linq;
+    using Nautilus.Common.Componentry;
+    using Nautilus.Common.Interfaces;
     using Nautilus.Core.CQS;
     using Nautilus.Data.Interfaces;
     using Nautilus.DomainModel.Enums;
@@ -19,69 +20,50 @@ namespace Nautilus.Redis.Data
     using StackExchange.Redis;
 
     /// <summary>
-    /// Provides a repository for persisting <see cref="Bar"/> objects into Redis.
+    /// Provides a repository for handling <see cref="Bar"/>s with Redis.
     /// </summary>
-    public sealed class RedisBarRepository : IBarRepository
+    public sealed class RedisBarRepository : Component, IBarRepository
     {
+        private readonly ConnectionMultiplexer connection;
         private readonly RedisBarClient barClient;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RedisBarRepository"/> class.
         /// </summary>
+        /// <param name="container">The componentry container.</param>
         /// <param name="connection">The clients manager.</param>
-        public RedisBarRepository(ConnectionMultiplexer connection)
+        public RedisBarRepository(IComponentryContainer container, ConnectionMultiplexer connection)
+            : base(container)
         {
-            this.barClient = new RedisBarClient(connection);
+            this.connection = connection;
+            this.barClient = new RedisBarClient(container, connection);
         }
 
-        /// <summary>
-        /// Returns the total count of bars persisted within the database.
-        /// </summary>
-        /// <returns>A <see cref="int"/>.</returns>
+        /// <inheritdoc />
         public int AllBarsCount()
         {
             return this.barClient.AllBarsCount();
         }
 
-        /// <summary>
-        /// Returns the count of bars persisted within the database with the given
-        /// <see cref="BarSpecification"/>.
-        /// </summary>
-        /// <param name="barType">The bar specification.</param>
-        /// <returns>A <see cref="int"/>.</returns>
+        /// <inheritdoc />
         public int BarsCount(BarType barType)
         {
             return this.barClient.BarsCount(barType);
         }
 
-        /// <summary>
-        /// Adds the given bar to the repository.
-        /// </summary>
-        /// <param name="barType">The bar type to add.</param>
-        /// <param name="bar">The bar to add.</param>
-        /// <returns>A <see cref="CommandResult"/>.</returns>
-        public CommandResult Add(BarType barType, Bar bar)
+        /// <inheritdoc />
+        public void Add(BarType barType, Bar bar)
         {
-            return this.barClient.AddBar(barType, bar);
+            this.barClient.AddBar(barType, bar);
         }
 
-        /// <summary>
-        /// Adds the given bar(s) to the repository.
-        /// </summary>
-        /// <param name="barData">The data data to add.</param>
-        /// <returns>A <see cref="CommandResult"/>.</returns>
-        public CommandResult Add(BarDataFrame barData)
+        /// <inheritdoc />
+        public void Add(BarDataFrame barData)
         {
-            return this.barClient.AddBars(barData.BarType, barData.Bars);
+            this.barClient.AddBars(barData.BarType, barData.Bars);
         }
 
-        /// <summary>
-        /// Returns a market data frame populated with the given bar info specification.
-        /// </summary>
-        /// <param name="barType">The bar type.</param>
-        /// <param name="fromDateTime">The from date time.</param>
-        /// <param name="toDateTime">The to date time.</param>
-        /// <returns>A <see cref="QueryResult{MarketDataFrame}"/>.</returns>
+        /// <inheritdoc />
         public QueryResult<BarDataFrame> Find(
             BarType barType,
             ZonedDateTime fromDateTime,
@@ -108,12 +90,7 @@ namespace Nautilus.Redis.Data
                 : QueryResult<BarDataFrame>.Fail(barsQuery.Message);
         }
 
-        /// <summary>
-        /// Returns a query result containing the <see cref="ZonedDateTime"/> timestamp of the last
-        /// bar within <see cref="Redis"/> for the given <see cref="BarSpecification"/> (if successful).
-        /// </summary>
-        /// <param name="barType">The requested bar type.</param>
-        /// <returns>A <see cref="QueryResult{T}"/> containing the <see cref="Bar"/>.</returns>
+        /// <inheritdoc />
         public QueryResult<ZonedDateTime> LastBarTimestamp(BarType barType)
         {
             var barKeysQuery = this.barClient.GetAllSortedKeys(barType);
@@ -131,15 +108,9 @@ namespace Nautilus.Redis.Data
                 : QueryResult<ZonedDateTime>.Fail(barsQuery.Message);
         }
 
-        /// <summary>
-        /// Removes the difference in date keys for each symbol from the database.
-        /// </summary>
-        /// <param name="barStructure">The resolution to trim.</param>
-        /// <param name="trimToDays">The number of days (keys) to trim to.</param>
-        /// <returns>The result of the operation.</returns>
-        public CommandResult TrimToDays(BarStructure barStructure, int trimToDays)
+        /// <inheritdoc />
+        public void TrimToDays(BarStructure barStructure, int trimToDays)
         {
-            var results = new List<CommandResult>();
             var keys = this.barClient.GetSortedKeysBySymbolResolution(barStructure);
             foreach (var value in keys.Values)
             {
@@ -152,22 +123,15 @@ namespace Nautilus.Redis.Data
                 var difference = keyCount - trimToDays;
                 for (var i = 0; i < difference; i++)
                 {
-                    var result = this.barClient.Delete(value[i]);
-                    results.Add(result);
+                    this.barClient.Delete(value[i]);
                 }
             }
-
-            return CommandResult.Combine(results.ToArray());
         }
 
-        /// <summary>
-        /// Sends a command to Redis to snapshot the database to disk.
-        /// </summary>
-        /// <returns>The result of the operation.</returns>
-        public CommandResult SnapshotDatabase()
+        /// <inheritdoc />
+        public void SnapshotDatabase()
         {
-            // Not implemented.
-            return CommandResult.Ok();
+            // Not implemented yet
         }
     }
 }

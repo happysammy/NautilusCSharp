@@ -25,6 +25,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     public class RedisBarRepositoryTests : IDisposable
     {
         private readonly ITestOutputHelper output;
+        private readonly MockLoggingAdapter logger;
         private readonly ConnectionMultiplexer redisConnection;
         private readonly RedisBarRepository repository;
 
@@ -32,8 +33,13 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         {
             // Fixture Setup
             this.output = output;
+
+            var containerFactory = new StubComponentryContainerProvider();
+            this.logger = containerFactory.LoggingAdapter;
+            var container = containerFactory.Create();
+
             this.redisConnection = ConnectionMultiplexer.Connect("localhost:6379,allowAdmin=true");
-            this.repository = new RedisBarRepository(this.redisConnection);
+            this.repository = new RedisBarRepository(container, this.redisConnection);
 
             this.redisConnection.GetServer(RedisConstants.LocalHost, RedisConstants.DefaultPort).FlushAllDatabases();
         }
@@ -53,15 +59,12 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var marketData = new BarDataFrame(barType, new[] { bar });
 
             // Act
-            var result = this.repository.Add(marketData);
+            this.repository.Add(marketData);
 
             // Assert
-            this.output.WriteLine(result.Message);
             this.PrintRepositoryStatus(barType);
-            Assert.True(result.IsSuccess);
             Assert.Equal(1, this.repository.AllBarsCount());
             Assert.Equal(1, this.repository.BarsCount(barType));
-            Assert.Equal("Added 1 bars to AUDUSD.FXCM-1-MINUTE[ASK], TotalCount=1", result.Message);
         }
 
         [Fact]
@@ -77,15 +80,12 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var marketData = new BarDataFrame(barType, new[] { bar1, bar2, bar3, bar4, bar5 });
 
             // Act
-            var result = this.repository.Add(marketData);
+            this.repository.Add(marketData);
 
             // Assert
-            this.output.WriteLine(result.Message);
             this.PrintRepositoryStatus(barType);
-            Assert.True(result.IsSuccess);
             Assert.Equal(5, this.repository.AllBarsCount());
             Assert.Equal(5, this.repository.BarsCount(barType));
-            Assert.Equal("Added 5 bars to AUDUSD.FXCM-1-MINUTE[ASK], TotalCount=5", result.Message);
         }
 
         [Fact]
@@ -108,15 +108,12 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             this.repository.Add(marketData1);
 
             // Act
-            var result = this.repository.Add(marketData2);
+            this.repository.Add(marketData2);
 
             // Assert
-            this.output.WriteLine(result.Message);
             this.PrintRepositoryStatus(barType);
-            Assert.True(result.IsSuccess);
             Assert.Equal(8, this.repository.BarsCount(barType));
             Assert.Equal(8, this.repository.AllBarsCount());
-            Assert.Equal("Added 3 bars to AUDUSD.FXCM-1-MINUTE[ASK], TotalCount=8", result.Message);
         }
 
         [Fact]
@@ -139,15 +136,12 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             this.repository.Add(marketData1);
 
             // Act
-            var result = this.repository.Add(marketData2);
+            this.repository.Add(marketData2);
 
             // Assert
-            this.output.WriteLine(result.Message);
             this.PrintRepositoryStatus(barType);
-            Assert.True(result.IsSuccess);
             Assert.Equal(8, this.repository.BarsCount(barType));
             Assert.Equal(8, this.repository.AllBarsCount());
-            Assert.Equal("Added 3 bars to AUDUSD.FXCM-1-MINUTE[ASK], TotalCount=8", result.Message);
         }
 
         [Fact]

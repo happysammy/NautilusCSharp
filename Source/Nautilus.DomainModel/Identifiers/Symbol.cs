@@ -28,7 +28,7 @@ namespace Nautilus.DomainModel.Identifiers
         public Symbol(string code, Venue venue)
             : base($"{code.Replace("/", " ").ToUpper()}.{venue.Value}")
         {
-            Debug.NotEmptyOrWhiteSpace(code, nameof(code));
+            Condition.NotEmptyOrWhiteSpace(code, nameof(code));
             Debug.True(code.IsAllUpperCase(), $"The symbol code value '{code}' was not all upper case.");
 
             this.Code = code;

@@ -25,7 +25,7 @@ namespace Nautilus.Data.Providers
     /// </summary>
     public sealed class TickProvider : MessageServer<Request, Response>
     {
-        private readonly ITickRepository repository;
+        private readonly ITickRepositoryReadOnly repository;
         private readonly IDataSerializer<Tick[]> dataSerializer;
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace Nautilus.Data.Providers
         /// <param name="port">The port.</param>
         public TickProvider(
             IComponentryContainer container,
-            ITickRepository repository,
+            ITickRepositoryReadOnly repository,
             IDataSerializer<Tick[]> dataSerializer,
             IMessageSerializer<Request> inboundSerializer,
             IMessageSerializer<Response> outboundSerializer,

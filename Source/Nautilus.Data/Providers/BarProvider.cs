@@ -27,7 +27,7 @@ namespace Nautilus.Data.Providers
     /// </summary>
     public sealed class BarProvider : MessageServer<Request, Response>
     {
-        private readonly IBarRepository repository;
+        private readonly IBarRepositoryReadOnly repository;
         private readonly IDataSerializer<BarDataFrame> dataSerializer;
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace Nautilus.Data.Providers
         /// <param name="port">The port.</param>
         public BarProvider(
             IComponentryContainer container,
-            IBarRepository repository,
+            IBarRepositoryReadOnly repository,
             IDataSerializer<BarDataFrame> dataSerializer,
             IMessageSerializer<Request> inboundSerializer,
             IMessageSerializer<Response> outboundSerializer,
@@ -69,7 +69,7 @@ namespace Nautilus.Data.Providers
                 var dataType = request.Query["DataType"];
                 if (dataType != "Bar[]")
                 {
-                    this.SendQueryFailure($"incorrect DataType requested (was {dataType})", request.Id, envelope.Sender);
+                    this.SendQueryFailure($"incorrect DataType requested, was {dataType}", request.Id, envelope.Sender);
                     return;
                 }
 

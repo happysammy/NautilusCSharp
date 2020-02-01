@@ -57,7 +57,7 @@ namespace Nautilus.Data.Providers
         }
 
         /// <inheritdoc />
-        public CommandResult Add(Tick tick)
+        public void Add(Tick tick)
         {
             if (this.tickStore.TryGetValue(tick.Symbol, out var tickList))
             {
@@ -67,19 +67,12 @@ namespace Nautilus.Data.Providers
             {
                 this.tickStore[tick.Symbol] = new List<Tick> { tick };
             }
-
-            return CommandResult.Ok();
         }
 
         /// <inheritdoc />
-        public CommandResult Add(List<Tick> ticks)
+        public void Add(List<Tick> ticks)
         {
             Debug.NotEmpty(ticks, nameof(ticks));
-
-            if (ticks.Count == 0)
-            {
-                return CommandResult.Fail("No ticks were add");
-            }
 
             var symbol = ticks[0].Symbol;
             if (this.tickStore.TryGetValue(symbol, out var tickList))
@@ -90,8 +83,6 @@ namespace Nautilus.Data.Providers
             {
                 this.tickStore[symbol] = ticks;
             }
-
-            return CommandResult.Ok();
         }
 
         /// <inheritdoc />
@@ -121,7 +112,7 @@ namespace Nautilus.Data.Providers
         }
 
         /// <inheritdoc />
-        public CommandResult TrimFrom(ZonedDateTime trimFrom)
+        public void TrimFrom(ZonedDateTime trimFrom)
         {
             foreach (var symbol in this.tickStore.Keys.ToList())
             {
@@ -131,13 +122,17 @@ namespace Nautilus.Data.Providers
 
                 this.tickStore[symbol] = trimmedTicks;
             }
+        }
 
-            return CommandResult.Ok();
+        /// <inheritdoc />
+        public void SnapshotDatabase()
+        {
+            // Not implemented yet
         }
 
         private void OnMessage(Tick tick)
         {
-            this.Add(tick).OnFailure(result => this.Log.Error(result.Message));
+            this.Add(tick);
         }
 
         private void OnMessage(TrimTickData message)

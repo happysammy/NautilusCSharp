@@ -151,7 +151,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             Task.Delay(100).Wait();  // Allow socket to connect
 
             var instrument = StubInstrumentProvider.AUDUSD();
-            this.repository.Add(instrument, StubZonedDateTime.UnixEpoch());
+            this.repository.Add(instrument);
 
             var query = new Dictionary<string, string>
             {
@@ -193,8 +193,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
 
             var instrument1 = StubInstrumentProvider.AUDUSD();
             var instrument2 = StubInstrumentProvider.EURUSD();
-            this.repository.Add(instrument1, StubZonedDateTime.UnixEpoch());
-            this.repository.Add(instrument2, StubZonedDateTime.UnixEpoch());
+            this.repository.Add(instrument1);
+            this.repository.Add(instrument2);
 
             var query = new Dictionary<string, string>
             {

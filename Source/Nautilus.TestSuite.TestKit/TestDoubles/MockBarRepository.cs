@@ -39,7 +39,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             return this.bars.Select(kvp => kvp.Value.Count).Sum();
         }
 
-        public CommandResult Add(BarType barType, Bar bar)
+        public void Add(BarType barType, Bar bar)
         {
             if (!this.bars.ContainsKey(barType))
             {
@@ -47,11 +47,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             }
 
             this.bars[barType].Add(bar);
-
-            return CommandResult.Ok();
         }
 
-        public CommandResult Add(BarDataFrame barData)
+        public void Add(BarDataFrame barData)
         {
             if (this.bars.ContainsKey(barData.BarType))
             {
@@ -62,8 +60,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             {
                 this.Add(barData.BarType, bar);
             }
-
-            return CommandResult.Ok();
         }
 
         public QueryResult<BarDataFrame> Find(BarType barType, ZonedDateTime fromDateTime, ZonedDateTime toDateTime)
@@ -87,16 +83,14 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 : QueryResult<ZonedDateTime>.Ok(this.bars[barType].Last().Timestamp);
         }
 
-        public CommandResult TrimToDays(BarStructure barStructure, int trimToDays)
+        public void TrimToDays(BarStructure barStructure, int trimToDays)
         {
-            // Not implemented
-            return CommandResult.Ok();
+            // Not implemented yet
         }
 
-        public CommandResult SnapshotDatabase()
+        public void SnapshotDatabase()
         {
-            // Not implemented
-            return CommandResult.Ok();
+            // Not implemented yet
         }
     }
 }

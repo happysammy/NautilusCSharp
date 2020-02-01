@@ -9,67 +9,35 @@
 namespace Nautilus.Data.Interfaces
 {
     using System.Collections.Generic;
-    using Nautilus.Core.CQS;
-    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
     /// <summary>
     /// Provides a repository for accessing <see cref="Tick"/> data.
     /// </summary>
-    public interface ITickRepository
+    public interface ITickRepository : ITickRepositoryReadOnly
     {
-        /// <summary>
-        /// Returns the count of ticks held within the repository for the given symbol.
-        /// </summary>
-        /// <param name="symbol">The tick symbol to count.</param>
-        /// <returns>An <see cref="int"/>.</returns>
-        int TicksCount(Symbol symbol);
-
-        /// <summary>
-        /// Returns the total count of ticks held within the repository.
-        /// </summary>
-        /// <returns>A <see cref="int"/>.</returns>
-        int AllTicksCount();
-
         /// <summary>
         /// Add the given tick to the repository.
         /// </summary>
         /// <param name="tick">The tick to add.</param>
-        /// <returns>The result of the operation.</returns>
-        CommandResult Add(Tick tick);
+        void Add(Tick tick);
 
         /// <summary>
         /// Add the given ticks to the repository.
         /// </summary>
         /// <param name="ticks">The ticks to add.</param>
-        /// <returns>The result of the operation.</returns>
-        CommandResult Add(List<Tick> ticks);
-
-        /// <summary>
-        /// Returns the result of the find ticks query.
-        /// </summary>
-        /// <param name="symbol">The tick symbol to find.</param>
-        /// <param name="fromDateTime">The from date time.</param>
-        /// <param name="toDateTime">The to date time.</param>
-        /// <returns>The result of the query.</returns>
-        QueryResult<List<Tick>> Find(
-            Symbol symbol,
-            ZonedDateTime fromDateTime,
-            ZonedDateTime toDateTime);
-
-        /// <summary>
-        /// Returns the result of the last tick timestamp of the given symbol.
-        /// </summary>
-        /// <param name="symbol">The tick symbol.</param>
-        /// <returns>The result of the query.</returns>
-        QueryResult<ZonedDateTime> LastTickTimestamp(Symbol symbol);
+        void Add(List<Tick> ticks);
 
         /// <summary>
         /// Removes the ticks prior to the given trim from date time.
         /// </summary>
         /// <param name="trimFrom">The date time the tick data should be trimmed from.</param>
-        /// <returns>The result of the operation.</returns>
-        CommandResult TrimFrom(ZonedDateTime trimFrom);
+        void TrimFrom(ZonedDateTime trimFrom);
+
+        /// <summary>
+        /// Save a snapshot of the database to disk.
+        /// </summary>
+        void SnapshotDatabase();
     }
 }

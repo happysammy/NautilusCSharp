@@ -11,6 +11,8 @@ namespace Nautilus.Redis.Data
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Nautilus.Common.Componentry;
+    using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.CQS;
@@ -25,7 +27,7 @@ namespace Nautilus.Redis.Data
     /// <summary>
     /// Provides a thread-safe client for accessing bar data from <see cref="Redis"/>.
     /// </summary>
-    public sealed class RedisBarClient
+    public sealed class RedisBarClient : Component
     {
         private readonly IServer redisServer;
         private readonly IDatabase redisDatabase;
@@ -33,8 +35,10 @@ namespace Nautilus.Redis.Data
         /// <summary>
         /// Initializes a new instance of the <see cref="RedisBarClient"/> class.
         /// </summary>
+        /// <param name="container">The componentry container.</param>
         /// <param name="connection">The redis connection multiplexer.</param>
-        public RedisBarClient(ConnectionMultiplexer connection)
+        public RedisBarClient(IComponentryContainer container, ConnectionMultiplexer connection)
+            : base(container)
         {
             this.redisServer = connection.GetServer(RedisConstants.LocalHost, RedisConstants.DefaultPort);
             this.redisDatabase = connection.GetDatabase();
@@ -171,14 +175,13 @@ namespace Nautilus.Redis.Data
         /// </summary>
         /// <param name="barType">The bar type to add.</param>
         /// <param name="bar">The bar to add.</param>
-        /// <returns>A command result.</returns>
         [PerformanceOptimized]
-        public CommandResult AddBar(BarType barType, Bar bar)
+        public void AddBar(BarType barType, Bar bar)
         {
             var key = KeyProvider.GetBarKey(barType, new DateKey(bar.Timestamp));
             this.redisDatabase.ListRightPush(key, bar.ToString());
 
-            return CommandResult.Ok($"Added 1 bar to {barType}");
+            this.Log.Debug($"Added 1 bar to {barType}");
         }
 
         /// <summary>

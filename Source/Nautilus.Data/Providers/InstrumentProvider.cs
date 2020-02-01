@@ -25,7 +25,7 @@ namespace Nautilus.Data.Providers
     /// </summary>
     public sealed class InstrumentProvider : MessageServer<Request, Response>
     {
-        private readonly IInstrumentRepository repository;
+        private readonly IInstrumentRepositoryReadOnly repository;
         private readonly IDataSerializer<Instrument[]> dataSerializer;
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace Nautilus.Data.Providers
         /// <param name="port">The port.</param>
         public InstrumentProvider(
             IComponentryContainer container,
-            IInstrumentRepository repository,
+            IInstrumentRepositoryReadOnly repository,
             IDataSerializer<Instrument[]> dataSerializer,
             IMessageSerializer<Request> inboundSerializer,
             IMessageSerializer<Response> outboundSerializer,

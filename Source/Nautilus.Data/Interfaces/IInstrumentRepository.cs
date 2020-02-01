@@ -8,16 +8,13 @@
 
 namespace Nautilus.Data.Interfaces
 {
-    using System.Collections.Generic;
-    using Nautilus.Core.CQS;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Identifiers;
-    using NodaTime;
 
     /// <summary>
     /// Provides a repository for accessing <see cref="Instrument"/> data.
     /// </summary>
-    public interface IInstrumentRepository
+    public interface IInstrumentRepository : IInstrumentRepositoryReadOnly
     {
         /// <summary>
         /// Clears all instruments from the in-memory cache.
@@ -44,28 +41,11 @@ namespace Nautilus.Data.Interfaces
         /// Updates the given instrument in the database.
         /// </summary>
         /// <param name="instrument">The instrument.</param>
-        /// <param name="timeNow">The time now.</param>
-        /// <returns>A <see cref="CommandResult"/> result.</returns>
-        CommandResult Add(Instrument instrument, ZonedDateTime timeNow);
+        void Add(Instrument instrument);
 
         /// <summary>
-        /// Returns the instrument corresponding to the given symbol.
+        /// Save a snapshot of the database to disk.
         /// </summary>
-        /// <param name="symbol">The symbol.</param>
-        /// <returns>A <see cref="QueryResult{Instrument}"/> result.</returns>
-        QueryResult<Instrument> FindInCache(Symbol symbol);
-
-        /// <summary>
-        /// Returns the all instruments corresponding to the given venue.
-        /// </summary>
-        /// <param name="venue">The venue.</param>
-        /// <returns>A result of the query.</returns>
-        QueryResult<IEnumerable<Instrument>> FindInCache(Venue venue);
-
-        /// <summary>
-        /// Returns the instrument symbol collection.
-        /// </summary>
-        /// <returns>The collection of symbols held by the repository.</returns>
-        IReadOnlyCollection<Symbol> GetInstrumentSymbols();
+        void SnapshotDatabase();
     }
 }

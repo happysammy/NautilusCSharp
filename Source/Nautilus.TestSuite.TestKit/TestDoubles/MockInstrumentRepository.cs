@@ -15,7 +15,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using Nautilus.Data.Interfaces;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Identifiers;
-    using NodaTime;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class MockInstrumentRepository : IInstrumentRepository
@@ -47,11 +46,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             this.instruments.Remove(symbol);
         }
 
-        public CommandResult Add(Instrument instrument, ZonedDateTime timeNow)
+        public void Add(Instrument instrument)
         {
             this.instruments.Add(instrument.Symbol, instrument);
-
-            return CommandResult.Ok();
         }
 
         public QueryResult<Instrument> FindInCache(Symbol symbol)
@@ -76,6 +73,11 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public IReadOnlyCollection<Symbol> GetInstrumentSymbols()
         {
             return this.instruments.Keys;
+        }
+
+        public void SnapshotDatabase()
+        {
+            // Not implemented yet
         }
     }
 }

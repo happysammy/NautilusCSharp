@@ -26,6 +26,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     public class RedisBarClientTests : IDisposable
     {
         private readonly ITestOutputHelper output;
+        private readonly MockLoggingAdapter logger;
         private readonly ConnectionMultiplexer redisConnection;
         private readonly RedisBarClient client;
 
@@ -33,8 +34,13 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         {
             // Fixture Setup
             this.output = output;
+
+            var containerFactory = new StubComponentryContainerProvider();
+            this.logger = containerFactory.LoggingAdapter;
+            var container = containerFactory.Create();
+
             this.redisConnection = ConnectionMultiplexer.Connect("localhost:6379,allowAdmin=true");
-            this.client = new RedisBarClient(this.redisConnection);
+            this.client = new RedisBarClient(container, this.redisConnection);
 
             this.redisConnection.GetServer(RedisConstants.LocalHost, RedisConstants.DefaultPort).FlushAllDatabases();
         }
@@ -173,12 +179,9 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var bar = StubBarData.Create();
 
             // Act
-            var result = this.client.AddBar(barType, bar);
+            this.client.AddBar(barType, bar);
 
             // Assert
-            this.output.WriteLine(result.Message);
-            Assert.True(result.IsSuccess);
-
             Assert.Equal(1, this.client.BarsCount(barType));
             Assert.Equal(1, this.client.KeysCount(barType));
             Assert.Equal(1, this.client.AllBarsCount());

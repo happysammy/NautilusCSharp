@@ -85,13 +85,14 @@ namespace NautilusData
 
             var connection = ConnectionMultiplexer.Connect("localhost:6379,allowAdmin=true");
             var tickRepository = new InMemoryTickStore(container, dataBusAdapter);
-            var barRepository = new RedisBarRepository(connection);
-            var instrumentRepository = new RedisInstrumentRepository(connection);
+            var barRepository = new RedisBarRepository(container, connection);
+            var instrumentRepository = new RedisInstrumentRepository(container, connection);
             instrumentRepository.CacheAll();
 
             var databaseTaskManager = new DatabaseTaskManager(
                 container,
                 dataBusAdapter,
+                tickRepository,
                 barRepository,
                 instrumentRepository);
 
