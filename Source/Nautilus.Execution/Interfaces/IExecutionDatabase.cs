@@ -11,7 +11,7 @@ namespace Nautilus.Execution.Interfaces
     /// <summary>
     /// Provides an execution database for persisting execution related data.
     /// </summary>
-    public interface IExecutionDatabase : IExecutionDatabaseRead, IExecutionDatabaseWrite, IExecutionDatabaseCommand
+    public interface IExecutionDatabase : IExecutionDatabaseCommand, IExecutionDatabaseRead, IExecutionDatabaseWrite
     {
     }
 }

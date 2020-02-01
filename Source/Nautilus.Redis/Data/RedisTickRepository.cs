@@ -9,17 +9,35 @@
 namespace Nautilus.Redis.Data
 {
     using System.Collections.Generic;
+    using Nautilus.Common.Componentry;
+    using Nautilus.Common.Interfaces;
     using Nautilus.Core.CQS;
     using Nautilus.Data.Interfaces;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
+    using StackExchange.Redis;
 
     /// <summary>
     /// Provides a repository for handling <see cref="Tick"/>s with Redis.
     /// </summary>
-    public class RedisTickRepository : ITickRepository
+    public class RedisTickRepository : Component, ITickRepository
     {
+        private readonly IServer redisServer;
+        private readonly IDatabase redisDatabase;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RedisTickRepository"/> class.
+        /// </summary>
+        /// <param name="container">The componentry container.</param>
+        /// <param name="connection">The clients manager.</param>
+        public RedisTickRepository(IComponentryContainer container, ConnectionMultiplexer connection)
+            : base(container)
+        {
+            this.redisServer = connection.GetServer(RedisConstants.LocalHost, RedisConstants.DefaultPort);
+            this.redisDatabase = connection.GetDatabase();
+        }
+
         /// <inheritdoc />
         public int TicksCount(Symbol symbol)
         {
@@ -45,6 +63,18 @@ namespace Nautilus.Redis.Data
         }
 
         /// <inheritdoc />
+        public void TrimFrom(ZonedDateTime trimFrom)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public void SnapshotDatabase()
+        {
+            this.redisServer.Save(SaveType.BackgroundSave, CommandFlags.FireAndForget);
+        }
+
+        /// <inheritdoc />
         public QueryResult<List<Tick>> Find(Symbol symbol, ZonedDateTime fromDateTime, ZonedDateTime toDateTime)
         {
             throw new System.NotImplementedException();
@@ -54,18 +84,6 @@ namespace Nautilus.Redis.Data
         public QueryResult<ZonedDateTime> LastTickTimestamp(Symbol symbol)
         {
             throw new System.NotImplementedException();
-        }
-
-        /// <inheritdoc />
-        public void TrimFrom(ZonedDateTime trimFrom)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        /// <inheritdoc />
-        public void SnapshotDatabase()
-        {
-            // Not implemented yet
         }
     }
 }

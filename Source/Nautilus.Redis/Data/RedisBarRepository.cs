@@ -8,11 +8,17 @@
 
 namespace Nautilus.Redis.Data
 {
+    using System;
+    using System.Collections.Generic;
     using System.Linq;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
     using Nautilus.Core.CQS;
+    using Nautilus.Core.Extensions;
     using Nautilus.Data.Interfaces;
+    using Nautilus.Data.Keys;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Frames;
     using Nautilus.DomainModel.ValueObjects;
@@ -24,8 +30,8 @@ namespace Nautilus.Redis.Data
     /// </summary>
     public sealed class RedisBarRepository : Component, IBarRepository
     {
-        private readonly ConnectionMultiplexer connection;
-        private readonly RedisBarClient barClient;
+        private readonly IServer redisServer;
+        private readonly IDatabase redisDatabase;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RedisBarRepository"/> class.
@@ -35,32 +41,186 @@ namespace Nautilus.Redis.Data
         public RedisBarRepository(IComponentryContainer container, ConnectionMultiplexer connection)
             : base(container)
         {
-            this.connection = connection;
-            this.barClient = new RedisBarClient(container, connection);
-        }
-
-        /// <inheritdoc />
-        public int AllBarsCount()
-        {
-            return this.barClient.AllBarsCount();
-        }
-
-        /// <inheritdoc />
-        public int BarsCount(BarType barType)
-        {
-            return this.barClient.BarsCount(barType);
-        }
-
-        /// <inheritdoc />
-        public void Add(BarType barType, Bar bar)
-        {
-            this.barClient.AddBar(barType, bar);
+            this.redisServer = connection.GetServer(RedisConstants.LocalHost, RedisConstants.DefaultPort);
+            this.redisDatabase = connection.GetDatabase();
         }
 
         /// <inheritdoc />
         public void Add(BarDataFrame barData)
         {
-            this.barClient.AddBars(barData.BarType, barData.Bars);
+            this.AddBars(barData.BarType, barData.Bars);
+        }
+
+        /// <summary>
+        /// Adds the given bar to the <see cref="Redis"/> List associated with the bar key.
+        /// </summary>
+        /// <param name="barType">The bar type to add.</param>
+        /// <param name="bar">The bar to add.</param>
+        [PerformanceOptimized]
+        public void Add(BarType barType, Bar bar)
+        {
+            var key = KeyProvider.GetBarKey(barType, new DateKey(bar.Timestamp));
+            this.redisDatabase.ListRightPush(key, bar.ToString());
+
+            this.Log.Debug($"Added 1 bar to {barType}");
+        }
+
+        /// <summary>
+        /// Adds the given bar to the repository.
+        /// </summary>
+        /// <param name="barType">The barType to add.</param>
+        /// <param name="bars">The bars to add.</param>
+        [PerformanceOptimized]
+        public void AddBars(BarType barType, Bar[] bars)
+        {
+            Debug.EqualTo(barType.Specification.Period, 1, nameof(barType.Specification.Period));
+            Debug.NotEmpty(bars, nameof(bars));
+
+            var barsAddedCounter = 0;
+            var barsIndex = this.OrganizeBarsByDay(bars);
+
+            foreach (var dateKey in barsIndex.Keys)
+            {
+                var key = KeyProvider.GetBarKey(barType, dateKey);
+
+                if (!this.KeyExists(key))
+                {
+                    foreach (var bar in barsIndex[dateKey])
+                    {
+                        this.redisDatabase.ListRightPush(key, bar.ToString());
+                        barsAddedCounter++;
+                    }
+
+                    continue;
+                }
+
+                // The key should exist in Redis because it was just checked by KeyExists().
+                var persistedBars = this.GetBarsByDay(key).Value;
+
+                foreach (var bar in barsIndex[dateKey])
+                {
+                    if (bar.Timestamp.IsGreaterThan(persistedBars.Last().Timestamp))
+                    {
+                        this.redisDatabase.ListRightPush(key, bar.ToString());
+                        barsAddedCounter++;
+                    }
+                }
+            }
+
+            this.Log.Debug(
+                $"Added {barsAddedCounter} bars to {barType}, TotalCount={this.BarsCount(barType)}");
+        }
+
+        /// <inheritdoc />
+        public void TrimToDays(BarStructure barStructure, int trimToDays)
+        {
+            var keys = this.GetSortedKeysBySymbolResolution(barStructure);
+            foreach (var value in keys.Values)
+            {
+                var keyCount = value.Count;
+                if (keyCount <= trimToDays)
+                {
+                    continue;
+                }
+
+                var difference = keyCount - trimToDays;
+                for (var i = 0; i < difference; i++)
+                {
+                    this.Delete(value[i]);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Deletes the given key if it exists in the database.
+        /// </summary>
+        /// <param name="key">The key to delete.</param>
+        public void Delete(string key)
+        {
+            Debug.NotEmptyOrWhiteSpace(key, nameof(key));
+
+            if (!this.KeyExists(key))
+            {
+                this.Log.Error($"Cannot find {key} to delete in the database");
+            }
+
+            this.redisDatabase.KeyDelete(key);
+
+            this.Log.Information($"Removed {key} from the database");
+        }
+
+        /// <inheritdoc />
+        public void SnapshotDatabase()
+        {
+            this.redisServer.Save(SaveType.BackgroundSave, CommandFlags.FireAndForget);
+        }
+
+        /// <summary>
+        /// Returns a result indicating whether a given key exists.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns>A <see cref="bool"/>.</returns>
+        public bool KeyExists(string key)
+        {
+            Debug.NotEmptyOrWhiteSpace(key, nameof(key));
+
+            return this.redisDatabase.KeyExists(key);
+        }
+
+        /// <summary>
+        /// Returns a count of all bars held within the <see cref="Redis"/> namespace 'market_date'.
+        /// </summary>
+        /// <returns>A <see cref="long"/>.</returns>
+        public long AllKeysCount()
+        {
+            return this.redisServer.Keys(pattern: KeyProvider.GetBarWildcardKey()).Count();
+        }
+
+        /// <summary>
+        /// Returns a count of all bars held within <see cref="Redis"/> of the given <see cref="BarSpecification"/>.
+        /// </summary>
+        /// <param name="barType">The bar type.</param>
+        /// <returns>A <see cref="long"/>.</returns>
+        public long KeysCount(BarType barType)
+        {
+            return this.redisServer.Keys(pattern: KeyProvider.GetBarWildcardKey(barType)).Count();
+        }
+
+        /// <summary>
+        /// Returns a count of all bars held within <see cref="Redis"/> of the given <see cref="BarSpecification"/>.
+        /// </summary>
+        /// <param name="barType">The bar type.</param>
+        /// <returns>A <see cref="long"/>.</returns>
+        public int BarsCount(BarType barType)
+        {
+            var allKeys = this.redisServer.Keys(pattern: KeyProvider.GetBarWildcardKey(barType)).ToArray();
+
+            if (allKeys.Length == 0)
+            {
+                return 0;
+            }
+
+            return allKeys
+                .Select(key => this.GetBarsByDay(key))
+                .Sum(bars => bars.Value.Length);
+        }
+
+        /// <summary>
+        /// Returns a count of all bar strings held within the <see cref="Redis"/> namespace 'MarketData'.
+        /// </summary>
+        /// <returns>A <see cref="long"/>.</returns>
+        public int AllBarsCount()
+        {
+            var allKeys = this.redisServer.Keys(pattern: KeyProvider.GetBarWildcardKey()).ToArray();
+
+            if (allKeys.Length == 0)
+            {
+                return 0;
+            }
+
+            return allKeys
+                .Select(key => this.GetBarsByDay(key))
+                .Sum(bars => bars.Value.Length);
         }
 
         /// <inheritdoc />
@@ -69,7 +229,7 @@ namespace Nautilus.Redis.Data
             ZonedDateTime fromDateTime,
             ZonedDateTime toDateTime)
         {
-            var barsQuery = this.barClient.GetBars(barType, fromDateTime, toDateTime);
+            var barsQuery = this.GetBars(barType, fromDateTime, toDateTime);
 
             return barsQuery.IsSuccess
                  ? QueryResult<BarDataFrame>.Ok(barsQuery.Value)
@@ -83,7 +243,7 @@ namespace Nautilus.Redis.Data
         /// <returns>The query result of bars.</returns>
         public QueryResult<BarDataFrame> FindAll(BarType barType)
         {
-            var barsQuery = this.barClient.GetAllBars(barType);
+            var barsQuery = this.GetAllBars(barType);
 
             return barsQuery.IsSuccess
                 ? QueryResult<BarDataFrame>.Ok(barsQuery.Value)
@@ -93,7 +253,7 @@ namespace Nautilus.Redis.Data
         /// <inheritdoc />
         public QueryResult<ZonedDateTime> LastBarTimestamp(BarType barType)
         {
-            var barKeysQuery = this.barClient.GetAllSortedKeys(barType);
+            var barKeysQuery = this.GetAllSortedKeys(barType);
 
             if (barKeysQuery.IsFailure)
             {
@@ -101,37 +261,210 @@ namespace Nautilus.Redis.Data
             }
 
             var lastKey = barKeysQuery.Value.Last();
-            var barsQuery = this.barClient.GetBarsByDay(lastKey);
+            var barsQuery = this.GetBarsByDay(lastKey);
 
             return barsQuery.IsSuccess
                 ? QueryResult<ZonedDateTime>.Ok(barsQuery.Value.Last().Timestamp)
                 : QueryResult<ZonedDateTime>.Fail(barsQuery.Message);
         }
 
-        /// <inheritdoc />
-        public void TrimToDays(BarStructure barStructure, int trimToDays)
+        /// <summary>
+        /// Returns a list of all market data keys based on the given bar specification.
+        /// </summary>
+        /// <param name="barType">The bar specification.</param>
+        /// <returns>A query result of <see cref="IReadOnlyList{T}"/> strings.</returns>
+        public QueryResult<List<string>> GetAllSortedKeys(BarType barType)
         {
-            var keys = this.barClient.GetSortedKeysBySymbolResolution(barStructure);
-            foreach (var value in keys.Values)
+            if (this.KeysCount(barType) == 0)
             {
-                var keyCount = value.Count;
-                if (keyCount <= trimToDays)
+                return QueryResult<List<string>>.Fail($"Market data not found for {barType}");
+            }
+
+            var allKeys = this.redisServer.Keys(pattern: KeyProvider.GetBarWildcardKey(barType));
+
+            var keyStrings = allKeys
+                .Select(key => key.ToString())
+                .ToList();
+            keyStrings.Sort();
+
+            return QueryResult<List<string>>.Ok(keyStrings);
+        }
+
+        /// <summary>
+        /// Returns a list of all market data keys based on the given bar specification.
+        /// </summary>
+        /// <param name="barStructure">The bar resolution keys.</param>
+        /// <returns>The result of the query.</returns>
+        [PerformanceOptimized]
+        public Dictionary<string, List<string>> GetSortedKeysBySymbolResolution(BarStructure barStructure)
+        {
+            var allKeysBytes = this.redisServer.Keys(pattern: KeyProvider.GetBarWildcardKey());
+
+            var keysCollection = allKeysBytes.Select(key => key.ToString());
+            var keysOfResolution = new Dictionary<string, List<string>>();
+
+            foreach (var key in keysCollection)
+            {
+                if (!key.Contains(barStructure.ToString()))
                 {
+                    // Found resolution not applicable.
                     continue;
                 }
 
-                var difference = keyCount - trimToDays;
-                for (var i = 0; i < difference; i++)
+                var splitKey = key.Split(':');
+                var symbolKey = splitKey[3] + ":" + splitKey[4];
+
+                if (!keysOfResolution.ContainsKey(symbolKey))
                 {
-                    this.barClient.Delete(value[i]);
+                    keysOfResolution.Add(symbolKey, new List<string>());
                 }
+
+                keysOfResolution[symbolKey].Add(key);
+                keysOfResolution[symbolKey].Sort();
             }
+
+            return keysOfResolution;
         }
 
-        /// <inheritdoc />
-        public void SnapshotDatabase()
+        /// <summary>
+        /// Returns all bars from <see cref="Redis"/> of the given <see cref="BarSpecification"/>.
+        /// </summary>
+        /// <param name="barType">The specification of bars to get.</param>
+        /// <returns>A read only collection of <see cref="Bar"/>(s).</returns>
+        [PerformanceOptimized]
+        public QueryResult<BarDataFrame> GetAllBars(BarType barType)
         {
-            // Not implemented yet
+            Debug.EqualTo(barType.Specification.Period, 1, nameof(barType.Specification.Period));
+
+            var barKeysQuery = this.GetAllSortedKeys(barType);
+
+            if (barKeysQuery.IsFailure)
+            {
+                return QueryResult<BarDataFrame>.Fail(barKeysQuery.Message);
+            }
+
+            var barsArray = barKeysQuery
+                .Value
+                .SelectMany(key => this.redisDatabase.ListRange(key))
+                .Select(value => Bar.FromString(value))
+                .ToArray();
+
+            return QueryResult<BarDataFrame>.Ok(new BarDataFrame(barType, barsArray));
+        }
+
+        /// <summary>
+        /// Returns all bars from <see cref="Redis"/> of the given <see cref="BarSpecification"/> within the given
+        /// range of <see cref="ZonedDateTime"/> (inclusive).
+        /// </summary>
+        /// <param name="barType">The specification of bars to get.</param>
+        /// <param name="fromDateTime">The from date time range.</param>
+        /// <param name="toDateTime">The to date time range.</param>
+        /// <returns>A read only collection of <see cref="Bar"/>(s).</returns>
+        public QueryResult<BarDataFrame> GetBars(
+            BarType barType,
+            ZonedDateTime fromDateTime,
+            ZonedDateTime toDateTime)
+        {
+            Debug.NotDefault(fromDateTime, nameof(fromDateTime));
+            Debug.NotDefault(toDateTime, nameof(toDateTime));
+
+            if (this.KeysCount(barType) == 0)
+            {
+                return QueryResult<BarDataFrame>.Fail($"Market data not found for {barType}");
+            }
+
+            var barKeys = KeyProvider.GetBarKeys(barType, fromDateTime, toDateTime);
+
+            var barsArray = barKeys
+                .SelectMany(key => this.redisDatabase.ListRange(key))
+                .Select(value => Bar.FromString(value))
+                .Where(bar => bar.Timestamp.IsGreaterThanOrEqualTo(fromDateTime)
+                           && bar.Timestamp.IsLessThanOrEqualTo(toDateTime))
+                .ToArray();
+
+            if (barsArray.Length == 0)
+            {
+                return QueryResult<BarDataFrame>.Fail(
+                    $"Market data not complete for {barType} in time range from " +
+                    $"{fromDateTime.ToIsoString()} to " +
+                    $"{toDateTime.ToIsoString()}");
+            }
+
+            return QueryResult<BarDataFrame>.Ok(new BarDataFrame(barType, barsArray));
+        }
+
+        /// <summary>
+        /// Returns a query result if success containing the requested bar, or failure containing
+        /// a message.
+        /// </summary>
+        /// <param name="barType">The requested bars specification.</param>
+        /// <param name="timestamp">The requested bars timestamp.</param>
+        /// <returns>A query result of <see cref="Bar"/>.</returns>
+        [PerformanceOptimized]
+        public QueryResult<Bar> GetBar(BarType barType, ZonedDateTime timestamp)
+        {
+            Debug.NotDefault(timestamp, nameof(timestamp));
+
+            var key = KeyProvider.GetBarKey(barType, new DateKey(timestamp));
+            var persistedBars = this.GetBarsByDay(key);
+
+            if (persistedBars.IsFailure)
+            {
+                return QueryResult<Bar>.Fail(persistedBars.Message);
+            }
+
+            for (var i = 0; i < persistedBars.Value.Length; i++)
+            {
+                if (persistedBars.Value[i].Timestamp.Equals(timestamp))
+                {
+                    return QueryResult<Bar>.Ok(persistedBars.Value[i]);
+                }
+            }
+
+            return QueryResult<Bar>.Fail($"Market data not found for {barType} " +
+                                         $"at {timestamp.ToIsoString()}");
+        }
+
+        /// <summary>
+        /// Finds and returns bars by the given key.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns>The query result list of bars.</returns>
+        public QueryResult<Bar[]> GetBarsByDay(string key)
+        {
+            Debug.NotEmptyOrWhiteSpace(key, nameof(key));
+
+            if (!this.KeyExists(key))
+            {
+                return QueryResult<Bar[]>.Fail($"Market data not found for {key}");
+            }
+
+            var values = this.redisDatabase.ListRange(key);
+
+            return QueryResult<Bar[]>.Ok(Array.ConvertAll(values, b => Bar.FromString(b)));
+        }
+
+        /// <summary>
+        /// Organizes the given bars array into a dictionary of bar lists indexed by a date key.
+        /// </summary>
+        /// <param name="bars">The bars array.</param>
+        /// <returns>The organized dictionary.</returns>
+        public Dictionary<DateKey, List<Bar>> OrganizeBarsByDay(Bar[] bars)
+        {
+            var barsDictionary = new Dictionary<DateKey, List<Bar>>();
+            for (var i = 0; i < bars.Length; i++)
+            {
+                var dateKey = new DateKey(bars[i].Timestamp);
+
+                if (!barsDictionary.ContainsKey(dateKey))
+                {
+                    barsDictionary.Add(dateKey, new List<Bar>());
+                }
+
+                barsDictionary[dateKey].Add(bars[i]);
+            }
+
+            return barsDictionary;
         }
     }
 }

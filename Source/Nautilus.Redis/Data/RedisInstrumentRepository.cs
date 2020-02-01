@@ -95,17 +95,6 @@ namespace Nautilus.Redis.Data
             }
         }
 
-        /// <summary>
-        /// Returns all instrument keys from the Redis database.
-        /// </summary>
-        /// <returns>The keys.</returns>
-        public IReadOnlyCollection<string> GetAllKeys()
-        {
-            return this.redisServer.Keys(pattern: KeyProvider.GetInstrumentWildcardKey())
-                .Select(k => k.ToString())
-                .ToArray();
-        }
-
         /// <inheritdoc />
         [PerformanceOptimized]
         public void Add(Instrument instrument)
@@ -143,7 +132,18 @@ namespace Nautilus.Redis.Data
         /// <inheritdoc />
         public void SnapshotDatabase()
         {
-            // Not implemented yet
+            this.redisServer.Save(SaveType.BackgroundSave, CommandFlags.FireAndForget);
+        }
+
+        /// <summary>
+        /// Returns all instrument keys from the Redis database.
+        /// </summary>
+        /// <returns>The keys.</returns>
+        public IReadOnlyCollection<string> GetAllKeys()
+        {
+            return this.redisServer.Keys(pattern: KeyProvider.GetInstrumentWildcardKey())
+                .Select(k => k.ToString())
+                .ToArray();
         }
 
         /// <inheritdoc />
