@@ -15,7 +15,7 @@ namespace Nautilus.DomainModel.ValueObjects
     using Nautilus.Core.Primitives;
 
     /// <summary>
-    /// Represents a non-negative decimal quantity.
+    /// Represents a non-negative quantity with a specified decimal precision.
     /// </summary>
     [Immutable]
     public sealed class Quantity : DecimalNumber
@@ -30,7 +30,7 @@ namespace Nautilus.DomainModel.ValueObjects
         private Quantity(decimal value, int precision)
             : base(value, precision)
         {
-            Debug.NotNegativeDecimal(value, nameof(value));
+            Condition.NotNegativeDecimal(value, nameof(value));
         }
 
         /// <summary>

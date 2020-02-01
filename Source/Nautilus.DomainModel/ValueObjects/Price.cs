@@ -15,7 +15,7 @@ namespace Nautilus.DomainModel.ValueObjects
     using Nautilus.Core.Primitives;
 
     /// <summary>
-    /// Represents a non-negative financial market price.
+    /// Represents a non-negative financial market price with a specified decimal precision.
     /// </summary>
     [Immutable]
     public sealed class Price : DecimalNumber
@@ -28,7 +28,7 @@ namespace Nautilus.DomainModel.ValueObjects
         private Price(decimal value, int precision)
             : base(value, precision)
         {
-            Debug.NotNegativeDecimal(value, nameof(value));
+            Condition.NotNegativeDecimal(value, nameof(value));
         }
 
         /// <summary>

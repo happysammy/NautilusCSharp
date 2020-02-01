@@ -15,7 +15,7 @@ namespace Nautilus.DomainModel.ValueObjects
     using Nautilus.Core.Primitives;
 
     /// <summary>
-    /// Represents a non-negative decimal volume.
+    /// Represents a non-negative volume with a specified decimal precision.
     /// </summary>
     [Immutable]
     public sealed class Volume : DecimalNumber
