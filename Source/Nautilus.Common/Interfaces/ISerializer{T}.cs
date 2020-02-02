@@ -24,8 +24,8 @@ namespace Nautilus.Common.Interfaces
         /// <summary>
         /// Returns the deserialize object of type T.
         /// </summary>
-        /// <param name="bytes">The bytes to deserialize.</param>
+        /// <param name="dataBytes">The bytes to deserialize.</param>
         /// <returns>The deserialized object.</returns>
-        T Deserialize(byte[] bytes);
+        T Deserialize(byte[] dataBytes);
     }
 }

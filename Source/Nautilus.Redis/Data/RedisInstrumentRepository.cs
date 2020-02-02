@@ -34,6 +34,7 @@ namespace Nautilus.Redis.Data
     /// </summary>
     public sealed class RedisInstrumentRepository : Component, IInstrumentRepository
     {
+        private readonly IDataSerializer<Instrument> serializer;
         private readonly IServer redisServer;
         private readonly IDatabase redisDatabase;
         private readonly IDictionary<Symbol, Instrument> cache;
@@ -42,10 +43,15 @@ namespace Nautilus.Redis.Data
         /// Initializes a new instance of the <see cref="RedisInstrumentRepository"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
+        /// <param name="serializer">The instrument serializer.</param>
         /// <param name="connection">The redis connection multiplexer.</param>
-        public RedisInstrumentRepository(IComponentryContainer container, ConnectionMultiplexer connection)
+        public RedisInstrumentRepository(
+            IComponentryContainer container,
+            IDataSerializer<Instrument> serializer,
+            ConnectionMultiplexer connection)
             : base(container)
         {
+            this.serializer = serializer;
             this.redisServer = connection.GetServer(RedisConstants.LocalHost, RedisConstants.DefaultPort);
             this.redisDatabase = connection.GetDatabase();
             this.cache = new Dictionary<Symbol, Instrument>();
@@ -147,7 +153,7 @@ namespace Nautilus.Redis.Data
         }
 
         /// <inheritdoc />
-        public QueryResult<Instrument> FindInCache(Symbol symbol)
+        public QueryResult<Instrument> GetInstrument(Symbol symbol)
         {
             return this.cache.ContainsKey(symbol)
                 ? QueryResult<Instrument>.Ok(this.cache[symbol])
@@ -155,16 +161,47 @@ namespace Nautilus.Redis.Data
         }
 
         /// <inheritdoc />
-        public QueryResult<IEnumerable<Instrument>> FindInCache(Venue venue)
+        public QueryResult<Instrument[]> GetInstruments(Venue venue)
         {
             var instruments = this.cache
                 .Where(kvp => kvp.Key.Venue == venue)
                 .Select(kvp => kvp.Value)
-                .ToList();
+                .ToArray();
 
-            return instruments.Count > 0
-                ? QueryResult<IEnumerable<Instrument>>.Ok(instruments)
-                : QueryResult<IEnumerable<Instrument>>.Fail($"Cannot find any instrument for {venue}");
+            return instruments.Length > 0
+                ? QueryResult<Instrument[]>.Ok(instruments)
+                : QueryResult<Instrument[]>.Fail($"Cannot find any instrument for {venue}");
+        }
+
+        /// <inheritdoc />
+        public QueryResult<byte[][]> GetInstrumentData(Symbol symbol)
+        {
+            var instrumentQuery = this.GetInstrument(symbol);
+            if (instrumentQuery.IsFailure)
+            {
+                return QueryResult<byte[][]>.Fail(instrumentQuery.Message);
+            }
+
+            return QueryResult<byte[][]>.Ok(new[] { this.serializer.Serialize(instrumentQuery.Value) });
+        }
+
+        /// <inheritdoc />
+        public QueryResult<byte[][]> GetInstrumentData(Venue venue)
+        {
+            var instrumentQuery = this.GetInstruments(venue);
+            if (instrumentQuery.IsFailure)
+            {
+                return QueryResult<byte[][]>.Fail(instrumentQuery.Message);
+            }
+
+            var instrumentsLength = instrumentQuery.Value.Length;
+            var instrumentsBytes = new byte[instrumentsLength][];
+            for (var i = 0; i < instrumentsLength; i++)
+            {
+                instrumentsBytes[i] = this.serializer.Serialize(instrumentQuery.Value[i]);
+            }
+
+            return QueryResult<byte[][]>.Ok(instrumentsBytes);
         }
 
         /// <summary>

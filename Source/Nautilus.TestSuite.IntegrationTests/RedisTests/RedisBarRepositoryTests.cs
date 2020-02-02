@@ -153,7 +153,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var barType = StubBarType.AUDUSD();
 
             // Act
-            var result = this.repository.Find(barType, StubZonedDateTime.UnixEpoch(), StubZonedDateTime.UnixEpoch() + Duration.FromDays(1));
+            var result = this.repository.GetBars(barType);
 
             // Assert
             this.output.WriteLine(result.Message);
@@ -176,7 +176,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             this.repository.Add(marketData);
 
             // Act
-            var result = this.repository.Find(barType2, StubZonedDateTime.UnixEpoch(), StubZonedDateTime.UnixEpoch() + Duration.FromDays(1));
+            var result = this.repository.GetBars(barType2);
 
             // Assert
             Assert.True(result.IsFailure);
@@ -197,7 +197,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             this.repository.Add(marketData);
 
             // Act
-            var result = this.repository.Find(barType, StubZonedDateTime.UnixEpoch(), StubZonedDateTime.UnixEpoch());
+            var result = this.repository.GetBars(barType);
 
             // Assert
             this.output.WriteLine(result.Message);
@@ -222,7 +222,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             this.repository.Add(marketData);
 
             // Act
-            var result = this.repository.Find(barType, StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1), StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(3));
+            var result = this.repository.GetBars(barType);
 
             // Assert
             this.output.WriteLine(result.Message);
@@ -359,7 +359,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
                 Volume.Create(1000000m),
                 StubZonedDateTime.UnixEpoch());
 
-            this.repository.AddBars(barType, new[] { bar });
+            this.repository.Add(barType, new[] { bar });
 
             // Act
             var result = this.repository.KeyExists(barKey);
@@ -375,7 +375,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var barType = StubBarType.AUDUSD();
 
             // Act
-            var result = this.repository.GetAllSortedKeys(barType);
+            var result = this.repository.GetKeysSorted(barType);
 
             // Assert
             Assert.True(result.IsFailure);
@@ -389,15 +389,15 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var bar1 = StubBarData.Create();
             var bar2 = StubBarData.Create(Duration.FromDays(2));
 
-            this.repository.AddBars(barType, new[] { bar1, bar2 });
+            this.repository.Add(barType, new[] { bar1, bar2 });
 
             // Act
-            var result = this.repository.GetAllSortedKeys(barType);
+            var result = this.repository.GetKeysSorted(barType);
 
             // Assert
             Assert.True(result.IsSuccess);
-            Assert.Equal(2, result.Value.Count);
-            result.Value.ForEach(k => this.output.WriteLine(k));
+            Assert.Equal(2, result.Value.Length);
+            result.Value.ToList().ForEach(k => this.output.WriteLine(k));
         }
 
         [Theory]
@@ -452,7 +452,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var bar = StubBarData.Create();
 
             // Act
-            this.repository.AddBars(barType, new[] { bar });
+            this.repository.Add(barType, new[] { bar });
 
             // Assert
             Assert.Equal(1, this.repository.BarsCount(barType));
@@ -469,10 +469,10 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var bar1 = StubBarData.Create();
             var bar2 = StubBarData.Create(1);
 
-            this.repository.AddBars(barType, new[] { bar1 });
+            this.repository.Add(barType, new[] { bar1 });
 
             // Act
-            this.repository.AddBars(barType, new[] { bar2 });
+            this.repository.Add(barType, new[] { bar2 });
 
             // Assert
             Assert.Equal(2, this.repository.BarsCount(barType));
@@ -490,10 +490,10 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var bar2 = StubBarData.Create(2);
             var bar3 = StubBarData.Create(4);
 
-            this.repository.AddBars(barType, new[] { bar1, bar2 });
+            this.repository.Add(barType, new[] { bar1, bar2 });
 
             // Act
-            this.repository.AddBars(barType, new[] { bar3 });
+            this.repository.Add(barType, new[] { bar3 });
 
             // Assert
             Assert.Equal(3, this.repository.BarsCount(barType));
@@ -509,10 +509,10 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var bar2 = StubBarData.Create(Duration.FromDays(1));
             var bar3 = StubBarData.Create(Duration.FromDays(1) + Duration.FromMinutes(1));
 
-            this.repository.AddBars(barType, new[] { bar1, bar2 });
+            this.repository.Add(barType, new[] { bar1, bar2 });
 
             // Act
-            this.repository.AddBars(barType, new[] { bar3 });
+            this.repository.Add(barType, new[] { bar3 });
 
             // Assert
             Assert.Equal(3, this.repository.BarsCount(barType));
@@ -531,80 +531,11 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var bar5 = StubBarData.Create(4);
 
             // Act
-            this.repository.AddBars(barType, new[] { bar1, bar2, bar3, bar4, bar5 });
+            this.repository.Add(barType, new[] { bar1, bar2, bar3, bar4, bar5 });
 
             // Assert
             Assert.Equal(5, this.repository.BarsCount(barType));
             Assert.Equal(5, this.repository.AllBarsCount());
-        }
-
-        [Fact]
-        internal void GetBarString_WithOneBar_ReturnsBar()
-        {
-            // Arrange
-            var barType = StubBarType.AUDUSD();
-            var bar = StubBarData.Create();
-
-            this.repository.AddBars(barType, new[] { bar });
-
-            // Act
-            var result = this.repository.GetBar(barType, bar.Timestamp);
-
-            // Assert
-            this.output.WriteLine(result.Value.ToString());
-            Assert.True(result.IsSuccess);
-            Assert.Equal("1.00000,1.00000,1.00000,1.00000,1000000,1970-01-01T00:00:00.000Z", result.Value.ToString());
-        }
-
-        [Fact]
-        internal void GetBar_WithNoBars_ReturnsQueryFailure()
-        {
-            // Arrange
-            var barType = StubBarType.AUDUSD();
-            var bar = StubBarData.Create();
-
-            // Act
-            var result = this.repository.GetBar(barType, bar.Timestamp);
-
-            // Assert
-            this.output.WriteLine(result.Message);
-            Assert.True(result.IsFailure);
-        }
-
-        [Fact]
-        internal void GetBar_WithOneBar_ReturnsBar()
-        {
-            // Arrange
-            var barType = StubBarType.AUDUSD();
-            var bar = StubBarData.Create();
-            this.repository.AddBars(barType, new[] { bar });
-
-            // Act
-            var result = this.repository.GetBar(barType, bar.Timestamp);
-
-            // Assert
-            this.output.WriteLine(result.Message);
-            Assert.True(result.IsSuccess);
-            Assert.Equal(bar, result.Value);
-        }
-
-        [Fact]
-        internal void GetBar_WithMultipleBars_ReturnsExpectedBar()
-        {
-            // Arrange
-            var barType = StubBarType.AUDUSD();
-            var bar1 = StubBarData.Create();
-            var bar2 = StubBarData.Create(1);
-            var bar3 = StubBarData.Create(2);
-            this.repository.AddBars(barType, new[] { bar1, bar2, bar3 });
-
-            // Act
-            var result = this.repository.GetBar(barType, bar2.Timestamp);
-
-            // Assert
-            this.output.WriteLine(result.Message);
-            Assert.True(result.IsSuccess);
-            Assert.Equal(bar2, result.Value);
         }
 
         [Fact]
@@ -614,7 +545,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var barType = StubBarType.AUDUSD();
 
             // Act
-            var result = this.repository.GetBars(barType, StubZonedDateTime.UnixEpoch(), StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1));
+            var result = this.repository.GetBars(barType);
 
             // Assert
             this.output.WriteLine(result.Message);
@@ -629,10 +560,10 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var barType = StubBarType.AUDUSD();
             var bar = StubBarData.Create(Duration.FromHours(1));
 
-            this.repository.AddBars(barType, new[] { bar });
+            this.repository.Add(barType, new[] { bar });
 
             // Act
-            var result = this.repository.GetBars(barType, StubZonedDateTime.UnixEpoch(), StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(2));
+            var result = this.repository.GetBars(barType);
 
             // Assert
             this.output.WriteLine(result.Message);
@@ -649,10 +580,10 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var bar2 = StubBarData.Create(1);
             var bar3 = StubBarData.Create(2);
 
-            this.repository.AddBars(barType, new[] { bar1, bar2, bar3 });
+            this.repository.Add(barType, new[] { bar1, bar2, bar3 });
 
             // Act
-            var result = this.repository.GetBars(barType, bar2.Timestamp, bar2.Timestamp);
+            var result = this.repository.GetBars(barType);
 
             // Assert
             this.output.WriteLine(result.Message);
@@ -670,10 +601,10 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var bar2 = StubBarData.Create(1);
             var bar3 = StubBarData.Create(2);
 
-            this.repository.AddBars(barType, new[] { bar1, bar2, bar3 });
+            this.repository.Add(barType, new[] { bar1, bar2, bar3 });
 
             // Act
-            var result = this.repository.GetBars(barType, bar1.Timestamp, bar3.Timestamp);
+            var result = this.repository.GetBars(barType);
 
             // Assert
             this.output.WriteLine(result.Message);
@@ -689,10 +620,10 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var bar1 = StubBarData.Create();
             var bar2 = StubBarData.Create(Duration.FromDays(1));
             var bar3 = StubBarData.Create(Duration.FromDays(2));
-            this.repository.AddBars(barType, new[] { bar1, bar2, bar3 });
+            this.repository.Add(barType, new[] { bar1, bar2, bar3 });
 
             // Act
-            var result = this.repository.GetBars(barType, bar1.Timestamp, bar3.Timestamp);
+            var result = this.repository.GetBars(barType);
 
             // Assert
             this.output.WriteLine(result.Message);
@@ -714,11 +645,11 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var bar5 = StubBarData.Create(Duration.FromDays(4));
             var bar6 = StubBarData.Create(Duration.FromDays(5));
 
-            this.repository.AddBars(barType, new[] { bar1, bar2, bar3, bar4, bar5, bar6 });
-            this.repository.AddBars(barType2, new[] { bar1, bar2, bar3, bar4, bar5, bar6 });
+            this.repository.Add(barType, new[] { bar1, bar2, bar3, bar4, bar5, bar6 });
+            this.repository.Add(barType2, new[] { bar1, bar2, bar3, bar4, bar5, bar6 });
 
             // Act
-            var result = this.repository.GetSortedKeysBySymbolResolution(BarStructure.Minute);
+            var result = this.repository.GetSortedKeysBySymbolStructure(BarStructure.Minute);
 
             foreach (var symbol in result)
             {
@@ -753,7 +684,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var barList = new[] { bar1, bar2, bar3, bar4 };
 
             // Act
-            var result = this.repository.OrganizeBarsByDay(barList);
+            var result = RedisBarRepository.OrganizeBarsByDay(barList);
 
             // Assert
             Assert.Equal(expectedCount, result.Keys.Count);
@@ -761,7 +692,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
         private void PrintRepositoryStatus(BarType barType)
         {
-            var barsQuery = this.repository.FindAll(barType);
+            var barsQuery = this.repository.GetBars(barType);
 
             if (barsQuery.IsFailure)
             {
@@ -770,7 +701,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
                 return;
             }
 
-            var bars = this.repository.FindAll(barType).Value.Bars;
+            var bars = this.repository.GetBars(barType).Value.Bars;
 
             foreach (var bar in bars)
             {

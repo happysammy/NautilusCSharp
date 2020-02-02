@@ -19,20 +19,34 @@ namespace Nautilus.Common.Interfaces
         /// <summary>
         /// Gets the serializers encoding.
         /// </summary>
-        DataEncoding DataEncoding { get;  }
+        DataEncoding Encoding { get; }
 
         /// <summary>
         /// Returns the serialized data object bytes.
         /// </summary>
-        /// <param name="data">The data object to serialize.</param>
+        /// <param name="dataObject">The data object to serialize.</param>
         /// <returns>The serialized data object bytes.</returns>
-        byte[] Serialize(T data);
+        byte[] Serialize(T dataObject);
 
         /// <summary>
         /// Returns the deserialize data object of type T.
         /// </summary>
-        /// <param name="bytes">The bytes to deserialize.</param>
+        /// <param name="dataBytes">The bytes to deserialize.</param>
         /// <returns>The deserialized data object.</returns>
-        T Deserialize(byte[] bytes);
+        T Deserialize(byte[] dataBytes);
+
+        /// <summary>
+        /// Returns the serialized data object two dimensional bytes array.
+        /// </summary>
+        /// <param name="dataObjects">The data objects to serialize.</param>
+        /// <returns>The serialized data object bytes.</returns>
+        byte[][] Serialize(T[] dataObjects);
+
+        /// <summary>
+        /// Returns the deserialize data object of type T array.
+        /// </summary>
+        /// <param name="dataBytesArray">The bytes array to deserialize.</param>
+        /// <returns>The deserialized data object.</returns>
+        T[] Deserialize(byte[][] dataBytesArray);
     }
 }

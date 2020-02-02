@@ -30,9 +30,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             return MsgPackSerializer.Serialize(package);
         }
 
-        public MockMessage Deserialize(byte[] commandBytes)
+        public MockMessage Deserialize(byte[] dataBytes)
         {
-            var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(commandBytes);
+            var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(dataBytes);
 
             return new MockMessage(
                 unpacked[nameof(MockMessage.Payload)].ToString(),

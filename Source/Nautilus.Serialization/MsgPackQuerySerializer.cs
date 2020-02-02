@@ -34,9 +34,9 @@ namespace Nautilus.Serialization
         }
 
         /// <inheritdoc />
-        public Dictionary<string, string> Deserialize(byte[] queryBytes)
+        public Dictionary<string, string> Deserialize(byte[] dataBytes)
         {
-            var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(queryBytes);
+            var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(dataBytes);
 
             var query = new Dictionary<string, string>();
             foreach (var (key, value) in unpacked)

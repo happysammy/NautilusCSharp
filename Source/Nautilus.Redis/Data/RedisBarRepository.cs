@@ -45,17 +45,36 @@ namespace Nautilus.Redis.Data
             this.redisDatabase = connection.GetDatabase();
         }
 
+        /// <summary>
+        /// Organizes the given bars array into a dictionary of bar lists indexed by a date key.
+        /// </summary>
+        /// <param name="bars">The bars array.</param>
+        /// <returns>The organized dictionary.</returns>
+        [PerformanceOptimized]
+        public static Dictionary<DateKey, List<Bar>> OrganizeBarsByDay(Bar[] bars)
+        {
+            var barsDictionary = new Dictionary<DateKey, List<Bar>>();
+            for (var i = 0; i < bars.Length; i++)
+            {
+                var dateKey = new DateKey(bars[i].Timestamp);
+                if (!barsDictionary.ContainsKey(dateKey))
+                {
+                    barsDictionary.Add(dateKey, new List<Bar>());
+                }
+
+                barsDictionary[dateKey].Add(bars[i]);
+            }
+
+            return barsDictionary;
+        }
+
         /// <inheritdoc />
         public void Add(BarDataFrame barData)
         {
-            this.AddBars(barData.BarType, barData.Bars);
+            this.Add(barData.BarType, barData.Bars);
         }
 
-        /// <summary>
-        /// Adds the given bar to the <see cref="Redis"/> List associated with the bar key.
-        /// </summary>
-        /// <param name="barType">The bar type to add.</param>
-        /// <param name="bar">The bar to add.</param>
+        /// <inheritdoc />
         [PerformanceOptimized]
         public void Add(BarType barType, Bar bar)
         {
@@ -65,20 +84,14 @@ namespace Nautilus.Redis.Data
             this.Log.Debug($"Added 1 bar to {barType}");
         }
 
-        /// <summary>
-        /// Adds the given bar to the repository.
-        /// </summary>
-        /// <param name="barType">The barType to add.</param>
-        /// <param name="bars">The bars to add.</param>
+        /// <inheritdoc />
         [PerformanceOptimized]
-        public void AddBars(BarType barType, Bar[] bars)
+        public void Add(BarType barType, Bar[] bars)
         {
-            Debug.EqualTo(barType.Specification.Period, 1, nameof(barType.Specification.Period));
             Debug.NotEmpty(bars, nameof(bars));
 
             var barsAddedCounter = 0;
-            var barsIndex = this.OrganizeBarsByDay(bars);
-
+            var barsIndex = OrganizeBarsByDay(bars);
             foreach (var dateKey in barsIndex.Keys)
             {
                 var key = KeyProvider.GetBarKey(barType, dateKey);
@@ -94,7 +107,7 @@ namespace Nautilus.Redis.Data
                     continue;
                 }
 
-                // The key should exist in Redis because it was just checked by KeyExists().
+                // The key should exist in Redis because it was just checked by KeyExists()
                 var persistedBars = this.GetBarsByDay(key).Value;
 
                 foreach (var bar in barsIndex[dateKey])
@@ -114,7 +127,7 @@ namespace Nautilus.Redis.Data
         /// <inheritdoc />
         public void TrimToDays(BarStructure barStructure, int trimToDays)
         {
-            var keys = this.GetSortedKeysBySymbolResolution(barStructure);
+            var keys = this.GetSortedKeysBySymbolStructure(barStructure);
             foreach (var value in keys.Values)
             {
                 var keyCount = value.Count;
@@ -194,7 +207,6 @@ namespace Nautilus.Redis.Data
         public int BarsCount(BarType barType)
         {
             var allKeys = this.redisServer.Keys(pattern: KeyProvider.GetBarWildcardKey(barType)).ToArray();
-
             if (allKeys.Length == 0)
             {
                 return 0;
@@ -212,7 +224,6 @@ namespace Nautilus.Redis.Data
         public int AllBarsCount()
         {
             var allKeys = this.redisServer.Keys(pattern: KeyProvider.GetBarWildcardKey()).ToArray();
-
             if (allKeys.Length == 0)
             {
                 return 0;
@@ -224,43 +235,15 @@ namespace Nautilus.Redis.Data
         }
 
         /// <inheritdoc />
-        public QueryResult<BarDataFrame> Find(
-            BarType barType,
-            ZonedDateTime fromDateTime,
-            ZonedDateTime toDateTime)
-        {
-            var barsQuery = this.GetBars(barType, fromDateTime, toDateTime);
-
-            return barsQuery.IsSuccess
-                 ? QueryResult<BarDataFrame>.Ok(barsQuery.Value)
-                 : QueryResult<BarDataFrame>.Fail(barsQuery.Message);
-        }
-
-        /// <summary>
-        /// Finds and returns all bars matching the given bar type.
-        /// </summary>
-        /// <param name="barType">The bar type.</param>
-        /// <returns>The query result of bars.</returns>
-        public QueryResult<BarDataFrame> FindAll(BarType barType)
-        {
-            var barsQuery = this.GetAllBars(barType);
-
-            return barsQuery.IsSuccess
-                ? QueryResult<BarDataFrame>.Ok(barsQuery.Value)
-                : QueryResult<BarDataFrame>.Fail(barsQuery.Message);
-        }
-
-        /// <inheritdoc />
         public QueryResult<ZonedDateTime> LastBarTimestamp(BarType barType)
         {
-            var barKeysQuery = this.GetAllSortedKeys(barType);
-
-            if (barKeysQuery.IsFailure)
+            var keysQuery = this.GetKeysSorted(barType);
+            if (keysQuery.IsFailure)
             {
-                return QueryResult<ZonedDateTime>.Fail(barKeysQuery.Message);
+                return QueryResult<ZonedDateTime>.Fail(keysQuery.Message);
             }
 
-            var lastKey = barKeysQuery.Value.Last();
+            var lastKey = keysQuery.Value.Last();
             var barsQuery = this.GetBarsByDay(lastKey);
 
             return barsQuery.IsSuccess
@@ -273,21 +256,16 @@ namespace Nautilus.Redis.Data
         /// </summary>
         /// <param name="barType">The bar specification.</param>
         /// <returns>A query result of <see cref="IReadOnlyList{T}"/> strings.</returns>
-        public QueryResult<List<string>> GetAllSortedKeys(BarType barType)
+        public QueryResult<string[]> GetKeysSorted(BarType barType)
         {
-            if (this.KeysCount(barType) == 0)
-            {
-                return QueryResult<List<string>>.Fail($"Market data not found for {barType}");
-            }
-
-            var allKeys = this.redisServer.Keys(pattern: KeyProvider.GetBarWildcardKey(barType));
-
-            var keyStrings = allKeys
+            var keysQuery = this.redisServer.Keys(pattern: KeyProvider.GetBarWildcardKey(barType))
                 .Select(key => key.ToString())
                 .ToList();
-            keyStrings.Sort();
+            keysQuery.Sort();
 
-            return QueryResult<List<string>>.Ok(keyStrings);
+            return keysQuery.Count > 0
+                ? QueryResult<string[]>.Ok(keysQuery.ToArray())
+                : QueryResult<string[]>.Fail($"Market data not found for {barType}");
         }
 
         /// <summary>
@@ -296,18 +274,18 @@ namespace Nautilus.Redis.Data
         /// <param name="barStructure">The bar resolution keys.</param>
         /// <returns>The result of the query.</returns>
         [PerformanceOptimized]
-        public Dictionary<string, List<string>> GetSortedKeysBySymbolResolution(BarStructure barStructure)
+        public Dictionary<string, List<string>> GetSortedKeysBySymbolStructure(BarStructure barStructure)
         {
-            var allKeysBytes = this.redisServer.Keys(pattern: KeyProvider.GetBarWildcardKey());
+            var keysQuery = this.redisServer.Keys(pattern: KeyProvider.GetBarWildcardKey())
+                .Select(key => key.ToString())
+                .ToList();
 
-            var keysCollection = allKeysBytes.Select(key => key.ToString());
             var keysOfResolution = new Dictionary<string, List<string>>();
-
-            foreach (var key in keysCollection)
+            foreach (var key in keysQuery)
             {
                 if (!key.Contains(barStructure.ToString()))
                 {
-                    // Found resolution not applicable.
+                    // Found resolution not applicable
                     continue;
                 }
 
@@ -326,103 +304,87 @@ namespace Nautilus.Redis.Data
             return keysOfResolution;
         }
 
-        /// <summary>
-        /// Returns all bars from <see cref="Redis"/> of the given <see cref="BarSpecification"/>.
-        /// </summary>
-        /// <param name="barType">The specification of bars to get.</param>
-        /// <returns>A read only collection of <see cref="Bar"/>(s).</returns>
+        /// <inheritdoc />
         [PerformanceOptimized]
-        public QueryResult<BarDataFrame> GetAllBars(BarType barType)
+        public QueryResult<BarDataFrame> GetBars(BarType barType, int limit = 0)
         {
-            Debug.EqualTo(barType.Specification.Period, 1, nameof(barType.Specification.Period));
-
-            var barKeysQuery = this.GetAllSortedKeys(barType);
-
-            if (barKeysQuery.IsFailure)
+            var keysQuery = this.GetKeysSorted(barType);
+            if (keysQuery.IsFailure)
             {
-                return QueryResult<BarDataFrame>.Fail(barKeysQuery.Message);
+                return QueryResult<BarDataFrame>.Fail(keysQuery.Message);
             }
 
-            var barsArray = barKeysQuery
+            var bars = keysQuery
                 .Value
                 .SelectMany(key => this.redisDatabase.ListRange(key))
                 .Select(value => Bar.FromString(value))
                 .ToArray();
 
-            return QueryResult<BarDataFrame>.Ok(new BarDataFrame(barType, barsArray));
+            return QueryResult<BarDataFrame>.Ok(new BarDataFrame(barType, bars));
         }
 
         /// <summary>
-        /// Returns all bars from <see cref="Redis"/> of the given <see cref="BarSpecification"/> within the given
-        /// range of <see cref="ZonedDateTime"/> (inclusive).
+        /// Returns all bars from <see cref="Redis"/> of the given <see cref="BarType"/> within the given
+        /// range of <see cref="DateKey"/>s (inclusive).
         /// </summary>
-        /// <param name="barType">The specification of bars to get.</param>
-        /// <param name="fromDateTime">The from date time range.</param>
-        /// <param name="toDateTime">The to date time range.</param>
-        /// <returns>A read only collection of <see cref="Bar"/>(s).</returns>
-        public QueryResult<BarDataFrame> GetBars(
-            BarType barType,
-            ZonedDateTime fromDateTime,
-            ZonedDateTime toDateTime)
+        /// <param name="barType">The type of bars to get.</param>
+        /// <param name="fromDate">The from date.</param>
+        /// <param name="toDate">The to date.</param>
+        /// <param name="limit">The optional limit for a count of bars.</param>
+        /// <returns>The result of the query.</returns>
+        public QueryResult<BarDataFrame> GetBars(BarType barType, DateKey fromDate, DateKey toDate, int limit = 0)
         {
-            Debug.NotDefault(fromDateTime, nameof(fromDateTime));
-            Debug.NotDefault(toDateTime, nameof(toDateTime));
+            Debug.True(fromDate.CompareTo(toDate) <= 0, "fromDate.CompareTo(toDate) <= 0");
+
+            var dataQuery = this.GetBarData(barType, fromDate, toDate, limit);
+            if (dataQuery.IsFailure)
+            {
+                return QueryResult<BarDataFrame>.Fail(dataQuery.Message);
+            }
+
+            #pragma warning disable CS8604
+            var bars = dataQuery.Value
+                    .Select(value => Bar.FromString(value.ToString()))
+                    .ToArray();
+
+            return QueryResult<BarDataFrame>.Ok(new BarDataFrame(barType, bars));
+        }
+
+        /// <inheritdoc />
+        [PerformanceOptimized]
+        public QueryResult<byte[][]> GetBarData(BarType barType, DateKey fromDate, DateKey toDate, int limit = 0)
+        {
+            Debug.True(fromDate.CompareTo(toDate) <= 0, "fromDate.CompareTo(toDate) <= 0");
 
             if (this.KeysCount(barType) == 0)
             {
-                return QueryResult<BarDataFrame>.Fail($"Market data not found for {barType}");
+                return QueryResult<byte[][]>.Fail($"Cannot find bar data for {barType}");
             }
 
-            var barKeys = KeyProvider.GetBarKeys(barType, fromDateTime, toDateTime);
-
-            var barsArray = barKeys
-                .SelectMany(key => this.redisDatabase.ListRange(key))
-                .Select(value => Bar.FromString(value))
-                .Where(bar => bar.Timestamp.IsGreaterThanOrEqualTo(fromDateTime)
-                           && bar.Timestamp.IsLessThanOrEqualTo(toDateTime))
-                .ToArray();
-
-            if (barsArray.Length == 0)
+            var keys = KeyProvider.GetBarKeys(barType, fromDate, toDate);
+            var data = new List<byte[]>();
+            foreach (var key in keys)
             {
-                return QueryResult<BarDataFrame>.Fail(
-                    $"Market data not complete for {barType} in time range from " +
-                    $"{fromDateTime.ToIsoString()} to " +
-                    $"{toDateTime.ToIsoString()}");
+                data.AddRange(this.ReadDataToBytes(key));
             }
 
-            return QueryResult<BarDataFrame>.Ok(new BarDataFrame(barType, barsArray));
-        }
-
-        /// <summary>
-        /// Returns a query result if success containing the requested bar, or failure containing
-        /// a message.
-        /// </summary>
-        /// <param name="barType">The requested bars specification.</param>
-        /// <param name="timestamp">The requested bars timestamp.</param>
-        /// <returns>A query result of <see cref="Bar"/>.</returns>
-        [PerformanceOptimized]
-        public QueryResult<Bar> GetBar(BarType barType, ZonedDateTime timestamp)
-        {
-            Debug.NotDefault(timestamp, nameof(timestamp));
-
-            var key = KeyProvider.GetBarKey(barType, new DateKey(timestamp));
-            var persistedBars = this.GetBarsByDay(key);
-
-            if (persistedBars.IsFailure)
+            if (data.Count == 0)
             {
-                return QueryResult<Bar>.Fail(persistedBars.Message);
+                return QueryResult<byte[][]>.Fail($"Cannot find bar data for {barType} between {fromDate} to {toDate}");
             }
 
-            for (var i = 0; i < persistedBars.Value.Length; i++)
+            if (limit > 0)
             {
-                if (persistedBars.Value[i].Timestamp.Equals(timestamp))
+                var segment = new byte[Math.Min(data.Count, limit)][];
+                for (var i = segment.Length - 1; i >= 0; i--)
                 {
-                    return QueryResult<Bar>.Ok(persistedBars.Value[i]);
+                    segment[i] = data[i];
                 }
+
+                return QueryResult<byte[][]>.Ok(segment);
             }
 
-            return QueryResult<Bar>.Fail($"Market data not found for {barType} " +
-                                         $"at {timestamp.ToIsoString()}");
+            return QueryResult<byte[][]>.Ok(data.ToArray());
         }
 
         /// <summary>
@@ -430,41 +392,19 @@ namespace Nautilus.Redis.Data
         /// </summary>
         /// <param name="key">The key.</param>
         /// <returns>The query result list of bars.</returns>
-        public QueryResult<Bar[]> GetBarsByDay(string key)
+        private QueryResult<Bar[]> GetBarsByDay(string key)
         {
-            Debug.NotEmptyOrWhiteSpace(key, nameof(key));
-
-            if (!this.KeyExists(key))
-            {
-                return QueryResult<Bar[]>.Fail($"Market data not found for {key}");
-            }
-
-            var values = this.redisDatabase.ListRange(key);
-
-            return QueryResult<Bar[]>.Ok(Array.ConvertAll(values, b => Bar.FromString(b)));
+            return QueryResult<Bar[]>.Ok(Array.ConvertAll(this.ReadDataToStrings(key), Bar.FromString));
         }
 
-        /// <summary>
-        /// Organizes the given bars array into a dictionary of bar lists indexed by a date key.
-        /// </summary>
-        /// <param name="bars">The bars array.</param>
-        /// <returns>The organized dictionary.</returns>
-        public Dictionary<DateKey, List<Bar>> OrganizeBarsByDay(Bar[] bars)
+        private string[] ReadDataToStrings(string key)
         {
-            var barsDictionary = new Dictionary<DateKey, List<Bar>>();
-            for (var i = 0; i < bars.Length; i++)
-            {
-                var dateKey = new DateKey(bars[i].Timestamp);
+            return Array.ConvertAll(this.redisDatabase.ListRange(key), x => (string)x);
+        }
 
-                if (!barsDictionary.ContainsKey(dateKey))
-                {
-                    barsDictionary.Add(dateKey, new List<Bar>());
-                }
-
-                barsDictionary[dateKey].Add(bars[i]);
-            }
-
-            return barsDictionary;
+        private byte[][] ReadDataToBytes(string key)
+        {
+            return Array.ConvertAll(this.redisDatabase.ListRange(key), x => (byte[])x);
         }
     }
 }

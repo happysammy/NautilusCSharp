@@ -84,7 +84,14 @@
       "ZARJPY"
     ],
 
-    "barSpecifications": [],
+    "barSpecifications": [
+      "1-MINUTE[ASK]",
+      "1-MINUTE[MID]",
+      "1-MINUTE[BID]",
+      "1-HOUR[ASK]",
+      "1-HOUR[MID]",
+      "1-HOUR[BID]"
+    ],
 
     "tickDataTrimDay": "Sunday",
     "tickDataTrimHour": 0,

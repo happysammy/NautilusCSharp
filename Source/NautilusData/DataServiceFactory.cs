@@ -86,7 +86,10 @@ namespace NautilusData
             var connection = ConnectionMultiplexer.Connect("localhost:6379,allowAdmin=true");
             var tickRepository = new InMemoryTickStore(container, dataBusAdapter);
             var barRepository = new RedisBarRepository(container, connection);
-            var instrumentRepository = new RedisInstrumentRepository(container, connection);
+            var instrumentRepository = new RedisInstrumentRepository(
+                container,
+                new BsonInstrumentSerializer(),
+                connection);
             instrumentRepository.CacheAll();
 
             var databaseTaskManager = new DatabaseTaskManager(
@@ -104,7 +107,7 @@ namespace NautilusData
             var tickProvider = new TickProvider(
                 container,
                 tickRepository,
-                new BsonTickArraySerializer(),
+                new BsonByteArrayArraySerializer(),
                 new MsgPackRequestSerializer(new MsgPackQuerySerializer()),
                 new MsgPackResponseSerializer(),
                 config.TickRequestPort);
@@ -112,7 +115,7 @@ namespace NautilusData
             var barProvider = new BarProvider(
                 container,
                 barRepository,
-                new BsonBarDataFrameSerializer(),
+                new BsonByteArrayArraySerializer(),
                 new MsgPackRequestSerializer(new MsgPackQuerySerializer()),
                 new MsgPackResponseSerializer(),
                 config.BarRequestPort);
@@ -120,7 +123,7 @@ namespace NautilusData
             var instrumentProvider = new InstrumentProvider(
                 container,
                 instrumentRepository,
-                new BsonInstrumentArraySerializer(),
+                new BsonByteArrayArraySerializer(),
                 new MsgPackRequestSerializer(new MsgPackQuerySerializer()),
                 new MsgPackResponseSerializer(),
                 config.InstrumentRequestPort);

@@ -9,6 +9,7 @@
 namespace Nautilus.Data.Messages.Responses
 {
     using System;
+    using System.Collections.Generic;
     using Nautilus.Common.Enums;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
@@ -25,13 +26,17 @@ namespace Nautilus.Data.Messages.Responses
         /// Initializes a new instance of the <see cref="DataResponse"/> class.
         /// </summary>
         /// <param name="data">The response data.</param>
+        /// <param name="dataType">The response data type.</param>
+        /// <param name="metaData">The response metadata.</param>
         /// <param name="dataEncoding">The response data encoding.</param>
         /// <param name="correlationId">The response correlation identifier.</param>
         /// <param name="responseId">The response identifier.</param>
         /// <param name="responseTimestamp">The response timestamp.</param>
         public DataResponse(
             byte[] data,
+            string dataType,
             DataEncoding dataEncoding,
+            Dictionary<string, string> metaData,
             Guid correlationId,
             Guid responseId,
             ZonedDateTime responseTimestamp)
@@ -45,7 +50,9 @@ namespace Nautilus.Data.Messages.Responses
             Debug.NotDefault(responseTimestamp, nameof(responseTimestamp));
 
             this.Data = data;
+            this.DataType = dataType;
             this.DataEncoding = dataEncoding;
+            this.Metadata = metaData;
         }
 
         /// <summary>
@@ -54,8 +61,18 @@ namespace Nautilus.Data.Messages.Responses
         public byte[] Data { get; }
 
         /// <summary>
+        /// Gets the responses data type.
+        /// </summary>
+        public string DataType { get; }
+
+        /// <summary>
         /// Gets the responses data encoding.
         /// </summary>
         public DataEncoding DataEncoding { get; }
+
+        /// <summary>
+        /// Gets the responses metadata.
+        /// </summary>
+        public Dictionary<string, string> Metadata { get; }
     }
 }

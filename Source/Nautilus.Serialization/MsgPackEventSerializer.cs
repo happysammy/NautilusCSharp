@@ -166,9 +166,9 @@ namespace Nautilus.Serialization
         }
 
         /// <inheritdoc />
-        public Event Deserialize(byte[] serializedEvent)
+        public Event Deserialize(byte[] dataBytes)
         {
-            var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(serializedEvent);
+            var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(dataBytes);
 
             var @event = unpacked[nameof(Event.Type)].ToString();
             var id = ObjectExtractor.Guid(unpacked[nameof(Event.Id)]);

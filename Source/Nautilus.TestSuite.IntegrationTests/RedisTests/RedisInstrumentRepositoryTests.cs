@@ -13,6 +13,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     using Nautilus.DomainModel.Entities;
     using Nautilus.Redis;
     using Nautilus.Redis.Data;
+    using Nautilus.Serialization;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using StackExchange.Redis;
     using Xunit;
@@ -37,7 +38,10 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             this.redisConnection = ConnectionMultiplexer.Connect("localhost:6379,allowAdmin=true");
             this.redisConnection.GetServer(RedisConstants.LocalHost, RedisConstants.DefaultPort).FlushAllDatabases();
 
-            this.repository = new RedisInstrumentRepository(container, this.redisConnection);
+            this.repository = new RedisInstrumentRepository(
+                container,
+                new BsonInstrumentSerializer(),
+                this.redisConnection);
         }
 
         public void Dispose()
@@ -122,7 +126,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             this.repository.CacheAll();
 
             // Act
-            var result = this.repository.FindInCache(instrument.Symbol);
+            var result = this.repository.GetInstrument(instrument.Symbol);
 
             // Assert
             Assert.Equal(instrument, result.Value);
@@ -143,9 +147,9 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             // Act
             this.repository.CacheAll();
-            var result1 = this.repository.FindInCache(instrument1.Symbol);
-            var result2 = this.repository.FindInCache(instrument2.Symbol);
-            var result3 = this.repository.FindInCache(instrument3.Symbol);
+            var result1 = this.repository.GetInstrument(instrument1.Symbol);
+            var result2 = this.repository.GetInstrument(instrument2.Symbol);
+            var result3 = this.repository.GetInstrument(instrument3.Symbol);
 
             // Assert
             Assert.Equal(instrument1, result1.Value);

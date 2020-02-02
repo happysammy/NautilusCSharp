@@ -8,8 +8,8 @@
 
 namespace Nautilus.Data.Interfaces
 {
-    using System.Collections.Generic;
     using Nautilus.Core.CQS;
+    using Nautilus.Data.Keys;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
@@ -33,16 +33,34 @@ namespace Nautilus.Data.Interfaces
         int AllTicksCount();
 
         /// <summary>
-        /// Returns the result of the find ticks query.
+        /// Returns the ticks held in the repository of the given <see cref="Symbol"/> within the given
+        /// range of <see cref="DateKey"/>s (inclusive).
         /// </summary>
         /// <param name="symbol">The tick symbol to find.</param>
-        /// <param name="fromDateTime">The from date time.</param>
-        /// <param name="toDateTime">The to date time.</param>
+        /// <param name="fromDate">The from date.</param>
+        /// <param name="toDate">The to date.</param>
+        /// <param name="limit">The optional count limit for the data.</param>
         /// <returns>The result of the query.</returns>
-        QueryResult<List<Tick>> Find(
+        QueryResult<Tick[]> GetTicks(
             Symbol symbol,
-            ZonedDateTime fromDateTime,
-            ZonedDateTime toDateTime);
+            DateKey fromDate,
+            DateKey toDate,
+            int limit = 0);
+
+        /// <summary>
+        /// Returns the tick data held in the repository of the given <see cref="Symbol"/> within the given
+        /// range of <see cref="DateKey"/>s (inclusive).
+        /// </summary>
+        /// <param name="symbol">The tick symbol to find.</param>
+        /// <param name="fromDate">The from date.</param>
+        /// <param name="toDate">The to date.</param>
+        /// <param name="limit">The optional count limit for the data.</param>
+        /// <returns>The result of the query.</returns>
+        QueryResult<byte[][]> GetTickData(
+            Symbol symbol,
+            DateKey fromDate,
+            DateKey toDate,
+            int limit = 0);
 
         /// <summary>
         /// Returns the result of the last tick timestamp of the given symbol.

@@ -13,6 +13,7 @@ namespace Nautilus.Redis.Data
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.CQS;
     using Nautilus.Data.Interfaces;
+    using Nautilus.Data.Keys;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
@@ -36,18 +37,6 @@ namespace Nautilus.Redis.Data
         {
             this.redisServer = connection.GetServer(RedisConstants.LocalHost, RedisConstants.DefaultPort);
             this.redisDatabase = connection.GetDatabase();
-        }
-
-        /// <inheritdoc />
-        public int TicksCount(Symbol symbol)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        /// <inheritdoc />
-        public int AllTicksCount()
-        {
-            throw new System.NotImplementedException();
         }
 
         /// <inheritdoc />
@@ -75,7 +64,25 @@ namespace Nautilus.Redis.Data
         }
 
         /// <inheritdoc />
-        public QueryResult<List<Tick>> Find(Symbol symbol, ZonedDateTime fromDateTime, ZonedDateTime toDateTime)
+        public int TicksCount(Symbol symbol)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public int AllTicksCount()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public QueryResult<Tick[]> GetTicks(Symbol symbol, DateKey fromDate, DateKey toDate, int limit = 0)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public QueryResult<byte[][]> GetTickData(Symbol symbol, DateKey fromDate, DateKey toDate, int limit = 0)
         {
             throw new System.NotImplementedException();
         }

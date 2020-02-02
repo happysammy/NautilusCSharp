@@ -87,9 +87,9 @@ namespace Nautilus.Serialization
         }
 
         /// <inheritdoc />
-        public Command Deserialize(byte[] commandBytes)
+        public Command Deserialize(byte[] dataBytes)
         {
-            var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(commandBytes);
+            var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(dataBytes);
 
             var command = unpacked[nameof(Command.Type)].AsString();
             var id = ObjectExtractor.Guid(unpacked[nameof(Command.Id)]);

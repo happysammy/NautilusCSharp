@@ -51,11 +51,26 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             this.instruments.Add(instrument.Symbol, instrument);
         }
 
-        public QueryResult<Instrument> FindInCache(Symbol symbol)
+        public QueryResult<Instrument> GetInstrument(Symbol symbol)
         {
             return this.instruments.ContainsKey(symbol)
                 ? QueryResult<Instrument>.Ok(this.instruments[symbol])
                 : QueryResult<Instrument>.Fail($"no instrument found for symbol {symbol}");
+        }
+
+        public QueryResult<Instrument[]> GetInstruments(Venue venue)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public QueryResult<byte[][]> GetInstrumentData(Symbol symbol)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public QueryResult<byte[][]> GetInstrumentData(Venue venue)
+        {
+            throw new System.NotImplementedException();
         }
 
         public QueryResult<IEnumerable<Instrument>> FindInCache(Venue venue)

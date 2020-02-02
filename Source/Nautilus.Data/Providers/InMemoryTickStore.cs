@@ -9,6 +9,7 @@
 namespace Nautilus.Data.Providers
 {
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Nautilus.Common.Data;
     using Nautilus.Common.Interfaces;
@@ -16,6 +17,7 @@ namespace Nautilus.Data.Providers
     using Nautilus.Core.CQS;
     using Nautilus.Core.Extensions;
     using Nautilus.Data.Interfaces;
+    using Nautilus.Data.Keys;
     using Nautilus.Data.Messages.Commands;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
@@ -57,6 +59,18 @@ namespace Nautilus.Data.Providers
         }
 
         /// <inheritdoc />
+        public QueryResult<Tick[]> GetTicks(Symbol symbol, DateKey fromDate, DateKey toDate, int limit = 0)
+        {
+            return QueryResult<Tick[]>.Ok(this.tickStore[symbol].ToArray());
+        }
+
+        /// <inheritdoc />
+        public QueryResult<byte[][]> GetTickData(Symbol symbol, DateKey fromDate, DateKey toDate, int limit = 0)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        /// <inheritdoc />
         public void Add(Tick tick)
         {
             if (this.tickStore.TryGetValue(tick.Symbol, out var tickList))
@@ -83,24 +97,6 @@ namespace Nautilus.Data.Providers
             {
                 this.tickStore[symbol] = ticks;
             }
-        }
-
-        /// <inheritdoc />
-        public QueryResult<List<Tick>> Find(
-            Symbol symbol,
-            ZonedDateTime fromDateTime,
-            ZonedDateTime toDateTime)
-        {
-            if (this.tickStore.TryGetValue(symbol, out var tickList))
-            {
-                return QueryResult<List<Tick>>.Ok(
-                    tickList
-                        .Where(t => t.Timestamp.IsGreaterThanOrEqualTo(fromDateTime) &&
-                                    t.Timestamp.IsLessThanOrEqualTo(toDateTime))
-                        .ToList());
-            }
-
-            return QueryResult<List<Tick>>.Fail($"Tick data not found for {symbol}");
         }
 
         /// <inheritdoc />

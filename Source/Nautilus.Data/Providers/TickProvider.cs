@@ -13,6 +13,7 @@ namespace Nautilus.Data.Providers
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Message;
     using Nautilus.Data.Interfaces;
+    using Nautilus.Data.Keys;
     using Nautilus.Data.Messages.Requests;
     using Nautilus.Data.Messages.Responses;
     using Nautilus.DomainModel.Identifiers;
@@ -25,8 +26,10 @@ namespace Nautilus.Data.Providers
     /// </summary>
     public sealed class TickProvider : MessageServer<Request, Response>
     {
+        private const string TICKARRAY = "Tick[]";
+
         private readonly ITickRepositoryReadOnly repository;
-        private readonly IDataSerializer<Tick[]> dataSerializer;
+        private readonly IByteArrayArraySerializer dataSerializer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TickProvider"/> class.
@@ -40,7 +43,7 @@ namespace Nautilus.Data.Providers
         public TickProvider(
             IComponentryContainer container,
             ITickRepositoryReadOnly repository,
-            IDataSerializer<Tick[]> dataSerializer,
+            IByteArrayArraySerializer dataSerializer,
             IMessageSerializer<Request> inboundSerializer,
             IMessageSerializer<Response> outboundSerializer,
             NetworkPort port)
@@ -67,20 +70,23 @@ namespace Nautilus.Data.Providers
                 try
                 {
                     var dataType = request.Query["DataType"];
-                    if (dataType != "Tick[]")
+                    if (dataType != TICKARRAY)
                     {
                         this.SendQueryFailure($"incorrect DataType requested, was {dataType}", request.Id, envelope.Sender);
                         return;
                     }
 
+                    // Query objects
                     var symbol = Symbol.FromString(request.Query["Symbol"]);
-                    var fromDateTime = request.Query["FromDateTime"].ToZonedDateTimeFromIso();
-                    var toDateTime = request.Query["ToDateTime"].ToZonedDateTimeFromIso();
+                    var fromDate = DateKey.FromString(request.Query["FromDate"]);
+                    var toDate = DateKey.FromString(request.Query["ToDate"]);
+                    var limit = Convert.ToInt32(request.Query["Limit"]);
 
-                    var query = this.repository.Find(
+                    var query = this.repository.GetTickData(
                         symbol,
-                        fromDateTime,
-                        toDateTime);
+                        fromDate,
+                        toDate,
+                        limit);
 
                     if (query.IsFailure)
                     {
@@ -89,14 +95,11 @@ namespace Nautilus.Data.Providers
                         return;
                     }
 
-                    var ticks = query
-                        .Value
-                        .ToArray();
-                    var data = this.dataSerializer.Serialize(ticks);
-
                     var response = new DataResponse(
-                        data,
-                        this.dataSerializer.DataEncoding,
+                        this.dataSerializer.Serialize(query.Value),
+                        typeof(Tick[]).Name,
+                        this.dataSerializer.Encoding,
+                        request.Query,
                         request.Id,
                         this.NewGuid(),
                         this.TimeNow());
@@ -105,6 +108,7 @@ namespace Nautilus.Data.Providers
                 }
                 catch (Exception ex)
                 {
+                    this.Log.Error($"{ex}");
                     this.SendQueryFailure(ex.Message, request.Id, envelope.Sender);
                 }
             });

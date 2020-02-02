@@ -56,9 +56,9 @@ namespace Nautilus.Serialization
         }
 
         /// <inheritdoc />
-        public Request Deserialize(byte[] requestBytes)
+        public Request Deserialize(byte[] dataBytes)
         {
-            var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(requestBytes);
+            var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(dataBytes);
 
             var request = unpacked[nameof(Request.Type)].ToString();
             var id = ObjectExtractor.Guid(unpacked[nameof(Request.Id)]);

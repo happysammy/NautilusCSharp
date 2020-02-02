@@ -29,33 +29,33 @@ namespace Nautilus.Serialization
     public class BsonInstrumentSerializer : IDataSerializer<Instrument>
     {
         /// <inheritdoc />
-        public DataEncoding DataEncoding => DataEncoding.Bson;
+        public DataEncoding Encoding => DataEncoding.Bson;
 
         /// <inheritdoc />
-        public byte[] Serialize(Instrument instrument)
+        public byte[] Serialize(Instrument dataObject)
         {
             var bsonMap = new BsonDocument
             {
-                { nameof(Instrument.Symbol), instrument.Symbol.Value },
-                { nameof(Instrument.BrokerSymbol), instrument.BrokerSymbol.Value },
-                { nameof(Instrument.QuoteCurrency), instrument.QuoteCurrency.ToString() },
-                { nameof(Instrument.SecurityType), instrument.SecurityType.ToString() },
-                { nameof(Instrument.PricePrecision), instrument.PricePrecision },
-                { nameof(Instrument.SizePrecision), instrument.SizePrecision },
-                { nameof(Instrument.MinStopDistanceEntry), instrument.MinStopDistanceEntry },
-                { nameof(Instrument.MinStopDistance), instrument.MinStopDistance },
-                { nameof(Instrument.MinLimitDistanceEntry), instrument.MinLimitDistanceEntry },
-                { nameof(Instrument.MinLimitDistance), instrument.MinLimitDistance },
-                { nameof(Instrument.TickSize), instrument.TickSize.ToString() },
-                { nameof(Instrument.RoundLotSize), instrument.RoundLotSize.ToString() },
-                { nameof(Instrument.MinTradeSize), instrument.MinTradeSize.ToString() },
-                { nameof(Instrument.MaxTradeSize), instrument.MaxTradeSize.ToString() },
-                { nameof(Instrument.RolloverInterestBuy), instrument.RolloverInterestBuy.ToString(CultureInfo.InvariantCulture) },
-                { nameof(Instrument.RolloverInterestSell), instrument.RolloverInterestSell.ToString(CultureInfo.InvariantCulture) },
-                { nameof(Instrument.Timestamp), instrument.Timestamp.ToIsoString() },
+                { nameof(Instrument.Symbol), dataObject.Symbol.Value },
+                { nameof(Instrument.BrokerSymbol), dataObject.BrokerSymbol.Value },
+                { nameof(Instrument.QuoteCurrency), dataObject.QuoteCurrency.ToString() },
+                { nameof(Instrument.SecurityType), dataObject.SecurityType.ToString() },
+                { nameof(Instrument.PricePrecision), dataObject.PricePrecision },
+                { nameof(Instrument.SizePrecision), dataObject.SizePrecision },
+                { nameof(Instrument.MinStopDistanceEntry), dataObject.MinStopDistanceEntry },
+                { nameof(Instrument.MinStopDistance), dataObject.MinStopDistance },
+                { nameof(Instrument.MinLimitDistanceEntry), dataObject.MinLimitDistanceEntry },
+                { nameof(Instrument.MinLimitDistance), dataObject.MinLimitDistance },
+                { nameof(Instrument.TickSize), dataObject.TickSize.ToString() },
+                { nameof(Instrument.RoundLotSize), dataObject.RoundLotSize.ToString() },
+                { nameof(Instrument.MinTradeSize), dataObject.MinTradeSize.ToString() },
+                { nameof(Instrument.MaxTradeSize), dataObject.MaxTradeSize.ToString() },
+                { nameof(Instrument.RolloverInterestBuy), dataObject.RolloverInterestBuy.ToString(CultureInfo.InvariantCulture) },
+                { nameof(Instrument.RolloverInterestSell), dataObject.RolloverInterestSell.ToString(CultureInfo.InvariantCulture) },
+                { nameof(Instrument.Timestamp), dataObject.Timestamp.ToIsoString() },
             }.ToDictionary();
 
-            if (instrument is ForexInstrument forexCcy)
+            if (dataObject is ForexInstrument forexCcy)
             {
                 bsonMap.Add(nameof(ForexInstrument.BaseCurrency), forexCcy.BaseCurrency.ToString());
             }
@@ -64,11 +64,11 @@ namespace Nautilus.Serialization
         }
 
         /// <inheritdoc />
-        public Instrument Deserialize(byte[] serialized)
+        public Instrument Deserialize(byte[] dataBytes)
         {
-            Debug.NotEmpty(serialized, nameof(serialized));
+            Debug.NotEmpty(dataBytes, nameof(dataBytes));
 
-            var unpacked = BsonSerializer.Deserialize<BsonDocument>(serialized);
+            var unpacked = BsonSerializer.Deserialize<BsonDocument>(dataBytes);
 
             var securityType = unpacked[nameof(Instrument.SecurityType)].AsString.ToEnum<SecurityType>();
             if (securityType == SecurityType.Forex)
@@ -109,6 +109,30 @@ namespace Nautilus.Serialization
                 Convert.ToDecimal(unpacked[nameof(Instrument.RolloverInterestBuy)].AsString),
                 Convert.ToDecimal(unpacked[nameof(Instrument.RolloverInterestSell)].AsString),
                 unpacked[nameof(Instrument.Timestamp)].AsString.ToZonedDateTimeFromIso());
+        }
+
+        /// <inheritdoc />
+        public byte[][] Serialize(Instrument[] dataObjects)
+        {
+            var output = new byte[dataObjects.Length][];
+            for (var i = 0; i < dataObjects.Length; i++)
+            {
+                output[i] = this.Serialize(dataObjects[i]);
+            }
+
+            return output;
+        }
+
+        /// <inheritdoc />
+        public Instrument[] Deserialize(byte[][] dataBytesArray)
+        {
+            var output = new Instrument[dataBytesArray.Length];
+            for (var i = 0; i < dataBytesArray.Length; i++)
+            {
+                output[i] = this.Deserialize(dataBytesArray[i]);
+            }
+
+            return output;
         }
     }
 }

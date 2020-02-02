@@ -38,9 +38,10 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
         private readonly ITestOutputHelper output;
         private readonly MockLoggingAdapter loggingAdapter;
         private readonly IInstrumentRepository repository;
-        private readonly IDataSerializer<Instrument[]> dataSerializer;
+        private readonly IByteArrayArraySerializer dataSerializer;
         private readonly IMessageSerializer<Request> requestSerializer;
         private readonly IMessageSerializer<Response> responseSerializer;
+        private readonly IDataSerializer<Instrument> instrumentSerializer;
         private readonly InstrumentProvider provider;
 
         public InstrumentProviderTests(ITestOutputHelper output)
@@ -52,9 +53,10 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             var container = containerFactory.Create();
             this.loggingAdapter = containerFactory.LoggingAdapter;
             this.repository = new MockInstrumentRepository();
-            this.dataSerializer = new BsonInstrumentArraySerializer();
+            this.dataSerializer = new BsonByteArrayArraySerializer();
             this.requestSerializer = new MsgPackRequestSerializer(new MsgPackQuerySerializer());
             this.responseSerializer = new MsgPackResponseSerializer();
+            this.instrumentSerializer = new BsonInstrumentSerializer();
 
             this.provider = new InstrumentProvider(
                 container,
@@ -168,12 +170,12 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             requester.SendFrame(this.requestSerializer.Serialize(request));
             var response = (DataResponse)this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
             var data = this.dataSerializer.Deserialize(response.Data);
-
+            var deserialized = this.instrumentSerializer.Deserialize(data);
             LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Equal(typeof(DataResponse), response.Type);
-            Assert.Equal(instrument, data[0]);
+            Assert.Equal(instrument, deserialized[0]);
 
             // Tear Down;
             requester.Disconnect(TEST_ADDRESS);
@@ -211,13 +213,14 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             requester.SendFrame(this.requestSerializer.Serialize(request));
             var response = (DataResponse)this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
             var data = this.dataSerializer.Deserialize(response.Data);
+            var deserialized = this.instrumentSerializer.Deserialize(data);
 
             LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Equal(typeof(DataResponse), response.Type);
-            Assert.Equal(instrument1, data[0]);
-            Assert.Equal(instrument2, data[1]);
+            Assert.Equal(instrument1, deserialized[0]);
+            Assert.Equal(instrument2, deserialized[1]);
 
             // Tear Down;
             requester.Disconnect(TEST_ADDRESS);

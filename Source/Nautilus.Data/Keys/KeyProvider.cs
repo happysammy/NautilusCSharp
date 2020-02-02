@@ -39,29 +39,36 @@ namespace Nautilus.Data.Keys
         /// <param name="fromDateTime">The from date time.</param>
         /// <param name="toDateTime">The to date time.</param>
         /// <returns>An array of <see cref="DateKey"/>.</returns>
-        /// <remarks>The given time range should have been previously validated.</remarks>
         public static List<DateKey> GetDateKeys(ZonedDateTime fromDateTime, ZonedDateTime toDateTime)
         {
-            Debug.NotDefault(fromDateTime, nameof(fromDateTime));
-            Debug.NotDefault(toDateTime, nameof(toDateTime));
-            Debug.True(!toDateTime.IsLessThan(fromDateTime), nameof(toDateTime));
+            Debug.True(fromDateTime.IsLessThanOrEqualTo(toDateTime), "fromDateTime.IsLessThanOrEqualTo(toDateTime)");
 
-            var difference = (toDateTime - fromDateTime) / Duration.FromDays(1);
+            return GetDateKeys(new DateKey(fromDateTime), new DateKey(fromDateTime));
+        }
 
-            if (difference <= 1)
+        /// <summary>
+        /// Returns an array of <see cref="DateKey"/>s based on the given from and to <see cref="ZonedDateTime"/> range.
+        /// </summary>
+        /// <param name="fromDate">The from date.</param>
+        /// <param name="toDate">The to date.</param>
+        /// <returns>An array of <see cref="DateKey"/>.</returns>
+        public static List<DateKey> GetDateKeys(DateKey fromDate, DateKey toDate)
+        {
+            Debug.True(fromDate.CompareTo(toDate) <= 0, "fromDate.CompareTo(toDate) <= 0");
+
+            var difference = Convert.ToInt32(Math.Floor((toDate.StartOfDay - fromDate.StartOfDay) / Duration.FromDays(1)));
+            if (difference == 0)
             {
-                return new List<DateKey> { new DateKey(fromDateTime) };
+                return new List<DateKey> { toDate };
             }
 
-            var iterationCount = Convert.ToInt32(Math.Floor(difference));
-
-            var dateKeys = new List<DateKey> { new DateKey(fromDateTime) };
-            for (var i = 0; i < iterationCount; i++)
+            var dateRange = new List<DateKey> { fromDate };
+            for (var i = 0; i < difference; i++)
             {
-                dateKeys.Add(new DateKey(fromDateTime + Duration.FromDays(i + 1)));
+                dateRange.Add(new DateKey(fromDate.StartOfDay + Duration.FromDays(i + 1)));
             }
 
-            return dateKeys;
+            return dateRange;
         }
 
         /// <summary>
@@ -90,20 +97,15 @@ namespace Nautilus.Data.Keys
         /// <see cref="ZonedDateTime"/> range.
         /// </summary>
         /// <param name="symbol">The ticks symbol.</param>
-        /// <param name="fromDateTime">The ticks from date time.</param>
-        /// <param name="toDateTime">The ticks to date time.</param>
+        /// <param name="fromDate">The ticks from date time.</param>
+        /// <param name="toDate">The ticks to date time.</param>
         /// <returns>An array of <see cref="DateKey"/>.</returns>
         /// <remarks>The given time range should have been previously validated.</remarks>
-        public static IEnumerable<string> GetTickKeys(
-            Symbol symbol,
-            ZonedDateTime fromDateTime,
-            ZonedDateTime toDateTime)
+        public static string[] GetTickKeys(Symbol symbol, DateKey fromDate, DateKey toDate)
         {
-            Debug.NotDefault(fromDateTime, nameof(fromDateTime));
-            Debug.NotDefault(toDateTime, nameof(toDateTime));
-            Debug.True(!toDateTime.IsLessThan(fromDateTime), nameof(toDateTime));
-
-            return GetDateKeys(fromDateTime, toDateTime).Select(key => GetTickKey(symbol, key));
+            return GetDateKeys(fromDate, toDate)
+                .Select(key => GetTickKey(symbol, key))
+                .ToArray();
         }
 
         /// <summary>
@@ -150,20 +152,17 @@ namespace Nautilus.Data.Keys
         /// <see cref="ZonedDateTime"/> range.
         /// </summary>
         /// <param name="barType">The bar specification.</param>
-        /// <param name="fromDateTime">The from date time.</param>
-        /// <param name="toDateTime">The to date time.</param>
+        /// <param name="fromDate">The from date time.</param>
+        /// <param name="toDate">The to date time.</param>
         /// <returns>An array of key <see cref="string"/>(s).</returns>
         /// <remarks>The given time range should have been previously validated.</remarks>
-        public static IEnumerable<string> GetBarKeys(
-            BarType barType,
-            ZonedDateTime fromDateTime,
-            ZonedDateTime toDateTime)
+        public static string[] GetBarKeys(BarType barType, DateKey fromDate, DateKey toDate)
         {
-            Debug.NotDefault(fromDateTime, nameof(fromDateTime));
-            Debug.NotDefault(toDateTime, nameof(toDateTime));
-            Debug.True(toDateTime.IsGreaterThanOrEqualTo(fromDateTime), nameof(toDateTime));
+            Debug.True(fromDate.CompareTo(toDate) <= 0, "fromDate.CompareTo(toDate) <= 0");
 
-            return GetDateKeys(fromDateTime, toDateTime).Select(key => GetBarKey(barType, key));
+            return GetDateKeys(fromDate, toDate)
+                .Select(key => GetBarKey(barType, key))
+                .ToArray();
         }
 
         /// <summary>

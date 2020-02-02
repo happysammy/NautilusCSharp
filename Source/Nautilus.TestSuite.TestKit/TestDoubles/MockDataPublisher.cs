@@ -41,16 +41,31 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
         private sealed class MockSerializer : ISerializer<string>, IDataSerializer<string>
         {
-            public DataEncoding DataEncoding => DataEncoding.Undefined;
+            public DataEncoding Encoding => DataEncoding.Undefined;
+
+            byte[] IDataSerializer<string>.Serialize(string dataObject)
+            {
+                return System.Text.Encoding.UTF8.GetBytes(dataObject);
+            }
+
+            public byte[][] Serialize(string[] dataObjects)
+            {
+                throw new NotImplementedException();
+            }
+
+            public string[] Deserialize(byte[][] dataBytesArray)
+            {
+                throw new NotImplementedException();
+            }
 
             public byte[] Serialize(string message)
             {
-                return Encoding.UTF8.GetBytes(message);
+                return System.Text.Encoding.UTF8.GetBytes(message);
             }
 
-            public string Deserialize(byte[] bytes)
+            public string Deserialize(byte[] dataBytes)
             {
-                return Encoding.UTF8.GetString(bytes);
+                return System.Text.Encoding.UTF8.GetString(dataBytes);
             }
         }
     }

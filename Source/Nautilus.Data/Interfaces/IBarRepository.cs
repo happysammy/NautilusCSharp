@@ -18,6 +18,12 @@ namespace Nautilus.Data.Interfaces
     public interface IBarRepository : IBarRepositoryReadOnly
     {
         /// <summary>
+        /// Adds the given bars to the repository.
+        /// </summary>
+        /// <param name="barData">The market data to add.</param>
+        void Add(BarDataFrame barData);
+
+        /// <summary>
         /// Adds the given bar to the repository.
         /// </summary>
         /// <param name="barType">The barType to add.</param>
@@ -27,8 +33,9 @@ namespace Nautilus.Data.Interfaces
         /// <summary>
         /// Adds the given bars to the repository.
         /// </summary>
-        /// <param name="barData">The market data to add.</param>
-        void Add(BarDataFrame barData);
+        /// <param name="barType">The barType to add.</param>
+        /// <param name="bars">The bars to add.</param>
+        void Add(BarType barType, Bar[] bars);
 
         /// <summary>
         /// Removes the difference in date keys for each symbol from the repository.

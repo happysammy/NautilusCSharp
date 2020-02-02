@@ -8,7 +8,6 @@
 
 namespace Nautilus.Serialization
 {
-    using System.Text;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
@@ -17,18 +16,42 @@ namespace Nautilus.Serialization
     public class Utf8BarSerializer : IDataSerializer<Bar>
     {
         /// <inheritdoc />
-        public DataEncoding DataEncoding => DataEncoding.Utf8;
+        public DataEncoding Encoding => DataEncoding.Utf8;
 
         /// <inheritdoc />
-        public byte[] Serialize(Bar bar)
+        public byte[] Serialize(Bar dataObject)
         {
-            return Encoding.UTF8.GetBytes(bar.ToString());
+            return System.Text.Encoding.UTF8.GetBytes(dataObject.ToString());
         }
 
         /// <inheritdoc />
-        public Bar Deserialize(byte[] bytes)
+        public Bar Deserialize(byte[] dataBytes)
         {
-            return Bar.FromString(Encoding.UTF8.GetString(bytes));
+            return Bar.FromString(System.Text.Encoding.UTF8.GetString(dataBytes));
+        }
+
+        /// <inheritdoc />
+        public byte[][] Serialize(Bar[] dataObjects)
+        {
+            var output = new byte[dataObjects.Length][];
+            for (var i = 0; i < dataObjects.Length; i++)
+            {
+                output[i] = this.Serialize(dataObjects[i]);
+            }
+
+            return output;
+        }
+
+        /// <inheritdoc />
+        public Bar[] Deserialize(byte[][] dataBytesArray)
+        {
+            var output = new Bar[dataBytesArray.Length];
+            for (var i = 0; i < dataBytesArray.Length; i++)
+            {
+                output[i] = this.Deserialize(dataBytesArray[i]);
+            }
+
+            return output;
         }
     }
 }

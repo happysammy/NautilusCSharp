@@ -9,6 +9,7 @@
 namespace Nautilus.Data.Interfaces
 {
     using Nautilus.Core.CQS;
+    using Nautilus.Data.Keys;
     using Nautilus.DomainModel.Frames;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
@@ -33,16 +34,42 @@ namespace Nautilus.Data.Interfaces
         int AllBarsCount();
 
         /// <summary>
-        /// Returns the result of the find bars query.
+        /// Returns all bars from the repository of the given <see cref="BarType"/>.
         /// </summary>
-        /// <param name="barType">The bar specification to find.</param>
-        /// <param name="fromDateTime">The from date time.</param>
-        /// <param name="toDateTime">The to date time.</param>
+        /// <param name="barType">The type of bars to get.</param>
+        /// <param name="limit">The optional limit for a count of bars.</param>
         /// <returns>The result of the query.</returns>
-        QueryResult<BarDataFrame> Find(
+        public QueryResult<BarDataFrame> GetBars(BarType barType, int limit = 0);
+
+        /// <summary>
+        /// Returns the bars held in the database of the given <see cref="BarType"/> within the given
+        /// range of <see cref="DateKey"/>s (inclusive).
+        /// </summary>
+        /// <param name="barType">The type of bars to get.</param>
+        /// <param name="fromDate">The from date.</param>
+        /// <param name="toDate">The to date.</param>
+        /// <param name="limit">The optional count limit for the bars.</param>
+        /// <returns>The result of the query.</returns>
+        QueryResult<BarDataFrame> GetBars(
             BarType barType,
-            ZonedDateTime fromDateTime,
-            ZonedDateTime toDateTime);
+            DateKey fromDate,
+            DateKey toDate,
+            int limit = 0);
+
+        /// <summary>
+        /// Returns the bar data held in the database of the given <see cref="BarType"/> within the given
+        /// range of <see cref="DateKey"/>s (inclusive).
+        /// </summary>
+        /// <param name="barType">The type of bars data to get.</param>
+        /// <param name="fromDate">The from date.</param>
+        /// <param name="toDate">The to date.</param>
+        /// <param name="limit">The optional count limit for the data.</param>
+        /// <returns>The result of the query.</returns>
+        public QueryResult<byte[][]> GetBarData(
+            BarType barType,
+            DateKey fromDate,
+            DateKey toDate,
+            int limit = 0);
 
         /// <summary>
         /// Returns the result of the last bars timestamp of the given <see cref="BarType"/>.

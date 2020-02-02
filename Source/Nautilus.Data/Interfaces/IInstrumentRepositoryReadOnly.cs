@@ -19,23 +19,37 @@ namespace Nautilus.Data.Interfaces
     public interface IInstrumentRepositoryReadOnly
     {
         /// <summary>
-        /// Returns the instrument corresponding to the given symbol.
-        /// </summary>
-        /// <param name="symbol">The symbol.</param>
-        /// <returns>A <see cref="QueryResult{Instrument}"/> result.</returns>
-        QueryResult<Instrument> FindInCache(Symbol symbol);
-
-        /// <summary>
-        /// Returns the all instruments corresponding to the given venue.
-        /// </summary>
-        /// <param name="venue">The venue.</param>
-        /// <returns>A result of the query.</returns>
-        QueryResult<IEnumerable<Instrument>> FindInCache(Venue venue);
-
-        /// <summary>
         /// Returns the instrument symbol collection.
         /// </summary>
         /// <returns>The collection of symbols held by the repository.</returns>
         IReadOnlyCollection<Symbol> GetInstrumentSymbols();
+
+        /// <summary>
+        /// Returns the instrument corresponding to the given symbol.
+        /// </summary>
+        /// <param name="symbol">The query symbol.</param>
+        /// <returns>The result of the query.</returns>
+        QueryResult<Instrument> GetInstrument(Symbol symbol);
+
+        /// <summary>
+        /// Returns the all instruments corresponding to the given venue.
+        /// </summary>
+        /// <param name="venue">The query venue.</param>
+        /// <returns>A result of the query.</returns>
+        QueryResult<Instrument[]> GetInstruments(Venue venue);
+
+        /// <summary>
+        /// Returns the instrument data corresponding to the given symbol.
+        /// </summary>
+        /// <param name="symbol">The query symbol.</param>
+        /// <returns>The result of the query.</returns>
+        QueryResult<byte[][]> GetInstrumentData(Symbol symbol);
+
+        /// <summary>
+        /// Returns the all instruments corresponding to the given venue.
+        /// </summary>
+        /// <param name="venue">The query venue.</param>
+        /// <returns>The result of the query.</returns>
+        QueryResult<byte[][]> GetInstrumentData(Venue venue);
     }
 }
