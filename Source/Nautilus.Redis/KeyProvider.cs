@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Data.Keys
+namespace Nautilus.Redis
 {
     using System;
     using System.Collections.Generic;
@@ -14,6 +14,7 @@ namespace Nautilus.Data.Keys
     using System.Linq;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
+    using Nautilus.Data.Keys;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
@@ -24,7 +25,7 @@ namespace Nautilus.Data.Keys
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Allows nameof.")]
     public static class KeyProvider
     {
-        private const string NautilusData = nameof(NautilusData) + ":" + nameof(Data);
+        private const string NautilusData = nameof(NautilusData) + ":" + nameof(Nautilus.Data);
         private const string Ticks = nameof(Ticks);
         private const string Bars = nameof(Bars);
         private const string Instruments = nameof(Instruments);
@@ -43,7 +44,7 @@ namespace Nautilus.Data.Keys
         {
             Debug.True(fromDateTime.IsLessThanOrEqualTo(toDateTime), "fromDateTime.IsLessThanOrEqualTo(toDateTime)");
 
-            return GetDateKeys(new DateKey(fromDateTime), new DateKey(fromDateTime));
+            return GetDateKeys(new DateKey(fromDateTime), new DateKey(toDateTime));
         }
 
         /// <summary>
@@ -56,16 +57,11 @@ namespace Nautilus.Data.Keys
         {
             Debug.True(fromDate.CompareTo(toDate) <= 0, "fromDate.CompareTo(toDate) <= 0");
 
-            var difference = Convert.ToInt32(Math.Floor((toDate.StartOfDay - fromDate.StartOfDay) / Duration.FromDays(1)));
-            if (difference == 0)
-            {
-                return new List<DateKey> { toDate };
-            }
-
+            var difference = (int)((toDate.StartOfDay - fromDate.StartOfDay) / Duration.FromDays(1));
             var dateRange = new List<DateKey> { fromDate };
             for (var i = 0; i < difference; i++)
             {
-                dateRange.Add(new DateKey(fromDate.StartOfDay + Duration.FromDays(i + 1)));
+                dateRange.Add(new DateKey(fromDate.DateUtc + Period.FromDays(i + 1)));
             }
 
             return dateRange;

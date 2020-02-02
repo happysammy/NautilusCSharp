@@ -228,8 +228,8 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             this.output.WriteLine(result.Message);
             Assert.True(result.IsSuccess);
             Assert.Equal(5, this.repository.AllBarsCount());
-            Assert.Equal(3, result.Value.Bars.Length);
             Assert.Equal(5, this.repository.BarsCount(barType));
+            Assert.Equal(5, result.Value.Bars.Length);
         }
 
         [Fact]
@@ -404,7 +404,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         [InlineData(0, 1, "1970-01-01")]
         [InlineData(1, 1, "1970-01-01")]
         [InlineData(12, 1, "1970-01-01")]
-        [InlineData(24, 1, "1970-01-01")]
+        [InlineData(24, 2, "1970-01-02")]
         [InlineData(36, 2, "1970-01-02")]
         [InlineData(48, 3, "1970-01-03")]
         [InlineData(168, 8, "1970-01-08")]
@@ -421,10 +421,11 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             // Act
             var result = KeyProvider.GetDateKeys(fromDateTime, toDateTime);
 
+            result.ForEach(dk => this.output.WriteLine(dk.ToString()));
+
             // Assert
             Assert.Equal(dateKeyCount, result.Count);
             Assert.Equal(expectedKey, result.Last().ToString());
-            result.ForEach(dk => this.output.WriteLine(dk.ToString()));
         }
 
         [Fact]
@@ -567,8 +568,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             // Assert
             this.output.WriteLine(result.Message);
-            Assert.True(result.IsFailure);
-            Assert.Equal("Market data not complete for AUDUSD.FXCM-1-MINUTE[ASK] in time range from 1970-01-01T00:00:00.000Z to 1970-01-01T00:02:00.000Z", result.Message);
+            Assert.True(result.IsSuccess);
         }
 
         [Fact]
@@ -588,8 +588,9 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             // Assert
             this.output.WriteLine(result.Message);
             Assert.True(result.IsSuccess);
-            Assert.Single(result.Value.Bars);
-            Assert.Equal(bar2, result.Value.Bars[0]);
+            Assert.Equal(bar1, result.Value.Bars[0]);
+            Assert.Equal(bar2, result.Value.Bars[1]);
+            Assert.Equal(bar3, result.Value.Bars[2]);
         }
 
         [Fact]
