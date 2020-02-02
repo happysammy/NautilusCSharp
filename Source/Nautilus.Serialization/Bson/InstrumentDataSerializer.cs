@@ -1,20 +1,22 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="BsonInstrumentSerializer.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="InstrumentDataSerializer.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2020 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   https://nautechsystems.io
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Serialization
+namespace Nautilus.Serialization.Bson
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using MongoDB.Bson;
     using MongoDB.Bson.Serialization;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Entities;
@@ -22,14 +24,19 @@ namespace Nautilus.Serialization
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
 
-    /// <summary>
-    /// Provides a data serializer for the BSON specification.
-    /// </summary>
+    /// <inheritdoc />
     [SuppressMessage("ReSharper", "SA1310", Justification = "Easier to read.")]
-    public class BsonInstrumentSerializer : IDataSerializer<Instrument>
+    public class InstrumentDataSerializer : IDataSerializer<Instrument>
     {
+        private const string DATA = "Data";
+        private const string DATA_TYPE = "DataType";
+        private const string METADATA = "Metadata";
+
         /// <inheritdoc />
-        public DataEncoding Encoding => DataEncoding.Bson;
+        public DataEncoding BlobEncoding => DataEncoding.Bson;
+
+        /// <inheritdoc />
+        public DataEncoding ObjectEncoding => DataEncoding.Bson;
 
         /// <inheritdoc />
         public byte[] Serialize(Instrument dataObject)
@@ -61,6 +68,35 @@ namespace Nautilus.Serialization
             }
 
             return bsonMap.ToBson();
+        }
+
+        /// <inheritdoc />
+        [PerformanceOptimized]
+        public byte[][] Serialize(Instrument[] dataObjects)
+        {
+            var output = new byte[dataObjects.Length][];
+            for (var i = 0; i < dataObjects.Length; i++)
+            {
+                output[i] = this.Serialize(dataObjects[i]);
+            }
+
+            return output;
+        }
+
+        /// <inheritdoc />
+        [PerformanceOptimized]
+        public byte[] SerializeBlob(byte[][] dataObjectsArray, Dictionary<string, string> metadata)
+        {
+            Debug.NotEmpty(dataObjectsArray, nameof(dataObjectsArray));
+
+            var bson = new BsonDocument
+            {
+                { DATA_TYPE, typeof(Instrument[]).Name },
+                { DATA, new BsonArray(dataObjectsArray) },
+                { METADATA, new BsonArray(metadata) },
+            };
+
+            return bson.ToBson();
         }
 
         /// <inheritdoc />
@@ -112,18 +148,7 @@ namespace Nautilus.Serialization
         }
 
         /// <inheritdoc />
-        public byte[][] Serialize(Instrument[] dataObjects)
-        {
-            var output = new byte[dataObjects.Length][];
-            for (var i = 0; i < dataObjects.Length; i++)
-            {
-                output[i] = this.Serialize(dataObjects[i]);
-            }
-
-            return output;
-        }
-
-        /// <inheritdoc />
+        [PerformanceOptimized]
         public Instrument[] Deserialize(byte[][] dataBytesArray)
         {
             var output = new Instrument[dataBytesArray.Length];
@@ -133,6 +158,21 @@ namespace Nautilus.Serialization
             }
 
             return output;
+        }
+
+        /// <inheritdoc />
+        public Instrument[] DeserializeBlob(byte[] dataBytes)
+        {
+            var data = BsonSerializer.Deserialize<BsonDocument>(dataBytes);
+            var valueArray = data[DATA].AsBsonArray;
+
+            var instruments = new Instrument[valueArray.Count];
+            for (var i = 0; i < valueArray.Count; i++)
+            {
+                instruments[i] = this.Deserialize(valueArray[i].AsByteArray);
+            }
+
+            return instruments;
         }
     }
 }

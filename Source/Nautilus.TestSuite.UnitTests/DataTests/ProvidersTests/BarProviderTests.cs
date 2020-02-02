@@ -19,11 +19,11 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
     using Nautilus.Data.Messages.Requests;
     using Nautilus.Data.Messages.Responses;
     using Nautilus.Data.Providers;
-    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network;
     using Nautilus.Network.Messages;
-    using Nautilus.Serialization;
+    using Nautilus.Serialization.Bson;
+    using Nautilus.Serialization.MessagePack;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NetMQ;
@@ -41,7 +41,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
         private readonly ITestOutputHelper output;
         private readonly MockLoggingAdapter loggingAdapter;
         private readonly IBarRepository repository;
-        private readonly IByteArrayArraySerializer dataSerializer;
+        private readonly IDataSerializer<Bar> dataSerializer;
         private readonly IMessageSerializer<Request> requestSerializer;
         private readonly IMessageSerializer<Response> responseSerializer;
         private readonly IDataSerializer<Bar> barSerializer;
@@ -56,10 +56,10 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             var container = containerFactory.Create();
             this.loggingAdapter = containerFactory.LoggingAdapter;
             this.repository = new MockBarRepository();
-            this.dataSerializer = new BsonByteArrayArraySerializer();
+            this.dataSerializer = new BarDataSerializer();
             this.requestSerializer = new MsgPackRequestSerializer(new MsgPackQuerySerializer());
             this.responseSerializer = new MsgPackResponseSerializer();
-            this.barSerializer = new Utf8BarSerializer();
+            this.barSerializer = new BarDataSerializer();
 
             this.provider = new BarProvider(
                 container,
@@ -140,8 +140,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
                 { "DataType", "Bar[]" },
                 { "Symbol", barType.Symbol.Value },
                 { "Specification", barType.Specification.ToString() },
-                { "FromDateTime", datetimeFrom.ToIsoString() },
-                { "ToDateTime", datetimeTo.ToIsoString() },
+                { "FromDate", datetimeFrom.ToIsoString() },
+                { "ToDate", datetimeTo.ToIsoString() },
             };
 
             var request = new DataRequest(
@@ -152,15 +152,12 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             // Act
             requester.SendFrame(this.requestSerializer.Serialize(request));
             var response = (DataResponse)this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
-            var data = this.dataSerializer.Deserialize(response.Data);
-            var bars = this.barSerializer.Deserialize(data);
+            var bars = this.barSerializer.DeserializeBlob(response.Data);
 
             LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Equal(typeof(DataResponse), response.Type);
-            Assert.Equal(barType.Symbol, Symbol.FromString(response.Metadata["Symbol"]));
-            Assert.Equal(barType.Specification, BarSpecification.FromString(response.Metadata["Specification"]));
             Assert.Equal(2, bars.Length);
             Assert.Equal(bar1, bars[0]);
             Assert.Equal(bar2, bars[1]);

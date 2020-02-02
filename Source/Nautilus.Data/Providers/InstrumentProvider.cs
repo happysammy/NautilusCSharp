@@ -24,10 +24,8 @@ namespace Nautilus.Data.Providers
     /// </summary>
     public sealed class InstrumentProvider : MessageServer<Request, Response>
     {
-        private const string INSTRUMENTARRAY = "Instrument[]";
-
         private readonly IInstrumentRepositoryReadOnly repository;
-        private readonly IByteArrayArraySerializer dataSerializer;
+        private readonly IDataSerializer<Instrument> dataSerializer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InstrumentProvider"/> class.
@@ -41,7 +39,7 @@ namespace Nautilus.Data.Providers
         public InstrumentProvider(
             IComponentryContainer container,
             IInstrumentRepositoryReadOnly repository,
-            IByteArrayArraySerializer dataSerializer,
+            IDataSerializer<Instrument> dataSerializer,
             IMessageSerializer<Request> inboundSerializer,
             IMessageSerializer<Response> outboundSerializer,
             NetworkPort port)
@@ -68,7 +66,7 @@ namespace Nautilus.Data.Providers
                 try
                 {
                     var dataType = request.Query["DataType"];
-                    if (dataType != INSTRUMENTARRAY)
+                    if (dataType != typeof(Instrument[]).Name)
                     {
                         this.SendQueryFailure($"Incorrect DataType requested, was {dataType}", request.Id, envelope.Sender);
                         return;
@@ -87,10 +85,8 @@ namespace Nautilus.Data.Providers
                         }
 
                         var response = new DataResponse(
-                            this.dataSerializer.Serialize(query.Value),
-                            typeof(Instrument).Name,
-                            this.dataSerializer.Encoding,
-                            request.Query,
+                            this.dataSerializer.SerializeBlob(query.Value, request.Query),
+                            this.dataSerializer.BlobEncoding,
                             request.Id,
                             Guid.NewGuid(),
                             this.TimeNow());
@@ -111,10 +107,8 @@ namespace Nautilus.Data.Providers
                         }
 
                         var response = new DataResponse(
-                            this.dataSerializer.Serialize(query.Value),
-                            typeof(Instrument[]).Name,
-                            this.dataSerializer.Encoding,
-                            request.Query,
+                            this.dataSerializer.SerializeBlob(query.Value, request.Query),
+                            this.dataSerializer.BlobEncoding,
                             request.Id,
                             Guid.NewGuid(),
                             this.TimeNow());

@@ -21,7 +21,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
     using Nautilus.DomainModel.Entities;
     using Nautilus.Network;
     using Nautilus.Network.Messages;
-    using Nautilus.Serialization;
+    using Nautilus.Serialization.Bson;
+    using Nautilus.Serialization.MessagePack;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NetMQ;
@@ -38,10 +39,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
         private readonly ITestOutputHelper output;
         private readonly MockLoggingAdapter loggingAdapter;
         private readonly IInstrumentRepository repository;
-        private readonly IByteArrayArraySerializer dataSerializer;
+        private readonly IDataSerializer<Instrument> dataSerializer;
         private readonly IMessageSerializer<Request> requestSerializer;
         private readonly IMessageSerializer<Response> responseSerializer;
-        private readonly IDataSerializer<Instrument> instrumentSerializer;
         private readonly InstrumentProvider provider;
 
         public InstrumentProviderTests(ITestOutputHelper output)
@@ -53,10 +53,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             var container = containerFactory.Create();
             this.loggingAdapter = containerFactory.LoggingAdapter;
             this.repository = new MockInstrumentRepository();
-            this.dataSerializer = new BsonByteArrayArraySerializer();
+            this.dataSerializer = new InstrumentDataSerializer();
             this.requestSerializer = new MsgPackRequestSerializer(new MsgPackQuerySerializer());
             this.responseSerializer = new MsgPackResponseSerializer();
-            this.instrumentSerializer = new BsonInstrumentSerializer();
 
             this.provider = new InstrumentProvider(
                 container,
@@ -169,13 +168,12 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             // Act
             requester.SendFrame(this.requestSerializer.Serialize(request));
             var response = (DataResponse)this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
-            var data = this.dataSerializer.Deserialize(response.Data);
-            var deserialized = this.instrumentSerializer.Deserialize(data);
+            var data = this.dataSerializer.DeserializeBlob(response.Data);
             LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Equal(typeof(DataResponse), response.Type);
-            Assert.Equal(instrument, deserialized[0]);
+            Assert.Equal(instrument, data[0]);
 
             // Tear Down;
             requester.Disconnect(TEST_ADDRESS);
@@ -212,15 +210,14 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             // Act
             requester.SendFrame(this.requestSerializer.Serialize(request));
             var response = (DataResponse)this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
-            var data = this.dataSerializer.Deserialize(response.Data);
-            var deserialized = this.instrumentSerializer.Deserialize(data);
+            var data = this.dataSerializer.DeserializeBlob(response.Data);
 
             LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Equal(typeof(DataResponse), response.Type);
-            Assert.Equal(instrument1, deserialized[0]);
-            Assert.Equal(instrument2, deserialized[1]);
+            Assert.Equal(instrument1, data[0]);
+            Assert.Equal(instrument2, data[1]);
 
             // Tear Down;
             requester.Disconnect(TEST_ADDRESS);

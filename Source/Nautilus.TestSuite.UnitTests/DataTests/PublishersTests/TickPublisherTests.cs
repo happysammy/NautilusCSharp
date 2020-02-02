@@ -15,7 +15,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
     using Nautilus.Data.Publishers;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.Network;
-    using Nautilus.Serialization;
+    using Nautilus.Serialization.Bson;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NetMQ;
@@ -45,7 +45,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
             this.publisher = new TickPublisher(
                 container,
                 DataBusFactory.Create(container),
-                new Utf8TickSerializer(),
+                new TickDataSerializer(),
                 new NetworkPort(55606));
         }
 

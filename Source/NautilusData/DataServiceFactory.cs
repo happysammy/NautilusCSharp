@@ -25,7 +25,8 @@ namespace NautilusData
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Redis.Data;
     using Nautilus.Scheduler;
-    using Nautilus.Serialization;
+    using Nautilus.Serialization.Bson;
+    using Nautilus.Serialization.MessagePack;
     using NodaTime;
     using StackExchange.Redis;
 
@@ -55,19 +56,19 @@ namespace NautilusData
             var tickPublisher = new TickPublisher(
                 container,
                 dataBusAdapter,
-                new Utf8TickSerializer(),
+                new TickDataSerializer(),
                 config.TickSubscribePort);
 
             var barPublisher = new BarPublisher(
                 container,
                 dataBusAdapter,
-                new Utf8BarSerializer(),
+                new BarDataSerializer(),
                 config.BarSubscribePort);
 
             var instrumentPublisher = new InstrumentPublisher(
                 container,
                 dataBusAdapter,
-                new BsonInstrumentSerializer(),
+                new InstrumentDataSerializer(),
                 config.InstrumentSubscribePort);
 
             var symbolConverter = new SymbolConverter(config.SymbolIndex);
@@ -88,7 +89,7 @@ namespace NautilusData
             var barRepository = new RedisBarRepository(container, connection);
             var instrumentRepository = new RedisInstrumentRepository(
                 container,
-                new BsonInstrumentSerializer(),
+                new InstrumentDataSerializer(),
                 connection);
             instrumentRepository.CacheAll();
 
@@ -107,7 +108,7 @@ namespace NautilusData
             var tickProvider = new TickProvider(
                 container,
                 tickRepository,
-                new BsonByteArrayArraySerializer(),
+                new TickDataSerializer(),
                 new MsgPackRequestSerializer(new MsgPackQuerySerializer()),
                 new MsgPackResponseSerializer(),
                 config.TickRequestPort);
@@ -115,7 +116,7 @@ namespace NautilusData
             var barProvider = new BarProvider(
                 container,
                 barRepository,
-                new BsonByteArrayArraySerializer(),
+                new BarDataSerializer(),
                 new MsgPackRequestSerializer(new MsgPackQuerySerializer()),
                 new MsgPackResponseSerializer(),
                 config.BarRequestPort);
@@ -123,7 +124,7 @@ namespace NautilusData
             var instrumentProvider = new InstrumentProvider(
                 container,
                 instrumentRepository,
-                new BsonByteArrayArraySerializer(),
+                new InstrumentDataSerializer(),
                 new MsgPackRequestSerializer(new MsgPackQuerySerializer()),
                 new MsgPackResponseSerializer(),
                 config.InstrumentRequestPort);

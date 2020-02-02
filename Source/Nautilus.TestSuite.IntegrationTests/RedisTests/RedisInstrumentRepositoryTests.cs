@@ -13,7 +13,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     using Nautilus.DomainModel.Entities;
     using Nautilus.Redis;
     using Nautilus.Redis.Data;
-    using Nautilus.Serialization;
+    using Nautilus.Serialization.Bson;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using StackExchange.Redis;
     using Xunit;
@@ -40,7 +40,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             this.repository = new RedisInstrumentRepository(
                 container,
-                new BsonInstrumentSerializer(),
+                new InstrumentDataSerializer(),
                 this.redisConnection);
         }
 

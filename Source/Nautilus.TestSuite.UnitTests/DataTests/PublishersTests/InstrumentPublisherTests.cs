@@ -16,7 +16,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
     using Nautilus.Data.Publishers;
     using Nautilus.DomainModel.Entities;
     using Nautilus.Network;
-    using Nautilus.Serialization;
+    using Nautilus.Serialization.Bson;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NetMQ;
@@ -42,7 +42,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
             var containerFactory = new StubComponentryContainerProvider();
             var container = containerFactory.Create();
             this.loggingAdapter = containerFactory.LoggingAdapter;
-            this.serializer = new BsonInstrumentSerializer();
+            this.serializer = new InstrumentDataSerializer();
 
             this.publisher = new InstrumentPublisher(
                 container,

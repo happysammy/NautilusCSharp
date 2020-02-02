@@ -11,7 +11,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
-    using Nautilus.Serialization;
+    using Nautilus.Serialization.Bson;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;
     using Xunit.Abstractions;
@@ -31,7 +31,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         internal void CanSerializeAndDeserializeInstrument()
         {
             // Arrange
-            var serializer = new BsonInstrumentSerializer();
+            var serializer = new InstrumentDataSerializer();
             var instrument = StubInstrumentProvider.AUDUSD();
 
             // Act

@@ -9,6 +9,7 @@
 namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
     using Nautilus.Common.Enums;
@@ -41,14 +42,21 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
         private sealed class MockSerializer : ISerializer<string>, IDataSerializer<string>
         {
-            public DataEncoding Encoding => DataEncoding.Undefined;
+            public DataEncoding BlobEncoding => DataEncoding.Undefined;
+
+            public DataEncoding ObjectEncoding => DataEncoding.Undefined;
 
             byte[] IDataSerializer<string>.Serialize(string dataObject)
             {
-                return System.Text.Encoding.UTF8.GetBytes(dataObject);
+                return Encoding.UTF8.GetBytes(dataObject);
             }
 
             public byte[][] Serialize(string[] dataObjects)
+            {
+                throw new NotImplementedException();
+            }
+
+            public byte[] SerializeBlob(byte[][] dataObjectsArray, Dictionary<string, string> metadata)
             {
                 throw new NotImplementedException();
             }
@@ -58,14 +66,19 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 throw new NotImplementedException();
             }
 
+            public string[] DeserializeBlob(byte[] dataBytes)
+            {
+                throw new NotImplementedException();
+            }
+
             public byte[] Serialize(string message)
             {
-                return System.Text.Encoding.UTF8.GetBytes(message);
+                return Encoding.UTF8.GetBytes(message);
             }
 
             public string Deserialize(byte[] dataBytes)
             {
-                return System.Text.Encoding.UTF8.GetString(dataBytes);
+                return Encoding.UTF8.GetString(dataBytes);
             }
         }
     }

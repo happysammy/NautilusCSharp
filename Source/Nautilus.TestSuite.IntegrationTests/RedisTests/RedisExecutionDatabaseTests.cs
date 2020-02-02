@@ -19,7 +19,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     using Nautilus.Execution.Interfaces;
     using Nautilus.Redis;
     using Nautilus.Redis.Execution;
-    using Nautilus.Serialization;
+    using Nautilus.Serialization.MessagePack;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using StackExchange.Redis;

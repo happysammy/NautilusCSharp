@@ -10,7 +10,6 @@ namespace Nautilus.Data.Providers
 {
     using System;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Extensions;
     using Nautilus.Core.Message;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Keys;
@@ -26,10 +25,8 @@ namespace Nautilus.Data.Providers
     /// </summary>
     public sealed class TickProvider : MessageServer<Request, Response>
     {
-        private const string TICKARRAY = "Tick[]";
-
         private readonly ITickRepositoryReadOnly repository;
-        private readonly IByteArrayArraySerializer dataSerializer;
+        private readonly IDataSerializer<Tick> dataSerializer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TickProvider"/> class.
@@ -43,7 +40,7 @@ namespace Nautilus.Data.Providers
         public TickProvider(
             IComponentryContainer container,
             ITickRepositoryReadOnly repository,
-            IByteArrayArraySerializer dataSerializer,
+            IDataSerializer<Tick> dataSerializer,
             IMessageSerializer<Request> inboundSerializer,
             IMessageSerializer<Response> outboundSerializer,
             NetworkPort port)
@@ -70,7 +67,7 @@ namespace Nautilus.Data.Providers
                 try
                 {
                     var dataType = request.Query["DataType"];
-                    if (dataType != TICKARRAY)
+                    if (dataType != typeof(Tick[]).Name)
                     {
                         this.SendQueryFailure($"incorrect DataType requested, was {dataType}", request.Id, envelope.Sender);
                         return;
@@ -96,10 +93,8 @@ namespace Nautilus.Data.Providers
                     }
 
                     var response = new DataResponse(
-                        this.dataSerializer.Serialize(query.Value),
-                        typeof(Tick[]).Name,
-                        this.dataSerializer.Encoding,
-                        request.Query,
+                        this.dataSerializer.SerializeBlob(query.Value, request.Query),
+                        this.dataSerializer.BlobEncoding,
                         request.Id,
                         this.NewGuid(),
                         this.TimeNow());

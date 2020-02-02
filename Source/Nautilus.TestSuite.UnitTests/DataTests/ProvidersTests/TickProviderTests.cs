@@ -19,13 +19,13 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Keys;
     using Nautilus.Data.Messages.Requests;
-    using Nautilus.Data.Messages.Responses;
     using Nautilus.Data.Providers;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network;
     using Nautilus.Network.Messages;
-    using Nautilus.Serialization;
+    using Nautilus.Serialization.Bson;
+    using Nautilus.Serialization.MessagePack;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NetMQ;
@@ -43,10 +43,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
         private readonly ITestOutputHelper output;
         private readonly MockLoggingAdapter loggingAdapter;
         private readonly ITickRepository repository;
-        private readonly IByteArrayArraySerializer dataSerializer;
+        private readonly IDataSerializer<Tick> dataSerializer;
         private readonly IMessageSerializer<Request> requestSerializer;
         private readonly IMessageSerializer<Response> responseSerializer;
-        private readonly IDataSerializer<Tick> tickSerializer;
         private readonly TickProvider provider;
 
         public TickProviderTests(ITestOutputHelper output)
@@ -58,10 +57,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             var container = containerFactory.Create();
             this.loggingAdapter = containerFactory.LoggingAdapter;
             this.repository = new InMemoryTickStore(container, DataBusFactory.Create(container));
-            this.dataSerializer = new BsonByteArrayArraySerializer();
+            this.dataSerializer = new TickDataSerializer();
             this.requestSerializer = new MsgPackRequestSerializer(new MsgPackQuerySerializer());
             this.responseSerializer = new MsgPackResponseSerializer();
-            this.tickSerializer = new Utf8TickSerializer();
 
             this.provider = new TickProvider(
                 container,

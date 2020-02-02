@@ -15,7 +15,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using Nautilus.Core.Message;
     using Nautilus.Messaging;
     using Nautilus.Network;
-    using Nautilus.Serialization;
+    using Nautilus.Serialization.MessagePack;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class MockMessageServer : MessageServer<MockMessage, Response>

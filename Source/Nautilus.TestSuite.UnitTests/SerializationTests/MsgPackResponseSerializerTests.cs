@@ -15,11 +15,11 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
     using Nautilus.Data.Messages.Responses;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Frames;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network.Messages;
-    using Nautilus.Serialization;
+    using Nautilus.Serialization.Bson;
+    using Nautilus.Serialization.MessagePack;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NodaTime;
     using Xunit;
@@ -117,8 +117,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         internal void CanSerializeAndDeserialize_TickDataResponse()
         {
             // Arrange
-            var tickSerializer = new Utf8TickSerializer();
-            var dataSerializer = new BsonByteArrayArraySerializer();
+            var dataSerializer = new TickDataSerializer();
             var datetimeFrom = StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1);
             var datetimeTo = datetimeFrom + Duration.FromMinutes(1);
 
@@ -143,14 +142,13 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var correlationId = Guid.NewGuid();
             var id = Guid.NewGuid();
 
-            var serializedTicks = tickSerializer.Serialize(ticks);
-            var data = dataSerializer.Serialize(serializedTicks);
+            var metadata = new Dictionary<string, string> { { "Symbol", symbol.Value } };
+            var serializedTicks = dataSerializer.Serialize(ticks);
+            var data = dataSerializer.SerializeBlob(serializedTicks, metadata);
 
             var response = new DataResponse(
                 data,
-                typeof(Tick[]).Name,
-                dataSerializer.Encoding,
-                new Dictionary<string, string> { { "Symbol", symbol.Value } },
+                dataSerializer.BlobEncoding,
                 correlationId,
                 id,
                 StubZonedDateTime.UnixEpoch());
@@ -158,14 +156,12 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             // Act
             var serializedResponse = this.serializer.Serialize(response);
             var deserializedResponse = (DataResponse)this.serializer.Deserialize(serializedResponse);
-            var deserializedData = dataSerializer.Deserialize(deserializedResponse.Data);
-            var deserializedTicks = tickSerializer.Deserialize(symbol, deserializedData);
+            var deserializedData = dataSerializer.DeserializeBlob(deserializedResponse.Data);
 
             // Assert
             Assert.Equal(response, deserializedResponse);
-            Assert.Equal(symbol, Symbol.FromString(deserializedResponse.Metadata["Symbol"]));
-            Assert.Equal(tick1, deserializedTicks[0]);
-            Assert.Equal(tick2, deserializedTicks[1]);
+            Assert.Equal(tick1, deserializedData[0]);
+            Assert.Equal(tick2, deserializedData[1]);
             Assert.Equal(correlationId, deserializedResponse.CorrelationId);
             this.output.WriteLine(Convert.ToBase64String(serializedResponse));
             this.output.WriteLine(Encoding.UTF8.GetString(serializedResponse));
@@ -175,15 +171,13 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         internal void CanSerializeAndDeserialize_BarDataResponses()
         {
             // Arrange
-            var barSerializer = new Utf8BarSerializer();
-            var dataSerializer = new BsonByteArrayArraySerializer();
+            var dataSerializer = new BarDataSerializer();
             var symbol = new Symbol("AUDUSD", new Venue("FXCM"));
             var barSpec = new BarSpecification(1, BarStructure.Minute, PriceType.Bid);
             var correlationId = Guid.NewGuid();
 
             var bars = new[] { StubBarProvider.Build(), StubBarProvider.Build() };
-            var serializedBars = barSerializer.Serialize(bars);
-            var data = dataSerializer.Serialize(serializedBars);
+            var serializedBars = dataSerializer.Serialize(bars);
 
             var metadata = new Dictionary<string, string>
             {
@@ -191,11 +185,11 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
                 { "Specification", barSpec.ToString() },
             };
 
+            var data = dataSerializer.SerializeBlob(serializedBars, metadata);
+
             var response = new DataResponse(
                 data,
-                typeof(Bar[]).Name,
-                dataSerializer.Encoding,
-                metadata,
+                dataSerializer.BlobEncoding,
                 correlationId,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -203,14 +197,11 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             // Act
             var serializedResponse = this.serializer.Serialize(response);
             var deserializedResponse = (DataResponse)this.serializer.Deserialize(serializedResponse);
-            var deserializedData = dataSerializer.Deserialize(deserializedResponse.Data);
-            var deserializedBars = barSerializer.Deserialize(deserializedData);
+            var deserializedData = dataSerializer.DeserializeBlob(deserializedResponse.Data);
 
             // Assert
             Assert.Equal(response, deserializedResponse);
-            Assert.Equal(symbol, Symbol.FromString(deserializedResponse.Metadata["Symbol"]));
-            Assert.Equal(barSpec, BarSpecification.FromString(deserializedResponse.Metadata["Specification"]));
-            Assert.Equal(bars, deserializedBars);
+            Assert.Equal(bars, deserializedData);
             Assert.Equal(correlationId, deserializedResponse.CorrelationId);
             this.output.WriteLine(Convert.ToBase64String(serializedResponse));
             this.output.WriteLine(Encoding.UTF8.GetString(serializedResponse));
@@ -220,20 +211,19 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         internal void CanSerializeAndDeserialize_InstrumentResponses()
         {
             // Arrange
-            var instrumentSerializer = new BsonInstrumentSerializer();
-            var dataSerializer = new BsonByteArrayArraySerializer();
+            var dataSerializer = new InstrumentDataSerializer();
             var instrument = StubInstrumentProvider.AUDUSD();
             var correlationId = Guid.NewGuid();
 
             Instrument[] instruments = { instrument };
-            var serializedInstruments = instrumentSerializer.Serialize(instruments);
-            var data = dataSerializer.Serialize(serializedInstruments);
+            var serializedInstruments = dataSerializer.Serialize(instruments);
+
+            var metadata = new Dictionary<string, string> { { "Symbol", instrument.Symbol.ToString() } };
+            var data = dataSerializer.SerializeBlob(serializedInstruments, metadata);
 
             var response = new DataResponse(
                 data,
-                typeof(Instrument[]).Name,
-                dataSerializer.Encoding,
-                new Dictionary<string, string> { { "Symbol", instrument.Symbol.ToString() } },
+                dataSerializer.BlobEncoding,
                 correlationId,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -241,12 +231,11 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             // Act
             var serializedResponse = this.serializer.Serialize(response);
             var deserializedResponse = (DataResponse)this.serializer.Deserialize(serializedResponse);
-            var deserializedData = dataSerializer.Deserialize(deserializedResponse.Data);
-            var deserializedInstruments = instrumentSerializer.Deserialize(deserializedData);
+            var deserializedData = dataSerializer.DeserializeBlob(deserializedResponse.Data);
 
             // Assert
             Assert.Equal(response, deserializedResponse);
-            Assert.Equal(instrument, deserializedInstruments[0]);
+            Assert.Equal(instrument, deserializedData[0]);
             Assert.Equal(correlationId, deserializedResponse.CorrelationId);
             this.output.WriteLine(Convert.ToBase64String(serializedResponse));
             this.output.WriteLine(Encoding.UTF8.GetString(serializedResponse));

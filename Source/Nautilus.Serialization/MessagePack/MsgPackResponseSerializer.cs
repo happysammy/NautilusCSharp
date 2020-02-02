@@ -6,9 +6,8 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Serialization
+namespace Nautilus.Serialization.MessagePack
 {
-    using System.Collections.Generic;
     using MsgPack;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -48,9 +47,7 @@ namespace Nautilus.Serialization
                     break;
                 case DataResponse res:
                     package.Add(nameof(res.Data), res.Data);
-                    package.Add(nameof(res.DataType), res.DataType);
                     package.Add(nameof(res.DataEncoding), res.DataEncoding.ToString().ToUpper());
-                    package.Add(nameof(res.Metadata), PackMetadata(res.Metadata));
                     break;
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(response, nameof(response));
@@ -92,38 +89,13 @@ namespace Nautilus.Serialization
                 case nameof(DataResponse):
                     return new DataResponse(
                         unpacked[nameof(DataResponse.Data)].AsBinary(),
-                        unpacked[nameof(DataResponse.DataType)].AsString(),
                         unpacked[nameof(DataResponse.DataEncoding)].ToString().ToEnum<DataEncoding>(),
-                        UnpackMetadata(unpacked[nameof(DataResponse.Metadata)].AsBinary()),
                         correlationId,
                         id,
                         timestamp);
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(response, nameof(response));
             }
-        }
-
-        private static byte[] PackMetadata(Dictionary<string, string> metadata)
-        {
-            var metaDict = new MessagePackObjectDictionary();
-            foreach (var (key, value) in metadata)
-            {
-                metaDict.Add(key, value);
-            }
-
-            return MsgPackSerializer.Serialize(metaDict);
-        }
-
-        private static Dictionary<string, string> UnpackMetadata(byte[] packed)
-        {
-            var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(packed);
-            var metadata = new Dictionary<string, string>();
-            foreach (var (key, value) in unpacked)
-            {
-                metadata.Add(key.AsString(), value.AsString());
-            }
-
-            return metadata;
         }
     }
 }

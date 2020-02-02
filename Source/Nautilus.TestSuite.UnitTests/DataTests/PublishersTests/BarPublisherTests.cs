@@ -15,7 +15,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
     using Nautilus.Data.Publishers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network;
-    using Nautilus.Serialization;
+    using Nautilus.Serialization.Bson;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NetMQ;
@@ -30,7 +30,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
         private const string TEST_ADDRESS = "tcp://localhost:55511";
         private readonly ITestOutputHelper output;
         private readonly MockLoggingAdapter loggingAdapter;
-        private readonly Utf8BarSerializer serializer;
+        private readonly BarDataSerializer serializer;
         private readonly BarPublisher publisher;
 
         public BarPublisherTests(ITestOutputHelper output)
@@ -41,7 +41,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
             var containerFactory = new StubComponentryContainerProvider();
             var container = containerFactory.Create();
             this.loggingAdapter = containerFactory.LoggingAdapter;
-            this.serializer = new Utf8BarSerializer();
+            this.serializer = new BarDataSerializer();
 
             this.publisher = new BarPublisher(
                 container,

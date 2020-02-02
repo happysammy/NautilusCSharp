@@ -9,7 +9,6 @@
 namespace Nautilus.Data.Providers
 {
     using System;
-    using System.Runtime.CompilerServices;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Message;
     using Nautilus.Data.Interfaces;
@@ -26,10 +25,8 @@ namespace Nautilus.Data.Providers
     /// </summary>
     public sealed class BarProvider : MessageServer<Request, Response>
     {
-        private const string BARARRAY = "Bar[]";
-
         private readonly IBarRepositoryReadOnly repository;
-        private readonly IByteArrayArraySerializer dataSerializer;
+        private readonly IDataSerializer<Bar> dataSerializer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BarProvider"/> class.
@@ -43,7 +40,7 @@ namespace Nautilus.Data.Providers
         public BarProvider(
             IComponentryContainer container,
             IBarRepositoryReadOnly repository,
-            IByteArrayArraySerializer dataSerializer,
+            IDataSerializer<Bar> dataSerializer,
             IMessageSerializer<Request> inboundSerializer,
             IMessageSerializer<Response> outboundSerializer,
             NetworkPort port)
@@ -68,7 +65,7 @@ namespace Nautilus.Data.Providers
             try
             {
                 var dataType = request.Query["DataType"];
-                if (dataType != BARARRAY)
+                if (dataType != typeof(Bar[]).Name)
                 {
                     this.SendQueryFailure($"incorrect DataType requested, was {dataType}", request.Id, envelope.Sender);
                     return;
@@ -96,10 +93,8 @@ namespace Nautilus.Data.Providers
                 }
 
                 var response = new DataResponse(
-                    this.dataSerializer.Serialize(query.Value),
-                    typeof(Bar[]).Name,
-                    this.dataSerializer.Encoding,
-                    request.Query,
+                    this.dataSerializer.SerializeBlob(query.Value, request.Query),
+                    this.dataSerializer.BlobEncoding,
                     request.Id,
                     this.NewGuid(),
                     this.TimeNow());
