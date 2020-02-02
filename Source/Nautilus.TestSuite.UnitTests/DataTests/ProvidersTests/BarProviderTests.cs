@@ -13,7 +13,6 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Extensions;
     using Nautilus.Core.Message;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Keys;
@@ -29,7 +28,6 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NetMQ;
     using NetMQ.Sockets;
-    using NodaTime;
     using Xunit;
     using Xunit.Abstractions;
 

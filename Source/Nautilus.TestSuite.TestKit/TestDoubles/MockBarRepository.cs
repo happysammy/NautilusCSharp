@@ -95,11 +95,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 : QueryResult<byte[][]>.Fail($"Cannot find any bar data for {barType}");
         }
 
-        public QueryResult<BarDataFrame> GetBars(BarType barType)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public QueryResult<ZonedDateTime> LastBarTimestamp(BarType barType)
         {
             return !this.database.ContainsKey(barType)

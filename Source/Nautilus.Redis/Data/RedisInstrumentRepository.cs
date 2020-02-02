@@ -20,7 +20,6 @@ namespace Nautilus.Redis.Data
     using Nautilus.Core.CQS;
     using Nautilus.Core.Extensions;
     using Nautilus.Data.Interfaces;
-    using Nautilus.Data.Keys;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;

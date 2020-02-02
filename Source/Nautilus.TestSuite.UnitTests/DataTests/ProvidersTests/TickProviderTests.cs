@@ -14,7 +14,6 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
     using System.Threading.Tasks;
     using Nautilus.Common.Data;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Extensions;
     using Nautilus.Core.Message;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Keys;
@@ -77,7 +76,6 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             // Arrange
             this.provider.Start();
             Task.Delay(100).Wait();  // Allow provider to start
-
 
             var symbol = new Symbol("AUDUSD", new Venue("FXCM"));
             var requester = new RequestSocket();
