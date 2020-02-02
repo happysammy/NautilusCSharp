@@ -269,7 +269,7 @@ namespace Nautilus.Redis.Data
         }
 
         /// <inheritdoc />
-        public IReadOnlyCollection<Symbol> GetInstrumentSymbols() => this.cache.Keys.ToArray();
+        public IReadOnlyCollection<Symbol> GetCachedSymbols() => this.cache.Keys.ToArray();
 
         private void Write(Instrument instrument)
         {

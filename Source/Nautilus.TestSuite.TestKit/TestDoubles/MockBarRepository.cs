@@ -11,6 +11,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using Nautilus.Common.Interfaces;
     using Nautilus.Core.CQS;
     using Nautilus.Core.Extensions;
     using Nautilus.Data.Interfaces;
@@ -24,10 +25,12 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     public class MockBarRepository : IBarRepository
     {
         private readonly Dictionary<BarType, List<Bar>> database;
+        private readonly IDataSerializer<Bar> serializer;
 
-        public MockBarRepository()
+        public MockBarRepository(IDataSerializer<Bar> serializer)
         {
             this.database = new Dictionary<BarType, List<Bar>>();
+            this.serializer = serializer;
         }
 
         public void Add(BarType barType, Bar bar)
@@ -73,21 +76,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
         public QueryResult<BarDataFrame> GetBars(BarType barType, DateKey fromDate, DateKey toDate, int limit = 0)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public QueryResult<byte[][]> GetBarData(BarType barType, DateKey fromDate, DateKey toDate, int limit = 0)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public QueryResult<BarDataFrame> GetBars(BarType barType)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public QueryResult<BarDataFrame> GetBars(BarType barType, ZonedDateTime fromDateTime, ZonedDateTime toDateTime)
-        {
             if (!this.database.ContainsKey(barType))
             {
                 return QueryResult<BarDataFrame>.Fail($"No bars for {barType}");
@@ -96,11 +84,18 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             return QueryResult<BarDataFrame>.Ok(new BarDataFrame(
                 barType,
                 this.database[barType].Where(b =>
-                    b.Timestamp.IsGreaterThanOrEqualTo(fromDateTime) &&
-                    b.Timestamp.IsLessThanOrEqualTo(toDateTime)).ToArray()));
+                    b.Timestamp.IsGreaterThanOrEqualTo(fromDate.StartOfDay) &&
+                    b.Timestamp.IsLessThanOrEqualTo(fromDate.StartOfDay)).ToArray()));
         }
 
-        public QueryResult<byte[][]> GetBarData(BarType barType, ZonedDateTime fromDateTime, ZonedDateTime toDateTime)
+        public QueryResult<byte[][]> GetBarData(BarType barType, DateKey fromDate, DateKey toDate, int limit = 0)
+        {
+            return this.database.TryGetValue(barType, out var barList)
+                ? QueryResult<byte[][]>.Ok(this.serializer.Serialize(barList.ToArray()))
+                : QueryResult<byte[][]>.Fail($"Cannot find any bar data for {barType}");
+        }
+
+        public QueryResult<BarDataFrame> GetBars(BarType barType)
         {
             throw new System.NotImplementedException();
         }

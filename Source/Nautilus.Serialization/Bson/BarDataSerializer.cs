@@ -59,7 +59,7 @@ namespace Nautilus.Serialization.Bson
             {
                 { DATA_TYPE, typeof(Bar[]).Name },
                 { DATA, new BsonArray(dataObjectsArray) },
-                { METADATA, new BsonArray(metadata) },
+                { METADATA, metadata.ToBsonDocument() },
             }.ToBson();
         }
 

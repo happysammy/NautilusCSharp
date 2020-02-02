@@ -103,6 +103,7 @@ namespace Nautilus.Data.Providers
             }
             catch (Exception ex)
             {
+                this.Log.Error($"{ex}");
                 this.SendQueryFailure(ex.Message, request.Id, envelope.Sender);
             }
         }

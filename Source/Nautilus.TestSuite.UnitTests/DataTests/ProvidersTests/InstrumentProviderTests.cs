@@ -52,8 +52,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             var containerFactory = new StubComponentryContainerProvider();
             var container = containerFactory.Create();
             this.loggingAdapter = containerFactory.LoggingAdapter;
-            this.repository = new MockInstrumentRepository();
             this.dataSerializer = new InstrumentDataSerializer();
+            this.repository = new MockInstrumentRepository(this.dataSerializer);
             this.requestSerializer = new MsgPackRequestSerializer(new MsgPackQuerySerializer());
             this.responseSerializer = new MsgPackResponseSerializer();
 
@@ -156,7 +156,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
 
             var query = new Dictionary<string, string>
             {
-                { "DataType", "Instrument" },
+                { "DataType", "Instrument[]" },
                 { "Symbol", instrument.Symbol.Value },
             };
 
@@ -169,7 +169,6 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             requester.SendFrame(this.requestSerializer.Serialize(request));
             var response = (DataResponse)this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
             var data = this.dataSerializer.DeserializeBlob(response.Data);
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Equal(typeof(DataResponse), response.Type);

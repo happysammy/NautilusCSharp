@@ -16,6 +16,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Message;
     using Nautilus.Data.Interfaces;
+    using Nautilus.Data.Keys;
     using Nautilus.Data.Messages.Requests;
     using Nautilus.Data.Messages.Responses;
     using Nautilus.Data.Providers;
@@ -44,7 +45,6 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
         private readonly IDataSerializer<Bar> dataSerializer;
         private readonly IMessageSerializer<Request> requestSerializer;
         private readonly IMessageSerializer<Response> responseSerializer;
-        private readonly IDataSerializer<Bar> barSerializer;
         private readonly BarProvider provider;
 
         public BarProviderTests(ITestOutputHelper output)
@@ -55,11 +55,10 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             var containerFactory = new StubComponentryContainerProvider();
             var container = containerFactory.Create();
             this.loggingAdapter = containerFactory.LoggingAdapter;
-            this.repository = new MockBarRepository();
             this.dataSerializer = new BarDataSerializer();
+            this.repository = new MockBarRepository(this.dataSerializer);
             this.requestSerializer = new MsgPackRequestSerializer(new MsgPackQuerySerializer());
             this.responseSerializer = new MsgPackResponseSerializer();
-            this.barSerializer = new BarDataSerializer();
 
             this.provider = new BarProvider(
                 container,
@@ -77,9 +76,6 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             this.provider.Start();
             Task.Delay(100).Wait();  // Allow provider to start
 
-            var datetimeFrom = StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1);
-            var datetimeTo = datetimeFrom + Duration.FromMinutes(1);
-
             var barType = StubBarType.AUDUSD();
 
             var requester = new RequestSocket();
@@ -91,8 +87,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
                 { "DataType", "Bar[]" },
                 { "Symbol", barType.Symbol.Value },
                 { "Specification", barType.Specification.ToString() },
-                { "FromDateTime", datetimeFrom.ToIsoString() },
-                { "ToDateTime", datetimeTo.ToIsoString() },
+                { "FromDate", new DateKey(StubZonedDateTime.UnixEpoch()).ToString() },
+                { "ToDate", new DateKey(StubZonedDateTime.UnixEpoch()).ToString() },
+                { "Limit", "0" },
             };
 
             var request = new DataRequest(
@@ -121,12 +118,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             this.provider.Start();  // Allow provider to start
             Task.Delay(100).Wait();
 
-            var datetimeFrom = StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1);
-            var datetimeTo = datetimeFrom + Duration.FromMinutes(1);
-
             var barType = StubBarType.AUDUSD();
-            var bar1 = StubBarProvider.BuildWithTimestamp(datetimeFrom);
-            var bar2 = StubBarProvider.BuildWithTimestamp(datetimeTo);
+            var bar1 = StubBarProvider.Build();
+            var bar2 = StubBarProvider.Build();
 
             this.repository.Add(barType, bar1);
             this.repository.Add(barType, bar2);
@@ -140,8 +134,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
                 { "DataType", "Bar[]" },
                 { "Symbol", barType.Symbol.Value },
                 { "Specification", barType.Specification.ToString() },
-                { "FromDate", datetimeFrom.ToIsoString() },
-                { "ToDate", datetimeTo.ToIsoString() },
+                { "FromDate", new DateKey(StubZonedDateTime.UnixEpoch()).ToString() },
+                { "ToDate", new DateKey(StubZonedDateTime.UnixEpoch()).ToString() },
+                { "Limit", "0" },
             };
 
             var request = new DataRequest(
@@ -152,7 +147,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             // Act
             requester.SendFrame(this.requestSerializer.Serialize(request));
             var response = (DataResponse)this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
-            var bars = this.barSerializer.DeserializeBlob(response.Data);
+            var bars = this.dataSerializer.DeserializeBlob(response.Data);
 
             LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 

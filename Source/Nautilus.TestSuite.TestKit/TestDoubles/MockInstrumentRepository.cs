@@ -11,6 +11,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using Nautilus.Common.Interfaces;
     using Nautilus.Core.CQS;
     using Nautilus.Data.Interfaces;
     using Nautilus.DomainModel.Entities;
@@ -20,10 +21,12 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     public class MockInstrumentRepository : IInstrumentRepository
     {
         private readonly Dictionary<Symbol, Instrument> instruments;
+        private readonly IDataSerializer<Instrument> serializer;
 
-        public MockInstrumentRepository()
+        public MockInstrumentRepository(IDataSerializer<Instrument> serializer)
         {
             this.instruments = new Dictionary<Symbol, Instrument>();
+            this.serializer = serializer;
         }
 
         public void ResetCache()
@@ -60,17 +63,17 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
         public QueryResult<Instrument[]> GetInstruments(Venue venue)
         {
-            throw new System.NotImplementedException();
+            return QueryResult<Instrument[]>.Ok(this.instruments.Values.ToArray());
         }
 
         public QueryResult<byte[][]> GetInstrumentData(Symbol symbol)
         {
-            throw new System.NotImplementedException();
+            return QueryResult<byte[][]>.Ok(this.serializer.Serialize(this.instruments.Values.ToArray()));
         }
 
         public QueryResult<byte[][]> GetInstrumentData(Venue venue)
         {
-            throw new System.NotImplementedException();
+            return QueryResult<byte[][]>.Ok(this.serializer.Serialize(this.instruments.Values.ToArray()));
         }
 
         public QueryResult<IEnumerable<Instrument>> FindInCache(Venue venue)
@@ -85,7 +88,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 : QueryResult<IEnumerable<Instrument>>.Fail($"no instruments found for venue {venue}");
         }
 
-        public IReadOnlyCollection<Symbol> GetInstrumentSymbols()
+        public IReadOnlyCollection<Symbol> GetCachedSymbols()
         {
             return this.instruments.Keys;
         }

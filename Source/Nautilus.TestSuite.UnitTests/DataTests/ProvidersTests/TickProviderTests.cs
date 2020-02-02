@@ -19,6 +19,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Keys;
     using Nautilus.Data.Messages.Requests;
+    using Nautilus.Data.Messages.Responses;
     using Nautilus.Data.Providers;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
@@ -56,8 +57,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             var containerFactory = new StubComponentryContainerProvider();
             var container = containerFactory.Create();
             this.loggingAdapter = containerFactory.LoggingAdapter;
-            this.repository = new InMemoryTickStore(container, DataBusFactory.Create(container));
             this.dataSerializer = new TickDataSerializer();
+            this.repository = new InMemoryTickStore(container, this.dataSerializer, DataBusFactory.Create(container));
             this.requestSerializer = new MsgPackRequestSerializer(new MsgPackQuerySerializer());
             this.responseSerializer = new MsgPackResponseSerializer();
 
@@ -77,11 +78,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             this.provider.Start();
             Task.Delay(100).Wait();  // Allow provider to start
 
-            var datetimeFrom = StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1);
-            var datetimeTo = datetimeFrom + Duration.FromMinutes(1);
 
             var symbol = new Symbol("AUDUSD", new Venue("FXCM"));
-
             var requester = new RequestSocket();
             requester.Connect(TEST_ADDRESS);
             Task.Delay(100).Wait();  // Allow socket to connect
@@ -90,8 +88,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             {
                 { "DataType", "Tick[]" },
                 { "Symbol", symbol.Value },
-                { "FromDateTime", datetimeFrom.ToIsoString() },
-                { "ToDateTime", datetimeTo.ToIsoString() },
+                { "FromDate", new DateKey(StubZonedDateTime.UnixEpoch()).ToString() },
+                { "ToDate", new DateKey(StubZonedDateTime.UnixEpoch()).ToString() },
+                { "Limit", "0" },
             };
 
             var dataRequest = new DataRequest(
@@ -138,8 +137,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             {
                 { "DataType", "Tick[]" },
                 { "Symbol", symbol.Value },
-                { "FromDate", new DateKey(datetimeFrom).ToString() },
-                { "ToDate", new DateKey(datetimeTo).ToString() },
+                { "FromDate", new DateKey(StubZonedDateTime.UnixEpoch()).ToString() },
+                { "ToDate", new DateKey(StubZonedDateTime.UnixEpoch()).ToString() },
                 { "Limit", "0" },
             };
 
@@ -150,24 +149,20 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
 
             // Act
             requester.SendFrame(this.requestSerializer.Serialize(dataRequest));
-            var response = (QueryFailure)this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
-            this.output.WriteLine(response.Message);
+            var response = (DataResponse)this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
+            var ticks = this.dataSerializer.DeserializeBlob(response.Data);
 
-            // var data = this.dataSerializer.Deserialize(response.Data);
-            // var ticks = this.tickSerializer.Deserialize(data);
-            //
             LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
-            //
-            // // Assert
-            // Assert.Equal(typeof(DataResponse), response.Type);
-            // Assert.Equal(symbol, Symbol.FromString(response.Metadata["Symbol"]));
-            // Assert.Equal(2, data.Length);
-            // Assert.Equal(tick1, ticks[0]);
-            // Assert.Equal(tick2, ticks[1]);
-            //
-            // // Tear Down;
-            // requester.Disconnect(TEST_ADDRESS);
-            // this.provider.Stop();
+
+            // Assert
+            Assert.Equal(typeof(DataResponse), response.Type);
+            Assert.Equal(2, ticks.Length);
+            Assert.Equal(tick1, ticks[0]);
+            Assert.Equal(tick2, ticks[1]);
+
+            // Tear Down;
+            requester.Disconnect(TEST_ADDRESS);
+            this.provider.Stop();
         }
     }
 }

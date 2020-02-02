@@ -93,7 +93,7 @@ namespace Nautilus.Serialization.Bson
             {
                 { DATA_TYPE, typeof(Instrument[]).Name },
                 { DATA, new BsonArray(dataObjectsArray) },
-                { METADATA, new BsonArray(metadata) },
+                { METADATA, metadata.ToBsonDocument() },
             };
 
             return bson.ToBson();

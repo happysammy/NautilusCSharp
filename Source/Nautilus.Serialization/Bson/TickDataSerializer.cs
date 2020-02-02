@@ -71,7 +71,7 @@ namespace Nautilus.Serialization.Bson
             {
                 { DATA_TYPE, typeof(Tick[]).Name },
                 { DATA, new BsonArray(dataObjectsArray) },
-                { METADATA, new BsonArray(metadata) },
+                { METADATA, metadata.ToBsonDocument() },
             }.ToBson();
         }
 
@@ -106,7 +106,7 @@ namespace Nautilus.Serialization.Bson
             var ticks = new Tick[valueArray.Count];
             for (var i = 0; i < valueArray.Count; i++)
             {
-                ticks[i] = Tick.FromString(symbol, valueArray[i].AsString);
+                ticks[i] = Tick.FromString(symbol,  Encoding.UTF8.GetString(valueArray[i].AsByteArray));
             }
 
             return ticks;

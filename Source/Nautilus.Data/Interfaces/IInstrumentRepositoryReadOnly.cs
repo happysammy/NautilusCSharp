@@ -22,7 +22,7 @@ namespace Nautilus.Data.Interfaces
         /// Returns the instrument symbol collection.
         /// </summary>
         /// <returns>The collection of symbols held by the repository.</returns>
-        IReadOnlyCollection<Symbol> GetInstrumentSymbols();
+        IReadOnlyCollection<Symbol> GetCachedSymbols();
 
         /// <summary>
         /// Returns the instrument corresponding to the given symbol.

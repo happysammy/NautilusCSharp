@@ -14,7 +14,6 @@ namespace Nautilus.Data.Providers
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.CQS;
-    using Nautilus.Core.Extensions;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Keys;
     using Nautilus.Data.Messages.Commands;
@@ -28,16 +27,22 @@ namespace Nautilus.Data.Providers
     public sealed class InMemoryTickStore : DataBusConnected, ITickRepository
     {
         private readonly Dictionary<Symbol, List<Tick>> tickStore;
+        private readonly IDataSerializer<Tick> serializer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InMemoryTickStore"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
+        /// <param name="serializer">The serializer for the repository.</param>
         /// <param name="dataBusAdapter">The data bus adapter.</param>
-        public InMemoryTickStore(IComponentryContainer container, IDataBusAdapter dataBusAdapter)
+        public InMemoryTickStore(
+            IComponentryContainer container,
+            IDataSerializer<Tick> serializer,
+            IDataBusAdapter dataBusAdapter)
         : base(container, dataBusAdapter)
         {
             this.tickStore = new Dictionary<Symbol, List<Tick>>();
+            this.serializer = serializer;
 
             this.RegisterHandler<Tick>(this.OnMessage);
             this.RegisterHandler<TrimTickData>(this.OnMessage);
@@ -46,35 +51,11 @@ namespace Nautilus.Data.Providers
         }
 
         /// <inheritdoc />
-        public int TicksCount(Symbol symbol)
-        {
-            return !this.tickStore.ContainsKey(symbol) ? 0 : this.tickStore[symbol].Count;
-        }
-
-        /// <inheritdoc />
-        public int AllTicksCount()
-        {
-            return this.tickStore.Select(symbol => symbol.Value).Count();
-        }
-
-        /// <inheritdoc />
-        public QueryResult<Tick[]> GetTicks(Symbol symbol, DateKey fromDate, DateKey toDate, int limit = 0)
-        {
-            return QueryResult<Tick[]>.Ok(this.tickStore[symbol].ToArray());
-        }
-
-        /// <inheritdoc />
-        public QueryResult<byte[][]> GetTickData(Symbol symbol, DateKey fromDate, DateKey toDate, int limit = 0)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        /// <inheritdoc />
         public void Add(Tick tick)
         {
             if (this.tickStore.TryGetValue(tick.Symbol, out var tickList))
             {
-                tickList.Add(tick);
+                this.tickStore[tick.Symbol].Add(tick);
             }
             else
             {
@@ -99,30 +80,49 @@ namespace Nautilus.Data.Providers
         }
 
         /// <inheritdoc />
+        public int TicksCount(Symbol symbol)
+        {
+            return !this.tickStore.ContainsKey(symbol) ? 0 : this.tickStore[symbol].Count;
+        }
+
+        /// <inheritdoc />
+        public int AllTicksCount()
+        {
+            return this.tickStore.Select(symbol => symbol.Value).Count();
+        }
+
+        /// <inheritdoc />
+        public QueryResult<Tick[]> GetTicks(Symbol symbol, DateKey fromDate, DateKey toDate, int limit = 0)
+        {
+            return QueryResult<Tick[]>.Ok(this.tickStore[symbol].ToArray());
+        }
+
+        /// <inheritdoc />
+        public QueryResult<byte[][]> GetTickData(Symbol symbol, DateKey fromDate, DateKey toDate, int limit = 0)
+        {
+            return this.tickStore.TryGetValue(symbol, out var tickList)
+                ? QueryResult<byte[][]>.Ok(this.serializer.Serialize(tickList.ToArray()))
+                : QueryResult<byte[][]>.Fail($"Cannot find any {symbol} tick data");
+        }
+
+        /// <inheritdoc />
         public QueryResult<ZonedDateTime> LastTickTimestamp(Symbol symbol)
         {
             return this.tickStore.TryGetValue(symbol, out var tickList)
                 ? QueryResult<ZonedDateTime>.Ok(tickList.Last().Timestamp)
-                : QueryResult<ZonedDateTime>.Fail($"Tick data not found for {symbol}");
+                : QueryResult<ZonedDateTime>.Fail($"Cannot find any {symbol} tick data");
         }
 
         /// <inheritdoc />
         public void TrimFrom(ZonedDateTime trimFrom)
         {
-            foreach (var symbol in this.tickStore.Keys.ToList())
-            {
-                var trimmedTicks = this.tickStore[symbol]
-                    .Where(t => t.Timestamp.IsGreaterThanOrEqualTo(trimFrom))
-                    .ToList();
-
-                this.tickStore[symbol] = trimmedTicks;
-            }
+            // Not implemented for mock
         }
 
         /// <inheritdoc />
         public void SnapshotDatabase()
         {
-            // Not implemented yet
+            // Not implemented for mock
         }
 
         private void OnMessage(Tick tick)
