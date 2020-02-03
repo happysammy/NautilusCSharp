@@ -57,7 +57,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             var container = containerFactory.Create();
             this.loggingAdapter = containerFactory.LoggingAdapter;
             this.dataSerializer = new TickDataSerializer();
-            this.repository = new InMemoryTickStore(container, this.dataSerializer, DataBusFactory.Create(container));
+            this.repository = new MockTickRepository(container, this.dataSerializer, DataBusFactory.Create(container));
             this.requestSerializer = new MsgPackRequestSerializer(new MsgPackQuerySerializer());
             this.responseSerializer = new MsgPackResponseSerializer();
 

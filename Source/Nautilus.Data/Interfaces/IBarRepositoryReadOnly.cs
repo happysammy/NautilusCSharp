@@ -20,18 +20,18 @@ namespace Nautilus.Data.Interfaces
     public interface IBarRepositoryReadOnly
     {
         /// <summary>
+        /// Returns the total count of bars held within the repository.
+        /// </summary>
+        /// <returns>A <see cref="int"/>.</returns>
+        long BarsCount();
+
+        /// <summary>
         /// Returns the count of bars held within the repository for the given
         /// <see cref="BarType"/>.
         /// </summary>
         /// <param name="barType">The bar type to count.</param>
         /// <returns>A <see cref="int"/>.</returns>
-        int BarsCount(BarType barType);
-
-        /// <summary>
-        /// Returns the total count of bars held within the repository.
-        /// </summary>
-        /// <returns>A <see cref="int"/>.</returns>
-        int AllBarsCount();
+        long BarsCount(BarType barType);
 
         /// <summary>
         /// Returns all bars from the repository of the given <see cref="BarType"/>.
@@ -39,7 +39,7 @@ namespace Nautilus.Data.Interfaces
         /// <param name="barType">The type of bars to get.</param>
         /// <param name="limit">The optional limit for a count of bars.</param>
         /// <returns>The result of the query.</returns>
-        public QueryResult<BarDataFrame> GetBars(BarType barType, int limit = 0);
+        QueryResult<BarDataFrame> GetBars(BarType barType, int limit = 0);
 
         /// <summary>
         /// Returns the bars held in the database of the given <see cref="BarType"/> within the given
@@ -65,7 +65,7 @@ namespace Nautilus.Data.Interfaces
         /// <param name="toDate">The to date.</param>
         /// <param name="limit">The optional count limit for the data.</param>
         /// <returns>The result of the query.</returns>
-        public QueryResult<byte[][]> GetBarData(
+        QueryResult<byte[][]> GetBarData(
             BarType barType,
             DateKey fromDate,
             DateKey toDate,

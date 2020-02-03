@@ -20,17 +20,17 @@ namespace Nautilus.Data.Interfaces
     public interface ITickRepositoryReadOnly
     {
         /// <summary>
+        /// Returns the total count of ticks held within the repository.
+        /// </summary>
+        /// <returns>A <see cref="int"/>.</returns>
+        long TicksCount();
+
+        /// <summary>
         /// Returns the count of ticks held within the repository for the given symbol.
         /// </summary>
         /// <param name="symbol">The tick symbol to count.</param>
         /// <returns>An <see cref="int"/>.</returns>
-        int TicksCount(Symbol symbol);
-
-        /// <summary>
-        /// Returns the total count of ticks held within the repository.
-        /// </summary>
-        /// <returns>A <see cref="int"/>.</returns>
-        int AllTicksCount();
+        long TicksCount(Symbol symbol);
 
         /// <summary>
         /// Returns the ticks held in the repository of the given <see cref="Symbol"/> within the given

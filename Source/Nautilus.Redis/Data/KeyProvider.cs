@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Redis
+namespace Nautilus.Redis.Data
 {
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
@@ -60,20 +60,29 @@ namespace Nautilus.Redis
             var dateRange = new List<DateKey> { fromDate };
             for (var i = 0; i < difference; i++)
             {
-                dateRange.Add(new DateKey(fromDate.DateUtc + Period.FromDays(i + 1)));
+                dateRange.Add(new DateKey(fromDate.DateUtc.Date + Period.FromDays(i + 1)));
             }
 
             return dateRange;
         }
 
         /// <summary>
-        /// Returns a wildcard string from the given symbol bar spec.
+        /// Returns a tick data namespace wildcard string.
+        /// </summary>
+        /// <returns>A <see cref="string"/>.</returns>
+        public static string GetTicksWildcardKey()
+        {
+            return TicksNamespace + "*";
+        }
+
+        /// <summary>
+        /// Returns a tick data namespace wildcard string from the given symbol.
         /// </summary>
         /// <param name="symbol">The symbol.</param>
         /// <returns>A <see cref="string"/>.</returns>
-        public static string GetTickWildcardKey(Symbol symbol)
+        public static string GetTicksWildcardKey(Symbol symbol)
         {
-            return $"{TicksNamespace}:{symbol.Venue.Value}:{symbol.Code}";
+            return $"{TicksNamespace}:{symbol.Venue.Value}:{symbol.Code}*";
         }
 
         /// <summary>
@@ -82,7 +91,7 @@ namespace Nautilus.Redis
         /// <param name="symbol">The symbol.</param>
         /// <param name="dateKey">The date key.</param>
         /// <returns>The key string.</returns>
-        public static string GetTickKey(Symbol symbol, DateKey dateKey)
+        public static string GetTicksKey(Symbol symbol, DateKey dateKey)
         {
             return $"{TicksNamespace}:{symbol.Venue.Value}:{symbol.Code}:{dateKey}";
         }
@@ -96,10 +105,10 @@ namespace Nautilus.Redis
         /// <param name="toDate">The ticks to date time.</param>
         /// <returns>An array of <see cref="DateKey"/>.</returns>
         /// <remarks>The given time range should have been previously validated.</remarks>
-        public static string[] GetTickKeys(Symbol symbol, DateKey fromDate, DateKey toDate)
+        public static string[] GetTicksKeys(Symbol symbol, DateKey fromDate, DateKey toDate)
         {
             return GetDateKeys(fromDate, toDate)
-                .Select(key => GetTickKey(symbol, key))
+                .Select(key => GetTicksKey(symbol, key))
                 .ToArray();
         }
 
@@ -107,7 +116,7 @@ namespace Nautilus.Redis
         /// Returns a wildcard key string for all bars.
         /// </summary>
         /// <returns>The key <see cref="string"/>.</returns>
-        public static string GetBarWildcardKey()
+        public static string GetBarsWildcardKey()
         {
             return BarsNamespace + "*";
         }
@@ -117,7 +126,7 @@ namespace Nautilus.Redis
         /// </summary>
         /// <param name="barType">The symbol bar spec.</param>
         /// <returns>A <see cref="string"/>.</returns>
-        public static string GetBarWildcardKey(BarType barType)
+        public static string GetBarsWildcardKey(BarType barType)
         {
             return BarsNamespace +
                    $":{barType.Symbol.Venue.Value}" +
@@ -132,7 +141,7 @@ namespace Nautilus.Redis
         /// <param name="barType">The bar type.</param>
         /// <param name="dateKey">The date key.</param>
         /// <returns>The key <see cref="string"/>.</returns>
-        public static string GetBarKey(BarType barType, DateKey dateKey)
+        public static string GetBarsKey(BarType barType, DateKey dateKey)
         {
             return BarsNamespace +
                    $":{barType.Symbol.Venue.Value}" +
@@ -151,12 +160,12 @@ namespace Nautilus.Redis
         /// <param name="toDate">The to date time.</param>
         /// <returns>An array of key <see cref="string"/>(s).</returns>
         /// <remarks>The given time range should have been previously validated.</remarks>
-        public static string[] GetBarKeys(BarType barType, DateKey fromDate, DateKey toDate)
+        public static string[] GetBarsKeys(BarType barType, DateKey fromDate, DateKey toDate)
         {
             Debug.True(fromDate.CompareTo(toDate) <= 0, "fromDate.CompareTo(toDate) <= 0");
 
             return GetDateKeys(fromDate, toDate)
-                .Select(key => GetBarKey(barType, key))
+                .Select(key => GetBarsKey(barType, key))
                 .ToArray();
         }
 
@@ -164,7 +173,7 @@ namespace Nautilus.Redis
         /// Returns a wildcard key string for all instruments.
         /// </summary>
         /// <returns>The key <see cref="string"/>.</returns>
-        public static string GetInstrumentWildcardKey()
+        public static string GetInstrumentsWildcardKey()
         {
             return InstrumentsNamespace + "*";
         }
@@ -174,7 +183,7 @@ namespace Nautilus.Redis
         /// </summary>
         /// <param name="symbol">The instruments symbol.</param>
         /// <returns>The key <see cref="string"/>.</returns>
-        public static string GetInstrumentKey(Symbol symbol)
+        public static string GetInstrumentsKey(Symbol symbol)
         {
             return InstrumentsNamespace + ":" + symbol.Value;
         }

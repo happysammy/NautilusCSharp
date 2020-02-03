@@ -65,7 +65,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             // Assert
             this.PrintRepositoryStatus(barType);
-            Assert.Equal(1, this.repository.AllBarsCount());
+            Assert.Equal(1, this.repository.BarsCount());
             Assert.Equal(1, this.repository.BarsCount(barType));
         }
 
@@ -86,7 +86,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             // Assert
             this.PrintRepositoryStatus(barType);
-            Assert.Equal(5, this.repository.AllBarsCount());
+            Assert.Equal(5, this.repository.BarsCount());
             Assert.Equal(5, this.repository.BarsCount(barType));
         }
 
@@ -115,7 +115,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             // Assert
             this.PrintRepositoryStatus(barType);
             Assert.Equal(8, this.repository.BarsCount(barType));
-            Assert.Equal(8, this.repository.AllBarsCount());
+            Assert.Equal(8, this.repository.BarsCount());
         }
 
         [Fact]
@@ -143,11 +143,11 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             // Assert
             this.PrintRepositoryStatus(barType);
             Assert.Equal(8, this.repository.BarsCount(barType));
-            Assert.Equal(8, this.repository.AllBarsCount());
+            Assert.Equal(8, this.repository.BarsCount());
         }
 
         [Fact]
-        internal void Find_WithNoMarketData_ReturnsExpectedQueryFailure()
+        internal void GetBars_WithNoMarketData_ReturnsExpectedQueryFailure()
         {
             // Arrange
             var barType = StubBarType.AUDUSD();
@@ -159,13 +159,12 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             this.output.WriteLine(result.Message);
             this.PrintRepositoryStatus(barType);
             Assert.True(result.IsFailure);
-            Assert.Equal(0, this.repository.AllBarsCount());
+            Assert.Equal(0, this.repository.BarsCount());
             Assert.Equal(0, this.repository.BarsCount(barType));
-            Assert.Equal("Market data not found for AUDUSD.FXCM-1-MINUTE[ASK]", result.Message);
         }
 
         [Fact]
-        internal void Find_WithOtherMarketData_ReturnsExpectedQueryFailure()
+        internal void GetBars_WithOtherMarketData_ReturnsExpectedQueryFailure()
         {
             // Arrange
             var barType1 = StubBarType.AUDUSD();
@@ -180,14 +179,13 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             // Assert
             Assert.True(result.IsFailure);
-            Assert.Equal(1, this.repository.AllBarsCount());
+            Assert.Equal(1, this.repository.BarsCount());
             Assert.Equal(1, this.repository.BarsCount(barType1));
             Assert.Equal(0, this.repository.BarsCount(barType2));
-            Assert.Equal("Market data not found for GBPUSD.FXCM-1-MINUTE[BID]", result.Message);
         }
 
         [Fact]
-        internal void Find_WhenOnlyOneBarPersisted_ReturnsExpectedMarketDataFromRepository()
+        internal void GetBars_WhenOnlyOneBarPersisted_ReturnsExpectedMarketDataFromRepository()
         {
             // Arrange
             var barType = StubBarType.AUDUSD();
@@ -202,13 +200,13 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             // Assert
             this.output.WriteLine(result.Message);
             Assert.True(result.IsSuccess);
-            Assert.Equal(1, this.repository.AllBarsCount());
+            Assert.Equal(1, this.repository.BarsCount());
             Assert.Single(result.Value.Bars);
             Assert.Equal(1, this.repository.BarsCount(barType));
         }
 
         [Fact]
-        internal void Find_WhenMultipleBarsPersisted_ReturnsExpectedMarketDataFromRepository()
+        internal void GetBars_WhenMultipleBarsPersisted_ReturnsExpectedMarketDataFromRepository()
         {
             // Arrange
             var barType = StubBarType.AUDUSD();
@@ -227,13 +225,13 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             // Assert
             this.output.WriteLine(result.Message);
             Assert.True(result.IsSuccess);
-            Assert.Equal(5, this.repository.AllBarsCount());
+            Assert.Equal(5, this.repository.BarsCount());
             Assert.Equal(5, this.repository.BarsCount(barType));
             Assert.Equal(5, result.Value.Bars.Length);
         }
 
         [Fact]
-        internal void Test_can_trim_bars_leaving_correct_number_of_keys()
+        internal void TrimToDays_WithBarsPersisted_LeavesCorrectNumberOfKeys()
         {
             // Arrange
             var barType = StubBarType.AUDUSD();
@@ -256,7 +254,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         }
 
         [Fact]
-        internal void Test_can_trim_bars_down_to_correct_number_of_keys()
+        internal void TrimToDays_WithBarsPersisted_TrimsToCorrectNumber()
         {
             // Arrange
             var barType = StubBarType.AUDUSD();
@@ -279,7 +277,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         }
 
         [Fact]
-        internal void Test_can_trim_bars_down_to_correct_number_of_keys_when_multiple_resolutions()
+        internal void TrimToDays_WithMultipleResolutions_TrimsToCorrectNumber()
         {
             // Arrange
             var barType1 = StubBarType.AUDUSD();
@@ -308,41 +306,16 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         }
 
         [Fact]
-        internal void AllKeysCount_WithNoKeys_ReturnsZero()
-        {
-            // Arrange
-            // Act
-            var result = this.repository.AllKeysCount();
-
-            // Assert
-            Assert.Equal(0, result);
-        }
-
-        [Fact]
-        internal void KeysCount_WithNoKeys_ReturnsZero()
+        internal void BarsCount_WithNoBars_ReturnsZero()
         {
             // Arrange
             var barType = StubBarType.AUDUSD();
 
             // Act
-            var result = this.repository.KeysCount(barType);
+            var result = this.repository.BarsCount(barType);
 
             // Assert
             Assert.Equal(0, result);
-        }
-
-        [Fact]
-        internal void KeyExists_WithNoKeys_ReturnsFalse()
-        {
-            // Arrange
-            var barType = StubBarType.AUDUSD();
-            var barKey = KeyProvider.GetBarKey(barType, new DateKey(StubZonedDateTime.UnixEpoch()));
-
-            // Act
-            var result = this.repository.KeyExists(barKey);
-
-            // Assert
-            Assert.False(result);
         }
 
         [Fact]
@@ -350,7 +323,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         {
             // Arrange
             var barType = StubBarType.AUDUSD();
-            var barKey = KeyProvider.GetBarKey(barType, new DateKey(StubZonedDateTime.UnixEpoch()));
+            var barKey = KeyProvider.GetBarsKey(barType, new DateKey(StubZonedDateTime.UnixEpoch()));
             var bar = new Bar(
                 Price.Create(0.80000m),
                 Price.Create(0.80010m),
@@ -362,10 +335,10 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             this.repository.Add(barType, new[] { bar });
 
             // Act
-            var result = this.repository.KeyExists(barKey);
+            var result = this.repository.BarsCount(barType);
 
             // Assert
-            Assert.True(result);
+            Assert.Equal(1, result);
         }
 
         [Fact]
@@ -440,9 +413,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             // Assert
             Assert.Equal(1, this.repository.BarsCount(barType));
-            Assert.Equal(1, this.repository.KeysCount(barType));
-            Assert.Equal(1, this.repository.AllBarsCount());
-            Assert.Equal(1, this.repository.AllKeysCount());
+            Assert.Equal(1, this.repository.BarsCount());
         }
 
         [Fact]
@@ -457,9 +428,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             // Assert
             Assert.Equal(1, this.repository.BarsCount(barType));
-            Assert.Equal(1, this.repository.KeysCount(barType));
-            Assert.Equal(1, this.repository.AllBarsCount());
-            Assert.Equal(1, this.repository.AllKeysCount());
+            Assert.Equal(1, this.repository.BarsCount());
         }
 
         [Fact]
@@ -477,9 +446,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             // Assert
             Assert.Equal(2, this.repository.BarsCount(barType));
-            Assert.Equal(1, this.repository.KeysCount(barType));
-            Assert.Equal(2, this.repository.AllBarsCount());
-            Assert.Equal(1, this.repository.AllKeysCount());
+            Assert.Equal(2, this.repository.BarsCount());
         }
 
         [Fact]
@@ -498,7 +465,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             // Assert
             Assert.Equal(3, this.repository.BarsCount(barType));
-            Assert.Equal(3, this.repository.AllBarsCount());
+            Assert.Equal(3, this.repository.BarsCount());
         }
 
         [Fact]
@@ -517,7 +484,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             // Assert
             Assert.Equal(3, this.repository.BarsCount(barType));
-            Assert.Equal(3, this.repository.AllBarsCount());
+            Assert.Equal(3, this.repository.BarsCount());
         }
 
         [Fact]
@@ -536,7 +503,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             // Assert
             Assert.Equal(5, this.repository.BarsCount(barType));
-            Assert.Equal(5, this.repository.AllBarsCount());
+            Assert.Equal(5, this.repository.BarsCount());
         }
 
         [Fact]
@@ -551,7 +518,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             // Assert
             this.output.WriteLine(result.Message);
             Assert.True(result.IsFailure);
-            Assert.Equal("Market data not found for AUDUSD.FXCM-1-MINUTE[ASK]", result.Message);
         }
 
         [Fact]
@@ -633,7 +599,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         }
 
         [Fact]
-        internal void Test_can_get_sorted_bar_keys_by_symbol_and_resolution()
+        internal void GetKeysBySymbolStructureSorted_WithKeys_ReturnsCorrectlySortedKeys()
         {
             // Arrange
             var barType = StubBarType.AUDUSD();
@@ -650,7 +616,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             this.repository.Add(barType2, new[] { bar1, bar2, bar3, bar4, bar5, bar6 });
 
             // Act
-            var result = this.repository.GetSortedKeysBySymbolStructure(BarStructure.Minute);
+            var result = this.repository.GetKeysSorted(BarStructure.Minute);
 
             foreach (var symbol in result)
             {

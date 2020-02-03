@@ -84,7 +84,7 @@ namespace Nautilus.Redis.Data
         /// <inheritdoc />
         public void Delete(Symbol symbol)
         {
-            this.redisDatabase.KeyDelete(KeyProvider.GetInstrumentKey(symbol));
+            this.redisDatabase.KeyDelete(KeyProvider.GetInstrumentsKey(symbol));
 
             this.Log.Information($"Instrument {symbol.Value} deleted.");
         }
@@ -146,7 +146,7 @@ namespace Nautilus.Redis.Data
         /// <returns>The keys.</returns>
         public IReadOnlyCollection<string> GetAllKeys()
         {
-            return this.redisServer.Keys(pattern: KeyProvider.GetInstrumentWildcardKey())
+            return this.redisServer.Keys(pattern: KeyProvider.GetInstrumentsWildcardKey())
                 .Select(k => k.ToString())
                 .ToArray();
         }
@@ -296,7 +296,7 @@ namespace Nautilus.Redis.Data
                     new HashEntry(nameof(ForexInstrument.Timestamp), forexCcy.Timestamp.ToIsoString()),
                 };
 
-                this.redisDatabase.HashSet(KeyProvider.GetInstrumentKey(instrument.Symbol), forexHash);
+                this.redisDatabase.HashSet(KeyProvider.GetInstrumentsKey(instrument.Symbol), forexHash);
             }
 
             var instrumentHash = new[]
@@ -320,7 +320,7 @@ namespace Nautilus.Redis.Data
                 new HashEntry(nameof(Instrument.Timestamp), instrument.Timestamp.ToIsoString()),
             };
 
-            this.redisDatabase.HashSet(KeyProvider.GetInstrumentKey(instrument.Symbol), instrumentHash);
+            this.redisDatabase.HashSet(KeyProvider.GetInstrumentsKey(instrument.Symbol), instrumentHash);
         }
     }
 }

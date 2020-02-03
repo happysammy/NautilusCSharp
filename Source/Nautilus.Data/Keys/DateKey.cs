@@ -20,27 +20,6 @@ namespace Nautilus.Data.Keys
     [Immutable]
     public struct DateKey : IComparable<DateKey>, IEquatable<DateKey>
     {
-        private readonly LocalDateTime localStart;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DateKey"/> struct.
-        /// </summary>
-        /// <param name="year">The date key year.</param>
-        /// <param name="month">The date key month.</param>
-        /// <param name="day">The date key day.</param>
-        public DateKey(int year, int month, int day)
-        {
-            Debug.PositiveInt32(year, nameof(year));
-            Debug.PositiveInt32(month, nameof(month));
-            Debug.PositiveInt32(day, nameof(day));
-
-            this.Year = year;
-            this.Month = month;
-            this.Day = day;
-
-            this.localStart = new LocalDateTime(this.Year, this.Month, this.Day, 0, 0);
-        }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="DateKey"/> struct.
         /// </summary>
@@ -62,6 +41,23 @@ namespace Nautilus.Data.Keys
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="DateKey"/> struct.
+        /// </summary>
+        /// <param name="year">The date key year.</param>
+        /// <param name="month">The date key month.</param>
+        /// <param name="day">The date key day.</param>
+        private DateKey(int year, int month, int day)
+        {
+            Debug.PositiveInt32(year, nameof(year));
+            Debug.PositiveInt32(month, nameof(month));
+            Debug.PositiveInt32(day, nameof(day));
+
+            this.Year = year;
+            this.Month = month;
+            this.Day = day;
+        }
+
+        /// <summary>
         /// Gets the <see cref="DateKey"/>s year.
         /// </summary>
         public int Year { get; }
@@ -79,12 +75,12 @@ namespace Nautilus.Data.Keys
         /// <summary>
         /// Gets a <see cref="LocalDate"/> of this key UTC.
         /// </summary>
-        public LocalDate DateUtc => this.localStart.Date;
+        public LocalDateTime DateUtc => new LocalDateTime(this.Year, this.Month, this.Day, 0, 0);
 
         /// <summary>
         /// Gets a <see cref="StartOfDay"/> timestamp of the <see cref="DateKey"/> in UTC.
         /// </summary>
-        public ZonedDateTime StartOfDay => new ZonedDateTime(this.localStart, DateTimeZone.Utc, Offset.Zero);
+        public ZonedDateTime StartOfDay => new ZonedDateTime(this.DateUtc, DateTimeZone.Utc, Offset.Zero);
 
         /// <summary>
         /// Return a new <see cref="DateKey"/> parsed from the given string.
@@ -107,7 +103,7 @@ namespace Nautilus.Data.Keys
         /// <returns>A <see cref="int"/>.</returns>
         public int CompareTo(DateKey other)
         {
-            return this.localStart.CompareTo(other.localStart);
+            return this.DateUtc.CompareTo(other.DateUtc);
         }
 
         /// <summary>

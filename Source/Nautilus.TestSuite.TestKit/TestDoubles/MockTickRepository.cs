@@ -1,12 +1,12 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="InMemoryTickStore.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="MockTickRepository.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2020 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  https://nautechsystems.io
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Data.Providers
+namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -24,24 +24,24 @@ namespace Nautilus.Data.Providers
     /// <summary>
     /// Provides an in memory <see cref="Tick"/> store.
     /// </summary>
-    public sealed class InMemoryTickStore : DataBusConnected, ITickRepository
+    public sealed class MockTickRepository : DataBusConnected, ITickRepository
     {
-        private readonly Dictionary<Symbol, List<Tick>> tickStore;
+        private readonly Dictionary<Symbol, List<Tick>> database;
         private readonly IDataSerializer<Tick> serializer;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="InMemoryTickStore"/> class.
+        /// Initializes a new instance of the <see cref="MockTickRepository"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
         /// <param name="serializer">The serializer for the repository.</param>
         /// <param name="dataBusAdapter">The data bus adapter.</param>
-        public InMemoryTickStore(
+        public MockTickRepository(
             IComponentryContainer container,
             IDataSerializer<Tick> serializer,
             IDataBusAdapter dataBusAdapter)
         : base(container, dataBusAdapter)
         {
-            this.tickStore = new Dictionary<Symbol, List<Tick>>();
+            this.database = new Dictionary<Symbol, List<Tick>>();
             this.serializer = serializer;
 
             this.RegisterHandler<Tick>(this.OnMessage);
@@ -53,13 +53,13 @@ namespace Nautilus.Data.Providers
         /// <inheritdoc />
         public void Add(Tick tick)
         {
-            if (this.tickStore.TryGetValue(tick.Symbol, out var tickList))
+            if (this.database.TryGetValue(tick.Symbol, out var tickList))
             {
-                this.tickStore[tick.Symbol].Add(tick);
+                this.database[tick.Symbol].Add(tick);
             }
             else
             {
-                this.tickStore[tick.Symbol] = new List<Tick> { tick };
+                this.database[tick.Symbol] = new List<Tick> { tick };
             }
         }
 
@@ -69,38 +69,38 @@ namespace Nautilus.Data.Providers
             Debug.NotEmpty(ticks, nameof(ticks));
 
             var symbol = ticks[0].Symbol;
-            if (this.tickStore.TryGetValue(symbol, out var tickList))
+            if (this.database.TryGetValue(symbol, out var tickList))
             {
                 tickList.AddRange(ticks);
             }
             else
             {
-                this.tickStore[symbol] = ticks;
+                this.database[symbol] = ticks;
             }
         }
 
         /// <inheritdoc />
-        public int TicksCount(Symbol symbol)
+        public long TicksCount(Symbol symbol)
         {
-            return !this.tickStore.ContainsKey(symbol) ? 0 : this.tickStore[symbol].Count;
+            return !this.database.ContainsKey(symbol) ? 0 : this.database[symbol].Count;
         }
 
         /// <inheritdoc />
-        public int AllTicksCount()
+        public long TicksCount()
         {
-            return this.tickStore.Select(symbol => symbol.Value).Count();
+            return this.database.Select(symbol => symbol.Value).Count();
         }
 
         /// <inheritdoc />
         public QueryResult<Tick[]> GetTicks(Symbol symbol, DateKey fromDate, DateKey toDate, int limit = 0)
         {
-            return QueryResult<Tick[]>.Ok(this.tickStore[symbol].ToArray());
+            return QueryResult<Tick[]>.Ok(this.database[symbol].ToArray());
         }
 
         /// <inheritdoc />
         public QueryResult<byte[][]> GetTickData(Symbol symbol, DateKey fromDate, DateKey toDate, int limit = 0)
         {
-            return this.tickStore.TryGetValue(symbol, out var tickList)
+            return this.database.TryGetValue(symbol, out var tickList)
                 ? QueryResult<byte[][]>.Ok(this.serializer.Serialize(tickList.ToArray()))
                 : QueryResult<byte[][]>.Fail($"Cannot find any {symbol} tick data");
         }
@@ -108,7 +108,7 @@ namespace Nautilus.Data.Providers
         /// <inheritdoc />
         public QueryResult<ZonedDateTime> LastTickTimestamp(Symbol symbol)
         {
-            return this.tickStore.TryGetValue(symbol, out var tickList)
+            return this.database.TryGetValue(symbol, out var tickList)
                 ? QueryResult<ZonedDateTime>.Ok(tickList.Last().Timestamp)
                 : QueryResult<ZonedDateTime>.Fail($"Cannot find any {symbol} tick data");
         }

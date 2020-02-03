@@ -12,6 +12,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
+    using NodaTime;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public static class StubTickProvider
@@ -31,32 +32,15 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 StubZonedDateTime.UnixEpoch());
         }
 
-        public static Tick Create(
-            Symbol symbol,
-            Price bid,
-            Price ask)
+        public static Tick Create(Symbol symbol, ZonedDateTime timestamp)
         {
             return new Tick(
                 symbol,
-                bid,
-                ask,
+                Price.Create(LastBid),
+                Price.Create(LastAsk),
                 Volume.One(),
                 Volume.One(),
-                StubZonedDateTime.UnixEpoch());
-        }
-
-        public static Tick Create(
-            Symbol symbol,
-            decimal bid,
-            decimal ask)
-        {
-            return new Tick(
-                symbol,
-                Price.Create(bid),
-                Price.Create(ask),
-                Volume.One(),
-                Volume.One(),
-                StubZonedDateTime.UnixEpoch());
+                timestamp);
         }
     }
 }

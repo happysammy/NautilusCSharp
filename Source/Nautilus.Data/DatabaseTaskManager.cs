@@ -73,6 +73,8 @@ namespace Nautilus.Data
         private void OnMessage(BarData data)
         {
             this.barRepository.Add(data.BarType, data.Bar);
+
+            this.Log.Debug($"Received {data}");
         }
 
         private void OnMessage(BarDataFrame data)

@@ -59,12 +59,12 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             }
         }
 
-        public int BarsCount(BarType barType)
+        public long BarsCount(BarType barType)
         {
             return this.database[barType].Count;
         }
 
-        public int AllBarsCount()
+        public long BarsCount()
         {
             return this.database.Select(kvp => kvp.Value.Count).Sum();
         }
