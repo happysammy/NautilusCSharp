@@ -84,17 +84,15 @@ namespace Nautilus.Data.Aggregation
             if (this.barAggregators.TryGetValue(tick.Symbol, out var aggregator))
             {
                 aggregator.Endpoint.Send(tick);
-
-                // return;
             }
-
-            // TODO: Subscribe on condition
-            // this.Log.Warning($"No bar aggregator for {tick.Symbol} ticks.");
+            else
+            {
+                this.Log.Warning($"No bar aggregator for {tick.Symbol} ticks.");
+            }
         }
 
         private void OnMessage(BarData data)
         {
-            // Forward bar to data bus
             this.SendToBus(data);
         }
 

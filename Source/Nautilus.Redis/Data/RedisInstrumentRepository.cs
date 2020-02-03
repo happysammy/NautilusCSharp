@@ -110,24 +110,24 @@ namespace Nautilus.Redis.Data
             {
                 this.cache.Add(symbol, instrument);
                 this.Write(instrument);
+                this.Log.Information($"Added Instrument {symbol.Value}.");
+                return;
             }
 
             var instrumentBuilder = new InstrumentBuilder(this.cache[symbol]).Update(instrument);
-
             if (instrumentBuilder.Changes.Count == 0)
             {
                 this.Log.Information($"Instrument {symbol.Value} unchanged in cache.");
+                return;
             }
 
             var changesString = new StringBuilder();
-
             foreach (var change in instrumentBuilder.Changes)
             {
                 changesString.Append(change);
             }
 
             var updatedInstrument = instrumentBuilder.Build(this.TimeNow());
-
             this.cache[symbol] = updatedInstrument;
             this.Write(instrument);
 
@@ -297,8 +297,6 @@ namespace Nautilus.Redis.Data
                 };
 
                 this.redisDatabase.HashSet(KeyProvider.GetInstrumentKey(instrument.Symbol), forexHash);
-
-                this.Log.Information($"Added instrument {instrument}.");
             }
 
             var instrumentHash = new[]
@@ -323,8 +321,6 @@ namespace Nautilus.Redis.Data
             };
 
             this.redisDatabase.HashSet(KeyProvider.GetInstrumentKey(instrument.Symbol), instrumentHash);
-
-            this.Log.Information($"Added instrument {instrument}.");
         }
     }
 }

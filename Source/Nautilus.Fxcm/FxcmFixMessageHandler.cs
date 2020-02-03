@@ -259,13 +259,15 @@ namespace Nautilus.Fxcm
                     message.GetGroup(1, this.mdBidGroup);
                     message.GetGroup(2, this.mdAskGroup);
 
-                    this.dataGateway?.OnTick(new Tick(
+                    var tick = new Tick(
                         this.GetSymbol(message.GetField(Tags.Symbol)),
                         Price.Create(this.mdBidGroup.GetDecimal(Tags.MDEntryPx)),
                         Price.Create(this.mdAskGroup.GetDecimal(Tags.MDEntryPx)),
                         Volume.One(),
                         Volume.One(),
-                        this.tickTimestampProvider()));
+                        this.tickTimestampProvider());
+
+                    this.dataGateway?.OnTick(tick);
                 }
                 catch (Exception ex)
                 {
