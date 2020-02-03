@@ -228,11 +228,6 @@ namespace Nautilus.Redis.Data
         {
             Debug.True(fromDate.CompareTo(toDate) <= 0, "fromDate.CompareTo(toDate) <= 0");
 
-            if (this.KeyDoesNotExist(KeyProvider.GetBarsWildcardKey(barType)))
-            {
-                return QueryResult<byte[][]>.Fail($"Cannot find bar data for {barType}");
-            }
-
             var keys = KeyProvider.GetBarsKeys(barType, fromDate, toDate);
             var data = new List<byte[]>();
             foreach (var key in keys)
@@ -246,9 +241,9 @@ namespace Nautilus.Redis.Data
                 return QueryResult<byte[][]>.Fail($"Cannot find bar data for {barType} between {fromDate} to {toDate}");
             }
 
-            var difference = Math.Min(0, dataArray.Length - limit);
+            var startIndex = Math.Min(0, dataArray.Length - limit);
 
-            return QueryResult<byte[][]>.Ok(dataArray[difference..^1]);
+            return QueryResult<byte[][]>.Ok(dataArray[startIndex..]);
         }
 
         /// <summary>
@@ -338,7 +333,7 @@ namespace Nautilus.Redis.Data
         {
             Debug.NotEmptyOrWhiteSpace(key, nameof(key));
 
-            return !this.redisDatabase.KeyExists(key);
+            return !this.KeyExists(key);
         }
 
         private void Delete(string key)

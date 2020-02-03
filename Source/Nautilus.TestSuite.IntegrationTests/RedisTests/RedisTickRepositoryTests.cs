@@ -10,7 +10,9 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+    using Nautilus.Data.Keys;
     using Nautilus.DomainModel.Identifiers;
+    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Redis;
     using Nautilus.Redis.Data;
     using Nautilus.TestSuite.TestKit;
@@ -156,6 +158,116 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             Assert.Equal("NautilusData:Data:Ticks:FXCM:AUDUSD:1970-01-03", result["FXCM:AUDUSD"][2]);
             Assert.Equal("NautilusData:Data:Ticks:FXCM:GBPUSD:1970-01-01", result["FXCM:GBPUSD"][0]);
             Assert.Equal("NautilusData:Data:Ticks:FXCM:GBPUSD:1970-01-02", result["FXCM:GBPUSD"][1]);
+        }
+
+        [Fact]
+        internal void TrimToDays_WithMultipleDaysOfTicks_CorrectlyTrims()
+        {
+            // Arrange
+            var audusd = new Symbol("AUDUSD", new Venue("FXCM"));
+            var gbpusd = new Symbol("GBPUSD", new Venue("FXCM"));
+            var tick1 = StubTickProvider.Create(audusd);
+            var tick2 = StubTickProvider.Create(audusd, StubZonedDateTime.UnixEpoch() + Duration.FromDays(1));
+            var tick3 = StubTickProvider.Create(audusd, StubZonedDateTime.UnixEpoch() + Duration.FromDays(2));
+            var tick4 = StubTickProvider.Create(audusd, StubZonedDateTime.UnixEpoch() + Duration.FromDays(3));
+            var tick5 = StubTickProvider.Create(audusd, StubZonedDateTime.UnixEpoch() + Duration.FromDays(4));
+            var tick6 = StubTickProvider.Create(gbpusd, StubZonedDateTime.UnixEpoch() + Duration.FromDays(3));
+            var tick7 = StubTickProvider.Create(gbpusd, StubZonedDateTime.UnixEpoch() + Duration.FromDays(4));
+
+            this.repository.Add(tick1);
+            this.repository.Add(tick2);
+            this.repository.Add(tick3);
+            this.repository.Add(tick4);
+            this.repository.Add(tick5);
+            this.repository.Add(tick6);
+            this.repository.Add(tick7);
+
+            // Act
+            this.repository.TrimToDays(2);
+            var result = this.repository.GetKeysSorted();
+
+            // Assert
+            Assert.Equal(4, this.repository.TicksCount());
+            Assert.Equal(2, this.repository.TicksCount(audusd));
+            Assert.Equal(2, this.repository.TicksCount(gbpusd));
+            Assert.Equal("NautilusData:Data:Ticks:FXCM:AUDUSD:1970-01-04", result["FXCM:AUDUSD"][0]);
+            Assert.Equal("NautilusData:Data:Ticks:FXCM:AUDUSD:1970-01-05", result["FXCM:AUDUSD"][1]);
+            Assert.Equal("NautilusData:Data:Ticks:FXCM:GBPUSD:1970-01-04", result["FXCM:GBPUSD"][0]);
+            Assert.Equal("NautilusData:Data:Ticks:FXCM:GBPUSD:1970-01-05", result["FXCM:GBPUSD"][1]);
+        }
+
+        [Fact]
+        internal void GetTicks_WithNoTicks_ReturnsQueryFailure()
+        {
+            // Arrange
+            var audusd = new Symbol("AUDUSD", new Venue("FXCM"));
+
+            // Act
+            var result = this.repository.GetTicks(
+                audusd,
+                new DateKey(StubZonedDateTime.UnixEpoch() - Duration.FromDays(2)),
+                new DateKey(StubZonedDateTime.UnixEpoch()));
+
+            // Assert
+            Assert.Equal(0, this.repository.TicksCount());
+            Assert.Equal(0, this.repository.TicksCount(audusd));
+            Assert.True(result.IsFailure);
+        }
+
+        [Fact]
+        internal void GetTicks_WithOneTicks_ReturnsCorrectTick()
+        {
+            // Arrange
+            var audusd = new Symbol("AUDUSD", new Venue("FXCM"));
+            var tick1 = StubTickProvider.Create(audusd);
+            var ticks = new[] { tick1 };
+
+            this.repository.Add(tick1);
+
+            // Act
+            var result = this.repository.GetTicks(
+                audusd,
+                new DateKey(StubZonedDateTime.UnixEpoch() - Duration.FromDays(2)),
+                new DateKey(StubZonedDateTime.UnixEpoch()));
+
+            // Assert
+            Assert.Equal(1, this.repository.TicksCount());
+            Assert.Equal(1, this.repository.TicksCount(audusd));
+            Assert.True(result.IsSuccess);
+            Assert.Equal(ticks, result.Value);
+        }
+
+        [Fact]
+        internal void GetTicks_WithMultipleDaysOfTicks_ReturnsCorrectTicks()
+        {
+            // Arrange
+            var audusd = new Symbol("AUDUSD", new Venue("FXCM"));
+            var tick1 = StubTickProvider.Create(audusd);
+            var tick2 = StubTickProvider.Create(audusd, StubZonedDateTime.UnixEpoch() + Duration.FromDays(1));
+            var tick3 = StubTickProvider.Create(audusd, StubZonedDateTime.UnixEpoch() + Duration.FromDays(2));
+            var tick4 = StubTickProvider.Create(audusd, StubZonedDateTime.UnixEpoch() + Duration.FromDays(3));
+            var tick5 = StubTickProvider.Create(audusd, StubZonedDateTime.UnixEpoch() + Duration.FromDays(4));
+            var ticks = new[] { tick1, tick2, tick3, tick4, tick5 };
+
+            this.repository.Add(tick1);
+            this.repository.Add(tick2);
+            this.repository.Add(tick3);
+            this.repository.Add(tick4);
+            this.repository.Add(tick5);
+
+            // Act
+            var result = this.repository.GetTicks(
+                audusd,
+                new DateKey(StubZonedDateTime.UnixEpoch()),
+                new DateKey(StubZonedDateTime.UnixEpoch() + Duration.FromDays(4)));
+
+            this.output.WriteLine(result.Message);
+
+            // Assert
+            Assert.Equal(5, this.repository.TicksCount());
+            Assert.Equal(5, this.repository.TicksCount(audusd));
+            Assert.True(result.IsSuccess);
+            Assert.Equal(ticks, result.Value);
         }
     }
 }

@@ -12,6 +12,7 @@ namespace Nautilus.Redis.Data
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using System.Text;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
@@ -125,7 +126,7 @@ namespace Nautilus.Redis.Data
             var ticks = new Tick[dataQuery.Value.Length];
             for (var i = 0; i < dataQuery.Value.Length; i++)
             {
-                ticks[i] = Tick.FromString(symbol, dataQuery.Value[i].ToString());
+                ticks[i] = Tick.FromString(symbol, Encoding.UTF8.GetString(dataQuery.Value[i]));
             }
 
             return QueryResult<Tick[]>.Ok(ticks);
@@ -140,11 +141,6 @@ namespace Nautilus.Redis.Data
         {
             Debug.True(fromDate.CompareTo(toDate) <= 0, "fromDate.CompareTo(toDate) <= 0");
 
-            if (this.KeyDoesNotExist(KeyProvider.GetTicksWildcardKey(symbol)))
-            {
-                return QueryResult<byte[][]>.Fail($"Cannot find tick data for {symbol.Value}");
-            }
-
             var keys = KeyProvider.GetTicksKeys(symbol, fromDate, toDate);
             var data = new List<byte[]>();
             foreach (var key in keys)
@@ -158,9 +154,9 @@ namespace Nautilus.Redis.Data
                 return QueryResult<byte[][]>.Fail($"Cannot find tick data for {symbol.Value} between {fromDate} to {toDate}");
             }
 
-            var difference = Math.Min(0, dataArray.Length - limit);
+            var startIndex = Math.Min(0, dataArray.Length - limit);
 
-            return QueryResult<byte[][]>.Ok(dataArray[difference..^1]);
+            return QueryResult<byte[][]>.Ok(dataArray[startIndex..]);
         }
 
         /// <summary>
@@ -226,7 +222,7 @@ namespace Nautilus.Redis.Data
         {
             Debug.NotEmptyOrWhiteSpace(key, nameof(key));
 
-            return !this.redisDatabase.KeyExists(key);
+            return !this.KeyExists(key);
         }
 
         private void Delete(string key)
