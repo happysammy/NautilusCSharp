@@ -48,7 +48,7 @@ namespace Nautilus.Data.Messages.Commands
         public ZonedDateTime ScheduledTime { get; }
 
         /// <summary>
-        /// Gets the commands date time the tick data should be trimmed from.
+        /// Gets the commands rolling days to trim to.
         /// </summary>
         public int RollingDays { get; }
     }

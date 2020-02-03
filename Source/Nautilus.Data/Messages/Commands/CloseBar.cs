@@ -16,7 +16,7 @@ namespace Nautilus.Data.Messages.Commands
     using NodaTime;
 
     /// <summary>
-    /// Represents a command to close a <see cref="Bar"/> of the given <see cref="BarSpecification"/>.
+    /// Represents a command to close a <see cref="Bar"/> of the given <see cref="Specification"/>.
     /// </summary>
     [Immutable]
     public sealed class CloseBar : Command, IScheduledJob
@@ -24,12 +24,12 @@ namespace Nautilus.Data.Messages.Commands
         /// <summary>
         /// Initializes a new instance of the <see cref="CloseBar"/> class.
         /// </summary>
-        /// <param name="barSpec">The bar specification.</param>
+        /// <param name="specification">The bar specification.</param>
         /// <param name="scheduledTime">The scheduled job time.</param>
         /// <param name="commandId">The command identifier.</param>
         /// <param name="commandTimestamp">The command timestamp.</param>
         public CloseBar(
-            BarSpecification barSpec,
+            BarSpecification specification,
             ZonedDateTime scheduledTime,
             Guid commandId,
             ZonedDateTime commandTimestamp)
@@ -39,13 +39,13 @@ namespace Nautilus.Data.Messages.Commands
                 commandTimestamp)
         {
             this.ScheduledTime = scheduledTime;
-            this.BarSpecification = barSpec;
+            this.Specification = specification;
         }
 
         /// <summary>
         /// Gets the commands bar specification to close.
         /// </summary>
-        public BarSpecification BarSpecification { get; }
+        public BarSpecification Specification { get; }
 
         /// <inheritdoc />
         public ZonedDateTime ScheduledTime { get; }

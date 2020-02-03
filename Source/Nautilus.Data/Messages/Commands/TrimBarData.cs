@@ -57,7 +57,7 @@ namespace Nautilus.Data.Messages.Commands
         public ZonedDateTime ScheduledTime { get; }
 
         /// <summary>
-        /// Gets the commands number of days in the rolling window to trim to.
+        /// Gets the commands rolling days to trim to.
         /// </summary>
         public int RollingDays { get; }
 

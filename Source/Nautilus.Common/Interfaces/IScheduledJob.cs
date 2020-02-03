@@ -16,7 +16,7 @@ namespace Nautilus.Common.Interfaces
     public interface IScheduledJob
     {
         /// <summary>
-        /// Gets the commands job scheduled time.
+        /// Gets the commands scheduled job time.
         /// </summary>
         ZonedDateTime ScheduledTime { get; }
     }

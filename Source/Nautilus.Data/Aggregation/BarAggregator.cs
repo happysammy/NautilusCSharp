@@ -121,7 +121,7 @@ namespace Nautilus.Data.Aggregation
 
         private void OnMessage(CloseBar message)
         {
-            var barSpec = message.BarSpecification;
+            var barSpec = message.Specification;
             if (this.barBuilders.TryGetValue(barSpec, out var builder))
             {
                 if (builder is null)
@@ -142,7 +142,7 @@ namespace Nautilus.Data.Aggregation
             }
             else
             {
-                this.Log.Warning($"Does not contain the {nameof(BarSpecification)}({message.BarSpecification}).");
+                this.Log.Warning($"Does not contain the {nameof(BarSpecification)}({message.Specification}).");
             }
         }
 
