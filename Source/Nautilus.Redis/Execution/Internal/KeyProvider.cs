@@ -1,12 +1,12 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="Key.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="KeyProvider.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2020 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   https://nautechsystems.io
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Redis.Execution
+namespace Nautilus.Redis.Execution.Internal
 {
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.DomainModel.Identifiers;
@@ -15,7 +15,7 @@ namespace Nautilus.Redis.Execution
     /// Provides key strings for a Redis execution database.
     /// </summary>
     [SuppressMessage("ReSharper", "SA1310", Justification = "Easier to read.")]
-    internal static class Key
+    internal static class KeyProvider
     {
         private const string NAUTILUS_EXECUTOR = "NautilusExecutor:";
         private const string INDEX = NAUTILUS_EXECUTOR + "Index:";

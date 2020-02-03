@@ -12,7 +12,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Data.Keys;
     using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Redis;
     using Nautilus.Redis.Data;
     using Nautilus.TestSuite.TestKit;
@@ -122,7 +121,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             LogDumper.Dump(this.logger, this.output);
 
             // Assert
-            Assert.Equal(3, result.Value.Length);
+            Assert.Equal(3, result.Value.Count);
             Assert.Equal("NautilusData:Data:Ticks:FXCM:AUDUSD:1970-01-01", result.Value[0]);
             Assert.Equal("NautilusData:Data:Ticks:FXCM:AUDUSD:1970-01-02", result.Value[1]);
             Assert.Equal("NautilusData:Data:Ticks:FXCM:AUDUSD:1970-01-03", result.Value[2]);

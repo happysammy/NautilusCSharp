@@ -27,7 +27,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FramesTests
         {
             // Fixture Setup
             this.output = output;
-            this.stubBarType = StubBarType.AUDUSD();
+            this.stubBarType = StubBarType.AUDUSD_OneMinuteAsk();
         }
 
         [Fact]

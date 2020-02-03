@@ -24,7 +24,7 @@ namespace Nautilus.Redis.Data
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Redis.Data.Builders;
+    using Nautilus.Redis.Data.Internal;
     using StackExchange.Redis;
 
     /// <summary>
@@ -145,7 +145,7 @@ namespace Nautilus.Redis.Data
         /// <returns>The keys.</returns>
         public IReadOnlyCollection<string> GetAllKeys()
         {
-            return this.redisServer.Keys(pattern: KeyProvider.GetInstrumentsWildcardKey())
+            return this.redisServer.Keys(pattern: KeyProvider.GetInstrumentsPattern())
                 .Select(k => k.ToString())
                 .ToArray();
         }

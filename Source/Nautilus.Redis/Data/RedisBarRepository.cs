@@ -23,6 +23,7 @@ namespace Nautilus.Redis.Data
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Frames;
     using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.Redis.Data.Internal;
     using StackExchange.Redis;
 
     /// <summary>
@@ -151,7 +152,7 @@ namespace Nautilus.Redis.Data
         /// <inheritdoc />
         public long BarsCount(BarType barType)
         {
-            var allKeys = this.redisServer.Keys(pattern: KeyProvider.GetBarsWildcardKey(barType)).ToArray();
+            var allKeys = this.redisServer.Keys(pattern: KeyProvider.GetBarsPattern(barType)).ToArray();
             return allKeys.Length > 0
                 ? allKeys.Select(key => this.redisDatabase.ListLength(key)).Sum()
                 : 0;
@@ -160,7 +161,7 @@ namespace Nautilus.Redis.Data
         /// <inheritdoc />
         public long BarsCount()
         {
-            var allKeys = this.redisServer.Keys(pattern: KeyProvider.GetBarsWildcardKey()).ToArray();
+            var allKeys = this.redisServer.Keys(pattern: KeyProvider.GetBarsPattern()).ToArray();
             return allKeys.Length > 0
                 ? allKeys.Select(key => this.redisDatabase.ListLength(key)).Sum()
                 : 0;
@@ -252,20 +253,16 @@ namespace Nautilus.Redis.Data
         /// <param name="barType">The query bar type.</param>
         /// <returns>The sorted key strings.</returns>
         [PerformanceOptimized]
-        public QueryResult<string[]> GetKeysSorted(BarType barType)
+        public QueryResult<List<string>> GetKeysSorted(BarType barType)
         {
-            var keysArray = this.redisServer.Keys(pattern: KeyProvider.GetBarsWildcardKey(barType)).ToArray();
-            var keysList = new List<string>(keysArray.Length);
-            foreach (var key in keysArray)
-            {
-                keysList.Add(key.ToString());
-            }
+            var keys = this.redisServer.Keys(pattern: KeyProvider.GetBarsPattern(barType))
+                .Select(x => x.ToString())
+                .ToList();
+            keys.Sort();
 
-            keysList.Sort();
-
-            return keysList.Count > 0
-                ? QueryResult<string[]>.Ok(keysList.ToArray())
-                : QueryResult<string[]>.Fail($"No {barType} bar data found");
+            return keys.Count > 0
+                ? QueryResult<List<string>>.Ok(keys)
+                : QueryResult<List<string>>.Fail($"No {barType} bar data found");
         }
 
         /// <summary>
@@ -274,9 +271,9 @@ namespace Nautilus.Redis.Data
         /// <param name="barStructure">The query bar structure.</param>
         /// <returns>The sorted key strings.</returns>
         [PerformanceOptimized]
-        public Dictionary<string, List<string>> GetKeysSorted(BarStructure barStructure)
+        internal Dictionary<string, List<string>> GetKeysSorted(BarStructure barStructure)
         {
-            var keysQuery = this.redisServer.Keys(pattern: KeyProvider.GetBarsWildcardKey());
+            var keysQuery = this.redisServer.Keys(pattern: KeyProvider.GetBarsPattern());
             var barStructureString = barStructure.ToString();
 
             var keysOfResolution = new Dictionary<string, List<string>>();
@@ -304,7 +301,7 @@ namespace Nautilus.Redis.Data
             return keysOfResolution;
         }
 
-        private QueryResult<Bar> GetLastBar(string key)
+        private QueryResult<Bar> GetLastBar(RedisKey key)
         {
             Debug.NotEmptyOrWhiteSpace(key, nameof(key));
 
@@ -315,28 +312,28 @@ namespace Nautilus.Redis.Data
         }
 
         [SuppressMessage("ReSharper", "ReturnTypeCanBeEnumerable.Local", Justification = "Consistent API.")]
-        private byte[][] ReadDataToBytes(string key)
+        private byte[][] ReadDataToBytes(RedisKey key)
         {
             Debug.NotEmptyOrWhiteSpace(key, nameof(key));
 
             return Array.ConvertAll(this.redisDatabase.ListRange(key), x => (byte[])x);
         }
 
-        private bool KeyExists(string key)
+        private bool KeyExists(RedisKey key)
         {
             Debug.NotEmptyOrWhiteSpace(key, nameof(key));
 
             return this.redisDatabase.KeyExists(key);
         }
 
-        private bool KeyDoesNotExist(string key)
+        private bool KeyDoesNotExist(RedisKey key)
         {
             Debug.NotEmptyOrWhiteSpace(key, nameof(key));
 
             return !this.KeyExists(key);
         }
 
-        private void Delete(string key)
+        private void Delete(RedisKey key)
         {
             Debug.NotEmptyOrWhiteSpace(key, nameof(key));
 

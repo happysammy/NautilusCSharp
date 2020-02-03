@@ -13,11 +13,10 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
 
-    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public static class StubBarType
     {
-        public static BarType AUDUSD()
+        public static BarType AUDUSD_OneMinuteAsk()
         {
             return new BarType(
                 new Symbol("AUDUSD", new Venue("FXCM")),
@@ -27,7 +26,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                     PriceType.Ask));
         }
 
-        public static BarType GBPUSD()
+        public static BarType GBPUSD_OneMinuteBid()
         {
             return new BarType(
                 new Symbol("GBPUSD", new Venue("FXCM")),
@@ -37,7 +36,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                     PriceType.Bid));
         }
 
-        public static BarType GBPUSD_Second()
+        public static BarType GBPUSD_OneSecondMid()
         {
             return new BarType(
                 new Symbol("GBPUSD", new Venue("FXCM")),
@@ -47,7 +46,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                     PriceType.Mid));
         }
 
-        public static BarType USDJPY()
+        public static BarType USDJPY_OneMinuteBid()
         {
             return new BarType(
                 new Symbol("USDJPY", new Venue("FXCM")),
@@ -57,7 +56,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                     PriceType.Bid));
         }
 
-        public static BarType CADHKD()
+        public static BarType CADHKD_OneMinuteBid()
         {
             return new BarType(
                 new Symbol("CADHKD", new Venue("FXCM")),

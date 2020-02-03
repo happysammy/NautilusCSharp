@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Redis.Data.Builders
+namespace Nautilus.Redis.Data.Internal
 {
     using System.Collections.Generic;
     using System.Globalization;
@@ -20,7 +20,7 @@ namespace Nautilus.Redis.Data.Builders
     /// <summary>
     /// Provides a builder for creating <see cref="Instrument"/> objects.
     /// </summary>
-    public sealed class InstrumentBuilder
+    internal sealed class InstrumentBuilder
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="InstrumentBuilder"/> class.

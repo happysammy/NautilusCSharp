@@ -74,7 +74,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             this.provider.Start();
             Task.Delay(100).Wait();  // Allow provider to start
 
-            var barType = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD_OneMinuteAsk();
 
             var requester = new RequestSocket();
             requester.Connect(TEST_ADDRESS);
@@ -116,7 +116,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             this.provider.Start();  // Allow provider to start
             Task.Delay(100).Wait();
 
-            var barType = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD_OneMinuteAsk();
             var bar1 = StubBarProvider.Build();
             var bar2 = StubBarProvider.Build();
 

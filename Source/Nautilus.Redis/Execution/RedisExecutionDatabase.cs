@@ -20,6 +20,7 @@ namespace Nautilus.Redis.Execution
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.Execution.Engine;
     using Nautilus.Execution.Interfaces;
+    using Nautilus.Redis.Execution.Internal;
     using StackExchange.Redis;
     using Order = Nautilus.DomainModel.Aggregates.Order;
 
@@ -80,7 +81,7 @@ namespace Nautilus.Redis.Execution
 
             this.CachedAccounts.Clear();
 
-            var accountKeys = this.redisServer.Keys(pattern: Key.Accounts).ToArray();
+            var accountKeys = this.redisServer.Keys(pattern: KeyProvider.Accounts).ToArray();
             if (accountKeys.Length == 0)
             {
                 this.Log.Information("No accounts found in the database.");
@@ -120,7 +121,7 @@ namespace Nautilus.Redis.Execution
 
             this.CachedOrders.Clear();
 
-            var orderKeys = this.redisServer.Keys(pattern: Key.Orders).ToArray();
+            var orderKeys = this.redisServer.Keys(pattern: KeyProvider.Orders).ToArray();
             if (orderKeys.Length == 0)
             {
                 this.Log.Information("No orders found in the database.");
@@ -169,7 +170,7 @@ namespace Nautilus.Redis.Execution
 
             this.CachedPositions.Clear();
 
-            var positionKeys = this.redisServer.Keys(pattern: Key.Positions).ToArray();
+            var positionKeys = this.redisServer.Keys(pattern: KeyProvider.Positions).ToArray();
             if (positionKeys.Length == 0)
             {
                 this.Log.Information("No positions found in the database.");
@@ -266,7 +267,7 @@ namespace Nautilus.Redis.Execution
                 return CommandResult.Fail($"The {account.Id} already existed in the cache (was not unique).");
             }
 
-            this.redisDatabase.ListRightPush(Key.Account(account.Id), this.eventSerializer.Serialize(account.LastEvent), When.Always, CommandFlags.FireAndForget);
+            this.redisDatabase.ListRightPush(KeyProvider.Account(account.Id), this.eventSerializer.Serialize(account.LastEvent), When.Always, CommandFlags.FireAndForget);
 
             this.CachedAccounts[account.Id] = account;
 
@@ -283,25 +284,25 @@ namespace Nautilus.Redis.Execution
                 return CommandResult.Fail($"The {order.Id} already existed in the cache (was not unique).");
             }
 
-            this.redisDatabase.SetAdd(Key.IndexTraders, traderId.Value, CommandFlags.FireAndForget);
-            this.redisDatabase.SetAdd(Key.IndexTraderOrders(traderId), order.Id.Value, CommandFlags.FireAndForget);
-            this.redisDatabase.SetAdd(Key.IndexTraderPositions(traderId), positionId.Value, CommandFlags.FireAndForget);
-            this.redisDatabase.SetAdd(Key.IndexTraderStrategies(traderId), strategyId.Value, CommandFlags.FireAndForget);
-            this.redisDatabase.SetAdd(Key.IndexTraderStrategyOrders(traderId, strategyId), order.Id.Value, CommandFlags.FireAndForget);
-            this.redisDatabase.SetAdd(Key.IndexTraderStrategyPositions(traderId, strategyId), positionId.Value, CommandFlags.FireAndForget);
-            this.redisDatabase.SetAdd(Key.IndexAccountOrders(accountId), order.Id.Value, CommandFlags.FireAndForget);
-            this.redisDatabase.SetAdd(Key.IndexAccountPositions(accountId), order.Id.Value, CommandFlags.FireAndForget);
-            this.redisDatabase.HashSet(Key.IndexOrderTrader, new[] { new HashEntry(order.Id.Value, traderId.Value) }, CommandFlags.FireAndForget);
-            this.redisDatabase.HashSet(Key.IndexOrderAccount, new[] { new HashEntry(order.Id.Value, accountId.Value) }, CommandFlags.FireAndForget);
-            this.redisDatabase.HashSet(Key.IndexOrderPosition, new[] { new HashEntry(order.Id.Value, positionId.Value) }, CommandFlags.FireAndForget);
-            this.redisDatabase.HashSet(Key.IndexOrderStrategy, new[] { new HashEntry(order.Id.Value, strategyId.Value) }, CommandFlags.FireAndForget);
-            this.redisDatabase.HashSet(Key.IndexPositionTrader, new[] { new HashEntry(positionId.Value, traderId.Value) }, CommandFlags.FireAndForget);
-            this.redisDatabase.HashSet(Key.IndexPositionAccount, new[] { new HashEntry(positionId.Value, positionId.Value) }, CommandFlags.FireAndForget);
-            this.redisDatabase.HashSet(Key.IndexPositionStrategy, new[] { new HashEntry(positionId.Value, positionId.Value) }, CommandFlags.FireAndForget);
-            this.redisDatabase.SetAdd(Key.IndexPositionOrders(positionId), order.Id.Value, CommandFlags.FireAndForget);
-            this.redisDatabase.SetAdd(Key.IndexOrders, order.Id.Value, CommandFlags.FireAndForget);
+            this.redisDatabase.SetAdd(KeyProvider.IndexTraders, traderId.Value, CommandFlags.FireAndForget);
+            this.redisDatabase.SetAdd(KeyProvider.IndexTraderOrders(traderId), order.Id.Value, CommandFlags.FireAndForget);
+            this.redisDatabase.SetAdd(KeyProvider.IndexTraderPositions(traderId), positionId.Value, CommandFlags.FireAndForget);
+            this.redisDatabase.SetAdd(KeyProvider.IndexTraderStrategies(traderId), strategyId.Value, CommandFlags.FireAndForget);
+            this.redisDatabase.SetAdd(KeyProvider.IndexTraderStrategyOrders(traderId, strategyId), order.Id.Value, CommandFlags.FireAndForget);
+            this.redisDatabase.SetAdd(KeyProvider.IndexTraderStrategyPositions(traderId, strategyId), positionId.Value, CommandFlags.FireAndForget);
+            this.redisDatabase.SetAdd(KeyProvider.IndexAccountOrders(accountId), order.Id.Value, CommandFlags.FireAndForget);
+            this.redisDatabase.SetAdd(KeyProvider.IndexAccountPositions(accountId), order.Id.Value, CommandFlags.FireAndForget);
+            this.redisDatabase.HashSet(KeyProvider.IndexOrderTrader, new[] { new HashEntry(order.Id.Value, traderId.Value) }, CommandFlags.FireAndForget);
+            this.redisDatabase.HashSet(KeyProvider.IndexOrderAccount, new[] { new HashEntry(order.Id.Value, accountId.Value) }, CommandFlags.FireAndForget);
+            this.redisDatabase.HashSet(KeyProvider.IndexOrderPosition, new[] { new HashEntry(order.Id.Value, positionId.Value) }, CommandFlags.FireAndForget);
+            this.redisDatabase.HashSet(KeyProvider.IndexOrderStrategy, new[] { new HashEntry(order.Id.Value, strategyId.Value) }, CommandFlags.FireAndForget);
+            this.redisDatabase.HashSet(KeyProvider.IndexPositionTrader, new[] { new HashEntry(positionId.Value, traderId.Value) }, CommandFlags.FireAndForget);
+            this.redisDatabase.HashSet(KeyProvider.IndexPositionAccount, new[] { new HashEntry(positionId.Value, positionId.Value) }, CommandFlags.FireAndForget);
+            this.redisDatabase.HashSet(KeyProvider.IndexPositionStrategy, new[] { new HashEntry(positionId.Value, positionId.Value) }, CommandFlags.FireAndForget);
+            this.redisDatabase.SetAdd(KeyProvider.IndexPositionOrders(positionId), order.Id.Value, CommandFlags.FireAndForget);
+            this.redisDatabase.SetAdd(KeyProvider.IndexOrders, order.Id.Value, CommandFlags.FireAndForget);
 
-            this.redisDatabase.ListRightPush(Key.Order(order.Id), this.eventSerializer.Serialize(order.LastEvent), When.Always, CommandFlags.FireAndForget);
+            this.redisDatabase.ListRightPush(KeyProvider.Order(order.Id), this.eventSerializer.Serialize(order.LastEvent), When.Always, CommandFlags.FireAndForget);
 
             this.CachedOrders[order.Id] = order;
 
@@ -318,11 +319,11 @@ namespace Nautilus.Redis.Execution
                 return CommandResult.Fail($"The {position.Id} already existed in the cache (was not unique).");
             }
 
-            this.redisDatabase.SetAdd(Key.IndexPositions, position.Id.Value, CommandFlags.FireAndForget);
-            this.redisDatabase.HashSet(Key.IndexPositionBrokerId, new[] { new HashEntry(position.Id.Value, position.IdBroker.Value) }, CommandFlags.FireAndForget);
+            this.redisDatabase.SetAdd(KeyProvider.IndexPositions, position.Id.Value, CommandFlags.FireAndForget);
+            this.redisDatabase.HashSet(KeyProvider.IndexPositionBrokerId, new[] { new HashEntry(position.Id.Value, position.IdBroker.Value) }, CommandFlags.FireAndForget);
             if (position.IsOpen)
             {
-                this.redisDatabase.SetAdd(Key.IndexPositionsOpen, position.Id.Value, CommandFlags.FireAndForget);
+                this.redisDatabase.SetAdd(KeyProvider.IndexPositionsOpen, position.Id.Value, CommandFlags.FireAndForget);
             }
             else
             {
@@ -330,8 +331,8 @@ namespace Nautilus.Redis.Execution
                 this.Log.Error($"The added {position} was not open.");
             }
 
-            this.redisDatabase.HashSet(Key.IndexBrokerIdPosition(position.AccountId), new[] { new HashEntry(position.IdBroker.Value, position.Id.Value) }, CommandFlags.FireAndForget);
-            this.redisDatabase.ListRightPush(Key.Position(position.Id), this.eventSerializer.Serialize(position.LastEvent), When.Always, CommandFlags.FireAndForget);
+            this.redisDatabase.HashSet(KeyProvider.IndexBrokerIdPosition(position.AccountId), new[] { new HashEntry(position.IdBroker.Value, position.Id.Value) }, CommandFlags.FireAndForget);
+            this.redisDatabase.ListRightPush(KeyProvider.Position(position.Id), this.eventSerializer.Serialize(position.LastEvent), When.Always, CommandFlags.FireAndForget);
 
             this.CachedPositions[position.Id] = position;
 
@@ -343,7 +344,7 @@ namespace Nautilus.Redis.Execution
         /// <inheritdoc />
         public void UpdateAccount(Account account)
         {
-            this.redisDatabase.ListRightPush(Key.Account(account.Id), this.eventSerializer.Serialize(account.LastEvent), When.Always, CommandFlags.FireAndForget);
+            this.redisDatabase.ListRightPush(KeyProvider.Account(account.Id), this.eventSerializer.Serialize(account.LastEvent), When.Always, CommandFlags.FireAndForget);
         }
 
         /// <inheritdoc />
@@ -351,16 +352,16 @@ namespace Nautilus.Redis.Execution
         {
             if (order.IsWorking)
             {
-                this.redisDatabase.SetAdd(Key.IndexOrdersWorking, order.Id.Value, CommandFlags.FireAndForget);
-                this.redisDatabase.SetRemove(Key.IndexOrdersCompleted, order.Id.Value, CommandFlags.FireAndForget);
+                this.redisDatabase.SetAdd(KeyProvider.IndexOrdersWorking, order.Id.Value, CommandFlags.FireAndForget);
+                this.redisDatabase.SetRemove(KeyProvider.IndexOrdersCompleted, order.Id.Value, CommandFlags.FireAndForget);
             }
             else if (order.IsCompleted)
             {
-                this.redisDatabase.SetAdd(Key.IndexOrdersCompleted, order.Id.Value, CommandFlags.FireAndForget);
-                this.redisDatabase.SetRemove(Key.IndexOrdersWorking, order.Id.Value, CommandFlags.FireAndForget);
+                this.redisDatabase.SetAdd(KeyProvider.IndexOrdersCompleted, order.Id.Value, CommandFlags.FireAndForget);
+                this.redisDatabase.SetRemove(KeyProvider.IndexOrdersWorking, order.Id.Value, CommandFlags.FireAndForget);
             }
 
-            this.redisDatabase.ListRightPush(Key.Order(order.Id), this.eventSerializer.Serialize(order.LastEvent), When.Always, CommandFlags.FireAndForget);
+            this.redisDatabase.ListRightPush(KeyProvider.Order(order.Id), this.eventSerializer.Serialize(order.LastEvent), When.Always, CommandFlags.FireAndForget);
         }
 
         /// <inheritdoc />
@@ -368,22 +369,22 @@ namespace Nautilus.Redis.Execution
         {
             if (position.IsOpen)
             {
-                this.redisDatabase.SetAdd(Key.IndexPositionsOpen, position.Id.Value, CommandFlags.FireAndForget);
-                this.redisDatabase.SetRemove(Key.IndexPositionsClosed, position.Id.Value, CommandFlags.FireAndForget);
+                this.redisDatabase.SetAdd(KeyProvider.IndexPositionsOpen, position.Id.Value, CommandFlags.FireAndForget);
+                this.redisDatabase.SetRemove(KeyProvider.IndexPositionsClosed, position.Id.Value, CommandFlags.FireAndForget);
             }
             else if (position.IsClosed)
             {
-                this.redisDatabase.SetAdd(Key.IndexPositionsClosed, position.Id.Value, CommandFlags.FireAndForget);
-                this.redisDatabase.SetRemove(Key.IndexPositionsOpen, position.Id.Value, CommandFlags.FireAndForget);
+                this.redisDatabase.SetAdd(KeyProvider.IndexPositionsClosed, position.Id.Value, CommandFlags.FireAndForget);
+                this.redisDatabase.SetRemove(KeyProvider.IndexPositionsOpen, position.Id.Value, CommandFlags.FireAndForget);
             }
 
-            this.redisDatabase.ListRightPush(Key.Position(position.Id), this.eventSerializer.Serialize(position.LastEvent), When.Always, CommandFlags.FireAndForget);
+            this.redisDatabase.ListRightPush(KeyProvider.Position(position.Id), this.eventSerializer.Serialize(position.LastEvent), When.Always, CommandFlags.FireAndForget);
         }
 
         /// <inheritdoc />
         public override TraderId? GetTraderId(OrderId orderId)
         {
-            var traderId = this.redisDatabase.HashGet(Key.IndexOrderTrader, orderId.Value);
+            var traderId = this.redisDatabase.HashGet(KeyProvider.IndexOrderTrader, orderId.Value);
             return traderId == RedisValue.Null
                 ? null
                 : TraderId.FromString(traderId);
@@ -392,7 +393,7 @@ namespace Nautilus.Redis.Execution
         /// <inheritdoc />
         public override TraderId? GetTraderId(PositionId positionId)
         {
-            var traderId = this.redisDatabase.HashGet(Key.IndexPositionTrader, positionId.Value);
+            var traderId = this.redisDatabase.HashGet(KeyProvider.IndexPositionTrader, positionId.Value);
             return traderId == RedisValue.Null
                 ? null
                 : TraderId.FromString(traderId);
@@ -401,7 +402,7 @@ namespace Nautilus.Redis.Execution
         /// <inheritdoc />
         public override AccountId? GetAccountId(OrderId orderId)
         {
-            var accountId = this.redisDatabase.HashGet(Key.IndexOrderAccount, orderId.Value);
+            var accountId = this.redisDatabase.HashGet(KeyProvider.IndexOrderAccount, orderId.Value);
             return accountId == RedisValue.Null
                 ? null
                 : AccountId.FromString(accountId);
@@ -410,7 +411,7 @@ namespace Nautilus.Redis.Execution
         /// <inheritdoc />
         public override AccountId? GetAccountId(PositionId positionId)
         {
-            var accountId = this.redisDatabase.HashGet(Key.IndexPositionAccount, positionId.Value);
+            var accountId = this.redisDatabase.HashGet(KeyProvider.IndexPositionAccount, positionId.Value);
             return accountId == RedisValue.Null
                 ? null
                 : AccountId.FromString(accountId);
@@ -419,7 +420,7 @@ namespace Nautilus.Redis.Execution
         /// <inheritdoc />
         public override PositionId? GetPositionId(OrderId orderId)
         {
-            var idValue = this.redisDatabase.HashGet(Key.IndexOrderPosition, orderId.Value);
+            var idValue = this.redisDatabase.HashGet(KeyProvider.IndexOrderPosition, orderId.Value);
             return idValue == RedisValue.Null
                 ? null
                 : new PositionId(idValue);
@@ -428,7 +429,7 @@ namespace Nautilus.Redis.Execution
         /// <inheritdoc />
         public override PositionId? GetPositionId(AccountId accountId, PositionIdBroker positionIdBroker)
         {
-            var idValue = this.redisDatabase.HashGet(Key.IndexBrokerIdPosition(accountId), positionIdBroker.Value);
+            var idValue = this.redisDatabase.HashGet(KeyProvider.IndexBrokerIdPosition(accountId), positionIdBroker.Value);
             return idValue == RedisValue.Null
                 ? null
                 : new PositionId(idValue);
@@ -437,7 +438,7 @@ namespace Nautilus.Redis.Execution
         /// <inheritdoc />
         public override PositionIdBroker? GetPositionIdBroker(PositionId positionId)
         {
-            var idValue = this.redisDatabase.HashGet(Key.IndexPositionBrokerId, positionId.Value);
+            var idValue = this.redisDatabase.HashGet(KeyProvider.IndexPositionBrokerId, positionId.Value);
             return idValue == RedisValue.Null
                 ? null
                 : new PositionIdBroker(idValue);
@@ -446,13 +447,13 @@ namespace Nautilus.Redis.Execution
         /// <inheritdoc />
         public override ICollection<TraderId> GetTraderIds()
         {
-            return SetFactory.ConvertToSet(this.redisDatabase.SetMembers(Key.IndexTraders).ToArray(), TraderId.FromString);
+            return SetFactory.ConvertToSet(this.redisDatabase.SetMembers(KeyProvider.IndexTraders).ToArray(), TraderId.FromString);
         }
 
         /// <inheritdoc />
         public override ICollection<AccountId> GetAccountIds()
         {
-            var accountIds = this.redisServer.Keys(pattern: Key.Accounts)
+            var accountIds = this.redisServer.Keys(pattern: KeyProvider.Accounts)
                 .Select(k => k.ToString().Split(':')[^1])
                 .ToArray();
 
@@ -462,21 +463,21 @@ namespace Nautilus.Redis.Execution
         /// <inheritdoc />
         public override ICollection<StrategyId> GetStrategyIds(TraderId traderId)
         {
-            return SetFactory.ConvertToSet(this.redisDatabase.SetMembers(Key.IndexTraderStrategies(traderId)), StrategyId.FromString);
+            return SetFactory.ConvertToSet(this.redisDatabase.SetMembers(KeyProvider.IndexTraderStrategies(traderId)), StrategyId.FromString);
         }
 
         /// <inheritdoc />
         public override ICollection<OrderId> GetOrderIds()
         {
-            return SetFactory.ConvertToSet(this.redisDatabase.SetMembers(Key.IndexOrders), OrderId.FromString);
+            return SetFactory.ConvertToSet(this.redisDatabase.SetMembers(KeyProvider.IndexOrders), OrderId.FromString);
         }
 
         /// <inheritdoc />
         public override ICollection<OrderId> GetOrderIds(TraderId traderId, StrategyId? filterStrategyId = null)
         {
             var orderIdValues = filterStrategyId is null
-                ? this.redisDatabase.SetMembers(Key.IndexTraderOrders(traderId))
-                : this.redisDatabase.SetMembers(Key.IndexTraderStrategyOrders(traderId, filterStrategyId));
+                ? this.redisDatabase.SetMembers(KeyProvider.IndexTraderOrders(traderId))
+                : this.redisDatabase.SetMembers(KeyProvider.IndexTraderStrategyOrders(traderId, filterStrategyId));
 
             return SetFactory.ConvertToSet(orderIdValues, OrderId.FromString);
         }
@@ -484,15 +485,15 @@ namespace Nautilus.Redis.Execution
         /// <inheritdoc />
         public override ICollection<OrderId> GetOrderWorkingIds()
         {
-            return SetFactory.ConvertToSet(this.redisDatabase.SetMembers(Key.IndexOrdersWorking), OrderId.FromString);
+            return SetFactory.ConvertToSet(this.redisDatabase.SetMembers(KeyProvider.IndexOrdersWorking), OrderId.FromString);
         }
 
         /// <inheritdoc />
         public override ICollection<OrderId> GetOrderWorkingIds(TraderId traderId, StrategyId? filterStrategyId = null)
         {
             var orderIdValues = filterStrategyId is null
-                ? this.GetIntersection(Key.IndexOrdersWorking, Key.IndexTraderOrders(traderId))
-                : this.GetIntersection(Key.IndexOrdersWorking, Key.IndexTraderStrategyOrders(traderId, filterStrategyId));
+                ? this.GetIntersection(KeyProvider.IndexOrdersWorking, KeyProvider.IndexTraderOrders(traderId))
+                : this.GetIntersection(KeyProvider.IndexOrdersWorking, KeyProvider.IndexTraderStrategyOrders(traderId, filterStrategyId));
 
             return SetFactory.ConvertToSet(orderIdValues, OrderId.FromString);
         }
@@ -500,15 +501,15 @@ namespace Nautilus.Redis.Execution
         /// <inheritdoc />
         public override ICollection<OrderId> GetOrderCompletedIds()
         {
-            return SetFactory.ConvertToSet(this.redisDatabase.SetMembers(Key.IndexOrdersCompleted), OrderId.FromString);
+            return SetFactory.ConvertToSet(this.redisDatabase.SetMembers(KeyProvider.IndexOrdersCompleted), OrderId.FromString);
         }
 
         /// <inheritdoc />
         public override ICollection<OrderId> GetOrderCompletedIds(TraderId traderId, StrategyId? filterStrategyId = null)
         {
             var orderIdValues = filterStrategyId is null
-                ? this.GetIntersection(Key.IndexOrdersCompleted, Key.IndexTraderOrders(traderId))
-                : this.GetIntersection(Key.IndexOrdersCompleted, Key.IndexTraderStrategyOrders(traderId, filterStrategyId));
+                ? this.GetIntersection(KeyProvider.IndexOrdersCompleted, KeyProvider.IndexTraderOrders(traderId))
+                : this.GetIntersection(KeyProvider.IndexOrdersCompleted, KeyProvider.IndexTraderStrategyOrders(traderId, filterStrategyId));
 
             return SetFactory.ConvertToSet(orderIdValues, OrderId.FromString);
         }
@@ -516,15 +517,15 @@ namespace Nautilus.Redis.Execution
         /// <inheritdoc />
         public override ICollection<PositionId> GetPositionIds()
         {
-            return SetFactory.ConvertToSet(this.redisDatabase.SetMembers(Key.IndexPositions), PositionId.FromString);
+            return SetFactory.ConvertToSet(this.redisDatabase.SetMembers(KeyProvider.IndexPositions), PositionId.FromString);
         }
 
         /// <inheritdoc />
         public override ICollection<PositionId> GetPositionIds(TraderId traderId, StrategyId? filterStrategyId = null)
         {
             var positionIdValues = filterStrategyId is null
-                ? this.redisDatabase.SetMembers(Key.IndexTraderPositions(traderId))
-                : this.redisDatabase.SetMembers(Key.IndexTraderStrategyPositions(traderId, filterStrategyId));
+                ? this.redisDatabase.SetMembers(KeyProvider.IndexTraderPositions(traderId))
+                : this.redisDatabase.SetMembers(KeyProvider.IndexTraderStrategyPositions(traderId, filterStrategyId));
 
             return SetFactory.ConvertToSet(positionIdValues, PositionId.FromString);
         }
@@ -532,15 +533,15 @@ namespace Nautilus.Redis.Execution
         /// <inheritdoc />
         public override ICollection<PositionId> GetPositionOpenIds()
         {
-            return SetFactory.ConvertToSet(this.redisDatabase.SetMembers(Key.IndexPositionsOpen), PositionId.FromString);
+            return SetFactory.ConvertToSet(this.redisDatabase.SetMembers(KeyProvider.IndexPositionsOpen), PositionId.FromString);
         }
 
         /// <inheritdoc />
         public override ICollection<PositionId> GetPositionOpenIds(TraderId traderId, StrategyId? filterStrategyId = null)
         {
             var positionIdValues = filterStrategyId is null
-                ? this.GetIntersection(Key.IndexPositionsOpen, Key.IndexTraderPositions(traderId))
-                : this.GetIntersection(Key.IndexPositionsOpen, Key.IndexTraderStrategyPositions(traderId, filterStrategyId));
+                ? this.GetIntersection(KeyProvider.IndexPositionsOpen, KeyProvider.IndexTraderPositions(traderId))
+                : this.GetIntersection(KeyProvider.IndexPositionsOpen, KeyProvider.IndexTraderStrategyPositions(traderId, filterStrategyId));
 
             return SetFactory.ConvertToSet(positionIdValues, PositionId.FromString);
         }
@@ -548,15 +549,15 @@ namespace Nautilus.Redis.Execution
         /// <inheritdoc />
         public override ICollection<PositionId> GetPositionClosedIds()
         {
-            return SetFactory.ConvertToSet(this.redisDatabase.SetMembers(Key.IndexPositionsClosed), PositionId.FromString);
+            return SetFactory.ConvertToSet(this.redisDatabase.SetMembers(KeyProvider.IndexPositionsClosed), PositionId.FromString);
         }
 
         /// <inheritdoc />
         public override ICollection<PositionId> GetPositionClosedIds(TraderId traderId, StrategyId? filterStrategyId = null)
         {
             var positionIdValues = filterStrategyId is null
-                ? this.GetIntersection(Key.IndexPositionsClosed, Key.IndexTraderPositions(traderId))
-                : this.GetIntersection(Key.IndexPositionsClosed, Key.IndexTraderStrategyPositions(traderId, filterStrategyId));
+                ? this.GetIntersection(KeyProvider.IndexPositionsClosed, KeyProvider.IndexTraderPositions(traderId))
+                : this.GetIntersection(KeyProvider.IndexPositionsClosed, KeyProvider.IndexTraderStrategyPositions(traderId, filterStrategyId));
 
             return SetFactory.ConvertToSet(positionIdValues, PositionId.FromString);
         }

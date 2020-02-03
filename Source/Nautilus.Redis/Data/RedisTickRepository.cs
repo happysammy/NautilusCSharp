@@ -22,6 +22,7 @@ namespace Nautilus.Redis.Data
     using Nautilus.Data.Keys;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.Redis.Data.Internal;
     using StackExchange.Redis;
 
     /// <summary>
@@ -48,7 +49,7 @@ namespace Nautilus.Redis.Data
         public void Add(Tick tick)
         {
             var key = KeyProvider.GetTicksKey(tick.Symbol, new DateKey(tick.Timestamp));
-            this.redisDatabase.ListRightPush(key, tick.ToString());
+            this.redisDatabase.ListRightPush(key, tick.ToString(), flags: CommandFlags.FireAndForget);
         }
 
         /// <inheritdoc />
@@ -91,7 +92,7 @@ namespace Nautilus.Redis.Data
         /// <inheritdoc />
         public long TicksCount(Symbol symbol)
         {
-            var allKeys = this.redisServer.Keys(pattern: KeyProvider.GetTicksWildcardKey(symbol)).ToArray();
+            var allKeys = this.redisServer.Keys(pattern: KeyProvider.GetTicksPattern(symbol)).ToArray();
             return allKeys.Length > 0
                 ? allKeys.Select(key => this.redisDatabase.ListLength(key)).Sum()
                 : 0;
@@ -100,7 +101,7 @@ namespace Nautilus.Redis.Data
         /// <inheritdoc />
         public long TicksCount()
         {
-            var allKeys = this.redisServer.Keys(pattern: KeyProvider.GetTicksWildcardKey()).ToArray();
+            var allKeys = this.redisServer.Keys(pattern: KeyProvider.GetTicksPattern()).ToArray();
             return allKeys.Length > 0
                 ? allKeys.Select(key => this.redisDatabase.ListLength(key)).Sum()
                 : 0;
@@ -164,16 +165,16 @@ namespace Nautilus.Redis.Data
         /// </summary>
         /// <param name="symbol">The query symbol.</param>
         /// <returns>The sorted key strings.</returns>
-        public QueryResult<string[]> GetKeysSorted(Symbol symbol)
+        public QueryResult<List<string>> GetKeysSorted(Symbol symbol)
         {
-            var keysQuery = this.redisServer.Keys(pattern: KeyProvider.GetTicksWildcardKey(symbol))
-                .Select(key => key.ToString())
+            var keys = this.redisServer.Keys(pattern: KeyProvider.GetTicksPattern(symbol))
+                .Select(x => x.ToString())
                 .ToList();
-            keysQuery.Sort();
+            keys.Sort();
 
-            return keysQuery.Count > 0
-                ? QueryResult<string[]>.Ok(keysQuery.ToArray())
-                : QueryResult<string[]>.Fail($"No {symbol.Value} tick data found");
+            return keys.Count > 0
+                ? QueryResult<List<string>>.Ok(keys)
+                : QueryResult<List<string>>.Fail($"No {symbol.Value} tick data found");
         }
 
         /// <summary>
@@ -183,7 +184,7 @@ namespace Nautilus.Redis.Data
         [PerformanceOptimized]
         public Dictionary<string, List<string>> GetKeysSorted()
         {
-            var keysQuery = this.redisServer.Keys(pattern: KeyProvider.GetTicksWildcardKey());
+            var keysQuery = this.redisServer.Keys(pattern: KeyProvider.GetTicksPattern());
 
             var keysBySymbol = new Dictionary<string, List<string>>();
             foreach (var key in keysQuery)
@@ -204,28 +205,28 @@ namespace Nautilus.Redis.Data
         }
 
         [SuppressMessage("ReSharper", "ReturnTypeCanBeEnumerable.Local", Justification = "Consistent API.")]
-        private byte[][] ReadDataToBytes(string key)
+        private byte[][] ReadDataToBytes(RedisKey key)
         {
             Debug.NotEmptyOrWhiteSpace(key, nameof(key));
 
             return Array.ConvertAll(this.redisDatabase.ListRange(key), x => (byte[])x);
         }
 
-        private bool KeyExists(string key)
+        private bool KeyExists(RedisKey key)
         {
             Debug.NotEmptyOrWhiteSpace(key, nameof(key));
 
             return this.redisDatabase.KeyExists(key);
         }
 
-        private bool KeyDoesNotExist(string key)
+        private bool KeyDoesNotExist(RedisKey key)
         {
             Debug.NotEmptyOrWhiteSpace(key, nameof(key));
 
             return !this.KeyExists(key);
         }
 
-        private void Delete(string key)
+        private void Delete(RedisKey key)
         {
             Debug.NotEmptyOrWhiteSpace(key, nameof(key));
 

@@ -13,7 +13,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Redis.Data.Builders;
+    using Nautilus.Redis.Data.Internal;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;
     using Xunit.Abstractions;

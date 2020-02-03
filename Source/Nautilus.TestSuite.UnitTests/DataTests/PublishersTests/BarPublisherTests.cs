@@ -57,7 +57,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
             this.publisher.Start();
             Task.Delay(100).Wait();  // Allow publisher to start
 
-            var barType = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD_OneMinuteAsk();
 
             var subscriber = new SubscriberSocket(TEST_ADDRESS);
             subscriber.Connect(TEST_ADDRESS);

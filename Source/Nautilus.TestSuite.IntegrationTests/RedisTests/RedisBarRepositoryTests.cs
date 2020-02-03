@@ -17,6 +17,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Redis;
     using Nautilus.Redis.Data;
+    using Nautilus.Redis.Data.Internal;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NodaTime;
     using StackExchange.Redis;
@@ -56,7 +57,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void Add_WithOneBar_AddsBarToRepository()
         {
             // Arrange
-            var barType = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD_OneMinuteAsk();
             var bar = StubBarData.Create();
             var marketData = new BarDataFrame(barType, new[] { bar });
 
@@ -73,7 +74,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void Add_WithMultipleBars_AddsBarsToRepository()
         {
             // Arrange
-            var barType = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD_OneMinuteAsk();
             var bar1 = StubBarData.Create();
             var bar2 = StubBarData.Create(1);
             var bar3 = StubBarData.Create(2);
@@ -94,7 +95,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void Add_WithMultipleBarsAndBarsAlreadyPersisted_AddsExpectedBarsToRepository()
         {
             // Arrange
-            var barType = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD_OneMinuteAsk();
             var bar1 = StubBarData.Create();
             var bar2 = StubBarData.Create(1);
             var bar3 = StubBarData.Create(2);
@@ -122,7 +123,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void Add_WithMultipleBarsAlreadyPersisted_AddsNewBarsToRepository()
         {
             // Arrange
-            var barType = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD_OneMinuteAsk();
             var bar1 = StubBarData.Create();
             var bar2 = StubBarData.Create(1);
             var bar3 = StubBarData.Create(2);
@@ -150,7 +151,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void GetBars_WithNoMarketData_ReturnsExpectedQueryFailure()
         {
             // Arrange
-            var barType = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD_OneMinuteAsk();
 
             // Act
             var result = this.repository.GetBars(barType);
@@ -167,8 +168,8 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void GetBars_WithOtherMarketData_ReturnsExpectedQueryFailure()
         {
             // Arrange
-            var barType1 = StubBarType.AUDUSD();
-            var barType2 = StubBarType.GBPUSD();
+            var barType1 = StubBarType.AUDUSD_OneMinuteAsk();
+            var barType2 = StubBarType.GBPUSD_OneMinuteBid();
             var bar = StubBarData.Create();
             var marketData = new BarDataFrame(barType1, new[] { bar });
 
@@ -188,7 +189,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void GetBars_WhenOnlyOneBarPersisted_ReturnsExpectedMarketDataFromRepository()
         {
             // Arrange
-            var barType = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD_OneMinuteAsk();
             var bar = StubBarData.Create();
             var marketData = new BarDataFrame(barType, new[] { bar });
 
@@ -209,7 +210,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void GetBars_WhenMultipleBarsPersisted_ReturnsExpectedMarketDataFromRepository()
         {
             // Arrange
-            var barType = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD_OneMinuteAsk();
             var bar1 = StubBarData.Create();
             var bar2 = StubBarData.Create(1);
             var bar3 = StubBarData.Create(2);
@@ -234,7 +235,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void TrimToDays_WithBarsPersisted_LeavesCorrectNumberOfKeys()
         {
             // Arrange
-            var barType = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD_OneMinuteAsk();
             var bar1 = StubBarData.Create();
             var bar2 = StubBarData.Create(Duration.FromDays(1));
             var bar3 = StubBarData.Create(Duration.FromDays(2));
@@ -257,7 +258,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void TrimToDays_WithBarsPersisted_TrimsToCorrectNumber()
         {
             // Arrange
-            var barType = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD_OneMinuteAsk();
             var bar1 = StubBarData.Create();
             var bar2 = StubBarData.Create(Duration.FromDays(1));
             var bar3 = StubBarData.Create(Duration.FromDays(2));
@@ -280,8 +281,8 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void TrimToDays_WithMultipleResolutions_TrimsToCorrectNumber()
         {
             // Arrange
-            var barType1 = StubBarType.AUDUSD();
-            var barType2 = StubBarType.GBPUSD_Second();
+            var barType1 = StubBarType.AUDUSD_OneMinuteAsk();
+            var barType2 = StubBarType.GBPUSD_OneSecondMid();
 
             var bar1 = StubBarData.Create();
             var bar2 = StubBarData.Create(Duration.FromDays(1));
@@ -309,7 +310,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void BarsCount_WithNoBars_ReturnsZero()
         {
             // Arrange
-            var barType = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD_OneMinuteAsk();
 
             // Act
             var result = this.repository.BarsCount(barType);
@@ -322,7 +323,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void KeyExists_WithKeyInRedis_ReturnsTrue()
         {
             // Arrange
-            var barType = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD_OneMinuteAsk();
             var barKey = KeyProvider.GetBarsKey(barType, new DateKey(StubZonedDateTime.UnixEpoch()));
             var bar = new Bar(
                 Price.Create(0.80000m),
@@ -342,10 +343,10 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         }
 
         [Fact]
-        internal void GetAllKeys_WithNoKeysInRedis_ReturnsQueryFailure()
+        internal void GetKeysSorted_WithNoKeysInRedis_ReturnsQueryFailure()
         {
             // Arrange
-            var barType = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD_OneMinuteAsk();
 
             // Act
             var result = this.repository.GetKeysSorted(barType);
@@ -355,10 +356,10 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         }
 
         [Fact]
-        internal void GetAllKeys_WithKeysInRedis_ReturnsKeys()
+        internal void GetKeysSorted_WithKeysInRedis_ReturnsKeys()
         {
             // Arrange
-            var barType = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD_OneMinuteAsk();
             var bar1 = StubBarData.Create();
             var bar2 = StubBarData.Create(Duration.FromDays(2));
 
@@ -369,7 +370,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             // Assert
             Assert.True(result.IsSuccess);
-            Assert.Equal(2, result.Value.Length);
+            Assert.Equal(2, result.Value.Count);
             result.Value.ToList().ForEach(k => this.output.WriteLine(k));
         }
 
@@ -405,7 +406,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void AddBar_WithOneBar_AddsBarToRedis()
         {
             // Arrange
-            var barType = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD_OneMinuteAsk();
             var bar = StubBarData.Create();
 
             // Act
@@ -420,7 +421,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void AddBars_WithOneBar_AddsBarToRedis()
         {
             // Arrange
-            var barType = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD_OneMinuteAsk();
             var bar = StubBarData.Create();
 
             // Act
@@ -435,7 +436,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void AddBars_OneBarWithOneBarAlreadyPersisted_AddsBarToRedisAtCorrectIndex()
         {
             // Arrange
-            var barType = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD_OneMinuteAsk();
             var bar1 = StubBarData.Create();
             var bar2 = StubBarData.Create(1);
 
@@ -453,7 +454,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void AddBars_OneBarWithTwoBarsAlreadyPersistedWithAGap_AddsBarToRedisAtCorrectIndex()
         {
             // Arrange
-            var barType = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD_OneMinuteAsk();
             var bar1 = StubBarData.Create();
             var bar2 = StubBarData.Create(2);
             var bar3 = StubBarData.Create(4);
@@ -472,7 +473,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void AddBars_OneBarWithTwoAlreadyPersistedAtDifferentDay_AddsBarToRedisAtCorrectIndex()
         {
             // Arrange
-            var barType = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD_OneMinuteAsk();
             var bar1 = StubBarData.Create();
             var bar2 = StubBarData.Create(Duration.FromDays(1));
             var bar3 = StubBarData.Create(Duration.FromDays(1) + Duration.FromMinutes(1));
@@ -491,7 +492,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void AddBars_WithMultipleBars_AddsBarsToRedis()
         {
             // Arrange
-            var barType = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD_OneMinuteAsk();
             var bar1 = StubBarData.Create();
             var bar2 = StubBarData.Create(1);
             var bar3 = StubBarData.Create(2);
@@ -510,7 +511,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void GetBars_WithNoBars_ReturnsQueryFailure()
         {
             // Arrange
-            var barType = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD_OneMinuteAsk();
 
             // Act
             var result = this.repository.GetBars(barType);
@@ -524,7 +525,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void GetBars_WithBarOutOfRange_ReturnsQueryFailure()
         {
             // Arrange
-            var barType = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD_OneMinuteAsk();
             var bar = StubBarData.Create(Duration.FromHours(1));
 
             this.repository.Add(barType, new[] { bar });
@@ -541,7 +542,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void GetBars_WithRangeOfOneBar_ReturnsExpectedBars()
         {
             // Arrange
-            var barType = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD_OneMinuteAsk();
             var bar1 = StubBarData.Create();
             var bar2 = StubBarData.Create(1);
             var bar3 = StubBarData.Create(2);
@@ -563,7 +564,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void GetBars_WithRangeOfThreeBars_ReturnsExpectedThreeBars()
         {
             // Arrange
-            var barType = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD_OneMinuteAsk();
             var bar1 = StubBarData.Create();
             var bar2 = StubBarData.Create(1);
             var bar3 = StubBarData.Create(2);
@@ -583,7 +584,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void GetBars_WithThreeBarsSpreadAcrossThreeDays_ReturnsExpectedBars()
         {
             // Arrange
-            var barType = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD_OneMinuteAsk();
             var bar1 = StubBarData.Create();
             var bar2 = StubBarData.Create(Duration.FromDays(1));
             var bar3 = StubBarData.Create(Duration.FromDays(2));
@@ -602,8 +603,8 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void GetKeysBySymbolStructureSorted_WithKeys_ReturnsCorrectlySortedKeys()
         {
             // Arrange
-            var barType = StubBarType.AUDUSD();
-            var barType2 = StubBarType.GBPUSD_Second();
+            var barType = StubBarType.AUDUSD_OneMinuteAsk();
+            var barType2 = StubBarType.GBPUSD_OneSecondMid();
 
             var bar1 = StubBarData.Create();
             var bar2 = StubBarData.Create(Duration.FromDays(1));
