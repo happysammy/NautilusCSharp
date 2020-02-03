@@ -25,12 +25,14 @@ namespace Nautilus.Data.Messages.Responses
         /// Initializes a new instance of the <see cref="DataResponse"/> class.
         /// </summary>
         /// <param name="data">The response data.</param>
+        /// <param name="dataType">The response data type.</param>
         /// <param name="dataEncoding">The response data encoding.</param>
         /// <param name="correlationId">The response correlation identifier.</param>
         /// <param name="responseId">The response identifier.</param>
         /// <param name="responseTimestamp">The response timestamp.</param>
         public DataResponse(
             byte[] data,
+            string dataType,
             DataEncoding dataEncoding,
             Guid correlationId,
             Guid responseId,
@@ -45,6 +47,7 @@ namespace Nautilus.Data.Messages.Responses
             Debug.NotDefault(responseTimestamp, nameof(responseTimestamp));
 
             this.Data = data;
+            this.DataType = dataType;
             this.DataEncoding = dataEncoding;
         }
 
@@ -52,6 +55,11 @@ namespace Nautilus.Data.Messages.Responses
         /// Gets the responses data.
         /// </summary>
         public byte[] Data { get; }
+
+        /// <summary>
+        /// Gets the responses data type.
+        /// </summary>
+        public string DataType { get; }
 
         /// <summary>
         /// Gets the responses data encoding.

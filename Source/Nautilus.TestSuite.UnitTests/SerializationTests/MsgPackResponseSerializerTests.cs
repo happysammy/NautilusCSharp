@@ -148,6 +148,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             var response = new DataResponse(
                 data,
+                typeof(Tick[]).Name,
                 dataSerializer.BlobEncoding,
                 correlationId,
                 id,
@@ -189,6 +190,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             var response = new DataResponse(
                 data,
+                typeof(Bar[]).Name,
                 dataSerializer.BlobEncoding,
                 correlationId,
                 Guid.NewGuid(),
@@ -223,6 +225,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             var response = new DataResponse(
                 data,
+                typeof(Instrument[]).Name,
                 dataSerializer.BlobEncoding,
                 correlationId,
                 Guid.NewGuid(),

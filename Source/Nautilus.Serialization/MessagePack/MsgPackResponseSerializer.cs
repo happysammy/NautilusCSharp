@@ -47,6 +47,7 @@ namespace Nautilus.Serialization.MessagePack
                     break;
                 case DataResponse res:
                     package.Add(nameof(res.Data), res.Data);
+                    package.Add(nameof(res.DataType), res.DataType);
                     package.Add(nameof(res.DataEncoding), res.DataEncoding.ToString().ToUpper());
                     break;
                 default:
@@ -89,6 +90,7 @@ namespace Nautilus.Serialization.MessagePack
                 case nameof(DataResponse):
                     return new DataResponse(
                         unpacked[nameof(DataResponse.Data)].AsBinary(),
+                        unpacked[nameof(DataResponse.DataType)].ToString(),
                         unpacked[nameof(DataResponse.DataEncoding)].ToString().ToEnum<DataEncoding>(),
                         correlationId,
                         id,

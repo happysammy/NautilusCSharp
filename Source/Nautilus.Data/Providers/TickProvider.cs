@@ -94,6 +94,7 @@ namespace Nautilus.Data.Providers
 
                     var response = new DataResponse(
                         this.dataSerializer.SerializeBlob(query.Value, request.Query),
+                        dataType,
                         this.dataSerializer.BlobEncoding,
                         request.Id,
                         this.NewGuid(),
