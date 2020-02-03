@@ -186,7 +186,7 @@ namespace Nautilus.Redis.Execution
                 }
 
                 var position = new Position(
-                    new PositionId(key.ToString().Split(':').Last()),
+                    new PositionId(key.ToString().Split(':')[^1]),
                     (OrderFillEvent)this.eventSerializer.Deserialize(events.Dequeue()));
                 while (events.Count > 0)
                 {
@@ -453,7 +453,7 @@ namespace Nautilus.Redis.Execution
         public override ICollection<AccountId> GetAccountIds()
         {
             var accountIds = this.redisServer.Keys(pattern: Key.Accounts)
-                .Select(k => k.ToString().Split(':').Last())
+                .Select(k => k.ToString().Split(':')[^1])
                 .ToArray();
 
             return SetFactory.ConvertToSet(accountIds, AccountId.FromString);

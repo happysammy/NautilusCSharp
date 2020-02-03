@@ -8,7 +8,6 @@
 
 namespace Nautilus.DomainModel.Frames
 {
-    using System.Linq;
     using Nautilus.Core.Annotations;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
@@ -48,11 +47,11 @@ namespace Nautilus.DomainModel.Frames
         /// <summary>
         /// Gets the data frames start time.
         /// </summary>
-        public ZonedDateTime StartDateTime => this.Bars.First().Timestamp;
+        public ZonedDateTime StartDateTime => this.Bars[0].Timestamp;
 
         /// <summary>
         /// Gets the data frames end time.
         /// </summary>
-        public ZonedDateTime EndDateTime => this.Bars.Last().Timestamp;
+        public ZonedDateTime EndDateTime => this.Bars[^1].Timestamp;
     }
 }

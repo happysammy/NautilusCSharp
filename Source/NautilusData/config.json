@@ -96,7 +96,7 @@
     "tickDataTrimDay": "Sunday",
     "tickDataTrimHour": 0,
     "tickDataTrimMinute": 1,
-    "tickDataTrimWindowDays": 1,
+    "tickDataTrimWindowDays": 2,
     "barDataTrimDay": "Sunday",
     "barDataTrimHour": 0,
     "barDataTrimMinute": 1,

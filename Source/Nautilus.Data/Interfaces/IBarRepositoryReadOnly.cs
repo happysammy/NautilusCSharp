@@ -12,7 +12,6 @@ namespace Nautilus.Data.Interfaces
     using Nautilus.Data.Keys;
     using Nautilus.DomainModel.Frames;
     using Nautilus.DomainModel.ValueObjects;
-    using NodaTime;
 
     /// <summary>
     /// Provides a repository for accessing <see cref="Bar"/> data.
@@ -70,12 +69,5 @@ namespace Nautilus.Data.Interfaces
             DateKey fromDate,
             DateKey toDate,
             int limit = 0);
-
-        /// <summary>
-        /// Returns the result of the last bars timestamp of the given <see cref="BarType"/>.
-        /// </summary>
-        /// <param name="barType">The bar specification.</param>
-        /// <returns>The result of the query.</returns>
-        QueryResult<ZonedDateTime> LastBarTimestamp(BarType barType);
     }
 }

@@ -398,7 +398,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             // Assert
             Assert.Equal(dateKeyCount, result.Count);
-            Assert.Equal(expectedKey, result.Last().ToString());
+            Assert.Equal(expectedKey, result[^1].ToString());
         }
 
         [Fact]

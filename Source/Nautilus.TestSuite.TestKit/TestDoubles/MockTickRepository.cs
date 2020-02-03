@@ -19,7 +19,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using Nautilus.Data.Messages.Commands;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
-    using NodaTime;
 
     /// <summary>
     /// Provides an in memory <see cref="Tick"/> store.
@@ -106,15 +105,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         }
 
         /// <inheritdoc />
-        public QueryResult<ZonedDateTime> LastTickTimestamp(Symbol symbol)
-        {
-            return this.database.TryGetValue(symbol, out var tickList)
-                ? QueryResult<ZonedDateTime>.Ok(tickList.Last().Timestamp)
-                : QueryResult<ZonedDateTime>.Fail($"Cannot find any {symbol} tick data");
-        }
-
-        /// <inheritdoc />
-        public void TrimFrom(ZonedDateTime trimFrom)
+        public void TrimToDays(int days)
         {
             // Not implemented for mock
         }
@@ -132,7 +123,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
         private void OnMessage(TrimTickData message)
         {
-            this.TrimFrom(message.TrimFrom);
+            this.TrimToDays(message.RollingDays);
         }
     }
 }

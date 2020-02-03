@@ -9,7 +9,6 @@
 namespace Nautilus.Data.Integrity
 {
     using System.Collections.Generic;
-    using System.Linq;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.CQS;
     using Nautilus.Core.Extensions;
@@ -43,8 +42,8 @@ namespace Nautilus.Data.Integrity
             CheckBarsComplete(barType, bars, anomalyList);
 
             return anomalyList.Count == 0
-                       ? PassResult(barType, anomalyList, bars.First().Timestamp, bars.Last().Timestamp)
-                       : FailResult(barType, anomalyList, bars.First().Timestamp, bars.Last().Timestamp);
+                       ? PassResult(barType, anomalyList, bars[0].Timestamp, bars[^1].Timestamp)
+                       : FailResult(barType, anomalyList, bars[0].Timestamp, bars[^1].Timestamp);
         }
 
         [PerformanceOptimized]

@@ -99,7 +99,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             return !this.database.ContainsKey(barType)
                 ? QueryResult<ZonedDateTime>.Fail($"No bars for {barType}")
-                : QueryResult<ZonedDateTime>.Ok(this.database[barType].Last().Timestamp);
+                : QueryResult<ZonedDateTime>.Ok(this.database[barType][^1].Timestamp);
         }
 
         public void TrimToDays(BarStructure barStructure, int trimToDays)

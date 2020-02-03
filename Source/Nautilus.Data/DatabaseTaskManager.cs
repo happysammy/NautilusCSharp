@@ -50,6 +50,7 @@ namespace Nautilus.Data
             this.RegisterHandler<BarData>(this.OnMessage);
             this.RegisterHandler<BarDataFrame>(this.OnMessage);
             this.RegisterHandler<Instrument>(this.OnMessage);
+            this.RegisterHandler<TrimTickData>(this.OnMessage);
             this.RegisterHandler<TrimBarData>(this.OnMessage);
 
             this.Subscribe<Tick>();
@@ -87,11 +88,16 @@ namespace Nautilus.Data
             this.instrumentRepository.Add(data);
         }
 
+        private void OnMessage(TrimTickData message)
+        {
+            this.tickRepository.TrimToDays(message.RollingDays);
+        }
+
         private void OnMessage(TrimBarData message)
         {
             foreach (var resolution in message.BarStructures)
             {
-                this.barRepository.TrimToDays(resolution, message.RollingWindowDays);
+                this.barRepository.TrimToDays(resolution, message.RollingDays);
             }
         }
     }

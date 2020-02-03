@@ -246,7 +246,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CollectionsTests
             var unique = new UniqueList<string> { "0", "1" };
 
             // Act
-            var result = unique.Last();
+            var result = unique[^1];
 
             // Assert
             Assert.Equal("1", result);

@@ -38,11 +38,11 @@ namespace Nautilus.Data.Interfaces
         void Add(BarType barType, Bar[] bars);
 
         /// <summary>
-        /// Removes the difference in date keys for each symbol from the repository.
+        /// Trims the bars of the given structure held in the repository to equal the given days.
         /// </summary>
         /// <param name="barStructure">The bar resolution to trim.</param>
-        /// <param name="trimToDays">The number of days (keys) to trim to.</param>
-        void TrimToDays(BarStructure barStructure, int trimToDays);
+        /// <param name="days">The number of days (keys) to trim to.</param>
+        void TrimToDays(BarStructure barStructure, int days);
 
         /// <summary>
         /// Save a snapshot of the database to disk.

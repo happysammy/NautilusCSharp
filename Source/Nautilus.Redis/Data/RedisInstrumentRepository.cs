@@ -26,7 +26,6 @@ namespace Nautilus.Redis.Data
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Redis.Data.Builders;
     using StackExchange.Redis;
-    using Venue = Nautilus.DomainModel.Identifiers.Venue;
 
     /// <summary>
     /// Provides a repository for handling <see cref="Instrument"/>s with Redis.
@@ -73,7 +72,7 @@ namespace Nautilus.Redis.Data
 
                 if (!query.IsSuccess || this.cache.ContainsKey(query.Value.Symbol))
                 {
-                    continue; // Did not contain instruct or already cached.
+                    continue; // Did not contain instruct or already cached
                 }
 
                 var instrument = query.Value;

@@ -12,7 +12,6 @@ namespace Nautilus.Data.Interfaces
     using Nautilus.Data.Keys;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
-    using NodaTime;
 
     /// <summary>
     /// Provides a repository for accessing <see cref="Tick"/> data.
@@ -61,12 +60,5 @@ namespace Nautilus.Data.Interfaces
             DateKey fromDate,
             DateKey toDate,
             int limit = 0);
-
-        /// <summary>
-        /// Returns the result of the last tick timestamp of the given symbol.
-        /// </summary>
-        /// <param name="symbol">The tick symbol.</param>
-        /// <returns>The result of the query.</returns>
-        QueryResult<ZonedDateTime> LastTickTimestamp(Symbol symbol);
     }
 }

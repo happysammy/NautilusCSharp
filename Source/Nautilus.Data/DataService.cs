@@ -382,7 +382,7 @@ namespace Nautilus.Data
                 var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, now);
 
                 var job = new TrimTickData(
-                    nextTime - Duration.FromDays(this.tickRollingWindowDays),
+                    this.tickRollingWindowDays,
                     nextTime,
                     this.NewGuid(),
                     this.TimeNow());

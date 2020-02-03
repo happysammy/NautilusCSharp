@@ -8,8 +8,9 @@
 
 namespace Nautilus.Redis.Data
 {
+    using System;
     using System.Collections.Generic;
-    using System.Collections.Immutable;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
@@ -20,7 +21,6 @@ namespace Nautilus.Redis.Data
     using Nautilus.Data.Keys;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
-    using NodaTime;
     using StackExchange.Redis;
 
     /// <summary>
@@ -53,16 +53,32 @@ namespace Nautilus.Redis.Data
         /// <inheritdoc />
         public void Add(List<Tick> ticks)
         {
+            ticks.Sort();  // Ensure monotonically increasing
+
             foreach (var tick in ticks)
             {
-                this.Add(tick);  // TODO: Lazy add for now
+                this.Add(tick);
             }
         }
 
         /// <inheritdoc />
-        public void TrimFrom(ZonedDateTime trimFrom)
+        public void TrimToDays(int trimToDays)
         {
-            throw new System.NotImplementedException();
+            var keys = this.GetKeysSorted();
+            foreach (var value in keys.Values)
+            {
+                var keyCount = value.Count;
+                if (keyCount <= trimToDays)
+                {
+                    continue;
+                }
+
+                var difference = keyCount - trimToDays;
+                for (var i = 0; i < difference; i++)
+                {
+                    this.Delete(value[i]);
+                }
+            }
         }
 
         /// <inheritdoc />
@@ -90,21 +106,61 @@ namespace Nautilus.Redis.Data
         }
 
         /// <inheritdoc />
-        public QueryResult<Tick[]> GetTicks(Symbol symbol, DateKey fromDate, DateKey toDate, int limit = 0)
+        [PerformanceOptimized]
+        public QueryResult<Tick[]> GetTicks(
+            Symbol symbol,
+            DateKey fromDate,
+            DateKey toDate,
+            int limit = 0)
         {
-            throw new System.NotImplementedException();
+            Debug.True(fromDate.CompareTo(toDate) <= 0, "fromDate.CompareTo(toDate) <= 0");
+
+            var dataQuery = this.GetTickData(symbol, fromDate, toDate, limit);
+            if (dataQuery.IsFailure)
+            {
+                return QueryResult<Tick[]>.Fail(dataQuery.Message);
+            }
+
+#pragma warning disable CS8604
+            var ticks = new Tick[dataQuery.Value.Length];
+            for (var i = 0; i < dataQuery.Value.Length; i++)
+            {
+                ticks[i] = Tick.FromString(symbol, dataQuery.Value[i].ToString());
+            }
+
+            return QueryResult<Tick[]>.Ok(ticks);
         }
 
         /// <inheritdoc />
-        public QueryResult<byte[][]> GetTickData(Symbol symbol, DateKey fromDate, DateKey toDate, int limit = 0)
+        public QueryResult<byte[][]> GetTickData(
+            Symbol symbol,
+            DateKey fromDate,
+            DateKey toDate,
+            int limit = 0)
         {
-            throw new System.NotImplementedException();
-        }
+            Debug.True(fromDate.CompareTo(toDate) <= 0, "fromDate.CompareTo(toDate) <= 0");
 
-        /// <inheritdoc />
-        public QueryResult<ZonedDateTime> LastTickTimestamp(Symbol symbol)
-        {
-            throw new System.NotImplementedException();
+            if (this.KeyDoesNotExist(KeyProvider.GetTicksWildcardKey(symbol)))
+            {
+                return QueryResult<byte[][]>.Fail($"Cannot find tick data for {symbol.Value}");
+            }
+
+            var keys = KeyProvider.GetTicksKeys(symbol, fromDate, toDate);
+            var data = new List<byte[]>();
+            foreach (var key in keys)
+            {
+                data.AddRange(this.ReadDataToBytes(key));
+            }
+
+            var dataArray = data.ToArray();
+            if (dataArray.Length == 0)
+            {
+                return QueryResult<byte[][]>.Fail($"Cannot find tick data for {symbol.Value} between {fromDate} to {toDate}");
+            }
+
+            var difference = Math.Min(0, dataArray.Length - limit);
+
+            return QueryResult<byte[][]>.Ok(dataArray[difference..^1]);
         }
 
         /// <summary>
@@ -149,6 +205,14 @@ namespace Nautilus.Redis.Data
             }
 
             return keysBySymbol;
+        }
+
+        [SuppressMessage("ReSharper", "ReturnTypeCanBeEnumerable.Local", Justification = "Consistent API.")]
+        private byte[][] ReadDataToBytes(string key)
+        {
+            Debug.NotEmptyOrWhiteSpace(key, nameof(key));
+
+            return Array.ConvertAll(this.redisDatabase.ListRange(key), x => (byte[])x);
         }
 
         private bool KeyExists(string key)

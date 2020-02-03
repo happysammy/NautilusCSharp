@@ -10,7 +10,6 @@ namespace Nautilus.Data.Interfaces
 {
     using System.Collections.Generic;
     using Nautilus.DomainModel.ValueObjects;
-    using NodaTime;
 
     /// <summary>
     /// Provides a repository for accessing <see cref="Tick"/> data.
@@ -30,10 +29,10 @@ namespace Nautilus.Data.Interfaces
         void Add(List<Tick> ticks);
 
         /// <summary>
-        /// Removes the ticks prior to the given trim from date time.
+        /// Trims each symbols tick data in the repository to equal the given days.
         /// </summary>
-        /// <param name="trimFrom">The date time the tick data should be trimmed from.</param>
-        void TrimFrom(ZonedDateTime trimFrom);
+        /// <param name="trimToDays">The number of days (keys) to trim to.</param>
+        void TrimToDays(int trimToDays);
 
         /// <summary>
         /// Save a snapshot of the database to disk.
