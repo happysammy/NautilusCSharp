@@ -149,7 +149,7 @@ namespace Nautilus.Serialization.Bson
 
         /// <inheritdoc />
         [PerformanceOptimized]
-        public Instrument[] Deserialize(byte[][] dataBytesArray)
+        public Instrument[] Deserialize(byte[][] dataBytesArray, object? metadata = null)
         {
             var output = new Instrument[dataBytesArray.Length];
             for (var i = 0; i < dataBytesArray.Length; i++)

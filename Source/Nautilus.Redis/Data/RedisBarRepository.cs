@@ -8,7 +8,6 @@
 
 namespace Nautilus.Redis.Data
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Nautilus.Common.Interfaces;
@@ -23,6 +22,7 @@ namespace Nautilus.Redis.Data
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Redis.Data.Base;
     using Nautilus.Redis.Data.Internal;
+    using QuickFix.Fields;
     using StackExchange.Redis;
 
     /// <summary>
@@ -202,27 +202,19 @@ namespace Nautilus.Redis.Data
             BarType barType,
             int limit = 0)
         {
-            var keysQuery = this.GetKeysSorted(KeyProvider.GetBarsPattern(barType));
-            if (keysQuery.IsFailure)
+            Debug.NotNegativeInt32(limit, nameof(limit));
+
+            var dataQuery = this.GetKeysSorted(KeyProvider.GetBarsPattern(barType));
+            if (dataQuery.IsFailure)
             {
-                return QueryResult<byte[][]>.Fail(keysQuery.Message);
+                return QueryResult<byte[][]>.Fail(dataQuery.Message);
             }
 
-            var data = new List<byte[]>();
-            foreach (var key in keysQuery.Value)
-            {
-                data.AddRange(this.ReadDataToBytesArray(key, limit));
-            }
+            var data = this.ReadDataToBytesArray(dataQuery.Value, limit);
 
-            var dataArray = data.ToArray();
-            if (dataArray.Length == 0)
-            {
-                return QueryResult<byte[][]>.Fail($"Cannot find bar data for {barType}");
-            }
-
-            var startIndex = Math.Max(0, dataArray.Length - limit);
-
-            return QueryResult<byte[][]>.Ok(dataArray[startIndex..]);
+            return data.Length > 0
+                ? QueryResult<byte[][]>.Ok(data)
+                : QueryResult<byte[][]>.Fail($"Cannot find bar data for {barType}");
         }
 
         /// <inheritdoc />
@@ -234,23 +226,14 @@ namespace Nautilus.Redis.Data
             int limit = 0)
         {
             Debug.True(fromDate.CompareTo(toDate) <= 0, "fromDate.CompareTo(toDate) <= 0");
+            Debug.NotNegativeInt32(limit, nameof(limit));
 
             var keys = KeyProvider.GetBarsKeys(barType, fromDate, toDate);
-            var data = new List<byte[]>();
-            foreach (var key in keys)
-            {
-                data.AddRange(this.ReadDataToBytesArray(key, limit));
-            }
+            var data = this.ReadDataToBytesArray(keys, limit);
 
-            var dataArray = data.ToArray();
-            if (dataArray.Length == 0)
-            {
-                return QueryResult<byte[][]>.Fail($"Cannot find bar data for {barType} between {fromDate} to {toDate}");
-            }
-
-            var startIndex = Math.Max(0, dataArray.Length - limit);
-
-            return QueryResult<byte[][]>.Ok(dataArray[startIndex..]);
+            return data.Length > 0
+                ? QueryResult<byte[][]>.Ok(data)
+                : QueryResult<byte[][]>.Fail($"Cannot find bar data for {barType}");
         }
 
         private QueryResult<Bar> GetLastBar(RedisKey key)

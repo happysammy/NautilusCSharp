@@ -70,7 +70,7 @@ namespace Nautilus.Serialization.Bson
         }
 
         /// <inheritdoc />
-        public Bar[] Deserialize(byte[][] dataBytesArray)
+        public Bar[] Deserialize(byte[][] dataBytesArray, object? metadata = null)
         {
             var output = new Bar[dataBytesArray.Length];
             for (var i = 0; i < dataBytesArray.Length; i++)

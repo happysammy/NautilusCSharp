@@ -60,8 +60,9 @@ namespace Nautilus.Common.Interfaces
         /// Returns the deserialize data object of type T array.
         /// </summary>
         /// <param name="dataBytesArray">The bytes array to deserialize.</param>
+        /// <param name="metadata">The optional metadata for deserializing.</param>
         /// <returns>The deserialized data object.</returns>
-        T[] Deserialize(byte[][] dataBytesArray);
+        T[] Deserialize(byte[][] dataBytesArray, object? metadata = null);
 
         /// <summary>
         /// Return the data objects bytes array deserialized to a two dimensional array.

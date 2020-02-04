@@ -64,7 +64,7 @@ namespace Nautilus.Redis.Data.Base
             var keys = this.RedisServer.Keys(pattern: pattern)
                 .Select(x => x.ToString())
                 .ToList();
-            keys.Sort();  // TODO: Check sorting edge cases
+            keys.Sort();
 
             return keys.Count > 0
                 ? QueryResult<RedisKey[]>.Ok(Array.ConvertAll(keys.ToArray(), x => (RedisKey)x))
@@ -163,7 +163,7 @@ namespace Nautilus.Redis.Data.Base
 
             var data = this.ReadData(key);
 
-            return limit > 0 & limit < data.Length
+            return limit == 0
                 ? data
                 : data.SliceToLimitFromEnd(limit);
         }
@@ -189,7 +189,7 @@ namespace Nautilus.Redis.Data.Base
 
             var data = dataList.ToArray();
 
-            return limit > 0 & limit < data.Length
+            return limit == 0
                 ? data
                 : data.SliceToLimitFromEnd(limit);
         }

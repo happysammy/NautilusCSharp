@@ -100,7 +100,7 @@ namespace Nautilus.Redis.Data
                 return QueryResult<Tick[]>.Fail(dataQuery.Message);
             }
 
-            var ticks = this.serializer.Deserialize(dataQuery.Value);
+            var ticks = this.serializer.Deserialize(dataQuery.Value, symbol);
 
             return QueryResult<Tick[]>.Ok(ticks);
         }
@@ -121,7 +121,7 @@ namespace Nautilus.Redis.Data
                 return QueryResult<Tick[]>.Fail(dataQuery.Message);
             }
 
-            var ticks = this.serializer.Deserialize(dataQuery.Value);
+            var ticks = this.serializer.Deserialize(dataQuery.Value, symbol);
 
             return QueryResult<Tick[]>.Ok(ticks);
         }

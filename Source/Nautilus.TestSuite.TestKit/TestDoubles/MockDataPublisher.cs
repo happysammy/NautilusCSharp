@@ -61,7 +61,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 throw new NotImplementedException();
             }
 
-            public string[] Deserialize(byte[][] dataBytesArray)
+            public string[] Deserialize(byte[][] dataBytesArray, object? metadata = null)
             {
                 throw new NotImplementedException();
             }

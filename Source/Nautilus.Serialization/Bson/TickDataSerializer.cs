@@ -82,12 +82,12 @@ namespace Nautilus.Serialization.Bson
         }
 
         /// <inheritdoc />
-        public Tick[] Deserialize(byte[][] dataBytesArray)
+        public Tick[] Deserialize(byte[][] dataBytesArray, object? metadata = null)
         {
             var output = new Tick[dataBytesArray.Length];
             for (var i = 0; i < dataBytesArray.Length; i++)
             {
-                output[i] = this.Deserialize(dataBytesArray[i]);
+                output[i] = Tick.FromString((Symbol)metadata!, Encoding.UTF8.GetString(dataBytesArray[i]));
             }
 
             return output;
