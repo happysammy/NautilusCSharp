@@ -79,6 +79,6 @@ namespace Nautilus.DomainModel.Events
                                              $"{this.OrderSide} " +
                                              $"{this.FilledQuantity.ToStringFormatted()} " +
                                              $"{this.Symbol.Value} @ " +
-                                             $"{this.AveragePrice} {this.Currency})";
+                                             $"{this.AveragePrice})";
     }
 }
