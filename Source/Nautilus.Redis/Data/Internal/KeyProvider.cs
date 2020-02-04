@@ -133,7 +133,7 @@ namespace Nautilus.Redis.Data.Internal
                    $":{barType.Symbol.Venue.Value}" +
                    $":{barType.Symbol.Code}" +
                    $":{barType.Specification.BarStructure}" +
-                   $":{barType.Specification.PriceType}" + "*";
+                   $":{barType.Specification.PriceType}*";
         }
 
         /// <summary>

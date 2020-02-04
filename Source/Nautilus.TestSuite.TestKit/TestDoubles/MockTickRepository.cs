@@ -90,10 +90,24 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             return this.database.Select(symbol => symbol.Value).Count();
         }
 
+        /// <inheritdoc/>
+        public QueryResult<Tick[]> GetTicks(Symbol symbol, int limit = 0)
+        {
+            return QueryResult<Tick[]>.Ok(this.database[symbol].ToArray());
+        }
+
         /// <inheritdoc />
         public QueryResult<Tick[]> GetTicks(Symbol symbol, DateKey fromDate, DateKey toDate, int limit = 0)
         {
             return QueryResult<Tick[]>.Ok(this.database[symbol].ToArray());
+        }
+
+        /// <inheritdoc/>
+        public QueryResult<byte[][]> GetTickData(Symbol symbol, int limit = 0)
+        {
+            return this.database.TryGetValue(symbol, out var tickList)
+                ? QueryResult<byte[][]>.Ok(this.serializer.Serialize(tickList.ToArray()))
+                : QueryResult<byte[][]>.Fail($"Cannot find any {symbol} tick data");
         }
 
         /// <inheritdoc />

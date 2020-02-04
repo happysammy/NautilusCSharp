@@ -56,6 +56,14 @@ namespace Nautilus.Data.Interfaces
             int limit = 0);
 
         /// <summary>
+        /// Returns the bar data held in the database of the given <see cref="BarType"/>.
+        /// </summary>
+        /// <param name="barType">The type of bars data to get.</param>
+        /// <param name="limit">The optional count limit for the data.</param>
+        /// <returns>The result of the query.</returns>
+        QueryResult<byte[][]> GetBarData(BarType barType, int limit = 0);
+
+        /// <summary>
         /// Returns the bar data held in the database of the given <see cref="BarType"/> within the given
         /// range of <see cref="DateKey"/>s (inclusive).
         /// </summary>

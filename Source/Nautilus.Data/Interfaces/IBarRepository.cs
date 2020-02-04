@@ -15,7 +15,7 @@ namespace Nautilus.Data.Interfaces
     /// <summary>
     /// Provides a repository for accessing <see cref="Bar"/> data.
     /// </summary>
-    public interface IBarRepository : IBarRepositoryReadOnly
+    public interface IBarRepository : IBarRepositoryReadOnly, IRepository
     {
         /// <summary>
         /// Adds the given bars to the repository.
@@ -43,10 +43,5 @@ namespace Nautilus.Data.Interfaces
         /// <param name="barStructure">The bar resolution to trim.</param>
         /// <param name="days">The number of days (keys) to trim to.</param>
         void TrimToDays(BarStructure barStructure, int days);
-
-        /// <summary>
-        /// Save a snapshot of the database to disk.
-        /// </summary>
-        void SnapshotDatabase();
     }
 }

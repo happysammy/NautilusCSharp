@@ -71,7 +71,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
         public QueryResult<BarDataFrame> GetBars(BarType barType, int limit = 0)
         {
-            throw new System.NotImplementedException();
+            return QueryResult<BarDataFrame>.Ok(new BarDataFrame(barType, this.database[barType].ToArray()));
         }
 
         public QueryResult<BarDataFrame> GetBars(BarType barType, DateKey fromDate, DateKey toDate, int limit = 0)
@@ -86,6 +86,13 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 this.database[barType].Where(b =>
                     b.Timestamp.IsGreaterThanOrEqualTo(fromDate.StartOfDay) &&
                     b.Timestamp.IsLessThanOrEqualTo(fromDate.StartOfDay)).ToArray()));
+        }
+
+        public QueryResult<byte[][]> GetBarData(BarType barType, int limit = 0)
+        {
+            return this.database.TryGetValue(barType, out var barList)
+                ? QueryResult<byte[][]>.Ok(this.serializer.Serialize(barList.ToArray()))
+                : QueryResult<byte[][]>.Fail($"Cannot find any bar data for {barType}");
         }
 
         public QueryResult<byte[][]> GetBarData(BarType barType, DateKey fromDate, DateKey toDate, int limit = 0)

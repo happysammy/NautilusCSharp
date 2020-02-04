@@ -8,7 +8,9 @@
 
 namespace Nautilus.Core.Extensions
 {
+    using System;
     using System.Collections.Generic;
+    using Nautilus.Core.Correctness;
 
     /// <summary>
     /// Provides useful generic collection extension methods.
@@ -38,6 +40,21 @@ namespace Nautilus.Core.Extensions
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Returns the given array sliced to the given limit.
+        /// </summary>
+        /// <param name="array">The array to slice.</param>
+        /// <param name="limit">The limit for the array slice (>= 0).</param>
+        /// <typeparam name="T">The array elements type.</typeparam>
+        /// <returns>The sliced array.</returns>
+        public static T[] SliceToLimitFromEnd<T>(this T[] array, int limit)
+        {
+            Debug.NotNegativeInt32(limit, nameof(limit));
+
+            var startIndex = Math.Max(0, array.Length - limit);
+            return array[startIndex..];
         }
     }
 }

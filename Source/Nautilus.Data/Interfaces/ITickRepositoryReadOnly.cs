@@ -36,6 +36,15 @@ namespace Nautilus.Data.Interfaces
         /// range of <see cref="DateKey"/>s (inclusive).
         /// </summary>
         /// <param name="symbol">The tick symbol to find.</param>
+        /// <param name="limit">The optional count limit for the data.</param>
+        /// <returns>The result of the query.</returns>
+        QueryResult<Tick[]> GetTicks(Symbol symbol, int limit = 0);
+
+        /// <summary>
+        /// Returns the ticks held in the repository of the given <see cref="Symbol"/> within the given
+        /// range of <see cref="DateKey"/>s (inclusive).
+        /// </summary>
+        /// <param name="symbol">The tick symbol to find.</param>
         /// <param name="fromDate">The from date.</param>
         /// <param name="toDate">The to date.</param>
         /// <param name="limit">The optional count limit for the data.</param>
@@ -45,6 +54,14 @@ namespace Nautilus.Data.Interfaces
             DateKey fromDate,
             DateKey toDate,
             int limit = 0);
+
+        /// <summary>
+        /// Returns the tick data held in the repository of the given <see cref="Symbol"/>.
+        /// </summary>
+        /// <param name="symbol">The tick symbol to find.</param>
+        /// <param name="limit">The optional count limit for the data.</param>
+        /// <returns>The result of the query.</returns>
+        QueryResult<byte[][]> GetTickData(Symbol symbol, int limit = 0);
 
         /// <summary>
         /// Returns the tick data held in the repository of the given <see cref="Symbol"/> within the given

@@ -14,7 +14,7 @@ namespace Nautilus.Data.Interfaces
     /// <summary>
     /// Provides a repository for accessing <see cref="Tick"/> data.
     /// </summary>
-    public interface ITickRepository : ITickRepositoryReadOnly
+    public interface ITickRepository : ITickRepositoryReadOnly, IRepository
     {
         /// <summary>
         /// Add the given tick to the repository.
@@ -33,10 +33,5 @@ namespace Nautilus.Data.Interfaces
         /// </summary>
         /// <param name="trimToDays">The number of days (keys) to trim to.</param>
         void TrimToDays(int trimToDays);
-
-        /// <summary>
-        /// Save a snapshot of the database to disk.
-        /// </summary>
-        void SnapshotDatabase();
     }
 }

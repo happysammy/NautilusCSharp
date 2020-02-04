@@ -18,6 +18,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     using Nautilus.Redis;
     using Nautilus.Redis.Data;
     using Nautilus.Redis.Data.Internal;
+    using Nautilus.Serialization.Bson;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NodaTime;
     using StackExchange.Redis;
@@ -42,7 +43,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var container = containerFactory.Create();
 
             this.redisConnection = ConnectionMultiplexer.Connect("localhost:6379,allowAdmin=true");
-            this.repository = new RedisBarRepository(container, this.redisConnection);
+            this.repository = new RedisBarRepository(container, new BarDataSerializer(), this.redisConnection);
 
             this.redisConnection.GetServer(RedisConstants.LocalHost, RedisConstants.DefaultPort).FlushAllDatabases();
         }
@@ -349,7 +350,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var barType = StubBarType.AUDUSD_OneMinuteAsk();
 
             // Act
-            var result = this.repository.GetKeysSorted(barType);
+            var result = this.repository.GetKeysSorted(KeyProvider.GetBarsPattern());
 
             // Assert
             Assert.True(result.IsFailure);
@@ -366,11 +367,11 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             this.repository.Add(barType, new[] { bar1, bar2 });
 
             // Act
-            var result = this.repository.GetKeysSorted(barType);
+            var result = this.repository.GetKeysSorted(KeyProvider.GetBarsPattern());
 
             // Assert
             Assert.True(result.IsSuccess);
-            Assert.Equal(2, result.Value.Count);
+            Assert.Equal(2, result.Value.Length);
             result.Value.ToList().ForEach(k => this.output.WriteLine(k));
         }
 
@@ -522,7 +523,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         }
 
         [Fact]
-        internal void GetBars_WithBarOutOfRange_ReturnsQueryFailure()
+        internal void GetBars_WithHigherLimit_ReturnsExpectedBar()
         {
             // Arrange
             var barType = StubBarType.AUDUSD_OneMinuteAsk();
@@ -531,15 +532,17 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             this.repository.Add(barType, new[] { bar });
 
             // Act
-            var result = this.repository.GetBars(barType);
+            var result = this.repository.GetBars(barType, 100);
 
             // Assert
             this.output.WriteLine(result.Message);
             Assert.True(result.IsSuccess);
+            Assert.Equal(1, result.Value.Count);
+            Assert.Equal(bar, result.Value.Bars[0]);
         }
 
         [Fact]
-        internal void GetBars_WithRangeOfOneBar_ReturnsExpectedBars()
+        internal void GetBars_WithNoLimit_ReturnsExpectedBars()
         {
             // Arrange
             var barType = StubBarType.AUDUSD_OneMinuteAsk();
@@ -555,9 +558,32 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             // Assert
             this.output.WriteLine(result.Message);
             Assert.True(result.IsSuccess);
+            Assert.Equal(3, result.Value.Count);
             Assert.Equal(bar1, result.Value.Bars[0]);
             Assert.Equal(bar2, result.Value.Bars[1]);
             Assert.Equal(bar3, result.Value.Bars[2]);
+        }
+
+        [Fact]
+        internal void GetBars_WithLowerLimit_ReturnsExpectedBars()
+        {
+            // Arrange
+            var barType = StubBarType.AUDUSD_OneMinuteAsk();
+            var bar1 = StubBarData.Create();
+            var bar2 = StubBarData.Create(1);
+            var bar3 = StubBarData.Create(2);
+
+            this.repository.Add(barType, new[] { bar1, bar2, bar3 });
+
+            // Act
+            var result = this.repository.GetBars(barType, 2);
+
+            // Assert
+            this.output.WriteLine(result.Message);
+            Assert.True(result.IsSuccess);
+            Assert.Equal(2, result.Value.Count);
+            Assert.Equal(bar2, result.Value.Bars[0]);
+            Assert.Equal(bar3, result.Value.Bars[1]);
         }
 
         [Fact]
@@ -617,7 +643,11 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             this.repository.Add(barType2, new[] { bar1, bar2, bar3, bar4, bar5, bar6 });
 
             // Act
-            var result = this.repository.GetKeysSorted(BarStructure.Minute);
+            var result = this.repository.GetKeysSortedBySymbol(
+                KeyProvider.GetBarsPattern(),
+                3,
+                4,
+                BarStructure.Minute.ToString());
 
             foreach (var symbol in result)
             {

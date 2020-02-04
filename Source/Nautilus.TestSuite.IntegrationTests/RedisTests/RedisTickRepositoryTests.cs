@@ -14,6 +14,8 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.Redis;
     using Nautilus.Redis.Data;
+    using Nautilus.Redis.Data.Internal;
+    using Nautilus.Serialization.Bson;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NodaTime;
@@ -39,7 +41,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var container = containerFactory.Create();
 
             this.redisConnection = ConnectionMultiplexer.Connect("localhost:6379,allowAdmin=true");
-            this.repository = new RedisTickRepository(container, this.redisConnection);
+            this.repository = new RedisTickRepository(container, new TickDataSerializer(), this.redisConnection);
 
             this.redisConnection.GetServer(RedisConstants.LocalHost, RedisConstants.DefaultPort).FlushAllDatabases();
         }
@@ -116,12 +118,12 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             this.repository.Add(tick2);  // Out of order on purpose
 
             // Act
-            var result = this.repository.GetKeysSorted(audusd);
+            var result = this.repository.GetKeysSorted(KeyProvider.GetTicksPattern(audusd));
 
             LogDumper.Dump(this.logger, this.output);
 
             // Assert
-            Assert.Equal(3, result.Value.Count);
+            Assert.Equal(3, result.Value.Length);
             Assert.Equal("NautilusData:Data:Ticks:FXCM:AUDUSD:1970-01-01", result.Value[0]);
             Assert.Equal("NautilusData:Data:Ticks:FXCM:AUDUSD:1970-01-02", result.Value[1]);
             Assert.Equal("NautilusData:Data:Ticks:FXCM:AUDUSD:1970-01-03", result.Value[2]);
@@ -146,7 +148,10 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             this.repository.Add(tick4);  // Out of order on purpose
 
             // Act
-            var result = this.repository.GetKeysSorted();
+            var result = this.repository.GetKeysSortedBySymbol(
+                KeyProvider.GetTicksPattern(),
+                3,
+                4);
 
             // Assert
             Assert.Equal(2, result.Count);
@@ -183,7 +188,10 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             // Act
             this.repository.TrimToDays(2);
-            var result = this.repository.GetKeysSorted();
+            var result = this.repository.GetKeysSortedBySymbol(
+                KeyProvider.GetTicksPattern(),
+                3,
+                4);
 
             // Assert
             Assert.Equal(4, this.repository.TicksCount());
@@ -215,6 +223,26 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
         [Fact]
         internal void GetTicks_WithOneTicks_ReturnsCorrectTick()
+        {
+            // Arrange
+            var audusd = new Symbol("AUDUSD", new Venue("FXCM"));
+            var tick1 = StubTickProvider.Create(audusd);
+            var ticks = new[] { tick1 };
+
+            this.repository.Add(tick1);
+
+            // Act
+            var result = this.repository.GetTicks(audusd);
+
+            // Assert
+            Assert.Equal(1, this.repository.TicksCount());
+            Assert.Equal(1, this.repository.TicksCount(audusd));
+            Assert.True(result.IsSuccess);
+            Assert.Equal(ticks, result.Value);
+        }
+
+        [Fact]
+        internal void GetTicks_WithTimeRangeWithOneTicks_ReturnsCorrectTick()
         {
             // Arrange
             var audusd = new Symbol("AUDUSD", new Venue("FXCM"));
