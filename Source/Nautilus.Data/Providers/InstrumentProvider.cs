@@ -65,6 +65,8 @@ namespace Nautilus.Data.Providers
 
                 try
                 {
+                    this.Log.Information($"<--[REQ] {request}.");
+
                     var dataType = request.Query["DataType"];
                     if (dataType != typeof(Instrument[]).Name)
                     {
@@ -115,6 +117,7 @@ namespace Nautilus.Data.Providers
                             Guid.NewGuid(),
                             this.TimeNow());
 
+                        this.Log.Information($"[RES]--> {response}.");
                         this.SendMessage(response, envelope.Sender);
                     }
                     else

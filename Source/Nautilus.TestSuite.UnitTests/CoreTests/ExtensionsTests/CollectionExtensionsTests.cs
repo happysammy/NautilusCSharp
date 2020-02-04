@@ -80,5 +80,24 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
             // Assert
             Assert.Equal(new[] { 2, 3 }, result);
         }
+
+        [Fact]
+        public void Print_WithVariousDictionaries_ReturnsExpectedString()
+        {
+            // Arrange
+            var dict0 = new Dictionary<string, string>();
+            var dict1 = new Dictionary<string, string> { { "element", "1" } };
+            var dict2 = new Dictionary<string, string> { { "element1", "1" }, { "element2", "2" } };
+
+            // Act
+            var result0 = dict0.Print();
+            var result1 = dict1.Print();
+            var result2 = dict2.Print();
+
+            // Assert
+            Assert.Equal("{ }", result0);
+            Assert.Equal("{ element: 1 }", result1);
+            Assert.Equal("{ element1: 1, element2: 2 }", result2);
+        }
     }
 }

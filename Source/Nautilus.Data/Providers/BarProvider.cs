@@ -64,6 +64,8 @@ namespace Nautilus.Data.Providers
 
             try
             {
+                this.Log.Information($"<--[REQ] {request}.");
+
                 var dataType = request.Query["DataType"];
                 if (dataType != typeof(Bar[]).Name)
                 {
@@ -100,6 +102,7 @@ namespace Nautilus.Data.Providers
                     this.NewGuid(),
                     this.TimeNow());
 
+                this.Log.Information($"[RES]--> {response}.");
                 this.SendMessage(response, envelope.Sender);
             }
             catch (Exception ex)

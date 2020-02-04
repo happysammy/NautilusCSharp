@@ -12,6 +12,7 @@ namespace Nautilus.Data.Messages.Requests
     using System.Collections.Generic;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
+    using Nautilus.Core.Extensions;
     using Nautilus.Core.Message;
     using NodaTime;
 
@@ -46,5 +47,11 @@ namespace Nautilus.Data.Messages.Requests
         /// Gets the requests data query.
         /// </summary>
         public Dictionary<string, string> Query { get; }
+
+        /// <summary>
+        /// Returns a string representation of this <see cref="DataRequest"/>.
+        /// </summary>
+        /// <returns>A <see cref="string"/>.</returns>
+        public override string ToString() => $"{nameof(DataRequest)}(Query={this.Query.Print()}, Id={this.Id})";
     }
 }

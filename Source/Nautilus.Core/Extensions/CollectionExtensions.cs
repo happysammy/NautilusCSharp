@@ -10,6 +10,7 @@ namespace Nautilus.Core.Extensions
 {
     using System;
     using System.Collections.Generic;
+    using System.Reflection;
     using Nautilus.Core.Correctness;
 
     /// <summary>
@@ -55,6 +56,27 @@ namespace Nautilus.Core.Extensions
 
             var startIndex = Math.Max(0, array.Length - limit);
             return array[startIndex..];
+        }
+
+        /// <summary>
+        /// Returns the contents of the dictionary in a single line string.
+        /// </summary>
+        /// <param name="dictionary">The dictionary to print.</param>
+        /// <typeparam name="TKey">The type of key.</typeparam>
+        /// <typeparam name="TValue">The type of value.</typeparam>
+        /// <returns>The contents string.</returns>
+        public static string Print<TKey, TValue>(this Dictionary<TKey, TValue> dictionary)
+            where TKey : class
+        {
+            var output = "{ ";
+            foreach (var (key, value) in dictionary)
+            {
+                output += $"{key}: {value}, ";
+            }
+
+            output = output.TrimEnd(' ', ',') + " }";
+
+            return output;
         }
     }
 }
