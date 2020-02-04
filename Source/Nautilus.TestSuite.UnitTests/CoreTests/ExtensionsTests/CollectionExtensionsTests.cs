@@ -41,5 +41,44 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
             // Assert
             Assert.Equal(2, result);
         }
+
+        [Fact]
+        public void SliceToLimitFromEnd_EmptyArray_ReturnsEmptyArray()
+        {
+            // Arrange
+            var array = new int[0];
+
+            // Act
+            var result = array.SliceToLimitFromEnd(1);
+
+            // Assert
+            Assert.Equal(array, result);
+        }
+
+        [Fact]
+        public void SliceToLimitFromEnd_WithZeroLimit_ReturnsEmptyArray()
+        {
+            // Arrange
+            var array = new[] { 0, 1, 2, 3 };
+
+            // Act
+            var result = array.SliceToLimitFromEnd(0);
+
+            // Assert
+            Assert.Equal(new int[0], result);
+        }
+
+        [Fact]
+        public void SliceToLimitFromEnd_WithLimit_ReturnsCorrectlySlicedArray()
+        {
+            // Arrange
+            var array = new[] { 0, 1, 2, 3 };
+
+            // Act
+            var result = array.SliceToLimitFromEnd(2);
+
+            // Assert
+            Assert.Equal(new[] { 2, 3 }, result);
+        }
     }
 }
