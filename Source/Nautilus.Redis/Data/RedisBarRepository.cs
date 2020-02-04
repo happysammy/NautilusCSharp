@@ -242,7 +242,7 @@ namespace Nautilus.Redis.Data
                 return QueryResult<byte[][]>.Fail($"Cannot find bar data for {barType} between {fromDate} to {toDate}");
             }
 
-            var startIndex = Math.Min(0, dataArray.Length - limit);
+            var startIndex = Math.Max(0, dataArray.Length - limit);
 
             return QueryResult<byte[][]>.Ok(dataArray[startIndex..]);
         }
