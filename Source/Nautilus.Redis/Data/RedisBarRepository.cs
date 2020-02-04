@@ -244,7 +244,7 @@ namespace Nautilus.Redis.Data
 
             var startIndex = Math.Max(0, dataArray.Length - limit);
 
-            return QueryResult<byte[][]>.Ok(dataArray[startIndex..]);
+            return QueryResult<byte[][]>.Ok(dataArray[^startIndex..]);
         }
 
         /// <summary>
