@@ -617,8 +617,8 @@ namespace Nautilus.Fxcm
             var orderIdBroker = new OrderIdBroker(message.GetField(Tags.OrderID));
             var orderType = FxcmMessageHelper.GetOrderType(message.GetField(Tags.OrdType));
             var quantity = message.IsSetField(Tags.LeavesQty)
-                ? Quantity.Create(message.GetInt(Tags.LeavesQty))
-                : Quantity.Create(message.GetInt(Tags.OrderQty));
+                ? Quantity.Create(message.GetDecimal(Tags.LeavesQty))
+                : Quantity.Create(message.GetDecimal(Tags.OrderQty));
             var price = FxcmMessageHelper.GetOrderPrice(orderType, message);
             var modifiedTime = FxcmMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
 
@@ -641,7 +641,7 @@ namespace Nautilus.Fxcm
             var orderLabel = new Label(message.GetField(Tags.SecondaryClOrdID));
             var orderSide = FxcmMessageHelper.GetOrderSide(message.GetField(Tags.Side));
             var orderType = FxcmMessageHelper.GetOrderType(message.GetField(Tags.OrdType));
-            var quantity = Quantity.Create(message.GetInt(Tags.OrderQty));
+            var quantity = Quantity.Create(message.GetDecimal(Tags.OrderQty));
             var price = FxcmMessageHelper.GetOrderPrice(orderType, message);
             var timeInForce = FxcmMessageHelper.GetTimeInForce(message.GetField(Tags.TimeInForce));
             var expireTime = FxcmMessageHelper.GetExpireTime(message);
@@ -684,7 +684,7 @@ namespace Nautilus.Fxcm
             var positionIdBroker = new PositionIdBroker(message.GetField(FxcmTags.PosID));
             var symbol = this.GetSymbol(message.GetField(Tags.Symbol));
             var orderSide = FxcmMessageHelper.GetOrderSide(message.GetField(Tags.Side));
-            var filledQuantity = Quantity.Create(message.GetInt(Tags.CumQty));
+            var filledQuantity = Quantity.Create(message.GetDecimal(Tags.CumQty));
             var averagePrice = Price.Create(message.GetDecimal(Tags.AvgPx));
             var transactionCurrency = message.GetField(Tags.Currency).ToEnum<Currency>();
             var executionTime = FxcmMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
@@ -711,7 +711,7 @@ namespace Nautilus.Fxcm
             var positionIdBroker = new PositionIdBroker(message.GetField(FxcmTags.PosID));
             var symbol = this.GetSymbol(message.GetField(Tags.Symbol));
             var orderSide = FxcmMessageHelper.GetOrderSide(message.GetField(Tags.Side));
-            var filledQuantity = Quantity.Create(message.GetInt(Tags.CumQty));
+            var filledQuantity = Quantity.Create(message.GetDecimal(Tags.CumQty));
             var averagePrice = Price.Create(message.GetDecimal(Tags.AvgPx));
             var transactionCurrency = message.GetField(Tags.Currency).ToEnum<Currency>();
             var leavesQuantity = Quantity.Create(message.GetInt(Tags.LeavesQty));
