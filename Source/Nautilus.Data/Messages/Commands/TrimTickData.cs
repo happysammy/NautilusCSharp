@@ -34,7 +34,7 @@ namespace Nautilus.Data.Messages.Commands
             Guid commandId,
             ZonedDateTime commandTimestamp)
             : base(
-                typeof(TrimBarData),
+                typeof(TrimTickData),
                 commandId,
                 commandTimestamp)
         {

@@ -11,6 +11,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using Nautilus.Common.Data;
     using Nautilus.Data.Keys;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Frames;
@@ -44,7 +45,11 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var container = containerFactory.Create();
 
             this.redisConnection = ConnectionMultiplexer.Connect("localhost:6379,allowAdmin=true");
-            this.repository = new RedisBarRepository(container, new BarDataSerializer(), this.redisConnection);
+            this.repository = new RedisBarRepository(
+                container,
+                DataBusFactory.Create(container),
+                new BarDataSerializer(),
+                this.redisConnection);
 
             this.redisConnection.GetServer(RedisConstants.LocalHost, RedisConstants.DefaultPort).FlushAllDatabases();
         }

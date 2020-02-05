@@ -79,6 +79,36 @@ namespace Nautilus.Common.Componentry
         /// <summary>
         /// Returns the duration to the next day of week and time of day (UTC).
         /// </summary>
+        /// <param name="target">The target time of day.</param>
+        /// <param name="now">The current time instant.</param>
+        /// <returns>The next date time (UTC).</returns>
+        public static ZonedDateTime GetNextUtc(
+            [CanBeDefault] LocalTime target,
+            [CanBeDefault] Instant now)
+        {
+            var localNow = now.InZone(DateTimeZone.Utc).LocalDateTime;
+            var localTarget = new LocalDateTime(
+                localNow.Year,
+                localNow.Month,
+                localNow.Day,
+                target.Hour,
+                target.Minute,
+                target.Second,
+                target.Millisecond);
+
+            var nextToday = new ZonedDateTime(localTarget, DateTimeZone.Utc, Offset.Zero);
+            if (nextToday.IsLessThanOrEqualTo(now.InUtc()))
+            {
+                localTarget += Period.FromDays(1);
+                nextToday = new ZonedDateTime(localTarget, DateTimeZone.Utc, Offset.Zero);
+            }
+
+            return nextToday;
+        }
+
+        /// <summary>
+        /// Returns the duration to the next day of week and time of day (UTC).
+        /// </summary>
         /// <param name="dayOfWeek">The day of week.</param>
         /// <param name="timeOfDay">The time of day.</param>
         /// <param name="now">The current time instant.</param>

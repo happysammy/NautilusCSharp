@@ -47,7 +47,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             {
                 { ServiceAddress.DataService, this.receiver.Endpoint },
                 { ServiceAddress.BarAggregationController, this.receiver.Endpoint },
-                { ServiceAddress.DatabaseTaskManager, this.receiver.Endpoint },
+                { ServiceAddress.Scheduler, this.receiver.Endpoint },
             };
 
             this.messageBus.Endpoint.Send(new InitializeSwitchboard(
@@ -452,7 +452,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
 
             var envelope = new Envelope<MarketOpened>(
                 message,
-                ServiceAddress.Scheduler,
+                ServiceAddress.BarProvider,
                 ServiceAddress.DataService,
                 StubZonedDateTime.UnixEpoch());
 

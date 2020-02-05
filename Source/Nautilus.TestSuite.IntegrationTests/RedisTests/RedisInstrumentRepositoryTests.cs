@@ -10,6 +10,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+    using Nautilus.Common.Data;
     using Nautilus.DomainModel.Entities;
     using Nautilus.Redis;
     using Nautilus.Redis.Data;
@@ -40,6 +41,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             this.repository = new RedisInstrumentRepository(
                 container,
+                DataBusFactory.Create(container),
                 new InstrumentDataSerializer(),
                 this.redisConnection);
         }

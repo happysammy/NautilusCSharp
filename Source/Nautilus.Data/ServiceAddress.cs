@@ -36,19 +36,14 @@ namespace Nautilus.Data
         public static Address TickPublisher { get; } = new Address(nameof(TickPublisher));
 
         /// <summary>
-        /// Gets the <see cref="TickStore"/> component messaging address.
-        /// </summary>
-        public static Address TickStore { get; } = new Address(nameof(TickStore));
-
-        /// <summary>
         /// Gets the <see cref="TickProvider"/> component messaging address.
         /// </summary>
         public static Address TickProvider { get; } = new Address(nameof(TickProvider));
 
         /// <summary>
-        /// Gets the <see cref="DatabaseTaskManager"/> component messaging address.
+        /// Gets the <see cref="TickRepository"/> component messaging address.
         /// </summary>
-        public static Address DatabaseTaskManager { get; } = new Address(nameof(DatabaseTaskManager));
+        public static Address TickRepository { get; } = new Address(nameof(TickRepository));
 
         /// <summary>
         /// Gets the <see cref="BarAggregationController"/> component messaging address.
@@ -56,14 +51,19 @@ namespace Nautilus.Data
         public static Address BarAggregationController { get; } = new Address(nameof(BarAggregationController));
 
         /// <summary>
+        /// Gets the <see cref="BarPublisher"/> component messaging address.
+        /// </summary>
+        public static Address BarPublisher { get; } = new Address(nameof(BarPublisher));
+
+        /// <summary>
         /// Gets the <see cref="BarProvider"/> component messaging address.
         /// </summary>
         public static Address BarProvider { get; } = new Address(nameof(BarProvider));
 
         /// <summary>
-        /// Gets the <see cref="BarPublisher"/> component messaging address.
+        /// Gets the <see cref="BarProvider"/> component messaging address.
         /// </summary>
-        public static Address BarPublisher { get; } = new Address(nameof(BarPublisher));
+        public static Address BarRepository { get; } = new Address(nameof(BarProvider));
 
         /// <summary>
         /// Gets the <see cref="InstrumentProvider"/> component messaging address.

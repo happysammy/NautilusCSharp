@@ -85,20 +85,25 @@ namespace NautilusData
                 fixClient);
 
             var connection = ConnectionMultiplexer.Connect("localhost:6379,allowAdmin=true");
-            var tickRepository = new RedisTickRepository(container, new TickDataSerializer(), connection);
-            var barRepository = new RedisBarRepository(container, new BarDataSerializer(), connection);
+
+            var tickRepository = new RedisTickRepository(
+                container,
+                dataBusAdapter,
+                new TickDataSerializer(),
+                connection);
+
+            var barRepository = new RedisBarRepository(
+                container,
+                dataBusAdapter,
+                new BarDataSerializer(),
+                connection);
+
             var instrumentRepository = new RedisInstrumentRepository(
                 container,
+                dataBusAdapter,
                 new InstrumentDataSerializer(),
                 connection);
             instrumentRepository.CacheAll();
-
-            var databaseTaskManager = new DatabaseTaskManager(
-                container,
-                dataBusAdapter,
-                tickRepository,
-                barRepository,
-                instrumentRepository);
 
             var barAggregationController = new BarAggregationController(
                 container,
@@ -133,9 +138,8 @@ namespace NautilusData
             {
                 { ServiceAddress.Scheduler, scheduler.Endpoint },
                 { ServiceAddress.DataGateway, dataGateway.Endpoint },
-                { ServiceAddress.DatabaseTaskManager, databaseTaskManager.Endpoint },
                 { ServiceAddress.BarAggregationController, barAggregationController.Endpoint },
-                { ServiceAddress.TickStore, tickRepository.Endpoint },
+                { ServiceAddress.TickRepository, tickRepository.Endpoint },
                 { ServiceAddress.TickProvider, tickProvider.Endpoint },
                 { ServiceAddress.TickPublisher, tickPublisher.Endpoint },
                 { ServiceAddress.BarProvider, barProvider.Endpoint },

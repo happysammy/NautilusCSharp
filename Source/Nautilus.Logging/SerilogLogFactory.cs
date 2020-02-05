@@ -23,7 +23,7 @@ namespace Nautilus.Logging
         public static void Create(LogEventLevel logLevel)
         {
             {
-                const string logTemplateDefault = "{Timestamp:yyyy/MM/dd HH:mm:ss.fff} [{ThreadId:000}][{Level:u3}] {Message}{NewLine}{Exception}";
+                const string logTemplateDefault = "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{ThreadId:000}][{Level:u3}] {Message}{NewLine}{Exception}";
 
                 Log.Logger = new LoggerConfiguration()
                     .MinimumLevel.Verbose()

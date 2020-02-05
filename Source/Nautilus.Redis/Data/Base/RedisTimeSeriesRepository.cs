@@ -11,8 +11,9 @@ namespace Nautilus.Redis.Data.Base
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Nautilus.Common.Componentry;
+    using Nautilus.Common.Data;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messages.Commands;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.CQS;
@@ -23,15 +24,19 @@ namespace Nautilus.Redis.Data.Base
     /// <summary>
     /// The base class for all redis time series repositories.
     /// </summary>
-    public class RedisTimeSeriesRepository : Component, IRepository
+    public class RedisTimeSeriesRepository : DataBusConnected, IRepository
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="RedisTimeSeriesRepository"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
+        /// <param name="dataBusAdapter">The data bus adapter for the component.</param>
         /// <param name="connection">The clients manager.</param>
-        protected RedisTimeSeriesRepository(IComponentryContainer container, ConnectionMultiplexer connection)
-            : base(container)
+        protected RedisTimeSeriesRepository(
+            IComponentryContainer container,
+            IDataBusAdapter dataBusAdapter,
+            ConnectionMultiplexer connection)
+            : base(container, dataBusAdapter)
         {
             this.RedisServer = connection.GetServer(RedisConstants.LocalHost, RedisConstants.DefaultPort);
             this.RedisDatabase = connection.GetDatabase();
@@ -59,7 +64,7 @@ namespace Nautilus.Redis.Data.Base
         /// <param name="pattern">The pattern for the keys scan.</param>
         /// <returns>The sorted key strings.</returns>
         [PerformanceOptimized]
-        internal QueryResult<RedisKey[]> GetKeysSorted(RedisValue pattern)
+        public QueryResult<RedisKey[]> GetKeysSorted(RedisValue pattern)
         {
             var keys = this.RedisServer.Keys(pattern: pattern)
                 .Select(x => x.ToString())
@@ -80,7 +85,7 @@ namespace Nautilus.Redis.Data.Base
         /// <param name="filter">The optional filter pattern for the key scan.</param>
         /// <returns>The sorted key strings.</returns>
         [PerformanceOptimized]
-        internal Dictionary<string, List<string>> GetKeysSortedBySymbol(
+        public Dictionary<string, List<string>> GetKeysSortedBySymbol(
             RedisValue pattern,
             int keyIndexCode,
             int keyIndexVenue,
@@ -111,6 +116,12 @@ namespace Nautilus.Redis.Data.Base
             }
 
             return keysOfSymbol;
+        }
+
+        /// <inheritdoc />
+        protected override void OnStop(Stop stop)
+        {
+            this.SnapshotDatabase();
         }
 
         /// <summary>

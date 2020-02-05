@@ -10,6 +10,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+    using Nautilus.Common.Data;
     using Nautilus.Data.Keys;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.Redis;
@@ -41,7 +42,11 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var container = containerFactory.Create();
 
             this.redisConnection = ConnectionMultiplexer.Connect("localhost:6379,allowAdmin=true");
-            this.repository = new RedisTickRepository(container, new TickDataSerializer(), this.redisConnection);
+            this.repository = new RedisTickRepository(
+                container,
+                DataBusFactory.Create(container),
+                new TickDataSerializer(),
+                this.redisConnection);
 
             this.redisConnection.GetServer(RedisConstants.LocalHost, RedisConstants.DefaultPort).FlushAllDatabases();
         }

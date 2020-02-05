@@ -43,7 +43,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             this.logger = containerFactory.LoggingAdapter;
             var container = containerFactory.Create();
             var scheduler = new HashedWheelTimerScheduler(container);
-            var messageBusAdapter = new MockMessageBusProvider(container).MessageBusAdapter;
+            var messageBusAdapter = new MockMessageBusProvider(container).Adapter;
             this.tradingGateway = new MockTradingGateway(container);
             this.receiver = new MockMessagingAgent();
             this.receiver.RegisterHandler<Event>(this.receiver.OnMessage);

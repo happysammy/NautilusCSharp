@@ -13,6 +13,7 @@ namespace NautilusExecutor
     using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
+    using Serilog;
 
     /// <summary>
     /// The main entry point for the application.
@@ -41,6 +42,7 @@ namespace NautilusExecutor
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseStartup<Startup>()
+                .UseSerilog()
                 .Build();
 
         private static void UnhandledExceptionTrapper(object sender, UnhandledExceptionEventArgs ex)

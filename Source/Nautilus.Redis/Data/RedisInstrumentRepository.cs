@@ -13,7 +13,7 @@ namespace Nautilus.Redis.Data
     using System.Globalization;
     using System.Linq;
     using System.Text;
-    using Nautilus.Common.Componentry;
+    using Nautilus.Common.Data;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
@@ -30,7 +30,7 @@ namespace Nautilus.Redis.Data
     /// <summary>
     /// Provides a repository for handling <see cref="Instrument"/>s with Redis.
     /// </summary>
-    public sealed class RedisInstrumentRepository : Component, IInstrumentRepository
+    public sealed class RedisInstrumentRepository : DataBusConnected, IInstrumentRepository
     {
         private readonly IDataSerializer<Instrument> serializer;
         private readonly IServer redisServer;
@@ -41,18 +41,22 @@ namespace Nautilus.Redis.Data
         /// Initializes a new instance of the <see cref="RedisInstrumentRepository"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
+        /// <param name="dataBusAdapter">The data bus adapter.</param>
         /// <param name="serializer">The instrument serializer.</param>
         /// <param name="connection">The redis connection multiplexer.</param>
         public RedisInstrumentRepository(
             IComponentryContainer container,
+            IDataBusAdapter dataBusAdapter,
             IDataSerializer<Instrument> serializer,
             ConnectionMultiplexer connection)
-            : base(container)
+            : base(container, dataBusAdapter)
         {
             this.serializer = serializer;
             this.redisServer = connection.GetServer(RedisConstants.LocalHost, RedisConstants.DefaultPort);
             this.redisDatabase = connection.GetDatabase();
             this.cache = new Dictionary<Symbol, Instrument>();
+
+            this.Subscribe<Instrument>();
         }
 
         /// <inheritdoc />

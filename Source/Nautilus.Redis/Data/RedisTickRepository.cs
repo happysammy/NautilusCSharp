@@ -16,6 +16,7 @@ namespace Nautilus.Redis.Data
     using Nautilus.Core.CQS;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Keys;
+    using Nautilus.Data.Messages.Commands;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Redis.Data.Base;
@@ -33,15 +34,22 @@ namespace Nautilus.Redis.Data
         /// Initializes a new instance of the <see cref="RedisTickRepository"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
+        /// <param name="dataBusAdapter">The data bus adapter.</param>
         /// <param name="serializer">The tick serializer.</param>
         /// <param name="connection">The clients manager.</param>
         public RedisTickRepository(
             IComponentryContainer container,
+            IDataBusAdapter dataBusAdapter,
             IDataSerializer<Tick> serializer,
             ConnectionMultiplexer connection)
-            : base(container, connection)
+            : base(container, dataBusAdapter, connection)
         {
             this.serializer = serializer;
+
+            this.RegisterHandler<Tick>(this.OnMessage);
+            this.RegisterHandler<TrimTickData>(this.OnMessage);
+
+            this.Subscribe<Tick>();
         }
 
         /// <inheritdoc />
@@ -157,6 +165,18 @@ namespace Nautilus.Redis.Data
             return data.Length > 0
                 ? QueryResult<byte[][]>.Ok(data)
                 : QueryResult<byte[][]>.Fail($"Cannot find tick data for {symbol.Value}");
+        }
+
+        private void OnMessage(Tick tick)
+        {
+            this.Add(tick);
+        }
+
+        private void OnMessage(TrimTickData message)
+        {
+            this.Log.Information($"Received {message}.");
+
+            this.TrimToDays(message.RollingDays);
         }
     }
 }

@@ -36,10 +36,10 @@ namespace Nautilus.Data
         private readonly IReadOnlyCollection<BarSpecification> barSpecifications;
         private readonly (IsoDayOfWeek Day, LocalTime Time) connectTime;
         private readonly (IsoDayOfWeek Day, LocalTime Time) disconnectTime;
-        private readonly (IsoDayOfWeek Day, LocalTime Time) tickDataTrimTime;
-        private readonly (IsoDayOfWeek Day, LocalTime Time) barDataTrimTime;
-        private readonly int tickRollingWindowDays;
-        private readonly int barRollingWindowDays;
+        private readonly LocalTime trimTimeTicks;
+        private readonly LocalTime trimTimeBars;
+        private readonly int trimWindowDaysTicks;
+        private readonly int trimWindowDaysBars;
 
         private bool reconnect;
         private bool hasSentBarSubscriptions;
@@ -74,10 +74,10 @@ namespace Nautilus.Data
 
             this.connectTime = config.FixConfiguration.ConnectTime;
             this.disconnectTime = config.FixConfiguration.DisconnectTime;
-            this.tickDataTrimTime = config.TickDataTrimTime;
-            this.tickRollingWindowDays = config.TickDataTrimWindowDays;
-            this.barDataTrimTime = config.BarDataTrimTime;
-            this.barRollingWindowDays = config.BarDataTrimWindowDays;
+            this.trimTimeTicks = config.TickDataTrimTime;
+            this.trimWindowDaysTicks = config.TickDataTrimWindowDays;
+            this.trimTimeBars = config.BarDataTrimTime;
+            this.trimWindowDaysBars = config.BarDataTrimWindowDays;
             this.reconnect = true;
 
             addresses.Add(ServiceAddress.DataService, this.Endpoint);
@@ -122,9 +122,9 @@ namespace Nautilus.Data
 
                 this.CreateMarketOpenedJob();
                 this.CreateMarketClosedJob();
+                this.CreateTrimTickDataJob();
+                this.CreateTrimBarDataJob();
 
-                // this.CreateTrimTickDataJob();
-                // this.CreateTrimBarDataJob();
                 var receivers = new List<Address>
                 {
                     ServiceAddress.TickProvider,
@@ -174,12 +174,15 @@ namespace Nautilus.Data
             this.Log.Information($"Connected to FIX session {message.SessionId}.");
 
             this.dataGateway.UpdateInstrumentsSubscribeAll();
+            foreach (var symbol in this.subscribingSymbols)
+            {
+                this.dataGateway.MarketDataSubscribe(symbol);
+            }
+
             if (!this.hasSentBarSubscriptions)
             {
                 foreach (var symbol in this.subscribingSymbols)
                 {
-                    this.dataGateway.MarketDataSubscribe(symbol);
-
                     foreach (var barSpec in this.barSpecifications)
                     {
                         var barType = new BarType(symbol, barSpec);
@@ -239,7 +242,7 @@ namespace Nautilus.Data
             this.Log.Information($"Received {message}.");
 
             // Forward message
-            this.Send(message, ServiceAddress.TickStore);
+            this.Send(message, ServiceAddress.TickRepository);
 
             this.CreateTrimTickDataJob();
         }
@@ -249,7 +252,7 @@ namespace Nautilus.Data
             this.Log.Information($"Received {message}.");
 
             // Forward message
-            this.Send(message, ServiceAddress.DatabaseTaskManager);
+            this.Send(message, ServiceAddress.BarRepository);
 
             this.CreateTrimBarDataJob();
         }
@@ -375,14 +378,11 @@ namespace Nautilus.Data
             this.Execute(() =>
             {
                 var now = this.InstantNow();
-                var nextTime = TimingProvider.GetNextUtc(
-                    this.tickDataTrimTime.Day,
-                    this.tickDataTrimTime.Time,
-                    now);
+                var nextTime = TimingProvider.GetNextUtc(this.trimTimeTicks, now);
                 var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, now);
 
                 var job = new TrimTickData(
-                    this.tickRollingWindowDays,
+                    this.trimWindowDaysTicks,
                     nextTime,
                     this.NewGuid(),
                     this.TimeNow());
@@ -402,15 +402,12 @@ namespace Nautilus.Data
             this.Execute(() =>
             {
                 var now = this.InstantNow();
-                var nextTime = TimingProvider.GetNextUtc(
-                    this.barDataTrimTime.Day,
-                    this.barDataTrimTime.Time,
-                    now);
+                var nextTime = TimingProvider.GetNextUtc(this.trimTimeBars, now);
                 var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, now);
 
                 var job = new TrimBarData(
                     this.barSpecifications,
-                    this.barRollingWindowDays,
+                    this.trimWindowDaysBars,
                     nextTime,
                     this.NewGuid(),
                     this.TimeNow());

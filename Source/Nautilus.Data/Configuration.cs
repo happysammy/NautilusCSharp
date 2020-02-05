@@ -104,17 +104,15 @@ namespace Nautilus.Data
                 .Select(BarSpecification.FromString)
                 .ToImmutableList();
 
-            var tickTrimDay = configJson[ConfigSection.Data]["tickDataTrimDay"].ToString().ToEnum<IsoDayOfWeek>();
-            var tickTrimHour = (int)configJson[ConfigSection.Data]["tickDataTrimHour"];
-            var tickTrimMinute = (int)configJson[ConfigSection.Data]["tickDataTrimMinute"];
-            this.TickDataTrimTime = (tickTrimDay, new LocalTime(tickTrimHour, tickTrimMinute));
-            this.TickDataTrimWindowDays = (int)configJson[ConfigSection.Data]["tickDataTrimWindowDays"];
+            var tickTrimHour = (int)configJson[ConfigSection.Data]["trimJobTicks"]["hour"];
+            var tickTrimMinute = (int)configJson[ConfigSection.Data]["trimJobTicks"]["minute"];
+            this.TickDataTrimTime = new LocalTime(tickTrimHour, tickTrimMinute);
+            this.TickDataTrimWindowDays = (int)configJson[ConfigSection.Data]["trimJobTicks"]["windowDays"];
 
-            var barTrimDay = configJson[ConfigSection.Data]["barDataTrimDay"].ToString().ToEnum<IsoDayOfWeek>();
-            var barTrimHour = (int)configJson[ConfigSection.Data]["barDataTrimHour"];
-            var barTrimMinute = (int)configJson[ConfigSection.Data]["barDataTrimMinute"];
-            this.BarDataTrimTime = (barTrimDay, new LocalTime(barTrimHour, barTrimMinute));
-            this.BarDataTrimWindowDays = (int)configJson[ConfigSection.Data]["barDataTrimWindowDays"];
+            var barTrimHour = (int)configJson[ConfigSection.Data]["trimJobBars"]["hour"];
+            var barTrimMinute = (int)configJson[ConfigSection.Data]["trimJobBars"]["minute"];
+            this.BarDataTrimTime = new LocalTime(barTrimHour, barTrimMinute);
+            this.BarDataTrimWindowDays = (int)configJson[ConfigSection.Data]["trimJobBars"]["windowDays"];
         }
 
         /// <summary>
@@ -175,12 +173,12 @@ namespace Nautilus.Data
         /// <summary>
         /// Gets the time to trim the tick data.
         /// </summary>
-        public (IsoDayOfWeek, LocalTime) TickDataTrimTime { get; }
+        public LocalTime TickDataTrimTime { get; }
 
         /// <summary>
         /// Gets the time to trim the bar data.
         /// </summary>
-        public (IsoDayOfWeek, LocalTime) BarDataTrimTime { get; }
+        public LocalTime BarDataTrimTime { get; }
 
         /// <summary>
         /// Gets the tick data rolling trim window in days.

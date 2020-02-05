@@ -44,7 +44,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             this.container = containerFactory.Create();
             this.loggingAdapter = containerFactory.LoggingAdapter;
             var service = new MockMessageBusProvider(this.container);
-            this.messageBusAdapter = service.MessageBusAdapter;
+            this.messageBusAdapter = service.Adapter;
             this.receiver = new MockMessagingAgent().Endpoint;
         }
 

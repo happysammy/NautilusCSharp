@@ -17,6 +17,7 @@ namespace Nautilus.Redis.Data
     using Nautilus.Core.Extensions;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Keys;
+    using Nautilus.Data.Messages.Commands;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Frames;
     using Nautilus.DomainModel.ValueObjects;
@@ -35,15 +36,23 @@ namespace Nautilus.Redis.Data
         /// Initializes a new instance of the <see cref="RedisBarRepository"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
+        /// <param name="dataBusAdapter">The data bus adapter.</param>
         /// <param name="serializer">The bar serializer.</param>
         /// <param name="connection">The clients manager.</param>
         public RedisBarRepository(
             IComponentryContainer container,
+            IDataBusAdapter dataBusAdapter,
             IDataSerializer<Bar> serializer,
             ConnectionMultiplexer connection)
-            : base(container, connection)
+            : base(container, dataBusAdapter, connection)
         {
             this.serializer = serializer;
+
+            this.RegisterHandler<BarData>(this.OnMessage);
+            this.RegisterHandler<BarDataFrame>(this.OnMessage);
+            this.RegisterHandler<TrimBarData>(this.OnMessage);
+
+            this.Subscribe<BarData>();
         }
 
         /// <summary>
@@ -243,6 +252,28 @@ namespace Nautilus.Redis.Data
             return barQuery.Length > 0
                 ? QueryResult<Bar>.Ok(Bar.FromString(barQuery[^1].ToString()))
                 : QueryResult<Bar>.Fail("Cannot find bar data.");
+        }
+
+        private void OnMessage(BarData data)
+        {
+            this.Add(data.BarType, data.Bar);
+
+            this.Log.Debug($"Received {data}");
+        }
+
+        private void OnMessage(BarDataFrame data)
+        {
+            this.Add(data);
+        }
+
+        private void OnMessage(TrimBarData message)
+        {
+            this.Log.Information($"Received {message}.");
+
+            foreach (var structure in message.BarStructures)
+            {
+                this.TrimToDays(structure, message.RollingDays);
+            }
         }
     }
 }
