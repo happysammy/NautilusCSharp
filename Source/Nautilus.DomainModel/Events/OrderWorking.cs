@@ -153,7 +153,7 @@ namespace Nautilus.DomainModel.Events
                    $"OrderId={this.OrderId.Value}, " +
                    $"OrderIdBroker={this.OrderIdBroker.Value}, " +
                    $"Label={this.Label.Value}, " +
-                   $"{this.OrderSide} " +
+                   $"{this.OrderSide.ToString().ToUpper()} " +
                    $"{this.Quantity.ToStringFormatted()} " +
                    $"{this.Symbol.Value} " +
                    $"{this.OrderType} @ " +

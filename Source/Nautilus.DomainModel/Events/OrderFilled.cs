@@ -76,7 +76,7 @@ namespace Nautilus.DomainModel.Events
                                              $"OrderId={this.OrderId.Value}, " +
                                              $"ExecutionId={this.ExecutionId.Value}, " +
                                              $"PositionIdBroker={this.PositionIdBroker.Value}, " +
-                                             $"{this.OrderSide} " +
+                                             $"{this.OrderSide.ToString().ToUpper()} " +
                                              $"{this.FilledQuantity.ToStringFormatted()} " +
                                              $"{this.Symbol.Value} @ " +
                                              $"{this.AveragePrice})";
