@@ -30,6 +30,15 @@ namespace Nautilus.Core.Types
         }
 
         /// <summary>
+        /// Returns a label with a 'NONE' value.
+        /// </summary>
+        /// <returns>The label.</returns>
+        public static Label None()
+        {
+            return new Label(NONE);
+        }
+
+        /// <summary>
         /// Returns a value indicating whether the label is equal to 'NONE'.
         /// </summary>
         /// <returns>True if the label value is 'NONE', else False.</returns>

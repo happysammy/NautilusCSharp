@@ -22,7 +22,6 @@ namespace Nautilus.Redis.Data
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Redis.Data.Base;
     using Nautilus.Redis.Data.Internal;
-    using QuickFix.Fields;
     using StackExchange.Redis;
 
     /// <summary>
