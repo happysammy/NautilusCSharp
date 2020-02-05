@@ -163,7 +163,7 @@ namespace Nautilus.Redis.Data.Base
 
             var data = this.ReadData(key);
 
-            return limit == 0
+            return limit <= 0
                 ? data
                 : data.SliceToLimitFromEnd(limit);
         }
@@ -189,7 +189,7 @@ namespace Nautilus.Redis.Data.Base
 
             var data = dataList.ToArray();
 
-            return limit == 0
+            return limit <= 0
                 ? data
                 : data.SliceToLimitFromEnd(limit);
         }
@@ -222,7 +222,7 @@ namespace Nautilus.Redis.Data.Base
         /// Deletes the given key from the database. Logs an error if the key does not exist.
         /// </summary>
         /// <param name="key">The key to delete.</param>
-        protected void Delete(RedisKey key)
+        private void Delete(RedisKey key)
         {
             Debug.NotEmptyOrWhiteSpace(key, nameof(key));
 

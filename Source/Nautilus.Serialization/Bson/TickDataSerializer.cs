@@ -53,6 +53,8 @@ namespace Nautilus.Serialization.Bson
         /// <inheritdoc />
         public byte[][] Serialize(Tick[] dataObjects)
         {
+            Debug.NotEmpty(dataObjects, nameof(dataObjects));
+
             var output = new byte[dataObjects.Length][];
             for (var i = 0; i < dataObjects.Length; i++)
             {
@@ -78,12 +80,17 @@ namespace Nautilus.Serialization.Bson
         /// <inheritdoc />
         public Tick Deserialize(byte[] dataBytes)
         {
+            Debug.NotEmpty(dataBytes, nameof(dataBytes));
+
             return Tick.FromStringWithSymbol(Encoding.UTF8.GetString(dataBytes));
         }
 
         /// <inheritdoc />
         public Tick[] Deserialize(byte[][] dataBytesArray, object? metadata = null)
         {
+            Debug.NotEmpty(dataBytesArray, nameof(dataBytesArray));
+            Debug.NotNull(metadata, nameof(metadata));
+
             var output = new Tick[dataBytesArray.Length];
             for (var i = 0; i < dataBytesArray.Length; i++)
             {

@@ -74,6 +74,8 @@ namespace Nautilus.Serialization.Bson
         [PerformanceOptimized]
         public byte[][] Serialize(Instrument[] dataObjects)
         {
+            Debug.NotEmpty(dataObjects, nameof(dataObjects));
+
             var output = new byte[dataObjects.Length][];
             for (var i = 0; i < dataObjects.Length; i++)
             {
@@ -151,6 +153,8 @@ namespace Nautilus.Serialization.Bson
         [PerformanceOptimized]
         public Instrument[] Deserialize(byte[][] dataBytesArray, object? metadata = null)
         {
+            Debug.NotEmpty(dataBytesArray, nameof(dataBytesArray));
+
             var output = new Instrument[dataBytesArray.Length];
             for (var i = 0; i < dataBytesArray.Length; i++)
             {
@@ -163,6 +167,8 @@ namespace Nautilus.Serialization.Bson
         /// <inheritdoc />
         public Instrument[] DeserializeBlob(byte[] dataBytes)
         {
+            Debug.NotEmpty(dataBytes, nameof(dataBytes));
+
             var data = BsonSerializer.Deserialize<BsonDocument>(dataBytes);
             var valueArray = data[DATA].AsBsonArray;
 
