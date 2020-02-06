@@ -16,7 +16,6 @@ namespace Nautilus.Common.Data
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
     using Nautilus.Messaging;
 
     /// <summary>
@@ -98,18 +97,9 @@ namespace Nautilus.Common.Data
         [PerformanceOptimized]
         private void Publish(T data)
         {
-            Debug.NotNull(data, nameof(data));  // This should never happen
-
-            if (data is null)
+            for (var i = 0; i < this.subscriptions.Count; i++)
             {
-                return;  // This should never happen
-            }
-
-            var i = 0;
-            while (this.subscriptions.Count > i)
-            {
-                this.subscriptions[i].Endpoint.Send(data);
-                i++;
+                this.subscriptions[i].Endpoint.Send(data!);
             }
         }
     }

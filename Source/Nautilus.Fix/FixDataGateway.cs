@@ -72,13 +72,13 @@ namespace Nautilus.Fix
         }
 
         /// <inheritdoc />
-        public void OnTick(Tick tick)
+        public void OnData(Tick tick)
         {
             this.SendToBus(tick);
         }
 
         /// <inheritdoc />
-        public void OnInstrumentsUpdate(IEnumerable<Instrument> instruments)
+        public void OnData(IEnumerable<Instrument> instruments)
         {
             foreach (var instrument in instruments)
             {
@@ -89,7 +89,7 @@ namespace Nautilus.Fix
         /// <inheritdoc />
         public void OnMessage(string message)
         {
-            // No implemented
+            // No implemented yet (general business messages)
         }
 
         /// <inheritdoc />

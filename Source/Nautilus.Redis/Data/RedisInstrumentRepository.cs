@@ -56,6 +56,8 @@ namespace Nautilus.Redis.Data
             this.redisDatabase = connection.GetDatabase();
             this.cache = new Dictionary<Symbol, Instrument>();
 
+            this.RegisterHandler<Instrument>(this.OnData);
+
             this.Subscribe<Instrument>();
         }
 
@@ -272,6 +274,11 @@ namespace Nautilus.Redis.Data
 
         /// <inheritdoc />
         public IReadOnlyCollection<Symbol> GetCachedSymbols() => this.cache.Keys.ToArray();
+
+        private void OnData(Instrument instrument)
+        {
+            this.Add(instrument);
+        }
 
         private void Write(Instrument instrument)
         {

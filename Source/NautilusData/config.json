@@ -1,25 +1,29 @@
 ﻿{
   "logging": {
-    "logLevel": "Information"
+    "logLevel": "Debug"
   },
 
   "network": {
-    "tickReqPort": 55501,
-    "tickSubPort": 55502,
-    "barReqPort": 55503,
-    "barSubPort": 55504,
-    "instrumentReqPort": 55505,
-    "instrumentSubPort": 55506
+    "tickRouterPort": 55501,
+    "tickPubPort": 55502,
+    "barRouterPort": 55503,
+    "barPubPort": 55504,
+    "instrumentRouterPort": 55505,
+    "instrumentPubPort": 55506
   },
 
   "fix44": {
     "configFile": "fix_fxcm2_md.cfg",
-    "connectDay": "Sunday",
-    "connectHour": 20,
-    "connectMinute": 0,
-    "disconnectDay": "Saturday",
-    "disconnectHour": 21,
-    "disconnectMinute": 0
+    "connectJob": {
+      "day": "Sunday",
+      "hour": 20,
+      "minute": 0
+    },
+    "disconnectJob": {
+      "day": "Saturday",
+      "hour": 21,
+      "minute": 0
+    }
   },
 
   "data": {

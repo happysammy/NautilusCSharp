@@ -48,8 +48,8 @@ namespace Nautilus.Redis.Data
         {
             this.serializer = serializer;
 
-            this.RegisterHandler<BarData>(this.OnMessage);
-            this.RegisterHandler<BarDataFrame>(this.OnMessage);
+            this.RegisterHandler<BarData>(this.OnData);
+            this.RegisterHandler<BarDataFrame>(this.OnData);
             this.RegisterHandler<TrimBarData>(this.OnMessage);
 
             this.Subscribe<BarData>();
@@ -254,14 +254,14 @@ namespace Nautilus.Redis.Data
                 : QueryResult<Bar>.Fail("Cannot find bar data.");
         }
 
-        private void OnMessage(BarData data)
+        private void OnData(BarData data)
         {
             this.Add(data.BarType, data.Bar);
 
             this.Log.Debug($"Received {data}");
         }
 
-        private void OnMessage(BarDataFrame data)
+        private void OnData(BarDataFrame data)
         {
             this.Add(data);
         }

@@ -12,12 +12,16 @@
 
   "fix44": {
     "configFile": "fix_fxcm2.cfg",
-    "connectDay": "Sunday",
-    "connectHour": 20,
-    "connectMinute": 0,
-    "disconnectDay": "Saturday",
-    "disconnectHour": 21,
-    "disconnectMinute": 0
+    "connectJob": {
+      "day": "Sunday",
+      "hour": 20,
+      "minute": 0
+    },
+    "disconnectJob": {
+      "day": "Saturday",
+      "hour": 21,
+      "minute": 0
+    }
   },
 
   "symbols": [

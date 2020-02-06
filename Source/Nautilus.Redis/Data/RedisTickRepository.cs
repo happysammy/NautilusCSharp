@@ -46,7 +46,7 @@ namespace Nautilus.Redis.Data
         {
             this.serializer = serializer;
 
-            this.RegisterHandler<Tick>(this.OnMessage);
+            this.RegisterHandler<Tick>(this.OnData);
             this.RegisterHandler<TrimTickData>(this.OnMessage);
 
             this.Subscribe<Tick>();
@@ -167,7 +167,7 @@ namespace Nautilus.Redis.Data
                 : QueryResult<byte[][]>.Fail($"Cannot find tick data for {symbol.Value}");
         }
 
-        private void OnMessage(Tick tick)
+        private void OnData(Tick tick)
         {
             this.Add(tick);
         }

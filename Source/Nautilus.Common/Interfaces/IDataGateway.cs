@@ -60,13 +60,13 @@ namespace Nautilus.Common.Interfaces
         /// Handles received ticks.
         /// </summary>
         /// <param name="tick">The tick.</param>
-        void OnTick(Tick tick);
+        void OnData(Tick tick);
 
         /// <summary>
         /// Handles the collection of received instruments.
         /// </summary>
         /// <param name="instruments">The instruments collection.</param>
-        void OnInstrumentsUpdate(IEnumerable<Instrument> instruments);
+        void OnData(IEnumerable<Instrument> instruments);
 
         /// <summary>
         /// Handles received general messages.

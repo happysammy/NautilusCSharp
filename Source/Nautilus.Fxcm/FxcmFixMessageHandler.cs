@@ -211,7 +211,7 @@ namespace Nautilus.Fxcm
                     }
                 }
 
-                this.dataGateway?.OnInstrumentsUpdate(instruments);
+                this.dataGateway?.OnData(instruments);
             });
         }
 
@@ -267,7 +267,7 @@ namespace Nautilus.Fxcm
                         Volume.One(),
                         this.tickTimestampProvider());
 
-                    this.dataGateway?.OnTick(tick);
+                    this.dataGateway?.OnData(tick);
                 }
                 catch (Exception ex)
                 {
