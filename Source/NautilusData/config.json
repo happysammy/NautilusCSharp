@@ -1,6 +1,6 @@
 ﻿{
   "logging": {
-    "logLevel": "Debug"
+    "logLevel": "Information"
   },
 
   "network": {
@@ -100,13 +100,13 @@
     "trimJobTicks": {
       "hour": 22,
       "minute": 0,
-      "windowDays": 2
+      "windowDays": 1
     },
 
     "trimJobBars": {
       "hour": 22,
-      "minute": 1,
-      "windowDays": 5
+      "minute": 0,
+      "windowDays": 1
     }
   }
 }
