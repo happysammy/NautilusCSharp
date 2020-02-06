@@ -34,17 +34,17 @@ namespace Nautilus.Data
         private readonly IDataGateway dataGateway;
         private readonly IReadOnlyCollection<Symbol> subscribingSymbols;
         private readonly IReadOnlyCollection<BarSpecification> barSpecifications;
-        private readonly (IsoDayOfWeek Day, LocalTime Time) connectTime;
-        private readonly (IsoDayOfWeek Day, LocalTime Time) disconnectTime;
+        private readonly (IsoDayOfWeek Day, LocalTime Time) scheduledConnect;
+        private readonly (IsoDayOfWeek Day, LocalTime Time) scheduledDisconnect;
         private readonly LocalTime trimTimeTicks;
         private readonly LocalTime trimTimeBars;
         private readonly int trimWindowDaysTicks;
         private readonly int trimWindowDaysBars;
 
-        private bool reconnect;
+        private bool autoReconnect;
         private bool hasSentBarSubscriptions;
-        private ZonedDateTime? nextConnectTime;
-        private ZonedDateTime? nextDisconnectTime;
+        private ZonedDateTime nextConnectTime;
+        private ZonedDateTime nextDisconnectTime;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataService"/> class.
@@ -72,13 +72,21 @@ namespace Nautilus.Data
             this.subscribingSymbols = config.SubscribingSymbols;
             this.barSpecifications = config.BarSpecifications;
 
-            this.connectTime = config.FixConfiguration.ConnectTime;
-            this.disconnectTime = config.FixConfiguration.DisconnectTime;
+            this.scheduledConnect = config.FixConfiguration.ConnectTime;
+            this.scheduledDisconnect = config.FixConfiguration.DisconnectTime;
             this.trimTimeTicks = config.TickDataTrimTime;
             this.trimWindowDaysTicks = config.TickDataTrimWindowDays;
             this.trimTimeBars = config.BarDataTrimTime;
             this.trimWindowDaysBars = config.BarDataTrimWindowDays;
-            this.reconnect = true;
+            this.nextConnectTime = TimingProvider.GetNextUtc(
+                this.scheduledConnect.Day,
+                this.scheduledConnect.Time,
+                this.InstantNow());
+            this.nextDisconnectTime = TimingProvider.GetNextUtc(
+                this.scheduledDisconnect.Day,
+                this.scheduledDisconnect.Time,
+                this.InstantNow());
+            this.autoReconnect = true;
 
             addresses.Add(ServiceAddress.DataService, this.Endpoint);
             messageBusAdapter.Send(new InitializeSwitchboard(
@@ -109,19 +117,26 @@ namespace Nautilus.Data
             this.Execute(() =>
             {
                 if (TimingProvider.IsOutsideWeeklyInterval(
-                    this.disconnectTime,
-                    this.connectTime,
+                    this.scheduledDisconnect,
+                    this.scheduledConnect,
                     this.InstantNow()))
                 {
                     this.Send(start, ServiceAddress.DataGateway);
+
+                    // Outside connection schedule weekly interval
+                    this.CreateDisconnectFixJob();
+                    this.CreateConnectFixJob();
                 }
                 else
                 {
+                    // Inside connection schedule weekly interval
                     this.CreateConnectFixJob();
+                    this.CreateDisconnectFixJob();
                 }
 
                 this.CreateMarketOpenedJob();
                 this.CreateMarketClosedJob();
+
                 this.CreateTrimTickDataJob();
                 this.CreateTrimBarDataJob();
 
@@ -142,6 +157,9 @@ namespace Nautilus.Data
         /// <inheritdoc />
         protected override void OnStop(Stop stop)
         {
+            this.autoReconnect = false;  // Avoid immediate reconnection
+
+            // Forward stop message
             var receivers = new List<Address>
             {
                 ServiceAddress.DataGateway,
@@ -159,19 +177,25 @@ namespace Nautilus.Data
         private void OnMessage(Connect message)
         {
             // Forward message
+            this.autoReconnect = true;
             this.Send(message, ServiceAddress.DataGateway);
         }
 
         private void OnMessage(Disconnect message)
         {
             // Forward message
-            this.reconnect = false;  // Avoid immediate reconnection
+            this.autoReconnect = false;  // Avoid immediate reconnection
             this.Send(message, ServiceAddress.DataGateway);
         }
 
         private void OnMessage(FixSessionConnected message)
         {
-            this.Log.Information($"Connected to FIX session {message.SessionId}.");
+            this.Log.Information($"Connected to session {message.SessionId}.");
+
+            if (this.nextDisconnectTime.IsLessThanOrEqualTo(this.TimeNow()))
+            {
+                this.CreateDisconnectFixJob();
+            }
 
             this.dataGateway.UpdateInstrumentsSubscribeAll();
             foreach (var symbol in this.subscribingSymbols)
@@ -197,24 +221,30 @@ namespace Nautilus.Data
 
                 this.hasSentBarSubscriptions = true;
             }
-
-            if (this.nextDisconnectTime is null || this.nextDisconnectTime.Value.IsLessThanOrEqualTo(this.TimeNow()))
-            {
-                this.CreateDisconnectFixJob();
-            }
-
-            this.Log.Information($"{message.SessionId} session connected.");
         }
 
         private void OnMessage(FixSessionDisconnected message)
         {
-            if (this.reconnect && (this.nextConnectTime is null || this.nextConnectTime.Value.IsLessThanOrEqualTo(this.TimeNow())))
+            if (this.autoReconnect)
+            {
+                this.Log.Warning($"Disconnected from session {message.SessionId}. Initiating auto reconnect...");
+
+                var connect = new Connect(
+                    this.TimeNow(),
+                    this.NewGuid(),
+                    this.TimeNow());
+
+                this.Send(connect, ServiceAddress.DataGateway);
+            }
+            else
+            {
+                this.Log.Information($"Disconnected from session {message.SessionId}.");
+            }
+
+            if (this.nextConnectTime.IsLessThanOrEqualTo(this.TimeNow()))
             {
                 this.CreateConnectFixJob();
             }
-
-            this.Log.Warning($"Disconnected from session {message.SessionId}.");
-            this.reconnect = true; // Reset flag to default true
         }
 
         private void OnMessage(MarketOpened message)
@@ -263,8 +293,8 @@ namespace Nautilus.Data
             {
                 var now = this.InstantNow();
                 var nextTime = TimingProvider.GetNextUtc(
-                    this.connectTime.Day,
-                    this.connectTime.Time,
+                    this.scheduledConnect.Day,
+                    this.scheduledConnect.Time,
                     now);
                 var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, now);
 
@@ -291,8 +321,8 @@ namespace Nautilus.Data
             {
                 var now = this.InstantNow();
                 var nextTime = TimingProvider.GetNextUtc(
-                    this.disconnectTime.Day,
-                    this.disconnectTime.Time,
+                    this.scheduledDisconnect.Day,
+                    this.scheduledDisconnect.Time,
                     now);
                 var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, now);
 

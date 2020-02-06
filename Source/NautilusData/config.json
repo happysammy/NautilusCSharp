@@ -100,13 +100,13 @@
     "trimJobTicks": {
       "hour": 22,
       "minute": 0,
-      "windowDays": 1
+      "windowDays": 2
     },
 
     "trimJobBars": {
       "hour": 22,
       "minute": 0,
-      "windowDays": 1
+      "windowDays": 10
     }
   }
 }

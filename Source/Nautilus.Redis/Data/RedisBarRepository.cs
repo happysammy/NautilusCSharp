@@ -129,18 +129,22 @@ namespace Nautilus.Redis.Data
             }
 
             this.Log.Debug(
-                $"Added {barsAddedCounter} bars to {barType}, TotalCount={this.BarsCount(barType)}");
+                $"Added {barsAddedCounter} bars to {barType}, BarsCount={this.BarsCount(barType)}");
         }
 
         /// <inheritdoc />
         public void TrimToDays(BarStructure barStructure, int trimToDays)
         {
+            this.Log.Information($"Trimming {barStructure} bar data to {trimToDays} rolling days. ");
+
             this.TrimToDays(
                 KeyProvider.GetBarsPattern().ToString(),
                 3,
                 4,
                 trimToDays,
                 barStructure.ToString());
+
+            this.Log.Information($"Trim job complete. BarsCount={this.BarsCount()}.");
         }
 
         /// <inheritdoc />

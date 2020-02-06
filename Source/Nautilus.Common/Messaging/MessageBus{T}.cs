@@ -90,7 +90,7 @@ namespace Nautilus.Common.Messaging
             this.switchboard = message.Switchboard;
             this.switchboard.RegisterDeadLetterChannel(this.AddToDeadLetters);
 
-            this.Log.Information("Switchboard initialized.");
+            this.Log.Debug("Switchboard initialized.");
         }
 
         private void OnMessage(Subscribe<Type> message)

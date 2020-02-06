@@ -141,7 +141,7 @@ namespace Nautilus.Data.Aggregation
                 this.subscriptions.Add(barType, null);
             }
 
-            this.Log.Information($"Subscribed to {message.Subscription} bars.");
+            this.Log.Information($"Building {message.Subscription} bars.");
         }
 
         private void CreateCloseBarDelegate(BarSpecification barSpec, IEndpoint aggregator)
@@ -180,7 +180,7 @@ namespace Nautilus.Data.Aggregation
                 this.Log.Debug($"Removed BarAggregator[{symbol}].");
             }
 
-            this.Log.Information($"Unsubscribed from {message.Subscription} bars.");
+            this.Log.Information($"Stopped building {message.Subscription} bars.");
         }
 
         private void OnMessage(MarketOpened message)

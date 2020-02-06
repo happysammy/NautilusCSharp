@@ -73,11 +73,15 @@ namespace Nautilus.Redis.Data
         /// <inheritdoc />
         public void TrimToDays(int trimToDays)
         {
+            this.Log.Information($"Trimming tick data to {trimToDays} rolling days. ");
+
             this.TrimToDays(
                 KeyProvider.GetTicksPattern(),
                 3,
                 4,
                 trimToDays);
+
+            this.Log.Information($"Trim job complete. TicksCount={this.TicksCount()}.");
         }
 
         /// <inheritdoc />

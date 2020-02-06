@@ -23,7 +23,7 @@ namespace Nautilus.Fix.Interfaces
         /// Connects the FIX session.
         /// </summary>
         /// <param name="session">The FIX session.</param>
-        void ConnectSession(Session session);
+        void InitializeSession(Session session);
 
         /// <summary>
         /// Sends a CollateralInquiry FIX message.

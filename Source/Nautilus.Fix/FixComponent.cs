@@ -8,14 +8,12 @@
 
 namespace Nautilus.Fix
 {
-    using System;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Events;
     using Nautilus.Core.Types;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.Fix.Interfaces;
-    using NodaTime;
     using QuickFix;
     using QuickFix.Fields;
     using QuickFix.FIX44;
@@ -40,6 +38,7 @@ namespace Nautilus.Fix
         private readonly Account accountField;
 
         private SocketInitiator? initiator;
+        private Session? session;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FixComponent"/> class.
@@ -115,12 +114,12 @@ namespace Nautilus.Fix
         /// Gets a value indicating whether the FIX session is connected.
         /// </summary>
         /// <returns>A <see cref="bool"/>.</returns>
-        public bool IsConnected => this.FixSession != null && this.FixSession.IsLoggedOn;
+        public bool IsConnected => this.session != null && this.session.IsLoggedOn;
 
         /// <summary>
-        /// Gets the components FIX session.
+        /// Gets the components FIX session identifier.
         /// </summary>
-        protected Session? FixSession { get; private set; }
+        protected SessionID? SessionId { get; private set; }
 
         /// <summary>
         /// The initializes the FIX data gateway.
@@ -141,65 +140,6 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// Returns the current time of the components clock.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="ZonedDateTime"/>.
-        /// </returns>
-        public ZonedDateTime TimeNow()
-        {
-            return this.clock.TimeNow();
-        }
-
-        /// <summary>
-        /// Returns a new <see cref="Guid"/> from the components guid factory.
-        /// </summary>
-        /// <returns>A <see cref="Guid"/>.</returns>
-        public Guid NewGuid()
-        {
-            return this.guidFactory.Generate();
-        }
-
-        /// <summary>
-        /// Passes the given <see cref="Action"/> to the command handler for execution.
-        /// </summary>
-        /// <param name="action">The action to execute.</param>
-        public void Execute(Action action)
-        {
-            this.commandHandler.Execute(action);
-        }
-
-        /// <summary>
-        /// Connects to the FIX session.
-        /// </summary>
-        public void ConnectFix()
-        {
-            this.commandHandler.Execute(() =>
-            {
-                var settings = new SessionSettings(this.configPath);
-                var storeFactory = new FileStoreFactory(settings);
-
-                // var logFactory = new ScreenLogFactory(settings);
-                this.initiator = new SocketInitiator(this, storeFactory, settings, null);
-
-                this.Log.Debug("Starting initiator...");
-                this.initiator.Start();
-            });
-        }
-
-        /// <summary>
-        /// Disconnects from the FIX session.
-        /// </summary>
-        public void DisconnectFix()
-        {
-            this.commandHandler.Execute(() =>
-            {
-                this.Log.Debug("Stopping initiator... ");
-                this.initiator?.Stop();
-            });
-        }
-
-        /// <summary>
         /// Called when a new FIX session is created.
         /// </summary>
         /// <param name="sessionId">The session identifier.</param>
@@ -207,10 +147,10 @@ namespace Nautilus.Fix
         {
             this.commandHandler.Execute(() =>
             {
-                this.Log.Debug("Creating session...");
-                this.FixSession = Session.LookupSession(sessionId);
-                this.FixMessageRouter.ConnectSession(this.FixSession);
-                this.Log.Debug($"Session {this.FixSession}");
+                this.Log.Debug($"Creating session {sessionId}...");
+                this.SessionId = sessionId;
+                this.session = Session.LookupSession(sessionId);
+                this.FixMessageRouter.InitializeSession(this.session);
             });
         }
 
@@ -225,11 +165,11 @@ namespace Nautilus.Fix
                 var connected = new FixSessionConnected(
                     this.Brokerage,
                     sessionId.ToString(),
-                    this.NewGuid(),
-                    this.TimeNow());
+                    this.guidFactory.Generate(),
+                    this.clock.TimeNow());
 
-                this.messageBusAdapter.SendToBus(connected, null, this.TimeNow());
-                this.Log.Debug($"Connected to FIX session {sessionId}");
+                this.messageBusAdapter.SendToBus(connected, null, this.clock.TimeNow());
+                this.Log.Debug($"Connected to session {sessionId}");
             });
         }
 
@@ -244,10 +184,10 @@ namespace Nautilus.Fix
                 var disconnected = new FixSessionDisconnected(
                     this.Brokerage,
                     sessionId.ToString(),
-                    this.NewGuid(),
-                    this.TimeNow());
+                    this.guidFactory.Generate(),
+                    this.clock.TimeNow());
 
-                this.messageBusAdapter.SendToBus(disconnected, null, this.TimeNow());
+                this.messageBusAdapter.SendToBus(disconnected, null, this.clock.TimeNow());
 
                 this.Log.Debug($"Disconnected from session {sessionId}");
             });
@@ -458,6 +398,36 @@ namespace Nautilus.Fix
         public void OnMessage(ExecutionReport message, SessionID sessionId)
         {
             this.FixMessageHandler.OnMessage(message);
+        }
+
+        /// <summary>
+        /// Connects to the FIX session.
+        /// </summary>
+        protected void ConnectFix()
+        {
+            this.commandHandler.Execute(() =>
+            {
+                var settings = new SessionSettings(this.configPath);
+                var storeFactory = new FileStoreFactory(settings);
+
+                // var logFactory = new ScreenLogFactory(settings);
+                this.initiator = new SocketInitiator(this, storeFactory, settings, null);
+
+                this.Log.Debug("Starting initiator...");
+                this.initiator.Start();
+            });
+        }
+
+        /// <summary>
+        /// Disconnects from the FIX session.
+        /// </summary>
+        protected void DisconnectFix()
+        {
+            this.commandHandler.Execute(() =>
+            {
+                this.Log.Debug("Stopping initiator... ");
+                this.initiator?.Stop();
+            });
         }
     }
 }

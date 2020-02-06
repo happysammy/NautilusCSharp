@@ -142,6 +142,7 @@ namespace NautilusData
                 { ServiceAddress.TickRepository, tickRepository.Endpoint },
                 { ServiceAddress.TickProvider, tickProvider.Endpoint },
                 { ServiceAddress.TickPublisher, tickPublisher.Endpoint },
+                { ServiceAddress.BarRepository, barRepository.Endpoint },
                 { ServiceAddress.BarProvider, barProvider.Endpoint },
                 { ServiceAddress.BarPublisher, barPublisher.Endpoint },
                 { ServiceAddress.InstrumentProvider, instrumentProvider.Endpoint },

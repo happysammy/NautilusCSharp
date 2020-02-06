@@ -48,11 +48,11 @@ namespace Nautilus.Fix
         {
             if (this.IsConnected)
             {
-                this.Log.Warning($"Already connected to FIX session {this.FixSession}.");
+                this.Log.Warning($"Already connected to session {this.SessionId}.");
                 return;
             }
 
-            this.Log.Information($"Connecting to FIX session for {this.AccountId.Value}...");
+            this.Log.Debug($"Connecting...");
             this.ConnectFix();
         }
 
@@ -61,11 +61,11 @@ namespace Nautilus.Fix
         {
             if (!this.IsConnected)
             {
-                this.Log.Warning($"Already disconnected from FIX session {this.FixSession}.");
+                this.Log.Warning($"Already disconnected from session {this.SessionId}.");
                 return;
             }
 
-            this.Log.Information($"Disconnecting from FIX session for {this.AccountId.Value}...");
+            this.Log.Debug($"Disconnecting from session {this.SessionId}...");
             this.DisconnectFix();
         }
 

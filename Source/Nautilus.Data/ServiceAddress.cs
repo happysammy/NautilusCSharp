@@ -63,7 +63,7 @@ namespace Nautilus.Data
         /// <summary>
         /// Gets the <see cref="BarProvider"/> component messaging address.
         /// </summary>
-        public static Address BarRepository { get; } = new Address(nameof(BarProvider));
+        public static Address BarRepository { get; } = new Address(nameof(BarRepository));
 
         /// <summary>
         /// Gets the <see cref="InstrumentProvider"/> component messaging address.

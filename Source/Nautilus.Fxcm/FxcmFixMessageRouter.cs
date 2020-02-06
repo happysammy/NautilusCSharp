@@ -49,7 +49,7 @@ namespace Nautilus.Fxcm
         }
 
         /// <inheritdoc />
-        public void ConnectSession(Session session)
+        public void InitializeSession(Session session)
         {
             this.fixSession = session;
         }
