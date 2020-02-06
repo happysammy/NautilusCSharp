@@ -56,7 +56,7 @@ namespace NautilusData
                 configJson,
                 symbolIndex);
 
-            VersionChecker.Run(loggingAdapter, "NautilusData - Algorithmic Trading Data Service");
+            VersionChecker.Run(loggingAdapter, "NAUTILUS DATA - Algorithmic Trading Data Service");
 
             this.dataService = DataServiceFactory.Create(config);
             this.dataService.Start();

@@ -9,7 +9,10 @@
 namespace Nautilus.Common.Configuration
 {
     using System;
+    using System.Diagnostics;
     using System.Reflection;
+    using System.Runtime;
+    using System.Runtime.InteropServices;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Correctness;
 
@@ -27,22 +30,39 @@ namespace Nautilus.Common.Configuration
         {
             Condition.NotEmptyOrWhiteSpace(serviceTitle, nameof(serviceTitle));
 
-            log.Information("#---------------------------------------------------------------------------#");
+            log.Information("=================================================================");
+            log.Information(@"  _   _           _    _  _______  _____  _      _    _   _____ ");
+            log.Information(@" | \ | |    /\   | |  | ||__   __||_   _|| |    | |  | | / ____|");
+            log.Information(@" |  \| |   /  \  | |  | |   | |     | |  | |    | |  | || (___  ");
+            log.Information(@" | . ` |  / /\ \ | |  | |   | |     | |  | |    | |  | | \___ \ ");
+            log.Information(@" | |\  | / ____ \| |__| |   | |    _| |_ | |____| |__| | ____) |");
+            log.Information(@" |_| \_|/_/    \_\\____/    |_|   |_____||______|\____/ |_____/ ");
+            log.Information("                                                                 ");
             log.Information($" {serviceTitle}");
-            log.Information($" v{Assembly.GetExecutingAssembly().GetName().Version} by Nautech Systems Pty Ltd.");
-            log.Information(" Copyright (C) 2015-2019. All rights reserved.");
-            log.Information("#---------------------------------------------------------------------------#");
-            log.Information($"OS {Environment.OSVersion}");
+            log.Information(" by Nautech Systems Pty Ltd.");
+            log.Information(" Copyright (C) 2015-2020 All rights reserved.");
+            log.Information("=================================================================");
+            log.Information(" SYSTEM SPECIFICATION");
+            log.Information("=================================================================");
+            log.Information($"CPU architecture: {RuntimeInformation.ProcessArchitecture}");
+            log.Information($"CPU(s): {Environment.ProcessorCount}");
+            log.Information($"RAM-Avail: {Math.Round((decimal)Environment.WorkingSet / 1000000, 2)} MB");
+            log.Information($"OS: {Environment.OSVersion}");
             log.Information($"Is64BitOperatingSystem={Environment.Is64BitOperatingSystem}");
             log.Information($"Is64BitProcess={Environment.Is64BitProcess}");
+            log.Information("=================================================================");
+            log.Information(" VERSIONING");
+            log.Information("=================================================================");
             log.Information($"Microsoft.NETCore.App v{GetNetCoreVersion()}");
+            log.Information($"Nautilus {FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion}");
+            log.Information("=================================================================");
         }
 
         private static string GetNetCoreVersion()
         {
             // TODO: Fix this warning?
-            #pragma warning disable 8714, 8602
-            var assembly = typeof(System.Runtime.GCSettings).GetTypeInfo().Assembly;
+            #pragma warning disable 8602
+            var assembly = typeof(GCSettings).GetTypeInfo().Assembly;
             var assemblyPath = assembly.CodeBase.Split(new[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries);
             var netCoreAppIndex = Array.IndexOf(assemblyPath, "Microsoft.NETCore.App");
             if (netCoreAppIndex > 0 && netCoreAppIndex < assemblyPath.Length - 2)

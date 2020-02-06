@@ -56,7 +56,7 @@ namespace NautilusExecutor
                 configJson,
                 symbolIndex);
 
-            VersionChecker.Run(loggingAdapter, "NautilusExecutor - Algorithmic Trading Execution Service");
+            VersionChecker.Run(loggingAdapter, "NAUTILUS EXECUTOR - Algorithmic Trading Execution Service");
 
             this.executionService = ExecutionServiceFactory.Create(config);
             this.executionService.Start();

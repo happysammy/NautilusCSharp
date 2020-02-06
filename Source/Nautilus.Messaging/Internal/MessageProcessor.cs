@@ -141,6 +141,7 @@ namespace Nautilus.Messaging.Internal
             }
 
             this.Unhandled(message);
+
             return Task.CompletedTask;
         }
     }
