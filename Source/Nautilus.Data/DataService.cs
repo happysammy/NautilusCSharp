@@ -101,14 +101,14 @@ namespace Nautilus.Data
             this.RegisterHandler<TrimBarData>(this.OnMessage);
 
             // Events
-            this.RegisterHandler<FixSessionConnected>(this.OnMessage);
-            this.RegisterHandler<FixSessionDisconnected>(this.OnMessage);
+            this.RegisterHandler<SessionConnected>(this.OnMessage);
+            this.RegisterHandler<SessionDisconnected>(this.OnMessage);
             this.RegisterHandler<MarketOpened>(this.OnMessage);
             this.RegisterHandler<MarketClosed>(this.OnMessage);
 
             // Event Subscriptions
-            this.Subscribe<FixSessionConnected>();
-            this.Subscribe<FixSessionDisconnected>();
+            this.Subscribe<SessionConnected>();
+            this.Subscribe<SessionDisconnected>();
         }
 
         /// <inheritdoc />
@@ -188,7 +188,7 @@ namespace Nautilus.Data
             this.Send(message, ServiceAddress.DataGateway);
         }
 
-        private void OnMessage(FixSessionConnected message)
+        private void OnMessage(SessionConnected message)
         {
             this.Log.Information($"Connected to session {message.SessionId}.");
 
@@ -223,7 +223,7 @@ namespace Nautilus.Data
             }
         }
 
-        private void OnMessage(FixSessionDisconnected message)
+        private void OnMessage(SessionDisconnected message)
         {
             if (this.autoReconnect)
             {

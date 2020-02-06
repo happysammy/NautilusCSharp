@@ -199,13 +199,13 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
                 StubZonedDateTime.UnixEpoch());
 
             var subscribe4 = new Subscribe<Type>(
-                typeof(FixSessionConnected),
+                typeof(SessionConnected),
                 this.receiver.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             var subscribe5 = new Subscribe<Type>(
-                typeof(FixSessionConnected),
+                typeof(SessionConnected),
                 receiver2.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -222,10 +222,10 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             // Assert
             Assert.Contains(typeof(Event), this.messageBus.Subscriptions);
             Assert.Contains(typeof(MarketOpened), this.messageBus.Subscriptions);
-            Assert.Contains(typeof(FixSessionConnected), this.messageBus.Subscriptions);
+            Assert.Contains(typeof(SessionConnected), this.messageBus.Subscriptions);
             Assert.Equal(2, this.messageBus.Subscriptions[typeof(Event)].Count);
             Assert.Equal(1, this.messageBus.Subscriptions[typeof(MarketOpened)].Count);
-            Assert.Equal(2, this.messageBus.Subscriptions[typeof(FixSessionConnected)].Count);
+            Assert.Equal(2, this.messageBus.Subscriptions[typeof(SessionConnected)].Count);
             Assert.Equal(1, this.messageBus.Subscriptions[typeof(MarketOpened)].Count);
             Assert.Equal(5, this.messageBus.SubscriptionCount);
         }
@@ -364,13 +364,13 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
                 StubZonedDateTime.UnixEpoch());
 
             var subscribe4 = new Subscribe<Type>(
-                typeof(FixSessionConnected),
+                typeof(SessionConnected),
                 this.receiver.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             var subscribe5 = new Subscribe<Type>(
-                typeof(FixSessionConnected),
+                typeof(SessionConnected),
                 receiver2.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -388,7 +388,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
                 StubZonedDateTime.UnixEpoch());
 
             var unsubscribe3 = new Unsubscribe<Type>(
-                typeof(FixSessionConnected),
+                typeof(SessionConnected),
                 this.receiver.Mailbox,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -408,10 +408,10 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
 
             // Assert
             Assert.Contains(typeof(Event), this.messageBus.Subscriptions);
-            Assert.Contains(typeof(FixSessionConnected), this.messageBus.Subscriptions);
+            Assert.Contains(typeof(SessionConnected), this.messageBus.Subscriptions);
             Assert.DoesNotContain(typeof(MarketOpened), this.messageBus.Subscriptions);
             Assert.Equal(1, this.messageBus.Subscriptions[typeof(Event)].Count);
-            Assert.Equal(1, this.messageBus.Subscriptions[typeof(FixSessionConnected)].Count);
+            Assert.Equal(1, this.messageBus.Subscriptions[typeof(SessionConnected)].Count);
             Assert.Equal(2, this.messageBus.SubscriptionCount);
         }
 

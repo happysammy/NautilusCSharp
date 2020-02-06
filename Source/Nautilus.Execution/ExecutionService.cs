@@ -82,12 +82,12 @@ namespace Nautilus.Execution
             this.RegisterHandler<Disconnect>(this.OnMessage);
 
             // Events
-            this.RegisterHandler<FixSessionConnected>(this.OnMessage);
-            this.RegisterHandler<FixSessionDisconnected>(this.OnMessage);
+            this.RegisterHandler<SessionConnected>(this.OnMessage);
+            this.RegisterHandler<SessionDisconnected>(this.OnMessage);
 
             // Event Subscriptions
-            this.Subscribe<FixSessionConnected>();
-            this.Subscribe<FixSessionDisconnected>();
+            this.Subscribe<SessionConnected>();
+            this.Subscribe<SessionDisconnected>();
         }
 
         /// <inheritdoc />
@@ -148,7 +148,7 @@ namespace Nautilus.Execution
             this.Send(message, ServiceAddress.TradingGateway);
         }
 
-        private void OnMessage(FixSessionConnected message)
+        private void OnMessage(SessionConnected message)
         {
             this.Log.Information($"Connected to session {message.SessionId}.");
 
@@ -161,7 +161,7 @@ namespace Nautilus.Execution
             this.tradingGateway.SubscribeToPositionEvents();
         }
 
-        private void OnMessage(FixSessionDisconnected message)
+        private void OnMessage(SessionDisconnected message)
         {
             if (this.autoReconnect)
             {

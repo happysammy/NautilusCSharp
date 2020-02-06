@@ -162,7 +162,7 @@ namespace Nautilus.Fix
         {
             this.commandHandler.Execute(() =>
             {
-                var connected = new FixSessionConnected(
+                var connected = new SessionConnected(
                     this.Brokerage,
                     sessionId.ToString(),
                     this.guidFactory.Generate(),
@@ -181,7 +181,7 @@ namespace Nautilus.Fix
         {
             this.commandHandler.Execute(() =>
             {
-                var disconnected = new FixSessionDisconnected(
+                var disconnected = new SessionDisconnected(
                     this.Brokerage,
                     sessionId.ToString(),
                     this.guidFactory.Generate(),
