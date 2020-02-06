@@ -105,7 +105,7 @@ namespace Nautilus.Execution
                     ServiceAddress.EventPublisher,
                 };
 
-                this.SendAll(start, receivers);
+                this.Send(start, receivers);
 
                 // Inside connection schedule weekly interval
                 this.CreateDisconnectFixJob();
@@ -132,7 +132,7 @@ namespace Nautilus.Execution
                 ServiceAddress.EventPublisher,
             };
 
-            this.SendAll(stop, receivers);
+            this.Send(stop, receivers);
         }
 
         private void OnMessage(Connect message)

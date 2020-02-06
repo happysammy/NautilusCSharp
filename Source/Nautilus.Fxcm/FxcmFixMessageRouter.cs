@@ -30,7 +30,7 @@ namespace Nautilus.Fxcm
         private readonly SymbolConverter symbolConverter;
         private readonly AccountId accountId;
 
-        private Session? fixSession;
+        private Session? session;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FxcmFixMessageRouter"/> class.
@@ -49,9 +49,9 @@ namespace Nautilus.Fxcm
         }
 
         /// <inheritdoc />
-        public void InitializeSession(Session session)
+        public void InitializeSession(Session newSession)
         {
-            this.fixSession = session;
+            this.session = newSession;
         }
 
         /// <inheritdoc />
@@ -225,13 +225,13 @@ namespace Nautilus.Fxcm
 
         private void SendFixMessage(Message message)
         {
-            if (this.fixSession is null)
+            if (this.session is null)
             {
                 this.Log.Error($"Cannot send FIX message (the session is null).");
                 return;
             }
 
-            this.fixSession.Send(message);
+            this.session.Send(message);
 
             this.LogMessageSent(message);
         }

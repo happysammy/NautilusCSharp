@@ -86,7 +86,7 @@ namespace Nautilus.Common.Messaging
         /// <param name="message">The message to send.</param>
         /// <param name="receivers">The message receivers.</param>
         /// <typeparam name="T">The message type.</typeparam>
-        protected void SendAll<T>(T message, List<Address> receivers)
+        protected void Send<T>(T message, List<Address> receivers)
             where T : Message
         {
             Debug.NotEmpty(receivers, nameof(receivers));

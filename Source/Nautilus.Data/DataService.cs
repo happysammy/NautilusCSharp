@@ -150,7 +150,7 @@ namespace Nautilus.Data
                     ServiceAddress.InstrumentPublisher,
                 };
 
-                this.SendAll(start, receivers);
+                this.Send(start, receivers);
             });
         }
 
@@ -171,7 +171,7 @@ namespace Nautilus.Data
                 ServiceAddress.InstrumentPublisher,
             };
 
-            this.SendAll(stop, receivers);
+            this.Send(stop, receivers);
         }
 
         private void OnMessage(Connect message)
