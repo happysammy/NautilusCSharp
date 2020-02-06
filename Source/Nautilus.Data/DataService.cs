@@ -121,7 +121,7 @@ namespace Nautilus.Data
                     this.scheduledConnect,
                     this.InstantNow()))
                 {
-                    // this.Send(start, ServiceAddress.DataGateway);
+                    this.Send(start, ServiceAddress.DataGateway);
 
                     // Outside connection schedule weekly interval
                     this.CreateDisconnectFixJob();
