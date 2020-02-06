@@ -30,6 +30,7 @@ namespace Nautilus.DomainModel.Aggregates.Internal
                 { new StateTransition<OrderState>(OrderState.Submitted, Trigger.Event(typeof(OrderRejected))), OrderState.Rejected },
                 { new StateTransition<OrderState>(OrderState.Submitted, Trigger.Event(typeof(OrderAccepted))), OrderState.Accepted },
                 { new StateTransition<OrderState>(OrderState.Submitted, Trigger.Event(typeof(OrderWorking))), OrderState.Working },
+                { new StateTransition<OrderState>(OrderState.Rejected, Trigger.Event(typeof(OrderRejected))), OrderState.Rejected },
                 { new StateTransition<OrderState>(OrderState.Accepted, Trigger.Event(typeof(OrderCancelled))), OrderState.Cancelled },
                 { new StateTransition<OrderState>(OrderState.Accepted, Trigger.Event(typeof(OrderWorking))), OrderState.Working },
                 { new StateTransition<OrderState>(OrderState.Accepted, Trigger.Event(typeof(OrderPartiallyFilled))), OrderState.PartiallyFilled },

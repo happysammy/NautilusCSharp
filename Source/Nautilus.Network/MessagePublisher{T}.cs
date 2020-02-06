@@ -15,7 +15,6 @@ namespace Nautilus.Network
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Types;
-    using Nautilus.Messaging;
     using NetMQ;
     using NetMQ.Sockets;
 
@@ -59,10 +58,7 @@ namespace Nautilus.Network
             this.serializer = serializer;
 
             this.NetworkAddress = new ZmqNetworkAddress(host, port);
-            this.PublishedCount = 0;
-
-            this.RegisterHandler<Envelope<Start>>(this.OnMessage);
-            this.RegisterHandler<Envelope<Stop>>(this.OnMessage);
+            this.CountPublished = 0;
         }
 
         /// <summary>
@@ -71,9 +67,9 @@ namespace Nautilus.Network
         public ZmqNetworkAddress NetworkAddress { get; }
 
         /// <summary>
-        /// Gets the server received message count.
+        /// Gets the server published message count.
         /// </summary>
-        public int PublishedCount { get; private set; }
+        public int CountPublished { get; private set; }
 
         /// <summary>
         /// Dispose of the socket.
@@ -106,18 +102,8 @@ namespace Nautilus.Network
         {
             this.socket.SendMultipartBytes(Encoding.UTF8.GetBytes(topic), this.serializer.Serialize(message));
 
-            this.PublishedCount++;
-            this.Log.Verbose($"[{this.PublishedCount}]--> Topic={topic}, Message={message}");
-        }
-
-        private void OnMessage(Envelope<Start> message)
-        {
-            this.Open(message);
-        }
-
-        private void OnMessage(Envelope<Stop> message)
-        {
-            this.Open(message);
+            this.CountPublished++;
+            this.Log.Verbose($"[{this.CountPublished}]--> Topic={topic}, Message={message}");
         }
     }
 }

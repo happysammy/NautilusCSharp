@@ -61,8 +61,8 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             // Assert
             Assert.Equal("tcp://127.0.0.1:55555", server.NetworkAddress.ToString());
             Assert.Equal(State.Initialized, server.State);
-            Assert.Equal(0, server.ReceivedCount);
-            Assert.Equal(0, server.SentCount);
+            Assert.Equal(0, server.CountReceived);
+            Assert.Equal(0, server.CountSent);
 
             // Tear Down
             server.Stop();
@@ -126,8 +126,8 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             // Assert
             Assert.Equal(typeof(MessageRejected), response1.Type);
             Assert.Equal(typeof(MessageReceived), response2.Type);
-            Assert.Equal(1, server.ReceivedCount);
-            Assert.Equal(2, server.SentCount);
+            Assert.Equal(1, server.CountReceived);
+            Assert.Equal(2, server.CountSent);
 
             // Tear Down
             requester1.Disconnect(testAddress);
@@ -172,8 +172,8 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             // Assert
             Assert.Equal(typeof(MessageRejected), response1.Type);
             Assert.Equal(typeof(MessageReceived), response2.Type);
-            Assert.Equal(1, server.ReceivedCount);
-            Assert.Equal(2, server.SentCount);
+            Assert.Equal(1, server.CountReceived);
+            Assert.Equal(2, server.CountSent);
 
             // Tear Down
             requester1.Disconnect(testAddress);
@@ -213,8 +213,8 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             // Assert
             Assert.Equal(typeof(MessageReceived), response.Type);
-            Assert.Equal(1, server.ReceivedCount);
-            Assert.Equal(1, server.SentCount);
+            Assert.Equal(1, server.CountReceived);
+            Assert.Equal(1, server.CountSent);
             Assert.Contains(message, server.ReceivedMessages);
 
             // Tear Down
@@ -265,8 +265,8 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             Assert.Contains(message2, server.ReceivedMessages);
             Assert.Equal(typeof(MessageReceived), response1.Type);
             Assert.Equal(typeof(MessageReceived), response2.Type);
-            Assert.Equal(2, server.ReceivedCount);
-            Assert.Equal(2, server.SentCount);
+            Assert.Equal(2, server.CountReceived);
+            Assert.Equal(2, server.CountSent);
 
             // Tear Down
             requester.Disconnect(testAddress);
@@ -357,8 +357,8 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             // Assert
             Assert.Equal(1000, server.ReceivedMessages.Count);
-            Assert.Equal(1000, server.ReceivedCount);
-            Assert.Equal(1000, server.SentCount);
+            Assert.Equal(1000, server.CountReceived);
+            Assert.Equal(1000, server.CountSent);
             Assert.Equal("TEST-999", server.ReceivedMessages[^1].Payload);
             Assert.Equal("TEST-998", server.ReceivedMessages[^2].Payload);
 
@@ -411,8 +411,8 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             // Assert
             Assert.Equal(2000, server.ReceivedMessages.Count);
-            Assert.Equal(2000, server.ReceivedCount);
-            Assert.Equal(2000, server.SentCount);
+            Assert.Equal(2000, server.CountReceived);
+            Assert.Equal(2000, server.CountSent);
             Assert.Equal("TEST-999 from 2", server.ReceivedMessages[^1].Payload);
             Assert.Equal("TEST-999 from 1", server.ReceivedMessages[^2].Payload);
             Assert.Equal("TEST-998 from 2", server.ReceivedMessages[^3].Payload);

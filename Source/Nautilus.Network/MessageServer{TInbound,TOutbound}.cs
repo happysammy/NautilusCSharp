@@ -78,11 +78,9 @@ namespace Nautilus.Network
             this.outboundSerializer = outboundSerializer;
 
             this.NetworkAddress = new ZmqNetworkAddress(host, port);
-            this.ReceivedCount = 0;
-            this.SentCount = 0;
+            this.CountReceived = 0;
+            this.CountSent = 0;
 
-            this.RegisterHandler<Envelope<Start>>(this.OnMessage);
-            this.RegisterHandler<Envelope<Stop>>(this.OnMessage);
             this.RegisterUnhandled(this.UnhandledRequest);
         }
 
@@ -94,12 +92,12 @@ namespace Nautilus.Network
         /// <summary>
         /// Gets the server received message count.
         /// </summary>
-        public int ReceivedCount { get; private set; }
+        public int CountReceived { get; private set; }
 
         /// <summary>
         /// Gets the server processed message count.
         /// </summary>
-        public int SentCount { get; private set; }
+        public int CountSent { get; private set; }
 
         /// <summary>
         /// Dispose of the socket.
@@ -149,8 +147,8 @@ namespace Nautilus.Network
                     this.delimiter,
                     this.outboundSerializer.Serialize(outbound));
 
-                this.SentCount++;
-                this.Log.Verbose($"[{this.SentCount}]--> {outbound} to Address({receiver.Value.StringValue}).");
+                this.CountSent++;
+                this.Log.Verbose($"[{this.CountSent}]--> {outbound} to Address({receiver.Value.StringValue}).");
             });
         }
 
@@ -283,8 +281,8 @@ namespace Nautilus.Network
 
                 this.SendToSelf(envelope);
 
-                this.ReceivedCount++;
-                this.Log.Verbose($"[{this.ReceivedCount}]<-- {received} from Address({sender.StringValue}).");
+                this.CountReceived++;
+                this.Log.Verbose($"[{this.CountReceived}]<-- {received} from Address({sender.StringValue}).");
             }
             catch (SerializationException ex)
             {
@@ -292,16 +290,6 @@ namespace Nautilus.Network
                 this.Log.Error(message + Environment.NewLine + ex);
                 this.SendRejected(message, Guid.Empty, sender);
             }
-        }
-
-        private void OnMessage(Envelope<Start> message)
-        {
-            this.Open(message);
-        }
-
-        private void OnMessage(Envelope<Stop> message)
-        {
-            this.Open(message);
         }
 
         /// <summary>

@@ -35,7 +35,7 @@ namespace Nautilus.Common.Messaging
         {
             this.messageBusAdapter = messageBusAdapter;
 
-            this.RegisterHandler<IEnvelope>(this.Open);
+            this.RegisterHandler<IEnvelope>(this.OnEnvelope);
         }
 
         /// <summary>

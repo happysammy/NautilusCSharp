@@ -52,7 +52,7 @@ namespace Nautilus.Common.Messaging
             this.RegisterHandler<InitializeSwitchboard>(this.OnMessage);
             this.RegisterHandler<Subscribe<Type>>(this.OnMessage);
             this.RegisterHandler<Unsubscribe<Type>>(this.OnMessage);
-            this.RegisterHandler<IEnvelope>(this.OnEnvelope);
+            this.RegisterHandler<IEnvelope>(this.OnReceive, true);
         }
 
         /// <summary>
@@ -172,7 +172,7 @@ namespace Nautilus.Common.Messaging
             this.Log.Information($"Unsubscribed {subscriber} from {command.Subscription.Name} messages.");
         }
 
-        private void OnEnvelope(IEnvelope envelope)
+        private void OnReceive(IEnvelope envelope)
         {
             Debug.True(envelope.MessageBase is T, nameof(envelope.MessageBase)); // Design time error
 

@@ -198,7 +198,7 @@ namespace Nautilus.Common.Componentry
         /// Opens the envelope and sends the contained message to self.
         /// </summary>
         /// <param name="envelope">The envelope to open.</param>
-        protected void Open(IEnvelope envelope)
+        protected void OnEnvelope(IEnvelope envelope)
         {
             this.SendToSelf(envelope.MessageBase);
 

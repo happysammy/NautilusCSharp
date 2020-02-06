@@ -12,6 +12,7 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using System.Threading.Tasks;
     using Nautilus.Messaging.Internal;
     using Nautilus.TestSuite.TestKit.TestDoubles;
