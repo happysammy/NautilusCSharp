@@ -23,6 +23,7 @@
         <ProjectReference Include="..\Nautilus.Fix\Nautilus.Fix.csproj" />
         <ProjectReference Include="..\Nautilus.Network\Nautilus.Network.csproj" />
         <ProjectReference Include="..\Nautilus.Scheduler\Nautilus.Scheduler.csproj" />
+        <ProjectReference Include="..\Nautilus.Service\Nautilus.Service.csproj" />
     </ItemGroup>
 
     <ItemGroup>

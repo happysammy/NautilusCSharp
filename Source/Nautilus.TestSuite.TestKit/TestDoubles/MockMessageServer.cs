@@ -13,7 +13,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Message;
-    using Nautilus.Messaging;
     using Nautilus.Network;
     using Nautilus.Serialization.MessagePack;
 
@@ -35,17 +34,16 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             this.ReceivedMessages = new List<MockMessage>();
 
-            this.RegisterHandler<Envelope<MockMessage>>(this.OnMessage);
+            this.RegisterHandler<MockMessage>(this.OnMessage);
         }
 
         public List<MockMessage> ReceivedMessages { get; }
 
-        private void OnMessage(Envelope<MockMessage> envelope)
+        private void OnMessage(MockMessage message)
         {
-            var received = envelope.Message;
-            this.ReceivedMessages.Add(received);
+            this.ReceivedMessages.Add(message);
 
-            this.SendReceived(received, envelope.Sender);
+            this.SendReceived(message, message.Id);
         }
     }
 }

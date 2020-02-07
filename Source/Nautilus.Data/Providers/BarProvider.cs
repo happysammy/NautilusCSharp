@@ -17,7 +17,6 @@ namespace Nautilus.Data.Providers
     using Nautilus.Data.Messages.Responses;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Messaging;
     using Nautilus.Network;
 
     /// <summary>
@@ -55,13 +54,11 @@ namespace Nautilus.Data.Providers
             this.repository = repository;
             this.dataSerializer = dataSerializer;
 
-            this.RegisterHandler<Envelope<DataRequest>>(this.OnMessage);
+            this.RegisterHandler<DataRequest>(this.OnMessage);
         }
 
-        private void OnMessage(Envelope<DataRequest> envelope)
+        private void OnMessage(DataRequest request)
         {
-            var request = envelope.Message;
-
             try
             {
                 this.Log.Information($"<--[REQ] {request}.");
@@ -69,7 +66,7 @@ namespace Nautilus.Data.Providers
                 var dataType = request.Query["DataType"];
                 if (dataType != typeof(Bar[]).Name)
                 {
-                    this.SendQueryFailure($"incorrect DataType requested, was {dataType}", request.Id, envelope.Sender);
+                    this.SendQueryFailure($"incorrect DataType requested, was {dataType}", request.Id);
                     return;
                 }
 
@@ -81,21 +78,21 @@ namespace Nautilus.Data.Providers
                 var toDate = DateKey.FromString(request.Query["ToDate"]);
                 var limit = Convert.ToInt32(request.Query["Limit"]);
 
-                var query = this.repository.GetBarData(
+                var dataQuery = this.repository.GetBarData(
                     barType,
                     fromDate,
                     toDate,
                     limit);
 
-                if (query.IsFailure)
+                if (dataQuery.IsFailure)
                 {
-                    this.SendQueryFailure(query.Message, request.Id, envelope.Sender);
-                    this.Log.Warning($"{envelope.Message} QueryFailure({query.Message}).");
+                    this.SendQueryFailure(dataQuery.Message, request.Id);
+                    this.Log.Warning($"{request} QueryFailure({dataQuery.Message}).");
                     return;
                 }
 
                 var response = new DataResponse(
-                    this.dataSerializer.SerializeBlob(query.Value, request.Query),
+                    this.dataSerializer.SerializeBlob(dataQuery.Value, request.Query),
                     dataType,
                     this.dataSerializer.BlobEncoding,
                     request.Id,
@@ -103,12 +100,12 @@ namespace Nautilus.Data.Providers
                     this.TimeNow());
 
                 this.Log.Information($"[RES]--> {response}.");
-                this.SendMessage(response, envelope.Sender);
+                this.SendMessage(response, request.Id);
             }
             catch (Exception ex)
             {
                 this.Log.Error($"{ex}");
-                this.SendQueryFailure(ex.Message, request.Id, envelope.Sender);
+                this.SendQueryFailure(ex.Message, request.Id);
             }
         }
     }

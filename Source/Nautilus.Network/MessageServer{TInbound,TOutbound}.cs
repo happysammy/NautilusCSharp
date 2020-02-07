@@ -9,6 +9,7 @@
 namespace Nautilus.Network
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Runtime.Serialization;
     using System.Text;
@@ -43,6 +44,7 @@ namespace Nautilus.Network
         private readonly RouterSocket socket;
         private readonly IMessageSerializer<TInbound> inboundSerializer;
         private readonly IMessageSerializer<TOutbound> outboundSerializer;
+        private readonly Dictionary<Guid, Address> correlationIndex = new Dictionary<Guid, Address>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageServer{TInbound, TOutbound}"/> class.
@@ -81,7 +83,7 @@ namespace Nautilus.Network
             this.CountReceived = 0;
             this.CountSent = 0;
 
-            this.RegisterUnhandled(this.UnhandledRequest);
+            this.RegisterHandler<IEnvelope>(this.OnEnvelope);
         }
 
         /// <summary>
@@ -125,39 +127,11 @@ namespace Nautilus.Network
         }
 
         /// <summary>
-        /// Sends a message with the given payload to the given receiver address.
-        /// </summary>
-        /// <param name="outbound">The outbound message to send.</param>
-        /// <param name="receiver">The receiver address.</param>
-        protected void SendMessage(TOutbound outbound, Address? receiver)
-        {
-            Debug.NotNull(receiver, nameof(receiver));
-            Debug.True(receiver.HasValue, nameof(receiver));
-
-            this.Execute(() =>
-            {
-                if (receiver is null || !receiver.Value.HasBytesValue)
-                {
-                    this.Log.Error($"Cannot send message {outbound} (no receiver address).");
-                    return;
-                }
-
-                this.socket.SendMultipartBytes(
-                    receiver.Value.BytesValue,
-                    this.delimiter,
-                    this.outboundSerializer.Serialize(outbound));
-
-                this.CountSent++;
-                this.Log.Verbose($"[{this.CountSent}]--> {outbound} to Address({receiver.Value.StringValue}).");
-            });
-        }
-
-        /// <summary>
         /// Sends a MessageReceived message to the given receiver address.
         /// </summary>
         /// <param name="receivedMessage">The received message.</param>
-        /// <param name="receiver">The receiver address.</param>
-        protected void SendReceived(Message receivedMessage, Address? receiver)
+        /// <param name="correlationId">The correlation identifier for the response.</param>
+        protected void SendReceived(Message receivedMessage, Guid correlationId)
         {
             this.Execute(() =>
             {
@@ -173,7 +147,7 @@ namespace Nautilus.Network
                     throw new InvalidOperationException($"The message was not of type {typeof(TOutbound)}.");
                 }
 
-                this.SendMessage(received, receiver);
+                this.SendMessage(received, correlationId);
             });
         }
 
@@ -182,11 +156,7 @@ namespace Nautilus.Network
         /// </summary>
         /// <param name="failureMessage">The query failure message.</param>
         /// <param name="correlationId">The message correlation identifier.</param>
-        /// <param name="receiver">The receiver address.</param>
-        protected void SendQueryFailure(
-            string failureMessage,
-            Guid correlationId,
-            Address? receiver)
+        protected void SendQueryFailure(string failureMessage, Guid correlationId)
         {
             this.Execute(() =>
             {
@@ -202,36 +172,38 @@ namespace Nautilus.Network
                     throw new InvalidOperationException($"The message was not of type {typeof(TOutbound)}.");
                 }
 
-                this.SendMessage(failure, receiver);
+                this.SendMessage(failure, correlationId);
             });
         }
 
         /// <summary>
-        /// Sends a MessageRejected message to the given receiver address.
+        /// Sends a message with the given payload to the given receiver address.
         /// </summary>
-        /// <param name="rejectedMessage">The rejected message.</param>
-        /// <param name="correlationId">The message correlation identifier.</param>
-        /// <param name="receiver">The receiver address.</param>
-        private void SendRejected(
-            string rejectedMessage,
-            Guid correlationId,
-            Address? receiver)
+        /// <param name="outbound">The outbound message to send.</param>
+        /// <param name="correlationId">The correlation identifier for the receiver address.</param>
+        protected void SendMessage(TOutbound outbound, Guid correlationId)
         {
             this.Execute(() =>
             {
-                var rejected = new MessageRejected(
-                    rejectedMessage,
-                    correlationId,
-                    Guid.NewGuid(),
-                    this.TimeNow()) as TOutbound;
-
-                if (rejected is null)
+                if (this.correlationIndex.TryGetValue(correlationId, out var receiver))
                 {
-                    // This should never happen due to generic type constraints
-                    throw new InvalidOperationException($"The message was not of type {typeof(TOutbound)}.");
+                    this.correlationIndex.Remove(correlationId);
+                }
+                else
+                {
+                    this.Log.Error($"Cannot send message {outbound} " +
+                                   $"(no receiver address found for {correlationId}).");
+                    return;
                 }
 
-                this.SendMessage(rejected, receiver);
+                if (!receiver.HasBytesValue)
+                {
+                    this.Log.Error($"Cannot send message {outbound} " +
+                                   $"(no receiver address found for {correlationId}).");
+                    return;
+                }
+
+                this.SendMessage(outbound, receiver);
             });
         }
 
@@ -250,63 +222,91 @@ namespace Nautilus.Network
         {
             this.Execute(() =>
             {
-                var msg = this.socket.ReceiveMultipartBytes(EXPECTED_FRAMES_COUNT);  // msg[1] should be empty byte array delimiter
+                // msg[0] reply address
+                // msg[1] should be empty byte array delimiter
+                // msg[2] payload
+                var msg = this.socket.ReceiveMultipartBytes(EXPECTED_FRAMES_COUNT);
                 if (msg.Count != EXPECTED_FRAMES_COUNT)
                 {
                     var error = $"Message was malformed (expected {EXPECTED_FRAMES_COUNT} frames, received {msg.Count}).";
                     if (msg.Count >= 1)
                     {
-                        this.SendRejected(error, Guid.Empty, new Address(msg[0], Encoding.ASCII.GetString));
+                        this.SendRejected(error, new Address(msg[0], Encoding.ASCII.GetString));
                     }
 
                     this.Log.Error(error);
                 }
                 else
                 {
-                    this.DeserializeMessage(new Address(msg[0], Encoding.ASCII.GetString), msg[2]);
+                    this.DeserializeMessage(msg[2], new Address(msg[0], Encoding.ASCII.GetString));
                 }
             });
         }
 
-        private void DeserializeMessage(Address sender, byte[] payload)
+        private void DeserializeMessage(byte[] payload, Address sender)
         {
             try
             {
                 var received = this.inboundSerializer.Deserialize(payload);
-                var envelope = EnvelopeFactory.Create(
-                    received,
-                    null,
-                    sender,
-                    this.TimeNow());
+                this.correlationIndex[received.Id] = sender;
 
-                this.SendToSelf(envelope);
+                if (received.Type.IsSubclassOf(typeof(TInbound)) || received.Type == typeof(TInbound))
+                {
+                    this.SendToSelf(received);
+
+                    this.Log.Verbose($"[{this.CountReceived}]<-- {received} from Address({sender.StringValue}).");
+                }
+                else
+                {
+                    var errorMessage = $"Message type {received.Type} not valid at this address {this.NetworkAddress}.";
+                    this.SendRejected(errorMessage, sender);
+
+                    this.Log.Error(errorMessage);
+                }
 
                 this.CountReceived++;
-                this.Log.Verbose($"[{this.CountReceived}]<-- {received} from Address({sender.StringValue}).");
             }
             catch (SerializationException ex)
             {
                 var message = "Unable to deserialize message.";
                 this.Log.Error(message + Environment.NewLine + ex);
-                this.SendRejected(message, Guid.Empty, sender);
+                this.SendRejected(message, sender);
             }
         }
 
-        /// <summary>
-        /// Handle the given unhandled request message.
-        /// </summary>
-        /// <param name="request">The unhandled request object.</param>
-        private void UnhandledRequest(object request)
+        private void SendRejected(string rejectedMessage, Address receiver)
         {
-            if (request is IEnvelope envelope)
+            this.Execute(() =>
             {
-                var errorMessage = $"Message type {envelope.MessageType.Name} not valid at this address {this.NetworkAddress}.";
-                this.SendRejected(errorMessage, envelope.MessageBase.Id, envelope.Sender);
+                var rejected = new MessageRejected(
+                    rejectedMessage,
+                    Guid.Empty,
+                    Guid.NewGuid(),
+                    this.TimeNow()) as TOutbound;
 
-                this.Log.Error(errorMessage);
-            }
+                if (rejected is null)
+                {
+                    // Exists to avoid warning CS8604 for this.SendMessage(rejected, receiver)
+                    // This should never happen anyway due to generic type constraints
+                    throw new InvalidOperationException($"The message was not of type {typeof(TOutbound)}.");
+                }
 
-            this.AddToUnhandledMessages(request);
+                this.SendMessage(rejected, receiver);
+            });
+        }
+
+        private void SendMessage(TOutbound outbound, Address receiver)
+        {
+            this.Execute(() =>
+            {
+                this.socket.SendMultipartBytes(
+                    receiver.BytesValue,
+                    this.delimiter,
+                    this.outboundSerializer.Serialize(outbound));
+
+                this.CountSent++;
+                this.Log.Verbose($"[{this.CountSent}]--> {outbound} to Address({receiver}).");
+            });
         }
     }
 }

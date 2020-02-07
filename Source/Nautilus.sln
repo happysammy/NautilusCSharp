@@ -71,6 +71,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.TestSuite.UnitTest
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.TestSuite.IntegrationTests", "Nautilus.TestSuite.IntegrationTests\Nautilus.TestSuite.IntegrationTests.csproj", "{A8A27E8F-EF22-43C3-9350-91FD626A130F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Service", "Nautilus.Service\Nautilus.Service.csproj", "{53951310-D311-44F2-82E3-2980A7FCB58E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -154,6 +156,10 @@ Global
 		{ECB6AD8B-6714-4619-91DD-C459709C5036}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ECB6AD8B-6714-4619-91DD-C459709C5036}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ECB6AD8B-6714-4619-91DD-C459709C5036}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53951310-D311-44F2-82E3-2980A7FCB58E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53951310-D311-44F2-82E3-2980A7FCB58E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53951310-D311-44F2-82E3-2980A7FCB58E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53951310-D311-44F2-82E3-2980A7FCB58E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{5C57208C-5B4D-4413-A632-0159D379BC34} = {33E9E1BA-15F1-4786-9038-90EC96E2C6F2}
@@ -179,5 +185,6 @@ Global
 		{ECB6AD8B-6714-4619-91DD-C459709C5036} = {594EE890-8228-4812-AC7E-9E55610EDF59}
 		{FDF77D1F-4284-4DDC-9E10-F11AFA74535D} = {594EE890-8228-4812-AC7E-9E55610EDF59}
 		{9D3616C8-EE7A-42EC-8063-98388DF15FB8} = {594EE890-8228-4812-AC7E-9E55610EDF59}
+		{53951310-D311-44F2-82E3-2980A7FCB58E} = {594EE890-8228-4812-AC7E-9E55610EDF59}
 	EndGlobalSection
 EndGlobal

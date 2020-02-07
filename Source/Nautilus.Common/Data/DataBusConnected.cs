@@ -12,6 +12,7 @@ namespace Nautilus.Common.Data
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.Messaging.Interfaces;
 
     /// <summary>
     /// The base class for all components which are connected to the message bus.
@@ -31,6 +32,8 @@ namespace Nautilus.Common.Data
             : base(container)
         {
             this.dataBusAdapter = dataBusAdapter;
+
+            this.RegisterHandler<IEnvelope>(this.OnEnvelope);
         }
 
         /// <summary>

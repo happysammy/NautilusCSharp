@@ -12,7 +12,6 @@ namespace Nautilus.Execution.Network
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Message;
     using Nautilus.DomainModel.Commands;
-    using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Network;
 
@@ -22,7 +21,7 @@ namespace Nautilus.Execution.Network
     /// </summary>
     public sealed class CommandServer : MessageServer<Command, Response>
     {
-        private readonly IEndpoint receiver;
+        private readonly IEndpoint commandsSink;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandServer"/> class.
@@ -30,13 +29,13 @@ namespace Nautilus.Execution.Network
         /// <param name="container">The component setup container.</param>
         /// <param name="inboundSerializer">The inbound message serializer.</param>
         /// <param name="outboundSerializer">The outbound message serializer.</param>
-        /// <param name="receiver">The receiver endpoint for deserialized commands.</param>
+        /// <param name="commandsSink">The commands endpoint for deserialized commands.</param>
         /// <param name="port">The consumers port.</param>
         public CommandServer(
             IComponentryContainer container,
             IMessageSerializer<Command> inboundSerializer,
             IMessageSerializer<Response> outboundSerializer,
-            IEndpoint receiver,
+            IEndpoint commandsSink,
             NetworkPort port)
             : base(
                 container,
@@ -46,43 +45,43 @@ namespace Nautilus.Execution.Network
                 port,
                 Guid.NewGuid())
         {
-            this.receiver = receiver;
+            this.commandsSink = commandsSink;
 
-            this.RegisterHandler<Envelope<SubmitOrder>>(this.OnMessage);
-            this.RegisterHandler<Envelope<SubmitAtomicOrder>>(this.OnMessage);
-            this.RegisterHandler<Envelope<CancelOrder>>(this.OnMessage);
-            this.RegisterHandler<Envelope<ModifyOrder>>(this.OnMessage);
-            this.RegisterHandler<Envelope<AccountInquiry>>(this.OnMessage);
+            this.RegisterHandler<SubmitOrder>(this.OnMessage);
+            this.RegisterHandler<SubmitAtomicOrder>(this.OnMessage);
+            this.RegisterHandler<CancelOrder>(this.OnMessage);
+            this.RegisterHandler<ModifyOrder>(this.OnMessage);
+            this.RegisterHandler<AccountInquiry>(this.OnMessage);
         }
 
-        private void OnMessage(Envelope<SubmitOrder> envelope)
+        private void OnMessage(SubmitOrder command)
         {
-            this.receiver.Send(envelope.Message);
-            this.SendReceived(envelope.Message, envelope.Sender);
+            this.commandsSink.Send(command);
+            this.SendReceived(command, command.Id);
         }
 
-        private void OnMessage(Envelope<SubmitAtomicOrder> envelope)
+        private void OnMessage(SubmitAtomicOrder command)
         {
-            this.receiver.Send(envelope.Message);
-            this.SendReceived(envelope.Message, envelope.Sender);
+            this.commandsSink.Send(command);
+            this.SendReceived(command, command.Id);
         }
 
-        private void OnMessage(Envelope<CancelOrder> envelope)
+        private void OnMessage(CancelOrder command)
         {
-            this.receiver.Send(envelope.Message);
-            this.SendReceived(envelope.Message, envelope.Sender);
+            this.commandsSink.Send(command);
+            this.SendReceived(command, command.Id);
         }
 
-        private void OnMessage(Envelope<ModifyOrder> envelope)
+        private void OnMessage(ModifyOrder command)
         {
-            this.receiver.Send(envelope.Message);
-            this.SendReceived(envelope.Message, envelope.Sender);
+            this.commandsSink.Send(command);
+            this.SendReceived(command, command.Id);
         }
 
-        private void OnMessage(Envelope<AccountInquiry> envelope)
+        private void OnMessage(AccountInquiry command)
         {
-            this.receiver.Send(envelope.Message);
-            this.SendReceived(envelope.Message, envelope.Sender);
+            this.commandsSink.Send(command);
+            this.SendReceived(command, command.Id);
         }
     }
 }

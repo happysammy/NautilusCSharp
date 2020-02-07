@@ -229,7 +229,7 @@ namespace Nautilus.Common.Componentry
 
         private void Unhandled(object message)
         {
-            this.Log.Error($"Unhandled message [{message}].");
+            this.Log.Error($"Unhandled message: {message}.");
             this.AddToUnhandledMessages(message);
         }
     }
