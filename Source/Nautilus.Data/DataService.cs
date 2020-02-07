@@ -93,7 +93,7 @@ namespace Nautilus.Data
         }
 
         /// <inheritdoc />
-        protected override void ServiceStart(Start start)
+        protected override void OnServiceStart(Start start)
         {
             this.Execute(() =>
             {
@@ -120,7 +120,7 @@ namespace Nautilus.Data
         }
 
         /// <inheritdoc />
-        protected override void ServiceStop(Stop stop)
+        protected override void OnServiceStop(Stop stop)
         {
             // Forward stop message
             var receivers = new List<Address>

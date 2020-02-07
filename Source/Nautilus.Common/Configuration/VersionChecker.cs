@@ -46,7 +46,7 @@ namespace Nautilus.Common.Configuration
             log.Information("=================================================================");
             log.Information($"CPU architecture: {RuntimeInformation.ProcessArchitecture}");
             log.Information($"CPU(s): {Environment.ProcessorCount}");
-            log.Information($"RAM-Avail: {Math.Round((decimal)Environment.WorkingSet / 1000000, 2)} MB");
+            log.Information($"RAM-Avail: {Math.Round((decimal)Environment.WorkingSet / 1000000, 2)} GB");
             log.Information($"OS: {Environment.OSVersion}");
             log.Information($"Is64BitOperatingSystem={Environment.Is64BitOperatingSystem}");
             log.Information($"Is64BitProcess={Environment.Is64BitProcess}");

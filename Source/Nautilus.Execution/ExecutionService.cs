@@ -63,7 +63,7 @@ namespace Nautilus.Execution
         }
 
         /// <inheritdoc />
-        protected override void ServiceStart(Start start)
+        protected override void OnServiceStart(Start start)
         {
             // Forward start message
             var receivers = new List<Address>
@@ -77,7 +77,7 @@ namespace Nautilus.Execution
         }
 
         /// <inheritdoc />
-        protected override void ServiceStop(Stop stop)
+        protected override void OnServiceStop(Stop stop)
         {
             // Forward stop message
             var receivers = new List<Address>

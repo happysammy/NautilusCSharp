@@ -117,7 +117,7 @@ namespace Nautilus.Service
                     this.CreateDisconnectFixJob();
                 }
 
-                this.ServiceStart(start);
+                this.OnServiceStart(start);
             });
         }
 
@@ -125,14 +125,14 @@ namespace Nautilus.Service
         protected override void OnStop(Stop stop)
         {
             this.autoReconnect = false;  // Avoid immediate reconnection
-            this.ServiceStop(stop);
+            this.OnServiceStop(stop);
         }
 
         /// <summary>
         /// Called when the service receives a <see cref="Start"/> message.
         /// </summary>
         /// <param name="start">The start message.</param>
-        protected virtual void ServiceStart(Start start)
+        protected virtual void OnServiceStart(Start start)
         {
             // Do nothing if not overridden
         }
@@ -141,7 +141,7 @@ namespace Nautilus.Service
         /// Called when the service receives a <see cref="Stop"/> message.
         /// </summary>
         /// <param name="stop">The start message.</param>
-        protected virtual void ServiceStop(Stop stop)
+        protected virtual void OnServiceStop(Stop stop)
         {
             // Do nothing if not overridden
         }
