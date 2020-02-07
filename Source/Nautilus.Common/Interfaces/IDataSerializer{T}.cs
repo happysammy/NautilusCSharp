@@ -38,11 +38,11 @@ namespace Nautilus.Common.Interfaces
         /// Returns the serialized data object two dimensional bytes array.
         /// </summary>
         /// <param name="dataObjects">The data objects to serialize.</param>
-        /// <returns>The serialized data object bytes.</returns>
+        /// <returns>The serialized data object byte arrays array.</returns>
         byte[][] Serialize(T[] dataObjects);
 
         /// <summary>
-        /// Return the data objects bytes array serialized to a single array.
+        /// Return the data objects byte arrays serialized to a single array.
         /// </summary>
         /// <param name="dataObjectsArray">The data objects array to serialize.</param>
         /// <param name="metadata">The metadata for the given data objects array.</param>
@@ -68,7 +68,7 @@ namespace Nautilus.Common.Interfaces
         /// Return the data objects bytes array deserialized to a two dimensional array.
         /// </summary>
         /// <param name="dataBytes">The data bytes to deserialize.</param>
-        /// <returns>The deserialized data bytes array.</returns>
+        /// <returns>The deserialized data byte arrays.</returns>
         T[] DeserializeBlob(byte[] dataBytes);
     }
 }

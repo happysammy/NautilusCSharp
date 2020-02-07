@@ -63,35 +63,35 @@ namespace Nautilus.Serialization.MessagePack
             var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(dataBytes);
 
             var response = unpacked[nameof(Response.Type)].ToString();
-            var correlationId = ObjectExtractor.Guid(unpacked[nameof(Response.CorrelationId)]);
-            var id = ObjectExtractor.Guid(unpacked[nameof(Response.Id)]);
-            var timestamp = ObjectExtractor.ZonedDateTime(unpacked[nameof(Response.Timestamp)]);
+            var correlationId = ObjectExtractor.AsGuid(unpacked[nameof(Response.CorrelationId)]);
+            var id = ObjectExtractor.AsGuid(unpacked[nameof(Response.Id)]);
+            var timestamp = ObjectExtractor.AsZonedDateTime(unpacked[nameof(Response.Timestamp)]);
 
             switch (response)
             {
                 case nameof(MessageReceived):
                     return new MessageReceived(
-                        unpacked[nameof(MessageReceived.ReceivedType)].ToString(),
+                        unpacked[nameof(MessageReceived.ReceivedType)].AsString(),
                         correlationId,
                         id,
                         timestamp);
                 case nameof(MessageRejected):
                     return new MessageRejected(
-                        unpacked[nameof(MessageRejected.Message)].ToString(),
+                        unpacked[nameof(MessageRejected.Message)].AsString(),
                         correlationId,
                         id,
                         timestamp);
                 case nameof(QueryFailure):
                     return new QueryFailure(
-                        unpacked[nameof(MessageRejected.Message)].ToString(),
+                        unpacked[nameof(MessageRejected.Message)].AsString(),
                         correlationId,
                         id,
                         timestamp);
                 case nameof(DataResponse):
                     return new DataResponse(
                         unpacked[nameof(DataResponse.Data)].AsBinary(),
-                        unpacked[nameof(DataResponse.DataType)].ToString(),
-                        unpacked[nameof(DataResponse.DataEncoding)].ToString().ToEnum<DataEncoding>(),
+                        unpacked[nameof(DataResponse.DataType)].AsString(),
+                        unpacked[nameof(DataResponse.DataEncoding)].AsString().ToEnum<DataEncoding>(),
                         correlationId,
                         id,
                         timestamp);

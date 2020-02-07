@@ -99,15 +99,15 @@ namespace Nautilus.Serialization.Internal
         /// <exception cref="InvalidEnumArgumentException">If the order type is unknown.</exception>
         private Order Deserialize(MessagePackObjectDictionary unpacked)
         {
-            var type = ObjectExtractor.Enum<OrderType>(unpacked[nameof(OrderType)]);
-            var id = ObjectExtractor.OrderId(unpacked, nameof(Order.Id));
+            var type = ObjectExtractor.AsEnum<OrderType>(unpacked[nameof(OrderType)]);
+            var id = ObjectExtractor.AsOrderId(unpacked, nameof(Order.Id));
             var symbol = this.symbolCache.Get(unpacked[nameof(Symbol)].AsString());
-            var label = ObjectExtractor.Label(unpacked);
-            var side = ObjectExtractor.Enum<OrderSide>(unpacked[nameof(OrderSide)]);
-            var purpose = ObjectExtractor.Enum<OrderPurpose>(unpacked[nameof(OrderPurpose)]);
-            var quantity = ObjectExtractor.Quantity(unpacked[nameof(Order.Quantity)]);
-            var timestamp = ObjectExtractor.ZonedDateTime(unpacked[nameof(Order.Timestamp)]);
-            var initialId = ObjectExtractor.Guid(unpacked[nameof(Order.InitId)]);
+            var label = ObjectExtractor.AsLabel(unpacked);
+            var side = ObjectExtractor.AsEnum<OrderSide>(unpacked[nameof(OrderSide)]);
+            var purpose = ObjectExtractor.AsEnum<OrderPurpose>(unpacked[nameof(OrderPurpose)]);
+            var quantity = ObjectExtractor.AsQuantity(unpacked[nameof(Order.Quantity)]);
+            var timestamp = ObjectExtractor.AsZonedDateTime(unpacked[nameof(Order.Timestamp)]);
+            var initialId = ObjectExtractor.AsGuid(unpacked[nameof(Order.InitId)]);
 
             switch (type)
             {
@@ -129,9 +129,9 @@ namespace Nautilus.Serialization.Internal
                         side,
                         purpose,
                         quantity,
-                        ObjectExtractor.Price(unpacked[nameof(Order.Price)]),
-                        ObjectExtractor.Enum<TimeInForce>(unpacked[nameof(Order.TimeInForce)]),
-                        ObjectExtractor.NullableZonedDateTime(unpacked[nameof(Order.ExpireTime)]),
+                        ObjectExtractor.AsPrice(unpacked[nameof(Order.Price)]),
+                        ObjectExtractor.AsEnum<TimeInForce>(unpacked[nameof(Order.TimeInForce)]),
+                        ObjectExtractor.AsNullableZonedDateTime(unpacked[nameof(Order.ExpireTime)]),
                         timestamp,
                         initialId);
                 case OrderType.StopLimit:
@@ -142,9 +142,9 @@ namespace Nautilus.Serialization.Internal
                         side,
                         purpose,
                         quantity,
-                        ObjectExtractor.Price(unpacked[nameof(Order.Price)]),
-                        ObjectExtractor.Enum<TimeInForce>(unpacked[nameof(Order.TimeInForce)]),
-                        ObjectExtractor.NullableZonedDateTime(unpacked[nameof(Order.ExpireTime)]),
+                        ObjectExtractor.AsPrice(unpacked[nameof(Order.Price)]),
+                        ObjectExtractor.AsEnum<TimeInForce>(unpacked[nameof(Order.TimeInForce)]),
+                        ObjectExtractor.AsNullableZonedDateTime(unpacked[nameof(Order.ExpireTime)]),
                         timestamp,
                         initialId);
                 case OrderType.StopMarket:
@@ -155,9 +155,9 @@ namespace Nautilus.Serialization.Internal
                         side,
                         purpose,
                         quantity,
-                        ObjectExtractor.Price(unpacked[nameof(Order.Price)]),
-                        ObjectExtractor.Enum<TimeInForce>(unpacked[nameof(Order.TimeInForce)]),
-                        ObjectExtractor.NullableZonedDateTime(unpacked[nameof(Order.ExpireTime)]),
+                        ObjectExtractor.AsPrice(unpacked[nameof(Order.Price)]),
+                        ObjectExtractor.AsEnum<TimeInForce>(unpacked[nameof(Order.TimeInForce)]),
+                        ObjectExtractor.AsNullableZonedDateTime(unpacked[nameof(Order.ExpireTime)]),
                         timestamp,
                         initialId);
                 case OrderType.MIT:
@@ -168,11 +168,13 @@ namespace Nautilus.Serialization.Internal
                         side,
                         purpose,
                         quantity,
-                        ObjectExtractor.Price(unpacked[nameof(Order.Price)]),
-                        ObjectExtractor.Enum<TimeInForce>(unpacked[nameof(Order.TimeInForce)]),
-                        ObjectExtractor.NullableZonedDateTime(unpacked[nameof(Order.ExpireTime)]),
+                        ObjectExtractor.AsPrice(unpacked[nameof(Order.Price)]),
+                        ObjectExtractor.AsEnum<TimeInForce>(unpacked[nameof(Order.TimeInForce)]),
+                        ObjectExtractor.AsNullableZonedDateTime(unpacked[nameof(Order.ExpireTime)]),
                         timestamp,
                         initialId);
+                case OrderType.Undefined:
+                    goto default;
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(type, nameof(type));
             }

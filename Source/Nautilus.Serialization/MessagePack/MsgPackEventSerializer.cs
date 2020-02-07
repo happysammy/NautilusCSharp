@@ -170,152 +170,152 @@ namespace Nautilus.Serialization.MessagePack
         {
             var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(dataBytes);
 
-            var @event = unpacked[nameof(Event.Type)].ToString();
-            var id = ObjectExtractor.Guid(unpacked[nameof(Event.Id)]);
-            var timestamp = ObjectExtractor.ZonedDateTime(unpacked[nameof(Event.Timestamp)]);
+            var @event = unpacked[nameof(Event.Type)].AsString();
+            var id = ObjectExtractor.AsGuid(unpacked[nameof(Event.Id)]);
+            var timestamp = ObjectExtractor.AsZonedDateTime(unpacked[nameof(Event.Timestamp)]);
 
             switch (@event)
             {
                 case nameof(AccountStateEvent):
-                    var currency = ObjectExtractor.Enum<Currency>(unpacked[nameof(AccountStateEvent.Currency)]);
+                    var currency = ObjectExtractor.AsEnum<Currency>(unpacked[nameof(AccountStateEvent.Currency)]);
                     return new AccountStateEvent(
                         this.identifierCache.AccountId(unpacked),
                         currency,
-                        ObjectExtractor.Money(unpacked[nameof(AccountStateEvent.CashBalance)], currency),
-                        ObjectExtractor.Money(unpacked[nameof(AccountStateEvent.CashStartDay)], currency),
-                        ObjectExtractor.Money(unpacked[nameof(AccountStateEvent.CashActivityDay)], currency),
-                        ObjectExtractor.Money(unpacked[nameof(AccountStateEvent.MarginUsedLiquidation)], currency),
-                        ObjectExtractor.Money(unpacked[nameof(AccountStateEvent.MarginUsedMaintenance)], currency),
-                        ObjectExtractor.Decimal(unpacked[nameof(AccountStateEvent.MarginRatio)].ToString()),
+                        ObjectExtractor.AsMoney(unpacked[nameof(AccountStateEvent.CashBalance)], currency),
+                        ObjectExtractor.AsMoney(unpacked[nameof(AccountStateEvent.CashStartDay)], currency),
+                        ObjectExtractor.AsMoney(unpacked[nameof(AccountStateEvent.CashActivityDay)], currency),
+                        ObjectExtractor.AsMoney(unpacked[nameof(AccountStateEvent.MarginUsedLiquidation)], currency),
+                        ObjectExtractor.AsMoney(unpacked[nameof(AccountStateEvent.MarginUsedMaintenance)], currency),
+                        ObjectExtractor.AsDecimal(unpacked[nameof(AccountStateEvent.MarginRatio)].ToString()),
                         unpacked[nameof(AccountStateEvent.MarginCallStatus)].AsString(),
                         id,
                         timestamp);
                 case nameof(OrderInitialized):
                     return new OrderInitialized(
-                        ObjectExtractor.OrderId(unpacked),
+                        ObjectExtractor.AsOrderId(unpacked),
                         this.identifierCache.Symbol(unpacked),
-                        ObjectExtractor.Label(unpacked),
-                        ObjectExtractor.Enum<OrderSide>(unpacked[nameof(OrderInitialized.OrderSide)]),
-                        ObjectExtractor.Enum<OrderType>(unpacked[nameof(OrderInitialized.OrderType)]),
-                        ObjectExtractor.Enum<OrderPurpose>(unpacked[nameof(OrderInitialized.OrderPurpose)]),
-                        ObjectExtractor.Quantity(unpacked[nameof(OrderInitialized.Quantity)]),
-                        ObjectExtractor.NullablePrice(unpacked[nameof(OrderInitialized.Price)]),
-                        ObjectExtractor.Enum<TimeInForce>(unpacked[nameof(OrderInitialized.TimeInForce)]),
-                        ObjectExtractor.NullableZonedDateTime(unpacked[nameof(OrderInitialized.ExpireTime)]),
+                        ObjectExtractor.AsLabel(unpacked),
+                        ObjectExtractor.AsEnum<OrderSide>(unpacked[nameof(OrderInitialized.OrderSide)]),
+                        ObjectExtractor.AsEnum<OrderType>(unpacked[nameof(OrderInitialized.OrderType)]),
+                        ObjectExtractor.AsEnum<OrderPurpose>(unpacked[nameof(OrderInitialized.OrderPurpose)]),
+                        ObjectExtractor.AsQuantity(unpacked[nameof(OrderInitialized.Quantity)]),
+                        ObjectExtractor.AsNullablePrice(unpacked[nameof(OrderInitialized.Price)]),
+                        ObjectExtractor.AsEnum<TimeInForce>(unpacked[nameof(OrderInitialized.TimeInForce)]),
+                        ObjectExtractor.AsNullableZonedDateTime(unpacked[nameof(OrderInitialized.ExpireTime)]),
                         id,
                         timestamp);
                 case nameof(OrderInvalid):
                     return new OrderInvalid(
-                        ObjectExtractor.OrderId(unpacked),
+                        ObjectExtractor.AsOrderId(unpacked),
                         unpacked[nameof(OrderInvalid.InvalidReason)].AsString(),
                         id,
                         timestamp);
                 case nameof(OrderDenied):
                     return new OrderDenied(
-                        ObjectExtractor.OrderId(unpacked),
+                        ObjectExtractor.AsOrderId(unpacked),
                         unpacked[nameof(OrderDenied.DeniedReason)].AsString(),
                         id,
                         timestamp);
                 case nameof(OrderSubmitted):
                     return new OrderSubmitted(
                         this.identifierCache.AccountId(unpacked),
-                        ObjectExtractor.OrderId(unpacked),
-                        ObjectExtractor.ZonedDateTime(unpacked[nameof(OrderSubmitted.SubmittedTime)]),
+                        ObjectExtractor.AsOrderId(unpacked),
+                        ObjectExtractor.AsZonedDateTime(unpacked[nameof(OrderSubmitted.SubmittedTime)]),
                         id,
                         timestamp);
                 case nameof(OrderAccepted):
                     return new OrderAccepted(
                         this.identifierCache.AccountId(unpacked),
-                        ObjectExtractor.OrderId(unpacked),
-                        ObjectExtractor.OrderIdBroker(unpacked),
-                        ObjectExtractor.Label(unpacked),
-                        ObjectExtractor.ZonedDateTime(unpacked[nameof(OrderAccepted.AcceptedTime)]),
+                        ObjectExtractor.AsOrderId(unpacked),
+                        ObjectExtractor.AsOrderIdBroker(unpacked),
+                        ObjectExtractor.AsLabel(unpacked),
+                        ObjectExtractor.AsZonedDateTime(unpacked[nameof(OrderAccepted.AcceptedTime)]),
                         id,
                         timestamp);
                 case nameof(OrderRejected):
                     return new OrderRejected(
                         this.identifierCache.AccountId(unpacked),
-                        ObjectExtractor.OrderId(unpacked),
-                        ObjectExtractor.ZonedDateTime(unpacked[nameof(OrderRejected.RejectedTime)]),
-                        unpacked[nameof(OrderRejected.RejectedReason)].ToString(),
+                        ObjectExtractor.AsOrderId(unpacked),
+                        ObjectExtractor.AsZonedDateTime(unpacked[nameof(OrderRejected.RejectedTime)]),
+                        unpacked[nameof(OrderRejected.RejectedReason)].AsString(),
                         id,
                         timestamp);
                 case nameof(OrderWorking):
                     return new OrderWorking(
                         this.identifierCache.AccountId(unpacked),
-                        ObjectExtractor.OrderId(unpacked),
-                        ObjectExtractor.OrderIdBroker(unpacked),
+                        ObjectExtractor.AsOrderId(unpacked),
+                        ObjectExtractor.AsOrderIdBroker(unpacked),
                         this.identifierCache.Symbol(unpacked),
-                        ObjectExtractor.Label(unpacked),
-                        ObjectExtractor.Enum<OrderSide>(unpacked[nameof(OrderWorking.OrderSide)]),
-                        ObjectExtractor.Enum<OrderType>(unpacked[nameof(OrderWorking.OrderType)]),
-                        ObjectExtractor.Quantity(unpacked[nameof(OrderWorking.Quantity)]),
-                        ObjectExtractor.Price(unpacked[nameof(OrderWorking.Price)]),
-                        ObjectExtractor.Enum<TimeInForce>(unpacked[nameof(OrderWorking.TimeInForce)]),
-                        ObjectExtractor.NullableZonedDateTime(unpacked[nameof(OrderWorking.ExpireTime)]),
-                        ObjectExtractor.ZonedDateTime(unpacked[nameof(OrderWorking.WorkingTime)]),
+                        ObjectExtractor.AsLabel(unpacked),
+                        ObjectExtractor.AsEnum<OrderSide>(unpacked[nameof(OrderWorking.OrderSide)]),
+                        ObjectExtractor.AsEnum<OrderType>(unpacked[nameof(OrderWorking.OrderType)]),
+                        ObjectExtractor.AsQuantity(unpacked[nameof(OrderWorking.Quantity)]),
+                        ObjectExtractor.AsPrice(unpacked[nameof(OrderWorking.Price)]),
+                        ObjectExtractor.AsEnum<TimeInForce>(unpacked[nameof(OrderWorking.TimeInForce)]),
+                        ObjectExtractor.AsNullableZonedDateTime(unpacked[nameof(OrderWorking.ExpireTime)]),
+                        ObjectExtractor.AsZonedDateTime(unpacked[nameof(OrderWorking.WorkingTime)]),
                         id,
                         timestamp);
                 case nameof(OrderCancelled):
                     return new OrderCancelled(
                         this.identifierCache.AccountId(unpacked),
-                        ObjectExtractor.OrderId(unpacked),
-                        ObjectExtractor.ZonedDateTime(unpacked[nameof(OrderCancelled.CancelledTime)]),
+                        ObjectExtractor.AsOrderId(unpacked),
+                        ObjectExtractor.AsZonedDateTime(unpacked[nameof(OrderCancelled.CancelledTime)]),
                         id,
                         timestamp);
                 case nameof(OrderCancelReject):
                     return new OrderCancelReject(
                         this.identifierCache.AccountId(unpacked),
-                        ObjectExtractor.OrderId(unpacked),
-                        ObjectExtractor.ZonedDateTime(unpacked[nameof(OrderCancelReject.RejectedTime)]),
+                        ObjectExtractor.AsOrderId(unpacked),
+                        ObjectExtractor.AsZonedDateTime(unpacked[nameof(OrderCancelReject.RejectedTime)]),
                         unpacked[nameof(OrderCancelReject.RejectedResponseTo)].ToString(),
-                        unpacked[nameof(OrderCancelReject.RejectedReason)].ToString(),
+                        unpacked[nameof(OrderCancelReject.RejectedReason)].AsString(),
                         id,
                         timestamp);
                 case nameof(OrderModified):
                     return new OrderModified(
                         this.identifierCache.AccountId(unpacked),
-                        ObjectExtractor.OrderId(unpacked),
-                        ObjectExtractor.OrderIdBroker(unpacked),
-                        ObjectExtractor.Quantity(unpacked[nameof(OrderModified.ModifiedQuantity)]),
-                        ObjectExtractor.Price(unpacked[nameof(OrderModified.ModifiedPrice)]),
-                        ObjectExtractor.ZonedDateTime(unpacked[nameof(OrderModified.ModifiedTime)]),
+                        ObjectExtractor.AsOrderId(unpacked),
+                        ObjectExtractor.AsOrderIdBroker(unpacked),
+                        ObjectExtractor.AsQuantity(unpacked[nameof(OrderModified.ModifiedQuantity)]),
+                        ObjectExtractor.AsPrice(unpacked[nameof(OrderModified.ModifiedPrice)]),
+                        ObjectExtractor.AsZonedDateTime(unpacked[nameof(OrderModified.ModifiedTime)]),
                         id,
                         timestamp);
                 case nameof(OrderExpired):
                     return new OrderExpired(
                         this.identifierCache.AccountId(unpacked),
-                        ObjectExtractor.OrderId(unpacked),
-                        ObjectExtractor.ZonedDateTime(unpacked[nameof(OrderExpired.ExpiredTime)]),
+                        ObjectExtractor.AsOrderId(unpacked),
+                        ObjectExtractor.AsZonedDateTime(unpacked[nameof(OrderExpired.ExpiredTime)]),
                         id,
                         timestamp);
                 case nameof(OrderPartiallyFilled):
                     return new OrderPartiallyFilled(
                         this.identifierCache.AccountId(unpacked),
-                        ObjectExtractor.OrderId(unpacked),
-                        ObjectExtractor.ExecutionId(unpacked),
-                        ObjectExtractor.PositionIdBroker(unpacked),
+                        ObjectExtractor.AsOrderId(unpacked),
+                        ObjectExtractor.AsExecutionId(unpacked),
+                        ObjectExtractor.AsPositionIdBroker(unpacked),
                         this.identifierCache.Symbol(unpacked),
-                        ObjectExtractor.Enum<OrderSide>(unpacked[nameof(OrderPartiallyFilled.OrderSide)]),
-                        ObjectExtractor.Quantity(unpacked[nameof(OrderPartiallyFilled.FilledQuantity)]),
-                        ObjectExtractor.Quantity(unpacked[nameof(OrderPartiallyFilled.LeavesQuantity)]),
-                        ObjectExtractor.Price(unpacked[nameof(OrderPartiallyFilled.AveragePrice)]),
-                        ObjectExtractor.Enum<Currency>(unpacked[nameof(OrderPartiallyFilled.Currency)]),
-                        ObjectExtractor.ZonedDateTime(unpacked[nameof(OrderPartiallyFilled.ExecutionTime)]),
+                        ObjectExtractor.AsEnum<OrderSide>(unpacked[nameof(OrderPartiallyFilled.OrderSide)]),
+                        ObjectExtractor.AsQuantity(unpacked[nameof(OrderPartiallyFilled.FilledQuantity)]),
+                        ObjectExtractor.AsQuantity(unpacked[nameof(OrderPartiallyFilled.LeavesQuantity)]),
+                        ObjectExtractor.AsPrice(unpacked[nameof(OrderPartiallyFilled.AveragePrice)]),
+                        ObjectExtractor.AsEnum<Currency>(unpacked[nameof(OrderPartiallyFilled.Currency)]),
+                        ObjectExtractor.AsZonedDateTime(unpacked[nameof(OrderPartiallyFilled.ExecutionTime)]),
                         id,
                         timestamp);
                 case nameof(OrderFilled):
                     return new OrderFilled(
                         this.identifierCache.AccountId(unpacked),
-                        ObjectExtractor.OrderId(unpacked),
-                        ObjectExtractor.ExecutionId(unpacked),
-                        ObjectExtractor.PositionIdBroker(unpacked),
+                        ObjectExtractor.AsOrderId(unpacked),
+                        ObjectExtractor.AsExecutionId(unpacked),
+                        ObjectExtractor.AsPositionIdBroker(unpacked),
                         this.identifierCache.Symbol(unpacked),
-                        ObjectExtractor.Enum<OrderSide>(unpacked[nameof(OrderFilled.OrderSide)]),
-                        ObjectExtractor.Quantity(unpacked[nameof(OrderFilled.FilledQuantity)]),
-                        ObjectExtractor.Price(unpacked[nameof(OrderFilled.AveragePrice)]),
-                        ObjectExtractor.Enum<Currency>(unpacked[nameof(OrderFilled.Currency)]),
-                        ObjectExtractor.ZonedDateTime(unpacked[nameof(OrderFilled.ExecutionTime)]),
+                        ObjectExtractor.AsEnum<OrderSide>(unpacked[nameof(OrderFilled.OrderSide)]),
+                        ObjectExtractor.AsQuantity(unpacked[nameof(OrderFilled.FilledQuantity)]),
+                        ObjectExtractor.AsPrice(unpacked[nameof(OrderFilled.AveragePrice)]),
+                        ObjectExtractor.AsEnum<Currency>(unpacked[nameof(OrderFilled.Currency)]),
+                        ObjectExtractor.AsZonedDateTime(unpacked[nameof(OrderFilled.ExecutionTime)]),
                         id,
                         timestamp);
                 default:

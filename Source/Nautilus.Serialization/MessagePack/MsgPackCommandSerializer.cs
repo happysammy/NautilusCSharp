@@ -92,7 +92,7 @@ namespace Nautilus.Serialization.MessagePack
             var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(dataBytes);
 
             var command = unpacked[nameof(Command.Type)].AsString();
-            var id = ObjectExtractor.Guid(unpacked[nameof(Command.Id)]);
+            var id = ObjectExtractor.AsGuid(unpacked[nameof(Command.Id)]);
             var timestamp = unpacked[nameof(Command.Timestamp)].AsString().ToZonedDateTimeFromIso();
 
             switch (command)
@@ -108,7 +108,7 @@ namespace Nautilus.Serialization.MessagePack
                         this.identifierCache.TraderId(unpacked),
                         this.identifierCache.AccountId(unpacked),
                         this.identifierCache.StrategyId(unpacked),
-                        ObjectExtractor.PositionId(unpacked),
+                        ObjectExtractor.AsPositionId(unpacked),
                         this.orderSerializer.Deserialize(unpacked[nameof(SubmitOrder.Order)].AsBinary()),
                         id,
                         timestamp);
@@ -117,7 +117,7 @@ namespace Nautilus.Serialization.MessagePack
                         this.identifierCache.TraderId(unpacked),
                         this.identifierCache.AccountId(unpacked),
                         this.identifierCache.StrategyId(unpacked),
-                        ObjectExtractor.PositionId(unpacked),
+                        ObjectExtractor.AsPositionId(unpacked),
                         new AtomicOrder(
                             this.orderSerializer.Deserialize(unpacked[nameof(AtomicOrder.Entry)].AsBinary()),
                             this.orderSerializer.Deserialize(unpacked[nameof(AtomicOrder.StopLoss)].AsBinary()),
@@ -128,16 +128,16 @@ namespace Nautilus.Serialization.MessagePack
                     return new ModifyOrder(
                         this.identifierCache.TraderId(unpacked),
                         this.identifierCache.AccountId(unpacked),
-                        ObjectExtractor.OrderId(unpacked),
-                        ObjectExtractor.Quantity(unpacked[nameof(ModifyOrder.ModifiedQuantity)]),
-                        ObjectExtractor.Price(unpacked[nameof(ModifyOrder.ModifiedPrice)]),
+                        ObjectExtractor.AsOrderId(unpacked),
+                        ObjectExtractor.AsQuantity(unpacked[nameof(ModifyOrder.ModifiedQuantity)]),
+                        ObjectExtractor.AsPrice(unpacked[nameof(ModifyOrder.ModifiedPrice)]),
                         id,
                         timestamp);
                 case nameof(CancelOrder):
                     return new CancelOrder(
                         this.identifierCache.TraderId(unpacked),
                         this.identifierCache.AccountId(unpacked),
-                        ObjectExtractor.OrderId(unpacked),
+                        ObjectExtractor.AsOrderId(unpacked),
                         unpacked[nameof(CancelOrder.CancelReason)].AsString(),
                         id,
                         timestamp);

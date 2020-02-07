@@ -60,9 +60,9 @@ namespace Nautilus.Serialization.MessagePack
         {
             var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(dataBytes);
 
-            var request = unpacked[nameof(Request.Type)].ToString();
-            var id = ObjectExtractor.Guid(unpacked[nameof(Request.Id)]);
-            var timestamp = ObjectExtractor.ZonedDateTime(unpacked[nameof(Request.Timestamp)]);
+            var request = unpacked[nameof(Request.Type)].AsString();
+            var id = ObjectExtractor.AsGuid(unpacked[nameof(Request.Id)]);
+            var timestamp = ObjectExtractor.AsZonedDateTime(unpacked[nameof(Request.Timestamp)]);
 
             switch (request)
             {

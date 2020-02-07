@@ -25,11 +25,10 @@ namespace Nautilus.Serialization.Internal
         internal static byte[] Serialize<T>(T obj)
         {
             var serializer = MessagePackSerializer.Get<T>();
-            using (var byteStream = new MemoryStream())
-            {
-                serializer.Pack(byteStream, obj);
-                return byteStream.ToArray();
-            }
+            using var byteStream = new MemoryStream();
+            serializer.Pack(byteStream, obj);
+
+            return byteStream.ToArray();
         }
 
         /// <summary>
@@ -41,10 +40,9 @@ namespace Nautilus.Serialization.Internal
         internal static T Deserialize<T>(byte[] bytes)
         {
             var serializer = MessagePackSerializer.Get<T>();
-            using (var byteStream = new MemoryStream(bytes))
-            {
-                return serializer.Unpack(byteStream);
-            }
+            using var byteStream = new MemoryStream(bytes);
+
+            return serializer.Unpack(byteStream);
         }
     }
 }

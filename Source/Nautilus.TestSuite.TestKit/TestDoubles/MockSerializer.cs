@@ -36,7 +36,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
             return new MockMessage(
                 unpacked[nameof(MockMessage.Payload)].ToString(),
-                ObjectExtractor.Guid(unpacked[nameof(MockMessage.Id)]),
+                ObjectExtractor.AsGuid(unpacked[nameof(MockMessage.Id)]),
                 unpacked[nameof(MockMessage.Timestamp)].ToString().ToZonedDateTimeFromIso());
         }
     }

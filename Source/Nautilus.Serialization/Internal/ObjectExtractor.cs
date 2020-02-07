@@ -29,7 +29,7 @@ namespace Nautilus.Serialization.Internal
         /// </summary>
         /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <returns>The extracted <see cref="decimal"/>.</returns>
-        internal static decimal Decimal(MessagePackObject unpacked)
+        internal static decimal AsDecimal(MessagePackObject unpacked)
         {
             return Convert.ToDecimal(unpacked.AsString());
         }
@@ -39,59 +39,9 @@ namespace Nautilus.Serialization.Internal
         /// </summary>
         /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <returns>The extracted Guid.</returns>
-        internal static Guid Guid(MessagePackObject unpacked)
+        internal static Guid AsGuid(MessagePackObject unpacked)
         {
-            return System.Guid.Parse(unpacked.AsString());
-        }
-
-        /// <summary>
-        /// Returns a Symbol extracted from the given <see cref="MessagePackObject"/>.
-        /// </summary>
-        /// <param name="unpacked">The MessagePack object to extract from.</param>
-        /// <returns>The extracted Symbol.</returns>
-        internal static Symbol Symbol(MessagePackObjectDictionary unpacked)
-        {
-            return Nautilus.DomainModel.Identifiers.Symbol.FromString(unpacked[nameof(Symbol)].AsString());
-        }
-
-        /// <summary>
-        /// Returns a BarSpecification extracted from the given <see cref="MessagePackObject"/>.
-        /// </summary>
-        /// <param name="unpacked">The MessagePack object to extract from.</param>
-        /// <returns>The extracted BarSpecification.</returns>
-        internal static BarSpecification BarSpecification(MessagePackObjectDictionary unpacked)
-        {
-            return DomainModel.ValueObjects.BarSpecification.FromString(unpacked[nameof(BarSpecification)].AsString());
-        }
-
-        /// <summary>
-        /// Returns a TraderId extracted from the given <see cref="MessagePackObjectDictionary"/>.
-        /// </summary>
-        /// <param name="unpacked">The dictionary to extract from.</param>
-        /// <returns>The extracted TraderId.</returns>
-        internal static TraderId TraderId(MessagePackObjectDictionary unpacked)
-        {
-            return Nautilus.DomainModel.Identifiers.TraderId.FromString(unpacked[nameof(TraderId)].AsString());
-        }
-
-        /// <summary>
-        /// Returns a StrategyId extracted from the given <see cref="MessagePackObjectDictionary"/>.
-        /// </summary>
-        /// <param name="unpacked">The dictionary to extract from.</param>
-        /// <returns>The extracted StrategyId.</returns>
-        internal static StrategyId StrategyId(MessagePackObjectDictionary unpacked)
-        {
-            return Nautilus.DomainModel.Identifiers.StrategyId.FromString(unpacked[nameof(StrategyId)].AsString());
-        }
-
-        /// <summary>
-        /// Returns an AccountId extracted from the given <see cref="MessagePackObject"/>.
-        /// </summary>
-        /// <param name="unpacked">The MessagePack object to extract from.</param>
-        /// <returns>The extracted AccountId.</returns>
-        internal static AccountId AccountId(MessagePackObjectDictionary unpacked)
-        {
-            return Nautilus.DomainModel.Identifiers.AccountId.FromString(unpacked[nameof(AccountId)].AsString());
+            return Guid.Parse(unpacked.AsString());
         }
 
         /// <summary>
@@ -99,7 +49,7 @@ namespace Nautilus.Serialization.Internal
         /// </summary>
         /// <param name="unpacked">The dictionary to extract from.</param>
         /// <returns>The extracted PositionId.</returns>
-        internal static PositionId PositionId(MessagePackObjectDictionary unpacked)
+        internal static PositionId AsPositionId(MessagePackObjectDictionary unpacked)
         {
             return new PositionId(unpacked[nameof(PositionId)].AsString());
         }
@@ -110,7 +60,7 @@ namespace Nautilus.Serialization.Internal
         /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <param name="orderField">The order identifier extraction field.</param>
         /// <returns>The extracted OrderId.</returns>
-        internal static OrderId OrderId(MessagePackObjectDictionary unpacked, string orderField = nameof(OrderId))
+        internal static OrderId AsOrderId(MessagePackObjectDictionary unpacked, string orderField = nameof(OrderId))
         {
             return new OrderId(unpacked[orderField].AsString());
         }
@@ -120,7 +70,7 @@ namespace Nautilus.Serialization.Internal
         /// </summary>
         /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <returns>The extracted OrderIdBroker.</returns>
-        internal static OrderIdBroker OrderIdBroker(MessagePackObjectDictionary unpacked)
+        internal static OrderIdBroker AsOrderIdBroker(MessagePackObjectDictionary unpacked)
         {
             return new OrderIdBroker(unpacked[nameof(OrderIdBroker)].AsString());
         }
@@ -130,7 +80,7 @@ namespace Nautilus.Serialization.Internal
         /// </summary>
         /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <returns>The extracted ExecutionId.</returns>
-        internal static ExecutionId ExecutionId(MessagePackObjectDictionary unpacked)
+        internal static ExecutionId AsExecutionId(MessagePackObjectDictionary unpacked)
         {
             return new ExecutionId(unpacked[nameof(ExecutionId)].AsString());
         }
@@ -140,7 +90,7 @@ namespace Nautilus.Serialization.Internal
         /// </summary>
         /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <returns>The extracted ExecutionTicket.</returns>
-        internal static PositionIdBroker PositionIdBroker(MessagePackObjectDictionary unpacked)
+        internal static PositionIdBroker AsPositionIdBroker(MessagePackObjectDictionary unpacked)
         {
             return new PositionIdBroker(unpacked[nameof(PositionIdBroker)].AsString());
         }
@@ -150,7 +100,7 @@ namespace Nautilus.Serialization.Internal
         /// </summary>
         /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <returns>The extracted Label.</returns>
-        internal static Label Label(MessagePackObjectDictionary unpacked)
+        internal static Label AsLabel(MessagePackObjectDictionary unpacked)
         {
             return new Label(unpacked[nameof(Label)].AsString());
         }
@@ -161,7 +111,7 @@ namespace Nautilus.Serialization.Internal
         /// <typeparam name="TEnum">The enumerator type.</typeparam>
         /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <returns>The extracted <see cref="Enum"/>.</returns>
-        internal static TEnum Enum<TEnum>(MessagePackObject unpacked)
+        internal static TEnum AsEnum<TEnum>(MessagePackObject unpacked)
             where TEnum : struct
         {
             return unpacked.ToString().ToEnum<TEnum>();
@@ -172,9 +122,9 @@ namespace Nautilus.Serialization.Internal
         /// </summary>
         /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <returns>The extracted Quantity.</returns>
-        internal static Quantity Quantity(MessagePackObject unpacked)
+        internal static Quantity AsQuantity(MessagePackObject unpacked)
         {
-            return DomainModel.ValueObjects.Quantity.Create(unpacked.AsString());
+            return Quantity.Create(unpacked.AsString());
         }
 
         /// <summary>
@@ -183,9 +133,9 @@ namespace Nautilus.Serialization.Internal
         /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <param name="currency">The currency.</param>
         /// <returns>The extracted Money.</returns>
-        internal static Money Money(MessagePackObject unpacked, Currency currency)
+        internal static Money AsMoney(MessagePackObject unpacked, Currency currency)
         {
-            return DomainModel.ValueObjects.Money.Create(Convert.ToDecimal(unpacked.AsString()), currency);
+            return Money.Create(Convert.ToDecimal(unpacked.AsString()), currency);
         }
 
         /// <summary>
@@ -193,9 +143,9 @@ namespace Nautilus.Serialization.Internal
         /// </summary>
         /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <returns>The extracted Price.</returns>
-        internal static Price Price(MessagePackObject unpacked)
+        internal static Price AsPrice(MessagePackObject unpacked)
         {
-            return DomainModel.ValueObjects.Price.Create(Convert.ToDecimal(unpacked.AsString()));
+            return Price.Create(Convert.ToDecimal(unpacked.AsString()));
         }
 
         /// <summary>
@@ -203,12 +153,12 @@ namespace Nautilus.Serialization.Internal
         /// </summary>
         /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <returns>The extracted Price?.</returns>
-        internal static Price? NullablePrice(MessagePackObject unpacked)
+        internal static Price? AsNullablePrice(MessagePackObject unpacked)
         {
             var unpackedString = unpacked.AsString();
             return unpackedString == NONE
                 ? null
-                : DomainModel.ValueObjects.Price.Create(Convert.ToDecimal(unpackedString));
+                : Price.Create(Convert.ToDecimal(unpackedString));
         }
 
         /// <summary>
@@ -216,7 +166,7 @@ namespace Nautilus.Serialization.Internal
         /// </summary>
         /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <returns>The extracted <see cref="decimal"/>.</returns>
-        internal static ZonedDateTime ZonedDateTime(MessagePackObject unpacked)
+        internal static ZonedDateTime AsZonedDateTime(MessagePackObject unpacked)
         {
             return unpacked.AsString().ToZonedDateTimeFromIso();
         }
@@ -226,7 +176,7 @@ namespace Nautilus.Serialization.Internal
         /// </summary>
         /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <returns>The extracted <see cref="NodaTime.ZonedDateTime"/>?.</returns>
-        internal static ZonedDateTime? NullableZonedDateTime(MessagePackObject unpacked)
+        internal static ZonedDateTime? AsNullableZonedDateTime(MessagePackObject unpacked)
         {
             var unpackedString = unpacked.AsString();
             return unpackedString == NONE
