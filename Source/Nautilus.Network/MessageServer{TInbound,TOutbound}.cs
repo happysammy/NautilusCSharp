@@ -184,9 +184,8 @@ namespace Nautilus.Network
         {
             this.Execute(() =>
             {
-                if (this.correlationIndex.TryGetValue(correlationId, out var receiver))
+                if (this.correlationIndex.Remove(correlationId, out var receiver))
                 {
-                    this.correlationIndex.Remove(correlationId);
                 }
                 else
                 {
