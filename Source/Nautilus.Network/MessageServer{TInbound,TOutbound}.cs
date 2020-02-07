@@ -130,8 +130,7 @@ namespace Nautilus.Network
         /// Sends a MessageReceived message to the given receiver address.
         /// </summary>
         /// <param name="receivedMessage">The received message.</param>
-        /// <param name="correlationId">The correlation identifier for the response.</param>
-        protected void SendReceived(Message receivedMessage, Guid correlationId)
+        protected void SendReceived(Message receivedMessage)
         {
             this.Execute(() =>
             {
@@ -147,7 +146,7 @@ namespace Nautilus.Network
                     throw new InvalidOperationException($"The message was not of type {typeof(TOutbound)}.");
                 }
 
-                this.SendMessage(received, correlationId);
+                this.SendMessage(received, receivedMessage.Id);
             });
         }
 

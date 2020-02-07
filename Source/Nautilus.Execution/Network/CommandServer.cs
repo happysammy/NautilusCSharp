@@ -57,31 +57,31 @@ namespace Nautilus.Execution.Network
         private void OnMessage(SubmitOrder command)
         {
             this.commandsSink.Send(command);
-            this.SendReceived(command, command.Id);
+            this.SendReceived(command);
         }
 
         private void OnMessage(SubmitAtomicOrder command)
         {
             this.commandsSink.Send(command);
-            this.SendReceived(command, command.Id);
+            this.SendReceived(command);
         }
 
         private void OnMessage(CancelOrder command)
         {
             this.commandsSink.Send(command);
-            this.SendReceived(command, command.Id);
+            this.SendReceived(command);
         }
 
         private void OnMessage(ModifyOrder command)
         {
             this.commandsSink.Send(command);
-            this.SendReceived(command, command.Id);
+            this.SendReceived(command);
         }
 
         private void OnMessage(AccountInquiry command)
         {
             this.commandsSink.Send(command);
-            this.SendReceived(command, command.Id);
+            this.SendReceived(command);
         }
     }
 }

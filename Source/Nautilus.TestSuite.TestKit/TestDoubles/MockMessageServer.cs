@@ -43,7 +43,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             this.ReceivedMessages.Add(message);
 
-            this.SendReceived(message, message.Id);
+            this.SendReceived(message);
         }
     }
 }
