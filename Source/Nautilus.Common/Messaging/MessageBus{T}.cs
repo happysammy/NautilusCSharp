@@ -49,10 +49,10 @@ namespace Nautilus.Common.Messaging
 
             this.BusType = typeof(T);
 
+            this.RegisterHandler<IEnvelope>(this.OnReceive);
             this.RegisterHandler<InitializeSwitchboard>(this.OnMessage);
             this.RegisterHandler<Subscribe<Type>>(this.OnMessage);
             this.RegisterHandler<Unsubscribe<Type>>(this.OnMessage);
-            this.RegisterHandler<IEnvelope>(this.OnReceive, true);
         }
 
         /// <summary>
@@ -96,7 +96,6 @@ namespace Nautilus.Common.Messaging
         private void OnMessage(Subscribe<Type> message)
         {
             var type = message.Subscription;
-
             if (type == this.BusType)
             {
                 this.Subscribe(message, this.subscriptionsAll);
@@ -121,7 +120,6 @@ namespace Nautilus.Common.Messaging
         private void OnMessage(Unsubscribe<Type> message)
         {
             var type = message.Subscription;
-
             if (type == this.BusType)
             {
                 this.Unsubscribe(message, this.subscriptionsAll);
@@ -239,10 +237,9 @@ namespace Nautilus.Common.Messaging
                     .AsReadOnly());
             }
 
-            // Deconstruction causes nullability warning CS8619
-            foreach (var kvp in this.subscriptions)
+            foreach (var (key, value) in this.subscriptions)
             {
-                dict.Add(kvp.Key, kvp.Value
+                dict.Add(key, value
                     .Select(m => m.Address)
                     .ToList()
                     .AsReadOnly());

@@ -56,18 +56,16 @@ namespace Nautilus.Messaging
         /// Register the message type with the given handler.
         /// </summary>
         /// <typeparam name="TMessage">The message type.</typeparam>
-        /// <param name="handler">The handler.</param>
-        /// <param name="force">If the handler registration should be forced (any existing handler
-        /// will be overwritten.)</param>
-        public void RegisterHandler<TMessage>(Action<TMessage> handler, bool force = false)
+        /// <param name="handler">The handler to register.</param>
+        public void RegisterHandler<TMessage>(Action<TMessage> handler)
         {
-            this.processor.RegisterHandler(handler, force);
+            this.processor.RegisterHandler(handler);
         }
 
         /// <summary>
         /// Register the given handler to receive unhandled messaged.
         /// </summary>ve
-        /// <param name="handler">The handler.</param>
+        /// <param name="handler">The handler to register.</param>
         protected void RegisterUnhandled(Action<object> handler)
         {
             this.processor.RegisterUnhandled(handler);

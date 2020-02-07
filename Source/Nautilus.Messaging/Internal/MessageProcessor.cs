@@ -76,21 +76,9 @@ namespace Nautilus.Messaging.Internal
         /// </summary>ve
         /// <typeparam name="TMessage">The message type.</typeparam>
         /// <param name="handler">The handler.</param>
-        /// <param name="force">If the handler registration should be forced (any existing handler
-        /// will be overwritten.)</param>
-        public void RegisterHandler<TMessage>(Action<TMessage> handler, bool force = false)
+        public void RegisterHandler<TMessage>(Action<TMessage> handler)
         {
             var type = typeof(TMessage);
-
-            if (force)
-            {
-                var existing = this.FindExistingHandler(type);
-                if (existing != null)
-                {
-                    this.registeredHandlers.Remove((KeyValuePair<Type, Handler>)existing);
-                }
-            }
-
             if (this.registeredHandlers.Any(h => h.Key == type))
             {
                 throw new ArgumentException($"Cannot register handler " +
@@ -147,11 +135,6 @@ namespace Nautilus.Messaging.Internal
             this.Unhandled(message);
 
             return Task.CompletedTask;
-        }
-
-        private KeyValuePair<Type, Handler>? FindExistingHandler(Type handlerType)
-        {
-            return this.registeredHandlers.FirstOrDefault(h => h.Key == handlerType);
         }
 
         private void MoveHandlerToEndOfList(Type handlerType)
