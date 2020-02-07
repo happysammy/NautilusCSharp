@@ -20,7 +20,7 @@ namespace Nautilus.Core.Extensions
         /// </summary>
         /// <param name="type">The type to extract the name from.</param>
         /// <returns>The name <see cref="string"/>.</returns>
-        public static string ExtractFormattedName(this Type type)
+        public static string NameFormatted(this Type type)
         {
             return type.IsGenericType
                 ? ParseGenericName(type)

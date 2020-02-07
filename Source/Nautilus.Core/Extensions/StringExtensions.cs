@@ -27,12 +27,9 @@ namespace Nautilus.Core.Extensions
             where T : struct
         {
             var stripped = input.Replace("_", string.Empty);  // Strip snake case of underscores
-            if (Enum.TryParse<T>(stripped, true, out var result))
-            {
-                return result;
-            }
-
-            return Enum.Parse<T>("Undefined");
+            return Enum.TryParse<T>(stripped, true, out var result)
+                ? result
+                : Enum.Parse<T>("Undefined");
         }
 
         /// <summary>

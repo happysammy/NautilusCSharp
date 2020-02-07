@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.UnitTests.CoreTests
+namespace Nautilus.TestSuite.UnitTests.CoreTests.TypesTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
@@ -26,7 +26,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
         {
             // Arrange
             var message1 = new Start(Guid.NewGuid(), StubZonedDateTime.UnixEpoch());
-
             var message2 = new Start(Guid.NewGuid(), StubZonedDateTime.UnixEpoch());
 
             // Act

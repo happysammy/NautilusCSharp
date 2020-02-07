@@ -105,6 +105,6 @@ namespace Nautilus.Core.Types
         /// Returns a string representation of this <see cref="Message"/>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{this.Type.ExtractFormattedName()}(Id={this.Id})";
+        public override string ToString() => $"{this.Type.NameFormatted()}(Id={this.Id})";
     }
 }

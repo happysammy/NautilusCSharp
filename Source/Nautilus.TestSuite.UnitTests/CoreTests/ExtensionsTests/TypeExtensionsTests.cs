@@ -21,23 +21,23 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
     public class TypeExtensionsTests
     {
         [Fact]
-        internal void ExtractFormattedName_FromReferenceType_ReturnsExpectedName()
+        internal void NameFormatted_FromReferenceType_ReturnsExpectedName()
         {
             // Arrange
             // Act
-            var result = typeof(Console).ExtractFormattedName();
+            var result = typeof(Console).NameFormatted();
 
             // Assert
             Assert.Equal("Console", result);
         }
 
         [Fact]
-        internal void ExtractFormattedName_FromSingleGenericType_ReturnsExpectedName()
+        internal void NameFormatted_FromSingleGenericType_ReturnsExpectedName()
         {
             // Arrange
             // Act
             var result1 = typeof(Envelope<Message>).Name;
-            var result2 = typeof(Envelope<Message>).ExtractFormattedName();
+            var result2 = typeof(Envelope<Message>).NameFormatted();
 
             // Assert
             Assert.Equal("Envelope`1", result1);
@@ -45,12 +45,12 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
         }
 
         [Fact]
-        internal void ExtractFormattedName_FromMultipleGenericType_ReturnsExpectedName()
+        internal void NameFormatted_FromMultipleGenericType_ReturnsExpectedName()
         {
             // Arrange
             // Act
             var result1 = typeof(MessageServer<Request, Response>).Name;
-            var result2 = typeof(MessageServer<Request, Response>).ExtractFormattedName();
+            var result2 = typeof(MessageServer<Request, Response>).NameFormatted();
 
             // Assert
             Assert.Equal("MessageServer`2", result1);

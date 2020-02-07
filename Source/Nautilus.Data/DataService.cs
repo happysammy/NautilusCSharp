@@ -115,7 +115,10 @@ namespace Nautilus.Data
                     ServiceAddress.InstrumentPublisher,
                 };
 
-                this.Send(start, receivers);
+                this.Log.Error("About to throw...");
+                throw new InvalidOperationException("BOOM!");
+
+                // this.Send(start, receivers);
             });
         }
 

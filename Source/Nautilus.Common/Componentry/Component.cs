@@ -44,7 +44,7 @@ namespace Nautilus.Common.Componentry
             this.startedTimes = new List<ZonedDateTime>();
             this.stoppedTimes = new List<ZonedDateTime>();
 
-            this.Name = new Label(this.GetType().ExtractFormattedName());
+            this.Name = new Label(this.GetType().NameFormatted());
             this.Address = new Address(this.Name.Value);
             this.Mailbox = new Mailbox(this.Address, this.Endpoint);
             this.Log = container.LoggerFactory.Create(this.Name);
@@ -179,19 +179,6 @@ namespace Nautilus.Common.Componentry
             where T : Exception
         {
             this.commandHandler.Execute<T>(action);
-        }
-
-        /// <summary>
-        /// Passes the given <see cref="Action"/> to the <see cref="commandHandler"/> for execution.
-        /// </summary>
-        /// <typeparam name="T1">The first exception type.</typeparam>
-        /// <typeparam name="T2">The second exception type.</typeparam>
-        /// <param name="action">The action to execute.</param>
-        protected void Execute<T1, T2>(Action action)
-            where T1 : Exception
-            where T2 : Exception
-        {
-            this.commandHandler.Execute<T1, T2>(action);
         }
 
         /// <summary>
