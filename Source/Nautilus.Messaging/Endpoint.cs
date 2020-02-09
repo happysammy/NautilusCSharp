@@ -55,6 +55,12 @@ namespace Nautilus.Messaging
         /// <inheritdoc />
         public void Send(object message) => this.target.Post(message);
 
+        /// <inheritdoc />
+        public ITargetBlock<object> GetLink()
+        {
+            return this.target;
+        }
+
         /// <summary>
         /// Returns a value indicating whether this <see cref="Endpoint"/> is equal
         /// to the given <see cref="object"/>.

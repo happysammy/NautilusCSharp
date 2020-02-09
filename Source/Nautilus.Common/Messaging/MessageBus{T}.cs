@@ -46,8 +46,6 @@ namespace Nautilus.Common.Messaging
 
             this.switchboard = Switchboard.Empty();
 
-            this.BusType = typeof(T);
-
             this.RegisterHandler<IEnvelope>(this.OnReceive);
             this.RegisterHandler<InitializeSwitchboard>(this.OnMessage);
             this.RegisterHandler<Subscribe<Type>>(this.OnMessage);
@@ -57,7 +55,7 @@ namespace Nautilus.Common.Messaging
         /// <summary>
         /// Gets the message bus type.
         /// </summary>
-        public Type BusType { get; }
+        public Type BusType { get; } = typeof(T);
 
         /// <summary>
         /// Gets the list of dead letters (undelivered messages).

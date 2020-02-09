@@ -8,13 +8,14 @@
 
 namespace Nautilus.DomainModel.ValueObjects
 {
+    using System;
     using Nautilus.Core.Annotations;
 
     /// <summary>
     /// Represents financial market trade bar data including <see cref="BarType"/>.
     /// </summary>
     [Immutable]
-    public struct BarData
+    public struct BarData : ICloneable
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="BarData"/> struct.
@@ -42,5 +43,11 @@ namespace Nautilus.DomainModel.ValueObjects
         /// </summary>
         /// <returns>A string.</returns>
         public override string ToString() => $"{nameof(BarData)}({this.BarType}, {this.Bar})";
+
+        /// <inheritdoc />
+        public object Clone()
+        {
+            return this;  // Immutable type
+        }
     }
 }

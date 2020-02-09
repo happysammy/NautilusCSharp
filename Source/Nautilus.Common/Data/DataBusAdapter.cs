@@ -58,19 +58,19 @@ namespace Nautilus.Common.Data
         /// <inheritdoc />
         public void SendToBus(Tick data)
         {
-            this.tickBus.Endpoint.Send(data);
+            this.tickBus.PostData(data);
         }
 
         /// <inheritdoc />
         public void SendToBus(BarData data)
         {
-            this.barBus.Endpoint.Send(data);
+            this.barBus.PostData(data);
         }
 
         /// <inheritdoc />
         public void SendToBus(Instrument data)
         {
-            this.instrumentBus.Endpoint.Send(data);
+            this.instrumentBus.PostData(data);
         }
 
         /// <inheritdoc />

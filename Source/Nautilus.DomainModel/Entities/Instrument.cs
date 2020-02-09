@@ -8,6 +8,7 @@
 
 namespace Nautilus.DomainModel.Entities
 {
+    using System;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Entities.Base;
@@ -20,7 +21,7 @@ namespace Nautilus.DomainModel.Entities
     /// Represents a tradeable financial market instrument.
     /// </summary>
     [Immutable]
-    public class Instrument : Entity<InstrumentId, Instrument>
+    public class Instrument : Entity<InstrumentId, Instrument>, ICloneable
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Instrument"/> class.
@@ -187,5 +188,11 @@ namespace Nautilus.DomainModel.Entities
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
         public override string ToString() => this.Id.Value;
+
+        /// <inheritdoc />
+        public object Clone()
+        {
+            return this;  // Immutable type
+        }
     }
 }

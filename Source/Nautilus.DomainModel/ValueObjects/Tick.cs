@@ -20,7 +20,7 @@ namespace Nautilus.DomainModel.ValueObjects
     /// Represents a financial market tick.
     /// </summary>
     [Immutable]
-    public struct Tick : IEquatable<object>, IEquatable<Tick>, IComparable<Tick>
+    public struct Tick : IEquatable<object>, IEquatable<Tick>, IComparable<Tick>, ICloneable
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Tick"/> structure.
@@ -97,6 +97,22 @@ namespace Nautilus.DomainModel.ValueObjects
         public static bool operator !=(Tick left,  Tick right) => !(left == right);
 
         /// <summary>
+        /// Returns a clone of this tick.
+        /// </summary>
+        /// <param name="tick">The tick to clone.</param>
+        /// <returns>The cloned tick.</returns>
+        public static Tick Clone(Tick tick)
+        {
+            return new Tick(
+                tick.Symbol,
+                tick.Bid,
+                tick.Ask,
+                tick.BidSize,
+                tick.AskSize,
+                tick.Timestamp);
+        }
+
+        /// <summary>
         /// Returns a new <see cref="Tick"/> from the given <see cref="string"/>.
         /// </summary>
         /// <param name="tickString">The tick string which includes the symbol.</param>
@@ -138,12 +154,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A <see cref="bool"/>.</returns>
         public override bool Equals(object? other) => other is Tick tick && this.Equals(tick);
 
-        /// <summary>
-        /// Returns a value indicating whether this <see cref="Tick"/> is equal
-        /// to the given <see cref="Tick"/>.
-        /// </summary>
-        /// <param name="other">The other object.</param>
-        /// <returns>A <see cref="bool"/>.</returns>
+        /// <inheritdoc />
         public bool Equals(Tick other)
         {
             return this.Symbol == other.Symbol &&
@@ -154,18 +165,10 @@ namespace Nautilus.DomainModel.ValueObjects
                    this.Timestamp == other.Timestamp;
         }
 
-        /// <summary>
-        /// Returns a result indicating whether the left <see cref="Tick"/> is less than, equal
-        /// to or greater than the right <see cref="Tick"/>.
-        /// </summary>
-        /// <param name="other">The other tick to compare.</param>
-        /// <returns>An <see cref="int"/>.</returns>
+        /// <inheritdoc />
         public int CompareTo(Tick other) => this.Timestamp.Compare(other.Timestamp);
 
-        /// <summary>
-        /// Returns the hash code of the <see cref="Tick"/>.
-        /// </summary>
-        /// <returns>An <see cref="int"/>.</returns>
+        /// <inheritdoc />
         public override int GetHashCode()
         {
             return Hash.GetCode(this.Symbol, this.Bid, this.Ask);
@@ -180,5 +183,11 @@ namespace Nautilus.DomainModel.ValueObjects
                                              $"{this.BidSize}," +
                                              $"{this.AskSize}," +
                                              $"{this.Timestamp.ToIsoString()}";
+
+        /// <inheritdoc />
+        public object Clone()
+        {
+            return this;  // Immutable type
+        }
     }
 }

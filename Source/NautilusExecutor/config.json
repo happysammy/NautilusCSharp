@@ -12,11 +12,13 @@
 
   "fix44": {
     "configFile": "fix_fxcm2.cfg",
+
     "connectJob": {
       "day": "Sunday",
       "hour": 20,
       "minute": 0
     },
+
     "disconnectJob": {
       "day": "Saturday",
       "hour": 21,

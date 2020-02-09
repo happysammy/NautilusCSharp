@@ -11,10 +11,10 @@ namespace Nautilus.Common.Data
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks.Dataflow;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
-    using Nautilus.Core.Annotations;
     using Nautilus.Messaging;
 
     /// <summary>
@@ -22,7 +22,11 @@ namespace Nautilus.Common.Data
     /// </summary>
     /// <typeparam name="T">The bus data type.</typeparam>
     public sealed class DataBus<T> : Component
+        where T : ICloneable
     {
+        // The BroadcastBlock<T> ensures that the current element is broadcast to any linked targets
+        // before allowing the element to be overwritten.
+        private readonly BroadcastBlock<object> pipeline;
         private readonly List<Mailbox> subscriptions;
 
         /// <summary>
@@ -32,11 +36,15 @@ namespace Nautilus.Common.Data
         public DataBus(IComponentryContainer container)
         : base(container)
         {
+            this.pipeline = new BroadcastBlock<object>(
+                CloneData,
+                new ExecutionDataflowBlockOptions
+            {
+                BoundedCapacity = (int)Math.Pow(2, 22),
+            });
+
             this.subscriptions = new List<Mailbox>();
 
-            this.BusType = typeof(T);
-
-            this.RegisterHandler<T>(this.Publish);
             this.RegisterHandler<Subscribe<Type>>(this.OnMessage);
             this.RegisterHandler<Unsubscribe<Type>>(this.OnMessage);
         }
@@ -44,12 +52,21 @@ namespace Nautilus.Common.Data
         /// <summary>
         /// Gets the bus data type.
         /// </summary>
-        public Type BusType { get; }
+        public Type BusType { get; } = typeof(T);
 
         /// <summary>
         /// Gets the data bus subscriptions.
         /// </summary>
         public IReadOnlyCollection<Address> Subscriptions => this.subscriptions.Select(m => m.Address).ToList().AsReadOnly();
+
+        /// <summary>
+        /// Posts the given data onto the data bus.
+        /// </summary>
+        /// <param name="data">The data to post.</param>
+        public void PostData(T data)
+        {
+            this.pipeline.Post(data);
+        }
 
         /// <inheritdoc />
         protected override void OnStart(Start start)
@@ -59,6 +76,11 @@ namespace Nautilus.Common.Data
         /// <inheritdoc />
         protected override void OnStop(Stop stop)
         {
+        }
+
+        private static object CloneData(object data)
+        {
+            return data;
         }
 
         private void OnMessage(Subscribe<Type> message)
@@ -78,6 +100,7 @@ namespace Nautilus.Common.Data
                 return;  // Design time error
             }
 
+            this.pipeline.LinkTo(subscriber.Endpoint.GetLink());
             this.subscriptions.Add(subscriber);
             this.Log.Information($"Subscribed {subscriber} to {this.BusType.Name} data.");
         }
@@ -99,17 +122,9 @@ namespace Nautilus.Common.Data
                 return;
             }
 
+            // TODO: Currently can't easily unlink a subscriber from data
             this.subscriptions.Remove(subscriber);
             this.Log.Information($"Unsubscribed {subscriber} from {this.BusType.Name} data.");
-        }
-
-        [PerformanceOptimized]
-        private void Publish(T data)
-        {
-            for (var i = 0; i < this.subscriptions.Count; i++)
-            {
-                this.subscriptions[i].Endpoint.Send(data!);
-            }
         }
     }
 }

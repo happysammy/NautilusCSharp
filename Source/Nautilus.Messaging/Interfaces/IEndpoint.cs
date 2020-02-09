@@ -9,6 +9,7 @@
 namespace Nautilus.Messaging.Interfaces
 {
     using System;
+    using System.Threading.Tasks.Dataflow;
 
     /// <summary>
     /// Provides a messaging endpoint.
@@ -20,5 +21,11 @@ namespace Nautilus.Messaging.Interfaces
         /// </summary>
         /// <param name="message">The message to send.</param>
         void Send(object message);
+
+        /// <summary>
+        /// Gets the endpoints target block.
+        /// </summary>
+        /// <returns>The target block.</returns>
+        ITargetBlock<object> GetLink();
     }
 }
