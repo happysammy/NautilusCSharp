@@ -26,6 +26,7 @@ namespace Nautilus.Service
     /// </summary>
     public abstract class NautilusServiceBase : MessageBusConnected
     {
+        private readonly MessageBusAdapter messageBus;
         private readonly (IsoDayOfWeek Day, LocalTime Time) scheduledConnect;
         private readonly (IsoDayOfWeek Day, LocalTime Time) scheduledDisconnect;
         private readonly List<Address> connectionAddresses = new List<Address>();
@@ -44,11 +45,12 @@ namespace Nautilus.Service
         /// <exception cref="ArgumentException">If the addresses is empty.</exception>
         protected NautilusServiceBase(
             IComponentryContainer container,
-            IMessageBusAdapter messageBusAdapter,
+            MessageBusAdapter messageBusAdapter,
             IScheduler scheduler,
             FixConfiguration config)
             : base(container, messageBusAdapter)
         {
+            this.messageBus = messageBusAdapter;
             this.Scheduler = scheduler;
             this.scheduledConnect = config.ConnectTime;
             this.scheduledDisconnect = config.DisconnectTime;
@@ -99,20 +101,20 @@ namespace Nautilus.Service
         /// <inheritdoc />
         protected override void OnStart(Start start)
         {
-            if (TimingProvider.IsOutsideWeeklyInterval(
+            if (TimingProvider.IsInsideWeeklyInterval(
                 this.scheduledDisconnect,
                 this.scheduledConnect,
                 this.InstantNow()))
             {
-                // Outside disconnection schedule weekly interval
-                this.CreateDisconnectFixJob();
-                this.CreateConnectFixJob();
-            }
-            else
-            {
                 // Inside disconnection schedule weekly interval
                 this.CreateConnectFixJob();
                 this.CreateDisconnectFixJob();
+            }
+            else
+            {
+                // Outside disconnection schedule weekly interval
+                this.CreateDisconnectFixJob();
+                this.CreateConnectFixJob();
             }
 
             this.OnServiceStart(start);
@@ -125,6 +127,7 @@ namespace Nautilus.Service
         {
             this.maintainConnection = false;  // Avoid immediate reconnection
             this.OnServiceStop(stop);
+            this.messageBus.Stop();
         }
 
         /// <summary>

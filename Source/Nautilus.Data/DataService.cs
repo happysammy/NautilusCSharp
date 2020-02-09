@@ -16,7 +16,6 @@ namespace Nautilus.Data
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messages.Events;
     using Nautilus.Common.Messaging;
-    using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.Data.Messages.Commands;
     using Nautilus.DomainModel.Identifiers;
@@ -31,9 +30,9 @@ namespace Nautilus.Data
     /// </summary>
     public sealed class DataService : NautilusServiceBase
     {
-        private readonly MessageBusAdapter messageBusAdapter;
-        private readonly DataBusAdapter dataBusAdapter;
-        private readonly List<Address> addresses;
+        private readonly DataBusAdapter dataBus;
+        private readonly List<Address> componentsStartable;
+        private readonly List<Address> componentsStoppable;
         private readonly IDataGateway dataGateway;
         private readonly IReadOnlyCollection<Symbol> subscribingSymbols;
         private readonly IReadOnlyCollection<BarSpecification> barSpecifications;
@@ -52,14 +51,12 @@ namespace Nautilus.Data
         /// <param name="dataBusAdapter">The data bus adapter.</param>
         /// <param name="scheduler">The scheduler.</param>
         /// <param name="dataGateway">The data gateway.</param>
-        /// <param name="addresses">The data service address dictionary.</param>
         /// <param name="config">The service configuration.</param>
         /// <exception cref="ArgumentException">If the addresses is empty.</exception>
         public DataService(
             IComponentryContainer container,
             MessageBusAdapter messageBusAdapter,
             DataBusAdapter dataBusAdapter,
-            List<Address> addresses,
             IScheduler scheduler,
             IDataGateway dataGateway,
             Configuration config)
@@ -69,12 +66,36 @@ namespace Nautilus.Data
                 scheduler,
                 config.FixConfiguration)
         {
-            Condition.NotEmpty(addresses, nameof(addresses));
-
-            this.messageBusAdapter = messageBusAdapter;
-            this.dataBusAdapter = dataBusAdapter;
-            this.addresses = addresses;
+            this.dataBus = dataBusAdapter;
             this.dataGateway = dataGateway;
+            this.componentsStartable = new List<Address>
+            {
+                ServiceAddress.TickRepository,
+                ServiceAddress.TickPublisher,
+                ServiceAddress.TickProvider,
+                ServiceAddress.BarRepository,
+                ServiceAddress.BarPublisher,
+                ServiceAddress.BarProvider,
+                ServiceAddress.InstrumentRepository,
+                ServiceAddress.InstrumentPublisher,
+                ServiceAddress.InstrumentProvider,
+                ServiceAddress.DataGateway,
+            };
+
+            this.componentsStoppable = new List<Address>
+            {
+                ServiceAddress.TickRepository,
+                ServiceAddress.TickPublisher,
+                ServiceAddress.TickProvider,
+                ServiceAddress.BarRepository,
+                ServiceAddress.BarPublisher,
+                ServiceAddress.BarProvider,
+                ServiceAddress.InstrumentRepository,
+                ServiceAddress.InstrumentPublisher,
+                ServiceAddress.InstrumentProvider,
+                ServiceAddress.DataGateway,
+            };
+
             this.subscribingSymbols = config.SubscribingSymbols;
             this.barSpecifications = config.BarSpecifications;
 
@@ -104,16 +125,17 @@ namespace Nautilus.Data
             this.CreateTrimBarDataJob();
 
             // Forward start message
-            this.Send(start, this.addresses);
+            this.Send(start, this.componentsStartable);
         }
 
         /// <inheritdoc />
         protected override void OnServiceStop(Stop stop)
         {
             // Forward stop message
-            this.Send(stop, this.addresses);
-            this.messageBusAdapter.Stop();
-            this.dataBusAdapter.Stop();
+            this.Send(stop, this.componentsStoppable);
+
+            // Message bus already stopping in service base
+            this.dataBus.Stop();
         }
 
         /// <inheritdoc />

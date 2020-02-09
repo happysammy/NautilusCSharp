@@ -12,7 +12,6 @@ namespace Nautilus.Common.Messaging
     using System.Collections.Generic;
     using System.Linq;
     using Nautilus.Common.Componentry;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core.Annotations;
@@ -39,7 +38,7 @@ namespace Nautilus.Common.Messaging
         /// </summary>
         /// <param name="container">The componentry container.</param>
         public MessageBus(IComponentryContainer container)
-        : base(container, State.Running)
+        : base(container)
         {
             this.deadLetters = new List<object>();
             this.subscriptionsAll = new List<Mailbox>();
@@ -75,6 +74,11 @@ namespace Nautilus.Common.Messaging
         /// Gets the message bus total subscriptions count.
         /// </summary>
         public int SubscriptionCount => this.BuildSubscribers().Select(kvp => kvp.Value.Count).Sum();
+
+        /// <inheritdoc />
+        protected override void OnStart(Start start)
+        {
+        }
 
         /// <inheritdoc />
         protected override void OnStop(Stop message)

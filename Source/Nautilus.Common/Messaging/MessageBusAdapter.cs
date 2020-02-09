@@ -99,6 +99,16 @@ namespace Nautilus.Common.Messaging
         }
 
         /// <summary>
+        /// Starts the message bus.
+        /// </summary>
+        public void Start()
+        {
+            this.cmdBus.Start();
+            this.evtBus.Start();
+            this.docBus.Start();
+        }
+
+        /// <summary>
         /// Stops the message bus.
         /// </summary>
         public void Stop()

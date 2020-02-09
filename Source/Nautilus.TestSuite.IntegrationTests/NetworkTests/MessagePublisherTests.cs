@@ -55,7 +55,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             // Assert
             Assert.Equal("tcp://127.0.0.1:55555", publisher.NetworkAddress.Value);
-            Assert.Equal(State.Initialized, publisher.State);
+            Assert.Equal(ComponentState.Initialized, publisher.ComponentState);
             Assert.Equal(0, publisher.PublishedCount);
         }
 
@@ -91,7 +91,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             // Assert
             Assert.Equal(TEST_TOPIC, Encoding.UTF8.GetString(receivedTopic));
             Assert.Equal(message, Encoding.UTF8.GetString(receivedMessage));
-            Assert.Equal(State.Running, publisher.State);
+            Assert.Equal(ComponentState.Running, publisher.ComponentState);
             Assert.Equal(1, publisher.PublishedCount);
 
             // Tear Down

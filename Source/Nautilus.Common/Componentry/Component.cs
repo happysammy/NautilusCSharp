@@ -34,8 +34,7 @@ namespace Nautilus.Common.Componentry
         /// Initializes a new instance of the <see cref="Component"/> class.
         /// </summary>
         /// <param name="container">The components componentry container.</param>
-        /// <param name="initial">The initial state of the component.</param>
-        protected Component(IComponentryContainer container, State initial = State.Initialized)
+        protected Component(IComponentryContainer container)
         {
             this.clock = container.Clock;
             this.guidFactory = container.GuidFactory;
@@ -46,7 +45,7 @@ namespace Nautilus.Common.Componentry
             this.Address = new Address(this.Name.Value);
             this.Mailbox = new Mailbox(this.Address, this.Endpoint);
             this.Log = container.LoggerFactory.Create(this.Name);
-            this.State = initial;
+            this.ComponentState = ComponentState.Initialized;
 
             this.RegisterExceptionHandler(this.HandleException);
             this.RegisterHandler<Start>(this.OnMessage);
@@ -75,7 +74,7 @@ namespace Nautilus.Common.Componentry
         /// <summary>
         /// Gets the components current state.
         /// </summary>
-        public State State { get; private set; }
+        public ComponentState ComponentState { get; private set; }
 
         /// <summary>
         /// Gets the time the component was initialized.
@@ -146,8 +145,7 @@ namespace Nautilus.Common.Componentry
         /// <param name="start">The start message.</param>
         protected virtual void OnStart(Start start)
         {
-            // this.Log.Error($"Received {start} with OnStart() not overridden in implementation.");
-            this.Log.Warning($"Received {start}.");
+            this.Log.Error($"Received {start} with OnStart() not overridden in implementation.");
         }
 
         /// <summary>
@@ -158,8 +156,7 @@ namespace Nautilus.Common.Componentry
         /// <param name="stop">The stop message.</param>
         protected virtual void OnStop(Stop stop)
         {
-            // this.Log.Error($"Received {stop} with OnStop() not overridden in implementation.");
-            this.Log.Warning($"Received {stop}.");
+            this.Log.Error($"Received {stop} with OnStop() not overridden in implementation.");
         }
 
         /// <summary>
@@ -179,20 +176,25 @@ namespace Nautilus.Common.Componentry
 
             this.OnStart(message);
             this.startedTimes.Add(this.TimeNow());
-            this.State = State.Running;
+            this.ComponentState = ComponentState.Running;
 
-            this.Log.Information($"{this.State}...");
+            this.Log.Information($"{this.ComponentState}...");
         }
 
         private void OnMessage(Stop message)
         {
             this.Log.Debug($"Stopping from message {message}...");
 
+            if (this.ComponentState != ComponentState.Running)
+            {
+                this.Log.Error($"Stopping component not already running, was {this.ComponentState}.");
+            }
+
             this.OnStop(message);
             this.stoppedTimes.Add(this.TimeNow());
-            this.State = State.Stopped;
+            this.ComponentState = ComponentState.Stopped;
 
-            this.Log.Information($"{this.State}.");
+            this.Log.Information($"{this.ComponentState}.");
         }
 
         private void HandleException(Exception ex)

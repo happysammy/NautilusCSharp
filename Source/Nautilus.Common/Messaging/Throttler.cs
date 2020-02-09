@@ -13,6 +13,7 @@ namespace Nautilus.Common.Messaging
     using System.Threading.Tasks;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messages.Commands;
     using Nautilus.Core.Correctness;
     using Nautilus.Messaging.Interfaces;
     using NodaTime;
@@ -71,6 +72,16 @@ namespace Nautilus.Common.Messaging
         /// Gets a value indicating whether the throttler is idle.
         /// </summary>
         public bool IsIdle { get; private set; }
+
+        /// <inheritdoc />
+        protected override void OnStart(Start start)
+        {
+        }
+
+        /// <inheritdoc />
+        protected override void OnStop(Stop message)
+        {
+        }
 
         private void OnMessage(RefreshVouchers message)
         {

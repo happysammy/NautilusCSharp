@@ -60,7 +60,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             // Assert
             Assert.Equal("tcp://127.0.0.1:55555", server.NetworkAddress.ToString());
-            Assert.Equal(State.Initialized, server.State);
+            Assert.Equal(ComponentState.Initialized, server.ComponentState);
             Assert.Equal(0, server.CountReceived);
             Assert.Equal(0, server.CountSent);
 
@@ -83,7 +83,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
-            Assert.Equal(State.Running, server.State);
+            Assert.Equal(ComponentState.Running, server.ComponentState);
 
             // Tear Down
             server.Stop();

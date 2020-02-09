@@ -16,6 +16,7 @@ namespace Nautilus.Scheduler
     using System.Threading.Tasks;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messages.Commands;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
@@ -222,6 +223,16 @@ namespace Nautilus.Scheduler
             var cancelable = new Cancelable(this);
             this.InternalSchedule(initialDelay, interval, new ScheduledSend(receiver, message, sender), cancelable);
             return cancelable;
+        }
+
+        /// <inheritdoc />
+        protected override void OnStart(Start start)
+        {
+        }
+
+        /// <inheritdoc />
+        protected override void OnStop(Stop stop)
+        {
         }
 
         private static long DurationToTicksWithCheck(Duration ticksDuration, long wheelLength)

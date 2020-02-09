@@ -15,6 +15,7 @@ namespace Nautilus.Redis.Data
     using System.Text;
     using Nautilus.Common.Data;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messages.Commands;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.CQS;
@@ -274,6 +275,19 @@ namespace Nautilus.Redis.Data
 
         /// <inheritdoc />
         public IReadOnlyCollection<Symbol> GetCachedSymbols() => this.cache.Keys.ToArray();
+
+        /// <inheritdoc />
+        protected override void OnStart(Start start)
+        {
+        }
+
+        /// <inheritdoc />
+        protected override void OnStop(Stop stop)
+        {
+            this.Log.Debug("Saving database...");
+            this.SnapshotDatabase();
+            this.Log.Information("Database saved.");
+        }
 
         private void OnData(Instrument instrument)
         {

@@ -9,7 +9,6 @@
 namespace NautilusExecutor
 {
     using System.Collections.Generic;
-    using System.Linq;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Logging;
@@ -48,8 +47,12 @@ namespace NautilusExecutor
                 guidFactory,
                 new LoggerFactory(config.LoggingAdapter));
 
-            var messagingAdapter = MessageBusFactory.Create(container);
             var scheduler = new HashedWheelTimerScheduler(container);
+            scheduler.Start();
+
+            var messagingAdapter = MessageBusFactory.Create(container);
+            messagingAdapter.Start();
+
             var symbolConverter = new SymbolConverter(config.SymbolIndex);
 
             var fixClient = CreateFixClient(
@@ -83,13 +86,18 @@ namespace NautilusExecutor
                 tradingGateway,
                 eventPublisher.Endpoint);
 
-            var commandServer = new CommandRouter(
+            var commandRouter = new CommandRouter(
                 container,
                 messagingAdapter,
-                new MsgPackCommandSerializer(),
-                new MsgPackResponseSerializer(),
                 executionEngine.Endpoint,
                 config);
+
+            var commandServer = new CommandServer(
+                container,
+                new MsgPackCommandSerializer(),
+                new MsgPackResponseSerializer(),
+                commandRouter.Endpoint,
+                config.CommandsPort);
 
             var addresses = new Dictionary<Address, IEndpoint>
             {
@@ -97,6 +105,7 @@ namespace NautilusExecutor
                 { ServiceAddress.TradingGateway, tradingGateway.Endpoint },
                 { ServiceAddress.ExecutionEngine, executionEngine.Endpoint },
                 { ServiceAddress.ExecutionDatabase, executionDatabase.Endpoint },
+                { ServiceAddress.CommandRouter, commandRouter.Endpoint },
                 { ServiceAddress.CommandServer, commandServer.Endpoint },
                 { ServiceAddress.EventPublisher, eventPublisher.Endpoint },
             };
@@ -104,7 +113,6 @@ namespace NautilusExecutor
             var executionService = new ExecutionService(
                 container,
                 messagingAdapter,
-                addresses.Keys.ToList(),
                 scheduler,
                 tradingGateway,
                 config);

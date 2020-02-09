@@ -71,6 +71,16 @@ namespace Nautilus.Data.Aggregation
         /// </summary>
         public IReadOnlyDictionary<BarType, ICancelable?> Subscriptions => this.subscriptions.ToImmutableDictionary();
 
+        /// <summary>
+        /// Actions to be performed on component stop. Called when a Stop message is received.
+        /// After this method is called the component state will become Stopped.
+        /// Note: A log event will be created for the Stop message.
+        /// </summary>
+        /// <param name="stop">The stop message.</param>
+        protected override void OnStop(Stop stop)
+        {
+        }
+
         private static bool IsMarketOpen(Instant now)
         {
             return TimingProvider.IsOutsideWeeklyInterval(

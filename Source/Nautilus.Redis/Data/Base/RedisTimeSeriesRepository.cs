@@ -119,9 +119,16 @@ namespace Nautilus.Redis.Data.Base
         }
 
         /// <inheritdoc />
+        protected override void OnStart(Start start)
+        {
+        }
+
+        /// <inheritdoc />
         protected override void OnStop(Stop stop)
         {
+            this.Log.Debug("Saving database...");
             this.SnapshotDatabase();
+            this.Log.Information("Database saved.");
         }
 
         /// <summary>

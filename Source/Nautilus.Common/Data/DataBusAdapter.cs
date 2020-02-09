@@ -100,7 +100,17 @@ namespace Nautilus.Common.Data
         }
 
         /// <summary>
-        /// Stops the message bus.
+        /// Starts the data bus.
+        /// </summary>
+        public void Start()
+        {
+            this.tickBus.Start();
+            this.barBus.Start();
+            this.instrumentBus.Start();
+        }
+
+        /// <summary>
+        /// Stops the data bus.
         /// </summary>
         public void Stop()
         {

@@ -9,7 +9,6 @@
 namespace NautilusData
 {
     using System.Collections.Generic;
-    using System.Linq;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Data;
     using Nautilus.Common.Interfaces;
@@ -52,8 +51,13 @@ namespace NautilusData
                 new LoggerFactory(config.LoggingAdapter));
 
             var scheduler = new HashedWheelTimerScheduler(container);
+            scheduler.Start();
+
             var messagingAdapter = MessageBusFactory.Create(container);
+            messagingAdapter.Start();
+
             var dataBusAdapter = DataBusFactory.Create(container);
+            dataBusAdapter.Start();
 
             var tickPublisher = new TickPublisher(
                 container,
@@ -156,7 +160,6 @@ namespace NautilusData
                 container,
                 messagingAdapter,
                 dataBusAdapter,
-                addresses.Keys.ToList(),
                 scheduler,
                 dataGateway,
                 config);

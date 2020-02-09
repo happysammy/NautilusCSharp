@@ -12,7 +12,6 @@ namespace Nautilus.Common.Data
     using System.Collections.Generic;
     using System.Linq;
     using Nautilus.Common.Componentry;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core.Annotations;
@@ -31,7 +30,7 @@ namespace Nautilus.Common.Data
         /// </summary>
         /// <param name="container">The componentry container.</param>
         public DataBus(IComponentryContainer container)
-        : base(container, State.Running)
+        : base(container)
         {
             this.subscriptions = new List<Mailbox>();
 
@@ -51,6 +50,16 @@ namespace Nautilus.Common.Data
         /// Gets the data bus subscriptions.
         /// </summary>
         public IReadOnlyCollection<Address> Subscriptions => this.subscriptions.Select(m => m.Address).ToList().AsReadOnly();
+
+        /// <inheritdoc />
+        protected override void OnStart(Start start)
+        {
+        }
+
+        /// <inheritdoc />
+        protected override void OnStop(Stop stop)
+        {
+        }
 
         private void OnMessage(Subscribe<Type> message)
         {

@@ -26,9 +26,7 @@ namespace Nautilus.Common.Data
         /// </summary>
         /// <param name="container">The container.</param>
         /// <param name="dataBusAdapter">The data bus adapter.</param>
-        protected DataBusConnected(
-            IComponentryContainer container,
-            IDataBusAdapter dataBusAdapter)
+        protected DataBusConnected(IComponentryContainer container, IDataBusAdapter dataBusAdapter)
             : base(container)
         {
             this.dataBusAdapter = dataBusAdapter;

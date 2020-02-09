@@ -28,9 +28,7 @@ namespace Nautilus.Common.Messaging
         /// </summary>
         /// <param name="container">The container.</param>
         /// <param name="messageBusAdapter">The messaging adapter.</param>
-        protected MessageBusConnected(
-            IComponentryContainer container,
-            IMessageBusAdapter messageBusAdapter)
+        protected MessageBusConnected(IComponentryContainer container, IMessageBusAdapter messageBusAdapter)
             : base(container)
         {
             this.messageBusAdapter = messageBusAdapter;

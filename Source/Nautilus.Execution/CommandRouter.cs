@@ -13,7 +13,6 @@ namespace Nautilus.Execution
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Message;
     using Nautilus.DomainModel.Commands;
-    using Nautilus.Execution.Network;
     using Nautilus.Messaging.Interfaces;
     using NodaTime;
 
@@ -22,36 +21,23 @@ namespace Nautilus.Execution
     /// </summary>
     public class CommandRouter : MessageBusConnected
     {
-        private readonly CommandServer commandServer;
         private readonly Throttler commandThrottler;
         private readonly Throttler newOrderThrottler;
-        private readonly IEndpoint executionEngine;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandRouter"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
         /// <param name="messageBusAdapter">The messaging adapter.</param>
-        /// <param name="inboundSerializer">The inbound message serializer.</param>
-        /// <param name="outboundSerializer">The outbound message serializer.</param>
         /// <param name="executionEngine">The execution engine endpoint.</param>
         /// <param name="config">The service configuration.</param>
         public CommandRouter(
             IComponentryContainer container,
             IMessageBusAdapter messageBusAdapter,
-            IMessageSerializer<Command> inboundSerializer,
-            IMessageSerializer<Response> outboundSerializer,
             IEndpoint executionEngine,
             Configuration config)
             : base(container, messageBusAdapter)
         {
-            this.commandServer = new CommandServer(
-                container,
-                inboundSerializer,
-                outboundSerializer,
-                this.Endpoint,
-                config.CommandsPort);
-
             this.commandThrottler = new Throttler(
                 container,
                 executionEngine,
@@ -64,8 +50,6 @@ namespace Nautilus.Execution
                 Duration.FromSeconds(1),
                 config.NewOrdersPerSecond);
 
-            this.executionEngine = executionEngine;
-
             this.RegisterHandler<SubmitOrder>(this.OnMessage);
             this.RegisterHandler<SubmitAtomicOrder>(this.OnMessage);
             this.RegisterHandler<CancelOrder>(this.OnMessage);
@@ -76,15 +60,14 @@ namespace Nautilus.Execution
         /// <inheritdoc />
         protected override void OnStart(Start message)
         {
-            // Forward start message
-            this.commandServer.Endpoint.Send(message);
+            this.commandThrottler.Start();
+            this.newOrderThrottler.Start();
         }
 
         /// <inheritdoc />
         protected override void OnStop(Stop message)
         {
             // Forward stop message
-            this.commandServer.Endpoint.Send(message);
             this.commandThrottler.Stop();
             this.newOrderThrottler.Stop();
         }
