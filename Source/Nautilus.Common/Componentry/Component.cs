@@ -165,7 +165,7 @@ namespace Nautilus.Common.Componentry
         /// <param name="envelope">The envelope to open.</param>
         protected void OnEnvelope(IEnvelope envelope)
         {
-            this.SendToSelf(envelope.MessageBase);
+            this.SendToSelf(envelope.Message);
 
             this.Log.Verbose($"Received {envelope}.");
         }

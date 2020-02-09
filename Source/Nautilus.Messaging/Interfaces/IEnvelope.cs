@@ -20,7 +20,7 @@ namespace Nautilus.Messaging.Interfaces
         /// <summary>
         /// Gets the envelopes message.
         /// </summary>
-        Message MessageBase { get; }
+        Message Message { get; }
 
         /// <summary>
         /// Gets the envelopes message type.

@@ -176,7 +176,7 @@ namespace Nautilus.Common.Messaging
 
         private void OnReceive(IEnvelope envelope)
         {
-            Debug.True(envelope.MessageBase is T, nameof(envelope.MessageBase)); // Design time error
+            Debug.True(envelope.Message is T, nameof(envelope.Message)); // Design time error
 
             if (envelope.Receiver is null)
             {

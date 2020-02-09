@@ -95,6 +95,23 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
         }
 
         [Fact]
+        internal void GivenMessage_WithExplodingHandler_PropagatesException()
+        {
+            // Arrange
+            var processor = new MessageProcessor();
+            processor.RegisterHandler<string>(ThisWillBlowUp);
+
+            // Act
+            processor.Endpoint.Send("BOOM!");
+
+            // Assert
+            // TODO: Assert.Single(processor.Exceptions);
+            // Assert.Contains("test", processor.UnhandledMessages);
+            // Assert.Equal(0, processor.InputCount);
+            // Assert.Equal(1, processor.ProcessedCount);
+        }
+
+        [Fact]
         internal void GivenMessage_WhenNoHandlersRegistered_ThenStoresInUnhandledMessages()
         {
             // Arrange

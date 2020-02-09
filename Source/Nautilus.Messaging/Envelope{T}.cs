@@ -50,12 +50,7 @@ namespace Nautilus.Messaging
         /// <summary>
         /// Gets the envelopes message.
         /// </summary>
-        public T Message { get; }
-
-        /// <summary>
-        /// Gets the envelopes message as a type of <see cref="Message"/>.
-        /// </summary>
-        public Message MessageBase => this.Message;
+        public Message Message { get; }
 
         /// <summary>
         /// Gets the envelopes message type.
