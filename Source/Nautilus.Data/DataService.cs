@@ -31,8 +31,7 @@ namespace Nautilus.Data
     public sealed class DataService : NautilusServiceBase
     {
         private readonly DataBusAdapter dataBus;
-        private readonly List<Address> componentsStartable;
-        private readonly List<Address> componentsStoppable;
+        private readonly List<Address> managedComponents;
         private readonly IDataGateway dataGateway;
         private readonly IReadOnlyCollection<Symbol> subscribingSymbols;
         private readonly IReadOnlyCollection<BarSpecification> barSpecifications;
@@ -68,21 +67,7 @@ namespace Nautilus.Data
         {
             this.dataBus = dataBusAdapter;
             this.dataGateway = dataGateway;
-            this.componentsStartable = new List<Address>
-            {
-                ServiceAddress.TickRepository,
-                ServiceAddress.TickPublisher,
-                ServiceAddress.TickProvider,
-                ServiceAddress.BarRepository,
-                ServiceAddress.BarPublisher,
-                ServiceAddress.BarProvider,
-                ServiceAddress.InstrumentRepository,
-                ServiceAddress.InstrumentPublisher,
-                ServiceAddress.InstrumentProvider,
-                ServiceAddress.DataGateway,
-            };
-
-            this.componentsStoppable = new List<Address>
+            this.managedComponents = new List<Address>
             {
                 ServiceAddress.TickRepository,
                 ServiceAddress.TickPublisher,
@@ -125,14 +110,14 @@ namespace Nautilus.Data
             this.CreateTrimBarDataJob();
 
             // Forward start message
-            this.Send(start, this.componentsStartable);
+            this.Send(start, this.managedComponents);
         }
 
         /// <inheritdoc />
         protected override void OnServiceStop(Stop stop)
         {
             // Forward stop message
-            this.Send(stop, this.componentsStoppable);
+            this.Send(stop, this.managedComponents);
 
             // Message bus already stopping in service base
             this.dataBus.Stop();

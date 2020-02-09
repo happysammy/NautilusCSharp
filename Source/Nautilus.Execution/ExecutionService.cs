@@ -23,8 +23,7 @@ namespace Nautilus.Execution
     public sealed class ExecutionService : NautilusServiceBase
     {
         private readonly ITradingGateway tradingGateway;
-        private readonly List<Address> componentsStartable;
-        private readonly List<Address> componentsStoppable;
+        private readonly List<Address> managedComponents;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExecutionService"/> class.
@@ -49,15 +48,7 @@ namespace Nautilus.Execution
         {
             this.tradingGateway = tradingGateway;
 
-            this.componentsStartable = new List<Address>
-            {
-                ServiceAddress.CommandRouter,
-                ServiceAddress.CommandServer,
-                ServiceAddress.EventPublisher,
-                ServiceAddress.TradingGateway,
-            };
-
-            this.componentsStoppable = new List<Address>
+            this.managedComponents = new List<Address>
             {
                 ServiceAddress.CommandRouter,
                 ServiceAddress.CommandServer,
@@ -72,14 +63,14 @@ namespace Nautilus.Execution
         protected override void OnServiceStart(Start start)
         {
             // Forward start message
-            this.Send(start, this.componentsStartable);
+            this.Send(start, this.managedComponents);
         }
 
         /// <inheritdoc />
         protected override void OnServiceStop(Stop stop)
         {
             // Forward stop message
-            this.Send(stop, this.componentsStoppable);
+            this.Send(stop, this.managedComponents);
         }
 
         /// <inheritdoc />
