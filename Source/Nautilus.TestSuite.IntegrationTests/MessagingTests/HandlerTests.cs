@@ -8,6 +8,7 @@
 
 namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
 {
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Messaging.Internal;
@@ -26,6 +27,17 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
         }
 
         [Fact]
+        internal async System.Threading.Tasks.Task Handle_WithExplodingFuncDelegate_PropagatesThrownException()
+        {
+            // Arrange
+            var handler = Handler.Create<string>(ThisWillBlowUp);
+
+            // Act
+            // Assert
+            await Assert.ThrowsAsync<InvalidOperationException>(() => handler.Handle("BOOM!"));
+        }
+
+        [Fact]
         internal void Handle_WhenCorrectMessageReferenceType_ReturnsTrue()
         {
             // Arrange
@@ -37,7 +49,7 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
 
             // Assert
             Assert.Equal(typeof(string), handler.Type);
-            Assert.True(result);
+            Assert.True(result.IsCompletedSuccessfully);
             Assert.Contains("test", receiver);
         }
 
@@ -53,7 +65,7 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
 
             // Assert
             Assert.Equal(typeof(int), handler.Type);
-            Assert.True(result);
+            Assert.True(result.IsCompletedSuccessfully);
             Assert.Contains(1, receiver);
         }
 
@@ -69,7 +81,13 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
 
             // Assert
             Assert.Equal(typeof(int), handler.Type);
-            Assert.False(result);
+            Assert.True(result.IsCompleted);
+        }
+
+        // Test function
+        private static void ThisWillBlowUp(string input)
+        {
+            throw new InvalidOperationException(input);
         }
     }
 }

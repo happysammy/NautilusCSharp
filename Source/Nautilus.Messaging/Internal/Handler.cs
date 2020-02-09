@@ -9,10 +9,11 @@
 namespace Nautilus.Messaging.Internal
 {
     using System;
+    using System.Threading.Tasks;
     using Nautilus.Core.Annotations;
 
     /// <summary>
-    /// Provides a handler for a type of message.
+    /// Provides a handler for a specified type of message.
     /// </summary>
     [Immutable]
     internal sealed class Handler
@@ -22,7 +23,7 @@ namespace Nautilus.Messaging.Internal
         /// </summary>
         /// <param name="type">The message type.</param>
         /// <param name="handle">The delegate handle.</param>
-        private Handler(Type type, Func<object, bool> handle)
+        private Handler(Type type, Func<object, Task<bool>> handle)
         {
             this.Type = type;
             this.Handle = handle;
@@ -36,7 +37,7 @@ namespace Nautilus.Messaging.Internal
         /// <summary>
         /// Gets the handlers delegate.
         /// </summary>
-        internal Func<object, bool> Handle { get; }
+        internal Func<object, Task<bool>> Handle { get; }
 
         /// <summary>
         /// Creates a new handler from the given delegate.
@@ -46,16 +47,16 @@ namespace Nautilus.Messaging.Internal
         /// <returns>The created handler.</returns>
         internal static Handler Create<TMessage>(Action<TMessage> handle)
         {
-            bool ActionDelegate(object message)
+            Task<bool> ActionDelegate(object message)
             {
-                if (!(message is TMessage typedMessage))
+                if (message is TMessage typedMessage)
                 {
-                    return false;
+                    handle.Invoke(typedMessage);
+                    return Task.FromResult(true);
                 }
 
-                handle.Invoke(typedMessage);
-
-                return true;
+                // The given message was not of the handlers type
+                return Task.FromResult(false);
             }
 
             return new Handler(typeof(TMessage), ActionDelegate);

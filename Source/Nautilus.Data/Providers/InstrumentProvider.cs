@@ -58,76 +58,89 @@ namespace Nautilus.Data.Providers
 
         private void OnMessage(DataRequest request)
         {
-            this.Execute(() =>
+            try
             {
-                try
-                {
-                    this.Log.Information($"<--[REQ] {request}.");
+                this.Log.Information($"<--[REQ] {request}.");
 
-                    var dataType = request.Query["DataType"];
-                    if (dataType != typeof(Instrument[]).Name)
+                var dataType = request.Query["DataType"];
+                if (dataType != typeof(Instrument[]).Name)
+                {
+                    this.SendQueryFailure($"Incorrect DataType requested, was {dataType}", request.Id);
+                    return;
+                }
+
+                // Query for symbol instrument
+                if (request.Query.ContainsKey("Symbol"))
+                {
+                    var symbol = Symbol.FromString(request.Query["Symbol"]);
+                    var dataQuery = this.repository.GetInstrumentData(symbol);
+                    if (dataQuery.IsFailure)
                     {
-                        this.SendQueryFailure($"Incorrect DataType requested, was {dataType}", request.Id);
+                        this.SendQueryFailure(dataQuery.Message, request.Id);
+                        this.Log.Warning($"{request} QueryFailure({dataQuery.Message}).");
                         return;
                     }
 
-                    // Query for symbol instrument
-                    if (request.Query.ContainsKey("Symbol"))
+                    if (dataQuery.Value.Length == 0)
                     {
-                        var symbol = Symbol.FromString(request.Query["Symbol"]);
-                        var dataQuery = this.repository.GetInstrumentData(symbol);
-                        if (dataQuery.IsFailure)
-                        {
-                            this.SendQueryFailure(dataQuery.Message, request.Id);
-                            this.Log.Warning($"{request} QueryFailure({dataQuery.Message}).");
-                            return;
-                        }
-
-                        var response = new DataResponse(
-                            this.dataSerializer.SerializeBlob(dataQuery.Value, request.Query),
-                            dataType,
-                            this.dataSerializer.BlobEncoding,
-                            request.Id,
-                            Guid.NewGuid(),
-                            this.TimeNow());
-
-                        this.SendMessage(response, request.Id);
+                        var message = $"Cannot find instruments for the '{symbol}' symbol";
+                        this.SendQueryFailure(dataQuery.Message, request.Id);
+                        this.Log.Warning($"{request} QueryFailure({message}).");
+                        return;
                     }
 
-                    // Query for all venue instruments
-                    else if (request.Query.ContainsKey("Venue"))
-                    {
-                        var venue = new Venue(request.Query["Venue"]);
-                        var dataQuery = this.repository.GetInstrumentData(venue);
-                        if (dataQuery.IsFailure)
-                        {
-                            this.SendQueryFailure(dataQuery.Message, request.Id);
-                            this.Log.Warning($"{request} QueryFailure({dataQuery.Message}).");
-                            return;
-                        }
+                    var response = new DataResponse(
+                        this.dataSerializer.SerializeBlob(dataQuery.Value, request.Query),
+                        dataType,
+                        this.dataSerializer.BlobEncoding,
+                        request.Id,
+                        Guid.NewGuid(),
+                        this.TimeNow());
 
-                        var response = new DataResponse(
-                            this.dataSerializer.SerializeBlob(dataQuery.Value, request.Query),
-                            dataType,
-                            this.dataSerializer.BlobEncoding,
-                            request.Id,
-                            Guid.NewGuid(),
-                            this.TimeNow());
-
-                        this.Log.Information($"[RES]--> {response}.");
-                        this.SendMessage(response, request.Id);
-                    }
-                    else
-                    {
-                        this.SendQueryFailure($"Invalid Instrument query, must contain 'Symbol' or 'Venue'", request.Id);
-                    }
+                    this.SendMessage(response, request.Id);
                 }
-                catch (Exception ex)
+
+                // Query for all venue instruments
+                else if (request.Query.ContainsKey("Venue"))
                 {
-                    this.Log.Error($"{ex}");
-                    this.SendQueryFailure(ex.Message, request.Id);
+                    var venue = new Venue(request.Query["Venue"]);
+                    var dataQuery = this.repository.GetInstrumentData(venue);
+                    if (dataQuery.IsFailure)
+                    {
+                        this.SendQueryFailure(dataQuery.Message, request.Id);
+                        this.Log.Warning($"{request} QueryFailure({dataQuery.Message}).");
+                        return;
+                    }
+
+                    if (dataQuery.Value.Length == 0)
+                    {
+                        var message = $"Cannot find instruments for the '{venue}' venue";
+                        this.SendQueryFailure(message, request.Id);
+                        this.Log.Warning($"{request} QueryFailure({message}).");
+                        return;
+                    }
+
+                    var response = new DataResponse(
+                        this.dataSerializer.SerializeBlob(dataQuery.Value, request.Query),
+                        dataType,
+                        this.dataSerializer.BlobEncoding,
+                        request.Id,
+                        Guid.NewGuid(),
+                        this.TimeNow());
+
+                    this.Log.Information($"[RES]--> {response}.");
+                    this.SendMessage(response, request.Id);
                 }
-            });
+                else
+                {
+                    this.SendQueryFailure($"Invalid Instrument query, must contain 'Symbol' or 'Venue'", request.Id);
+                }
+            }
+            catch (Exception ex)
+            {
+                this.Log.Error($"{ex}");
+                this.SendQueryFailure(ex.Message, request.Id);
+            }
         }
     }
 }

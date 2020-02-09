@@ -38,7 +38,6 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
             processor.RegisterHandler<string>(receiver.Add);
 
             // Act
-
             // Assert
             Assert.Throws<ArgumentException>(() => processor.RegisterHandler<string>(receiver.Add));
         }
@@ -176,7 +175,7 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
             receiver.Endpoint.Send("4");
             receiver.Endpoint.Send(4);
 
-            Task.Delay(100).Wait();
+            Task.Delay(200).Wait();
 
             Assert.True(receiver.Messages[0].Equals("1"));
             Assert.True(receiver.Messages[1].Equals(1));
@@ -251,9 +250,9 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
                 receiver.Endpoint.Send(i);
             }
 
-            while (receiver.Messages.Count < 2000000)
+            while (receiver.ProcessedCount < 2000000)
             {
-                // Wait.
+                // Wait
             }
 
             stopwatch.Stop();
@@ -261,9 +260,18 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
             this.output.WriteLine(stopwatch.ElapsedMilliseconds.ToString());
             this.output.WriteLine(receiver.Messages.Count.ToString());
 
+            // ~1350 ms for 1000000 messages with Task<bool> being returned by handler
+            // ~1250 ms for 1000000 messages with bool being returned by handler
+
             // Assert
             Assert.Equal(0, receiver.InputCount);
             Assert.Equal(2000000, receiver.ProcessedCount);
+        }
+
+        // Test function
+        private static void ThisWillBlowUp(string input)
+        {
+            throw new InvalidOperationException(input);
         }
     }
 }

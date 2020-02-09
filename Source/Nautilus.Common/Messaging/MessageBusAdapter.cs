@@ -16,16 +16,15 @@ namespace Nautilus.Common.Messaging
     using Nautilus.Core.Message;
     using Nautilus.Core.Types;
     using Nautilus.Messaging;
-    using Nautilus.Messaging.Interfaces;
     using NodaTime;
 
     /// <inheritdoc />
     [Immutable]
     public sealed class MessageBusAdapter : IMessageBusAdapter
     {
-        private readonly IEndpoint cmdBus;
-        private readonly IEndpoint evtBus;
-        private readonly IEndpoint docBus;
+        private readonly MessageBus<Command> cmdBus;
+        private readonly MessageBus<Event> evtBus;
+        private readonly MessageBus<Document> docBus;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageBusAdapter"/> class.
@@ -34,9 +33,9 @@ namespace Nautilus.Common.Messaging
         /// <param name="evtBus">The event bus endpoint.</param>
         /// <param name="docBus">The document bus endpoint.</param>
         public MessageBusAdapter(
-            IEndpoint cmdBus,
-            IEndpoint evtBus,
-            IEndpoint docBus)
+            MessageBus<Command> cmdBus,
+            MessageBus<Event> evtBus,
+            MessageBus<Document> docBus)
         {
             this.cmdBus = cmdBus;
             this.evtBus = evtBus;
@@ -50,9 +49,9 @@ namespace Nautilus.Common.Messaging
         /// <param name="message">The message.</param>
         public void Send(InitializeSwitchboard message)
         {
-            this.cmdBus.Send(message);
-            this.evtBus.Send(message);
-            this.docBus.Send(message);
+            this.cmdBus.Endpoint.Send(message);
+            this.evtBus.Endpoint.Send(message);
+            this.docBus.Endpoint.Send(message);
         }
 
         /// <inheritdoc />
@@ -99,23 +98,33 @@ namespace Nautilus.Common.Messaging
             this.WrapAndSend(message, null, sender, timestamp);
         }
 
+        /// <summary>
+        /// Stops the message bus.
+        /// </summary>
+        public void Stop()
+        {
+            this.cmdBus.Stop();
+            this.evtBus.Stop();
+            this.docBus.Stop();
+        }
+
         private void SendToBus(Type type, Message message)
         {
             if (type == typeof(Command) || type.IsSubclassOf(typeof(Command)))
             {
-                this.cmdBus.Send(message);
+                this.cmdBus.Endpoint.Send(message);
                 return;
             }
 
             if (type == typeof(Event) || type.IsSubclassOf(typeof(Event)))
             {
-                this.evtBus.Send(message);
+                this.evtBus.Endpoint.Send(message);
                 return;
             }
 
             if (type == typeof(Document) || type.IsSubclassOf(typeof(Document)))
             {
-                this.docBus.Send(message);
+                this.docBus.Endpoint.Send(message);
                 return;
             }
 
@@ -135,13 +144,13 @@ namespace Nautilus.Common.Messaging
             switch (message)
             {
                 case Command cmd:
-                    this.cmdBus.Send(envelope);
+                    this.cmdBus.Endpoint.Send(envelope);
                     break;
                 case Event evt:
-                    this.evtBus.Send(envelope);
+                    this.evtBus.Endpoint.Send(envelope);
                     break;
                 case Document doc:
-                    this.docBus.Send(envelope);
+                    this.docBus.Endpoint.Send(envelope);
                     break;
                 default:
                     // Design time error

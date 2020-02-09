@@ -21,9 +21,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public MockMessageBusProvider(IComponentryContainer container)
         {
             var adapter = new MessageBusAdapter(
-                new MessageBus<Command>(container).Endpoint,
-                new MessageBus<Event>(container).Endpoint,
-                new MessageBus<Document>(container).Endpoint);
+                new MessageBus<Command>(container),
+                new MessageBus<Event>(container),
+                new MessageBus<Document>(container));
 
             this.Adapter = adapter;
 

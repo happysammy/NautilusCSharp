@@ -8,8 +8,7 @@
 
 namespace Nautilus.Messaging
 {
-    using System;
-    using System.Reflection.Emit;
+    using System.Threading.Tasks.Dataflow;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Messaging.Interfaces;
@@ -18,19 +17,19 @@ namespace Nautilus.Messaging
     [Immutable]
     public sealed class Endpoint : IEndpoint
     {
-        private readonly Func<object, bool> target;
+        private readonly ActionBlock<object> target;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Endpoint"/> class.
         /// </summary>
         /// <param name="target">The target delegate for the end point.</param>
-        public Endpoint(Func<object, bool> target)
+        public Endpoint(ActionBlock<object> target)
         {
             this.target = target;
         }
 
         /// <summary>
-        /// Returns a value indicating whether the <see cref="Label"/>s are equal.
+        /// Returns a value indicating whether the <see cref="Endpoint"/>s are equal.
         /// </summary>
         /// <param name="left">The left object.</param>
         /// <param name="right">The right object.</param>
@@ -54,7 +53,7 @@ namespace Nautilus.Messaging
         public static bool operator !=(Endpoint left,  Endpoint right) => !(left == right);
 
         /// <inheritdoc />
-        public void Send(object message) => this.target.Invoke(message);
+        public void Send(object message) => this.target.Post(message);
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="Endpoint"/> is equal

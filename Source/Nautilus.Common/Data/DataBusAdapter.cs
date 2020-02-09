@@ -28,24 +28,27 @@ namespace Nautilus.Common.Data
     public class DataBusAdapter : IDataBusAdapter
     {
         private readonly ImmutableDictionary<Type, IEndpoint> endpoints;
-        private readonly IEndpoint tickBus;
-        private readonly IEndpoint barBus;
-        private readonly IEndpoint instrumentBus;
+        private readonly DataBus<Tick> tickBus;
+        private readonly DataBus<BarData> barBus;
+        private readonly DataBus<Instrument> instrumentBus;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataBusAdapter"/> class.
         /// </summary>
-        /// <param name="endpoints">The data bus endpoints.</param>
         /// <param name="tickBus">The tick bus endpoint.</param>
         /// <param name="barBus">The bar bus endpoint.</param>
         /// <param name="instrumentBus">The instrument bus endpoint.</param>
         public DataBusAdapter(
-            Dictionary<Type, IEndpoint> endpoints,
-            IEndpoint tickBus,
-            IEndpoint barBus,
-            IEndpoint instrumentBus)
+            DataBus<Tick> tickBus,
+            DataBus<BarData> barBus,
+            DataBus<Instrument> instrumentBus)
         {
-            this.endpoints = endpoints.ToImmutableDictionary();
+            this.endpoints = new Dictionary<Type, IEndpoint>
+            {
+                { tickBus.BusType, tickBus.Endpoint },
+                { barBus.BusType, barBus.Endpoint },
+                { instrumentBus.BusType, instrumentBus.Endpoint },
+            }.ToImmutableDictionary();
 
             this.tickBus = tickBus;
             this.barBus = barBus;
@@ -55,19 +58,19 @@ namespace Nautilus.Common.Data
         /// <inheritdoc />
         public void SendToBus(Tick data)
         {
-            this.tickBus.Send(data);
+            this.tickBus.Endpoint.Send(data);
         }
 
         /// <inheritdoc />
         public void SendToBus(BarData data)
         {
-            this.barBus.Send(data);
+            this.barBus.Endpoint.Send(data);
         }
 
         /// <inheritdoc />
         public void SendToBus(Instrument data)
         {
-            this.instrumentBus.Send(data);
+            this.instrumentBus.Endpoint.Send(data);
         }
 
         /// <inheritdoc />
@@ -94,6 +97,16 @@ namespace Nautilus.Common.Data
                 timestamp);
 
             this.Send(subscription, message);
+        }
+
+        /// <summary>
+        /// Stops the message bus.
+        /// </summary>
+        public void Stop()
+        {
+            this.tickBus.Stop();
+            this.barBus.Stop();
+            this.instrumentBus.Stop();
         }
 
         private void Send(Type subscription, Message message)

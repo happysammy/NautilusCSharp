@@ -76,15 +76,17 @@ namespace Nautilus.Execution
         /// <inheritdoc />
         protected override void OnStart(Start message)
         {
-            // Forward start message.
+            // Forward start message
             this.commandServer.Endpoint.Send(message);
         }
 
         /// <inheritdoc />
         protected override void OnStop(Stop message)
         {
-            // Forward stop message.
+            // Forward stop message
             this.commandServer.Endpoint.Send(message);
+            this.commandThrottler.Stop();
+            this.newOrderThrottler.Stop();
         }
 
         private void OnMessage(SubmitOrder message)

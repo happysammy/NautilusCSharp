@@ -9,10 +9,12 @@
 namespace NautilusData
 {
     using System.Collections.Generic;
+    using System.Linq;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Data;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Logging;
+    using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Correctness;
     using Nautilus.Data;
@@ -50,7 +52,7 @@ namespace NautilusData
                 new LoggerFactory(config.LoggingAdapter));
 
             var scheduler = new HashedWheelTimerScheduler(container);
-            var messageBusAdapter = MessageBusFactory.Create(container);
+            var messagingAdapter = MessageBusFactory.Create(container);
             var dataBusAdapter = DataBusFactory.Create(container);
 
             var tickPublisher = new TickPublisher(
@@ -75,7 +77,7 @@ namespace NautilusData
 
             var fixClient = CreateFixClient(
                 container,
-                messageBusAdapter,
+                messagingAdapter,
                 config.FixConfiguration,
                 symbolConverter);
 
@@ -145,17 +147,27 @@ namespace NautilusData
                 { ServiceAddress.BarRepository, barRepository.Endpoint },
                 { ServiceAddress.BarProvider, barProvider.Endpoint },
                 { ServiceAddress.BarPublisher, barPublisher.Endpoint },
+                { ServiceAddress.InstrumentRepository, instrumentRepository.Endpoint },
                 { ServiceAddress.InstrumentProvider, instrumentProvider.Endpoint },
                 { ServiceAddress.InstrumentPublisher, instrumentPublisher.Endpoint },
             };
 
-            return new DataService(
+            var dataService = new DataService(
                 container,
-                messageBusAdapter,
-                addresses,
+                messagingAdapter,
+                dataBusAdapter,
+                addresses.Keys.ToList(),
                 scheduler,
                 dataGateway,
                 config);
+
+            addresses.Add(ServiceAddress.DataService, dataService.Endpoint);
+            messagingAdapter.Send(new InitializeSwitchboard(
+                Switchboard.Create(addresses),
+                dataService.NewGuid(),
+                dataService.TimeNow()));
+
+            return dataService;
         }
 
         private static IFixClient CreateFixClient(

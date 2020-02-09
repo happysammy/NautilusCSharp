@@ -27,7 +27,6 @@ namespace Nautilus.Common.Componentry
     {
         private readonly IZonedClock clock;
         private readonly IGuidFactory guidFactory;
-        private readonly CommandHandler commandHandler;
         private readonly List<ZonedDateTime> startedTimes;
         private readonly List<ZonedDateTime> stoppedTimes;
 
@@ -40,7 +39,6 @@ namespace Nautilus.Common.Componentry
         {
             this.clock = container.Clock;
             this.guidFactory = container.GuidFactory;
-            this.commandHandler = new CommandHandler(this.Log);
             this.startedTimes = new List<ZonedDateTime>();
             this.stoppedTimes = new List<ZonedDateTime>();
 
@@ -50,6 +48,7 @@ namespace Nautilus.Common.Componentry
             this.Log = container.LoggerFactory.Create(this.Name);
             this.State = initial;
 
+            this.RegisterExceptionHandler(this.HandleException);
             this.RegisterHandler<Start>(this.OnMessage);
             this.RegisterHandler<Stop>(this.OnMessage);
             this.RegisterUnhandled(this.Unhandled);
@@ -102,6 +101,28 @@ namespace Nautilus.Common.Componentry
         protected ILogger Log { get; }
 
         /// <summary>
+        /// Returns the current time of the service clock.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="ZonedDateTime"/>.
+        /// </returns>
+        public ZonedDateTime TimeNow() => this.clock.TimeNow();
+
+        /// <summary>
+        /// Returns the current instant of the service clock.
+        /// </summary>
+        /// <returns>
+        /// An <see cref="Instant"/>.
+        /// </returns>
+        public Instant InstantNow() => this.clock.InstantNow();
+
+        /// <summary>
+        /// Returns a new <see cref="Guid"/> from the systems <see cref="Guid"/> factory.
+        /// </summary>
+        /// <returns>A <see cref="Guid"/>.</returns>
+        public Guid NewGuid() => this.guidFactory.Generate();
+
+        /// <summary>
         /// Sends a new <see cref="Start"/> message to the component.
         /// </summary>
         public void Start()
@@ -125,7 +146,8 @@ namespace Nautilus.Common.Componentry
         /// <param name="start">The start message.</param>
         protected virtual void OnStart(Start start)
         {
-            this.Log.Error($"Received {start} with OnStart() not overridden in implementation.");
+            // this.Log.Error($"Received {start} with OnStart() not overridden in implementation.");
+            this.Log.Warning($"Received {start}.");
         }
 
         /// <summary>
@@ -136,49 +158,8 @@ namespace Nautilus.Common.Componentry
         /// <param name="stop">The stop message.</param>
         protected virtual void OnStop(Stop stop)
         {
-            this.Log.Error($"Received {stop} with OnStop() not overridden in implementation.");
-        }
-
-        /// <summary>
-        /// Returns the current time of the service clock.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="ZonedDateTime"/>.
-        /// </returns>
-        protected ZonedDateTime TimeNow() => this.clock.TimeNow();
-
-        /// <summary>
-        /// Returns the current instant of the service clock.
-        /// </summary>
-        /// <returns>
-        /// An <see cref="Instant"/>.
-        /// </returns>
-        protected Instant InstantNow() => this.clock.InstantNow();
-
-        /// <summary>
-        /// Returns a new <see cref="Guid"/> from the systems <see cref="Guid"/> factory.
-        /// </summary>
-        /// <returns>A <see cref="Guid"/>.</returns>
-        protected Guid NewGuid() => this.guidFactory.Generate();
-
-        /// <summary>
-        /// Passes the given <see cref="Action"/> to the <see cref="commandHandler"/> for execution.
-        /// </summary>
-        /// <param name="action">The action to execute.</param>
-        protected void Execute(Action action)
-        {
-            this.commandHandler.Execute(action);
-        }
-
-        /// <summary>
-        /// Passes the given <see cref="Action"/> to the <see cref="commandHandler"/> for execution.
-        /// </summary>
-        /// <typeparam name="T">The exception type.</typeparam>
-        /// <param name="action">The action to execute.</param>
-        protected void Execute<T>(Action action)
-            where T : Exception
-        {
-            this.commandHandler.Execute<T>(action);
+            // this.Log.Error($"Received {stop} with OnStop() not overridden in implementation.");
+            this.Log.Warning($"Received {stop}.");
         }
 
         /// <summary>
@@ -212,6 +193,21 @@ namespace Nautilus.Common.Componentry
             this.State = State.Stopped;
 
             this.Log.Information($"{this.State}.");
+        }
+
+        private void HandleException(Exception ex)
+        {
+            switch (ex)
+            {
+                case NullReferenceException _:
+                case ArgumentException _:
+                    this.Log.Error(ex.Message, ex);
+                    break;
+                default:
+                    this.Log.Fatal(ex.Message, ex);
+
+                    throw ex;
+            }
         }
 
         private void Unhandled(object message)

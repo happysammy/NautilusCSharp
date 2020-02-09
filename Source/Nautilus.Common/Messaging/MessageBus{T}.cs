@@ -196,26 +196,23 @@ namespace Nautilus.Common.Messaging
         [PerformanceOptimized]
         private void Publish(IEnvelope envelope)
         {
-            this.Execute(() =>
+            if (this.subscriptionsAll.Count > 0)
             {
-                if (this.subscriptionsAll.Count > 0)
+                for (var i = 0; i < this.subscriptionsAll.Count; i++)
                 {
-                    for (var i = 0; i < this.subscriptionsAll.Count; i++)
-                    {
-                        this.subscriptionsAll[i].Endpoint.Send(envelope);
-                        this.Log.Verbose($"Published[{this.ProcessedCount}] {envelope.Sender} -> {envelope} -> {this.subscriptionsAll[i].Address}");
-                    }
+                    this.subscriptionsAll[i].Endpoint.Send(envelope);
+                    this.Log.Verbose($"Published[{this.ProcessedCount}] {envelope.Sender} -> {envelope} -> {this.subscriptionsAll[i].Address}");
                 }
+            }
 
-                if (this.subscriptions.TryGetValue(envelope.MessageType, out var subscribers) && subscribers.Count > 0)
+            if (this.subscriptions.TryGetValue(envelope.MessageType, out var subscribers) && subscribers.Count > 0)
+            {
+                for (var i = 0; i < subscribers.Count; i++)
                 {
-                    for (var i = 0; i < subscribers.Count; i++)
-                    {
-                        subscribers[i].Endpoint.Send(envelope);
-                        this.Log.Verbose($"Published[{this.ProcessedCount}] {envelope.Sender} -> {envelope} -> {subscribers[i].Address}");
-                    }
+                    subscribers[i].Endpoint.Send(envelope);
+                    this.Log.Verbose($"Published[{this.ProcessedCount}] {envelope.Sender} -> {envelope} -> {subscribers[i].Address}");
                 }
-            });
+            }
         }
 
         private void AddToDeadLetters(object message)

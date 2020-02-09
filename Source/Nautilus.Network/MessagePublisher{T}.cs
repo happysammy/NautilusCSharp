@@ -94,6 +94,8 @@ namespace Nautilus.Network
         {
             this.socket.Unbind(this.NetworkAddress.Value);
             this.Log.Debug($"Unbound {this.socket.GetType().Name} from {this.NetworkAddress}");
+
+            // this.Dispose();
         }
 
         /// <summary>

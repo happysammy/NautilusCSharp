@@ -11,6 +11,7 @@ namespace Nautilus.Data
     using System;
     using System.Collections.Generic;
     using Nautilus.Common.Componentry;
+    using Nautilus.Common.Data;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messages.Events;
@@ -21,7 +22,6 @@ namespace Nautilus.Data
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging;
-    using Nautilus.Messaging.Interfaces;
     using Nautilus.Scheduler;
     using Nautilus.Service;
     using NodaTime;
@@ -31,6 +31,9 @@ namespace Nautilus.Data
     /// </summary>
     public sealed class DataService : NautilusServiceBase
     {
+        private readonly MessageBusAdapter messageBusAdapter;
+        private readonly DataBusAdapter dataBusAdapter;
+        private readonly List<Address> addresses;
         private readonly IDataGateway dataGateway;
         private readonly IReadOnlyCollection<Symbol> subscribingSymbols;
         private readonly IReadOnlyCollection<BarSpecification> barSpecifications;
@@ -46,6 +49,7 @@ namespace Nautilus.Data
         /// </summary>
         /// <param name="container">The componentry container.</param>
         /// <param name="messageBusAdapter">The messaging adapter.</param>
+        /// <param name="dataBusAdapter">The data bus adapter.</param>
         /// <param name="scheduler">The scheduler.</param>
         /// <param name="dataGateway">The data gateway.</param>
         /// <param name="addresses">The data service address dictionary.</param>
@@ -54,7 +58,8 @@ namespace Nautilus.Data
         public DataService(
             IComponentryContainer container,
             MessageBusAdapter messageBusAdapter,
-            Dictionary<Address, IEndpoint> addresses,
+            DataBusAdapter dataBusAdapter,
+            List<Address> addresses,
             IScheduler scheduler,
             IDataGateway dataGateway,
             Configuration config)
@@ -66,6 +71,9 @@ namespace Nautilus.Data
         {
             Condition.NotEmpty(addresses, nameof(addresses));
 
+            this.messageBusAdapter = messageBusAdapter;
+            this.dataBusAdapter = dataBusAdapter;
+            this.addresses = addresses;
             this.dataGateway = dataGateway;
             this.subscribingSymbols = config.SubscribingSymbols;
             this.barSpecifications = config.BarSpecifications;
@@ -74,12 +82,6 @@ namespace Nautilus.Data
             this.trimWindowDaysTicks = config.TickDataTrimWindowDays;
             this.trimTimeBars = config.BarDataTrimTime;
             this.trimWindowDaysBars = config.BarDataTrimWindowDays;
-
-            addresses.Add(ServiceAddress.DataService, this.Endpoint);
-            messageBusAdapter.Send(new InitializeSwitchboard(
-                Switchboard.Create(addresses),
-                this.NewGuid(),
-                this.TimeNow()));
 
             this.RegisterConnectionAddress(ServiceAddress.DataGateway);
 
@@ -95,49 +97,23 @@ namespace Nautilus.Data
         /// <inheritdoc />
         protected override void OnServiceStart(Start start)
         {
-            this.Execute(() =>
-            {
-                this.CreateMarketOpenedJob();
-                this.CreateMarketClosedJob();
+            this.CreateMarketOpenedJob();
+            this.CreateMarketClosedJob();
 
-                this.CreateTrimTickDataJob();
-                this.CreateTrimBarDataJob();
+            this.CreateTrimTickDataJob();
+            this.CreateTrimBarDataJob();
 
-                // Forward start message
-                var receivers = new List<Address>
-                {
-                    ServiceAddress.DataGateway,
-                    ServiceAddress.TickProvider,
-                    ServiceAddress.TickPublisher,
-                    ServiceAddress.BarProvider,
-                    ServiceAddress.BarPublisher,
-                    ServiceAddress.InstrumentProvider,
-                    ServiceAddress.InstrumentPublisher,
-                };
-
-                this.Log.Error("About to throw...");
-                throw new InvalidOperationException("BOOM!");
-
-                // this.Send(start, receivers);
-            });
+            // Forward start message
+            this.Send(start, this.addresses);
         }
 
         /// <inheritdoc />
         protected override void OnServiceStop(Stop stop)
         {
             // Forward stop message
-            var receivers = new List<Address>
-            {
-                ServiceAddress.DataGateway,
-                ServiceAddress.TickProvider,
-                ServiceAddress.TickPublisher,
-                ServiceAddress.BarProvider,
-                ServiceAddress.BarPublisher,
-                ServiceAddress.InstrumentProvider,
-                ServiceAddress.InstrumentPublisher,
-            };
-
-            this.Send(stop, receivers);
+            this.Send(stop, this.addresses);
+            this.messageBusAdapter.Stop();
+            this.dataBusAdapter.Stop();
         }
 
         /// <inheritdoc />
@@ -211,111 +187,99 @@ namespace Nautilus.Data
 
         private void CreateMarketOpenedJob()
         {
-            this.Execute(() =>
+            var jobDay = IsoDayOfWeek.Sunday;
+            var jobTime = new LocalTime(21, 00);
+            var now = this.InstantNow();
+
+            foreach (var symbol in this.subscribingSymbols)
             {
-                var jobDay = IsoDayOfWeek.Sunday;
-                var jobTime = new LocalTime(21, 00);
-                var now = this.InstantNow();
+                var nextTime = TimingProvider.GetNextUtc(jobDay, jobTime, now);
+                var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, this.InstantNow());
 
-                foreach (var symbol in this.subscribingSymbols)
-                {
-                    var nextTime = TimingProvider.GetNextUtc(jobDay, jobTime, now);
-                    var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, this.InstantNow());
+                var marketOpened = new MarketOpened(
+                    symbol,
+                    nextTime,
+                    this.NewGuid(),
+                    this.TimeNow());
 
-                    var marketOpened = new MarketOpened(
-                        symbol,
-                        nextTime,
-                        this.NewGuid(),
-                        this.TimeNow());
+                this.Scheduler.ScheduleSendOnceCancelable(
+                    durationToNext,
+                    this.Endpoint,
+                    marketOpened,
+                    this.Endpoint);
 
-                    this.Scheduler.ScheduleSendOnceCancelable(
-                        durationToNext,
-                        this.Endpoint,
-                        marketOpened,
-                        this.Endpoint);
-
-                    this.Log.Information($"Created scheduled event {marketOpened}-{symbol} for {nextTime.ToIsoString()}");
-                }
-            });
+                this.Log.Information($"Created scheduled event {marketOpened}-{symbol} for {nextTime.ToIsoString()}");
+            }
         }
 
         private void CreateMarketClosedJob()
         {
-            this.Execute(() =>
+            var jobDay = IsoDayOfWeek.Saturday;
+            var jobTime = new LocalTime(20, 00);
+            var now = this.InstantNow();
+
+            foreach (var symbol in this.subscribingSymbols)
             {
-                var jobDay = IsoDayOfWeek.Saturday;
-                var jobTime = new LocalTime(20, 00);
-                var now = this.InstantNow();
+                var nextTime = TimingProvider.GetNextUtc(jobDay, jobTime, now);
+                var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, this.InstantNow());
 
-                foreach (var symbol in this.subscribingSymbols)
-                {
-                    var nextTime = TimingProvider.GetNextUtc(jobDay, jobTime, now);
-                    var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, this.InstantNow());
+                var marketClosed = new MarketClosed(
+                    symbol,
+                    nextTime,
+                    this.NewGuid(),
+                    this.TimeNow());
 
-                    var marketClosed = new MarketClosed(
-                        symbol,
-                        nextTime,
-                        this.NewGuid(),
-                        this.TimeNow());
+                this.Scheduler.ScheduleSendOnceCancelable(
+                    durationToNext,
+                    this.Endpoint,
+                    marketClosed,
+                    this.Endpoint);
 
-                    this.Scheduler.ScheduleSendOnceCancelable(
-                        durationToNext,
-                        this.Endpoint,
-                        marketClosed,
-                        this.Endpoint);
-
-                    this.Log.Information($"Created scheduled event {marketClosed}-{symbol} for {nextTime.ToIsoString()}");
-                }
-            });
+                this.Log.Information($"Created scheduled event {marketClosed}-{symbol} for {nextTime.ToIsoString()}");
+            }
         }
 
         private void CreateTrimTickDataJob()
         {
-            this.Execute(() =>
-            {
-                var now = this.InstantNow();
-                var nextTime = TimingProvider.GetNextUtc(this.trimTimeTicks, now);
-                var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, now);
+            var now = this.InstantNow();
+            var nextTime = TimingProvider.GetNextUtc(this.trimTimeTicks, now);
+            var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, now);
 
-                var job = new TrimTickData(
-                    this.trimWindowDaysTicks,
-                    nextTime,
-                    this.NewGuid(),
-                    this.TimeNow());
+            var job = new TrimTickData(
+                this.trimWindowDaysTicks,
+                nextTime,
+                this.NewGuid(),
+                this.TimeNow());
 
-                this.Scheduler.ScheduleSendOnceCancelable(
-                    durationToNext,
-                    this.Endpoint,
-                    job,
-                    this.Endpoint);
+            this.Scheduler.ScheduleSendOnceCancelable(
+                durationToNext,
+                this.Endpoint,
+                job,
+                this.Endpoint);
 
-                this.Log.Information($"Created scheduled job {job} for {nextTime.ToIsoString()}");
-            });
+            this.Log.Information($"Created scheduled job {job} for {nextTime.ToIsoString()}");
         }
 
         private void CreateTrimBarDataJob()
         {
-            this.Execute(() =>
-            {
-                var now = this.InstantNow();
-                var nextTime = TimingProvider.GetNextUtc(this.trimTimeBars, now);
-                var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, now);
+            var now = this.InstantNow();
+            var nextTime = TimingProvider.GetNextUtc(this.trimTimeBars, now);
+            var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, now);
 
-                var job = new TrimBarData(
-                    this.barSpecifications,
-                    this.trimWindowDaysBars,
-                    nextTime,
-                    this.NewGuid(),
-                    this.TimeNow());
+            var job = new TrimBarData(
+                this.barSpecifications,
+                this.trimWindowDaysBars,
+                nextTime,
+                this.NewGuid(),
+                this.TimeNow());
 
-                this.Scheduler.ScheduleSendOnceCancelable(
-                    durationToNext,
-                    this.Endpoint,
-                    job,
-                    this.Endpoint);
+            this.Scheduler.ScheduleSendOnceCancelable(
+                durationToNext,
+                this.Endpoint,
+                job,
+                this.Endpoint);
 
-                this.Log.Information($"Created scheduled job {job} for {nextTime.ToIsoString()}");
-            });
+            this.Log.Information($"Created scheduled job {job} for {nextTime.ToIsoString()}");
         }
     }
 }

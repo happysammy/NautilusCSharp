@@ -88,7 +88,6 @@ namespace Nautilus.Serialization.Bson
         /// <inheritdoc />
         public Tick[] Deserialize(byte[][] dataBytesArray, object? metadata = null)
         {
-            Debug.NotEmpty(dataBytesArray, nameof(dataBytesArray));
             Debug.NotNull(metadata, nameof(metadata));
 
             var output = new Tick[dataBytesArray.Length];

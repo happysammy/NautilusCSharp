@@ -32,7 +32,7 @@ namespace Nautilus.Service
 
         private ZonedDateTime nextConnectTime;
         private ZonedDateTime nextDisconnectTime;
-        private bool autoReconnect;
+        private bool maintainConnection;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NautilusServiceBase"/> class.
@@ -44,7 +44,7 @@ namespace Nautilus.Service
         /// <exception cref="ArgumentException">If the addresses is empty.</exception>
         protected NautilusServiceBase(
             IComponentryContainer container,
-            MessageBusAdapter messageBusAdapter,
+            IMessageBusAdapter messageBusAdapter,
             IScheduler scheduler,
             FixConfiguration config)
             : base(container, messageBusAdapter)
@@ -60,7 +60,7 @@ namespace Nautilus.Service
                 this.scheduledDisconnect.Day,
                 this.scheduledDisconnect.Time,
                 this.InstantNow());
-            this.autoReconnect = true;
+            this.maintainConnection = false;
 
             // Commands
             this.RegisterHandler<Connect>(this.OnMessage);
@@ -99,32 +99,31 @@ namespace Nautilus.Service
         /// <inheritdoc />
         protected override void OnStart(Start start)
         {
-            this.Execute(() =>
+            if (TimingProvider.IsOutsideWeeklyInterval(
+                this.scheduledDisconnect,
+                this.scheduledConnect,
+                this.InstantNow()))
             {
-                if (TimingProvider.IsOutsideWeeklyInterval(
-                    this.scheduledDisconnect,
-                    this.scheduledConnect,
-                    this.InstantNow()))
-                {
-                    // Outside disconnection schedule weekly interval
-                    this.CreateDisconnectFixJob();
-                    this.CreateConnectFixJob();
-                }
-                else
-                {
-                    // Inside disconnection schedule weekly interval
-                    this.CreateConnectFixJob();
-                    this.CreateDisconnectFixJob();
-                }
+                // Outside disconnection schedule weekly interval
+                this.CreateDisconnectFixJob();
+                this.CreateConnectFixJob();
+            }
+            else
+            {
+                // Inside disconnection schedule weekly interval
+                this.CreateConnectFixJob();
+                this.CreateDisconnectFixJob();
+            }
 
-                this.OnServiceStart(start);
-            });
+            this.OnServiceStart(start);
+
+            this.Log.Information("Running...");
         }
 
         /// <inheritdoc />
         protected override void OnStop(Stop stop)
         {
-            this.autoReconnect = false;  // Avoid immediate reconnection
+            this.maintainConnection = false;  // Avoid immediate reconnection
             this.OnServiceStop(stop);
         }
 
@@ -165,14 +164,14 @@ namespace Nautilus.Service
         private void OnMessage(Connect connect)
         {
             // Forward message
-            this.autoReconnect = true;
+            this.maintainConnection = true;
             this.Send(connect, this.connectionAddresses);
         }
 
         private void OnMessage(Disconnect disconnect)
         {
             // Forward message
-            this.autoReconnect = false;  // Avoid immediate reconnection
+            this.maintainConnection = false;  // Avoid immediate reconnection
             this.Send(disconnect, this.connectionAddresses);
         }
 
@@ -190,16 +189,9 @@ namespace Nautilus.Service
 
         private void OnMessage(SessionDisconnected message)
         {
-            if (this.autoReconnect)
+            if (this.maintainConnection)
             {
-                this.Log.Warning($"Disconnected from session {message.SessionId}. Initiating auto reconnect...");
-
-                var connect = new Connect(
-                    this.TimeNow(),
-                    this.NewGuid(),
-                    this.TimeNow());
-
-                this.Send(connect, this.connectionAddresses);
+                this.Log.Warning($"Disconnected from session {message.SessionId}.");
             }
             else
             {
@@ -216,58 +208,52 @@ namespace Nautilus.Service
 
         private void CreateConnectFixJob()
         {
-            this.Execute(() =>
-            {
-                var now = this.InstantNow();
-                var nextTime = TimingProvider.GetNextUtc(
-                    this.scheduledConnect.Day,
-                    this.scheduledConnect.Time,
-                    now);
-                var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, now);
+            var now = this.InstantNow();
+            var nextTime = TimingProvider.GetNextUtc(
+                this.scheduledConnect.Day,
+                this.scheduledConnect.Time,
+                now);
+            var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, now);
 
-                var job = new Connect(
-                    nextTime,
-                    this.NewGuid(),
-                    this.TimeNow());
+            var job = new Connect(
+                nextTime,
+                this.NewGuid(),
+                this.TimeNow());
 
-                this.Scheduler.ScheduleSendOnceCancelable(
-                    durationToNext,
-                    this.Endpoint,
-                    job,
-                    this.Endpoint);
+            this.Scheduler.ScheduleSendOnceCancelable(
+                durationToNext,
+                this.Endpoint,
+                job,
+                this.Endpoint);
 
-                this.nextConnectTime = nextTime;
+            this.nextConnectTime = nextTime;
 
-                this.Log.Information($"Created scheduled job {job} for {nextTime.ToIsoString()}");
-            });
+            this.Log.Information($"Created scheduled job {job} for {nextTime.ToIsoString()}");
         }
 
         private void CreateDisconnectFixJob()
         {
-            this.Execute(() =>
-            {
-                var now = this.InstantNow();
-                var nextTime = TimingProvider.GetNextUtc(
-                    this.scheduledDisconnect.Day,
-                    this.scheduledDisconnect.Time,
-                    now);
-                var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, now);
+            var now = this.InstantNow();
+            var nextTime = TimingProvider.GetNextUtc(
+                this.scheduledDisconnect.Day,
+                this.scheduledDisconnect.Time,
+                now);
+            var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, now);
 
-                var job = new Disconnect(
-                    nextTime,
-                    this.NewGuid(),
-                    this.TimeNow());
+            var job = new Disconnect(
+                nextTime,
+                this.NewGuid(),
+                this.TimeNow());
 
-                this.Scheduler.ScheduleSendOnceCancelable(
-                    durationToNext,
-                    this.Endpoint,
-                    job,
-                    this.Endpoint);
+            this.Scheduler.ScheduleSendOnceCancelable(
+                durationToNext,
+                this.Endpoint,
+                job,
+                this.Endpoint);
 
-                this.nextDisconnectTime = nextTime;
+            this.nextDisconnectTime = nextTime;
 
-                this.Log.Information($"Created scheduled job {job} for {nextTime.ToIsoString()}");
-            });
+            this.Log.Information($"Created scheduled job {job} for {nextTime.ToIsoString()}");
         }
     }
 }

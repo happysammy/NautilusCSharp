@@ -15,7 +15,6 @@ namespace Nautilus.Execution
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Correctness;
     using Nautilus.Messaging;
-    using Nautilus.Messaging.Interfaces;
     using Nautilus.Scheduler;
     using Nautilus.Service;
 
@@ -24,6 +23,8 @@ namespace Nautilus.Execution
     /// </summary>
     public sealed class ExecutionService : NautilusServiceBase
     {
+        private readonly MessageBusAdapter messageBusAdapter;
+        private readonly List<Address> addresses;
         private readonly ITradingGateway tradingGateway;
 
         /// <summary>
@@ -39,7 +40,7 @@ namespace Nautilus.Execution
         public ExecutionService(
             IComponentryContainer container,
             MessageBusAdapter messageBusAdapter,
-            Dictionary<Address, IEndpoint> addresses,
+            List<Address> addresses,
             IScheduler scheduler,
             ITradingGateway tradingGateway,
             Configuration config)
@@ -51,12 +52,8 @@ namespace Nautilus.Execution
         {
             Condition.NotEmpty(addresses, nameof(addresses));
 
-            addresses.Add(ServiceAddress.ExecutionService, this.Endpoint);
-            messageBusAdapter.Send(new InitializeSwitchboard(
-                Switchboard.Create(addresses),
-                this.NewGuid(),
-                this.TimeNow()));
-
+            this.messageBusAdapter = messageBusAdapter;
+            this.addresses = addresses;
             this.tradingGateway = tradingGateway;
 
             this.RegisterConnectionAddress(ServiceAddress.TradingGateway);
@@ -73,7 +70,7 @@ namespace Nautilus.Execution
                 ServiceAddress.EventPublisher,
             };
 
-            this.Send(start, receivers);
+            this.Send(start, this.addresses);
         }
 
         /// <inheritdoc />
@@ -87,7 +84,8 @@ namespace Nautilus.Execution
                 ServiceAddress.EventPublisher,
             };
 
-            this.Send(stop, receivers);
+            this.Send(stop, this.addresses);
+            this.messageBusAdapter.Stop();
         }
 
         /// <inheritdoc />

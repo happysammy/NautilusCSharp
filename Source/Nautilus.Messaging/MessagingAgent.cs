@@ -63,6 +63,15 @@ namespace Nautilus.Messaging
         }
 
         /// <summary>
+        /// Register the given handler to receive exceptions raised by the processor.
+        /// </summary>ve
+        /// <param name="handler">The handler to register.</param>
+        protected void RegisterExceptionHandler(Action<Exception> handler)
+        {
+            this.processor.RegisterExceptionHandler(handler);
+        }
+
+        /// <summary>
         /// Register the given handler to receive unhandled messaged.
         /// </summary>ve
         /// <param name="handler">The handler to register.</param>

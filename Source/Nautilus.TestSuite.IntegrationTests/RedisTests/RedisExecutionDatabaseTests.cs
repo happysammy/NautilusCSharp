@@ -16,7 +16,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Execution.Interfaces;
     using Nautilus.Redis;
     using Nautilus.Redis.Execution;
     using Nautilus.Serialization.MessagePack;
@@ -32,7 +31,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         private readonly ITestOutputHelper output;
         private readonly MockLoggingAdapter logger;
         private readonly ConnectionMultiplexer redisConnection;
-        private readonly IExecutionDatabase database;
+        private readonly RedisExecutionDatabase database;
 
         public RedisExecutionDatabaseTests(ITestOutputHelper output)
         {

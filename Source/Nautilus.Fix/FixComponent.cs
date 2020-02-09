@@ -8,7 +8,6 @@
 
 namespace Nautilus.Fix
 {
-    using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Events;
     using Nautilus.Core.Types;
@@ -31,7 +30,6 @@ namespace Nautilus.Fix
         private readonly IGuidFactory guidFactory;
         private readonly ILogger logger;
         private readonly IMessageBusAdapter messageBusAdapter;
-        private readonly CommandHandler commandHandler;
         private readonly FixCredentials credentials;
         private readonly string configPath;
         private readonly bool sendAccountTag;
@@ -59,7 +57,6 @@ namespace Nautilus.Fix
             this.guidFactory = container.GuidFactory;
             this.logger = container.LoggerFactory.Create(new Label(this.GetType().Name));
             this.messageBusAdapter = messageBusAdapter;
-            this.commandHandler = new CommandHandler(this.logger);
 
             this.AccountId = new AccountId(config.Broker, config.Credentials.AccountNumber, config.AccountType);
             this.Brokerage = this.AccountId.Broker;
@@ -145,13 +142,10 @@ namespace Nautilus.Fix
         /// <param name="sessionId">The session identifier.</param>
         public void OnCreate(SessionID sessionId)
         {
-            this.commandHandler.Execute(() =>
-            {
-                this.Log.Debug($"Creating session {sessionId}...");
-                this.SessionId = sessionId;
-                this.session = Session.LookupSession(sessionId);
-                this.FixMessageRouter.InitializeSession(this.session);
-            });
+            this.Log.Debug($"Creating session {sessionId}...");
+            this.SessionId = sessionId;
+            this.session = Session.LookupSession(sessionId);
+            this.FixMessageRouter.InitializeSession(this.session);
         }
 
         /// <summary>
@@ -160,17 +154,14 @@ namespace Nautilus.Fix
         /// <param name="sessionId">The session identifier.</param>
         public void OnLogon(SessionID sessionId)
         {
-            this.commandHandler.Execute(() =>
-            {
-                var connected = new SessionConnected(
-                    this.Brokerage,
-                    sessionId.ToString(),
-                    this.guidFactory.Generate(),
-                    this.clock.TimeNow());
+            var connected = new SessionConnected(
+                this.Brokerage,
+                sessionId.ToString(),
+                this.guidFactory.Generate(),
+                this.clock.TimeNow());
 
-                this.messageBusAdapter.SendToBus(connected, null, this.clock.TimeNow());
-                this.Log.Debug($"Connected to session {sessionId}");
-            });
+            this.messageBusAdapter.SendToBus(connected, null, this.clock.TimeNow());
+            this.Log.Debug($"Connected to session {sessionId}");
         }
 
         /// <summary>
@@ -179,18 +170,15 @@ namespace Nautilus.Fix
         /// <param name="sessionId">The session identifier.</param>
         public void OnLogout(SessionID sessionId)
         {
-            this.commandHandler.Execute(() =>
-            {
-                var disconnected = new SessionDisconnected(
-                    this.Brokerage,
-                    sessionId.ToString(),
-                    this.guidFactory.Generate(),
-                    this.clock.TimeNow());
+            var disconnected = new SessionDisconnected(
+                this.Brokerage,
+                sessionId.ToString(),
+                this.guidFactory.Generate(),
+                this.clock.TimeNow());
 
-                this.messageBusAdapter.SendToBus(disconnected, null, this.clock.TimeNow());
+            this.messageBusAdapter.SendToBus(disconnected, null, this.clock.TimeNow());
 
-                this.Log.Debug($"Disconnected from session {sessionId}");
-            });
+            this.Log.Debug($"Disconnected from session {sessionId}");
         }
 
         /// <summary>
@@ -209,21 +197,18 @@ namespace Nautilus.Fix
         /// <param name="sessionId">The session id.</param>
         public void ToAdmin(Message message, SessionID sessionId)
         {
-            this.commandHandler.Execute(() =>
+            if (message is Logon)
             {
-                if (message is Logon)
-                {
-                    message.SetField(new Username(this.credentials.Username));
-                    message.SetField(new Password(this.credentials.Password));
+                message.SetField(new Username(this.credentials.Username));
+                message.SetField(new Password(this.credentials.Password));
 
-                    this.Log.Debug("Authorizing session...");
-                }
+                this.Log.Debug("Authorizing session...");
+            }
 
-                if (this.sendAccountTag)
-                {
-                    message.SetField(this.accountField);
-                }
-            });
+            if (this.sendAccountTag)
+            {
+                message.SetField(this.accountField);
+            }
         }
 
         /// <summary>
@@ -233,10 +218,7 @@ namespace Nautilus.Fix
         /// <param name="sessionId">The session id.</param>
         public void FromApp(Message message, SessionID sessionId)
         {
-            this.commandHandler.Execute<UnsupportedMessageType>(() =>
-            {
-                this.Crack(message, sessionId);
-            });
+            this.Crack(message, sessionId);
         }
 
         /// <summary>
@@ -247,27 +229,24 @@ namespace Nautilus.Fix
         /// <exception cref="DoNotSend">If possible duplication flag is true.</exception>
         public void ToApp(Message message, SessionID sessionId)
         {
-            this.commandHandler.Execute<FieldNotFoundException, DoNotSend>(() =>
+            if (this.sendAccountTag)
             {
-                if (this.sendAccountTag)
-                {
-                    message.SetField(this.accountField);
-                }
+                message.SetField(this.accountField);
+            }
 
-                var possDupFlag = false;
+            var possDupFlag = false;
 
-                if (message.Header.IsSetField(Tags.PossDupFlag))
-                {
-                    possDupFlag =
-                        QuickFix.Fields.Converters.BoolConverter.Convert(
-                            message.Header.GetField(Tags.PossDupFlag));
-                }
+            if (message.Header.IsSetField(Tags.PossDupFlag))
+            {
+                possDupFlag =
+                    QuickFix.Fields.Converters.BoolConverter.Convert(
+                        message.Header.GetField(Tags.PossDupFlag));
+            }
 
-                if (possDupFlag)
-                {
-                    throw new DoNotSend();
-                }
-            });
+            if (possDupFlag)
+            {
+                throw new DoNotSend();
+            }
         }
 
         /// <summary>
@@ -405,17 +384,14 @@ namespace Nautilus.Fix
         /// </summary>
         protected void ConnectFix()
         {
-            this.commandHandler.Execute(() =>
-            {
-                var settings = new SessionSettings(this.configPath);
-                var storeFactory = new FileStoreFactory(settings);
+            var settings = new SessionSettings(this.configPath);
+            var storeFactory = new FileStoreFactory(settings);
 
-                // var logFactory = new ScreenLogFactory(settings);
-                this.initiator = new SocketInitiator(this, storeFactory, settings, null);
+            // var logFactory = new ScreenLogFactory(settings);
+            this.initiator = new SocketInitiator(this, storeFactory, settings, null);
 
-                this.Log.Debug("Starting initiator...");
-                this.initiator.Start();
-            });
+            this.Log.Debug("Starting initiator...");
+            this.initiator.Start();
         }
 
         /// <summary>
@@ -423,11 +399,8 @@ namespace Nautilus.Fix
         /// </summary>
         protected void DisconnectFix()
         {
-            this.commandHandler.Execute(() =>
-            {
-                this.Log.Debug("Stopping initiator... ");
-                this.initiator?.Stop();
-            });
+            this.Log.Debug("Stopping initiator... ");
+            this.initiator?.Stop();
         }
     }
 }

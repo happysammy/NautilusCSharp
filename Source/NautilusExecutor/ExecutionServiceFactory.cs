@@ -9,12 +9,13 @@
 namespace NautilusExecutor
 {
     using System.Collections.Generic;
+    using System.Linq;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Logging;
+    using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Correctness;
-    using Nautilus.DomainModel.Identifiers;
     using Nautilus.Execution;
     using Nautilus.Execution.Engine;
     using Nautilus.Execution.Network;
@@ -49,8 +50,6 @@ namespace NautilusExecutor
 
             var messagingAdapter = MessageBusFactory.Create(container);
             var scheduler = new HashedWheelTimerScheduler(container);
-
-            var venue = new Venue(config.FixConfiguration.Broker.Value);
             var symbolConverter = new SymbolConverter(config.SymbolIndex);
 
             var fixClient = CreateFixClient(
@@ -97,17 +96,26 @@ namespace NautilusExecutor
                 { ServiceAddress.Scheduler, scheduler.Endpoint },
                 { ServiceAddress.TradingGateway, tradingGateway.Endpoint },
                 { ServiceAddress.ExecutionEngine, executionEngine.Endpoint },
+                { ServiceAddress.ExecutionDatabase, executionDatabase.Endpoint },
                 { ServiceAddress.CommandServer, commandServer.Endpoint },
                 { ServiceAddress.EventPublisher, eventPublisher.Endpoint },
             };
 
-            return new ExecutionService(
+            var executionService = new ExecutionService(
                 container,
                 messagingAdapter,
-                addresses,
+                addresses.Keys.ToList(),
                 scheduler,
                 tradingGateway,
                 config);
+
+            addresses.Add(ServiceAddress.ExecutionService, executionService.Endpoint);
+            messagingAdapter.Send(new InitializeSwitchboard(
+                Switchboard.Create(addresses),
+                executionService.NewGuid(),
+                executionService.TimeNow()));
+
+            return executionService;
         }
 
         private static IFixClient CreateFixClient(

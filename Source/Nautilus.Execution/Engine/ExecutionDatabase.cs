@@ -14,6 +14,7 @@ namespace Nautilus.Execution.Engine
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.Execution.Interfaces;
+    using Nautilus.Messaging.Interfaces;
 
     /// <summary>
     /// Provides the abstract base class for all execution databases.
@@ -30,6 +31,8 @@ namespace Nautilus.Execution.Engine
             this.CachedAccounts = new Dictionary<AccountId, Account>();
             this.CachedOrders = new Dictionary<OrderId, Order>();
             this.CachedPositions = new Dictionary<PositionId, Position>();
+
+            this.RegisterHandler<IEnvelope>(this.OnEnvelope);
         }
 
         /// <summary>
@@ -50,12 +53,9 @@ namespace Nautilus.Execution.Engine
         /// <inheritdoc />
         public void LoadCaches()
         {
-            this.Execute(() =>
-            {
-                this.LoadAccountsCache();
-                this.LoadOrdersCache();
-                this.LoadPositionsCache();
-            });
+            this.LoadAccountsCache();
+            this.LoadOrdersCache();
+            this.LoadPositionsCache();
         }
 
         /// <inheritdoc />

@@ -160,7 +160,6 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
 
             // Tear Down;
             requester.Disconnect(TEST_ADDRESS);
-            this.provider.Stop();
         }
     }
 }

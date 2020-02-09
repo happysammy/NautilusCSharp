@@ -74,8 +74,6 @@ namespace Nautilus.Serialization.Bson
         [PerformanceOptimized]
         public byte[][] Serialize(Instrument[] dataObjects)
         {
-            Debug.NotEmpty(dataObjects, nameof(dataObjects));
-
             var output = new byte[dataObjects.Length][];
             for (var i = 0; i < dataObjects.Length; i++)
             {
@@ -89,8 +87,6 @@ namespace Nautilus.Serialization.Bson
         [PerformanceOptimized]
         public byte[] SerializeBlob(byte[][] dataObjectsArray, Dictionary<string, string> metadata)
         {
-            Debug.NotEmpty(dataObjectsArray, nameof(dataObjectsArray));
-
             var bson = new BsonDocument
             {
                 { DATA_TYPE, typeof(Instrument[]).Name },

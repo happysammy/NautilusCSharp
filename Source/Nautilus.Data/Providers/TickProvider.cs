@@ -59,55 +59,52 @@ namespace Nautilus.Data.Providers
 
         private void OnMessage(DataRequest request)
         {
-            this.Execute(() =>
+            try
             {
-                try
+                this.Log.Information($"<--[REQ] {request}.");
+
+                var dataType = request.Query["DataType"];
+                if (dataType != typeof(Tick[]).Name)
                 {
-                    this.Log.Information($"<--[REQ] {request}.");
-
-                    var dataType = request.Query["DataType"];
-                    if (dataType != typeof(Tick[]).Name)
-                    {
-                        this.SendQueryFailure($"incorrect DataType requested, was {dataType}", request.Id);
-                        return;
-                    }
-
-                    // Query objects
-                    var symbol = Symbol.FromString(request.Query["Symbol"]);
-                    var fromDate = DateKey.FromString(request.Query["FromDate"]);
-                    var toDate = DateKey.FromString(request.Query["ToDate"]);
-                    var limit = Convert.ToInt32(request.Query["Limit"]);
-
-                    var dataQuery = this.repository.GetTickData(
-                        symbol,
-                        fromDate,
-                        toDate,
-                        limit);
-
-                    if (dataQuery.IsFailure)
-                    {
-                        this.SendQueryFailure(dataQuery.Message, request.Id);
-                        this.Log.Warning($"{request} query failed ({dataQuery.Message}).");
-                        return;
-                    }
-
-                    var response = new DataResponse(
-                        this.dataSerializer.SerializeBlob(dataQuery.Value, request.Query),
-                        dataType,
-                        this.dataSerializer.BlobEncoding,
-                        request.Id,
-                        this.NewGuid(),
-                        this.TimeNow());
-
-                    this.Log.Information($"[RES]--> {response}.");
-                    this.SendMessage(response, request.Id);
+                    this.SendQueryFailure($"incorrect DataType requested, was {dataType}", request.Id);
+                    return;
                 }
-                catch (Exception ex)
+
+                // Query objects
+                var symbol = Symbol.FromString(request.Query["Symbol"]);
+                var fromDate = DateKey.FromString(request.Query["FromDate"]);
+                var toDate = DateKey.FromString(request.Query["ToDate"]);
+                var limit = Convert.ToInt32(request.Query["Limit"]);
+
+                var dataQuery = this.repository.GetTickData(
+                    symbol,
+                    fromDate,
+                    toDate,
+                    limit);
+
+                if (dataQuery.IsFailure)
                 {
-                    this.Log.Error($"{ex}");
-                    this.SendQueryFailure(ex.Message, request.Id);
+                    this.SendQueryFailure(dataQuery.Message, request.Id);
+                    this.Log.Warning($"{request} query failed ({dataQuery.Message}).");
+                    return;
                 }
-            });
+
+                var response = new DataResponse(
+                    this.dataSerializer.SerializeBlob(dataQuery.Value, request.Query),
+                    dataType,
+                    this.dataSerializer.BlobEncoding,
+                    request.Id,
+                    this.NewGuid(),
+                    this.TimeNow());
+
+                this.Log.Information($"[RES]--> {response}.");
+                this.SendMessage(response, request.Id);
+            }
+            catch (Exception ex)
+            {
+                this.Log.Error($"{ex}");
+                this.SendQueryFailure(ex.Message, request.Id);
+            }
         }
     }
 }

@@ -89,6 +89,8 @@ namespace Nautilus.Fxcm
             {
                 this.tickTimestampProvider = this.TimeNow;
             }
+
+            this.RegisterExceptionHandler(this.HandleException);
         }
 
         /// <summary>
@@ -113,451 +115,428 @@ namespace Nautilus.Fxcm
         [SystemBoundary]
         public void OnMessage(BusinessMessageReject message)
         {
-            this.Execute<FieldNotFoundException>(() =>
-            {
-                this.Log.Warning($"{RECV}{FIX} {nameof(BusinessMessageReject)}");
-            });
+            this.Log.Warning($"{RECV}{FIX} {nameof(BusinessMessageReject)}");
         }
 
         /// <inheritdoc />
         [SystemBoundary]
         public void OnMessage(Email message)
         {
-            this.Execute<FieldNotFoundException>(() =>
-            {
-                this.Log.Warning($"{RECV}{FIX} {nameof(Email)}");
-            });
+            this.Log.Warning($"{RECV}{FIX} {nameof(Email)}");
         }
 
         /// <inheritdoc />
         [SystemBoundary]
         public void OnMessage(SecurityList message)
         {
-            this.Execute<FieldNotFoundException>(() =>
+            Debug.NotNull(this.dataGateway, nameof(this.dataGateway));
+
+            var responseId = message.GetField(Tags.SecurityResponseID);
+            var result = FxcmMessageHelper.GetSecurityRequestResult(message.SecurityRequestResult);
+            this.Log.Debug($"{RECV}{FIX} {nameof(SecurityList)}(ResponseId={responseId}, Result={result}).");
+
+            var instruments = new List<Instrument>();
+            var groupCount = Convert.ToInt32(message.NoRelatedSym.ToString());
+            var group = new SecurityList.NoRelatedSymGroup();
+
+            for (var i = 1; i <= groupCount; i++)
             {
-                Debug.NotNull(this.dataGateway, nameof(this.dataGateway));
+                message.GetGroup(i, group);
 
-                var responseId = message.GetField(Tags.SecurityResponseID);
-                var result = FxcmMessageHelper.GetSecurityRequestResult(message.SecurityRequestResult);
-                this.Log.Debug($"{RECV}{FIX} {nameof(SecurityList)}(ResponseId={responseId}, Result={result}).");
+                var brokerSymbolCode = group.GetField(Tags.Symbol);
+                var symbol = this.GetSymbol(brokerSymbolCode);
+                var brokerSymbol = new BrokerSymbol(brokerSymbolCode);
+                var securityType = FxcmMessageHelper.GetSecurityType(group.GetString(FxcmTags.ProductID));
+                var tickPrecision = group.GetInt(FxcmTags.SymPrecision);
+                var tickSize = group.GetDecimal(FxcmTags.SymPointSize) * 0.1m;  // Field 9002 gives 'point' size (* 0.1m to get tick size)
+                var roundLot = group.GetInt(Tags.RoundLot);
+                var minStopDistanceEntry = group.GetInt(FxcmTags.CondDistEntryStop);
+                var minLimitDistanceEntry = group.GetInt(FxcmTags.CondDistEntryLimit);
+                var minStopDistance = group.GetInt(FxcmTags.CondDistStop);
+                var minLimitDistance = group.GetInt(FxcmTags.CondDistLimit);
+                var minTradeSize = group.GetInt(FxcmTags.MinQuantity);
+                var maxTradeSize = group.GetInt(FxcmTags.MaxQuantity);
+                var rolloverInterestBuy = group.GetDecimal(FxcmTags.SymInterestBuy);
+                var rolloverInterestSell = group.GetDecimal(FxcmTags.SymInterestSell);
 
-                var instruments = new List<Instrument>();
-                var groupCount = Convert.ToInt32(message.NoRelatedSym.ToString());
-                var group = new SecurityList.NoRelatedSymGroup();
-
-                for (var i = 1; i <= groupCount; i++)
+                if (securityType == SecurityType.Forex)
                 {
-                    message.GetGroup(i, group);
+                    var forexCcy = new ForexInstrument(
+                        symbol,
+                        brokerSymbol,
+                        tickPrecision,
+                        0,
+                        minStopDistanceEntry,
+                        minLimitDistanceEntry,
+                        minStopDistance,
+                        minLimitDistance,
+                        Price.Create(tickSize),
+                        Quantity.Create(roundLot),
+                        Quantity.Create(minTradeSize),
+                        Quantity.Create(maxTradeSize),
+                        rolloverInterestBuy,
+                        rolloverInterestSell,
+                        this.TimeNow());
 
-                    var brokerSymbolCode = group.GetField(Tags.Symbol);
-                    var symbol = this.GetSymbol(brokerSymbolCode);
-                    var brokerSymbol = new BrokerSymbol(brokerSymbolCode);
-                    var securityType = FxcmMessageHelper.GetSecurityType(group.GetString(FxcmTags.ProductID));
-                    var tickPrecision = group.GetInt(FxcmTags.SymPrecision);
-                    var tickSize = group.GetDecimal(FxcmTags.SymPointSize) * 0.1m;  // Field 9002 gives 'point' size (* 0.1m to get tick size)
-                    var roundLot = group.GetInt(Tags.RoundLot);
-                    var minStopDistanceEntry = group.GetInt(FxcmTags.CondDistEntryStop);
-                    var minLimitDistanceEntry = group.GetInt(FxcmTags.CondDistEntryLimit);
-                    var minStopDistance = group.GetInt(FxcmTags.CondDistStop);
-                    var minLimitDistance = group.GetInt(FxcmTags.CondDistLimit);
-                    var minTradeSize = group.GetInt(FxcmTags.MinQuantity);
-                    var maxTradeSize = group.GetInt(FxcmTags.MaxQuantity);
-                    var rolloverInterestBuy = group.GetDecimal(FxcmTags.SymInterestBuy);
-                    var rolloverInterestSell = group.GetDecimal(FxcmTags.SymInterestSell);
-
-                    if (securityType == SecurityType.Forex)
-                    {
-                        var forexCcy = new ForexInstrument(
-                            symbol,
-                            brokerSymbol,
-                            tickPrecision,
-                            0,
-                            minStopDistanceEntry,
-                            minLimitDistanceEntry,
-                            minStopDistance,
-                            minLimitDistance,
-                            Price.Create(tickSize),
-                            Quantity.Create(roundLot),
-                            Quantity.Create(minTradeSize),
-                            Quantity.Create(maxTradeSize),
-                            rolloverInterestBuy,
-                            rolloverInterestSell,
-                            this.TimeNow());
-
-                        instruments.Add(forexCcy);
-                    }
-                    else
-                    {
-                        var instrument = new Instrument(
-                            symbol,
-                            brokerSymbol,
-                            group.GetField(Tags.Currency).ToEnum<Nautilus.DomainModel.Enums.Currency>(),
-                            securityType,
-                            tickPrecision,
-                            0,
-                            minStopDistanceEntry,
-                            minLimitDistanceEntry,
-                            minStopDistance,
-                            minLimitDistance,
-                            Price.Create(tickSize),
-                            Quantity.Create(roundLot),
-                            Quantity.Create(minTradeSize),
-                            Quantity.Create(maxTradeSize),
-                            rolloverInterestBuy,
-                            rolloverInterestSell,
-                            this.TimeNow());
-
-                        instruments.Add(instrument);
-                    }
+                    instruments.Add(forexCcy);
                 }
+                else
+                {
+                    var instrument = new Instrument(
+                        symbol,
+                        brokerSymbol,
+                        group.GetField(Tags.Currency).ToEnum<Nautilus.DomainModel.Enums.Currency>(),
+                        securityType,
+                        tickPrecision,
+                        0,
+                        minStopDistanceEntry,
+                        minLimitDistanceEntry,
+                        minStopDistance,
+                        minLimitDistance,
+                        Price.Create(tickSize),
+                        Quantity.Create(roundLot),
+                        Quantity.Create(minTradeSize),
+                        Quantity.Create(maxTradeSize),
+                        rolloverInterestBuy,
+                        rolloverInterestSell,
+                        this.TimeNow());
 
-                this.dataGateway?.OnData(instruments);
-            });
+                    instruments.Add(instrument);
+                }
+            }
+
+            this.dataGateway?.OnData(instruments);
         }
 
         /// <inheritdoc />
         [SystemBoundary]
         public void OnMessage(QuoteStatusReport message)
         {
-            this.Execute<FieldNotFoundException>(() =>
-            {
-                this.Log.Verbose($"{RECV}{FIX} {nameof(QuoteStatusReport)}");
-                this.Log.Information(message.Product.ToString());
-            });
+            this.Log.Verbose($"{RECV}{FIX} {nameof(QuoteStatusReport)}");
+            this.Log.Information(message.Product.ToString());
         }
 
         /// <inheritdoc />
         [SystemBoundary]
         public void OnMessage(TradingSessionStatus message)
         {
-            this.Execute<FieldNotFoundException>(() =>
-            {
-                this.Log.Warning($"{RECV}{FIX} Unhandled {nameof(TradingSessionStatus)}");
-            });
+            this.Log.Warning($"{RECV}{FIX} Unhandled {nameof(TradingSessionStatus)}");
         }
 
         /// <inheritdoc />
         [SystemBoundary]
         public void OnMessage(MarketDataRequestReject message)
         {
-            this.Execute<FieldNotFoundException>(() =>
-            {
-                this.Log.Warning($"{RECV}{FIX} {nameof(MarketDataRequestReject)}(Text={message.GetField(Tags.Text)}).");
-            });
+            this.Log.Warning($"{RECV}{FIX} {nameof(MarketDataRequestReject)}(Text={message.GetField(Tags.Text)}).");
         }
 
         /// <inheritdoc />
         [SystemBoundary]
         public void OnMessage(MarketDataSnapshotFullRefresh message)
         {
-            this.Execute<FieldNotFoundException>(() =>
+            Debug.NotNull(this.dataGateway, nameof(this.dataGateway));
+
+            try
             {
-                Debug.NotNull(this.dataGateway, nameof(this.dataGateway));
+                message.GetGroup(1, this.mdBidGroup);
+                message.GetGroup(2, this.mdAskGroup);
 
-                try
+                var tick = new Tick(
+                    this.GetSymbol(message.GetField(Tags.Symbol)),
+                    Price.Create(this.mdBidGroup.GetDecimal(Tags.MDEntryPx)),
+                    Price.Create(this.mdAskGroup.GetDecimal(Tags.MDEntryPx)),
+                    Volume.One(),
+                    Volume.One(),
+                    this.tickTimestampProvider());
+
+                this.dataGateway?.OnData(tick);
+            }
+            catch (Exception ex)
+            {
+                if (ex is FormatException || ex is OverflowException)
                 {
-                    message.GetGroup(1, this.mdBidGroup);
-                    message.GetGroup(2, this.mdAskGroup);
-
-                    var tick = new Tick(
-                        this.GetSymbol(message.GetField(Tags.Symbol)),
-                        Price.Create(this.mdBidGroup.GetDecimal(Tags.MDEntryPx)),
-                        Price.Create(this.mdAskGroup.GetDecimal(Tags.MDEntryPx)),
-                        Volume.One(),
-                        Volume.One(),
-                        this.tickTimestampProvider());
-
-                    this.dataGateway?.OnData(tick);
+                    this.Log.Error("Could not parse decimal.");
+                    return;
                 }
-                catch (Exception ex)
-                {
-                    if (ex is FormatException || ex is OverflowException)
-                    {
-                        this.Log.Error("Could not parse decimal.");
-                        return;
-                    }
 
-                    this.Log.Fatal(ex.Message, ex);
-                }
-            });
+                this.Log.Fatal(ex.Message, ex);
+            }
         }
 
         /// <inheritdoc />
         [SystemBoundary]
         public void OnMessage(CollateralInquiryAck message)
         {
-            this.Execute<FieldNotFoundException>(() =>
-            {
-                var inquiryId = message.GetField(Tags.CollInquiryID);
-                var accountNumber = message.GetField(Tags.Account);
+            var inquiryId = message.GetField(Tags.CollInquiryID);
+            var accountNumber = message.GetField(Tags.Account);
 
-                this.Log.Debug($"{RECV}{FIX} {nameof(CollateralInquiryAck)}(InquiryId={inquiryId}, AccountNumber={accountNumber}).");
-            });
+            this.Log.Debug($"{RECV}{FIX} {nameof(CollateralInquiryAck)}(InquiryId={inquiryId}, AccountNumber={accountNumber}).");
         }
 
         /// <inheritdoc />
         [SystemBoundary]
         public void OnMessage(CollateralReport message)
         {
-            this.Execute<FieldNotFoundException>(() =>
-            {
-                Debug.NotNull(this.tradingGateway, nameof(this.tradingGateway));
+            Debug.NotNull(this.tradingGateway, nameof(this.tradingGateway));
 
-                var inquiryId = message.GetField(Tags.CollRptID);
-                var accountNumber = message.GetField(Tags.Account);
-                this.Log.Debug($"{RECV}{FIX} {nameof(CollateralReport)}(InquiryId={inquiryId}, AccountNumber={accountNumber}).");
+            var inquiryId = message.GetField(Tags.CollRptID);
+            var accountNumber = message.GetField(Tags.Account);
+            this.Log.Debug($"{RECV}{FIX} {nameof(CollateralReport)}(InquiryId={inquiryId}, AccountNumber={accountNumber}).");
 
-                var cashBalance = message.GetDecimal(Tags.CashOutstanding);
-                var cashStartDay = message.GetDecimal(Tags.StartCash);
-                var cashDaily = message.GetDecimal(FxcmTags.CashDaily);
-                var marginUsedMaintenance = message.GetDecimal(FxcmTags.UsedMarginMaintenance);
-                var marginUsedLiq = message.GetDecimal(FxcmTags.UsedMarginLiquidation);
-                var marginRatio = message.GetDecimal(Tags.MarginRatio);
-                var marginCallStatus = message.GetField(FxcmTags.MarginCall);
+            var cashBalance = message.GetDecimal(Tags.CashOutstanding);
+            var cashStartDay = message.GetDecimal(Tags.StartCash);
+            var cashDaily = message.GetDecimal(FxcmTags.CashDaily);
+            var marginUsedMaintenance = message.GetDecimal(FxcmTags.UsedMarginMaintenance);
+            var marginUsedLiq = message.GetDecimal(FxcmTags.UsedMarginLiquidation);
+            var marginRatio = message.GetDecimal(Tags.MarginRatio);
+            var marginCallStatus = message.GetField(FxcmTags.MarginCall);
 
-                var accountEvent = new AccountStateEvent(
-                    this.accountId,
-                    this.accountCurrency,
-                    Money.Create(cashBalance, this.accountCurrency),
-                    Money.Create(cashStartDay, this.accountCurrency),
-                    Money.Create(cashDaily, this.accountCurrency),
-                    Money.Create(marginUsedLiq, this.accountCurrency),
-                    Money.Create(marginUsedMaintenance, this.accountCurrency),
-                    marginRatio,
-                    marginCallStatus,
-                    this.NewGuid(),
-                    this.TimeNow());
+            var accountEvent = new AccountStateEvent(
+                this.accountId,
+                this.accountCurrency,
+                Money.Create(cashBalance, this.accountCurrency),
+                Money.Create(cashStartDay, this.accountCurrency),
+                Money.Create(cashDaily, this.accountCurrency),
+                Money.Create(marginUsedLiq, this.accountCurrency),
+                Money.Create(marginUsedMaintenance, this.accountCurrency),
+                marginRatio,
+                marginCallStatus,
+                this.NewGuid(),
+                this.TimeNow());
 
-                this.tradingGateway?.Send(accountEvent);
-            });
+            this.tradingGateway?.Send(accountEvent);
         }
 
         /// <inheritdoc />
         [SystemBoundary]
         public void OnMessage(RequestForPositionsAck message)
         {
-            this.Execute<FieldNotFoundException>(() =>
+            var accountNumber = message.GetField(Tags.Account);
+            var posRequestId = message.GetField(Tags.PosReqID);
+            var posRequestStatus = message.GetInt(Tags.PosReqStatus) == 0
+                ? "Completed"
+                : "Rejected";
+
+            var posRequestResult = message.GetInt(Tags.PosReqResult);
+            string posRequestResultString;
+            switch (posRequestResult)
             {
-                var accountNumber = message.GetField(Tags.Account);
-                var posRequestId = message.GetField(Tags.PosReqID);
-                var posRequestStatus = message.GetInt(Tags.PosReqStatus) == 0
-                    ? "Completed"
-                    : "Rejected";
+                case 0:
+                    posRequestResultString = "Valid request";
+                    break;
+                case 2:
+                    posRequestResultString = "No positions found";
+                    break;
+                default:
+                    posRequestResultString = "Other";
+                    break;
+            }
 
-                var posRequestResult = message.GetInt(Tags.PosReqResult);
-                string posRequestResultString;
-                switch (posRequestResult)
-                {
-                    case 0:
-                        posRequestResultString = "Valid request";
-                        break;
-                    case 2:
-                        posRequestResultString = "No positions found";
-                        break;
-                    default:
-                        posRequestResultString = "Other";
-                        break;
-                }
-
-                this.Log.Information($"{RECV}{FIX} {nameof(RequestForPositionsAck)}(" +
-                                     $"Account={accountNumber}" +
-                                     $"PosRequestId={posRequestId}, " +
-                                     $"Account={accountNumber}" +
-                                     $"Status={posRequestStatus}, " +
-                                     $"Result={posRequestResultString}");
-            });
+            this.Log.Information($"{RECV}{FIX} {nameof(RequestForPositionsAck)}(" +
+                                 $"Account={accountNumber}" +
+                                 $"PosRequestId={posRequestId}, " +
+                                 $"Account={accountNumber}" +
+                                 $"Status={posRequestStatus}, " +
+                                 $"Result={posRequestResultString}");
         }
 
         /// <inheritdoc />
         [SystemBoundary]
         public void OnMessage(PositionReport message)
         {
-            this.Execute<FieldNotFoundException>(() =>
-            {
-                this.Log.Debug($"{RECV}{FIX} {nameof(PositionReport)}({message.Account})");
-            });
+            this.Log.Debug($"{RECV}{FIX} {nameof(PositionReport)}({message.Account})");
         }
 
         /// <inheritdoc />
         [SystemBoundary]
         public void OnMessage(QuickFix.FIX44.OrderCancelReject message)
         {
-            this.Execute<FieldNotFoundException>(() =>
-            {
-                Debug.NotNull(this.tradingGateway, nameof(this.tradingGateway));
+            Debug.NotNull(this.tradingGateway, nameof(this.tradingGateway));
 
-                this.Log.Debug($"{RECV}{FIX} {nameof(OrderCancelReject)}");
+            this.Log.Debug($"{RECV}{FIX} {nameof(OrderCancelReject)}");
 
-                var orderId = this.GetOrderId(message);
-                var rejectedTime = FxcmMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
-                var rejectResponseTo = FxcmMessageHelper.GetCxlRejResponseTo(message.CxlRejResponseTo);
-                var rejectReason = message.GetField(FxcmTags.ErrorDetails).TrimEnd('.');
+            var orderId = this.GetOrderId(message);
+            var rejectedTime = FxcmMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
+            var rejectResponseTo = FxcmMessageHelper.GetCxlRejResponseTo(message.CxlRejResponseTo);
+            var rejectReason = message.GetField(FxcmTags.ErrorDetails).TrimEnd('.');
 
-                var orderCancelReject = new OrderCancelReject(
-                    this.accountId,
-                    orderId,
-                    rejectedTime,
-                    rejectResponseTo,
-                    rejectReason,
-                    this.NewGuid(),
-                    this.TimeNow());
+            var orderCancelReject = new OrderCancelReject(
+                this.accountId,
+                orderId,
+                rejectedTime,
+                rejectResponseTo,
+                rejectReason,
+                this.NewGuid(),
+                this.TimeNow());
 
-                this.tradingGateway?.Send(orderCancelReject);
-            });
+            this.tradingGateway?.Send(orderCancelReject);
         }
 
         /// <inheritdoc />
         [SystemBoundary]
         public void OnMessage(ExecutionReport message)
         {
-            this.Execute<FieldNotFoundException>(() =>
+            Debug.NotNull(this.tradingGateway, nameof(this.tradingGateway));
+
+            switch (message.OrdStatus.Obj)
             {
-                Debug.NotNull(this.tradingGateway, nameof(this.tradingGateway));
-
-                switch (message.OrdStatus.Obj)
+                case OrdStatus.REJECTED:
                 {
-                    case OrdStatus.REJECTED:
-                    {
-                        this.Log.Debug($"{RECV}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.REJECTED)})");
+                    this.Log.Debug($"{RECV}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.REJECTED)})");
 
-                        this.tradingGateway?.Send(this.GenerateOrderRejectedEvent(message));
-                        break;
-                    }
-
-                    case OrdStatus.PENDING_NEW:
-                    {
-                        this.Log.Debug($"{RECV}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.PENDING_NEW)}).");
-
-                        // Do nothing
-                        break;
-                    }
-
-                    case OrdStatus.NEW:
-                    {
-                        var fxcmOrdStatus = message.GetField(FxcmTags.OrdStatus);
-                        this.Log.Debug($"{RECV}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.NEW)}-{fxcmOrdStatus})");
-
-                        switch (fxcmOrdStatus)
-                        {
-                            case "P": // In Process
-                                this.tradingGateway?.Send(this.GenerateOrderAcceptedEvent(message));
-                                this.tradingGateway?.Send(this.GenerateOrderWorkingEvent(message));
-                                break;
-                            case "I": // Dealer Intervention
-                                this.tradingGateway?.Send(this.GenerateOrderAcceptedEvent(message));
-                                this.tradingGateway?.Send(this.GenerateOrderWorkingEvent(message));
-                                break;
-                            case "W": // Waiting (conditional order inactive state)
-                                if (message.IsSetField(Tags.SecondaryOrderID))
-                                {
-                                    // Accepted Conditional Order
-                                    this.tradingGateway?.Send(this.GenerateOrderAcceptedEvent(message));
-                                }
-                                else
-                                {
-                                    // Working Primary Order
-                                    this.tradingGateway?.Send(this.GenerateOrderWorkingEvent(message));
-                                }
-
-                                break;
-                            default:
-                                this.Log.Error($"Cannot process event (FXCMOrdStatus {fxcmOrdStatus} not recognized).");
-                                break;
-                        }
-
-                        break;
-                    }
-
-                    case OrdStatus.PENDING_CANCEL:
-                    {
-                        this.Log.Debug($"{RECV}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.PENDING_CANCEL)}).");
-
-                        // Do nothing
-                        break;
-                    }
-
-                    case OrdStatus.CANCELED:
-                    {
-                        this.Log.Debug($"{RECV}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.CANCELED)})");
-
-                        this.tradingGateway?.Send(this.GenerateOrderCancelledEvent(message));
-                        break;
-                    }
-
-                    case OrdStatus.REPLACED:
-                    {
-                        this.Log.Debug($"{RECV}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.REPLACED)})");
-
-                        this.tradingGateway?.Send(this.GenerateOrderModifiedEvent(message));
-                        break;
-                    }
-
-                    case OrdStatus.EXPIRED:
-                    {
-                        this.Log.Debug($"{RECV}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.EXPIRED)})");
-
-                        this.tradingGateway?.Send(this.GenerateOrderExpiredEvent(message));
-                        break;
-                    }
-
-                    case OrdStatus.STOPPED:
-                    {
-                        this.Log.Debug($"{RECV}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.STOPPED)}).");
-
-                        // Order is executing
-                        break;
-                    }
-
-                    case OrdStatus.FILLED:
-                    {
-                        this.Log.Debug($"{RECV}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.EXPIRED)})");
-
-                        this.tradingGateway?.Send(this.GenerateOrderFilledEvent(message));
-                        break;
-                    }
-
-                    case OrdStatus.PARTIALLY_FILLED:
-                    {
-                        this.Log.Debug($"{RECV}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.PARTIALLY_FILLED)})");
-
-                        this.tradingGateway?.Send(this.GenerateOrderPartiallyFilledEvent(message));
-                        break;
-                    }
-
-                    case OrdStatus.SUSPENDED:
-                    {
-                        this.Log.Warning($"{RECV}{FIX} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.SUSPENDED)}).");
-                        break;
-                    }
-
-                    case OrdStatus.CALCULATED:
-                    {
-                        this.Log.Warning($"{RECV}{FIX} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.CALCULATED)}).");
-                        break;
-                    }
-
-                    case OrdStatus.DONE_FOR_DAY:
-                    {
-                        this.Log.Warning($"{RECV}{FIX} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.DONE_FOR_DAY)}).");
-                        break;
-                    }
-
-                    case OrdStatus.PENDING_REPLACE:
-                    {
-                        this.Log.Warning($"{RECV}{FIX} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.PENDING_REPLACE)}).");
-                        break;
-                    }
-
-                    case OrdStatus.ACCEPTED_FOR_BIDDING:
-                    {
-                        this.Log.Warning($"{RECV}{FIX} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.ACCEPTED_FOR_BIDDING)}).");
-                        break;
-                    }
-
-                    default:
-                        throw ExceptionFactory.InvalidSwitchArgument(message.OrdStatus, nameof(message.OrdStatus));
+                    this.tradingGateway?.Send(this.GenerateOrderRejectedEvent(message));
+                    break;
                 }
-            });
+
+                case OrdStatus.PENDING_NEW:
+                {
+                    this.Log.Debug($"{RECV}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.PENDING_NEW)}).");
+
+                    // Do nothing
+                    break;
+                }
+
+                case OrdStatus.NEW:
+                {
+                    var fxcmOrdStatus = message.GetField(FxcmTags.OrdStatus);
+                    this.Log.Debug($"{RECV}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.NEW)}-{fxcmOrdStatus})");
+
+                    switch (fxcmOrdStatus)
+                    {
+                        case "P": // In Process
+                            this.tradingGateway?.Send(this.GenerateOrderAcceptedEvent(message));
+                            this.tradingGateway?.Send(this.GenerateOrderWorkingEvent(message));
+                            break;
+                        case "I": // Dealer Intervention
+                            this.tradingGateway?.Send(this.GenerateOrderAcceptedEvent(message));
+                            this.tradingGateway?.Send(this.GenerateOrderWorkingEvent(message));
+                            break;
+                        case "W": // Waiting (conditional order inactive state)
+                            if (message.IsSetField(Tags.SecondaryOrderID))
+                            {
+                                // Accepted Conditional Order
+                                this.tradingGateway?.Send(this.GenerateOrderAcceptedEvent(message));
+                            }
+                            else
+                            {
+                                // Working Primary Order
+                                this.tradingGateway?.Send(this.GenerateOrderWorkingEvent(message));
+                            }
+
+                            break;
+                        default:
+                            this.Log.Error($"Cannot process event (FXCMOrdStatus {fxcmOrdStatus} not recognized).");
+                            break;
+                    }
+
+                    break;
+                }
+
+                case OrdStatus.PENDING_CANCEL:
+                {
+                    this.Log.Debug($"{RECV}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.PENDING_CANCEL)}).");
+
+                    // Do nothing
+                    break;
+                }
+
+                case OrdStatus.CANCELED:
+                {
+                    this.Log.Debug($"{RECV}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.CANCELED)})");
+
+                    this.tradingGateway?.Send(this.GenerateOrderCancelledEvent(message));
+                    break;
+                }
+
+                case OrdStatus.REPLACED:
+                {
+                    this.Log.Debug($"{RECV}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.REPLACED)})");
+
+                    this.tradingGateway?.Send(this.GenerateOrderModifiedEvent(message));
+                    break;
+                }
+
+                case OrdStatus.EXPIRED:
+                {
+                    this.Log.Debug($"{RECV}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.EXPIRED)})");
+
+                    this.tradingGateway?.Send(this.GenerateOrderExpiredEvent(message));
+                    break;
+                }
+
+                case OrdStatus.STOPPED:
+                {
+                    this.Log.Debug($"{RECV}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.STOPPED)}).");
+
+                    // Order is executing
+                    break;
+                }
+
+                case OrdStatus.FILLED:
+                {
+                    this.Log.Debug($"{RECV}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.EXPIRED)})");
+
+                    this.tradingGateway?.Send(this.GenerateOrderFilledEvent(message));
+                    break;
+                }
+
+                case OrdStatus.PARTIALLY_FILLED:
+                {
+                    this.Log.Debug($"{RECV}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.PARTIALLY_FILLED)})");
+
+                    this.tradingGateway?.Send(this.GenerateOrderPartiallyFilledEvent(message));
+                    break;
+                }
+
+                case OrdStatus.SUSPENDED:
+                {
+                    this.Log.Warning($"{RECV}{FIX} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.SUSPENDED)}).");
+                    break;
+                }
+
+                case OrdStatus.CALCULATED:
+                {
+                    this.Log.Warning($"{RECV}{FIX} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.CALCULATED)}).");
+                    break;
+                }
+
+                case OrdStatus.DONE_FOR_DAY:
+                {
+                    this.Log.Warning($"{RECV}{FIX} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.DONE_FOR_DAY)}).");
+                    break;
+                }
+
+                case OrdStatus.PENDING_REPLACE:
+                {
+                    this.Log.Warning($"{RECV}{FIX} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.PENDING_REPLACE)}).");
+                    break;
+                }
+
+                case OrdStatus.ACCEPTED_FOR_BIDDING:
+                {
+                    this.Log.Warning($"{RECV}{FIX} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.ACCEPTED_FOR_BIDDING)}).");
+                    break;
+                }
+
+                default:
+                    throw ExceptionFactory.InvalidSwitchArgument(message.OrdStatus, nameof(message.OrdStatus));
+            }
+        }
+
+        private void HandleException(Exception ex)
+        {
+            switch (ex)
+            {
+                case FieldNotFoundException _:
+                case NullReferenceException _:
+                case ArgumentException _:
+                    this.Log.Error(ex.Message, ex);
+                    break;
+                default:
+                    this.Log.Fatal(ex.Message, ex);
+
+                    throw ex;
+            }
         }
 
         private ZonedDateTime GetMarketDataTimestamp()

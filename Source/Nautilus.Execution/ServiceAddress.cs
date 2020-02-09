@@ -44,5 +44,10 @@ namespace Nautilus.Execution
         /// Gets the <see cref="ExecutionEngine"/> component messaging address.
         /// </summary>
         public static Address ExecutionEngine { get; } = new Address(nameof(ExecutionEngine));
+
+        /// <summary>
+        /// Gets the <see cref="ExecutionEngine"/> component messaging address.
+        /// </summary>
+        public static Address ExecutionDatabase { get; } = new Address(nameof(ExecutionDatabase));
     }
 }

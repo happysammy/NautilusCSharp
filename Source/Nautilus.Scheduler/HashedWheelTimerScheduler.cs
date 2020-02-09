@@ -77,6 +77,8 @@ namespace Nautilus.Scheduler
             this.wheel = CreateWheel(DEFAULT_TICKS_PER_WHEEL, this.Log);
             this.mask = this.wheel.Length - 1;
             this.tickDuration = DurationToTicksWithCheck(Duration.FromMilliseconds(MIN_TICK_DURATION_MS), this.wheel.Length);
+
+            this.RegisterHandler<IEnvelope>(this.OnEnvelope);
         }
 
         /// <inheritdoc/>
