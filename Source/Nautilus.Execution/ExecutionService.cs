@@ -53,7 +53,6 @@ namespace Nautilus.Execution
                 ServiceAddress.CommandRouter,
                 ServiceAddress.CommandServer,
                 ServiceAddress.EventPublisher,
-                ServiceAddress.TradingGateway,
             };
 
             this.RegisterConnectionAddress(ServiceAddress.TradingGateway);

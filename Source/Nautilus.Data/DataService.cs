@@ -78,7 +78,6 @@ namespace Nautilus.Data
                 ServiceAddress.InstrumentRepository,
                 ServiceAddress.InstrumentPublisher,
                 ServiceAddress.InstrumentProvider,
-                ServiceAddress.DataGateway,
             };
 
             this.subscribingSymbols = config.SubscribingSymbols;

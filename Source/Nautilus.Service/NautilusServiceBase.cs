@@ -106,15 +106,16 @@ namespace Nautilus.Service
                 this.scheduledConnect,
                 this.InstantNow()))
             {
-                // Inside disconnection schedule weekly interval
-                this.CreateConnectFixJob();
-                this.CreateDisconnectFixJob();
-            }
-            else
-            {
                 // Outside disconnection schedule weekly interval
                 this.CreateDisconnectFixJob();
                 this.CreateConnectFixJob();
+                this.Send(start, this.connectionAddresses);
+            }
+            else
+            {
+                // Inside disconnection schedule weekly interval
+                this.CreateConnectFixJob();
+                this.CreateDisconnectFixJob();
             }
 
             this.OnServiceStart(start);
