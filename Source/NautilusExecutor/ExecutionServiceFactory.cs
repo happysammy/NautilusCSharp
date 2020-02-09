@@ -102,12 +102,12 @@ namespace NautilusExecutor
             var addresses = new Dictionary<Address, IEndpoint>
             {
                 { ServiceAddress.Scheduler, scheduler.Endpoint },
-                { ServiceAddress.TradingGateway, tradingGateway.Endpoint },
                 { ServiceAddress.ExecutionEngine, executionEngine.Endpoint },
                 { ServiceAddress.ExecutionDatabase, executionDatabase.Endpoint },
                 { ServiceAddress.CommandRouter, commandRouter.Endpoint },
                 { ServiceAddress.CommandServer, commandServer.Endpoint },
                 { ServiceAddress.EventPublisher, eventPublisher.Endpoint },
+                { ServiceAddress.TradingGateway, tradingGateway.Endpoint },
             };
 
             var executionService = new ExecutionService(

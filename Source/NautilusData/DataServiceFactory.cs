@@ -143,7 +143,6 @@ namespace NautilusData
             var addresses = new Dictionary<Address, IEndpoint>
             {
                 { ServiceAddress.Scheduler, scheduler.Endpoint },
-                { ServiceAddress.DataGateway, dataGateway.Endpoint },
                 { ServiceAddress.BarAggregationController, barAggregationController.Endpoint },
                 { ServiceAddress.TickRepository, tickRepository.Endpoint },
                 { ServiceAddress.TickProvider, tickProvider.Endpoint },
@@ -154,6 +153,7 @@ namespace NautilusData
                 { ServiceAddress.InstrumentRepository, instrumentRepository.Endpoint },
                 { ServiceAddress.InstrumentProvider, instrumentProvider.Endpoint },
                 { ServiceAddress.InstrumentPublisher, instrumentPublisher.Endpoint },
+                { ServiceAddress.DataGateway, dataGateway.Endpoint },
             };
 
             var dataService = new DataService(
