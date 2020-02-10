@@ -101,24 +101,28 @@ namespace Nautilus.Service
         /// <inheritdoc />
         protected override void OnStart(Start start)
         {
-            if (TimingProvider.IsInsideWeeklyInterval(
+            if (TimingProvider.IsInsideInterval(
                 this.scheduledDisconnect,
                 this.scheduledConnect,
                 this.InstantNow()))
-            {
-                // Outside disconnection schedule weekly interval
-                this.CreateDisconnectFixJob();
-                this.CreateConnectFixJob();
-                this.Send(start, this.connectionAddresses);
-            }
-            else
             {
                 // Inside disconnection schedule weekly interval
                 this.CreateConnectFixJob();
                 this.CreateDisconnectFixJob();
             }
+            else
+            {
+                // Outside disconnection schedule weekly interval
+                this.CreateDisconnectFixJob();
+                this.CreateConnectFixJob();
+            }
 
             this.OnServiceStart(start);
+
+            if (this.IsTimeToConnect())
+            {
+                this.Send(start, this.connectionAddresses);
+            }
 
             this.Log.Information("Running...");
         }
@@ -127,6 +131,7 @@ namespace Nautilus.Service
         protected override void OnStop(Stop stop)
         {
             this.maintainConnection = false;  // Avoid immediate reconnection
+            this.Send(stop, this.connectionAddresses);
             this.OnServiceStop(stop);
             this.messageBus.Stop();
         }
@@ -163,6 +168,15 @@ namespace Nautilus.Service
         protected virtual void OnDisconnected()
         {
             // Do nothing if not overridden
+        }
+
+        private bool IsTimeToConnect()
+        {
+            var connectThisWeek = TimingProvider.ThisWeek(this.scheduledConnect, this.InstantNow());
+            var disconnectThisWeek = TimingProvider.ThisWeek(this.scheduledDisconnect, this.InstantNow());
+
+            var now = this.TimeNow();
+            return now.IsLessThan(disconnectThisWeek) || now.IsGreaterThan(connectThisWeek);
         }
 
         private void OnMessage(Connect connect)

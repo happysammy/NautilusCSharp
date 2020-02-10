@@ -83,7 +83,7 @@ namespace Nautilus.Data.Aggregation
 
         private static bool IsMarketOpen(Instant now)
         {
-            return TimingProvider.IsOutsideWeeklyInterval(
+            return TimingProvider.IsOutsideInterval(
                 (IsoDayOfWeek.Saturday, new LocalTime(20, 00)),
                 (IsoDayOfWeek.Sunday, new LocalTime(21, 00)),
                 now);
@@ -195,42 +195,40 @@ namespace Nautilus.Data.Aggregation
 
         private void OnMessage(MarketOpened message)
         {
-            // ReSharper disable once UseDeconstruction (causes nullability problem)
-            foreach (var subscription in this.SubscriptionsForSymbol(message.Symbol))
+            foreach (var (barType, buildingJob) in this.SubscriptionsForSymbol(message.Symbol))
             {
                 // Cancel old scheduled job if it still exists (this shouldn't need to happen)
-                if (subscription.Value != null)
+                if (buildingJob != null)
                 {
-                    this.subscriptions[subscription.Key]?.Cancel();
-                    this.subscriptions[subscription.Key] = null;
+                    buildingJob.Cancel();
+                    this.subscriptions[barType] = null;
                 }
 
                 // Create close bar job schedule
-                var barDuration = subscription.Key.Specification.Duration;
+                var barDuration = barType.Specification.Duration;
                 var initialDelay = TimingProvider.GetDelayToNextDuration(this.TimeNow(), barDuration);
                 var scheduledCancelable = this.scheduler.ScheduleRepeatedlyCancelable(
                     initialDelay,
                     barDuration,
                     () =>
                     {
-                        this.CreateCloseBarDelegate(subscription.Key.Specification, this.barAggregators[subscription.Key.Symbol].Endpoint);
+                        this.CreateCloseBarDelegate(barType.Specification, this.barAggregators[barType.Symbol].Endpoint);
                     });
 
-                this.subscriptions[subscription.Key] = scheduledCancelable;
+                this.subscriptions[barType] = scheduledCancelable;
 
-                this.Log.Debug($"MarketOpened: Started CloseBar job for {subscription.Key}.");
+                this.Log.Debug($"MarketOpened: Started CloseBar job for {barType}.");
             }
         }
 
         private void OnMessage(MarketClosed message)
         {
-            // ReSharper disable once UseDeconstruction (causes nullability problem)
-            foreach (var subscription in this.SubscriptionsForSymbol(message.Symbol))
+            foreach (var (barType, buildingJob) in this.SubscriptionsForSymbol(message.Symbol))
             {
-                subscription.Value?.Cancel();
-                this.subscriptions[subscription.Key] = null;
+                buildingJob?.Cancel();
+                this.subscriptions[barType] = null;
 
-                this.Log.Debug($"MarketClosed: Cancelled CloseBar job for {subscription.Key}.");
+                this.Log.Debug($"MarketClosed: Cancelled CloseBar job for {barType}.");
             }
         }
 

@@ -19,15 +19,43 @@ namespace Nautilus.Common.Componentry
     public static class TimingProvider
     {
         /// <summary>
+        /// Returns the datetime for the weekly day and time this week.
+        /// </summary>
+        /// <param name="weekly">The weekly day and time.</param>
+        /// <param name="now">The current time instant.</param>
+        /// <returns>The <see cref="ZonedDateTime"/> for this week.</returns>
+        public static ZonedDateTime ThisWeek((IsoDayOfWeek DayOfWeek, LocalTime Time) weekly, [CanBeDefault] Instant now)
+        {
+            Debug.NotDefault(weekly.DayOfWeek, nameof(weekly.DayOfWeek));
+
+            var localNow = now.InZone(DateTimeZone.Utc).LocalDateTime;
+
+            var midnightToday = localNow.Date.AtMidnight();
+            var difference = Period.FromDays(weekly.DayOfWeek - localNow.DayOfWeek);
+
+            var weeklyMidnight = midnightToday + difference;
+            var weeklyDateTime = new LocalDateTime(
+                weeklyMidnight.Year,
+                weeklyMidnight.Month,
+                weeklyMidnight.Day,
+                weekly.Time.Hour,
+                weekly.Time.Minute,
+                weekly.Time.Second,
+                weekly.Time.Millisecond);
+
+            return new ZonedDateTime(weeklyDateTime, DateTimeZone.Utc, Offset.Zero);
+        }
+
+        /// <summary>
         /// Returns a value indicating whether the given instant now is inside the given weekly interval.
         /// </summary>
         /// <param name="start">The start of the weekly interval.</param>
         /// <param name="end">The end of the weekly interval.</param>
         /// <param name="now">The current time instant.</param>
         /// <returns>True if now is inside the given interval, else false.</returns>
-        public static bool IsInsideWeeklyInterval(
-            (IsoDayOfWeek DayOfWeek, LocalTime time) start,
-            (IsoDayOfWeek DayOfWeek, LocalTime time) end,
+        public static bool IsInsideInterval(
+            (IsoDayOfWeek DayOfWeek, LocalTime Time) start,
+            (IsoDayOfWeek DayOfWeek, LocalTime Time) end,
             [CanBeDefault] Instant now)
         {
             Debug.NotDefault(start.DayOfWeek, nameof(start.DayOfWeek));
@@ -36,15 +64,15 @@ namespace Nautilus.Common.Componentry
 
             var localNow = now.InZone(DateTimeZone.Utc).LocalDateTime;
 
-            var startThisWeek = localNow
+            var startDateTime = localNow
                 .Date.With(DateAdjusters.NextOrSame(start.DayOfWeek))
-                .At(start.time);
+                .At(start.Time);
 
-            var endThisWeek = localNow
+            var endDateTime = localNow
                 .Date.With(DateAdjusters.NextOrSame(end.DayOfWeek))
-                .At(end.time);
+                .At(end.Time);
 
-            return localNow >= startThisWeek && localNow <= endThisWeek;
+            return localNow >= startDateTime && localNow <= endDateTime;
         }
 
         /// <summary>
@@ -54,9 +82,9 @@ namespace Nautilus.Common.Componentry
         /// <param name="end">The end of the weekly interval.</param>
         /// <param name="now">The current time instant.</param>
         /// <returns>True if now is outside the given interval, else false.</returns>
-        public static bool IsOutsideWeeklyInterval(
-            (IsoDayOfWeek DayOfWeek, LocalTime time) start,
-            (IsoDayOfWeek DayOfWeek, LocalTime time) end,
+        public static bool IsOutsideInterval(
+            (IsoDayOfWeek DayOfWeek, LocalTime Time) start,
+            (IsoDayOfWeek DayOfWeek, LocalTime Time) end,
             [CanBeDefault] Instant now)
         {
             Debug.NotDefault(start.DayOfWeek, nameof(start.DayOfWeek));
@@ -65,19 +93,19 @@ namespace Nautilus.Common.Componentry
 
             var localNow = now.InZone(DateTimeZone.Utc).LocalDateTime;
 
-            var startThisWeek = localNow
+            var localStart = localNow
                 .Date.With(DateAdjusters.NextOrSame(start.DayOfWeek))
-                .At(start.time);
+                .At(start.Time);
 
-            var endThisWeek = localNow
+            var localEnd = localNow
                 .Date.With(DateAdjusters.NextOrSame(end.DayOfWeek))
-                .At(end.time);
+                .At(end.Time);
 
-            return localNow < startThisWeek || localNow > endThisWeek;
+            return localNow < localStart || localNow > localEnd;
         }
 
         /// <summary>
-        /// Returns the duration to the next day of week and time of day (UTC).
+        /// Returns the next date time for the given target local time (UTC).
         /// </summary>
         /// <param name="target">The target time of day.</param>
         /// <param name="now">The current time instant.</param>

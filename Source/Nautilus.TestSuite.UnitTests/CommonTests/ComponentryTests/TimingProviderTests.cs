@@ -38,7 +38,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.ComponentryTests
         [InlineData(2008, 2, 2, 19, 59, false)]
         [InlineData(2008, 2, 2, 20, 00, true)]
         [InlineData(2008, 2, 2, 20, 01, true)]
-        internal void IsInsideWeeklyInterval_WithVariousDateTimes_ReturnsExpectedResult(
+        internal void IsInsideInterval_WithVariousDateTimes_ReturnsExpectedResult(
             int year,
             int month,
             int day,
@@ -51,9 +51,9 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.ComponentryTests
             var utcNow = new ZonedDateTime(localUtc, DateTimeZone.Utc, Offset.Zero);
 
             // Act
-            var intervalStart = (IsoDayOfWeek.Saturday, new LocalTime(20, 00));
-            var intervalEnd = (IsoDayOfWeek.Sunday, new LocalTime(21, 00));
-            var result = TimingProvider.IsInsideWeeklyInterval(intervalStart, intervalEnd, utcNow.ToInstant());
+            var start = (IsoDayOfWeek.Saturday, new LocalTime(20, 00));
+            var end = (IsoDayOfWeek.Sunday, new LocalTime(21, 00));
+            var result = TimingProvider.IsInsideInterval(start, end, utcNow.ToInstant());
 
             // Assert
             Assert.Equal(expected, result);
@@ -79,7 +79,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.ComponentryTests
         [InlineData(2008, 2, 2, 19, 59, true)]
         [InlineData(2008, 2, 2, 20, 00, false)]
         [InlineData(2008, 2, 2, 20, 01, false)]
-        internal void IsOutSideWeeklyInterval_WithVariousDateTimes_ReturnsExpectedResult(
+        internal void IsOutSideInterval_WithVariousDateTimes_ReturnsExpectedResult(
             int year,
             int month,
             int day,
@@ -92,9 +92,9 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.ComponentryTests
             var utcNow = new ZonedDateTime(localUtc, DateTimeZone.Utc, Offset.Zero);
 
             // Act
-            var intervalStart = (IsoDayOfWeek.Saturday, new LocalTime(20, 00));
-            var intervalEnd = (IsoDayOfWeek.Sunday, new LocalTime(21, 00));
-            var result = TimingProvider.IsOutsideWeeklyInterval(intervalStart, intervalEnd, utcNow.ToInstant());
+            var start = (IsoDayOfWeek.Saturday, new LocalTime(20, 00));
+            var end = (IsoDayOfWeek.Sunday, new LocalTime(21, 00));
+            var result = TimingProvider.IsOutsideInterval(start, end, utcNow.ToInstant());
 
             // Assert
             Assert.Equal(expected, result);
