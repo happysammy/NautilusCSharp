@@ -11,8 +11,8 @@ namespace Nautilus.Common.Configuration
     using System;
     using System.Diagnostics;
     using System.Reflection;
-    using System.Runtime;
     using System.Runtime.InteropServices;
+    using System.Runtime.Versioning;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Correctness;
 
@@ -53,24 +53,17 @@ namespace Nautilus.Common.Configuration
             log.Information("=================================================================");
             log.Information(" VERSIONING");
             log.Information("=================================================================");
-            log.Information($"Microsoft.NETCore.App v{GetNetCoreVersion()}");
+            log.Information($"{GetNetCoreVersion()}");
             log.Information($"Nautilus {FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion}");
             log.Information("=================================================================");
         }
 
         private static string GetNetCoreVersion()
         {
-            // TODO: Fix this warning?
-            #pragma warning disable 8602
-            var assembly = typeof(GCSettings).GetTypeInfo().Assembly;
-            var assemblyPath = assembly.CodeBase.Split(new[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries);
-            var netCoreAppIndex = Array.IndexOf(assemblyPath, "Microsoft.NETCore.App");
-            if (netCoreAppIndex > 0 && netCoreAppIndex < assemblyPath.Length - 2)
-            {
-                return assemblyPath[netCoreAppIndex + 1];
-            }
-
-            return string.Empty;
+            return Assembly
+                .GetEntryAssembly()?
+                .GetCustomAttribute<TargetFrameworkAttribute>()?
+                .FrameworkName ?? string.Empty;
         }
     }
 }
