@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.0</TargetFramework>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
         <LangVersion>8</LangVersion>
         <OutputType>Exe</OutputType>
         <Nullable>enable</Nullable>
@@ -10,13 +10,14 @@
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <WarningsAsErrors />
-        <DocumentationFile>bin\Debug\netcoreapp3.0\NautilusExecutor.xml</DocumentationFile>
+        <DocumentationFile>bin\Debug\netcoreapp3.1\NautilusExecutor.xml</DocumentationFile>
+        <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <WarningsAsErrors />
-        <DocumentationFile>bin\Debug\netcoreapp3.0\NautilusExecutor.xml</DocumentationFile>
+        <DocumentationFile>bin\Debug\netcoreapp3.1\NautilusExecutor.xml</DocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
