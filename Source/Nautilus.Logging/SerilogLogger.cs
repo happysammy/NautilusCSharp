@@ -27,7 +27,7 @@ namespace Nautilus.Logging
         {
             SerilogLogFactory.Create(logLevel);
 
-            var assembly = Assembly.GetAssembly(typeof(Log)) !;
+            var assembly = Assembly.GetAssembly(typeof(Log))!;
             this.AssemblyVersion = $"Serilog v{assembly.GetName().Version}";
         }
 

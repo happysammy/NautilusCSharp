@@ -153,18 +153,17 @@ namespace Nautilus.Common.Messaging
 
             switch (message)
             {
-                case Command cmd:
+                case Command _:
                     this.cmdBus.Endpoint.Send(envelope);
                     break;
-                case Event evt:
+                case Event _:
                     this.evtBus.Endpoint.Send(envelope);
                     break;
-                case Document doc:
+                case Document _:
                     this.docBus.Endpoint.Send(envelope);
                     break;
                 default:
-                    // Design time error
-                    throw ExceptionFactory.InvalidSwitchArgument(message, nameof(message));
+                    throw ExceptionFactory.InvalidSwitchArgument(message, nameof(message));  // Design time error
             }
         }
     }

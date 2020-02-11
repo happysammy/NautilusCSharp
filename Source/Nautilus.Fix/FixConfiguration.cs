@@ -38,8 +38,8 @@ namespace Nautilus.Fix
             string configPath,
             FixCredentials credentials,
             bool sendAccountTag,
-            (IsoDayOfWeek, LocalTime) connectTime,
-            (IsoDayOfWeek, LocalTime) disconnectTime)
+            (IsoDayOfWeek DayOfWeek, LocalTime Time) connectTime,
+            (IsoDayOfWeek DayOfWeek, LocalTime Time) disconnectTime)
         {
             Condition.NotEmptyOrWhiteSpace(configPath, nameof(configPath));
 
@@ -92,11 +92,11 @@ namespace Nautilus.Fix
         /// <summary>
         /// Gets the day of week and time for connecting FIX sessions.
         /// </summary>
-        public (IsoDayOfWeek, LocalTime) ConnectTime { get; }
+        public (IsoDayOfWeek DayOfWeek, LocalTime Time) ConnectTime { get; }
 
         /// <summary>
         /// Gets the day of week and time for disconnecting FIX sessions.
         /// </summary>
-        public (IsoDayOfWeek, LocalTime) DisconnectTime { get; }
+        public (IsoDayOfWeek DayOfWeek, LocalTime Time) DisconnectTime { get; }
     }
 }

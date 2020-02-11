@@ -36,8 +36,8 @@ namespace Nautilus.Data.Aggregation
             this.thisBarsSpreads = new List<decimal>();
             this.negativeSpreads = new List<(ZonedDateTime, decimal)>();
             this.averageSpreads = new List<(ZonedDateTime, decimal)>();
-            this.MaxSpread = ValueTuple.Create(default(ZonedDateTime), decimal.MinValue);
-            this.MinSpread = ValueTuple.Create(default(ZonedDateTime), decimal.MaxValue);
+            this.MaxSpread = (default, decimal.MinValue);
+            this.MinSpread = (default, decimal.MaxValue);
         }
 
         /// <summary>
@@ -73,12 +73,12 @@ namespace Nautilus.Data.Aggregation
         /// <summary>
         /// Gets the spread analyzers negative spreads.
         /// </summary>
-        public IReadOnlyList<(ZonedDateTime, decimal)> NegativeSpreads => this.negativeSpreads.ToList().AsReadOnly();
+        public IReadOnlyList<(ZonedDateTime Time, decimal Spread)> NegativeSpreads => this.negativeSpreads.ToList().AsReadOnly();
 
         /// <summary>
         /// Gets the spread analyzers negative spreads.
         /// </summary>
-        public IReadOnlyList<(ZonedDateTime, decimal)> TotalAverageSpreads => this.averageSpreads.ToList().AsReadOnly();
+        public IReadOnlyList<(ZonedDateTime Time, decimal Spread)> TotalAverageSpreads => this.averageSpreads.ToList().AsReadOnly();
 
         /// <summary>
         /// Updates the spread analyzer with the given tick.
