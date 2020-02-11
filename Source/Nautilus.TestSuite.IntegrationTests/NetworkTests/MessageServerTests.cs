@@ -24,7 +24,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
     using Xunit.Abstractions;
     using Encoding = System.Text.Encoding;
 
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public class MessageServerTests
     {
         private readonly ITestOutputHelper output;

@@ -13,8 +13,8 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
     using Nautilus.Core.Extensions;
     using Xunit;
 
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class CollectionExtensionsTests
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
+    public sealed class CollectionExtensionsTests
     {
         [Fact]
         public void Count_WithEmptyEnumerable_ReturnsZero()

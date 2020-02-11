@@ -25,7 +25,7 @@ namespace Nautilus.Common.Data
     /// Provides a means for components to subscribe to and unsubscribe from various data types.
     /// </summary>
     [Immutable]
-    public class DataBusAdapter : IDataBusAdapter
+    public sealed class DataBusAdapter : IDataBusAdapter
     {
         private readonly ImmutableDictionary<Type, IEndpoint> endpoints;
         private readonly DataBus<Tick> tickBus;

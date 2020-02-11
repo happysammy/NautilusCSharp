@@ -21,7 +21,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     /// <summary>
     /// Provides a mock trading gateway for testing.
     /// </summary>
-    public class MockTradingGateway : Component, ITradingGateway
+    public sealed class MockTradingGateway : Component, ITradingGateway
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MockTradingGateway"/> class.

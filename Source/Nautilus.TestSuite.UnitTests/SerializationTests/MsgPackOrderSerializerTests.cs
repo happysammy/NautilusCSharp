@@ -18,8 +18,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
     using Xunit;
     using Xunit.Abstractions;
 
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class MsgPackOrderSerializerTests
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
+    public sealed class MsgPackOrderSerializerTests
     {
         private readonly ITestOutputHelper output;
         private readonly OrderSerializer serializer;
@@ -186,7 +186,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         internal void Deserialize_GivenLimitOrder_FromPythonMsgPack_ReturnsExpectedOrder()
         {
             // Arrange
-            var base64 = "jKJJZLtPLTE5NzAwMTAxLTAwMDAwMC0wMDEtMDAxLTGmU3ltYm9sq0FVRFVTRC5GWENNqU9yZGVyU2lkZaNCdXmpT3JkZXJUeXBlpUxpbWl0qFF1YW50aXR5pjEwMDAwMKVQcmljZacxLjAwMDAwpUxhYmVspVMxX1NMrE9yZGVyUHVycG9zZaROb25lq1RpbWVJbkZvcmNlo0RBWapFeHBpcmVUaW1lpE5PTkWmSW5pdElk2gAkOWEwY2EzNTgtODZjZC00Y2JkLTllNGItOWJmNzA3Y2Q5NzQ4qVRpbWVzdGFtcLgxOTcwLTAxLTAxIDAwOjAwOjAwLjAwMFo=";
+            var base64 = "jKJJZLtPLTE5NzAwMTAxLTAwMDAwMC0wMDEtMDAxLTGmU3ltYm9sq0FVRFVTRC5GWENNqU9yZGVyU2lkZaNCdXmpT3JkZXJUeXBlpUxpbWl0qFF1YW50aXR5pjEwMDAwMKVQcmljZacxLjAwMDAwpUxhYmVspVMxX1NMrE9yZGVyUHVycG9zZaROb25lq1RpbWVJbkZvcmNlo0RBWapFeHBpcmVUaW1lpE5vbmWmSW5pdElk2gAkZTgzODBiNmUtZmI3Ni00MTUxLWI4M2MtMTZhYjNhYjcxODhmqVRpbWVzdGFtcLgxOTcwLTAxLTAxVDAwOjAwOjAwLjAwMFo=";
             var orderBytes = Convert.FromBase64String(base64);
 
             // Act
@@ -214,7 +214,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         internal void Deserialize_GivenStopLimitOrder_FromPythonMsgPack_ReturnsExpectedOrder()
         {
             // Arrange
-            var base64 = "jKJJZKhPLTEyMzQ1NqZTeW1ib2yrQVVEVVNELkZYQ02pT3JkZXJTaWRlo0J1ealPcmRlclR5cGWpU3RvcExpbWl0qFF1YW50aXR5pjEwMDAwMKVQcmljZacxLjAwMDAwpUxhYmVspVMxX1NMrE9yZGVyUHVycG9zZaROb25lq1RpbWVJbkZvcmNlo0RBWapFeHBpcmVUaW1lpE5PTkWmSW5pdElk2gAkZGRmMjU3NGUtYTQyZS00MmYwLWIwZjctNTM5OTc2Mjk5OTk1qVRpbWVzdGFtcLgxOTcwLTAxLTAxIDAwOjAwOjAwLjAwMFo=";
+            var base64 = "jKJJZKhPLTEyMzQ1NqZTeW1ib2yrQVVEVVNELkZYQ02pT3JkZXJTaWRlo0J1ealPcmRlclR5cGWpU3RvcExpbWl0qFF1YW50aXR5pjEwMDAwMKVQcmljZacxLjAwMDAwpUxhYmVspVMxX1NMrE9yZGVyUHVycG9zZaROb25lq1RpbWVJbkZvcmNlo0RBWapFeHBpcmVUaW1lpE5vbmWmSW5pdElk2gAkOTI5ZmY0YzYtNmU5MC00ZWIxLTk5ZWItMzBhZjEzZDdkZDZjqVRpbWVzdGFtcLgxOTcwLTAxLTAxVDAwOjAwOjAwLjAwMFo=";
             var orderBytes = Convert.FromBase64String(base64);
 
             // Act

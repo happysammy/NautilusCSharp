@@ -15,8 +15,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FiniteStateMachineTests
     using Nautilus.DomainModel.FiniteStateMachine;
     using Xunit;
 
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class StateTransitionTests
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
+    public sealed class StateTransitionTests
     {
         [Fact]
         public void IndexDictionary_WithExampleStateTransition_ReturnsExpectedValue()

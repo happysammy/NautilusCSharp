@@ -17,7 +17,7 @@ namespace Nautilus.Serialization.MessagePack
     /// <summary>
     /// Provides a serializer for query objects.
     /// </summary>
-    public class MsgPackQuerySerializer : ISerializer<Dictionary<string, string>>
+    public sealed class MsgPackQuerySerializer : ISerializer<Dictionary<string, string>>
     {
         /// <inheritdoc />
         public byte[] Serialize(Dictionary<string, string> query)

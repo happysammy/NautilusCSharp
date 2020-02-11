@@ -432,6 +432,6 @@ namespace Nautilus.Core.Primitives
         /// Returns the formatted string representation of this object.
         /// </summary>
         /// <returns>The formatted string.</returns>
-        public string ToStringFormatted() => this.Value.ToString($"N{this.Precision}", CultureInfo.InvariantCulture);
+        protected string ToStringFormatted() => this.Value.ToString($"N{this.Precision}", CultureInfo.InvariantCulture);
     }
 }

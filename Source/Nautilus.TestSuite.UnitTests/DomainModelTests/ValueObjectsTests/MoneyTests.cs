@@ -14,8 +14,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
     using Nautilus.DomainModel.ValueObjects;
     using Xunit;
 
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class MoneyTests
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
+    public sealed class MoneyTests
     {
         [Fact]
         internal void Zero_ReturnsMoneyWithAValueOfZero()

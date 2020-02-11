@@ -13,8 +13,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FiniteStateMachineTests
     using Nautilus.DomainModel.FiniteStateMachine;
     using Xunit;
 
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class TriggerTests
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
+    public sealed class TriggerTests
     {
         [Fact]
         public void Equals_VariousTriggerTransitionsAndOperators_TestsCorrectly()

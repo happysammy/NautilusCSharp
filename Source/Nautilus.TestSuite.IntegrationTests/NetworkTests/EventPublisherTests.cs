@@ -25,8 +25,8 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
     using Xunit;
     using Xunit.Abstractions;
 
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class EventPublisherTests
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
+    public sealed class EventPublisherTests
     {
         private readonly NetworkHost localHost = new NetworkHost("127.0.0.1");
         private readonly ITestOutputHelper output;
@@ -64,7 +64,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             var subscriber = new SubscriberSocket(testAddress);
             subscriber.Connect(testAddress);
-            subscriber.Subscribe("EVENTS:TRADE:TESTER-001");
+            subscriber.Subscribe("Events:Trade:TESTER-001");
             Task.Delay(100).Wait();
 
             var serializer = new MsgPackEventSerializer();
@@ -83,11 +83,11 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
-            Assert.Equal("EVENTS:TRADE:TESTER-001", Encoding.UTF8.GetString(topic));
+            Assert.Equal("Events:Trade:TESTER-001", Encoding.UTF8.GetString(topic));
             Assert.Equal(typeof(OrderRejected), @event.GetType());
 
             // Tear Down
-            subscriber.Unsubscribe("EVENTS:TRADE:TESTER-001");
+            subscriber.Unsubscribe("Events:Trade:TESTER-001");
             subscriber.Disconnect(testAddress);
             subscriber.Dispose();
             publisher.Stop();

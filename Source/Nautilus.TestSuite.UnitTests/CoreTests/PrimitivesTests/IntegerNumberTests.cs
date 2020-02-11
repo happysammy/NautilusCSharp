@@ -12,9 +12,9 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.PrimitivesTests
     using Nautilus.Core.Primitives;
     using Xunit;
 
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    [SuppressMessage("ReSharper", "SA1131", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class IntegerNumberTests
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
+    [SuppressMessage("ReSharper", "SA1131", Justification = "Test Suite")]
+    public sealed class IntegerNumberTests
     {
         [Fact]
         internal void Value_WithValidValueGiven_ReturnsExpectedValue()
@@ -126,7 +126,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.PrimitivesTests
             Assert.Equal(1.GetHashCode(), number1.GetHashCode());
         }
 
-        private class TestInteger : IntegerNumber
+        private sealed class TestInteger : IntegerNumber
         {
             public TestInteger(int value)
                 : base(value)

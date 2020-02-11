@@ -152,7 +152,7 @@ namespace Nautilus.Common.Messaging
             this.SendToSelf(this.refresh);
         }
 
-        private class RefreshVouchers
+        private sealed class RefreshVouchers
         {
         }
     }

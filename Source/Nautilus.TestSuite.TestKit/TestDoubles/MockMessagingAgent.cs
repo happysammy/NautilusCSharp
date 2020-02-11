@@ -15,8 +15,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging;
 
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class MockMessagingAgent : MessagingAgent
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
+    public sealed class MockMessagingAgent : MessagingAgent
     {
         private readonly int workDelayMilliseconds;
 

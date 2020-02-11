@@ -17,8 +17,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Identifiers;
 
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class MockInstrumentRepository : IInstrumentRepository
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
+    public sealed class MockInstrumentRepository : IInstrumentRepository
     {
         private readonly Dictionary<Symbol, Instrument> instruments;
         private readonly IDataSerializer<Instrument> serializer;

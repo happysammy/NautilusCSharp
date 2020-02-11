@@ -9,7 +9,6 @@
 namespace Nautilus.Serialization.Bson
 {
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     using System.Text;
     using MongoDB.Bson;
     using MongoDB.Bson.Serialization;
@@ -19,12 +18,11 @@ namespace Nautilus.Serialization.Bson
     using Nautilus.DomainModel.ValueObjects;
 
     /// <inheritdoc />
-    [SuppressMessage("ReSharper", "SA1310", Justification = "Easier to read.")]
-    public class BarDataSerializer : IDataSerializer<Bar>
+    public sealed class BarDataSerializer : IDataSerializer<Bar>
     {
-        private const string DATA = "Data";
-        private const string DATA_TYPE = "DataType";
-        private const string METADATA = "Metadata";
+        private const string Data = nameof(Data);
+        private const string DataType = nameof(DataType);
+        private const string MetaData = nameof(MetaData);
 
         /// <inheritdoc />
         public DataEncoding BlobEncoding => DataEncoding.Bson;
@@ -57,9 +55,9 @@ namespace Nautilus.Serialization.Bson
 
             return new BsonDocument
             {
-                { DATA_TYPE, typeof(Bar[]).Name },
-                { DATA, new BsonArray(dataObjectsArray) },
-                { METADATA, metadata.ToBsonDocument() },
+                { DataType, typeof(Bar[]).Name },
+                { Data, new BsonArray(dataObjectsArray) },
+                { MetaData, metadata.ToBsonDocument() },
             }.ToBson();
         }
 
@@ -89,7 +87,7 @@ namespace Nautilus.Serialization.Bson
             Debug.NotEmpty(dataBytes, nameof(dataBytes));
 
             var data = BsonSerializer.Deserialize<BsonDocument>(dataBytes);
-            var valueArray = data[DATA].AsBsonArray;
+            var valueArray = data[Data].AsBsonArray;
 
             var bars = new Bar[valueArray.Count];
             for (var i = 0; i < valueArray.Count; i++)

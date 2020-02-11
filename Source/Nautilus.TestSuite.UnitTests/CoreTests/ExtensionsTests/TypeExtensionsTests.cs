@@ -17,8 +17,8 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
     using Nautilus.Network;
     using Xunit;
 
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class TypeExtensionsTests
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
+    public sealed class TypeExtensionsTests
     {
         [Fact]
         internal void NameFormatted_FromReferenceType_ReturnsExpectedName()

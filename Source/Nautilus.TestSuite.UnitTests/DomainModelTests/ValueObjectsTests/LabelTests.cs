@@ -12,8 +12,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
     using Nautilus.Core.Types;
     using Xunit;
 
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class LabelTests
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
+    public sealed class LabelTests
     {
         [Fact]
         internal void Value_WithValidValueGiven_ReturnsExpectedValue()
@@ -50,7 +50,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         {
             // Arrange
             var label1 = new Label("abc123");
-            var label2 = new Label("NONE");
+            var label2 = new Label();
 
             // Act
             // Assert
@@ -63,7 +63,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         {
             // Arrange
             var label1 = new Label("abc123");
-            var label2 = new Label("NONE");
+            var label2 = new Label();
 
             // Act
             // Assert

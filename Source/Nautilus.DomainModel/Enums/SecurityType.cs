@@ -45,7 +45,7 @@ namespace Nautilus.DomainModel.Enums
         /// <summary>
         /// The contract for difference security type.
         /// </summary>
-        [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed")]
+        [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Correct name")]
         CFD = 5,
 
         /// <summary>

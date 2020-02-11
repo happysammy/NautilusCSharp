@@ -19,9 +19,9 @@ namespace Nautilus.Execution.Network
     /// </summary>
     public sealed class EventPublisher : MessagePublisher<Event>
     {
-        private const string EVENTS = "EVENTS";
-        private const string TRADE = "TRADE";
-        private const string ACCOUNT = "ACCOUNT";
+        private const string Events = nameof(Events);
+        private const string Trade = nameof(Trade);
+        private const string Account = nameof(Account);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EventPublisher"/> class.
@@ -46,12 +46,12 @@ namespace Nautilus.Execution.Network
 
         private void OnEvent(TradeEvent @event)
         {
-            this.Publish($"{EVENTS}:{TRADE}:{@event.TraderId.Value}", @event.Event);
+            this.Publish($"{Events}:{Trade}:{@event.TraderId.Value}", @event.Event);
         }
 
         private void OnEvent(AccountStateEvent @event)
         {
-            this.Publish($"{EVENTS}:{ACCOUNT}:{@event.AccountId.Value}", @event);
+            this.Publish($"{Events}:{Account}:{@event.AccountId.Value}", @event);
         }
     }
 }

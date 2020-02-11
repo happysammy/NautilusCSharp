@@ -13,8 +13,8 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CQSTests
     using Nautilus.Core.CQS;
     using Xunit;
 
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class QueryResultTests
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
+    public sealed class QueryResultTests
     {
         [Fact]
         public void Ok_WithGenericResult_ReturnsOk()
@@ -57,7 +57,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CQSTests
         }
 
         // Only instantiated within this class for testing purposes.
-        private class TestClass
+        private sealed class TestClass
         {
         }
     }

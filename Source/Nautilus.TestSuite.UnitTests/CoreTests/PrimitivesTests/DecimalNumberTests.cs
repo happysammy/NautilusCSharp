@@ -12,9 +12,9 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.PrimitivesTests
     using Nautilus.Core.Primitives;
     using Xunit;
 
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    [SuppressMessage("ReSharper", "SA1131", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class DecimalNumberTests
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
+    [SuppressMessage("ReSharper", "SA1131", Justification = "Test Suite")]
+    public sealed class DecimalNumberTests
     {
         [Fact]
         internal void Value_WithValidValueGiven_ReturnsExpectedValue()
@@ -125,7 +125,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.PrimitivesTests
             Assert.Equal(decimal.One.GetHashCode(), number1.GetHashCode());
         }
 
-        private class TestDecimal : DecimalNumber
+        private sealed class TestDecimal : DecimalNumber
         {
             public TestDecimal(decimal value)
                 : base(value, 1)

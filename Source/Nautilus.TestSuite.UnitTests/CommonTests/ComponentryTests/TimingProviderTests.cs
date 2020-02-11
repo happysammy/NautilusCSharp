@@ -14,9 +14,9 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.ComponentryTests
     using NodaTime;
     using Xunit;
 
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class TimingProviderTests
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
+    [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global", Justification = "Test Suite")]
+    public sealed class TimingProviderTests
     {
         [Theory]
         [InlineData(2018, 6, 30, 19, 59, false)]

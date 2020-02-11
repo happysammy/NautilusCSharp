@@ -14,8 +14,8 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
     using NodaTime;
     using Xunit;
 
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class ZonedDateTimeExtensionsTests
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
+    public sealed class ZonedDateTimeExtensionsTests
     {
         [Fact]
         internal void ToIsoString_WithValidZonedDateTime_ReturnsExpectedString()

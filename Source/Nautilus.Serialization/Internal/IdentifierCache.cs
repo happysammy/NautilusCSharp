@@ -15,7 +15,7 @@ namespace Nautilus.Serialization.Internal
     /// <summary>
     /// Provides an identifier cache.
     /// </summary>
-    public class IdentifierCache
+    public sealed class IdentifierCache
     {
         private readonly ObjectCache<string, TraderId> cachedTraderIds;
         private readonly ObjectCache<string, AccountId> cachedAccountIds;

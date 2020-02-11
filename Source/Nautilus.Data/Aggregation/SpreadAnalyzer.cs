@@ -20,9 +20,9 @@ namespace Nautilus.Data.Aggregation
     /// </summary>
     public sealed class SpreadAnalyzer
     {
-        private readonly List<decimal> thisBarsSpreads;
-        private readonly List<(ZonedDateTime, decimal)> negativeSpreads;
-        private readonly List<(ZonedDateTime, decimal)> averageSpreads;
+        private readonly List<decimal> spreads;
+        private readonly List<(ZonedDateTime, decimal)> spreadsNegative;
+        private readonly List<(ZonedDateTime, decimal)> spreadsAverage;
 
         // Initialized on first tick
         private bool isInitialized;
@@ -33,9 +33,10 @@ namespace Nautilus.Data.Aggregation
         /// </summary>
         public SpreadAnalyzer()
         {
-            this.thisBarsSpreads = new List<decimal>();
-            this.negativeSpreads = new List<(ZonedDateTime, decimal)>();
-            this.averageSpreads = new List<(ZonedDateTime, decimal)>();
+            this.spreads = new List<decimal>();
+            this.spreadsNegative = new List<(ZonedDateTime, decimal)>();
+            this.spreadsAverage = new List<(ZonedDateTime, decimal)>();
+
             this.MaxSpread = (default, decimal.MinValue);
             this.MinSpread = (default, decimal.MaxValue);
         }
@@ -73,12 +74,12 @@ namespace Nautilus.Data.Aggregation
         /// <summary>
         /// Gets the spread analyzers negative spreads.
         /// </summary>
-        public IReadOnlyList<(ZonedDateTime Time, decimal Spread)> NegativeSpreads => this.negativeSpreads.ToList().AsReadOnly();
+        public IReadOnlyList<(ZonedDateTime Time, decimal Spread)> NegativeSpreads => this.spreadsNegative.ToList().AsReadOnly();
 
         /// <summary>
         /// Gets the spread analyzers negative spreads.
         /// </summary>
-        public IReadOnlyList<(ZonedDateTime Time, decimal Spread)> TotalAverageSpreads => this.averageSpreads.ToList().AsReadOnly();
+        public IReadOnlyList<(ZonedDateTime Time, decimal Spread)> TotalAverageSpreads => this.spreadsAverage.ToList().AsReadOnly();
 
         /// <summary>
         /// Updates the spread analyzer with the given tick.
@@ -96,11 +97,11 @@ namespace Nautilus.Data.Aggregation
             this.CurrentAsk = tick.Ask;
             this.CurrentSpread = tick.Ask - tick.Bid;
 
-            this.thisBarsSpreads.Add(this.CurrentSpread);
+            this.spreads.Add(this.CurrentSpread);
 
             if (this.CurrentSpread < decimal.Zero)
             {
-                this.negativeSpreads.Add((tick.Timestamp, this.CurrentSpread));
+                this.spreadsNegative.Add((tick.Timestamp, this.CurrentSpread));
             }
 
             if (this.CurrentSpread > this.MaxSpread.Spread)
@@ -113,23 +114,23 @@ namespace Nautilus.Data.Aggregation
                 this.MinSpread = (tick.Timestamp, this.CurrentSpread);
             }
 
-            if (this.averageSpreads.Count == 0)
+            if (this.spreadsAverage.Count == 0)
             {
                 this.AverageSpread = this.CalculateAverageSpread();
             }
         }
 
         /// <summary>
-        /// Analyzes the spread data on the close of the bar with the given timestamp.
+        /// Analyzes the spread data at the given timestamp.
         /// </summary>
         /// <param name="timestamp">The timestamp.</param>
-        public void OnBarUpdate(ZonedDateTime timestamp)
+        public void Snapshot(ZonedDateTime timestamp)
         {
             Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.AverageSpread = this.CalculateAverageSpread();
-            this.averageSpreads.Add((timestamp, this.AverageSpread));
-            this.thisBarsSpreads.Clear();
+            this.spreadsAverage.Add((timestamp, this.AverageSpread));
+            this.spreads.Clear();
         }
 
         private decimal CalculateAverageSpread()
@@ -140,7 +141,7 @@ namespace Nautilus.Data.Aggregation
             }
 
             return Math.Round(
-                this.thisBarsSpreads.Sum() / Math.Max(this.thisBarsSpreads.Count, 1),
+                this.spreads.Sum() / Math.Max(this.spreads.Count, 1),
                 this.decimalPrecision);
         }
     }

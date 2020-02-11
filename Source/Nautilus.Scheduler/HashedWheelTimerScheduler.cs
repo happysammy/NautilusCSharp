@@ -11,7 +11,6 @@ namespace Nautilus.Scheduler
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     using System.Threading;
     using System.Threading.Tasks;
     using Nautilus.Common.Componentry;
@@ -37,17 +36,16 @@ namespace Nautilus.Scheduler
     /// Further reading: http://www.cs.columbia.edu/~nahum/w6998/papers/sosp87-timing-wheels.pdf
     /// Presentation: http://www.cse.wustl.edu/~cdgill/courses/cs6874/TimingWheels.ppt.
     /// </summary>
-    [SuppressMessage("ReSharper", "SA1310", Justification = "Easier to read.")]
     public sealed class HashedWheelTimerScheduler : Component, IScheduler, IDisposable
     {
-        private const int DEFAULT_TICKS_PER_WHEEL = 512;
-        private const int TWO_POWER_30 = 1073741824;
-        private const int MIN_TICK_DURATION_MS = 10;
-        private const int MAX_REGISTRATIONS_PER_TICK = 100000;
-        private const int TICKS_PER_MILLISECOND = 10000;
-        private const int WORKER_STATE_INIT = 0;
-        private const int WORKER_STATE_STARTED = 1;
-        private const int WORKER_STATE_SHUTDOWN = 2;
+        private const int DefaultTicksPerWheel = 512;
+        private const int TwoPower30 = 1073741824;
+        private const int MinTickDurationMs = 10;
+        private const int MaxRegistrationsPerTick = 100000;
+        private const int TicksPerMillisecond = 10000;
+        private const int WorkerStateInit = 0;
+        private const int WorkerStateStarted = 1;
+        private const int WorkerStateShutdown = 2;
 
         private readonly AtomicReference<TaskCompletionSource<IEnumerable<SchedulerRegistration>>> stopped = new AtomicReference<TaskCompletionSource<IEnumerable<SchedulerRegistration>>>();
         private readonly ConcurrentQueue<SchedulerRegistration> registrations = new ConcurrentQueue<SchedulerRegistration>();
@@ -66,7 +64,7 @@ namespace Nautilus.Scheduler
         /// <summary>
         /// 0 - INIT, 1 - STARTED, 2 - SHUTDOWN.
         /// </summary>
-        private volatile int workerState = WORKER_STATE_INIT;
+        private volatile int workerState = WorkerStateInit;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HashedWheelTimerScheduler"/> class.
@@ -75,9 +73,9 @@ namespace Nautilus.Scheduler
         public HashedWheelTimerScheduler(IComponentryContainer container)
             : base(container)
         {
-            this.wheel = CreateWheel(DEFAULT_TICKS_PER_WHEEL, this.Log);
+            this.wheel = CreateWheel(DefaultTicksPerWheel, this.Log);
             this.mask = this.wheel.Length - 1;
-            this.tickDuration = DurationToTicksWithCheck(Duration.FromMilliseconds(MIN_TICK_DURATION_MS), this.wheel.Length);
+            this.tickDuration = DurationToTicksWithCheck(Duration.FromMilliseconds(MinTickDurationMs), this.wheel.Length);
 
             this.RegisterHandler<IEnvelope>(this.OnEnvelope);
         }
@@ -246,7 +244,7 @@ namespace Nautilus.Scheduler
 
         private static Bucket[] CreateWheel(int ticksPerWheel, ILogger log)
         {
-            Condition.NotOutOfRangeInt32(ticksPerWheel, 1, TWO_POWER_30, nameof(ticksPerWheel));
+            Condition.NotOutOfRangeInt32(ticksPerWheel, 1, TwoPower30, nameof(ticksPerWheel));
 
             ticksPerWheel = NormalizeToPowerOf2(ticksPerWheel);
             var wheel = new Bucket[ticksPerWheel];
@@ -283,13 +281,13 @@ namespace Nautilus.Scheduler
         {
             switch (this.workerState)
             {
-                case WORKER_STATE_STARTED:
+                case WorkerStateStarted:
                     break; // Do nothing
-                case WORKER_STATE_INIT:
+                case WorkerStateInit:
                 {
                     this.worker = new Thread(this.Run) { IsBackground = true };
 
-                    if (Interlocked.CompareExchange(ref this.workerState, WORKER_STATE_STARTED, WORKER_STATE_INIT) == WORKER_STATE_INIT)
+                    if (Interlocked.CompareExchange(ref this.workerState, WorkerStateStarted, WorkerStateInit) == WorkerStateInit)
                     {
                         this.worker.Start();
                     }
@@ -297,7 +295,7 @@ namespace Nautilus.Scheduler
                     break;
                 }
 
-                case WORKER_STATE_SHUTDOWN:
+                case WorkerStateShutdown:
                     throw new SchedulerException("Cannot enqueue after timer shutdown.");
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(this.workerState, nameof(this.workerState));
@@ -325,7 +323,7 @@ namespace Nautilus.Scheduler
 
             this.workerInitialized.Signal();
 
-            while (this.workerState == WORKER_STATE_STARTED)
+            while (this.workerState == WorkerStateStarted)
             {
                 var deadline = this.WaitForNextTick();
                 if (deadline <= 0)
@@ -384,7 +382,7 @@ namespace Nautilus.Scheduler
                 while (true)
                 {
                     var currentTime = MonotonicClock.Elapsed.BclCompatibleTicks - this.startTime;
-                    var sleepMs = (deadline - currentTime + TICKS_PER_MILLISECOND - 1) / TICKS_PER_MILLISECOND;
+                    var sleepMs = (deadline - currentTime + TicksPerMillisecond - 1) / TicksPerMillisecond;
 
                     if (sleepMs <= 0)
                     {
@@ -406,7 +404,7 @@ namespace Nautilus.Scheduler
         private void TransferRegistrationsToBuckets()
         {
             // Transfer only max prevents a stale thread where its just adding new timeouts in a loop
-            for (var i = 0; i < MAX_REGISTRATIONS_PER_TICK; i++)
+            for (var i = 0; i < MaxRegistrationsPerTick; i++)
             {
                 if (!this.registrations.TryDequeue(out var registration))
                 {
@@ -454,7 +452,7 @@ namespace Nautilus.Scheduler
         private Task<IEnumerable<SchedulerRegistration>> OnStop()
         {
             var p = new TaskCompletionSource<IEnumerable<SchedulerRegistration>>();
-            if (this.stopped.CompareAndSet(null, p) && Interlocked.CompareExchange(ref this.workerState, WORKER_STATE_SHUTDOWN, WORKER_STATE_STARTED) == WORKER_STATE_STARTED)
+            if (this.stopped.CompareAndSet(null, p) && Interlocked.CompareExchange(ref this.workerState, WorkerStateShutdown, WorkerStateStarted) == WorkerStateStarted)
             {
                 // Let remaining work that is already being processed finish.
                 // The termination task will complete afterwards.

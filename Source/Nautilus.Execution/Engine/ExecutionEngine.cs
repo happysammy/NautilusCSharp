@@ -29,12 +29,12 @@ namespace Nautilus.Execution.Engine
     /// <summary>
     /// Provides a generic execution engine utilizing an abstract execution database.
     /// </summary>
-    public class ExecutionEngine : MessageBusConnected
+    public sealed class ExecutionEngine : MessageBusConnected
     {
-        private const string SENT = "-->";
-        private const string RECV = "<--";
-        private const string CMD = "[CMD]";
-        private const string EVT = "[EVT]";
+        private const string Sent = "-->";
+        private const string Received = "<--";
+        private const string Command = "[CMD]";
+        private const string Event = "[EVT]";
 
         private readonly IScheduler scheduler;
         private readonly IExecutionDatabase database;
@@ -129,7 +129,7 @@ namespace Nautilus.Execution.Engine
         private void OnMessage(SubmitOrder command)
         {
             this.CommandCount++;
-            this.Log.Information($"{RECV}{CMD} {command}.");
+            this.Log.Information($"{Received}{Command} {command}.");
 
             var result = this.database.AddOrder(
                 command.Order,
@@ -164,7 +164,7 @@ namespace Nautilus.Execution.Engine
         private void OnMessage(SubmitAtomicOrder command)
         {
             this.CommandCount++;
-            this.Log.Information($"{RECV}{CMD} {command}.");
+            this.Log.Information($"{Received}{Command} {command}.");
 
             var result = this.database.AddAtomicOrder(
                 command.AtomicOrder,
@@ -223,7 +223,7 @@ namespace Nautilus.Execution.Engine
         private void OnMessage(CancelOrder command)
         {
             this.CommandCount++;
-            this.Log.Information($"{RECV}{CMD} {command}.");
+            this.Log.Information($"{Received}{Command} {command}.");
 
             var order = this.database.GetOrder(command.OrderId);
             if (order is null)
@@ -234,7 +234,7 @@ namespace Nautilus.Execution.Engine
 
             if (order.IsCompleted)
             {
-                this.Log.Warning($"{RECV}{CMD} {command} and (order is already completed).");
+                this.Log.Warning($"{Received}{Command} {command} and (order is already completed).");
             }
 
             this.gateway.CancelOrder(order);
@@ -243,7 +243,7 @@ namespace Nautilus.Execution.Engine
         private void OnMessage(ModifyOrder command)
         {
             this.CommandCount++;
-            this.Log.Information($"{RECV}{CMD} {command}.");
+            this.Log.Information($"{Received}{Command} {command}.");
 
             var order = this.database.GetOrder(command.OrderId);
             if (order is null)
@@ -277,7 +277,7 @@ namespace Nautilus.Execution.Engine
         private void OnMessage(AccountInquiry command)
         {
             this.CommandCount++;
-            this.Log.Information($"{RECV}{CMD} {command}.");
+            this.Log.Information($"{Received}{Command} {command}.");
 
             this.gateway.AccountInquiry();
         }
@@ -286,7 +286,7 @@ namespace Nautilus.Execution.Engine
         private void OnMessage(OrderSubmitted @event)
         {
             this.EventCount++;
-            this.Log.Information($"{RECV}{EVT} {@event}.");
+            this.Log.Information($"{Received}{Event} {@event}.");
 
             this.ProcessOrderEvent(@event);
             this.SendToEventPublisher(@event);
@@ -295,7 +295,7 @@ namespace Nautilus.Execution.Engine
         private void OnMessage(OrderAccepted @event)
         {
             this.EventCount++;
-            this.Log.Information($"{RECV}{EVT} {@event}.");
+            this.Log.Information($"{Received}{Event} {@event}.");
 
             this.ProcessOrderEvent(@event);
             this.SendToEventPublisher(@event);
@@ -304,7 +304,7 @@ namespace Nautilus.Execution.Engine
         private void OnMessage(OrderRejected @event)
         {
             this.EventCount++;
-            this.Log.Warning($"{RECV}{EVT} {@event}.");
+            this.Log.Warning($"{Received}{Event} {@event}.");
 
             this.ProcessOrderEvent(@event);
             this.ClearModifyBuffer(@event.OrderId);
@@ -315,7 +315,7 @@ namespace Nautilus.Execution.Engine
         private void OnMessage(OrderWorking @event)
         {
             this.EventCount++;
-            this.Log.Information($"{RECV}{EVT} {@event}.");
+            this.Log.Information($"{Received}{Event} {@event}.");
 
             var order = this.ProcessOrderEvent(@event);
             if (order != null)
@@ -335,7 +335,7 @@ namespace Nautilus.Execution.Engine
         private void OnMessage(OrderModified @event)
         {
             this.EventCount++;
-            this.Log.Information($"{RECV}{EVT} {@event}.");
+            this.Log.Information($"{Received}{Event} {@event}.");
 
             var order = this.ProcessOrderEvent(@event);
             if (order != null)
@@ -349,7 +349,7 @@ namespace Nautilus.Execution.Engine
         private void OnMessage(OrderCancelReject @event)
         {
             this.EventCount++;
-            this.Log.Warning($"{RECV}{EVT} {@event}.");
+            this.Log.Warning($"{Received}{Event} {@event}.");
 
             this.SendToEventPublisher(@event);
         }
@@ -357,7 +357,7 @@ namespace Nautilus.Execution.Engine
         private void OnMessage(OrderExpired @event)
         {
             this.EventCount++;
-            this.Log.Information($"{RECV}{EVT} {@event}.");
+            this.Log.Information($"{Received}{Event} {@event}.");
 
             this.ProcessOrderEvent(@event);
             this.ClearModifyBuffer(@event.OrderId);
@@ -368,7 +368,7 @@ namespace Nautilus.Execution.Engine
         private void OnMessage(OrderCancelled @event)
         {
             this.EventCount++;
-            this.Log.Information($"{RECV}{EVT} {@event}.");
+            this.Log.Information($"{Received}{Event} {@event}.");
 
             this.ProcessOrderEvent(@event);
             this.ClearModifyBuffer(@event.OrderId);
@@ -379,7 +379,7 @@ namespace Nautilus.Execution.Engine
         private void OnMessage(OrderPartiallyFilled @event)
         {
             this.EventCount++;
-            this.Log.Warning($"{RECV}{EVT} {@event}.");
+            this.Log.Warning($"{Received}{Event} {@event}.");
 
             this.ProcessOrderEvent(@event);
             this.HandleOrderFillEvent(@event);
@@ -389,7 +389,7 @@ namespace Nautilus.Execution.Engine
         private void OnMessage(OrderFilled @event)
         {
             this.EventCount++;
-            this.Log.Information($"{RECV}{EVT} {@event}.");
+            this.Log.Information($"{Received}{Event} {@event}.");
 
             this.ProcessOrderEvent(@event);
             this.HandleOrderFillEvent(@event);
@@ -401,7 +401,7 @@ namespace Nautilus.Execution.Engine
         private void OnMessage(AccountStateEvent @event)
         {
             this.EventCount++;
-            this.Log.Information($"{RECV}{EVT} {@event}.");
+            this.Log.Information($"{Received}{Event} {@event}.");
 
             var account = this.database.GetAccount(@event.AccountId);
             if (account is null)
@@ -478,7 +478,7 @@ namespace Nautilus.Execution.Engine
                         order,
                         modifyOrder.ModifiedQuantity,
                         modifyOrder.ModifiedPrice);
-                    this.Log.Debug($"{CMD}{SENT} {modifyOrder} to TradingGateway.");
+                    this.Log.Debug($"{Command}{Sent} {modifyOrder} to TradingGateway.");
                 }
 
                 this.bufferModify.Remove(order.Id);
@@ -568,7 +568,7 @@ namespace Nautilus.Execution.Engine
         private void SendToEventPublisher(Event @event)
         {
             this.eventPublisher.Send(@event);
-            this.Log.Debug($"{EVT}{SENT} {@event} to EventPublisher.");
+            this.Log.Debug($"{Event}{Sent} {@event} to EventPublisher.");
         }
     }
 }

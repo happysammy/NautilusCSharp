@@ -14,8 +14,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
     using Xunit;
     using Xunit.Abstractions;
 
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class BarSpecificationTests
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
+    public sealed class BarSpecificationTests
     {
         private readonly ITestOutputHelper output;
 
@@ -23,6 +23,25 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         {
             // Fixture Setup
             this.output = output;
+        }
+
+        [Fact]
+        internal void Create_WithValidString_ReturnsExpectedBarSpec()
+        {
+            // Arrange
+            var barSpec1 = new BarSpecification(1, BarStructure.Minute, PriceType.Bid);
+            var barSpec2 = new BarSpecification(1, BarStructure.Hour, PriceType.Mid);
+
+            var string1 = barSpec1.ToString();
+            var string2 = barSpec2.ToString();
+
+            // Act
+            var result1 = BarSpecification.FromString(string1);
+            var result2 = BarSpecification.FromString(string2);
+
+            // Assert
+            Assert.Equal(barSpec1, result1);
+            Assert.Equal(barSpec2, result2);
         }
 
         [Fact]

@@ -13,11 +13,10 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
     using Nautilus.Core.Extensions;
     using Xunit;
 
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    [SuppressMessage("ReSharper", "SA1310", Justification = "Easier to read.")]
-    public class CommandExtensionsTests
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
+    public sealed class CommandExtensionsTests
     {
-        private const string ERROR_MESSAGE = "this failed";
+        private const string ErrorMessage = "this failed";
 
         [Fact]
         public void OnSuccess_WithAnonymousFunction_PerformsFunction()
@@ -40,7 +39,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
             var testBool = false;
 
             // Act
-            var command = CommandResult.Fail(ERROR_MESSAGE);
+            var command = CommandResult.Fail(ErrorMessage);
             command.OnFailure(() => testBool = true);
 
             // Assert

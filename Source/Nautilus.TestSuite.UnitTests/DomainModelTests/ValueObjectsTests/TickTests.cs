@@ -15,7 +15,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
     using NodaTime;
     using Xunit;
 
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class TickTests
     {
         private readonly Symbol symbol;
@@ -44,6 +44,26 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
             Assert.Equal(decimal.One, tick.Bid.Value);
             Assert.Equal(decimal.One, tick.Ask.Value);
             Assert.Equal(1970, tick.Timestamp.Year);
+        }
+
+        [Fact]
+        internal void FromString_WithValidString_ReturnsExpectedTick()
+        {
+            // Arrange
+            var tick = new Tick(
+                this.symbol,
+                Price.Create(1.00000m),
+                Price.Create(1.00000m),
+                Volume.One(),
+                Volume.One(),
+                StubZonedDateTime.UnixEpoch());
+
+            // Act
+            var tickString = tick.ToString();
+            var result = Tick.FromString(this.symbol, tickString);
+
+            // Assert
+            Assert.Equal(tick, result);
         }
 
         [Theory]

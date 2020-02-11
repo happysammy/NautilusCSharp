@@ -13,8 +13,8 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.ComponentryTests
     using Nautilus.DomainModel.Identifiers;
     using Xunit;
 
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class ObjectCacheTests
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
+    public sealed class ObjectCacheTests
     {
         [Fact]
         internal void Get_WhenNothingCached_ReturnsNewObject()

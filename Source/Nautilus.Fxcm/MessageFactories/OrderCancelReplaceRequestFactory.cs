@@ -61,7 +61,7 @@ namespace Nautilus.Fxcm.MessageFactories
                 case OrderType.StopLimit:
                     message.SetField(new Price(modifiedPrice));
                     break;
-                case OrderType.StopMarket:
+                case OrderType.Stop:
                     message.SetField(new StopPx(modifiedPrice));
                     break;
                 case OrderType.MIT:

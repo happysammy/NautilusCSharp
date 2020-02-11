@@ -16,8 +16,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
     using Xunit;
     using Xunit.Abstractions;
 
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class BsonInstrumentSerializerTests
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
+    public sealed class BsonInstrumentSerializerTests
     {
         private readonly ITestOutputHelper output;
 

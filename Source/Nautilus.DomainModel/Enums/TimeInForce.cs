@@ -14,7 +14,7 @@ namespace Nautilus.DomainModel.Enums
     /// <summary>
     /// The time in force for an order.
     /// </summary>
-    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed")]
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Correct format")]
     public enum TimeInForce
     {
         /// <summary>

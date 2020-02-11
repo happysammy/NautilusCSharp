@@ -22,7 +22,7 @@ namespace Nautilus.Serialization.Internal
     /// </summary>
     internal static class ObjectExtractor
     {
-        private const string NONE = nameof(NONE);
+        private const string None = nameof(None);
 
         /// <summary>
         /// Returns a <see cref="decimal"/> extracted from the given <see cref="MessagePackObject"/>.
@@ -156,7 +156,7 @@ namespace Nautilus.Serialization.Internal
         internal static Price? AsNullablePrice(MessagePackObject unpacked)
         {
             var unpackedString = unpacked.AsString();
-            return unpackedString == NONE
+            return unpackedString == None
                 ? null
                 : Price.Create(Convert.ToDecimal(unpackedString));
         }
@@ -179,7 +179,7 @@ namespace Nautilus.Serialization.Internal
         internal static ZonedDateTime? AsNullableZonedDateTime(MessagePackObject unpacked)
         {
             var unpackedString = unpacked.AsString();
-            return unpackedString == NONE
+            return unpackedString == None
                 ? null
                 : unpackedString.ToNullableZonedDateTimeFromIso();
         }

@@ -18,7 +18,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.TypesTests
     #pragma warning disable 8602
     #pragma warning disable 8604
     #pragma warning disable 8625
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class MessageTests
     {
         [Fact]

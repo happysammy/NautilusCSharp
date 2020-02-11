@@ -9,7 +9,6 @@
 namespace Nautilus.Core.Extensions
 {
     using System;
-    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using Nautilus.Core.Correctness;
     using NodaTime;
@@ -18,14 +17,13 @@ namespace Nautilus.Core.Extensions
     /// <summary>
     /// Provides useful comparison operations for the <see cref="ZonedDateTime"/> type.
     /// </summary>
-    [SuppressMessage("ReSharper", "SA1310", Justification = "Easier to read with underscores.")]
     public static class ZonedDateTimeExtensions
     {
-        private const string ISO_STRING_PARSE_PATTERN = "yyyy-MM-ddTHH:mm:ss.fff";
+        private const string IsoStringParsePattern = "yyyy-MM-ddTHH:mm:ss.fff";
 
         private static readonly ZonedDateTimePattern NodaIsoStringParsePattern =
             ZonedDateTimePattern.CreateWithInvariantCulture(
-                ISO_STRING_PARSE_PATTERN,
+                IsoStringParsePattern,
                 DateTimeZoneProviders.Tzdb);
 
         /// <summary>
@@ -89,7 +87,7 @@ namespace Nautilus.Core.Extensions
         {
             Debug.NotDefault(time, nameof(time));
 
-            return time.ToString(ISO_STRING_PARSE_PATTERN, CultureInfo.InvariantCulture.DateTimeFormat) + "Z";
+            return time.ToString(IsoStringParsePattern, CultureInfo.InvariantCulture.DateTimeFormat) + "Z";
         }
 
         /// <summary>

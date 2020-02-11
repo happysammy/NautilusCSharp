@@ -30,11 +30,10 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
     using Xunit;
     using Xunit.Abstractions;
 
-    [SuppressMessage("ReSharper", "SA1310", Justification = "Easier to read.")]
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class InstrumentProviderTests
     {
-        private const string TEST_ADDRESS = "tcp://localhost:55524";
+        private const string TestAddress = "tcp://localhost:55524";
 
         private readonly ITestOutputHelper output;
         private readonly MockLoggingAdapter loggingAdapter;
@@ -74,7 +73,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             Task.Delay(100).Wait();  // Allow provider to start
 
             var requester = new RequestSocket();
-            requester.Connect(TEST_ADDRESS);
+            requester.Connect(TestAddress);
             Task.Delay(100).Wait();  // Allow socket to connect
 
             var instrument = StubInstrumentProvider.AUDUSD();
@@ -100,7 +99,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             Assert.Equal(typeof(QueryFailure), response.Type);
 
             // Tear Down;
-            requester.Disconnect(TEST_ADDRESS);
+            requester.Disconnect(TestAddress);
         }
 
         [Fact]
@@ -111,7 +110,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             Task.Delay(100).Wait();  // Allow provider to start
 
             var requester = new RequestSocket();
-            requester.Connect(TEST_ADDRESS);
+            requester.Connect(TestAddress);
             Task.Delay(100).Wait();  // Allow socket to connect
 
             var query = new Dictionary<string, string>
@@ -135,7 +134,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             Assert.Equal(typeof(QueryFailure), response.Type);
 
             // Tear Down;
-            requester.Disconnect(TEST_ADDRESS);
+            requester.Disconnect(TestAddress);
             this.provider.Stop();
         }
 
@@ -147,7 +146,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             Task.Delay(100).Wait();
 
             var requester = new RequestSocket();
-            requester.Connect(TEST_ADDRESS);
+            requester.Connect(TestAddress);
             Task.Delay(100).Wait();  // Allow socket to connect
 
             var instrument = StubInstrumentProvider.AUDUSD();
@@ -174,7 +173,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             Assert.Equal(instrument, data[0]);
 
             // Tear Down;
-            requester.Disconnect(TEST_ADDRESS);
+            requester.Disconnect(TestAddress);
         }
 
         [Fact]
@@ -185,7 +184,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             Task.Delay(100).Wait();  // Allow provider to start
 
             var requester = new RequestSocket();
-            requester.Connect(TEST_ADDRESS);
+            requester.Connect(TestAddress);
             Task.Delay(100).Wait();  // Allow socket to connect
 
             var instrument1 = StubInstrumentProvider.AUDUSD();
@@ -222,7 +221,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             }
 
             // Tear Down;
-            requester.Disconnect(TEST_ADDRESS);
+            requester.Disconnect(TestAddress);
         }
     }
 }

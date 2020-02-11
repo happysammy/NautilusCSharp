@@ -22,8 +22,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
     using Xunit;
     using Xunit.Abstractions;
 
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class BarAggregatorTests
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
+    public sealed class BarAggregatorTests
     {
         private readonly ITestOutputHelper output;
         private readonly MockLoggingAdapter logger;

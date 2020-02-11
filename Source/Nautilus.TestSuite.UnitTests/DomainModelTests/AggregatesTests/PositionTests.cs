@@ -19,8 +19,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
     using NodaTime;
     using Xunit;
 
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class PositionTests
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
+    public sealed class PositionTests
     {
         [Fact]
         internal void Position_OrderFilledBuyCase_ReturnsCorrectValues()

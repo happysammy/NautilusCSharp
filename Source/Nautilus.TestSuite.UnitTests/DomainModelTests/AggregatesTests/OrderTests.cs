@@ -20,8 +20,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
     using Xunit;
     using Xunit.Abstractions;
 
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class OrderTests
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
+    public sealed class OrderTests
     {
         private readonly ITestOutputHelper output;
 
@@ -81,7 +81,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.Equal("O-123456", order.Id.Value);
             Assert.Equal("S1_SL", order.Label.Value);
             Assert.Equal(OrderSide.Buy, order.OrderSide);
-            Assert.Equal(OrderType.StopMarket, order.OrderType);
+            Assert.Equal(OrderType.Stop, order.OrderType);
             Assert.Equal(OrderPurpose.Entry, order.OrderPurpose);
             Assert.Equal(10, order.Quantity.Value);
             Assert.Equal(Price.Create(2000, 1), order.Price);

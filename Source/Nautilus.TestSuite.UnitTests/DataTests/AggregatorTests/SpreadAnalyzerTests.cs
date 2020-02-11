@@ -15,8 +15,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;
 
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class SpreadAnalyzerTests
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
+    public sealed class SpreadAnalyzerTests
     {
         private readonly SpreadAnalyzer spreadAnalyzer;
 
@@ -99,7 +99,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 StubZonedDateTime.UnixEpoch());
 
             this.spreadAnalyzer.Update(tick1);
-            this.spreadAnalyzer.OnBarUpdate(tick1.Timestamp);
+            this.spreadAnalyzer.Snapshot(tick1.Timestamp);
 
             var tick2 = new Tick(
                 new Symbol("AUDUSD", new Venue("FXCM")),

@@ -177,7 +177,7 @@ namespace Nautilus.DomainModel.Factories
                 symbol,
                 label,
                 side,
-                OrderType.StopMarket,
+                OrderType.Stop,
                 purpose,
                 quantity,
                 price,

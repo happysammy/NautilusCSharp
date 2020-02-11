@@ -12,8 +12,8 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CQSTests
     using Nautilus.Core.CQS;
     using Xunit;
 
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class CommandResultTests
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
+    public sealed class CommandResultTests
     {
         [Fact]
         public void Ok_ReturnsOk()

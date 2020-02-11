@@ -10,7 +10,6 @@ namespace Nautilus.Network
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     using System.Runtime.Serialization;
     using System.Text;
     using System.Threading;
@@ -32,12 +31,11 @@ namespace Nautilus.Network
     /// </summary>
     /// <typeparam name="TInbound">The inbound message type.</typeparam>
     /// <typeparam name="TOutbound">The outbound response type.</typeparam>
-    [SuppressMessage("ReSharper", "SA1310", Justification = "Easier to read.")]
     public abstract class MessageServer<TInbound, TOutbound> : Component, IDisposable
         where TInbound : Message
         where TOutbound : Response
     {
-        private const int EXPECTED_FRAMES_COUNT = 3;
+        private const int ExpectedFramesCount = 3;
 
         private readonly byte[] delimiter = { };
         private readonly CancellationTokenSource cts;
@@ -214,10 +212,10 @@ namespace Nautilus.Network
             // msg[0] reply address
             // msg[1] should be empty byte array delimiter
             // msg[2] payload
-            var msg = this.socket.ReceiveMultipartBytes(EXPECTED_FRAMES_COUNT);
-            if (msg.Count != EXPECTED_FRAMES_COUNT)
+            var msg = this.socket.ReceiveMultipartBytes(ExpectedFramesCount);
+            if (msg.Count != ExpectedFramesCount)
             {
-                var error = $"Message was malformed (expected {EXPECTED_FRAMES_COUNT} frames, received {msg.Count}).";
+                var error = $"Message was malformed (expected {ExpectedFramesCount} frames, received {msg.Count}).";
                 if (msg.Count >= 1)
                 {
                     this.SendRejected(error, new Address(msg[0], Encoding.ASCII.GetString));

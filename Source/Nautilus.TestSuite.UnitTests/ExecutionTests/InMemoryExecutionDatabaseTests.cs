@@ -23,8 +23,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
     using Xunit;
     using Xunit.Abstractions;
 
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class InMemoryExecutionDatabaseTests
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
+    public sealed class InMemoryExecutionDatabaseTests
     {
         private readonly ITestOutputHelper output;
         private readonly MockLoggingAdapter logger;

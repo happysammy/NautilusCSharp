@@ -17,43 +17,34 @@ namespace Nautilus.Core.Types
     [Immutable]
     public sealed class Label : Identifier<Label>
     {
-        private const string NONE = "NONE";
+        private const string None = nameof(None);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Label"/> class.
         /// </summary>
         /// <param name="value">The label value.</param>
-        public Label(string value)
+        public Label(string value = None)
             : base(value)
         {
             Debug.NotEmptyOrWhiteSpace(value, nameof(value));
         }
 
         /// <summary>
-        /// Returns a label with a 'NONE' value.
+        /// Returns a value indicating whether the label is equal to 'None'.
         /// </summary>
-        /// <returns>The label.</returns>
-        public static Label None()
-        {
-            return new Label(NONE);
-        }
-
-        /// <summary>
-        /// Returns a value indicating whether the label is equal to 'NONE'.
-        /// </summary>
-        /// <returns>True if the label value is 'NONE', else False.</returns>
+        /// <returns>True if the label value is 'None', else False.</returns>
         public bool IsNone()
         {
-            return this.Value == NONE;
+            return this.Value == None;
         }
 
         /// <summary>
-        /// Returns a value indicating whether the label is not equal to 'NONE'.
+        /// Returns a value indicating whether the label is not equal to 'None'.
         /// </summary>
-        /// <returns>True if the label value is not 'NONE', else False.</returns>
+        /// <returns>True if the label value is not 'None', else False.</returns>
         public bool NotNone()
         {
-            return this.Value != NONE;
+            return this.Value != None;
         }
     }
 }

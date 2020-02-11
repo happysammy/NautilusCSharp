@@ -17,7 +17,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public static class StubEventMessageProvider
     {
         public static AccountStateEvent AccountStateEvent(string accountId = "FXCM-123456789-SIMULATED")
@@ -122,7 +122,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 AccountId.FromString("FXCM-02851908-DEMO"),
                 order.Id,
                 StubZonedDateTime.UnixEpoch(),
-                "NONE",
+                "None",
                 "TEST",
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -152,8 +152,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             return new OrderPartiallyFilled(
                 AccountId.FromString("FXCM-02851908-DEMO"),
                 order.Id,
-                new ExecutionId("NONE"),
-                new PositionIdBroker("NONE"),
+                new ExecutionId("None"),
+                new PositionIdBroker("None"),
                 order.Symbol,
                 order.OrderSide,
                 filledQuantity,
@@ -175,8 +175,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             return new OrderFilled(
                 AccountId.FromString("FXCM-02851908-DEMO"),
                 order.Id,
-                new ExecutionId("NONE"),
-                new PositionIdBroker("NONE"),
+                new ExecutionId("None"),
+                new PositionIdBroker("None"),
                 order.Symbol,
                 order.OrderSide,
                 order.Quantity,

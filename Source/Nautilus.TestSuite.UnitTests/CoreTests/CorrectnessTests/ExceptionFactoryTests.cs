@@ -15,8 +15,8 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
     using Nautilus.DomainModel.Enums;
     using Xunit;
 
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class ExceptionFactoryTests
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
+    public sealed class ExceptionFactoryTests
     {
         [Fact]
         internal void InvalidSwitchArgument_WithObjectArgument_ReturnsExpectedException()

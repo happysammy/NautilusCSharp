@@ -17,8 +17,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FramesTests
     using Xunit;
     using Xunit.Abstractions;
 
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class BarDataFrameTests
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
+    public sealed class BarDataFrameTests
     {
         private readonly ITestOutputHelper output;
         private readonly BarType stubBarType;

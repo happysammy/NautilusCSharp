@@ -14,8 +14,8 @@ namespace Nautilus.TestSuite.UnitTests.TestKitTests.TestDoublesTests
     using NodaTime;
     using Xunit;
 
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class StubClockTests
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
+    public sealed class StubClockTests
     {
         [Fact]
         internal void TimeNow_WithStubSystemClock_ReturnsStubbedDateTime()

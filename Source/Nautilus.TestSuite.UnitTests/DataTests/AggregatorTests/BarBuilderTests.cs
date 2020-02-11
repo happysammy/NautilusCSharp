@@ -15,8 +15,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
     using NodaTime;
     using Xunit;
 
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class BarBuilderTests
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
+    public sealed class BarBuilderTests
     {
         [Fact]
         internal void Build_WithOneQuotes_ReturnsExpectedBar()

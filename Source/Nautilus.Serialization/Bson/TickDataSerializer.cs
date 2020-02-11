@@ -9,7 +9,6 @@
 namespace Nautilus.Serialization.Bson
 {
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     using System.Text;
     using MongoDB.Bson;
     using MongoDB.Bson.Serialization;
@@ -21,12 +20,11 @@ namespace Nautilus.Serialization.Bson
     using Nautilus.DomainModel.ValueObjects;
 
     /// <inheritdoc />
-    [SuppressMessage("ReSharper", "SA1310", Justification = "Easier to read.")]
-    public class TickDataSerializer : IDataSerializer<Tick>
+    public sealed class TickDataSerializer : IDataSerializer<Tick>
     {
-        private const string DATA = "Data";
-        private const string DATA_TYPE = "DataType";
-        private const string METADATA = "Metadata";
+        private const string Data = nameof(Data);
+        private const string DataType = nameof(DataType);
+        private const string MetaData = nameof(MetaData);
 
         private readonly ObjectCache<string, Symbol> cachedSymbols;
 
@@ -71,9 +69,9 @@ namespace Nautilus.Serialization.Bson
 
             return new BsonDocument
             {
-                { DATA_TYPE, typeof(Tick[]).Name },
-                { DATA, new BsonArray(dataObjectsArray) },
-                { METADATA, metadata.ToBsonDocument() },
+                { DataType, typeof(Tick[]).Name },
+                { Data, new BsonArray(dataObjectsArray) },
+                { MetaData, metadata.ToBsonDocument() },
             }.ToBson();
         }
 
@@ -82,7 +80,7 @@ namespace Nautilus.Serialization.Bson
         {
             Debug.NotEmpty(dataBytes, nameof(dataBytes));
 
-            return Tick.FromStringWithSymbol(Encoding.UTF8.GetString(dataBytes));
+            return Tick.FromStringWhichIncludesSymbol(Encoding.UTF8.GetString(dataBytes));
         }
 
         /// <inheritdoc />
@@ -106,8 +104,8 @@ namespace Nautilus.Serialization.Bson
 
             var data = BsonSerializer.Deserialize<BsonDocument>(dataBytes);
 
-            var symbol = this.cachedSymbols.Get(data[METADATA][nameof(Tick.Symbol)].AsString);
-            var valueArray = data[DATA].AsBsonArray;
+            var symbol = this.cachedSymbols.Get(data[MetaData][nameof(Tick.Symbol)].AsString);
+            var valueArray = data[Data].AsBsonArray;
 
             var ticks = new Tick[valueArray.Count];
             for (var i = 0; i < valueArray.Count; i++)

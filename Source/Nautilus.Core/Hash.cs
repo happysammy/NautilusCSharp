@@ -15,8 +15,8 @@ namespace Nautilus.Core
     /// </summary>
     public static class Hash
     {
-        private const int INITIALIZER = 17;
-        private const int MULTIPLIER = 29;
+        private const int Initializer = 17;
+        private const int Multiplier = 29;
 
         /// <summary>
         /// Returns a hash code for the given value.
@@ -29,7 +29,7 @@ namespace Nautilus.Core
         {
             unchecked
             {
-                return (INITIALIZER * MULTIPLIER) + (value is null ? 0 : value.GetHashCode());
+                return (Initializer * Multiplier) + (value is null ? 0 : value.GetHashCode());
             }
         }
 
@@ -46,9 +46,9 @@ namespace Nautilus.Core
         {
             unchecked
             {
-                var hash = INITIALIZER;
-                hash = (hash * MULTIPLIER) + (value1 is null ? 0 : value1.GetHashCode());
-                hash = (hash * MULTIPLIER) + (value2 is null ? 0 : value2.GetHashCode());
+                var hash = Initializer;
+                hash = (hash * Multiplier) + (value1 is null ? 0 : value1.GetHashCode());
+                hash = (hash * Multiplier) + (value2 is null ? 0 : value2.GetHashCode());
 
                 return hash;
             }
@@ -69,10 +69,10 @@ namespace Nautilus.Core
         {
             unchecked
             {
-                var hash = INITIALIZER;
-                hash = (hash * MULTIPLIER) + (value1 is null ? 0 : value1.GetHashCode());
-                hash = (hash * MULTIPLIER) + (value2 is null ? 0 : value2.GetHashCode());
-                hash = (hash * MULTIPLIER) + (value3 is null ? 0 : value3.GetHashCode());
+                var hash = Initializer;
+                hash = (hash * Multiplier) + (value1 is null ? 0 : value1.GetHashCode());
+                hash = (hash * Multiplier) + (value2 is null ? 0 : value2.GetHashCode());
+                hash = (hash * Multiplier) + (value3 is null ? 0 : value3.GetHashCode());
 
                 return hash;
             }
@@ -95,11 +95,11 @@ namespace Nautilus.Core
         {
             unchecked
             {
-                var hash = INITIALIZER;
-                hash = (hash * MULTIPLIER) + (value1 is null ? 0 : value1.GetHashCode());
-                hash = (hash * MULTIPLIER) + (value2 is null ? 0 : value2.GetHashCode());
-                hash = (hash * MULTIPLIER) + (value3 is null ? 0 : value3.GetHashCode());
-                hash = (hash * MULTIPLIER) + (value4 is null ? 0 : value4.GetHashCode());
+                var hash = Initializer;
+                hash = (hash * Multiplier) + (value1 is null ? 0 : value1.GetHashCode());
+                hash = (hash * Multiplier) + (value2 is null ? 0 : value2.GetHashCode());
+                hash = (hash * Multiplier) + (value3 is null ? 0 : value3.GetHashCode());
+                hash = (hash * Multiplier) + (value4 is null ? 0 : value4.GetHashCode());
 
                 return hash;
             }
@@ -124,12 +124,12 @@ namespace Nautilus.Core
         {
             unchecked
             {
-                var hash = INITIALIZER;
-                hash = (hash * MULTIPLIER) + (value1 is null ? 0 : value1.GetHashCode());
-                hash = (hash * MULTIPLIER) + (value2 is null ? 0 : value2.GetHashCode());
-                hash = (hash * MULTIPLIER) + (value3 is null ? 0 : value3.GetHashCode());
-                hash = (hash * MULTIPLIER) + (value4 is null ? 0 : value4.GetHashCode());
-                hash = (hash * MULTIPLIER) + (value5 is null ? 0 : value5.GetHashCode());
+                var hash = Initializer;
+                hash = (hash * Multiplier) + (value1 is null ? 0 : value1.GetHashCode());
+                hash = (hash * Multiplier) + (value2 is null ? 0 : value2.GetHashCode());
+                hash = (hash * Multiplier) + (value3 is null ? 0 : value3.GetHashCode());
+                hash = (hash * Multiplier) + (value4 is null ? 0 : value4.GetHashCode());
+                hash = (hash * Multiplier) + (value5 is null ? 0 : value5.GetHashCode());
 
                 return hash;
             }
@@ -156,13 +156,13 @@ namespace Nautilus.Core
         {
             unchecked
             {
-                var hash = INITIALIZER;
-                hash = (hash * MULTIPLIER) + (value1 is null ? 0 : value1.GetHashCode());
-                hash = (hash * MULTIPLIER) + (value2 is null ? 0 : value2.GetHashCode());
-                hash = (hash * MULTIPLIER) + (value3 is null ? 0 : value3.GetHashCode());
-                hash = (hash * MULTIPLIER) + (value4 is null ? 0 : value4.GetHashCode());
-                hash = (hash * MULTIPLIER) + (value5 is null ? 0 : value5.GetHashCode());
-                hash = (hash * MULTIPLIER) + (value6 is null ? 0 : value6.GetHashCode());
+                var hash = Initializer;
+                hash = (hash * Multiplier) + (value1 is null ? 0 : value1.GetHashCode());
+                hash = (hash * Multiplier) + (value2 is null ? 0 : value2.GetHashCode());
+                hash = (hash * Multiplier) + (value3 is null ? 0 : value3.GetHashCode());
+                hash = (hash * Multiplier) + (value4 is null ? 0 : value4.GetHashCode());
+                hash = (hash * Multiplier) + (value5 is null ? 0 : value5.GetHashCode());
+                hash = (hash * Multiplier) + (value6 is null ? 0 : value6.GetHashCode());
 
                 return hash;
             }

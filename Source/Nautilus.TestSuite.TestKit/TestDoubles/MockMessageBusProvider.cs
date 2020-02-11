@@ -15,8 +15,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Message;
 
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class MockMessageBusProvider
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
+    public sealed class MockMessageBusProvider
     {
         public MockMessageBusProvider(IComponentryContainer container)
         {

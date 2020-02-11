@@ -38,7 +38,7 @@ namespace Nautilus.Redis.Data.Base
             ConnectionMultiplexer connection)
             : base(container, dataBusAdapter)
         {
-            this.RedisServer = connection.GetServer(RedisConstants.LocalHost, RedisConstants.DefaultPort);
+            this.RedisServer = connection.GetServer(RedisConstants.Localhost, RedisConstants.DefaultPort);
             this.RedisDatabase = connection.GetDatabase();
         }
 

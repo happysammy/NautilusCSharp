@@ -16,8 +16,8 @@ namespace Nautilus.TestSuite.UnitTests.TestKitTests.TestDoublesTests
     using NodaTime;
     using Xunit;
 
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class StubOrderBuilderTests
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
+    public sealed class StubOrderBuilderTests
     {
         [Fact]
         internal void Build_WithNoParametersModified_ThenReturnsExpectedOrder()
@@ -31,7 +31,7 @@ namespace Nautilus.TestSuite.UnitTests.TestKitTests.TestDoublesTests
             Assert.Equal("O-123456", order.Id.Value);
             Assert.Equal("TEST_ORDER", order.Label.Value);
             Assert.Equal(OrderSide.Buy, order.OrderSide);
-            Assert.Equal(OrderType.StopMarket, order.OrderType);
+            Assert.Equal(OrderType.Stop, order.OrderType);
             Assert.Equal(Quantity.Create(100000), order.Quantity);
             Assert.Equal(Price.Create(1, 1), order.Price);
             Assert.Equal(TimeInForce.DAY, order.TimeInForce);
@@ -61,7 +61,7 @@ namespace Nautilus.TestSuite.UnitTests.TestKitTests.TestDoublesTests
             Assert.Equal("O-678910", order.Id.Value);
             Assert.Equal("TEST_ORDER2", order.Label.Value);
             Assert.Equal(OrderSide.Sell, order.OrderSide);
-            Assert.Equal(OrderType.StopMarket, order.OrderType);
+            Assert.Equal(OrderType.Stop, order.OrderType);
             Assert.Equal(Quantity.Create(100000), order.Quantity);
             Assert.Equal(Price.Create(1.00000m, 5), order.Price);
             Assert.Equal(TimeInForce.GTD, order.TimeInForce);
@@ -88,7 +88,7 @@ namespace Nautilus.TestSuite.UnitTests.TestKitTests.TestDoublesTests
             var order = new StubOrderBuilder().BuildStopMarketOrder();
 
             // Assert
-            Assert.Equal(OrderType.StopMarket, order.OrderType);
+            Assert.Equal(OrderType.Stop, order.OrderType);
         }
 
         [Fact]

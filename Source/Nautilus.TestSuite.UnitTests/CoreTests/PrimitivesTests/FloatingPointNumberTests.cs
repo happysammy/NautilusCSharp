@@ -12,9 +12,9 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.PrimitivesTests
     using Nautilus.Core.Primitives;
     using Xunit;
 
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    [SuppressMessage("ReSharper", "SA1131", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class FloatingPointNumberTests
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
+    [SuppressMessage("ReSharper", "SA1131", Justification = "Test Suite")]
+    public sealed class FloatingPointNumberTests
     {
         [Fact]
         internal void Value_WithValidValueGiven_ReturnsExpectedValue()
@@ -125,7 +125,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.PrimitivesTests
             Assert.Equal(1.0.GetHashCode(), number1.GetHashCode());
         }
 
-        private class TestFloat : FloatingPointNumber
+        private sealed class TestFloat : FloatingPointNumber
         {
             public TestFloat(double value)
                 : base(value)

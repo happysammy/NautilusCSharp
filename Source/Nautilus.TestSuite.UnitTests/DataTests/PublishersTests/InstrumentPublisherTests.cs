@@ -24,11 +24,10 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
     using Xunit;
     using Xunit.Abstractions;
 
-    [SuppressMessage("ReSharper", "SA1310", Justification = "Easier to read.")]
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class InstrumentPublisherTests
     {
-        private const string TEST_ADDRESS = "tcp://localhost:55512";
+        private const string TestAddress = "tcp://localhost:55512";
         private readonly ITestOutputHelper output;
         private readonly MockLoggingAdapter loggingAdapter;
         private readonly IDataSerializer<Instrument> serializer;
@@ -60,8 +59,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
 
             var instrument = StubInstrumentProvider.AUDUSD();
 
-            var subscriber = new SubscriberSocket(TEST_ADDRESS);
-            subscriber.Connect(TEST_ADDRESS);
+            var subscriber = new SubscriberSocket(TestAddress);
+            subscriber.Connect(TestAddress);
             subscriber.Subscribe(instrument.Symbol.Value);
             Task.Delay(100).Wait();
 
@@ -79,7 +78,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
 
             // Tear Down
             subscriber.Unsubscribe(instrument.Symbol.Value);
-            subscriber.Disconnect(TEST_ADDRESS);
+            subscriber.Disconnect(TestAddress);
             this.publisher.Stop();
         }
     }

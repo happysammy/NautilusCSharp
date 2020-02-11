@@ -21,7 +21,7 @@ namespace Nautilus.Serialization.Internal
     /// <summary>
     /// Provides serialization of <see cref="Order"/> objects to MessagePack specification bytes.
     /// </summary>
-    internal class OrderSerializer
+    internal sealed class OrderSerializer
     {
         private static readonly byte[] Empty = MsgPackSerializer.Serialize(new MessagePackObjectDictionary());
 
@@ -147,7 +147,7 @@ namespace Nautilus.Serialization.Internal
                         ObjectExtractor.AsNullableZonedDateTime(unpacked[nameof(Order.ExpireTime)]),
                         timestamp,
                         initialId);
-                case OrderType.StopMarket:
+                case OrderType.Stop:
                     return OrderFactory.StopMarket(
                         id,
                         symbol,

@@ -31,11 +31,10 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
     using Xunit;
     using Xunit.Abstractions;
 
-    [SuppressMessage("ReSharper", "SA1310", Justification = "Easier to read.")]
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class BarProviderTests
     {
-        private const string TEST_ADDRESS = "tcp://localhost:55523";
+        private const string TestAddress = "tcp://localhost:55523";
 
         private readonly ITestOutputHelper output;
         private readonly MockLoggingAdapter loggingAdapter;
@@ -77,7 +76,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             var barType = StubBarType.AUDUSD_OneMinuteAsk();
 
             var requester = new RequestSocket();
-            requester.Connect(TEST_ADDRESS);
+            requester.Connect(TestAddress);
             Task.Delay(100).Wait();  // Allow socket to connect
 
             var query = new Dictionary<string, string>
@@ -105,7 +104,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             Assert.Equal(typeof(QueryFailure), response.Type);
 
             // Tear Down;
-            requester.Disconnect(TEST_ADDRESS);
+            requester.Disconnect(TestAddress);
             this.provider.Stop();
         }
 
@@ -124,7 +123,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             this.repository.Add(barType, bar2);
 
             var requester = new RequestSocket();
-            requester.Connect(TEST_ADDRESS);
+            requester.Connect(TestAddress);
             Task.Delay(100).Wait();  // Allow socket to connect
 
             var query = new Dictionary<string, string>
@@ -156,7 +155,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             Assert.Equal(bar2, bars[1]);
 
             // Tear Down;
-            requester.Disconnect(TEST_ADDRESS);
+            requester.Disconnect(TestAddress);
             this.provider.Stop();
         }
     }

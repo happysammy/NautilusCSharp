@@ -13,7 +13,7 @@ namespace Nautilus.TestSuite.UnitTests.FixTests
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;
 
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class MessageTests
     {
         [Fact]

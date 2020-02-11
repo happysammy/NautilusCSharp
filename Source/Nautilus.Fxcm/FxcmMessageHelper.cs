@@ -9,7 +9,6 @@
 namespace Nautilus.Fxcm
 {
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Enums;
@@ -24,10 +23,18 @@ namespace Nautilus.Fxcm
     /// <summary>
     /// Provides useful methods for assisting with parsing FIX messages.
     /// </summary>
-    [SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1201:ElementsMustAppearInTheCorrectOrder", Justification = "Reviewed. Suppression is OK here.")]
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK here.")]
     public static class FxcmMessageHelper
     {
+        private static readonly ZonedDateTimePattern MarketDataParsePattern =
+            ZonedDateTimePattern.CreateWithInvariantCulture(
+                "yyyyMMddHH:mm:ss.fff",
+                DateTimeZoneProviders.Tzdb);
+
+        private static readonly ZonedDateTimePattern ExecutionReportParsePattern =
+            ZonedDateTimePattern.CreateWithInvariantCulture(
+                "yyyyMMdd-HH:mm:ss.fff",
+                DateTimeZoneProviders.Tzdb);
+
         private static readonly Dictionary<string, string> SecurityRequestResults = new Dictionary<string, string>
         {
             { "0", "Valid request" },
@@ -37,18 +44,6 @@ namespace Nautilus.Fxcm
             { "4", "Instrument data temporarily unavailable" },
             { "5", "Request for instrument data not supported" },
         };
-
-        /// <summary>
-        /// Returns the security request result string.
-        /// </summary>
-        /// <param name="result">The result.</param>
-        /// <returns>A <see cref="string"/>.</returns>
-        public static string GetSecurityRequestResult(SecurityRequestResult result)
-        {
-            return SecurityRequestResults.TryGetValue(result.ToString(), out var value)
-                ? value
-                : "Security request result unknown";
-        }
 
         private static readonly Dictionary<string, string> CxlRejReasonStrings = new Dictionary<string, string>
         {
@@ -62,35 +57,11 @@ namespace Nautilus.Fxcm
             { "99", "Other" },
         };
 
-        /// <summary>
-        /// Returns the cancel reject reason string.
-        /// </summary>
-        /// <param name="rejectCode">The reject code.</param>
-        /// <returns>A <see cref="string"/>.</returns>
-        public static string GetCancelRejectReasonString(string rejectCode)
-        {
-            return CxlRejReasonStrings.TryGetValue(rejectCode, out var value)
-                ? value
-                : "Other";
-        }
-
         private static readonly Dictionary<string, string> CxlRejResponse = new Dictionary<string, string>
         {
             { "1", "OrderCancel" },
             { "2", "OrderCancelRequest" },
         };
-
-        /// <summary>
-        /// Returns the cancel reject response to string.
-        /// </summary>
-        /// <param name="response">The response.</param>
-        /// <returns>A <see cref="string"/>.</returns>
-        public static string GetCxlRejResponseTo(CxlRejResponseTo response)
-        {
-            return CxlRejResponse.TryGetValue(response.ToString(), out var value)
-                ? value
-                : string.Empty;
-        }
 
         private static readonly Dictionary<TimeInForce, QuickFix.Fields.TimeInForce> TimeInForceIndex = new Dictionary<TimeInForce, QuickFix.Fields.TimeInForce>
         {
@@ -114,6 +85,42 @@ namespace Nautilus.Fxcm
             { "4", TimeInForce.FOC },
             { "3", TimeInForce.IOC },
         };
+
+        /// <summary>
+        /// Returns the security request result string.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        /// <returns>A <see cref="string"/>.</returns>
+        public static string GetSecurityRequestResult(SecurityRequestResult result)
+        {
+            return SecurityRequestResults.TryGetValue(result.ToString(), out var value)
+                ? value
+                : "Security request result unknown";
+        }
+
+        /// <summary>
+        /// Returns the cancel reject reason string.
+        /// </summary>
+        /// <param name="rejectCode">The reject code.</param>
+        /// <returns>A <see cref="string"/>.</returns>
+        public static string GetCancelRejectReasonString(string rejectCode)
+        {
+            return CxlRejReasonStrings.TryGetValue(rejectCode, out var value)
+                ? value
+                : "Other";
+        }
+
+        /// <summary>
+        /// Returns the cancel reject response to string.
+        /// </summary>
+        /// <param name="response">The response.</param>
+        /// <returns>A <see cref="string"/>.</returns>
+        public static string GetCxlRejResponseTo(CxlRejResponseTo response)
+        {
+            return CxlRejResponse.TryGetValue(response.ToString(), out var value)
+                ? value
+                : string.Empty;
+        }
 
         /// <summary>
         /// Returns the FIX time in force from the given enum.
@@ -213,7 +220,7 @@ namespace Nautilus.Fxcm
 
             if (fixType == OrdType.STOP.ToString())
             {
-                return OrderType.StopMarket;
+                return OrderType.Stop;
             }
 
             if (fixType == OrdType.STOP_LIMIT.ToString())
@@ -245,7 +252,7 @@ namespace Nautilus.Fxcm
             {
                 case OrderType.Market:
                     return new OrdType(OrdType.MARKET);
-                case OrderType.StopMarket:
+                case OrderType.Stop:
                     return new OrdType(OrdType.STOP);
                 case OrderType.StopLimit:
                     return new OrdType(OrdType.STOP_LIMIT);
@@ -304,7 +311,7 @@ namespace Nautilus.Fxcm
         /// <returns>A <see cref="decimal"/>.</returns>
         public static Price GetOrderPrice(OrderType orderType, ExecutionReport message)
         {
-            if (orderType == OrderType.StopMarket || orderType == OrderType.MIT)
+            if (orderType == OrderType.Stop || orderType == OrderType.MIT)
             {
                 return Price.Create(message.GetDecimal(Tags.StopPx));
             }
@@ -324,11 +331,6 @@ namespace Nautilus.Fxcm
                 : (ZonedDateTime?)null;
         }
 
-        private static readonly ZonedDateTimePattern MarketDataParsePattern =
-            ZonedDateTimePattern.CreateWithInvariantCulture(
-                "yyyyMMddHH:mm:ss.fff",
-                DateTimeZoneProviders.Tzdb);
-
         /// <summary>
         /// Returns the date time parsed from the given string.
         /// </summary>
@@ -336,11 +338,6 @@ namespace Nautilus.Fxcm
         /// <returns>The converted <see cref="ZonedDateTime"/>.</returns>
         public static ZonedDateTime ParseMarketDataTimestamp(string dateTime) =>
             MarketDataParsePattern.Parse(dateTime).Value;
-
-        private static readonly ZonedDateTimePattern ExecutionReportParsePattern =
-            ZonedDateTimePattern.CreateWithInvariantCulture(
-                "yyyyMMdd-HH:mm:ss.fff",
-                DateTimeZoneProviders.Tzdb);
 
         /// <summary>
         /// Returns the date time parsed from the given string.

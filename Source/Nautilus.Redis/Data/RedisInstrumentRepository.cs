@@ -53,7 +53,7 @@ namespace Nautilus.Redis.Data
             : base(container, dataBusAdapter)
         {
             this.serializer = serializer;
-            this.redisServer = connection.GetServer(RedisConstants.LocalHost, RedisConstants.DefaultPort);
+            this.redisServer = connection.GetServer(RedisConstants.Localhost, RedisConstants.DefaultPort);
             this.redisDatabase = connection.GetDatabase();
             this.cache = new Dictionary<Symbol, Instrument>();
 

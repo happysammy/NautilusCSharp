@@ -13,8 +13,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using Nautilus.Core.Types;
     using NodaTime;
 
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class MockMessage : Message
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
+    public sealed class MockMessage : Message
     {
         public MockMessage(
             string payload,

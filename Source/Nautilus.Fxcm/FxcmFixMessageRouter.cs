@@ -24,8 +24,8 @@ namespace Nautilus.Fxcm
     /// </summary>
     public sealed class FxcmFixMessageRouter : Component, IFixMessageRouter
     {
-        private const string SENT = "-->";
-        private const string FIX = "[FIX]";
+        private const string Sent = "-->";
+        private const string Protocol = "[FIX]";
 
         private readonly SymbolConverter symbolConverter;
         private readonly AccountId accountId;
@@ -69,13 +69,13 @@ namespace Nautilus.Fxcm
         /// <inheritdoc />
         public void RequestForOpenPositionsSubscribe()
         {
-            this.SendFixMessage(RequestForPositionsFactory.OpenAll(this.TimeNow()));
+            this.SendFixMessage(RequestForPositionsFactory.OpenAll(this.TimeNow(), this.accountId.AccountNumber));
         }
 
         /// <inheritdoc />
         public void RequestForClosedPositionsSubscribe()
         {
-            this.SendFixMessage(RequestForPositionsFactory.ClosedAll(this.TimeNow()));
+            this.SendFixMessage(RequestForPositionsFactory.ClosedAll(this.TimeNow(), this.accountId.AccountNumber));
         }
 
         /// <inheritdoc />
@@ -239,7 +239,7 @@ namespace Nautilus.Fxcm
         [System.Diagnostics.Conditional("DEBUG")]
         private void LogMessageSent(Message message)
         {
-            this.Log.Debug($"{FIX}{SENT} {message.GetType().Name}");
+            this.Log.Debug($"{Protocol}{Sent} {message.GetType().Name}");
         }
     }
 }

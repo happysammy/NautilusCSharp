@@ -22,11 +22,10 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
     using Xunit.Abstractions;
     using Encoding = System.Text.Encoding;
 
-    [SuppressMessage("ReSharper", "SA1310", Justification = "Easier to read.")]
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class MessagePublisherTests
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
+    public sealed class MessagePublisherTests
     {
-        private const string TEST_TOPIC = "TEST";
+        private const string TestTopic = "TEST";
 
         private readonly ITestOutputHelper output;
         private readonly IComponentryContainer container;
@@ -75,13 +74,13 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             const string testAddress = "tcp://localhost:55555";
             var subscriber = new SubscriberSocket(testAddress);
             subscriber.Connect(testAddress);
-            subscriber.Subscribe(TEST_TOPIC);
+            subscriber.Subscribe(TestTopic);
 
             Task.Delay(300).Wait(); // Allow sockets to initiate
 
             // Act
             const string message = "1234,1234";
-            publisher.Endpoint.Send((TEST_TOPIC, message));
+            publisher.Endpoint.Send((TestTopic, message));
 
             var receivedTopic = subscriber.ReceiveFrameBytes();
             var receivedMessage = subscriber.ReceiveFrameBytes();
@@ -89,13 +88,13 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
-            Assert.Equal(TEST_TOPIC, Encoding.UTF8.GetString(receivedTopic));
+            Assert.Equal(TestTopic, Encoding.UTF8.GetString(receivedTopic));
             Assert.Equal(message, Encoding.UTF8.GetString(receivedMessage));
             Assert.Equal(ComponentState.Running, publisher.ComponentState);
             Assert.Equal(1, publisher.PublishedCount);
 
             // Tear Down
-            subscriber.Unsubscribe(TEST_TOPIC);
+            subscriber.Unsubscribe(TestTopic);
             subscriber.Disconnect(testAddress);
             publisher.Stop();
         }

@@ -13,11 +13,10 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
     using Nautilus.Core.Extensions;
     using Xunit;
 
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    [SuppressMessage("ReSharper", "SA1310", Justification = "Easier to read.")]
-    public class QueryExtensionsTests
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
+    public sealed class QueryExtensionsTests
     {
-        private const string ERROR_MESSAGE = "this failed";
+        private const string ErrorMessage = "this failed";
 
         [Fact]
         public void OnFailure_WithQueryFailed_ExecutesChangeValueAction()
@@ -26,7 +25,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
             var testBool = false;
 
             // Act
-            var result = QueryResult<TestClass>.Fail(ERROR_MESSAGE);
+            var result = QueryResult<TestClass>.Fail(ErrorMessage);
             result.OnFailure(() => testBool = true);
 
             // Assert
@@ -40,11 +39,11 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
             var testError = string.Empty;
 
             // Act
-            var result = QueryResult<TestClass>.Fail(ERROR_MESSAGE);
+            var result = QueryResult<TestClass>.Fail(ErrorMessage);
             result.OnFailure(error => testError = error);
 
             // Assert
-            Assert.Equal(ERROR_MESSAGE, testError);
+            Assert.Equal(ErrorMessage, testError);
         }
 
         // Only instantiated within this class for testing purposes.

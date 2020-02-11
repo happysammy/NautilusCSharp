@@ -34,11 +34,10 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
     using Xunit;
     using Xunit.Abstractions;
 
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    [SuppressMessage("ReSharper", "SA1310", Justification = "Easier to read.")]
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class TickProviderTests
     {
-        private const string TEST_ADDRESS = "tcp://localhost:55522";
+        private const string TestAddress = "tcp://localhost:55522";
 
         private readonly ITestOutputHelper output;
         private readonly MockLoggingAdapter loggingAdapter;
@@ -79,7 +78,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
 
             var symbol = new Symbol("AUDUSD", new Venue("FXCM"));
             var requester = new RequestSocket();
-            requester.Connect(TEST_ADDRESS);
+            requester.Connect(TestAddress);
             Task.Delay(100).Wait();  // Allow socket to connect
 
             var query = new Dictionary<string, string>
@@ -106,7 +105,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             Assert.Equal(typeof(QueryFailure), response.Type);
 
             // Tear Down;
-            requester.Disconnect(TEST_ADDRESS);
+            requester.Disconnect(TestAddress);
             this.provider.Stop();
         }
 
@@ -128,7 +127,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             this.repository.Add(tick2);
 
             var requester = new RequestSocket();
-            requester.Connect(TEST_ADDRESS);
+            requester.Connect(TestAddress);
             Task.Delay(100).Wait();  // Allow socket to connect
 
             var query = new Dictionary<string, string>
@@ -159,7 +158,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             Assert.Equal(tick2, ticks[1]);
 
             // Tear Down;
-            requester.Disconnect(TEST_ADDRESS);
+            requester.Disconnect(TestAddress);
         }
     }
 }

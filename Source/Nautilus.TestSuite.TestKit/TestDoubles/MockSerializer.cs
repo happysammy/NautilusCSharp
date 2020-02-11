@@ -14,8 +14,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using Nautilus.Core.Extensions;
     using Nautilus.Serialization.Internal;
 
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class MockSerializer : IMessageSerializer<MockMessage>
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
+    public sealed class MockSerializer : IMessageSerializer<MockMessage>
     {
         public byte[] Serialize(MockMessage message)
         {

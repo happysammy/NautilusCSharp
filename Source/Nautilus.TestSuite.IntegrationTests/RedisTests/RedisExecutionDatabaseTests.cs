@@ -25,8 +25,8 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     using Xunit;
     using Xunit.Abstractions;
 
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class RedisExecutionDatabaseTests : IDisposable
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
+    public sealed class RedisExecutionDatabaseTests : IDisposable
     {
         private readonly ITestOutputHelper output;
         private readonly MockLoggingAdapter logger;
@@ -53,7 +53,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         public void Dispose()
         {
             // Tear Down
-            this.redisConnection.GetServer(RedisConstants.LocalHost, RedisConstants.DefaultPort).FlushAllDatabases();
+            this.redisConnection.GetServer(RedisConstants.Localhost, RedisConstants.DefaultPort).FlushAllDatabases();
         }
 
         [Fact]

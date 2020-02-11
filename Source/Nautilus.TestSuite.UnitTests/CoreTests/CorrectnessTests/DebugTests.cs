@@ -14,8 +14,8 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
     using Nautilus.Core.Correctness;
     using Xunit;
 
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class DebugTests
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
+    public sealed class DebugTests
     {
         [Fact]
         internal void True_WhenFalse_Throws()

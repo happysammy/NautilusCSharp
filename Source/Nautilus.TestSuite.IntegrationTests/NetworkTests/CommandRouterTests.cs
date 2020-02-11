@@ -20,8 +20,8 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
     using Xunit;
     using Xunit.Abstractions;
 
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class CommandRouterTests
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
+    public sealed class CommandRouterTests
     {
         private readonly NetworkHost localHost = new NetworkHost("127.0.0.1");
         private readonly ITestOutputHelper output;

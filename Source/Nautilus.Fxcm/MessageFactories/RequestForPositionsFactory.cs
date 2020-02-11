@@ -9,6 +9,7 @@
 namespace Nautilus.Fxcm.MessageFactories
 {
     using Nautilus.Core.Correctness;
+    using Nautilus.DomainModel.Identifiers;
     using NodaTime;
     using QuickFix.Fields;
     using QuickFix.FIX44;
@@ -18,44 +19,46 @@ namespace Nautilus.Fxcm.MessageFactories
     /// </summary>
     public static class RequestForPositionsFactory
     {
-        private const string FXCM = "FXCM";
+        private const string Broker = "FXCM";
 
         /// <summary>
         /// Creates and returns a new <see cref="RequestForPositions"/> FIX message.
         /// </summary>
         /// <param name="timeNow">The time now.</param>
+        /// <param name="account">The account for the request.</param>
         /// <param name="subscribe">The flag indicating whether updates should be subscribed to.</param>
         /// <returns>The FIX message.</returns>
-        public static RequestForPositions OpenAll(ZonedDateTime timeNow, bool subscribe = true)
+        public static RequestForPositions OpenAll(ZonedDateTime timeNow, AccountNumber account, bool subscribe = true)
         {
             Debug.NotDefault(timeNow, nameof(timeNow));
 
-            return Create(timeNow, 0, subscribe); // 0 = Open positions
+            return Create(timeNow, 0, account, subscribe); // 0 = Open positions
         }
 
         /// <summary>
         /// Creates and returns a new <see cref="RequestForPositions"/> FIX message.
         /// </summary>
         /// <param name="timeNow">The time now.</param>
+        /// <param name="account">The account for the request.</param>
         /// <param name="subscribe">The flag indicating whether updates should be subscribed to.</param>
         /// <returns>The FIX message.</returns>
-        public static RequestForPositions ClosedAll(ZonedDateTime timeNow, bool subscribe = true)
+        public static RequestForPositions ClosedAll(ZonedDateTime timeNow, AccountNumber account, bool subscribe = true)
         {
             Debug.NotDefault(timeNow, nameof(timeNow));
 
-            return Create(timeNow, 1, subscribe); // 1 = Closed positions
+            return Create(timeNow, 1, account, subscribe); // 1 = Closed positions
         }
 
-        private static RequestForPositions Create(ZonedDateTime timeNow, int reqType, bool subscribe)
+        private static RequestForPositions Create(ZonedDateTime timeNow, int reqType, AccountNumber account,  bool subscribe)
         {
             Debug.NotDefault(timeNow, nameof(timeNow));
 
             var message = new RequestForPositions();
             message.SetField(new PosReqID($"RP_{timeNow.TickOfDay}"));
             message.SetField(new PosReqType(reqType));
-            message.SetField(new Account("02851908"));
+            message.SetField(new Account(account.Value));
             message.SetField(new AccountType(AccountType.ACCOUNT_IS_CARRIED_ON_NON_CUSTOMER_SIDE_OF_BOOKS_AND_IS_CROSS_MARGINED));
-            message.SetField(new TradingSessionID(FXCM));
+            message.SetField(new TradingSessionID(Broker));
             message.SetField(new TransactTime(timeNow.ToDateTimeUtc()));
             message.SetField(subscribe is true
                 ? new SubscriptionRequestType(SubscriptionRequestType.SNAPSHOT_PLUS_UPDATES)

@@ -84,7 +84,7 @@ namespace Nautilus.Fxcm.MessageFactories
                     }
 
                     break;
-                case OrderType.StopMarket:
+                case OrderType.Stop:
                 case OrderType.MIT:
                     if (order.Price?.Value != null)
                     {

@@ -15,6 +15,8 @@ namespace Nautilus.Common.Data
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
     using Nautilus.Messaging;
 
     /// <summary>
@@ -22,7 +24,6 @@ namespace Nautilus.Common.Data
     /// </summary>
     /// <typeparam name="T">The bus data type.</typeparam>
     public sealed class DataBus<T> : Component
-        where T : ICloneable
     {
         // The BroadcastBlock<T> ensures that the current element is broadcast to any linked targets
         // before allowing the element to be overwritten.
@@ -36,6 +37,12 @@ namespace Nautilus.Common.Data
         public DataBus(IComponentryContainer container)
         : base(container)
         {
+            Condition.NotNull(typeof(T), nameof(T));
+
+            // TODO: Add Condition method for the below
+            var attributes = typeof(T).GetCustomAttributes(typeof(ImmutableAttribute), true);
+            Condition.True(attributes.Length > 0, "The data type <T> is not defined as immutable.");
+
             this.pipeline = new BroadcastBlock<object>(
                 CloneData,
                 new ExecutionDataflowBlockOptions
@@ -65,7 +72,7 @@ namespace Nautilus.Common.Data
         /// <param name="data">The data to post.</param>
         public void PostData(T data)
         {
-            this.pipeline.Post(data);
+            this.pipeline.Post(data!); // data cannot be null (checked in constructor)
         }
 
         /// <inheritdoc />

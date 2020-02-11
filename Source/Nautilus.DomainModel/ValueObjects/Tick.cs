@@ -20,7 +20,7 @@ namespace Nautilus.DomainModel.ValueObjects
     /// Represents a financial market tick.
     /// </summary>
     [Immutable]
-    public struct Tick : IEquatable<object>, IEquatable<Tick>, IComparable<Tick>, ICloneable
+    public struct Tick : IEquatable<object>, IEquatable<Tick>, IComparable<Tick>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Tick"/> structure.
@@ -97,27 +97,11 @@ namespace Nautilus.DomainModel.ValueObjects
         public static bool operator !=(Tick left,  Tick right) => !(left == right);
 
         /// <summary>
-        /// Returns a clone of this tick.
-        /// </summary>
-        /// <param name="tick">The tick to clone.</param>
-        /// <returns>The cloned tick.</returns>
-        public static Tick Clone(Tick tick)
-        {
-            return new Tick(
-                tick.Symbol,
-                tick.Bid,
-                tick.Ask,
-                tick.BidSize,
-                tick.AskSize,
-                tick.Timestamp);
-        }
-
-        /// <summary>
         /// Returns a new <see cref="Tick"/> from the given <see cref="string"/>.
         /// </summary>
         /// <param name="tickString">The tick string which includes the symbol.</param>
         /// <returns>The created <see cref="Tick"/>.</returns>
-        public static Tick FromStringWithSymbol(string tickString)
+        public static Tick FromStringWhichIncludesSymbol(string tickString)
         {
             Debug.NotEmptyOrWhiteSpace(tickString, nameof(tickString));
 
@@ -183,11 +167,5 @@ namespace Nautilus.DomainModel.ValueObjects
                                              $"{this.BidSize}," +
                                              $"{this.AskSize}," +
                                              $"{this.Timestamp.ToIsoString()}";
-
-        /// <inheritdoc />
-        public object Clone()
-        {
-            return this;  // Immutable type
-        }
     }
 }

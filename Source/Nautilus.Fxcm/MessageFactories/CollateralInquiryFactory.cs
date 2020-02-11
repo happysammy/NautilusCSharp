@@ -18,7 +18,7 @@ namespace Nautilus.Fxcm.MessageFactories
     /// </summary>
     public static class CollateralInquiryFactory
     {
-        private const string FXCM = "FXCM";
+        private const string Broker = "FXCM";
 
         /// <summary>
         /// Creates and returns a new <see cref="CollateralInquiry"/> FIX message.
@@ -32,7 +32,7 @@ namespace Nautilus.Fxcm.MessageFactories
             var message = new CollateralInquiry();
 
             message.SetField(new CollInquiryID($"CI_{timeNow.TickOfDay}"));
-            message.SetField(new TradingSessionID(FXCM));
+            message.SetField(new TradingSessionID(Broker));
             message.SetField(new SubscriptionRequestType(SubscriptionRequestType.SNAPSHOT_PLUS_UPDATES));
 
             return message;

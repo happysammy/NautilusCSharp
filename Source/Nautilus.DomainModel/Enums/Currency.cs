@@ -14,7 +14,7 @@ namespace Nautilus.DomainModel.Enums
     /// <summary>
     /// Represents an ISO 4217 currency code.
     /// </summary>
-    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed")]
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Correct names")]
     public enum Currency
     {
         /// <summary>
