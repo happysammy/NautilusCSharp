@@ -22,7 +22,7 @@ namespace Nautilus.Serialization.Bson
     {
         private const string Data = nameof(Data);
         private const string DataType = nameof(DataType);
-        private const string MetaData = nameof(MetaData);
+        private const string Metadata = nameof(Metadata);
 
         /// <inheritdoc />
         public DataEncoding BlobEncoding => DataEncoding.Bson;
@@ -57,7 +57,7 @@ namespace Nautilus.Serialization.Bson
             {
                 { DataType, typeof(Bar[]).Name },
                 { Data, new BsonArray(dataObjectsArray) },
-                { MetaData, metadata.ToBsonDocument() },
+                { Metadata, metadata.ToBsonDocument() },
             }.ToBson();
         }
 

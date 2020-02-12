@@ -24,7 +24,7 @@ namespace Nautilus.Serialization.Bson
     {
         private const string Data = nameof(Data);
         private const string DataType = nameof(DataType);
-        private const string MetaData = nameof(MetaData);
+        private const string Metadata = nameof(Metadata);
 
         private readonly ObjectCache<string, Symbol> cachedSymbols;
 
@@ -71,7 +71,7 @@ namespace Nautilus.Serialization.Bson
             {
                 { DataType, typeof(Tick[]).Name },
                 { Data, new BsonArray(dataObjectsArray) },
-                { MetaData, metadata.ToBsonDocument() },
+                { Metadata, metadata.ToBsonDocument() },
             }.ToBson();
         }
 
@@ -104,7 +104,7 @@ namespace Nautilus.Serialization.Bson
 
             var data = BsonSerializer.Deserialize<BsonDocument>(dataBytes);
 
-            var symbol = this.cachedSymbols.Get(data[MetaData][nameof(Tick.Symbol)].AsString);
+            var symbol = this.cachedSymbols.Get(data[Metadata][nameof(Tick.Symbol)].AsString);
             var valueArray = data[Data].AsBsonArray;
 
             var ticks = new Tick[valueArray.Count];
