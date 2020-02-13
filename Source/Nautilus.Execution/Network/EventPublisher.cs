@@ -36,7 +36,7 @@ namespace Nautilus.Execution.Network
             : base(
                 container,
                 serializer,
-                NetworkHost.LocalHost,
+                Nautilus.Network.NetworkAddress.LocalHost,
                 port,
                 Guid.NewGuid())
         {

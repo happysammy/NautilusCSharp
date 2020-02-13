@@ -40,7 +40,7 @@ namespace Nautilus.Network
         protected MessagePublisher(
             IComponentryContainer container,
             ISerializer<T> serializer,
-            NetworkHost host,
+            NetworkAddress host,
             NetworkPort port,
             Guid id)
             : base(container)

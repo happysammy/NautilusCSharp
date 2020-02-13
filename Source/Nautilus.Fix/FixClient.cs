@@ -59,7 +59,7 @@ namespace Nautilus.Fix
         /// <inheritdoc />
         public void Disconnect()
         {
-            if (!this.IsConnected)
+            if (this.IsDisconnected && this.SocketStopped)
             {
                 this.Log.Warning($"Already disconnected from session {this.SessionId}.");
                 return;

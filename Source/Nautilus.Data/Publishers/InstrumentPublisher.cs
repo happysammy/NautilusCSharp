@@ -34,7 +34,7 @@ namespace Nautilus.Data.Publishers
                 container,
                 dataBusAdapter,
                 serializer,
-                NetworkHost.LocalHost,
+                Network.NetworkAddress.LocalHost,
                 port,
                 Guid.NewGuid())
         {

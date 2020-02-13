@@ -41,7 +41,7 @@ namespace Nautilus.Execution.Network
                 container,
                 inboundSerializer,
                 outboundSerializer,
-                NetworkHost.LocalHost,
+                Nautilus.Network.NetworkAddress.LocalHost,
                 port,
                 Guid.NewGuid())
         {

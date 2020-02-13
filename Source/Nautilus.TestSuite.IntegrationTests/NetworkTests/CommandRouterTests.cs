@@ -23,7 +23,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class CommandRouterTests
     {
-        private readonly NetworkHost localHost = new NetworkHost("127.0.0.1");
+        private readonly NetworkAddress localHost = new NetworkAddress("127.0.0.1");
         private readonly ITestOutputHelper output;
         private readonly IComponentryContainer container;
         private readonly MockLoggingAdapter loggingAdapter;

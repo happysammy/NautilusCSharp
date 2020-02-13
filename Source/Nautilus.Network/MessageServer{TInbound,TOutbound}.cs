@@ -57,7 +57,7 @@ namespace Nautilus.Network
             IComponentryContainer container,
             IMessageSerializer<TInbound> inboundSerializer,
             IMessageSerializer<TOutbound> outboundSerializer,
-            NetworkHost host,
+            NetworkAddress host,
             NetworkPort port,
             Guid id)
             : base(container)

@@ -22,7 +22,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public MockDataPublisher(
             IComponentryContainer container,
             IDataBusAdapter dataBusAdapter,
-            NetworkHost host,
+            NetworkAddress host,
             NetworkPort port)
             : base(
                 container,

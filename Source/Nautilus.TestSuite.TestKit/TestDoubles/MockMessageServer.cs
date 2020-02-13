@@ -21,7 +21,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     {
         public MockMessageServer(
             IComponentryContainer container,
-            NetworkHost host,
+            NetworkAddress host,
             NetworkPort port,
             Guid id)
             : base(

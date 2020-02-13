@@ -52,7 +52,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             // Act
             var server = new MockMessageServer(
                 this.container,
-                NetworkHost.LocalHost,
+                NetworkAddress.LocalHost,
                 new NetworkPort(55555),
                 Guid.NewGuid());
 
@@ -75,7 +75,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             // Act
             var server = new MockMessageServer(
                 this.container,
-                NetworkHost.LocalHost,
+                NetworkAddress.LocalHost,
                 new NetworkPort(55556),
                 Guid.NewGuid());
             server.Start();
@@ -98,7 +98,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             var server = new MockMessageServer(
                 this.container,
-                NetworkHost.LocalHost,
+                NetworkAddress.LocalHost,
                 new NetworkPort(testPort),
                 Guid.NewGuid());
             server.Start();
@@ -144,7 +144,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             var server = new MockMessageServer(
                 this.container,
-                NetworkHost.LocalHost,
+                NetworkAddress.LocalHost,
                 new NetworkPort(testPort),
                 Guid.NewGuid());
             server.Start();
@@ -190,7 +190,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             var server = new MockMessageServer(
                 this.container,
-                NetworkHost.LocalHost,
+                NetworkAddress.LocalHost,
                 new NetworkPort(testPort),
                 Guid.NewGuid());
             server.Start();
@@ -231,7 +231,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             var server = new MockMessageServer(
                 this.container,
-                NetworkHost.LocalHost,
+                NetworkAddress.LocalHost,
                 new NetworkPort(testPort),
                 Guid.NewGuid());
             server.Start();
@@ -282,7 +282,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             var server = new MockMessageServer(
                 this.container,
-                NetworkHost.LocalHost,
+                NetworkAddress.LocalHost,
                 new NetworkPort(testPort),
                 Guid.NewGuid());
             server.Start();
@@ -331,7 +331,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             var server = new MockMessageServer(
                 this.container,
-                NetworkHost.LocalHost,
+                NetworkAddress.LocalHost,
                 new NetworkPort(testPort),
                 Guid.NewGuid());
             server.Start();
@@ -376,7 +376,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             var server = new MockMessageServer(
                 this.container,
-                NetworkHost.LocalHost,
+                NetworkAddress.LocalHost,
                 new NetworkPort(testPort),
                 Guid.NewGuid());
             server.Start();

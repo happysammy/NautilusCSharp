@@ -39,7 +39,7 @@ namespace Nautilus.Network
             IComponentryContainer container,
             IDataBusAdapter dataBusAdapter,
             IDataSerializer<T> dataSerializer,
-            NetworkHost host,
+            NetworkAddress host,
             NetworkPort port,
             Guid id)
             : base(container, dataBusAdapter)
@@ -50,7 +50,7 @@ namespace Nautilus.Network
             {
                 Options =
                 {
-                    Linger = TimeSpan.Zero,
+                    Linger = TimeSpan.FromSeconds(1),
                     Identity = Encoding.Unicode.GetBytes(id.ToString()),
                 },
             };

@@ -40,6 +40,12 @@ namespace Nautilus.Common.Interfaces
         bool IsConnected { get; }
 
         /// <summary>
+        /// Gets a value indicating whether the FIX client is disconnected.
+        /// </summary>
+        /// <returns>A <see cref="bool"/>.</returns>
+        bool IsDisconnected { get; }
+
+        /// <summary>
         /// Connects to a FIX session.
         /// </summary>
         void Connect();

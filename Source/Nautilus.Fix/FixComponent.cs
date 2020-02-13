@@ -17,8 +17,6 @@ namespace Nautilus.Fix
     using QuickFix.Fields;
     using QuickFix.FIX44;
     using QuickFix.Transport;
-
-    using AccountType = Nautilus.DomainModel.Enums.AccountType;
     using Message = QuickFix.Message;
 
     /// <summary>
@@ -58,18 +56,17 @@ namespace Nautilus.Fix
             this.logger = container.LoggerFactory.Create(new Label(this.GetType().Name));
             this.messageBusAdapter = messageBusAdapter;
 
+            this.FixMessageHandler = messageHandler;
+            this.FixMessageRouter = messageRouter;
+
             this.AccountId = new AccountId(config.Broker, config.Credentials.AccountNumber, config.AccountType);
             this.Brokerage = this.AccountId.Broker;
             this.AccountNumber = this.AccountId.AccountNumber;
-            this.AccountType = this.AccountId.AccountType;
 
             this.credentials = config.Credentials;
             this.configPath = config.ConfigPath;
             this.sendAccountTag = config.SendAccountTag;
             this.accountField = new Account(this.AccountNumber.Value);
-
-            this.FixMessageHandler = messageHandler;
-            this.FixMessageRouter = messageRouter;
         }
 
         /// <summary>
@@ -93,11 +90,6 @@ namespace Nautilus.Fix
         public AccountNumber AccountNumber { get; }
 
         /// <summary>
-        /// Gets the account type.
-        /// </summary>
-        public AccountType AccountType { get; }
-
-        /// <summary>
         /// Gets the components FIX message handler.
         /// </summary>
         public IFixMessageHandler FixMessageHandler { get; }
@@ -114,9 +106,25 @@ namespace Nautilus.Fix
         public bool IsConnected => this.session != null && this.session.IsLoggedOn;
 
         /// <summary>
+        /// Gets a value indicating whether the FIX session is disconnected.
+        /// </summary>
+        /// <returns>A <see cref="bool"/>.</returns>
+        public bool IsDisconnected => !this.IsConnected;
+
+        /// <summary>
         /// Gets the components FIX session identifier.
         /// </summary>
         protected SessionID? SessionId { get; private set; }
+
+        /// <summary>
+        /// Gets a value indicating whether a connection should be maintained.
+        /// </summary>
+        protected bool MaintainConnection { get; private set; } = false;
+
+        /// <summary>
+        /// Gets a value indicating whether the socket is stopped.
+        /// </summary>
+        protected bool SocketStopped { get; private set; } = false;
 
         /// <summary>
         /// The initializes the FIX data gateway.
@@ -142,6 +150,12 @@ namespace Nautilus.Fix
         /// <param name="sessionId">The session identifier.</param>
         public void OnCreate(SessionID sessionId)
         {
+            if (!this.MaintainConnection)
+            {
+                this.Log.Error("QuickFix attempted to create a session with maintainConnection=false.");
+                return;
+            }
+
             this.Log.Debug($"Creating session {sessionId}...");
             this.SessionId = sessionId;
             this.session = Session.LookupSession(sessionId);
@@ -234,16 +248,15 @@ namespace Nautilus.Fix
                 message.SetField(this.accountField);
             }
 
-            var possDupFlag = false;
-
+            var possibleDuplication = false;
             if (message.Header.IsSetField(Tags.PossDupFlag))
             {
-                possDupFlag =
+                possibleDuplication =
                     QuickFix.Fields.Converters.BoolConverter.Convert(
                         message.Header.GetField(Tags.PossDupFlag));
             }
 
-            if (possDupFlag)
+            if (possibleDuplication)
             {
                 throw new DoNotSend();
             }
@@ -384,6 +397,7 @@ namespace Nautilus.Fix
         /// </summary>
         protected void ConnectFix()
         {
+            this.MaintainConnection = true;
             var settings = new SessionSettings(this.configPath);
             var storeFactory = new FileStoreFactory(settings);
 
@@ -392,6 +406,7 @@ namespace Nautilus.Fix
 
             this.Log.Debug("Starting initiator...");
             this.initiator.Start();
+            this.SocketStopped = false;
         }
 
         /// <summary>
@@ -399,8 +414,10 @@ namespace Nautilus.Fix
         /// </summary>
         protected void DisconnectFix()
         {
+            this.MaintainConnection = false;
             this.Log.Debug("Stopping initiator... ");
             this.initiator?.Stop();
+            this.SocketStopped = true;
         }
     }
 }

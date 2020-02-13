@@ -46,7 +46,7 @@ namespace Nautilus.Data.Providers
                 container,
                 inboundSerializer,
                 outboundSerializer,
-                NetworkHost.LocalHost,
+                Network.NetworkAddress.LocalHost,
                 port,
                 Guid.NewGuid())
         {

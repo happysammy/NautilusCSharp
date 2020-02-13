@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="NetworkHost.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="NetworkAddress.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2020 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   https://nautechsystems.io
@@ -13,19 +13,19 @@ namespace Nautilus.Network
     using Nautilus.Core.Correctness;
 
     /// <summary>
-    /// Represents a valid network host address.
+    /// Represents a valid network address.
     /// </summary>
     [Immutable]
-    public sealed class NetworkHost
+    public sealed class NetworkAddress
     {
         private readonly string value;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NetworkHost"/> class.
+        /// Initializes a new instance of the <see cref="NetworkAddress"/> class.
         /// </summary>
         /// <param name="address">The network address.</param>
         /// <exception cref="ArgumentException">If the address is empty or white space.</exception>
-        public NetworkHost(string address)
+        public NetworkAddress(string address)
         {
             Condition.NotEmptyOrWhiteSpace(address, nameof(address));
 
@@ -36,10 +36,10 @@ namespace Nautilus.Network
         /// Gets the local host 127.0.0.1 network address.
         /// </summary>
         /// <returns>The local host network address.</returns>
-        public static NetworkHost LocalHost { get; } = new NetworkHost("127.0.0.1");
+        public static NetworkAddress LocalHost { get; } = new NetworkAddress("127.0.0.1");
 
         /// <summary>
-        /// Returns a string representation of this <see cref="NetworkHost"/>.
+        /// Returns a string representation of this <see cref="NetworkAddress"/>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
         public override string ToString() => this.value;
