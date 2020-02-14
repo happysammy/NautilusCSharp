@@ -119,12 +119,12 @@ namespace Nautilus.Fix
         /// <summary>
         /// Gets a value indicating whether a connection should be maintained.
         /// </summary>
-        protected bool MaintainConnection { get; private set; } = false;
+        protected bool MaintainConnection { get; private set; }
 
         /// <summary>
         /// Gets a value indicating whether the socket is stopped.
         /// </summary>
-        protected bool SocketStopped { get; private set; } = false;
+        protected bool SocketStopped { get; private set; }
 
         /// <summary>
         /// The initializes the FIX data gateway.
