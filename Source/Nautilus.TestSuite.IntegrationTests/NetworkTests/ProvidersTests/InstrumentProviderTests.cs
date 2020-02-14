@@ -33,15 +33,13 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class InstrumentProviderTests : IDisposable
     {
-        private const string TestAddress = "tcp://localhost:55524";
-
         private readonly ITestOutputHelper output;
         private readonly MockLoggingAdapter loggingAdapter;
+        private readonly IComponentryContainer container;
         private readonly IInstrumentRepository repository;
         private readonly IDataSerializer<Instrument> dataSerializer;
         private readonly IMessageSerializer<Request> requestSerializer;
         private readonly IMessageSerializer<Response> responseSerializer;
-        private readonly InstrumentProvider provider;
 
         public InstrumentProviderTests(ITestOutputHelper output)
         {
@@ -49,36 +47,40 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
             this.output = output;
 
             var containerFactory = new StubComponentryContainerProvider();
-            var container = containerFactory.Create();
+            this.container = containerFactory.Create();
             this.loggingAdapter = containerFactory.LoggingAdapter;
             this.dataSerializer = new InstrumentDataSerializer();
             this.repository = new MockInstrumentRepository(this.dataSerializer);
             this.requestSerializer = new MsgPackRequestSerializer(new MsgPackQuerySerializer());
             this.responseSerializer = new MsgPackResponseSerializer();
-
-            this.provider = new InstrumentProvider(
-                container,
-                this.repository,
-                this.dataSerializer,
-                this.requestSerializer,
-                this.responseSerializer,
-                new NetworkPort(55524));
         }
 
         public void Dispose()
         {
             NetMQConfig.Cleanup(false);
+            Task.Delay(100); // Allow cleanup
         }
 
         [Fact]
         internal void GivenInstrumentRequest_WithNoInstruments_ReturnsQueryFailedMessage()
         {
             // Arrange
-            this.provider.Start();
+            ushort testPort = 55620;
+            var testAddress = $"tcp://localhost:{testPort}";
+
+            var provider = new InstrumentProvider(
+                this.container,
+                this.repository,
+                this.dataSerializer,
+                this.requestSerializer,
+                this.responseSerializer,
+                EncryptionConfig.None(),
+                new NetworkPort(testPort));
+            provider.Start();
             Task.Delay(100).Wait();  // Allow provider to start
 
             var requester = new RequestSocket();
-            requester.Connect(TestAddress);
+            requester.Connect(testAddress);
             Task.Delay(100).Wait();  // Allow socket to connect
 
             var instrument = StubInstrumentProvider.AUDUSD();
@@ -108,11 +110,22 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
         internal void GivenInstrumentsRequest_WithNoInstruments_ReturnsQueryFailedMessage()
         {
             // Arrange
-            this.provider.Start();
+            ushort testPort = 55621;
+            var testAddress = $"tcp://localhost:{testPort}";
+
+            var provider = new InstrumentProvider(
+                this.container,
+                this.repository,
+                this.dataSerializer,
+                this.requestSerializer,
+                this.responseSerializer,
+                EncryptionConfig.None(),
+                new NetworkPort(testPort));
+            provider.Start();
             Task.Delay(500).Wait();  // Allow provider to start
 
             var requester = new RequestSocket();
-            requester.Connect(TestAddress);
+            requester.Connect(testAddress);
             Task.Delay(100).Wait();  // Allow socket to connect
 
             var query = new Dictionary<string, string>
@@ -140,11 +153,22 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
         internal void GivenInstrumentRequest_WithInstrument_ReturnsValidInstrumentResponse()
         {
             // Arrange
-            this.provider.Start();  // Allow provider to start
+            ushort testPort = 55622;
+            var testAddress = $"tcp://localhost:{testPort}";
+
+            var provider = new InstrumentProvider(
+                this.container,
+                this.repository,
+                this.dataSerializer,
+                this.requestSerializer,
+                this.responseSerializer,
+                EncryptionConfig.None(),
+                new NetworkPort(testPort));
+            provider.Start();
             Task.Delay(100).Wait();
 
             var requester = new RequestSocket();
-            requester.Connect(TestAddress);
+            requester.Connect(testAddress);
             Task.Delay(100).Wait();  // Allow socket to connect
 
             var instrument = StubInstrumentProvider.AUDUSD();
@@ -175,11 +199,22 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
         internal void GivenInstrumentsRequest_WithInstruments_ReturnsValidInstrumentResponse()
         {
             // Arrange
-            this.provider.Start();
+            ushort testPort = 55623;
+            var testAddress = $"tcp://localhost:{testPort}";
+
+            var provider = new InstrumentProvider(
+                this.container,
+                this.repository,
+                this.dataSerializer,
+                this.requestSerializer,
+                this.responseSerializer,
+                EncryptionConfig.None(),
+                new NetworkPort(testPort));
+            provider.Start();
             Task.Delay(100).Wait();  // Allow provider to start
 
             var requester = new RequestSocket();
-            requester.Connect(TestAddress);
+            requester.Connect(testAddress);
             Task.Delay(100).Wait();  // Allow socket to connect
 
             var instrument1 = StubInstrumentProvider.AUDUSD();

@@ -34,6 +34,7 @@ namespace Nautilus.Data.Providers
         /// <param name="dataSerializer">The data serializer.</param>
         /// <param name="inboundSerializer">The inbound message serializer.</param>
         /// <param name="outboundSerializer">The outbound message serializer.</param>
+        /// <param name="encryption">The encryption configuration.</param>
         /// <param name="port">The port.</param>
         public InstrumentProvider(
             IComponentryContainer container,
@@ -41,11 +42,13 @@ namespace Nautilus.Data.Providers
             IDataSerializer<Instrument> dataSerializer,
             IMessageSerializer<Request> inboundSerializer,
             IMessageSerializer<Response> outboundSerializer,
+            EncryptionConfig encryption,
             NetworkPort port)
             : base(
                 container,
                 inboundSerializer,
                 outboundSerializer,
+                encryption,
                 Network.NetworkAddress.LocalHost,
                 port,
                 Guid.NewGuid())

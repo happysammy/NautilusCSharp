@@ -30,17 +30,20 @@ namespace Nautilus.Execution.Network
         /// <param name="inboundSerializer">The inbound message serializer.</param>
         /// <param name="outboundSerializer">The outbound message serializer.</param>
         /// <param name="commandsSink">The commands endpoint for deserialized commands.</param>
+        /// <param name="encryption">The encryption configuration.</param>
         /// <param name="port">The consumers port.</param>
         public CommandServer(
             IComponentryContainer container,
             IMessageSerializer<Command> inboundSerializer,
             IMessageSerializer<Response> outboundSerializer,
             IEndpoint commandsSink,
+            EncryptionConfig encryption,
             NetworkPort port)
             : base(
                 container,
                 inboundSerializer,
                 outboundSerializer,
+                encryption,
                 Nautilus.Network.NetworkAddress.LocalHost,
                 port,
                 Guid.NewGuid())

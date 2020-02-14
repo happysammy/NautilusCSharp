@@ -21,6 +21,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     {
         public MockMessageServer(
             IComponentryContainer container,
+            EncryptionConfig encryption,
             NetworkAddress host,
             NetworkPort port,
             Guid id)
@@ -28,6 +29,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 container,
                 new MockSerializer(),
                 new MsgPackResponseSerializer(),
+                encryption,
                 host,
                 port,
                 id)

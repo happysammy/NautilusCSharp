@@ -22,12 +22,14 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public MockDataPublisher(
             IComponentryContainer container,
             IDataBusAdapter dataBusAdapter,
+            EncryptionConfig encryption,
             NetworkAddress host,
             NetworkPort port)
             : base(
                 container,
                 dataBusAdapter,
                 new MockSerializer(),
+                encryption,
                 host,
                 port,
                 Guid.NewGuid())

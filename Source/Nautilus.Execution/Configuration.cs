@@ -92,6 +92,11 @@ namespace Nautilus.Execution
         public ILoggingAdapter LoggingAdapter { get; }
 
         /// <summary>
+        /// Gets the encryption configuration.
+        /// </summary>
+        public EncryptionConfig Encryption { get; } = EncryptionConfig.None();
+
+        /// <summary>
         /// Gets the configuration commands port.
         /// </summary>
         public NetworkPort CommandsPort { get; }

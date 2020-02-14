@@ -46,6 +46,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
                 container,
                 DataBusFactory.Create(container),
                 new TickDataSerializer(),
+                EncryptionConfig.None(),
                 new NetworkPort(55606));
         }
 

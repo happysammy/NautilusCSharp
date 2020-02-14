@@ -24,16 +24,19 @@ namespace Nautilus.Data.Publishers
         /// <param name="container">The componentry container.</param>
         /// <param name="dataBusAdapter">The data bus adapter.</param>
         /// <param name="serializer">The instrument serializer.</param>
+        /// <param name="encryption">The encryption configuration.</param>
         /// <param name="port">The port.</param>
         public InstrumentPublisher(
             IComponentryContainer container,
             IDataBusAdapter dataBusAdapter,
             IDataSerializer<Instrument> serializer,
+            EncryptionConfig encryption,
             NetworkPort port)
             : base(
                 container,
                 dataBusAdapter,
                 serializer,
+                encryption,
                 Network.NetworkAddress.LocalHost,
                 port,
                 Guid.NewGuid())

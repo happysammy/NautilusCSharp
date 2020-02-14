@@ -121,6 +121,11 @@ namespace Nautilus.Data
         public ILoggingAdapter LoggingAdapter { get; }
 
         /// <summary>
+        /// Gets the encryption configuration.
+        /// </summary>
+        public EncryptionConfig Encryption { get; } = EncryptionConfig.None();
+
+        /// <summary>
         /// Gets the network configuration tick request port.
         /// </summary>
         public NetworkPort TickRequestPort { get; }

@@ -32,12 +32,14 @@ namespace Nautilus.Network
         /// </summary>
         /// <param name="container">The componentry container.</param>
         /// <param name="serializer">The message serializer.</param>
+        /// <param name="encryption">The encryption configuration.</param>
         /// <param name="host">The publishers host address.</param>
         /// <param name="port">The publishers port.</param>
         /// <param name="id">The publishers identifier.</param>
         protected MessagePublisher(
             IComponentryContainer container,
             ISerializer<T> serializer,
+            EncryptionConfig encryption,
             NetworkAddress host,
             NetworkPort port,
             Guid id)
@@ -53,6 +55,11 @@ namespace Nautilus.Network
                     Identity = Encoding.Unicode.GetBytes(id.ToString()),
                 },
             };
+
+            if (encryption.UseEncryption)
+            {
+                EncryptionProvider.Setup(encryption, this.socket);
+            }
 
             this.serializer = serializer;
 

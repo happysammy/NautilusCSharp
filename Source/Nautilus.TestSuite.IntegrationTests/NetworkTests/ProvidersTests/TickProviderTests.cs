@@ -37,15 +37,13 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class TickProviderTests : IDisposable
     {
-        private const string TestAddress = "tcp://localhost:55522";
-
         private readonly ITestOutputHelper output;
         private readonly MockLoggingAdapter loggingAdapter;
+        private readonly IComponentryContainer container;
         private readonly ITickRepository repository;
         private readonly IDataSerializer<Tick> dataSerializer;
         private readonly IMessageSerializer<Request> requestSerializer;
         private readonly IMessageSerializer<Response> responseSerializer;
-        private readonly TickProvider provider;
 
         public TickProviderTests(ITestOutputHelper output)
         {
@@ -53,37 +51,41 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
             this.output = output;
 
             var containerFactory = new StubComponentryContainerProvider();
-            var container = containerFactory.Create();
+            this.container = containerFactory.Create();
             this.loggingAdapter = containerFactory.LoggingAdapter;
             this.dataSerializer = new TickDataSerializer();
-            this.repository = new MockTickRepository(container, this.dataSerializer, DataBusFactory.Create(container));
+            this.repository = new MockTickRepository(this.container, this.dataSerializer, DataBusFactory.Create(this.container));
             this.requestSerializer = new MsgPackRequestSerializer(new MsgPackQuerySerializer());
             this.responseSerializer = new MsgPackResponseSerializer();
-
-            this.provider = new TickProvider(
-                container,
-                this.repository,
-                this.dataSerializer,
-                this.requestSerializer,
-                this.responseSerializer,
-                new NetworkPort(55522));
         }
 
         public void Dispose()
         {
             NetMQConfig.Cleanup(false);
+            Task.Delay(100); // Allow cleanup
         }
 
         [Fact]
         internal void GivenTickDataRequest_WithNoTicks_ReturnsQueryFailedMessage()
         {
             // Arrange
-            this.provider.Start();
+            ushort testPort = 55722;
+            var testAddress = $"tcp://localhost:{testPort}";
+
+            var provider = new TickProvider(
+                this.container,
+                this.repository,
+                this.dataSerializer,
+                this.requestSerializer,
+                this.responseSerializer,
+                EncryptionConfig.None(),
+                new NetworkPort(testPort));
+            provider.Start();
             Task.Delay(100).Wait();  // Allow provider to start
 
             var symbol = new Symbol("AUDUSD", new Venue("FXCM"));
             var requester = new RequestSocket();
-            requester.Connect(TestAddress);
+            requester.Connect(testAddress);
             Task.Delay(100).Wait();  // Allow socket to connect
 
             var query = new Dictionary<string, string>
@@ -114,7 +116,18 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
         internal void GivenTickDataRequest_WithTicks_ReturnsValidTickDataResponse()
         {
             // Arrange
-            this.provider.Start();
+            ushort testPort = 55723;
+            var testAddress = $"tcp://localhost:{testPort}";
+
+            var provider = new TickProvider(
+                this.container,
+                this.repository,
+                this.dataSerializer,
+                this.requestSerializer,
+                this.responseSerializer,
+                EncryptionConfig.None(),
+                new NetworkPort(testPort));
+            provider.Start();
             Task.Delay(100).Wait();  // Allow provider to start
 
             var datetimeFrom = StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1);
@@ -128,7 +141,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
             this.repository.Add(tick2);
 
             var requester = new RequestSocket();
-            requester.Connect(TestAddress);
+            requester.Connect(testAddress);
             Task.Delay(100).Wait();  // Allow socket to connect
 
             var query = new Dictionary<string, string>

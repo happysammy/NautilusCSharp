@@ -63,18 +63,21 @@ namespace NautilusData
                 container,
                 dataBusAdapter,
                 new TickDataSerializer(),
+                config.Encryption,
                 config.TickSubscribePort);
 
             var barPublisher = new BarPublisher(
                 container,
                 dataBusAdapter,
                 new BarDataSerializer(),
+                config.Encryption,
                 config.BarSubscribePort);
 
             var instrumentPublisher = new InstrumentPublisher(
                 container,
                 dataBusAdapter,
                 new InstrumentDataSerializer(),
+                config.Encryption,
                 config.InstrumentSubscribePort);
 
             var symbolConverter = new SymbolConverter(config.SymbolIndex);
@@ -122,6 +125,7 @@ namespace NautilusData
                 new TickDataSerializer(),
                 new MsgPackRequestSerializer(new MsgPackQuerySerializer()),
                 new MsgPackResponseSerializer(),
+                config.Encryption,
                 config.TickRequestPort);
 
             var barProvider = new BarProvider(
@@ -130,6 +134,7 @@ namespace NautilusData
                 new BarDataSerializer(),
                 new MsgPackRequestSerializer(new MsgPackQuerySerializer()),
                 new MsgPackResponseSerializer(),
+                config.Encryption,
                 config.BarRequestPort);
 
             var instrumentProvider = new InstrumentProvider(
@@ -138,6 +143,7 @@ namespace NautilusData
                 new InstrumentDataSerializer(),
                 new MsgPackRequestSerializer(new MsgPackQuerySerializer()),
                 new MsgPackResponseSerializer(),
+                config.Encryption,
                 config.InstrumentRequestPort);
 
             var addresses = new Dictionary<Address, IEndpoint>

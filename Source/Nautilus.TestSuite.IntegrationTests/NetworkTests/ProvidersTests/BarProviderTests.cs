@@ -59,6 +59,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
         public void Dispose()
         {
             NetMQConfig.Cleanup(false);
+            Task.Delay(100); // Allow cleanup
         }
 
         [Fact]
@@ -74,6 +75,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
                 this.dataSerializer,
                 this.requestSerializer,
                 this.responseSerializer,
+                EncryptionConfig.None(),
                 new NetworkPort(testPort));
             provider.Start();
             Task.Delay(100).Wait();  // Allow provider to start
@@ -123,6 +125,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
                 this.dataSerializer,
                 this.requestSerializer,
                 this.responseSerializer,
+                EncryptionConfig.None(),
                 new NetworkPort(testPort));
             provider.Start();
             Task.Delay(100).Wait();

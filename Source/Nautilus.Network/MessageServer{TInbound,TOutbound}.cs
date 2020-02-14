@@ -50,6 +50,7 @@ namespace Nautilus.Network
         /// <param name="container">The componentry container.</param>
         /// <param name="inboundSerializer">The inbound message serializer.</param>
         /// <param name="outboundSerializer">The outbound message serializer.</param>
+        /// <param name="encryption">The encryption configuration.</param>
         /// <param name="host">The consumer host address.</param>
         /// <param name="port">The consumer port.</param>
         /// <param name="id">The consumer identifier.</param>
@@ -57,6 +58,7 @@ namespace Nautilus.Network
             IComponentryContainer container,
             IMessageSerializer<TInbound> inboundSerializer,
             IMessageSerializer<TOutbound> outboundSerializer,
+            EncryptionConfig encryption,
             NetworkAddress host,
             NetworkPort port,
             Guid id)
@@ -73,6 +75,11 @@ namespace Nautilus.Network
                     Identity = Encoding.Unicode.GetBytes(id.ToString()),
                 },
             };
+
+            if (encryption.UseEncryption)
+            {
+                EncryptionProvider.Setup(encryption, this.socket);
+            }
 
             this.inboundSerializer = inboundSerializer;
             this.outboundSerializer = outboundSerializer;

@@ -76,6 +76,7 @@ namespace NautilusExecutor
             var eventPublisher = new EventPublisher(
                 container,
                 new MsgPackEventSerializer(),
+                config.Encryption,
                 config.EventsPort);
 
             var executionEngine = new ExecutionEngine(
@@ -97,6 +98,7 @@ namespace NautilusExecutor
                 new MsgPackCommandSerializer(),
                 new MsgPackResponseSerializer(),
                 commandRouter.Endpoint,
+                config.Encryption,
                 config.CommandsPort);
 
             var addresses = new Dictionary<Address, IEndpoint>

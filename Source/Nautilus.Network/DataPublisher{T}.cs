@@ -32,6 +32,7 @@ namespace Nautilus.Network
         /// <param name="container">The componentry container.</param>
         /// <param name="dataBusAdapter">The data bus adapter.</param>
         /// <param name="dataSerializer">The data serializer.</param>
+        /// <param name="encryption">The encryption configuration.</param>
         /// <param name="host">The publishers host address.</param>
         /// <param name="port">The publishers port.</param>
         /// <param name="id">The publishers identifier.</param>
@@ -39,6 +40,7 @@ namespace Nautilus.Network
             IComponentryContainer container,
             IDataBusAdapter dataBusAdapter,
             IDataSerializer<T> dataSerializer,
+            EncryptionConfig encryption,
             NetworkAddress host,
             NetworkPort port,
             Guid id)
@@ -54,6 +56,11 @@ namespace Nautilus.Network
                     Identity = Encoding.Unicode.GetBytes(id.ToString()),
                 },
             };
+
+            if (encryption.UseEncryption)
+            {
+                EncryptionProvider.Setup(encryption, this.socket);
+            }
 
             this.dataSerializer = dataSerializer;
 

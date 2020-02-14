@@ -28,14 +28,17 @@ namespace Nautilus.Execution.Network
         /// </summary>
         /// <param name="container">The component setup container.</param>
         /// <param name="serializer">The event serializer.</param>
+        /// <param name="encryption">THe encryption configuration.</param>
         /// <param name="port">The publishers port.</param>
         public EventPublisher(
             IComponentryContainer container,
             ISerializer<Event> serializer,
+            EncryptionConfig encryption,
             NetworkPort port)
             : base(
                 container,
                 serializer,
+                encryption,
                 Nautilus.Network.NetworkAddress.LocalHost,
                 port,
                 Guid.NewGuid())

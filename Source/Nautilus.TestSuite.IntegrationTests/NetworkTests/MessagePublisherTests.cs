@@ -55,6 +55,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             var publisher = new MockDataPublisher(
                 this.container,
                 DataBusFactory.Create(this.container),
+                EncryptionConfig.None(),
                 NetworkAddress.LocalHost,
                 new NetworkPort(55555));
 
@@ -71,6 +72,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             var publisher = new MockDataPublisher(
                 this.container,
                 DataBusFactory.Create(this.container),
+                EncryptionConfig.None(),
                 NetworkAddress.LocalHost,
                 new NetworkPort(55555));
             publisher.Start();
