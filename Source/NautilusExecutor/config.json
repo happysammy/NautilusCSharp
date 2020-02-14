@@ -11,7 +11,7 @@
   },
 
   "fix44": {
-    "configFile": "fix_fxcm2.cfg",
+    "configFile": "fix_fxcm4.cfg",
 
     "connectJob": {
       "day": "Sunday",
