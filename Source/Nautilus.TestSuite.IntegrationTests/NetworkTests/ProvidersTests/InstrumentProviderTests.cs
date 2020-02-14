@@ -67,7 +67,9 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
 
         public void Dispose()
         {
-            NetMQConfig.Cleanup(false);
+            Task.Delay(100).Wait();
+            NetMQConfig.Cleanup();
+            Task.Delay(100).Wait();
         }
 
         [Fact]
@@ -113,7 +115,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
         {
             // Arrange
             this.provider.Start();
-            Task.Delay(100).Wait();  // Allow provider to start
+            Task.Delay(500).Wait();  // Allow provider to start
 
             var requester = new RequestSocket();
             requester.Connect(TestAddress);
@@ -149,7 +151,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
         {
             // Arrange
             this.provider.Start();  // Allow provider to start
-            Task.Delay(500).Wait();
+            Task.Delay(100).Wait();
 
             var requester = new RequestSocket();
             requester.Connect(TestAddress);

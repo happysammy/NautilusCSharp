@@ -106,7 +106,7 @@ namespace Nautilus.Network
         {
             if (!this.socket.IsDisposed)
             {
-                this.socket.Dispose();
+                this.socket?.Dispose();
             }
         }
 
