@@ -91,12 +91,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             // Assert
             Assert.Equal("Events:Trade:TESTER-001", Encoding.UTF8.GetString(topic));
             Assert.Equal(typeof(OrderRejected), @event.GetType());
-
-            // Tear Down
-            subscriber.Unsubscribe("Events:Trade:TESTER-001");
-            subscriber.Disconnect(testAddress);
-            subscriber.Dispose();
-            publisher.Stop();
         }
     }
 }

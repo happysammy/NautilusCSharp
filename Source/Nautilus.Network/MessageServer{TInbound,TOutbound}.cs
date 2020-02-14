@@ -69,7 +69,7 @@ namespace Nautilus.Network
             {
                 Options =
                 {
-                    Linger = TimeSpan.Zero,
+                    Linger = TimeSpan.FromSeconds(1),
                     Identity = Encoding.Unicode.GetBytes(id.ToString()),
                 },
             };

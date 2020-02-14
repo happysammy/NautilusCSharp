@@ -71,9 +71,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
 
         public void Dispose()
         {
-            Task.Delay(100).Wait();
-            NetMQConfig.Cleanup();
-            Task.Delay(100).Wait();
+            NetMQConfig.Cleanup(false);
         }
 
         [Fact]
@@ -110,11 +108,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
 
             // Assert
             Assert.Equal(typeof(QueryFailure), response.Type);
-
-            // Tear Down
-            requester.Disconnect(TestAddress);
-            requester.Close();
-            this.provider.Stop();
         }
 
         [Fact]
@@ -164,11 +157,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
             Assert.Equal(2, ticks.Length);
             Assert.Equal(tick1, ticks[0]);
             Assert.Equal(tick2, ticks[1]);
-
-            // Tear Down
-            requester.Disconnect(TestAddress);
-            requester.Close();
-            this.provider.Stop();
         }
     }
 }
