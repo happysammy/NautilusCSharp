@@ -104,7 +104,7 @@ namespace Nautilus.Network
         /// </summary>
         public void Dispose()
         {
-            this.socket?.Dispose();
+            this.socket.Dispose();
         }
 
         /// <inheritdoc />
@@ -138,9 +138,10 @@ namespace Nautilus.Network
                 Guid.NewGuid(),
                 this.TimeNow()) as TOutbound;
 
+            // Exists to avoid warning CS8604 for this.SendMessage(rejected, receiver)
+            // This should never happen anyway due to generic type constraints
             if (received is null)
             {
-                // This should never happen due to generic type constraints
                 throw new InvalidOperationException($"The message was not of type {typeof(TOutbound)}.");
             }
 
@@ -160,9 +161,10 @@ namespace Nautilus.Network
                 Guid.NewGuid(),
                 this.TimeNow()) as TOutbound;
 
+            // Exists to avoid warning CS8604 for this.SendMessage(rejected, receiver)
+            // This should never happen anyway due to generic type constraints
             if (failure is null)
             {
-                // This should never happen due to generic type constraints
                 throw new InvalidOperationException($"The message was not of type {typeof(TOutbound)}.");
             }
 
@@ -268,10 +270,10 @@ namespace Nautilus.Network
                 Guid.NewGuid(),
                 this.TimeNow()) as TOutbound;
 
+            // Exists to avoid warning CS8604 for this.SendMessage(rejected, receiver)
+            // This should never happen anyway due to generic type constraints
             if (rejected is null)
             {
-                // Exists to avoid warning CS8604 for this.SendMessage(rejected, receiver)
-                // This should never happen anyway due to generic type constraints
                 throw new InvalidOperationException($"The message was not of type {typeof(TOutbound)}.");
             }
 

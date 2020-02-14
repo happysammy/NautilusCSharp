@@ -79,7 +79,7 @@ namespace Nautilus.Network
         /// </summary>
         public void Dispose()
         {
-            this.socket?.Dispose();
+            this.socket.Dispose();
         }
 
         /// <inheritdoc />
