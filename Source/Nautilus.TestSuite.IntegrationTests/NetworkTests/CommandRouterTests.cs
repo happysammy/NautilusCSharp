@@ -8,6 +8,7 @@
 
 namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 {
+    using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
     using Nautilus.Common.Interfaces;
@@ -16,12 +17,13 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
     using Nautilus.Network;
     using Nautilus.Serialization.MessagePack;
     using Nautilus.TestSuite.TestKit.TestDoubles;
+    using NetMQ;
     using NetMQ.Sockets;
     using Xunit;
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
-    public sealed class CommandRouterTests
+    public sealed class CommandRouterTests : IDisposable
     {
         private readonly NetworkAddress localHost = new NetworkAddress("127.0.0.1");
         private readonly ITestOutputHelper output;
@@ -38,6 +40,11 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             this.container = containerFactory.Create();
             this.loggingAdapter = containerFactory.LoggingAdapter;
             this.receiver = new MockMessagingAgent().Endpoint;
+        }
+
+        public void Dispose()
+        {
+            NetMQConfig.Cleanup(false);
         }
 
         [Fact]

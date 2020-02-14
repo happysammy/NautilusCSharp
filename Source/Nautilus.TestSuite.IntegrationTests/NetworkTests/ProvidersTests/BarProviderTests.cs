@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
+namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
 {
     using System;
     using System.Collections.Generic;
@@ -32,17 +32,15 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
-    public sealed class BarProviderTests
+    public sealed class BarProviderTests : IDisposable
     {
-        private const string TestAddress = "tcp://localhost:55523";
-
         private readonly ITestOutputHelper output;
         private readonly MockLoggingAdapter loggingAdapter;
+        private readonly IComponentryContainer container;
         private readonly IBarRepository repository;
         private readonly IDataSerializer<Bar> dataSerializer;
         private readonly IMessageSerializer<Request> requestSerializer;
         private readonly IMessageSerializer<Response> responseSerializer;
-        private readonly BarProvider provider;
 
         public BarProviderTests(ITestOutputHelper output)
         {
@@ -50,33 +48,41 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             this.output = output;
 
             var containerFactory = new StubComponentryContainerProvider();
-            var container = containerFactory.Create();
+            this.container = containerFactory.Create();
             this.loggingAdapter = containerFactory.LoggingAdapter;
             this.dataSerializer = new BarDataSerializer();
             this.repository = new MockBarRepository(this.dataSerializer);
             this.requestSerializer = new MsgPackRequestSerializer(new MsgPackQuerySerializer());
             this.responseSerializer = new MsgPackResponseSerializer();
+        }
 
-            this.provider = new BarProvider(
-                container,
-                this.repository,
-                this.dataSerializer,
-                this.requestSerializer,
-                this.responseSerializer,
-                new NetworkPort(55523));
+        public void Dispose()
+        {
+            NetMQConfig.Cleanup(false);
         }
 
         [Fact]
         internal void GivenBarDataRequest_WithNoBars_ReturnsQueryFailedMessage()
         {
             // Arrange
-            this.provider.Start();
+            ushort testPort = 55523;
+            var testAddress = $"tcp://localhost:{55523}";
+
+            var provider = new BarProvider(
+                this.container,
+                this.repository,
+                this.dataSerializer,
+                this.requestSerializer,
+                this.responseSerializer,
+                new NetworkPort(testPort));
+            provider.Start();
             Task.Delay(100).Wait();  // Allow provider to start
 
             var barType = StubBarType.AUDUSD_OneMinuteAsk();
 
             var requester = new RequestSocket();
-            requester.Connect(TestAddress);
+            requester.Connect(testAddress);
+
             Task.Delay(100).Wait();  // Allow socket to connect
 
             var query = new Dictionary<string, string>
@@ -103,16 +109,26 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             // Assert
             Assert.Equal(typeof(QueryFailure), response.Type);
 
-            // Tear Down;
-            requester.Disconnect(TestAddress);
-            this.provider.Stop();
+            requester.Disconnect(testAddress);
+            requester.Close();
+            provider.Stop();
         }
 
         [Fact]
         internal void GivenBarDataRequest_WithBars_ReturnsValidBarDataResponse()
         {
             // Arrange
-            this.provider.Start();  // Allow provider to start
+            ushort testPort = 55524;
+            var testAddress = $"tcp://localhost:{testPort}";
+
+            var provider = new BarProvider(
+                this.container,
+                this.repository,
+                this.dataSerializer,
+                this.requestSerializer,
+                this.responseSerializer,
+                new NetworkPort(testPort));
+            provider.Start();
             Task.Delay(100).Wait();
 
             var barType = StubBarType.AUDUSD_OneMinuteAsk();
@@ -123,7 +139,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             this.repository.Add(barType, bar2);
 
             var requester = new RequestSocket();
-            requester.Connect(TestAddress);
+            requester.Connect(testAddress);
+
             Task.Delay(100).Wait();  // Allow socket to connect
 
             var query = new Dictionary<string, string>
@@ -154,9 +171,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             Assert.Equal(bar1, bars[0]);
             Assert.Equal(bar2, bars[1]);
 
-            // Tear Down;
-            requester.Disconnect(TestAddress);
-            this.provider.Stop();
+            requester.Disconnect(testAddress);
+            requester.Close();
+            provider.Stop();
         }
     }
 }

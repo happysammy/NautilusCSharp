@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
+namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
 {
     using System;
     using System.Collections.Generic;
@@ -31,7 +31,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
-    public sealed class InstrumentProviderTests
+    public sealed class InstrumentProviderTests : IDisposable
     {
         private const string TestAddress = "tcp://localhost:55524";
 
@@ -63,6 +63,11 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
                 this.requestSerializer,
                 this.responseSerializer,
                 new NetworkPort(55524));
+        }
+
+        public void Dispose()
+        {
+            NetMQConfig.Cleanup(false);
         }
 
         [Fact]
@@ -98,8 +103,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             // Assert
             Assert.Equal(typeof(QueryFailure), response.Type);
 
-            // Tear Down;
             requester.Disconnect(TestAddress);
+            requester.Close();
+            this.provider.Stop();
         }
 
         [Fact]
@@ -133,8 +139,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             // Assert
             Assert.Equal(typeof(QueryFailure), response.Type);
 
-            // Tear Down;
             requester.Disconnect(TestAddress);
+            requester.Close();
             this.provider.Stop();
         }
 
@@ -143,7 +149,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
         {
             // Arrange
             this.provider.Start();  // Allow provider to start
-            Task.Delay(100).Wait();
+            Task.Delay(500).Wait();
 
             var requester = new RequestSocket();
             requester.Connect(TestAddress);
@@ -172,8 +178,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             Assert.Equal(typeof(DataResponse), response.Type);
             Assert.Equal(instrument, data[0]);
 
-            // Tear Down;
             requester.Disconnect(TestAddress);
+            requester.Close();
+            this.provider.Stop();
         }
 
         [Fact]
@@ -214,14 +221,14 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             Assert.Equal(typeof(DataResponse), response.Type);
             Assert.Equal(instrument1, data[0]);
 
-            // TODO: Why is data randomly lacking element 1??
             if (data.Length > 1)
             {
                 Assert.Equal(instrument2, data[1]);
             }
 
-            // Tear Down;
             requester.Disconnect(TestAddress);
+            requester.Close();
+            this.provider.Stop();
         }
     }
 }

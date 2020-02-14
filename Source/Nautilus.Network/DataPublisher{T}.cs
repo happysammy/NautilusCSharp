@@ -50,7 +50,7 @@ namespace Nautilus.Network
             {
                 Options =
                 {
-                    Linger = TimeSpan.FromSeconds(1),
+                    Linger = TimeSpan.Zero,
                     Identity = Encoding.Unicode.GetBytes(id.ToString()),
                 },
             };
@@ -76,7 +76,10 @@ namespace Nautilus.Network
         /// </summary>
         public void Dispose()
         {
-            this.socket.Dispose();
+            if (!this.socket.IsDisposed)
+            {
+                this.socket.Dispose();
+            }
         }
 
         /// <inheritdoc />
@@ -92,7 +95,7 @@ namespace Nautilus.Network
             this.socket.Unbind(this.NetworkAddress.Value);
             this.Log.Debug($"Unbound {this.socket.GetType().Name} from {this.NetworkAddress}");
 
-            // this.Dispose();
+            this.Dispose();
         }
 
         /// <summary>

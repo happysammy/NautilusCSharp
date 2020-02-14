@@ -25,7 +25,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
     using Encoding = System.Text.Encoding;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
-    public class MessageServerTests
+    public sealed class MessageServerTests : IDisposable
     {
         private readonly ITestOutputHelper output;
         private readonly IComponentryContainer container;
@@ -43,6 +43,11 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             this.loggingAdapter = containerFactory.LoggingAdapter;
             this.serializer = new MockSerializer();
             this.responseSerializer = new MsgPackResponseSerializer();
+        }
+
+        public void Dispose()
+        {
+            NetMQConfig.Cleanup(false);
         }
 
         [Fact]
@@ -63,9 +68,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             Assert.Equal(ComponentState.Initialized, server.ComponentState);
             Assert.Equal(0, server.CountReceived);
             Assert.Equal(0, server.CountSent);
-
-            // Tear Down
-            server.Stop();
         }
 
         [Fact]
@@ -84,9 +86,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             // Assert
             Assert.Equal(ComponentState.Running, server.ComponentState);
-
-            // Tear Down
-            server.Stop();
         }
 
         [Fact]
@@ -128,11 +127,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             Assert.Equal(typeof(MessageReceived), response2.Type);
             Assert.Equal(1, server.CountReceived);
             Assert.Equal(2, server.CountSent);
-
-            // Tear Down
-            requester1.Disconnect(testAddress);
-            requester2.Disconnect(testAddress);
-            server.Stop();
         }
 
         [Fact]
@@ -174,11 +168,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             Assert.Equal(typeof(MessageReceived), response2.Type);
             Assert.Equal(1, server.CountReceived);
             Assert.Equal(2, server.CountSent);
-
-            // Tear Down
-            requester1.Disconnect(testAddress);
-            requester2.Disconnect(testAddress);
-            server.Stop();
         }
 
         [Fact]
@@ -216,10 +205,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             Assert.Equal(1, server.CountReceived);
             Assert.Equal(1, server.CountSent);
             Assert.Contains(message, server.ReceivedMessages);
-
-            // Tear Down
-            requester.Disconnect(testAddress);
-            server.Stop();
         }
 
         [Fact]
@@ -267,10 +252,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             Assert.Equal(typeof(MessageReceived), response2.Type);
             Assert.Equal(2, server.CountReceived);
             Assert.Equal(2, server.CountSent);
-
-            // Tear Down
-            requester.Disconnect(testAddress);
-            server.Stop();
         }
 
         [Fact]
@@ -316,10 +297,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             Assert.Equal(typeof(MessageReceived), response1.Type);
             Assert.Contains(message1, server.ReceivedMessages);
             Assert.DoesNotContain(message2, server.ReceivedMessages);
-
-            // Tear Down
-            requester.Disconnect(testAddress);
-            requester.Close();
         }
 
         [Fact]
@@ -361,10 +338,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             Assert.Equal(1000, server.CountSent);
             Assert.Equal("TEST-999", server.ReceivedMessages[^1].Payload);
             Assert.Equal("TEST-998", server.ReceivedMessages[^2].Payload);
-
-            // Tear Down
-            requester.Disconnect(testAddress);
-            server.Stop();
         }
 
         [Fact]
@@ -417,11 +390,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             Assert.Equal("TEST-999 from 1", server.ReceivedMessages[^2].Payload);
             Assert.Equal("TEST-998 from 2", server.ReceivedMessages[^3].Payload);
             Assert.Equal("TEST-998 from 1", server.ReceivedMessages[^4].Payload);
-
-            // Tear Down
-            requester1.Disconnect(testAddress);
-            requester2.Disconnect(testAddress);
-            server.Stop();
         }
     }
 }

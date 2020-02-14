@@ -8,6 +8,7 @@
 
 namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 {
+    using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
     using System.Threading.Tasks;
@@ -26,7 +27,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
-    public sealed class EventPublisherTests
+    public sealed class EventPublisherTests : IDisposable
     {
         private readonly NetworkAddress localHost = new NetworkAddress("127.0.0.1");
         private readonly ITestOutputHelper output;
@@ -46,6 +47,11 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             var service = new MockMessageBusProvider(this.container);
             this.messageBusAdapter = service.Adapter;
             this.receiver = new MockMessagingAgent().Endpoint;
+        }
+
+        public void Dispose()
+        {
+            NetMQConfig.Cleanup(false);
         }
 
         [Fact]

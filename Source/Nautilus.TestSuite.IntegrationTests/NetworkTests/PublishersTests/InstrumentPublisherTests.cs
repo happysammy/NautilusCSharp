@@ -6,8 +6,9 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
+namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
 {
+    using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
     using System.Threading.Tasks;
@@ -25,7 +26,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
-    public sealed class InstrumentPublisherTests
+    public sealed class InstrumentPublisherTests : IDisposable
     {
         private const string TestAddress = "tcp://localhost:55512";
         private readonly ITestOutputHelper output;
@@ -50,12 +51,17 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
                 new NetworkPort(55512));
         }
 
+        public void Dispose()
+        {
+            NetMQConfig.Cleanup(false);
+        }
+
         [Fact]
         internal void GivenInstrument_WithSubscriber_PublishesMessage()
         {
             // Arrange
             this.publisher.Start();
-            Task.Delay(100).Wait();
+            Task.Delay(200).Wait();
 
             var instrument = StubInstrumentProvider.AUDUSD();
 
@@ -76,9 +82,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
             Assert.Equal(instrument.Symbol.Value, Encoding.UTF8.GetString(topic));
             Assert.Equal(instrument, this.serializer.Deserialize(message));
 
-            // Tear Down
-            subscriber.Unsubscribe(instrument.Symbol.Value);
             subscriber.Disconnect(TestAddress);
+            subscriber.Close();
             this.publisher.Stop();
         }
     }

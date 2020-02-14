@@ -8,6 +8,7 @@
 
 namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 {
+    using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
     using Nautilus.Common.Data;
@@ -23,7 +24,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
     using Encoding = System.Text.Encoding;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
-    public sealed class MessagePublisherTests
+    public sealed class MessagePublisherTests : IDisposable
     {
         private const string TestTopic = "TEST";
 
@@ -39,6 +40,11 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             var containerFactory = new StubComponentryContainerProvider();
             this.container = containerFactory.Create();
             this.loggingAdapter = containerFactory.LoggingAdapter;
+        }
+
+        public void Dispose()
+        {
+            NetMQConfig.Cleanup(false);
         }
 
         [Fact]
@@ -92,11 +98,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             Assert.Equal(message, Encoding.UTF8.GetString(receivedMessage));
             Assert.Equal(ComponentState.Running, publisher.ComponentState);
             Assert.Equal(1, publisher.PublishedCount);
-
-            // Tear Down
-            subscriber.Unsubscribe(TestTopic);
-            subscriber.Disconnect(testAddress);
-            publisher.Stop();
         }
     }
 }

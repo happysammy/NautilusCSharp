@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
+namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
 {
     using System;
     using System.Collections.Generic;
@@ -35,7 +35,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
-    public sealed class TickProviderTests
+    public sealed class TickProviderTests : IDisposable
     {
         private const string TestAddress = "tcp://localhost:55522";
 
@@ -67,6 +67,11 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
                 this.requestSerializer,
                 this.responseSerializer,
                 new NetworkPort(55522));
+        }
+
+        public void Dispose()
+        {
+            NetMQConfig.Cleanup(false);
         }
 
         [Fact]
@@ -104,9 +109,10 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             // Assert
             Assert.Equal(typeof(QueryFailure), response.Type);
 
-            // Tear Down;
-            requester.Disconnect(TestAddress);
+            // Tear Down
             this.provider.Stop();
+            requester.Disconnect(TestAddress);
+            requester.Close();
         }
 
         [Fact]
@@ -157,8 +163,10 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             Assert.Equal(tick1, ticks[0]);
             Assert.Equal(tick2, ticks[1]);
 
-            // Tear Down;
+            // Tear Down
+            this.provider.Stop();
             requester.Disconnect(TestAddress);
+            requester.Close();
         }
     }
 }
