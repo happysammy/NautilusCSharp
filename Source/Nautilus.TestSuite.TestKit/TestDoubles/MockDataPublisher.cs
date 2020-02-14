@@ -40,13 +40,13 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             this.Publish(toPublish.Topic, toPublish.Message);
         }
 
-        private sealed class MockSerializer : ISerializer<string>, IDataSerializer<string>
+        private sealed class MockSerializer : IDataSerializer<string>
         {
             public DataEncoding BlobEncoding => DataEncoding.Undefined;
 
             public DataEncoding ObjectEncoding => DataEncoding.Undefined;
 
-            byte[] IDataSerializer<string>.Serialize(string dataObject)
+            byte[] ISerializer<string>.Serialize(string dataObject)
             {
                 return Encoding.UTF8.GetBytes(dataObject);
             }

@@ -14,7 +14,6 @@ namespace Nautilus.Network
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core.Correctness;
-    using Nautilus.Core.Types;
     using Nautilus.Messaging.Interfaces;
     using NetMQ;
     using NetMQ.Sockets;
@@ -24,7 +23,6 @@ namespace Nautilus.Network
     /// </summary>
     /// <typeparam name="T">The publishing message type.</typeparam>
     public abstract class MessagePublisher<T> : Component, IDisposable
-        where T : Message
     {
         private readonly PublisherSocket socket;
         private readonly ISerializer<T> serializer;
@@ -81,7 +79,7 @@ namespace Nautilus.Network
         {
             if (!this.socket.IsDisposed)
             {
-                this.socket?.Dispose();
+                this.socket.Dispose();
             }
         }
 
