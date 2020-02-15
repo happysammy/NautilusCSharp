@@ -14,7 +14,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Message;
     using Nautilus.Network;
-    using Nautilus.Serialization.Serializers;
+    using Nautilus.Network.Encryption;
+    using Nautilus.Serialization.Compressors;
+    using Nautilus.Serialization.MessageSerializers;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class MockMessageServer : MessageServer<MockMessage, Response>
@@ -29,6 +31,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 container,
                 new MockSerializer(),
                 new MsgPackResponseSerializer(),
+                new BypassCompressor(),
                 encryption,
                 host,
                 port,

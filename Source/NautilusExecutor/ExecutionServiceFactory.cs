@@ -24,7 +24,8 @@ namespace NautilusExecutor
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Redis.Execution;
     using Nautilus.Scheduler;
-    using Nautilus.Serialization.Serializers;
+    using Nautilus.Serialization.Compressors;
+    using Nautilus.Serialization.MessageSerializers;
     using NodaTime;
     using StackExchange.Redis;
 
@@ -76,6 +77,7 @@ namespace NautilusExecutor
             var eventPublisher = new EventPublisher(
                 container,
                 new MsgPackEventSerializer(),
+                new LZ4Compressor(),
                 config.Encryption,
                 config.EventsPort);
 
@@ -97,6 +99,7 @@ namespace NautilusExecutor
                 container,
                 new MsgPackCommandSerializer(),
                 new MsgPackResponseSerializer(),
+                new LZ4Compressor(),
                 commandRouter.Endpoint,
                 config.Encryption,
                 config.CommandsPort);

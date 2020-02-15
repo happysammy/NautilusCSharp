@@ -16,7 +16,9 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
     using Nautilus.Data.Publishers;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.Network;
-    using Nautilus.Serialization.Bson;
+    using Nautilus.Network.Encryption;
+    using Nautilus.Serialization.Compressors;
+    using Nautilus.Serialization.DataSerializers;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NetMQ;
@@ -46,15 +48,14 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
                 container,
                 DataBusFactory.Create(container),
                 new TickDataSerializer(),
+                new BypassCompressor(),
                 EncryptionConfig.None(),
                 new NetworkPort(55606));
         }
 
         public void Dispose()
         {
-            Task.Delay(100).Wait();
-            NetMQConfig.Cleanup();
-            Task.Delay(100).Wait();
+            NetMQConfig.Cleanup(false);
         }
 
         [Fact]
@@ -62,7 +63,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
         {
             // Arrange
             this.publisher.Start();
-            Task.Delay(100).Wait();
+            Task.Delay(100).Wait(); // Allow publisher to start
 
             var symbol = new Symbol("AUDUSD", new Venue("FXCM"));
 
@@ -85,9 +86,13 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
             Assert.Equal(tick.Symbol.Value, Encoding.UTF8.GetString(receivedTopic));
             Assert.Equal(tick.ToString(), Encoding.UTF8.GetString(receivedMessage));
 
+            // Tear Down
+            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
             subscriber.Disconnect(TestAddress);
-            subscriber.Close();
+            subscriber.Dispose();
             this.publisher.Stop();
+            Task.Delay(100).Wait(); // Allow server to stop
+            this.publisher.Dispose();
         }
     }
 }

@@ -21,6 +21,7 @@ namespace Nautilus.Data
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Fix;
     using Nautilus.Network;
+    using Nautilus.Network.Encryption;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
     using NodaTime;

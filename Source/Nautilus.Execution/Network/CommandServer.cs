@@ -14,6 +14,7 @@ namespace Nautilus.Execution.Network
     using Nautilus.DomainModel.Commands;
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Network;
+    using Nautilus.Network.Encryption;
 
     /// <summary>
     /// Provides a command server which deserializes command messages and forwards them to the
@@ -29,6 +30,7 @@ namespace Nautilus.Execution.Network
         /// <param name="container">The component setup container.</param>
         /// <param name="inboundSerializer">The inbound message serializer.</param>
         /// <param name="outboundSerializer">The outbound message serializer.</param>
+        /// <param name="compressor">The message compressor.</param>
         /// <param name="commandRouter">The command router endpoint.</param>
         /// <param name="encryption">The encryption configuration.</param>
         /// <param name="port">The consumers port.</param>
@@ -36,6 +38,7 @@ namespace Nautilus.Execution.Network
             IComponentryContainer container,
             IMessageSerializer<Command> inboundSerializer,
             IMessageSerializer<Response> outboundSerializer,
+            ICompressor compressor,
             IEndpoint commandRouter,
             EncryptionConfig encryption,
             NetworkPort port)
@@ -43,6 +46,7 @@ namespace Nautilus.Execution.Network
                 container,
                 inboundSerializer,
                 outboundSerializer,
+                compressor,
                 encryption,
                 Nautilus.Network.NetworkAddress.LocalHost,
                 port,

@@ -11,9 +11,11 @@ namespace Nautilus.Network
     using System;
     using System.Text;
     using Nautilus.Common.Data;
+    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core.Correctness;
+    using Nautilus.Network.Encryption;
     using NetMQ;
     using NetMQ.Sockets;
 
@@ -23,15 +25,17 @@ namespace Nautilus.Network
     /// <typeparam name="T">The publishing data type.</typeparam>
     public abstract class DataPublisher<T> : DataBusConnected, IDisposable
     {
+        private readonly IDataSerializer<T> serializer;
+        private readonly ICompressor compressor;
         private readonly PublisherSocket socket;
-        private readonly IDataSerializer<T> dataSerializer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataPublisher{T}"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
         /// <param name="dataBusAdapter">The data bus adapter.</param>
-        /// <param name="dataSerializer">The data serializer.</param>
+        /// <param name="serializer">The data serializer.</param>
+        /// <param name="compressor">The data compressor.</param>
         /// <param name="encryption">The encryption configuration.</param>
         /// <param name="host">The publishers host address.</param>
         /// <param name="port">The publishers port.</param>
@@ -39,7 +43,8 @@ namespace Nautilus.Network
         protected DataPublisher(
             IComponentryContainer container,
             IDataBusAdapter dataBusAdapter,
-            IDataSerializer<T> dataSerializer,
+            IDataSerializer<T> serializer,
+            ICompressor compressor,
             EncryptionConfig encryption,
             NetworkAddress host,
             NetworkPort port,
@@ -47,6 +52,9 @@ namespace Nautilus.Network
             : base(container, dataBusAdapter)
         {
             Condition.NotDefault(id, nameof(id));
+
+            this.serializer = serializer;
+            this.compressor = compressor;
 
             this.socket = new PublisherSocket()
             {
@@ -61,8 +69,6 @@ namespace Nautilus.Network
             {
                 EncryptionProvider.SetupSocket(encryption, this.socket);
             }
-
-            this.dataSerializer = dataSerializer;
 
             this.NetworkAddress = new ZmqNetworkAddress(host, port);
             this.PublishedCount = 0;
@@ -83,6 +89,11 @@ namespace Nautilus.Network
         /// </summary>
         public void Dispose()
         {
+            if (this.ComponentState == ComponentState.Running)
+            {
+                throw new InvalidOperationException("Cannot dispose a running component.");
+            }
+
             if (!this.socket.IsDisposed)
             {
                 this.socket.Dispose();
@@ -101,8 +112,6 @@ namespace Nautilus.Network
         {
             this.socket.Unbind(this.NetworkAddress.Value);
             this.Log.Debug($"Unbound {this.socket.GetType().Name} from {this.NetworkAddress}");
-
-            this.Dispose();
         }
 
         /// <summary>
@@ -112,7 +121,8 @@ namespace Nautilus.Network
         /// <param name="message">The message to publish.</param>
         protected void Publish(string topic, T message)
         {
-            this.socket.SendMultipartBytes(Encoding.UTF8.GetBytes(topic), this.dataSerializer.Serialize(message));
+            var publishable = this.compressor.Compress(this.serializer.Serialize(message));
+            this.socket.SendMultipartBytes(Encoding.UTF8.GetBytes(topic), publishable);
 
             this.PublishedCount++;
             this.Log.Verbose($"[{this.PublishedCount}]--> Topic={topic}, Message={message}");

@@ -11,7 +11,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
-    using Nautilus.Serialization.Bson;
+    using Nautilus.Serialization.DataSerializers;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;
     using Xunit.Abstractions;

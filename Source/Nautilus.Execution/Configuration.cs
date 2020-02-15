@@ -18,6 +18,7 @@ namespace Nautilus.Execution
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.Fix;
     using Nautilus.Network;
+    using Nautilus.Network.Encryption;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
     using NodaTime;

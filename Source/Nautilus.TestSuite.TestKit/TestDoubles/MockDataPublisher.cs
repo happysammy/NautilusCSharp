@@ -15,6 +15,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Network;
+    using Nautilus.Network.Encryption;
+    using Nautilus.Serialization.Compressors;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class MockDataPublisher : DataPublisher<string>
@@ -29,6 +31,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 container,
                 dataBusAdapter,
                 new MockSerializer(),
+                new BypassCompressor(),
                 encryption,
                 host,
                 port,

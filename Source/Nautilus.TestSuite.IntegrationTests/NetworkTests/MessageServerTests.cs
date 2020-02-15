@@ -14,8 +14,9 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Network;
+    using Nautilus.Network.Encryption;
     using Nautilus.Network.Messages;
-    using Nautilus.Serialization.Serializers;
+    using Nautilus.Serialization.MessageSerializers;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NetMQ;
@@ -48,7 +49,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
         public void Dispose()
         {
             NetMQConfig.Cleanup(false);
-            Task.Delay(100);
         }
 
         [Fact]
@@ -62,8 +62,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 NetworkAddress.LocalHost,
                 new NetworkPort(55555),
                 Guid.NewGuid());
-
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Equal("tcp://127.0.0.1:55555", server.NetworkAddress.ToString());
@@ -84,11 +82,16 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 new NetworkPort(55556),
                 Guid.NewGuid());
             server.Start();
-
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            Task.Delay(100).Wait(); // Allow server to start
 
             // Assert
             Assert.Equal(ComponentState.Running, server.ComponentState);
+
+            // Tear Down
+            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            server.Stop();
+            Task.Delay(100).Wait(); // Allow server to stop
+            server.Dispose();
         }
 
         [Fact]
@@ -105,32 +108,64 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 new NetworkPort(testPort),
                 Guid.NewGuid());
             server.Start();
+            Task.Delay(100).Wait(); // Allow server to initiate
 
             var requester1 = new RequestSocket(testAddress);
-            var requester2 = new RequestSocket(testAddress);
             requester1.Connect(testAddress);
-            requester2.Connect(testAddress);
-
-            Task.Delay(100).Wait(); // Allow sockets to initiate
 
             // Act
-            requester1.SendMultipartBytes(new byte[] { }, new byte[] { });
+            requester1.SendMultipartBytes(new byte[] { });
             var response1 = this.responseSerializer.Deserialize(requester1.ReceiveFrameBytes());
-
-            var message = new MockMessage(
-                "TEST",
-                Guid.NewGuid(),
-                StubZonedDateTime.UnixEpoch());
-            requester2.SendFrame(this.serializer.Serialize(message));
-            var response2 = this.responseSerializer.Deserialize(requester2.ReceiveFrameBytes());
-
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Equal(typeof(MessageRejected), response1.Type);
-            Assert.Equal(typeof(MessageReceived), response2.Type);
             Assert.Equal(1, server.CountReceived);
-            Assert.Equal(2, server.CountSent);
+            Assert.Equal(1, server.CountSent);
+
+            // Tear Down
+            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            requester1.Disconnect(testAddress);
+            requester1.Dispose();
+            server.Stop();
+            Task.Delay(100).Wait(); // Allow server to stop
+            server.Dispose();
+        }
+
+        [Fact]
+        internal void GivenMessage_WhichHasIncorrectFrameCount_RespondsWithMessageRejected()
+        {
+            // Arrange
+            const int testPort = 55557;
+            var testAddress = "tcp://127.0.0.1:" + testPort;
+
+            var server = new MockMessageServer(
+                this.container,
+                EncryptionConfig.None(),
+                NetworkAddress.LocalHost,
+                new NetworkPort(testPort),
+                Guid.NewGuid());
+            server.Start();
+            Task.Delay(100).Wait(); // Allow server to initiate
+
+            var requester1 = new RequestSocket(testAddress);
+            requester1.Connect(testAddress);
+
+            // Act
+            requester1.SendMultipartBytes(new byte[] { }, new byte[] { }); // Two payloads incorrect
+            var response1 = this.responseSerializer.Deserialize(requester1.ReceiveFrameBytes());
+
+            // Assert
+            Assert.Equal(typeof(MessageRejected), response1.Type);
+            Assert.Equal(1, server.CountReceived);
+            Assert.Equal(1, server.CountSent);
+
+            // Tear Down
+            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            requester1.Disconnect(testAddress);
+            requester1.Dispose();
+            server.Stop();
+            Task.Delay(100).Wait(); // Allow server to stop
+            server.Dispose();
         }
 
         [Fact]
@@ -147,32 +182,29 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 new NetworkPort(testPort),
                 Guid.NewGuid());
             server.Start();
+            Task.Delay(100); // Allow server to start
 
             var requester1 = new RequestSocket(testAddress);
             var requester2 = new RequestSocket(testAddress);
             requester1.Connect(testAddress);
             requester2.Connect(testAddress);
 
-            Task.Delay(100).Wait(); // Allow sockets to initiate
-
             // Act
             requester1.SendFrame(Encoding.UTF8.GetBytes("WOW"));
             var response1 = this.responseSerializer.Deserialize(requester1.ReceiveFrameBytes());
 
-            var message = new MockMessage(
-                "TEST",
-                Guid.NewGuid(),
-                StubZonedDateTime.UnixEpoch());
-            requester2.SendFrame(this.serializer.Serialize(message));
-            var response2 = this.responseSerializer.Deserialize(requester2.ReceiveFrameBytes());
-
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
-
             // Assert
             Assert.Equal(typeof(MessageRejected), response1.Type);
-            Assert.Equal(typeof(MessageReceived), response2.Type);
             Assert.Equal(1, server.CountReceived);
-            Assert.Equal(2, server.CountSent);
+            Assert.Equal(1, server.CountSent);
+
+            // Tear Down
+            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            requester1.Disconnect(testAddress);
+            requester1.Dispose();
+            server.Stop();
+            Task.Delay(100).Wait(); // Allow server to stop
+            server.Dispose();
         }
 
         [Fact]
@@ -189,11 +221,10 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 new NetworkPort(testPort),
                 Guid.NewGuid());
             server.Start();
+            Task.Delay(100).Wait(); // Allow server to start
 
             var requester = new RequestSocket(testAddress);
             requester.Connect(testAddress);
-
-            Task.Delay(100).Wait(); // Allow sockets to initiate
 
             // Act
             var message = new MockMessage(
@@ -204,13 +235,19 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             requester.SendFrame(this.serializer.Serialize(message));
             var response = this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
 
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
-
             // Assert
             Assert.Equal(typeof(MessageReceived), response.Type);
             Assert.Equal(1, server.CountReceived);
             Assert.Equal(1, server.CountSent);
             Assert.Contains(message, server.ReceivedMessages);
+
+            // Tear Down
+            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            requester.Disconnect(testAddress);
+            requester.Dispose();
+            server.Stop();
+            Task.Delay(100).Wait(); // Allow server to stop
+            server.Dispose();
         }
 
         [Fact]
@@ -227,11 +264,10 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 new NetworkPort(testPort),
                 Guid.NewGuid());
             server.Start();
+            Task.Delay(100).Wait(); // Allow server to start
 
             var requester = new RequestSocket(testAddress);
             requester.Connect(testAddress);
-
-            Task.Delay(100).Wait(); // Allow sockets to initiate
 
             // Act
             var message1 = new MockMessage(
@@ -250,8 +286,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             requester.SendFrame(this.serializer.Serialize(message2));
             var response2 = this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
 
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
-
             // Assert
             Assert.Contains(message1, server.ReceivedMessages);
             Assert.Contains(message2, server.ReceivedMessages);
@@ -259,6 +293,14 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             Assert.Equal(typeof(MessageReceived), response2.Type);
             Assert.Equal(2, server.CountReceived);
             Assert.Equal(2, server.CountSent);
+
+            // Tear Down
+            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            requester.Disconnect(testAddress);
+            requester.Dispose();
+            server.Stop();
+            Task.Delay(100).Wait(); // Allow server to stop
+            server.Dispose();
         }
 
         [Fact]
@@ -275,11 +317,10 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 new NetworkPort(testPort),
                 Guid.NewGuid());
             server.Start();
+            Task.Delay(100).Wait(); // Allow server to start
 
             var requester = new RequestSocket(testAddress);
             requester.Connect(testAddress);
-
-            Task.Delay(100).Wait(); // Allow sockets to initiate
 
             var message1 = new MockMessage(
                 "TEST1",
@@ -299,12 +340,18 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 StubZonedDateTime.UnixEpoch());
             requester.SendFrame(this.serializer.Serialize(message2));
 
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
-
             // Assert
             Assert.Equal(typeof(MessageReceived), response1.Type);
             Assert.Contains(message1, server.ReceivedMessages);
             Assert.DoesNotContain(message2, server.ReceivedMessages);
+
+            // Tear Down
+            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            requester.Disconnect(testAddress);
+            requester.Dispose();
+            server.Stop();
+            Task.Delay(100).Wait(); // Allow server to stop
+            server.Dispose();
         }
 
         [Fact]
@@ -321,11 +368,10 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 new NetworkPort(testPort),
                 Guid.NewGuid());
             server.Start();
+            Task.Delay(100).Wait(); // Allow server to start
 
             var requester = new RequestSocket(testAddress);
             requester.Connect(testAddress);
-
-            Task.Delay(100).Wait(); // Allow sockets to initiate
 
             // Act
             for (var i = 0; i < 1000; i++)
@@ -339,14 +385,20 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
             }
 
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
-
             // Assert
             Assert.Equal(1000, server.ReceivedMessages.Count);
             Assert.Equal(1000, server.CountReceived);
             Assert.Equal(1000, server.CountSent);
             Assert.Equal("TEST-999", server.ReceivedMessages[^1].Payload);
             Assert.Equal("TEST-998", server.ReceivedMessages[^2].Payload);
+
+            // Tear Down
+            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            requester.Disconnect(testAddress);
+            requester.Dispose();
+            server.Stop();
+            Task.Delay(100).Wait(); // Allow server to stop
+            server.Dispose();
         }
 
         [Fact]
@@ -363,13 +415,12 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 new NetworkPort(testPort),
                 Guid.NewGuid());
             server.Start();
+            Task.Delay(100).Wait(); // Allow server to start
 
             var requester1 = new RequestSocket(testAddress);
             var requester2 = new RequestSocket(testAddress);
             requester1.Connect(testAddress);
             requester2.Connect(testAddress);
-
-            Task.Delay(100).Wait(); // Allow sockets to initiate
 
             // Act
             for (var i = 0; i < 1000; i++)
@@ -400,6 +451,16 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             Assert.Equal("TEST-999 from 1", server.ReceivedMessages[^2].Payload);
             Assert.Equal("TEST-998 from 2", server.ReceivedMessages[^3].Payload);
             Assert.Equal("TEST-998 from 1", server.ReceivedMessages[^4].Payload);
+
+            // Tear Down
+            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            requester1.Disconnect(testAddress);
+            requester2.Disconnect(testAddress);
+            requester1.Dispose();
+            requester2.Dispose();
+            server.Stop();
+            Task.Delay(100).Wait(); // Allow server to stop
+            server.Dispose();
         }
     }
 }

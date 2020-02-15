@@ -16,7 +16,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     using Nautilus.Redis;
     using Nautilus.Redis.Data;
     using Nautilus.Redis.Data.Internal;
-    using Nautilus.Serialization.Bson;
+    using Nautilus.Serialization.DataSerializers;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NodaTime;

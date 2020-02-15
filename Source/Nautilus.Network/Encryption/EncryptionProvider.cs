@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Network
+namespace Nautilus.Network.Encryption
 {
     using System.IO;
     using System.Text;

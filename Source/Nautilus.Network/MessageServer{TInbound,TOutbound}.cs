@@ -14,7 +14,7 @@ namespace Nautilus.Network
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
-    using Nautilus.Common.Componentry;
+    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core.Correctness;
@@ -22,9 +22,11 @@ namespace Nautilus.Network
     using Nautilus.Core.Types;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
+    using Nautilus.Network.Encryption;
     using Nautilus.Network.Messages;
     using NetMQ;
     using NetMQ.Sockets;
+    using Component = Nautilus.Common.Componentry.Component;
 
     /// <summary>
     /// The base class for all messaging servers.
@@ -35,14 +37,15 @@ namespace Nautilus.Network
         where TInbound : Message
         where TOutbound : Response
     {
-        private const int ExpectedFramesCount = 3;
+        private const int ExpectedFrameCount = 3;
 
-        private readonly byte[] delimiter = { };
-        private readonly CancellationTokenSource cts;
-        private readonly RouterSocket socket;
         private readonly IMessageSerializer<TInbound> inboundSerializer;
         private readonly IMessageSerializer<TOutbound> outboundSerializer;
+        private readonly ICompressor compressor;
+        private readonly CancellationTokenSource cts;
+        private readonly RouterSocket socket;
         private readonly Dictionary<Guid, Address> correlationIndex = new Dictionary<Guid, Address>();
+        private readonly byte[] delimiter = { };
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageServer{TInbound, TOutbound}"/> class.
@@ -50,6 +53,7 @@ namespace Nautilus.Network
         /// <param name="container">The componentry container.</param>
         /// <param name="inboundSerializer">The inbound message serializer.</param>
         /// <param name="outboundSerializer">The outbound message serializer.</param>
+        /// <param name="compressor">The message compressor.</param>
         /// <param name="encryption">The encryption configuration.</param>
         /// <param name="host">The consumer host address.</param>
         /// <param name="port">The consumer port.</param>
@@ -58,6 +62,7 @@ namespace Nautilus.Network
             IComponentryContainer container,
             IMessageSerializer<TInbound> inboundSerializer,
             IMessageSerializer<TOutbound> outboundSerializer,
+            ICompressor compressor,
             EncryptionConfig encryption,
             NetworkAddress host,
             NetworkPort port,
@@ -65,6 +70,10 @@ namespace Nautilus.Network
             : base(container)
         {
             Condition.NotDefault(id, nameof(id));
+
+            this.inboundSerializer = inboundSerializer;
+            this.outboundSerializer = outboundSerializer;
+            this.compressor = compressor;
 
             this.cts = new CancellationTokenSource();
             this.socket = new RouterSocket()
@@ -80,9 +89,6 @@ namespace Nautilus.Network
             {
                 EncryptionProvider.SetupSocket(encryption, this.socket);
             }
-
-            this.inboundSerializer = inboundSerializer;
-            this.outboundSerializer = outboundSerializer;
 
             this.NetworkAddress = new ZmqNetworkAddress(host, port);
             this.CountReceived = 0;
@@ -111,10 +117,17 @@ namespace Nautilus.Network
         /// </summary>
         public void Dispose()
         {
+            if (this.ComponentState is ComponentState.Running)
+            {
+                throw new InvalidOperationException("Cannot dispose a running component.");
+            }
+
             if (!this.socket.IsDisposed)
             {
                 this.socket.Dispose();
             }
+
+            this.Log.Debug("Disposed.");
         }
 
         /// <inheritdoc />
@@ -132,8 +145,6 @@ namespace Nautilus.Network
             this.cts.Cancel();
             this.socket.Unbind(this.NetworkAddress.Value);
             this.Log.Debug($"Unbound {this.socket.GetType().Name} from {this.NetworkAddress}");
-
-            this.Dispose();
         }
 
         /// <summary>
@@ -222,35 +233,50 @@ namespace Nautilus.Network
             // msg[0] reply address
             // msg[1] should be empty byte array delimiter
             // msg[2] payload
-            var msg = this.socket.ReceiveMultipartBytes(ExpectedFramesCount);
-            if (msg.Count != ExpectedFramesCount)
-            {
-                var error = $"Message was malformed (expected {ExpectedFramesCount} frames, received {msg.Count}).";
-                if (msg.Count >= 1)
-                {
-                    this.SendRejected(error, new Address(msg[0], Encoding.ASCII.GetString));
-                }
+            var frames = this.socket.ReceiveMultipartBytes();
+            this.CountReceived++;
+            this.Log.Verbose($"<--[{this.CountReceived}] Received {frames.Count} byte[] frames.");
 
-                this.Log.Error(error);
+            if (frames.Count < ExpectedFrameCount)
+            {
+                var errorMsg = $"Message was malformed (expected {ExpectedFrameCount} frames, received {frames.Count}).";
+                this.Reject(frames, errorMsg);
+            }
+
+            if (frames[2].Length == 0)
+            {
+                var errorMsg = "Message payload was empty.";
+                this.Reject(frames, errorMsg);
             }
             else
             {
-                this.DeserializeMessage(msg[2], new Address(msg[0], Encoding.ASCII.GetString));
+                this.DeserializeMessage(this.compressor.Decompress(frames[2]), new Address(frames[0], Encoding.ASCII.GetString));
             }
+        }
+
+        private void Reject(List<byte[]> frames, string errorMsg)
+        {
+            if (frames.Count == 0)
+            {
+                this.Log.Error(errorMsg.Remove(errorMsg.Length - 1, 1) + "with no reply address.");
+                return;
+            }
+
+            this.SendRejected(errorMsg, new Address(frames[0], Encoding.ASCII.GetString));
         }
 
         private void DeserializeMessage(byte[] payload, Address sender)
         {
             try
             {
-                var received = this.inboundSerializer.Deserialize(payload);
+                var received = this.inboundSerializer.Deserialize(payload); // failing here
                 this.correlationIndex[received.Id] = sender;
 
                 if (received.Type.IsSubclassOf(typeof(TInbound)) || received.Type == typeof(TInbound))
                 {
                     this.SendToSelf(received);
 
-                    this.Log.Verbose($"[{this.CountReceived}]<-- {received} from Address({sender.StringValue}).");
+                    this.Log.Verbose($"<--[{this.CountReceived}] {received} from Address({sender.StringValue}).");
                 }
                 else
                 {
@@ -259,10 +285,8 @@ namespace Nautilus.Network
 
                     this.Log.Error(errorMessage);
                 }
-
-                this.CountReceived++;
             }
-            catch (SerializationException ex)
+            catch (Exception ex)
             {
                 var message = "Unable to deserialize message.";
                 this.Log.Error(message + Environment.NewLine + ex);
@@ -289,10 +313,11 @@ namespace Nautilus.Network
 
         private void SendMessage(TOutbound outbound, Address receiver)
         {
+            var sendable = this.compressor.Compress(this.outboundSerializer.Serialize(outbound));
             this.socket.SendMultipartBytes(
                 receiver.BytesValue,
                 this.delimiter,
-                this.outboundSerializer.Serialize(outbound));
+                sendable);
 
             this.CountSent++;
             this.Log.Verbose($"[{this.CountSent}]--> {outbound} to Address({receiver}).");

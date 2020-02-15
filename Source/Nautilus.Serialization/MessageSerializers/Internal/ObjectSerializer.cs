@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Serialization.Internal
+namespace Nautilus.Serialization.MessageSerializers.Internal
 {
     using System;
     using System.Globalization;

@@ -187,7 +187,7 @@ namespace Nautilus.Common.Componentry
 
             if (this.ComponentState != ComponentState.Running)
             {
-                this.Log.Error($"Stopping component not already running, was {this.ComponentState}.");
+                this.Log.Error($"Stop message when component not already running, was {this.ComponentState}.");
             }
 
             this.OnStop(message);

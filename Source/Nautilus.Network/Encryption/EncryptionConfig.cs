@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Network
+namespace Nautilus.Network.Encryption
 {
     using Nautilus.Core.Correctness;
 

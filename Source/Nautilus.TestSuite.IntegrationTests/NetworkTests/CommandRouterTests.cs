@@ -15,7 +15,9 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
     using Nautilus.Execution.Network;
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Network;
-    using Nautilus.Serialization.Serializers;
+    using Nautilus.Network.Encryption;
+    using Nautilus.Serialization.Compressors;
+    using Nautilus.Serialization.MessageSerializers;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NetMQ;
     using NetMQ.Sockets;
@@ -45,7 +47,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
         public void Dispose()
         {
             NetMQConfig.Cleanup(false);
-            Task.Delay(100);
         }
 
         [Fact]
@@ -60,6 +61,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 this.container,
                 new MsgPackCommandSerializer(),
                 new MsgPackResponseSerializer(),
+                new BypassCompressor(),
                 this.receiver,
                 EncryptionConfig.None(),
                 new NetworkPort(5553));

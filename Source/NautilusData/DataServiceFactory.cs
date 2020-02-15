@@ -26,8 +26,9 @@ namespace NautilusData
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Redis.Data;
     using Nautilus.Scheduler;
-    using Nautilus.Serialization.Bson;
-    using Nautilus.Serialization.Serializers;
+    using Nautilus.Serialization.Compressors;
+    using Nautilus.Serialization.DataSerializers;
+    using Nautilus.Serialization.MessageSerializers;
     using NodaTime;
     using StackExchange.Redis;
 
@@ -63,6 +64,7 @@ namespace NautilusData
                 container,
                 dataBusAdapter,
                 new TickDataSerializer(),
+                new LZ4Compressor(),
                 config.Encryption,
                 config.TickPublisherPort);
 
@@ -70,6 +72,7 @@ namespace NautilusData
                 container,
                 dataBusAdapter,
                 new BarDataSerializer(),
+                new LZ4Compressor(),
                 config.Encryption,
                 config.BarPublisherPort);
 
@@ -77,6 +80,7 @@ namespace NautilusData
                 container,
                 dataBusAdapter,
                 new InstrumentDataSerializer(),
+                new LZ4Compressor(),
                 config.Encryption,
                 config.InstrumentPublisherPort);
 
@@ -125,6 +129,7 @@ namespace NautilusData
                 new TickDataSerializer(),
                 new MsgPackRequestSerializer(new MsgPackQuerySerializer()),
                 new MsgPackResponseSerializer(),
+                new LZ4Compressor(),
                 config.Encryption,
                 config.TickRouterPort);
 
@@ -134,6 +139,7 @@ namespace NautilusData
                 new BarDataSerializer(),
                 new MsgPackRequestSerializer(new MsgPackQuerySerializer()),
                 new MsgPackResponseSerializer(),
+                new LZ4Compressor(),
                 config.Encryption,
                 config.BarRouterPort);
 
@@ -143,6 +149,7 @@ namespace NautilusData
                 new InstrumentDataSerializer(),
                 new MsgPackRequestSerializer(new MsgPackQuerySerializer()),
                 new MsgPackResponseSerializer(),
+                new LZ4Compressor(),
                 config.Encryption,
                 config.InstrumentRouterPort);
 

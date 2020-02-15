@@ -16,7 +16,9 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
     using Nautilus.Data.Publishers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network;
-    using Nautilus.Serialization.Bson;
+    using Nautilus.Network.Encryption;
+    using Nautilus.Serialization.Compressors;
+    using Nautilus.Serialization.DataSerializers;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NetMQ;
@@ -47,15 +49,14 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
                 container,
                 DataBusFactory.Create(container),
                 this.serializer,
+                new BypassCompressor(),
                 EncryptionConfig.None(),
                 new NetworkPort(55511));
         }
 
         public void Dispose()
         {
-            Task.Delay(100).Wait();
-            NetMQConfig.Cleanup();
-            Task.Delay(100).Wait();
+            NetMQConfig.Cleanup(false);
         }
 
         [Fact]
@@ -63,14 +64,15 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
         {
             // Arrange
             this.publisher.Start();
-            Task.Delay(200).Wait();  // Allow publisher to start
+            Task.Delay(100).Wait();  // Allow publisher to start
 
             var barType = StubBarType.AUDUSD_OneMinuteAsk();
 
             var subscriber = new SubscriberSocket(TestAddress);
             subscriber.Connect(TestAddress);
             subscriber.Subscribe(barType.ToString());
-            Task.Delay(100).Wait();
+
+            Task.Delay(100).Wait(); // Allow socket to subscribe
 
             var bar = StubBarData.Create();
             var data = new BarData(barType, bar);
@@ -81,16 +83,18 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
             var topic = subscriber.ReceiveFrameBytes();
             var message = subscriber.ReceiveFrameBytes();
 
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
-
             // Assert
             Assert.Equal(barType.ToString(), Encoding.UTF8.GetString(topic));
             Assert.Equal(bar.ToString(), Encoding.UTF8.GetString(message));
             Assert.Equal(bar, this.serializer.Deserialize(message));
 
+            // Tear Down
+            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
             subscriber.Disconnect(TestAddress);
-            subscriber.Close();
+            subscriber.Dispose();
             this.publisher.Stop();
+            Task.Delay(100).Wait(); // Allow server to stop
+            this.publisher.Dispose();
         }
     }
 }

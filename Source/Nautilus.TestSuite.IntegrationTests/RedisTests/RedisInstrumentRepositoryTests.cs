@@ -14,7 +14,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     using Nautilus.DomainModel.Entities;
     using Nautilus.Redis;
     using Nautilus.Redis.Data;
-    using Nautilus.Serialization.Bson;
+    using Nautilus.Serialization.DataSerializers;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using StackExchange.Redis;
     using Xunit;

@@ -15,6 +15,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Network;
+    using Nautilus.Network.Encryption;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NetMQ;
@@ -45,7 +46,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
         public void Dispose()
         {
             NetMQConfig.Cleanup(false);
-            Task.Delay(100);
         }
 
         [Fact]
@@ -77,15 +77,14 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 NetworkAddress.LocalHost,
                 new NetworkPort(55555));
             publisher.Start();
-
-            Task.Delay(100).Wait(); // Allow sockets to initiate
+            Task.Delay(100).Wait(); // Allow publisher to start
 
             const string testAddress = "tcp://localhost:55555";
             var subscriber = new SubscriberSocket(testAddress);
             subscriber.Connect(testAddress);
             subscriber.Subscribe(TestTopic);
 
-            Task.Delay(300).Wait(); // Allow sockets to initiate
+            Task.Delay(100).Wait(); // Allow sockets to subscribe
 
             // Act
             const string message = "1234,1234";
@@ -94,13 +93,19 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             var receivedTopic = subscriber.ReceiveFrameBytes();
             var receivedMessage = subscriber.ReceiveFrameBytes();
 
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
-
             // Assert
             Assert.Equal(TestTopic, Encoding.UTF8.GetString(receivedTopic));
             Assert.Equal(message, Encoding.UTF8.GetString(receivedMessage));
             Assert.Equal(ComponentState.Running, publisher.ComponentState);
             Assert.Equal(1, publisher.PublishedCount);
+
+            // Tear Down
+            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            subscriber.Disconnect(testAddress);
+            subscriber.Dispose();
+            publisher.Stop();
+            Task.Delay(100).Wait(); // Allow server to stop
+            publisher.Dispose();
         }
     }
 }

@@ -21,9 +21,11 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
     using Nautilus.Data.Providers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network;
+    using Nautilus.Network.Encryption;
     using Nautilus.Network.Messages;
-    using Nautilus.Serialization.Bson;
-    using Nautilus.Serialization.Serializers;
+    using Nautilus.Serialization.Compressors;
+    using Nautilus.Serialization.DataSerializers;
+    using Nautilus.Serialization.MessageSerializers;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NetMQ;
@@ -59,7 +61,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
         public void Dispose()
         {
             NetMQConfig.Cleanup(false);
-            Task.Delay(100); // Allow cleanup
         }
 
         [Fact]
@@ -75,6 +76,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
                 this.dataSerializer,
                 this.requestSerializer,
                 this.responseSerializer,
+                new BypassCompressor(),
                 EncryptionConfig.None(),
                 new NetworkPort(testPort));
             provider.Start();
@@ -84,8 +86,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
 
             var requester = new RequestSocket();
             requester.Connect(testAddress);
-
-            Task.Delay(100).Wait();  // Allow socket to connect
 
             var query = new Dictionary<string, string>
             {
@@ -106,10 +106,16 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
             requester.SendFrame(this.requestSerializer.Serialize(request));
             var response = (QueryFailure)this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
 
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
-
             // Assert
             Assert.Equal(typeof(QueryFailure), response.Type);
+
+            // Tear Down
+            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            requester.Disconnect(testAddress);
+            requester.Dispose();
+            provider.Stop();
+            Task.Delay(100).Wait(); // Allow server to stop
+            provider.Dispose();
         }
 
         [Fact]
@@ -118,13 +124,14 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
             // Arrange
             ushort testPort = 55524;
             var testAddress = $"tcp://localhost:{testPort}";
-
+            var compressor = new LZ4Compressor();
             var provider = new BarProvider(
                 this.container,
                 this.repository,
                 this.dataSerializer,
                 this.requestSerializer,
                 this.responseSerializer,
+                compressor,
                 EncryptionConfig.None(),
                 new NetworkPort(testPort));
             provider.Start();
@@ -139,8 +146,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
 
             var requester = new RequestSocket();
             requester.Connect(testAddress);
-
-            Task.Delay(100).Wait();  // Allow socket to connect
 
             var query = new Dictionary<string, string>
             {
@@ -158,17 +163,24 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            requester.SendFrame(this.requestSerializer.Serialize(request));
-            var response = (DataResponse)this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
+            requester.SendFrame(compressor.Compress(this.requestSerializer.Serialize(request)));
+            var received = compressor.Decompress(requester.ReceiveFrameBytes());
+            var response = (DataResponse)this.responseSerializer.Deserialize(received);
             var bars = this.dataSerializer.DeserializeBlob(response.Data);
-
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
             Assert.Equal(typeof(DataResponse), response.Type);
             Assert.Equal(2, bars.Length);
             Assert.Equal(bar1, bars[0]);
             Assert.Equal(bar2, bars[1]);
+
+            // Tear Down
+            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            requester.Disconnect(testAddress);
+            requester.Dispose();
+            provider.Stop();
+            Task.Delay(100).Wait(); // Allow server to stop
+            provider.Dispose();
         }
     }
 }

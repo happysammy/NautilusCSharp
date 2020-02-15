@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Serialization.Serializers
+namespace Nautilus.Serialization.MessageSerializers
 {
     using System.Collections.Generic;
     using MessagePack;
@@ -15,7 +15,7 @@ namespace Nautilus.Serialization.Serializers
     using Nautilus.Core.Message;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
-    using Nautilus.Serialization.Internal;
+    using Nautilus.Serialization.MessageSerializers.Internal;
 
     /// <summary>
     /// Provides an <see cref="Event"/> message binary serializer for the MessagePack specification.

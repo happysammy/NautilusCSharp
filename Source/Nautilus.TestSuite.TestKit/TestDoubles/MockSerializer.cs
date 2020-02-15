@@ -12,10 +12,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using System.Diagnostics.CodeAnalysis;
     using MessagePack;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Extensions;
-    using Nautilus.Serialization.Internal;
+    using Nautilus.Serialization.MessageSerializers.Internal;
 
-#pragma warning disable CS8604
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class MockSerializer : IMessageSerializer<MockMessage>
     {
@@ -37,9 +35,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             var unpacked = MessagePackSerializer.Deserialize<Dictionary<string, byte[]>>(dataBytes);
 
             return new MockMessage(
-                unpacked[nameof(MockMessage.Payload)].ToString(),
+                ObjectDeserializer.AsString(unpacked[nameof(MockMessage.Payload)]),
                 ObjectDeserializer.AsGuid(unpacked[nameof(MockMessage.Id)]),
-                unpacked[nameof(MockMessage.Timestamp)].ToString().ToZonedDateTimeFromIso());
+                ObjectDeserializer.AsZonedDateTime(unpacked[nameof(MockMessage.Timestamp)]));
         }
     }
 }

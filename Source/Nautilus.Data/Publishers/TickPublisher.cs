@@ -12,6 +12,7 @@ namespace Nautilus.Data.Publishers
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network;
+    using Nautilus.Network.Encryption;
 
     /// <summary>
     /// Provides a publisher for <see cref="Tick"/> data.
@@ -24,18 +25,21 @@ namespace Nautilus.Data.Publishers
         /// <param name="container">The componentry container.</param>
         /// <param name="dataBusAdapter">The data bus adapter.</param>
         /// <param name="serializer">The tick serializer.</param>
+        /// <param name="compressor">The data compressor.</param>
         /// <param name="encryption">The encryption configuration.</param>
         /// <param name="port">The port.</param>
         public TickPublisher(
             IComponentryContainer container,
             IDataBusAdapter dataBusAdapter,
             IDataSerializer<Tick> serializer,
+            ICompressor compressor,
             EncryptionConfig encryption,
             NetworkPort port)
             : base(
                 container,
                 dataBusAdapter,
                 serializer,
+                compressor,
                 encryption,
                 Network.NetworkAddress.LocalHost,
                 port,
@@ -49,9 +53,6 @@ namespace Nautilus.Data.Publishers
         private void OnMessage(Tick tick)
         {
             this.Publish(tick.Symbol.Value, tick);
-
-            // TODO: Temporary logging for debug purposes
-            // this.Log.Information($"{tick.Symbol.Value} {tick}");
         }
     }
 }

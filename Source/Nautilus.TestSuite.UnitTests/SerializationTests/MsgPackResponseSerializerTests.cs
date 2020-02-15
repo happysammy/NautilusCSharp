@@ -18,8 +18,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network.Messages;
-    using Nautilus.Serialization.Bson;
-    using Nautilus.Serialization.Serializers;
+    using Nautilus.Serialization.DataSerializers;
+    using Nautilus.Serialization.MessageSerializers;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NodaTime;
     using Xunit;

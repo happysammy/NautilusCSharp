@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Serialization.Serializers
+namespace Nautilus.Serialization.MessageSerializers
 {
     using System.Collections.Generic;
     using MessagePack;

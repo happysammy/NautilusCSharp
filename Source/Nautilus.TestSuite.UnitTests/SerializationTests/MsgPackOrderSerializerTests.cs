@@ -12,7 +12,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
     using Nautilus.DomainModel.Enums;
-    using Nautilus.Serialization.Internal;
+    using Nautilus.Serialization.MessageSerializers.Internal;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NodaTime;
     using Xunit;

@@ -18,7 +18,9 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
     using Nautilus.Execution.Network;
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Network;
-    using Nautilus.Serialization.Serializers;
+    using Nautilus.Network.Encryption;
+    using Nautilus.Serialization.Compressors;
+    using Nautilus.Serialization.MessageSerializers;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NetMQ;
@@ -52,7 +54,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
         public void Dispose()
         {
             NetMQConfig.Cleanup(false);
-            Task.Delay(100);
         }
 
         [Fact]
@@ -64,16 +65,17 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             var publisher = new EventPublisher(
                 this.container,
                 new MsgPackEventSerializer(),
+                new BypassCompressor(),
                 EncryptionConfig.None(),
                 new NetworkPort(56601));
             publisher.Start();
-
-            Task.Delay(100).Wait();
+            Task.Delay(100).Wait(); // Allow publisher to start
 
             var subscriber = new SubscriberSocket(testAddress);
             subscriber.Connect(testAddress);
             subscriber.Subscribe("Events:Trade:TESTER-001");
-            Task.Delay(100).Wait();
+
+            Task.Delay(100).Wait(); // Allow socket to subscribe
 
             var serializer = new MsgPackEventSerializer();
             var order = new StubOrderBuilder().BuildMarketOrder();
@@ -88,11 +90,17 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             var message = subscriber.ReceiveFrameBytes();
             var @event = serializer.Deserialize(message);
 
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
-
             // Assert
             Assert.Equal("Events:Trade:TESTER-001", Encoding.UTF8.GetString(topic));
             Assert.Equal(typeof(OrderRejected), @event.GetType());
+
+            // Tear Down
+            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            subscriber.Disconnect(testAddress);
+            subscriber.Dispose();
+            publisher.Stop();
+            Task.Delay(100).Wait(); // Allow server to stop
+            publisher.Dispose();
         }
     }
 }

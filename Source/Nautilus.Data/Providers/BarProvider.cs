@@ -18,6 +18,7 @@ namespace Nautilus.Data.Providers
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network;
+    using Nautilus.Network.Encryption;
 
     /// <summary>
     /// Provides <see cref="Bar"/> data to requests.
@@ -35,6 +36,7 @@ namespace Nautilus.Data.Providers
         /// <param name="dataSerializer">The data serializer for the provider.</param>
         /// <param name="inboundSerializer">The inbound message serializer.</param>
         /// <param name="outboundSerializer">The outbound message serializer.</param>
+        /// <param name="compressor">The data compressor.</param>
         /// <param name="encryption">The encryption configuration.</param>
         /// <param name="port">The port.</param>
         public BarProvider(
@@ -43,12 +45,14 @@ namespace Nautilus.Data.Providers
             IDataSerializer<Bar> dataSerializer,
             IMessageSerializer<Request> inboundSerializer,
             IMessageSerializer<Response> outboundSerializer,
+            ICompressor compressor,
             EncryptionConfig encryption,
             NetworkPort port)
             : base(
                 container,
                 inboundSerializer,
                 outboundSerializer,
+                compressor,
                 encryption,
                 Network.NetworkAddress.LocalHost,
                 port,

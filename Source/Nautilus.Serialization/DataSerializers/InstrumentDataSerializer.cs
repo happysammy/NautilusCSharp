@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Serialization.Bson
+namespace Nautilus.Serialization.DataSerializers
 {
     using System;
     using System.Collections.Generic;

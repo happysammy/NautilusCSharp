@@ -12,6 +12,7 @@ namespace Nautilus.Data.Publishers
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Entities;
     using Nautilus.Network;
+    using Nautilus.Network.Encryption;
 
     /// <summary>
     /// Provides a publisher for <see cref="Instrument"/> data.
@@ -24,18 +25,21 @@ namespace Nautilus.Data.Publishers
         /// <param name="container">The componentry container.</param>
         /// <param name="dataBusAdapter">The data bus adapter.</param>
         /// <param name="serializer">The instrument serializer.</param>
+        /// <param name="compressor">The data compressor.</param>
         /// <param name="encryption">The encryption configuration.</param>
         /// <param name="port">The port.</param>
         public InstrumentPublisher(
             IComponentryContainer container,
             IDataBusAdapter dataBusAdapter,
             IDataSerializer<Instrument> serializer,
+            ICompressor compressor,
             EncryptionConfig encryption,
             NetworkPort port)
             : base(
                 container,
                 dataBusAdapter,
                 serializer,
+                compressor,
                 encryption,
                 Network.NetworkAddress.LocalHost,
                 port,
