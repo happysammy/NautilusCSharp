@@ -10,15 +10,17 @@ namespace Nautilus.Serialization.Internal
 {
     using System;
     using System.Collections.Generic;
+    using System.Text;
     using Nautilus.Common.Componentry;
     using Nautilus.DomainModel.Identifiers;
 
-#pragma warning disable CS8604
     /// <summary>
     /// Provides an identifier cache.
     /// </summary>
     public sealed class IdentifierCache
     {
+        private static readonly Func<byte[], string> Decode = Encoding.UTF8.GetString;
+
         private readonly ObjectCache<string, TraderId> cachedTraderIds;
         private readonly ObjectCache<string, AccountId> cachedAccountIds;
         private readonly ObjectCache<string, StrategyId> cachedStrategyIds;
@@ -40,14 +42,14 @@ namespace Nautilus.Serialization.Internal
         /// </summary>
         /// <param name="unpacked">The dictionary to extract from.</param>
         /// <returns>The extracted TraderId.</returns>
-        internal TraderId TraderId(Dictionary<string, object> unpacked)
+        internal TraderId TraderId(Dictionary<string, byte[]> unpacked)
         {
             if (unpacked is null)
             {
                 throw new ArgumentNullException(nameof(unpacked), "The unpacked argument was null.");
             }
 
-            return this.cachedTraderIds.Get(unpacked[nameof(this.TraderId)].ToString());
+            return this.cachedTraderIds.Get(Decode(unpacked[nameof(this.TraderId)]));
         }
 
         /// <summary>
@@ -55,9 +57,9 @@ namespace Nautilus.Serialization.Internal
         /// </summary>
         /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <returns>The extracted AccountId.</returns>
-        internal AccountId AccountId(Dictionary<string, object> unpacked)
+        internal AccountId AccountId(Dictionary<string, byte[]> unpacked)
         {
-            return this.cachedAccountIds.Get(unpacked[nameof(this.AccountId)].ToString());
+            return this.cachedAccountIds.Get(Decode(unpacked[nameof(this.AccountId)]));
         }
 
         /// <summary>
@@ -65,9 +67,9 @@ namespace Nautilus.Serialization.Internal
         /// </summary>
         /// <param name="unpacked">The dictionary to extract from.</param>
         /// <returns>The extracted StrategyId.</returns>
-        internal StrategyId StrategyId(Dictionary<string, object> unpacked)
+        internal StrategyId StrategyId(Dictionary<string, byte[]> unpacked)
         {
-            return this.cachedStrategyIds.Get(unpacked[nameof(this.StrategyId)].ToString());
+            return this.cachedStrategyIds.Get(Decode(unpacked[nameof(this.StrategyId)]));
         }
 
         /// <summary>
@@ -75,9 +77,9 @@ namespace Nautilus.Serialization.Internal
         /// </summary>
         /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <returns>The extracted Symbol.</returns>
-        internal Symbol Symbol(Dictionary<string, object> unpacked)
+        internal Symbol Symbol(Dictionary<string, byte[]> unpacked)
         {
-            return this.cachedSymbols.Get(unpacked[nameof(this.Symbol)].ToString());
+            return this.cachedSymbols.Get(Decode(unpacked[nameof(this.Symbol)]));
         }
     }
 }

@@ -21,12 +21,12 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     {
         public byte[] Serialize(MockMessage message)
         {
-            var package = new Dictionary<string, object>
+            var package = new Dictionary<string, byte[]>
             {
-                { nameof(MockMessage.Type), message.Type.Name },
-                { nameof(MockMessage.Payload), message.Payload },
-                { nameof(MockMessage.Id), message.Id.ToString() },
-                { nameof(MockMessage.Timestamp), message.Timestamp.ToIsoString() },
+                { nameof(MockMessage.Type), ObjectSerializer.Serialize(message.Type) },
+                { nameof(MockMessage.Payload), ObjectSerializer.Serialize(message.Payload) },
+                { nameof(MockMessage.Id), ObjectSerializer.Serialize(message.Id) },
+                { nameof(MockMessage.Timestamp), ObjectSerializer.Serialize(message.Timestamp) },
             };
 
             return MessagePackSerializer.Serialize(package);
@@ -34,11 +34,11 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
         public MockMessage Deserialize(byte[] dataBytes)
         {
-            var unpacked = MessagePackSerializer.Deserialize<Dictionary<string, object>>(dataBytes);
+            var unpacked = MessagePackSerializer.Deserialize<Dictionary<string, byte[]>>(dataBytes);
 
             return new MockMessage(
                 unpacked[nameof(MockMessage.Payload)].ToString(),
-                ObjectExtractor.AsGuid(unpacked[nameof(MockMessage.Id)]),
+                ObjectDeserializer.AsGuid(unpacked[nameof(MockMessage.Id)]),
                 unpacked[nameof(MockMessage.Timestamp)].ToString().ToZonedDateTimeFromIso());
         }
     }

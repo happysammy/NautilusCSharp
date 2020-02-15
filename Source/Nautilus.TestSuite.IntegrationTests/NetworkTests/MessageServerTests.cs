@@ -48,6 +48,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
         public void Dispose()
         {
             NetMQConfig.Cleanup(false);
+            Task.Delay(100);
         }
 
         [Fact]

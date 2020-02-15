@@ -12,12 +12,10 @@ namespace Nautilus.Serialization.Serializers
     using MessagePack;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Correctness;
-    using Nautilus.Core.Extensions;
     using Nautilus.Core.Message;
     using Nautilus.Data.Messages.Requests;
     using Nautilus.Serialization.Internal;
 
-#pragma warning disable CS8604
     /// <summary>
     /// Provides a <see cref="Request"/> message binary serializer for the MessagePack specification.
     /// </summary>
@@ -37,11 +35,11 @@ namespace Nautilus.Serialization.Serializers
         /// <inheritdoc />
         public byte[] Serialize(Request request)
         {
-            var package = new Dictionary<string, object>
+            var package = new Dictionary<string, byte[]>
             {
-                { nameof(Request.Type), request.Type.Name },
-                { nameof(Request.Id), request.Id.ToString() },
-                { nameof(Request.Timestamp), request.Timestamp.ToIsoString() },
+                { nameof(Request.Type), ObjectSerializer.Serialize(request.Type) },
+                { nameof(Request.Id), ObjectSerializer.Serialize(request.Id) },
+                { nameof(Request.Timestamp), ObjectSerializer.Serialize(request.Timestamp) },
             };
 
             switch (request)
@@ -59,17 +57,17 @@ namespace Nautilus.Serialization.Serializers
         /// <inheritdoc />
         public Request Deserialize(byte[] dataBytes)
         {
-            var unpacked = MessagePackSerializer.Deserialize<Dictionary<string, object>>(dataBytes);
+            var unpacked = MessagePackSerializer.Deserialize<Dictionary<string, byte[]>>(dataBytes);
 
-            var request = unpacked[nameof(Request.Type)].ToString();
-            var id = ObjectExtractor.AsGuid(unpacked[nameof(Request.Id)]);
-            var timestamp = ObjectExtractor.AsZonedDateTime(unpacked[nameof(Request.Timestamp)]);
+            var request = ObjectDeserializer.AsString(unpacked[nameof(Request.Type)]);
+            var id = ObjectDeserializer.AsGuid(unpacked[nameof(Request.Id)]);
+            var timestamp = ObjectDeserializer.AsZonedDateTime(unpacked[nameof(Request.Timestamp)]);
 
             switch (request)
             {
                 case nameof(DataRequest):
                     return new DataRequest(
-                        this.querySerializer.Deserialize((byte[])unpacked[nameof(DataRequest.Query)]),
+                        this.querySerializer.Deserialize(unpacked[nameof(DataRequest.Query)]),
                         id,
                         timestamp);
                 default:

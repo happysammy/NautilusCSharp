@@ -19,7 +19,6 @@ namespace Nautilus.Serialization.Serializers
     using Nautilus.Network.Messages;
     using Nautilus.Serialization.Internal;
 
-#pragma warning disable CS8604
     /// <summary>
     /// Provides a <see cref="Response"/> message binary serializer for the MessagePack specification.
     /// </summary>
@@ -28,29 +27,29 @@ namespace Nautilus.Serialization.Serializers
         /// <inheritdoc />
         public byte[] Serialize(Response response)
         {
-            var package = new Dictionary<string, object>
+            var package = new Dictionary<string, byte[]>
             {
-                { nameof(Response.Type), response.Type.Name },
-                { nameof(Response.CorrelationId), response.CorrelationId.ToString() },
-                { nameof(Response.Id), response.Id.ToString() },
-                { nameof(Response.Timestamp), response.Timestamp.ToIsoString() },
+                { nameof(Response.Type), ObjectSerializer.Serialize(response.Type) },
+                { nameof(Response.CorrelationId), ObjectSerializer.Serialize(response.CorrelationId) },
+                { nameof(Response.Id), ObjectSerializer.Serialize(response.Id) },
+                { nameof(Response.Timestamp), ObjectSerializer.Serialize(response.Timestamp) },
             };
 
             switch (response)
             {
                 case MessageReceived res:
-                    package.Add(nameof(res.ReceivedType), res.ReceivedType);
+                    package.Add(nameof(res.ReceivedType), ObjectSerializer.Serialize(res.ReceivedType));
                     break;
                 case MessageRejected res:
-                    package.Add(nameof(res.Message), res.Message);
+                    package.Add(nameof(res.Message), ObjectSerializer.Serialize(res.Message));
                     break;
                 case QueryFailure res:
-                    package.Add(nameof(res.Message), res.Message);
+                    package.Add(nameof(res.Message), ObjectSerializer.Serialize(res.Message));
                     break;
                 case DataResponse res:
                     package.Add(nameof(res.Data), res.Data);
-                    package.Add(nameof(res.DataType), res.DataType);
-                    package.Add(nameof(res.DataEncoding), res.DataEncoding.ToString().ToUpper());
+                    package.Add(nameof(res.DataType), ObjectSerializer.Serialize(res.DataType));
+                    package.Add(nameof(res.DataEncoding), ObjectSerializer.Serialize(res.DataEncoding.ToString().ToUpper()));
                     break;
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(response, nameof(response));
@@ -62,38 +61,38 @@ namespace Nautilus.Serialization.Serializers
         /// <inheritdoc />
         public Response Deserialize(byte[] dataBytes)
         {
-            var unpacked = MessagePackSerializer.Deserialize<Dictionary<string, object>>(dataBytes);
+            var unpacked = MessagePackSerializer.Deserialize<Dictionary<string, byte[]>>(dataBytes);
 
-            var response = unpacked[nameof(Response.Type)].ToString();
-            var correlationId = ObjectExtractor.AsGuid(unpacked[nameof(Response.CorrelationId)]);
-            var id = ObjectExtractor.AsGuid(unpacked[nameof(Response.Id)]);
-            var timestamp = ObjectExtractor.AsZonedDateTime(unpacked[nameof(Response.Timestamp)]);
+            var response = ObjectDeserializer.AsString(unpacked[nameof(Response.Type)]);
+            var correlationId = ObjectDeserializer.AsGuid(unpacked[nameof(Response.CorrelationId)]);
+            var id = ObjectDeserializer.AsGuid(unpacked[nameof(Response.Id)]);
+            var timestamp = ObjectDeserializer.AsZonedDateTime(unpacked[nameof(Response.Timestamp)]);
 
             switch (response)
             {
                 case nameof(MessageReceived):
                     return new MessageReceived(
-                        unpacked[nameof(MessageReceived.ReceivedType)].ToString(),
+                        ObjectDeserializer.AsString(unpacked[nameof(MessageReceived.ReceivedType)]),
                         correlationId,
                         id,
                         timestamp);
                 case nameof(MessageRejected):
                     return new MessageRejected(
-                        unpacked[nameof(MessageRejected.Message)].ToString(),
+                        ObjectDeserializer.AsString(unpacked[nameof(MessageRejected.Message)]),
                         correlationId,
                         id,
                         timestamp);
                 case nameof(QueryFailure):
                     return new QueryFailure(
-                        unpacked[nameof(MessageRejected.Message)].ToString(),
+                        ObjectDeserializer.AsString(unpacked[nameof(MessageRejected.Message)]),
                         correlationId,
                         id,
                         timestamp);
                 case nameof(DataResponse):
                     return new DataResponse(
-                        (byte[])unpacked[nameof(DataResponse.Data)],
-                        unpacked[nameof(DataResponse.DataType)].ToString(),
-                        unpacked[nameof(DataResponse.DataEncoding)].ToString().ToEnum<DataEncoding>(),
+                        unpacked[nameof(DataResponse.Data)],
+                        ObjectDeserializer.AsString(unpacked[nameof(DataResponse.DataType)]),
+                        ObjectDeserializer.AsString(unpacked[nameof(DataResponse.DataEncoding)]).ToEnum<DataEncoding>(),
                         correlationId,
                         id,
                         timestamp);
