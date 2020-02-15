@@ -18,32 +18,13 @@ namespace Nautilus.Serialization.Compressors
         /// <inheritdoc />
         public byte[] Compress(byte[] source)
         {
-            var target = new byte[LZ4Codec.MaximumOutputSize(source.Length)];
-            LZ4Codec.Encode(
-                source,
-                0,
-                source.Length,
-                target,
-                0,
-                target.Length);
-
-            return target;
+            return LZ4Pickler.Pickle(source);
         }
 
         /// <inheritdoc />
         public byte[] Decompress(byte[] source)
         {
-            // Unknown decompressed size (so as per Milos Krajewski source.Length * 255 to be safe)
-            var target = new byte[source.Length * 255];
-            var decoded = LZ4Codec.Decode(
-                source,
-                0,
-                source.Length,
-                target,
-                0,
-                target.Length);
-
-            return target;
+            return LZ4Pickler.Unpickle(source);
         }
     }
 }
