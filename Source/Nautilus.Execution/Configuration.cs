@@ -48,7 +48,7 @@ namespace Nautilus.Execution
             this.NewOrdersPerSecond = (int)configJson[ConfigSection.Network]["NewOrdersPerSecond"];
 
             // FIX Settings
-            var fixConfigFile = (string)configJson[ConfigSection.FIX44]["ConfigFile"] !;
+            var fixConfigFile = (string)configJson[ConfigSection.FIX44]["ConfigFile"]!;
             var assemblyDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location)!;
             var configPath = Path.GetFullPath(Path.Combine(assemblyDirectory, fixConfigFile));
 

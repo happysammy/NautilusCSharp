@@ -53,7 +53,7 @@ namespace Nautilus.Data
             this.InstrumentPublisherPort = new NetworkPort((ushort)configJson[ConfigSection.Network]["InstrumentPubPort"]);
 
             // FIX Settings
-            var fixConfigFile = (string)configJson[ConfigSection.FIX44]["ConfigFile"] !;
+            var fixConfigFile = (string)configJson[ConfigSection.FIX44]["ConfigFile"]!;
             var assemblyDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location)!;
             var configPath = Path.GetFullPath(Path.Combine(assemblyDirectory, fixConfigFile));
 
@@ -91,13 +91,13 @@ namespace Nautilus.Data
             this.SymbolIndex =
                 JsonConvert.DeserializeObject<ImmutableDictionary<string, string>>(symbolsIndex);
 
-            var symbols = (JArray)configJson[ConfigSection.Data]["Symbols"] !;
+            var symbols = (JArray)configJson[ConfigSection.Data]["Symbols"]!;
             this.SubscribingSymbols = symbols
                 .Select(s => new Symbol(s.ToString(), fixSettings["Brokerage"]))
                 .Distinct()
                 .ToImmutableList();
 
-            var barSpecs = (JArray)configJson[ConfigSection.Data]["BarSpecifications"] !;
+            var barSpecs = (JArray)configJson[ConfigSection.Data]["BarSpecifications"]!;
             this.BarSpecifications = barSpecs
                 .Select(bs => bs.ToString())
                 .Distinct()

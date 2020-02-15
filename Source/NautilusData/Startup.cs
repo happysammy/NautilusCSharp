@@ -47,7 +47,7 @@ namespace NautilusData
             this.Environment = environment;
 
             var configJson = JObject.Parse(File.ReadAllText("config.json"));
-            var logLevel = ((string)configJson[ConfigSection.Logging]["LogLevel"] !).ToEnum<LogEventLevel>()!;
+            var logLevel = ((string)configJson[ConfigSection.Logging]["LogLevel"]!).ToEnum<LogEventLevel>()!;
             var loggingAdapter = new SerilogLogger(logLevel);
             var symbolIndex = File.ReadAllText("symbols.json");
 
