@@ -76,9 +76,29 @@ namespace Nautilus.Serialization.Internal
         /// </summary>
         /// <param name="packed">The packed order.</param>
         /// <returns>The deserialized <see cref="Order"/>.</returns>
+        internal Order Deserialize(object packed) // Do not remove this method (not redundant)
+        {
+            return this.Deserialize((byte[])packed);
+        }
+
+        /// <summary>
+        /// Returns the given bytes deserialized to an <see cref="Order"/>.
+        /// </summary>
+        /// <param name="packed">The packed order.</param>
+        /// <returns>The deserialized <see cref="Order"/>.</returns>
         internal Order Deserialize(byte[] packed)
         {
             return this.Deserialize(MessagePackSerializer.Deserialize<Dictionary<string, object>>(packed));
+        }
+
+        /// <summary>
+        /// Returns the given bytes deserialized to an <see cref="Order"/>.
+        /// </summary>
+        /// <param name="packed">The packed order.</param>
+        /// <returns>The deserialized <see cref="Order"/>.</returns>
+        internal Order? DeserializeNullable(object packed) // Do not remove this method (not redundant)
+        {
+            return this.DeserializeNullable((byte[])packed);
         }
 
         /// <summary>

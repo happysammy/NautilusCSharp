@@ -8,7 +8,9 @@
 
 namespace Nautilus.Serialization.Serializers
 {
+    using System;
     using System.Collections.Generic;
+    using System.Text;
     using MessagePack;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Correctness;
@@ -106,26 +108,52 @@ namespace Nautilus.Serialization.Serializers
                         id,
                         timestamp);
                 case nameof(SubmitOrder):
-                    var unpackedBytes = MessagePackSerializer.Deserialize<Dictionary<string, byte[]>>(dataBytes);
+                    byte[] orderBytes;
+                    try
+                    {
+                        orderBytes = (byte[])unpacked[nameof(SubmitOrder.Order)];
+                    }
+                    catch (InvalidCastException)
+                    {
+                        var orderMapTempFix = MessagePackSerializer.Deserialize<Dictionary<string, byte[]>>(dataBytes);
+                        orderBytes = orderMapTempFix[nameof(SubmitOrder.Order)];
+                    }
+
                     return new SubmitOrder(
                         this.identifierCache.TraderId(unpacked),
                         this.identifierCache.AccountId(unpacked),
                         this.identifierCache.StrategyId(unpacked),
                         ObjectExtractor.AsPositionId(unpacked),
-                        this.orderSerializer.Deserialize(unpackedBytes[nameof(SubmitOrder.Order)]),
+                        this.orderSerializer.Deserialize(orderBytes),
                         id,
                         timestamp);
                 case nameof(SubmitAtomicOrder):
-                    var unpackedBytes2 = MessagePackSerializer.Deserialize<Dictionary<string, byte[]>>(dataBytes);
+                    byte[] entryOrderBytes;
+                    byte[] stopLossOrderBytes;
+                    byte[] profitTargetBytes;
+                    try
+                    {
+                        entryOrderBytes = (byte[])unpacked[nameof(AtomicOrder.Entry)];
+                        stopLossOrderBytes = (byte[])unpacked[nameof(AtomicOrder.StopLoss)];
+                        profitTargetBytes = (byte[])unpacked[nameof(AtomicOrder.TakeProfit)];
+                    }
+                    catch (InvalidCastException)
+                    {
+                        var orderMapTempFix = MessagePackSerializer.Deserialize<Dictionary<string, byte[]>>(dataBytes);
+                        entryOrderBytes = orderMapTempFix[nameof(AtomicOrder.Entry)];
+                        stopLossOrderBytes = orderMapTempFix[nameof(AtomicOrder.StopLoss)];
+                        profitTargetBytes = orderMapTempFix[nameof(AtomicOrder.TakeProfit)];
+                    }
+
                     return new SubmitAtomicOrder(
                         this.identifierCache.TraderId(unpacked),
                         this.identifierCache.AccountId(unpacked),
                         this.identifierCache.StrategyId(unpacked),
                         ObjectExtractor.AsPositionId(unpacked),
                         new AtomicOrder(
-                            this.orderSerializer.Deserialize(unpackedBytes2[nameof(AtomicOrder.Entry)]),
-                            this.orderSerializer.Deserialize(unpackedBytes2[nameof(AtomicOrder.StopLoss)]),
-                            this.orderSerializer.DeserializeNullable(unpackedBytes2[nameof(AtomicOrder.TakeProfit)])),
+                            this.orderSerializer.Deserialize(entryOrderBytes),
+                            this.orderSerializer.Deserialize(stopLossOrderBytes),
+                            this.orderSerializer.DeserializeNullable(profitTargetBytes)),
                         id,
                         timestamp);
                 case nameof(ModifyOrder):
