@@ -1,35 +1,35 @@
 ﻿{
-  "logging": {
-    "logLevel": "Information"
+  "Logging": {
+    "LogLevel": "Information"
   },
 
-  "network": {
-    "tickRouterPort": 55501,
-    "tickPubPort": 55502,
-    "barRouterPort": 55503,
-    "barPubPort": 55504,
-    "instrumentRouterPort": 55505,
-    "instrumentPubPort": 55506
+  "Network": {
+    "TickRouterPort": 55501,
+    "TickPubPort": 55502,
+    "BarRouterPort": 55503,
+    "BarPubPort": 55504,
+    "InstrumentRouterPort": 55505,
+    "InstrumentPubPort": 55506
   },
 
-  "fix44": {
-    "configFile": "fix_fxcm2_md.cfg",
+  "FIX44": {
+    "ConfigFile": "fix_fxcm2_md.cfg",
 
-    "connectJob": {
-      "day": "Sunday",
-      "hour": 20,
-      "minute": 0
+    "ConnectJob": {
+      "Day": "Sunday",
+      "Hour": 20,
+      "Minute": 0
     },
 
-    "disconnectJob": {
-      "day": "Saturday",
-      "hour": 21,
-      "minute": 0
+    "DisconnectJob": {
+      "Day": "Saturday",
+      "Hour": 21,
+      "Minute": 0
     }
   },
 
-  "data": {
-    "symbols": [
+  "Data": {
+    "Symbols": [
       "AUDCAD",
       "AUDCHF",
       "AUDJPY",
@@ -70,7 +70,7 @@
       "DE10YB"
     ],
 
-    "barSpecifications": [
+    "BarSpecifications": [
       "1-MINUTE[ASK]",
       "1-MINUTE[MID]",
       "1-MINUTE[BID]",
@@ -79,16 +79,16 @@
       "1-HOUR[BID]"
     ],
 
-    "trimJobTicks": {
-      "hour": 22,
-      "minute": 0,
-      "windowDays": 2
+    "TrimJobTicks": {
+      "Hour": 22,
+      "Minute": 0,
+      "WindowDays": 2
     },
 
-    "trimJobBars": {
-      "hour": 22,
-      "minute": 0,
-      "windowDays": 10
+    "TrimJobBars": {
+      "Hour": 22,
+      "Minute": 0,
+      "WindowDays": 10
     }
   }
 }

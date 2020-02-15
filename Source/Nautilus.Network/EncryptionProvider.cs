@@ -22,7 +22,7 @@ namespace Nautilus.Network
         /// </summary>
         /// <param name="config">The configuration for the encryption.</param>
         /// <param name="socket">The socket for the encryption.</param>
-        public static void Setup(EncryptionConfig config, NetMQSocket socket)
+        public static void SetupSocket(EncryptionConfig config, NetMQSocket socket)
         {
             // Load keys
             var publicKey = Encoding.UTF8.GetBytes(File.ReadAllText(config.KeysDirectory));

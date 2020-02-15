@@ -16,26 +16,22 @@ namespace Nautilus.Common.Configuration
         /// <summary>
         /// Gets the logging configuration section string.
         /// </summary>
-        public static string Logging { get; } = nameof(Logging).ToLower();
+        public static string Logging { get; } = nameof(Logging);
 
         /// <summary>
         /// Gets the logging configuration section string.
         /// </summary>
-        public static string Network { get; } = nameof(Network).ToLower();
+        public static string Network { get; } = nameof(Network);
 
         /// <summary>
         /// Gets the FIX configuration section string.
         /// </summary>
-        public static string Fix44 { get; } = nameof(Fix44).ToLower();
+        // ReSharper disable once InconsistentNaming (correct name)
+        public static string FIX44 { get; } = nameof(FIX44);
 
         /// <summary>
         /// Gets the database configuration section string.
         /// </summary>
-        public static string Data { get; } = nameof(Data).ToLower();
-
-        /// <summary>
-        /// Gets the symbols to subscribe to configuration section string.
-        /// </summary>
-        public static string Symbols { get; } = nameof(Symbols).ToLower();
+        public static string Data { get; } = nameof(Data);
     }
 }

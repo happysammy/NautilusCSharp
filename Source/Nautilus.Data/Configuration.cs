@@ -29,7 +29,7 @@ namespace Nautilus.Data
     /// <summary>
     /// Represents a <see cref="DataService"/> configuration.
     /// </summary>
-    public class Configuration
+    public sealed class Configuration
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Configuration"/> class.
@@ -45,15 +45,15 @@ namespace Nautilus.Data
             this.LoggingAdapter = loggingAdapter;
 
             // Network Settings
-            this.TickRouterPort = new NetworkPort((ushort)configJson[ConfigSection.Network]["tickRouterPort"]);
-            this.TickPublisherPort = new NetworkPort((ushort)configJson[ConfigSection.Network]["tickPubPort"]);
-            this.BarRouterPort = new NetworkPort((ushort)configJson[ConfigSection.Network]["barRouterPort"]);
-            this.BarPublisherPort = new NetworkPort((ushort)configJson[ConfigSection.Network]["barPubPort"]);
-            this.InstrumentRouterPort = new NetworkPort((ushort)configJson[ConfigSection.Network]["instrumentRouterPort"]);
-            this.InstrumentPublisherPort = new NetworkPort((ushort)configJson[ConfigSection.Network]["instrumentPubPort"]);
+            this.TickRouterPort = new NetworkPort((ushort)configJson[ConfigSection.Network]["TickRouterPort"]);
+            this.TickPublisherPort = new NetworkPort((ushort)configJson[ConfigSection.Network]["TickPubPort"]);
+            this.BarRouterPort = new NetworkPort((ushort)configJson[ConfigSection.Network]["BarRouterPort"]);
+            this.BarPublisherPort = new NetworkPort((ushort)configJson[ConfigSection.Network]["BarPubPort"]);
+            this.InstrumentRouterPort = new NetworkPort((ushort)configJson[ConfigSection.Network]["InstrumentRouterPort"]);
+            this.InstrumentPublisherPort = new NetworkPort((ushort)configJson[ConfigSection.Network]["InstrumentPubPort"]);
 
             // FIX Settings
-            var fixConfigFile = (string)configJson[ConfigSection.Fix44]["configFile"] !;
+            var fixConfigFile = (string)configJson[ConfigSection.FIX44]["ConfigFile"] !;
             var assemblyDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location)!;
             var configPath = Path.GetFullPath(Path.Combine(assemblyDirectory, fixConfigFile));
 
@@ -67,14 +67,14 @@ namespace Nautilus.Data
                 fixSettings["Password"]);
             var sendAccountTag = Convert.ToBoolean(fixSettings["SendAccountTag"]);
 
-            var connectDay = configJson[ConfigSection.Fix44]["connectJob"]["day"].ToString().ToEnum<IsoDayOfWeek>();
-            var connectHour = (int)configJson[ConfigSection.Fix44]["connectJob"]["hour"];
-            var connectMinute = (int)configJson[ConfigSection.Fix44]["connectJob"]["minute"];
+            var connectDay = configJson[ConfigSection.FIX44]["ConnectJob"]["Day"].ToString().ToEnum<IsoDayOfWeek>();
+            var connectHour = (int)configJson[ConfigSection.FIX44]["ConnectJob"]["Hour"];
+            var connectMinute = (int)configJson[ConfigSection.FIX44]["ConnectJob"]["Minute"];
             var connectTime = (connectDay, new LocalTime(connectHour, connectMinute));
 
-            var disconnectDay = configJson[ConfigSection.Fix44]["disconnectJob"]["day"].ToString().ToEnum<IsoDayOfWeek>();
-            var disconnectHour = (int)configJson[ConfigSection.Fix44]["disconnectJob"]["hour"];
-            var disconnectMinute = (int)configJson[ConfigSection.Fix44]["disconnectJob"]["minute"];
+            var disconnectDay = configJson[ConfigSection.FIX44]["DisconnectJob"]["Day"].ToString().ToEnum<IsoDayOfWeek>();
+            var disconnectHour = (int)configJson[ConfigSection.FIX44]["DisconnectJob"]["Hour"];
+            var disconnectMinute = (int)configJson[ConfigSection.FIX44]["DisconnectJob"]["Minute"];
             var disconnectTime = (disconnectDay, new LocalTime(disconnectHour, disconnectMinute));
 
             this.FixConfiguration = new FixConfiguration(
@@ -91,28 +91,28 @@ namespace Nautilus.Data
             this.SymbolIndex =
                 JsonConvert.DeserializeObject<ImmutableDictionary<string, string>>(symbolsIndex);
 
-            var symbols = (JArray)configJson[ConfigSection.Data]["symbols"] !;
+            var symbols = (JArray)configJson[ConfigSection.Data]["Symbols"] !;
             this.SubscribingSymbols = symbols
                 .Select(s => new Symbol(s.ToString(), fixSettings["Brokerage"]))
                 .Distinct()
                 .ToImmutableList();
 
-            var barSpecs = (JArray)configJson[ConfigSection.Data]["barSpecifications"] !;
+            var barSpecs = (JArray)configJson[ConfigSection.Data]["BarSpecifications"] !;
             this.BarSpecifications = barSpecs
                 .Select(bs => bs.ToString())
                 .Distinct()
                 .Select(BarSpecification.FromString)
                 .ToImmutableList();
 
-            var tickTrimHour = (int)configJson[ConfigSection.Data]["trimJobTicks"]["hour"];
-            var tickTrimMinute = (int)configJson[ConfigSection.Data]["trimJobTicks"]["minute"];
+            var tickTrimHour = (int)configJson[ConfigSection.Data]["TrimJobTicks"]["Hour"];
+            var tickTrimMinute = (int)configJson[ConfigSection.Data]["TrimJobTicks"]["Minute"];
             this.TickDataTrimTime = new LocalTime(tickTrimHour, tickTrimMinute);
-            this.TickDataTrimWindowDays = (int)configJson[ConfigSection.Data]["trimJobTicks"]["windowDays"];
+            this.TickDataTrimWindowDays = (int)configJson[ConfigSection.Data]["TrimJobTicks"]["WindowDays"];
 
-            var barTrimHour = (int)configJson[ConfigSection.Data]["trimJobBars"]["hour"];
-            var barTrimMinute = (int)configJson[ConfigSection.Data]["trimJobBars"]["minute"];
+            var barTrimHour = (int)configJson[ConfigSection.Data]["TrimJobBars"]["Hour"];
+            var barTrimMinute = (int)configJson[ConfigSection.Data]["TrimJobBars"]["Minute"];
             this.BarDataTrimTime = new LocalTime(barTrimHour, barTrimMinute);
-            this.BarDataTrimWindowDays = (int)configJson[ConfigSection.Data]["trimJobBars"]["windowDays"];
+            this.BarDataTrimWindowDays = (int)configJson[ConfigSection.Data]["TrimJobBars"]["WindowDays"];
         }
 
         /// <summary>

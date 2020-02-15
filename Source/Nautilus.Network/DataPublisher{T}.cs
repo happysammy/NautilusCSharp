@@ -59,7 +59,7 @@ namespace Nautilus.Network
 
             if (encryption.UseEncryption)
             {
-                EncryptionProvider.Setup(encryption, this.socket);
+                EncryptionProvider.SetupSocket(encryption, this.socket);
             }
 
             this.dataSerializer = dataSerializer;
@@ -85,7 +85,7 @@ namespace Nautilus.Network
         {
             if (!this.socket.IsDisposed)
             {
-                this.socket?.Dispose();
+                this.socket.Dispose();
             }
         }
 

@@ -1,89 +1,28 @@
 ﻿{
-  "logging": {
-    "logLevel": "Information"
+  "Logging": {
+    "LogLevel": "Information"
   },
 
-  "network": {
-    "commandsPort": 55555,
-    "eventsPort": 55556,
-    "commandsPerSecond": 100,
-    "newOrdersPerSecond": 15
+  "Network": {
+    "CommandsPort": 55555,
+    "EventsPort": 55556,
+    "CommandsPerSecond": 100,
+    "NewOrdersPerSecond": 15
   },
 
-  "fix44": {
-    "configFile": "fix_fxcm2.cfg",
+  "FIX44": {
+    "ConfigFile": "fix_fxcm2.cfg",
 
-    "connectJob": {
-      "day": "Sunday",
-      "hour": 20,
-      "minute": 0
+    "ConnectJob": {
+      "Day": "Sunday",
+      "Hour": 20,
+      "Minute": 0
     },
 
-    "disconnectJob": {
-      "day": "Saturday",
-      "hour": 21,
-      "minute": 0
+    "DisconnectJob": {
+      "Day": "Saturday",
+      "Hour": 21,
+      "Minute": 0
     }
-  },
-
-  "symbols": [
-    "AUDCAD",
-    "AUDCHF",
-    "AUDJPY",
-    "AUDNZD",
-    "AUDSGD",
-    "AUDUSD",
-    "CADCHF",
-    "CADHKD",
-    "CADJPY",
-    "CHFJPY",
-    "CHFSGD",
-    "EURAUD",
-    "EURCAD",
-    "EURCHF",
-    "EURDKK",
-    "EURGBP",
-    "EURHKD",
-    "EURHUF",
-    "EURJPY",
-    "EURNOK",
-    "EURNZD",
-    "EURPLN",
-    "EURRUB",
-    "EURSEK",
-    "EURSGD",
-    "EURTRY",
-    "EURUSD",
-    "GBPAUD",
-    "GBPCAD",
-    "GBPCHF",
-    "GBPJPY",
-    "GBPNZD",
-    "GBPUSD",
-    "HKDJPY",
-    "NZDCAD",
-    "NZDCHF",
-    "NZDJPY",
-    "NZDUSD",
-    "SGDJPY",
-    "TRYJPY",
-    "USDCAD",
-    "USDCHF",
-    "USDCNH",
-    "USDCZK",
-    "USDDKK",
-    "USDHKD",
-    "USDHUF",
-    "USDJPY",
-    "USDMXN",
-    "USDNOK",
-    "USDPLN",
-    "USDRON",
-    "USDRUB",
-    "USDSEK",
-    "USDSGD",
-    "USDTRY",
-    "USDZAR",
-    "ZARJPY"
-  ]
+  }
 }

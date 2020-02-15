@@ -42,13 +42,13 @@ namespace Nautilus.Execution
             this.LoggingAdapter = loggingAdapter;
 
             // Network Settings
-            this.CommandsPort = new NetworkPort((ushort)configJson[ConfigSection.Network]["commandsPort"]);
-            this.EventsPort = new NetworkPort((ushort)configJson[ConfigSection.Network]["eventsPort"]);
-            this.CommandsPerSecond = (int)configJson[ConfigSection.Network]["commandsPerSecond"];
-            this.NewOrdersPerSecond = (int)configJson[ConfigSection.Network]["newOrdersPerSecond"];
+            this.CommandsPort = new NetworkPort((ushort)configJson[ConfigSection.Network]["CommandsPort"]);
+            this.EventsPort = new NetworkPort((ushort)configJson[ConfigSection.Network]["EventsPort"]);
+            this.CommandsPerSecond = (int)configJson[ConfigSection.Network]["CommandsPerSecond"];
+            this.NewOrdersPerSecond = (int)configJson[ConfigSection.Network]["NewOrdersPerSecond"];
 
             // FIX Settings
-            var fixConfigFile = (string)configJson[ConfigSection.Fix44]["configFile"] !;
+            var fixConfigFile = (string)configJson[ConfigSection.FIX44]["ConfigFile"] !;
             var assemblyDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location)!;
             var configPath = Path.GetFullPath(Path.Combine(assemblyDirectory, fixConfigFile));
 
@@ -62,14 +62,14 @@ namespace Nautilus.Execution
                 fixSettings["Password"]);
             var sendAccountTag = Convert.ToBoolean(fixSettings["SendAccountTag"]);
 
-            var connectDay = configJson[ConfigSection.Fix44]["connectJob"]["day"].ToString().ToEnum<IsoDayOfWeek>();
-            var connectHour = (int)configJson[ConfigSection.Fix44]["connectJob"]["hour"];
-            var connectMinute = (int)configJson[ConfigSection.Fix44]["connectJob"]["minute"];
+            var connectDay = configJson[ConfigSection.FIX44]["ConnectJob"]["Day"].ToString().ToEnum<IsoDayOfWeek>();
+            var connectHour = (int)configJson[ConfigSection.FIX44]["ConnectJob"]["Hour"];
+            var connectMinute = (int)configJson[ConfigSection.FIX44]["ConnectJob"]["Minute"];
             var connectTime = (connectDay, new LocalTime(connectHour, connectMinute));
 
-            var disconnectDay = configJson[ConfigSection.Fix44]["disconnectJob"]["day"].ToString().ToEnum<IsoDayOfWeek>();
-            var disconnectHour = (int)configJson[ConfigSection.Fix44]["disconnectJob"]["hour"];
-            var disconnectMinute = (int)configJson[ConfigSection.Fix44]["disconnectJob"]["minute"];
+            var disconnectDay = configJson[ConfigSection.FIX44]["DisconnectJob"]["Day"].ToString().ToEnum<IsoDayOfWeek>();
+            var disconnectHour = (int)configJson[ConfigSection.FIX44]["DisconnectJob"]["Hour"];
+            var disconnectMinute = (int)configJson[ConfigSection.FIX44]["DisconnectJob"]["Minute"];
             var disconnectTime = (disconnectDay, new LocalTime(disconnectHour, disconnectMinute));
 
             this.FixConfiguration = new FixConfiguration(

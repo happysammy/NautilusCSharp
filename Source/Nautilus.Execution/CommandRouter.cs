@@ -19,7 +19,7 @@ namespace Nautilus.Execution
     /// <summary>
     /// Provides a <see cref="Command"/> message server using the ZeroMQ protocol.
     /// </summary>
-    public class CommandRouter : MessageBusConnected
+    public sealed class CommandRouter : MessageBusConnected
     {
         private readonly Throttler commandThrottler;
         private readonly Throttler newOrderThrottler;

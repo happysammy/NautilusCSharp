@@ -58,7 +58,7 @@ namespace Nautilus.Network
 
             if (encryption.UseEncryption)
             {
-                EncryptionProvider.Setup(encryption, this.socket);
+                EncryptionProvider.SetupSocket(encryption, this.socket);
             }
 
             this.serializer = serializer;

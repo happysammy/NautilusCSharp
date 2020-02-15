@@ -21,7 +21,7 @@ namespace Nautilus.Execution.Network
     /// </summary>
     public sealed class CommandServer : MessageServer<Command, Response>
     {
-        private readonly IEndpoint commandsSink;
+        private readonly IEndpoint commandRouter;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandServer"/> class.
@@ -29,14 +29,14 @@ namespace Nautilus.Execution.Network
         /// <param name="container">The component setup container.</param>
         /// <param name="inboundSerializer">The inbound message serializer.</param>
         /// <param name="outboundSerializer">The outbound message serializer.</param>
-        /// <param name="commandsSink">The commands endpoint for deserialized commands.</param>
+        /// <param name="commandRouter">The command router endpoint.</param>
         /// <param name="encryption">The encryption configuration.</param>
         /// <param name="port">The consumers port.</param>
         public CommandServer(
             IComponentryContainer container,
             IMessageSerializer<Command> inboundSerializer,
             IMessageSerializer<Response> outboundSerializer,
-            IEndpoint commandsSink,
+            IEndpoint commandRouter,
             EncryptionConfig encryption,
             NetworkPort port)
             : base(
@@ -48,7 +48,7 @@ namespace Nautilus.Execution.Network
                 port,
                 Guid.NewGuid())
         {
-            this.commandsSink = commandsSink;
+            this.commandRouter = commandRouter;
 
             this.RegisterHandler<SubmitOrder>(this.OnMessage);
             this.RegisterHandler<SubmitAtomicOrder>(this.OnMessage);
@@ -59,31 +59,31 @@ namespace Nautilus.Execution.Network
 
         private void OnMessage(SubmitOrder command)
         {
-            this.commandsSink.Send(command);
+            this.commandRouter.Send(command);
             this.SendReceived(command);
         }
 
         private void OnMessage(SubmitAtomicOrder command)
         {
-            this.commandsSink.Send(command);
+            this.commandRouter.Send(command);
             this.SendReceived(command);
         }
 
         private void OnMessage(CancelOrder command)
         {
-            this.commandsSink.Send(command);
+            this.commandRouter.Send(command);
             this.SendReceived(command);
         }
 
         private void OnMessage(ModifyOrder command)
         {
-            this.commandsSink.Send(command);
+            this.commandRouter.Send(command);
             this.SendReceived(command);
         }
 
         private void OnMessage(AccountInquiry command)
         {
-            this.commandsSink.Send(command);
+            this.commandRouter.Send(command);
             this.SendReceived(command);
         }
     }
