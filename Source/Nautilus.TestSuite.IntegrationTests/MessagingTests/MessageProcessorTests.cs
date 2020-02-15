@@ -104,8 +104,9 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
             // Act
             processor.Endpoint.Send("BOOM!");
 
+            // TODO: This test is not picking up the exception from the background thread
             // Assert
-            // TODO: Assert.Single(processor.Exceptions);
+            // Assert.Single(processor.Exceptions);
             // Assert.Contains("test", processor.UnhandledMessages);
             // Assert.Equal(0, processor.InputCount);
             // Assert.Equal(1, processor.ProcessedCount);
