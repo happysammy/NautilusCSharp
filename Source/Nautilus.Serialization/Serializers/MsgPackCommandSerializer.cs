@@ -10,7 +10,6 @@ namespace Nautilus.Serialization.Serializers
 {
     using System;
     using System.Collections.Generic;
-    using System.Text;
     using MessagePack;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Correctness;
@@ -108,6 +107,7 @@ namespace Nautilus.Serialization.Serializers
                         id,
                         timestamp);
                 case nameof(SubmitOrder):
+                    // TODO: Temporary fix for python serialized orders
                     byte[] orderBytes;
                     try
                     {
@@ -128,6 +128,7 @@ namespace Nautilus.Serialization.Serializers
                         id,
                         timestamp);
                 case nameof(SubmitAtomicOrder):
+                    // TODO: Temporary fix for python serialized orders
                     byte[] entryOrderBytes;
                     byte[] stopLossOrderBytes;
                     byte[] profitTargetBytes;
