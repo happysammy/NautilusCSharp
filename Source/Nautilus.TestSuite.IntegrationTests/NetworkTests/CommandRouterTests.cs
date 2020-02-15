@@ -15,7 +15,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
     using Nautilus.Execution.Network;
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Network;
-    using Nautilus.Serialization.MessagePack;
+    using Nautilus.Serialization.Serializers;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NetMQ;
     using NetMQ.Sockets;

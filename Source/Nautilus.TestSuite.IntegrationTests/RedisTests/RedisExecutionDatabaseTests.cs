@@ -18,7 +18,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Redis;
     using Nautilus.Redis.Execution;
-    using Nautilus.Serialization.MessagePack;
+    using Nautilus.Serialization.Serializers;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using StackExchange.Redis;

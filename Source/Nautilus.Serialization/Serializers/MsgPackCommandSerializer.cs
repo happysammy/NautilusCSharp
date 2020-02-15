@@ -6,9 +6,10 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Serialization.MessagePack
+namespace Nautilus.Serialization.Serializers
 {
-    using MsgPack;
+    using System.Collections.Generic;
+    using MessagePack;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
@@ -17,6 +18,7 @@ namespace Nautilus.Serialization.MessagePack
     using Nautilus.DomainModel.Entities;
     using Nautilus.Serialization.Internal;
 
+#pragma warning disable CS8604
     /// <summary>
     /// Provides a <see cref="Command"/> message binary serializer for the MessagePack specification.
     /// </summary>
@@ -37,7 +39,7 @@ namespace Nautilus.Serialization.MessagePack
         /// <inheritdoc />
         public byte[] Serialize(Command command)
         {
-            var package = new MessagePackObjectDictionary
+            var package = new Dictionary<string, object>
             {
                 { nameof(Command.Type), command.Type.Name },
                 { nameof(Command.Id), command.Id.ToString() },
@@ -83,17 +85,17 @@ namespace Nautilus.Serialization.MessagePack
                     throw ExceptionFactory.InvalidSwitchArgument(command, nameof(command));
             }
 
-            return MsgPackSerializer.Serialize(package);
+            return MessagePackSerializer.Serialize(package);
         }
 
         /// <inheritdoc />
         public Command Deserialize(byte[] dataBytes)
         {
-            var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(dataBytes);
+            var unpacked = MessagePackSerializer.Deserialize<Dictionary<string, object>>(dataBytes);
 
-            var command = unpacked[nameof(Command.Type)].AsString();
+            var command = unpacked[nameof(Command.Type)].ToString();
             var id = ObjectExtractor.AsGuid(unpacked[nameof(Command.Id)]);
-            var timestamp = unpacked[nameof(Command.Timestamp)].AsString().ToZonedDateTimeFromIso();
+            var timestamp = unpacked[nameof(Command.Timestamp)].ToString().ToZonedDateTimeFromIso();
 
             switch (command)
             {
@@ -104,24 +106,26 @@ namespace Nautilus.Serialization.MessagePack
                         id,
                         timestamp);
                 case nameof(SubmitOrder):
+                    var unpackedBytes = MessagePackSerializer.Deserialize<Dictionary<string, byte[]>>(dataBytes);
                     return new SubmitOrder(
                         this.identifierCache.TraderId(unpacked),
                         this.identifierCache.AccountId(unpacked),
                         this.identifierCache.StrategyId(unpacked),
                         ObjectExtractor.AsPositionId(unpacked),
-                        this.orderSerializer.Deserialize(unpacked[nameof(SubmitOrder.Order)].AsBinary()),
+                        this.orderSerializer.Deserialize(unpackedBytes[nameof(SubmitOrder.Order)]),
                         id,
                         timestamp);
                 case nameof(SubmitAtomicOrder):
+                    var unpackedBytes2 = MessagePackSerializer.Deserialize<Dictionary<string, byte[]>>(dataBytes);
                     return new SubmitAtomicOrder(
                         this.identifierCache.TraderId(unpacked),
                         this.identifierCache.AccountId(unpacked),
                         this.identifierCache.StrategyId(unpacked),
                         ObjectExtractor.AsPositionId(unpacked),
                         new AtomicOrder(
-                            this.orderSerializer.Deserialize(unpacked[nameof(AtomicOrder.Entry)].AsBinary()),
-                            this.orderSerializer.Deserialize(unpacked[nameof(AtomicOrder.StopLoss)].AsBinary()),
-                            this.orderSerializer.DeserializeNullable(unpacked[nameof(AtomicOrder.TakeProfit)].AsBinary())),
+                            this.orderSerializer.Deserialize(unpackedBytes2[nameof(AtomicOrder.Entry)]),
+                            this.orderSerializer.Deserialize(unpackedBytes2[nameof(AtomicOrder.StopLoss)]),
+                            this.orderSerializer.DeserializeNullable(unpackedBytes2[nameof(AtomicOrder.TakeProfit)])),
                         id,
                         timestamp);
                 case nameof(ModifyOrder):
@@ -138,7 +142,7 @@ namespace Nautilus.Serialization.MessagePack
                         this.identifierCache.TraderId(unpacked),
                         this.identifierCache.AccountId(unpacked),
                         ObjectExtractor.AsOrderId(unpacked),
-                        unpacked[nameof(CancelOrder.CancelReason)].AsString(),
+                        unpacked[nameof(CancelOrder.CancelReason)].ToString(),
                         id,
                         timestamp);
                 default:

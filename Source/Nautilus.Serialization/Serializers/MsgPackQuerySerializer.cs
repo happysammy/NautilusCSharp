@@ -6,14 +6,14 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Serialization.MessagePack
+namespace Nautilus.Serialization.Serializers
 {
     using System.Collections.Generic;
-    using MsgPack;
+    using MessagePack;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Correctness;
-    using Nautilus.Serialization.Internal;
 
+#pragma warning disable CS8604
     /// <summary>
     /// Provides a serializer for query objects.
     /// </summary>
@@ -24,24 +24,24 @@ namespace Nautilus.Serialization.MessagePack
         {
             Debug.NotEmpty(query, nameof(query));
 
-            var package = new MessagePackObjectDictionary();
+            var package = new Dictionary<string, object>();
             foreach (var (key, value) in query)
             {
                 package.Add(key, value);
             }
 
-            return MsgPackSerializer.Serialize(package);
+            return MessagePackSerializer.Serialize(package);
         }
 
         /// <inheritdoc />
         public Dictionary<string, string> Deserialize(byte[] dataBytes)
         {
-            var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(dataBytes);
+            var unpacked = MessagePackSerializer.Deserialize<Dictionary<string, object>>(dataBytes);
 
             var query = new Dictionary<string, string>();
             foreach (var (key, value) in unpacked)
             {
-                query.Add(key.AsString(), value.AsString());
+                query.Add(key, value.ToString());
             }
 
             return query;

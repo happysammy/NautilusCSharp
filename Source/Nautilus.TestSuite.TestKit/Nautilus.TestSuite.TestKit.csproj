@@ -31,8 +31,9 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="MessagePack" Version="2.1.90" />
+        <PackageReference Include="MessagePackAnalyzer" Version="2.1.90" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
-        <PackageReference Include="MsgPack.Cli" Version="1.0.1" />
         <PackageReference Include="xunit" Version="2.4.1" />
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1" />
         <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />

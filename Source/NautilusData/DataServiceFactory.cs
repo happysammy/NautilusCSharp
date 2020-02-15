@@ -27,7 +27,7 @@ namespace NautilusData
     using Nautilus.Redis.Data;
     using Nautilus.Scheduler;
     using Nautilus.Serialization.Bson;
-    using Nautilus.Serialization.MessagePack;
+    using Nautilus.Serialization.Serializers;
     using NodaTime;
     using StackExchange.Redis;
 

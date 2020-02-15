@@ -6,9 +6,10 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Serialization.MessagePack
+namespace Nautilus.Serialization.Serializers
 {
-    using MsgPack;
+    using System.Collections.Generic;
+    using MessagePack;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Correctness;
@@ -18,6 +19,7 @@ namespace Nautilus.Serialization.MessagePack
     using Nautilus.Network.Messages;
     using Nautilus.Serialization.Internal;
 
+#pragma warning disable CS8604
     /// <summary>
     /// Provides a <see cref="Response"/> message binary serializer for the MessagePack specification.
     /// </summary>
@@ -26,7 +28,7 @@ namespace Nautilus.Serialization.MessagePack
         /// <inheritdoc />
         public byte[] Serialize(Response response)
         {
-            var package = new MessagePackObjectDictionary
+            var package = new Dictionary<string, object>
             {
                 { nameof(Response.Type), response.Type.Name },
                 { nameof(Response.CorrelationId), response.CorrelationId.ToString() },
@@ -54,13 +56,13 @@ namespace Nautilus.Serialization.MessagePack
                     throw ExceptionFactory.InvalidSwitchArgument(response, nameof(response));
             }
 
-            return MsgPackSerializer.Serialize(package);
+            return MessagePackSerializer.Serialize(package);
         }
 
         /// <inheritdoc />
         public Response Deserialize(byte[] dataBytes)
         {
-            var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(dataBytes);
+            var unpacked = MessagePackSerializer.Deserialize<Dictionary<string, object>>(dataBytes);
 
             var response = unpacked[nameof(Response.Type)].ToString();
             var correlationId = ObjectExtractor.AsGuid(unpacked[nameof(Response.CorrelationId)]);
@@ -71,27 +73,27 @@ namespace Nautilus.Serialization.MessagePack
             {
                 case nameof(MessageReceived):
                     return new MessageReceived(
-                        unpacked[nameof(MessageReceived.ReceivedType)].AsString(),
+                        unpacked[nameof(MessageReceived.ReceivedType)].ToString(),
                         correlationId,
                         id,
                         timestamp);
                 case nameof(MessageRejected):
                     return new MessageRejected(
-                        unpacked[nameof(MessageRejected.Message)].AsString(),
+                        unpacked[nameof(MessageRejected.Message)].ToString(),
                         correlationId,
                         id,
                         timestamp);
                 case nameof(QueryFailure):
                     return new QueryFailure(
-                        unpacked[nameof(MessageRejected.Message)].AsString(),
+                        unpacked[nameof(MessageRejected.Message)].ToString(),
                         correlationId,
                         id,
                         timestamp);
                 case nameof(DataResponse):
                     return new DataResponse(
-                        unpacked[nameof(DataResponse.Data)].AsBinary(),
-                        unpacked[nameof(DataResponse.DataType)].AsString(),
-                        unpacked[nameof(DataResponse.DataEncoding)].AsString().ToEnum<DataEncoding>(),
+                        (byte[])unpacked[nameof(DataResponse.Data)],
+                        unpacked[nameof(DataResponse.DataType)].ToString(),
+                        unpacked[nameof(DataResponse.DataEncoding)].ToString().ToEnum<DataEncoding>(),
                         correlationId,
                         id,
                         timestamp);

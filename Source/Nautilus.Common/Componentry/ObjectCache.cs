@@ -17,7 +17,7 @@ namespace Nautilus.Common.Componentry
     /// </summary>
     /// <typeparam name="TKey">The key type for the cache.</typeparam>
     /// <typeparam name="TValue">The value type for the cache.</typeparam>
-    public class ObjectCache<TKey, TValue>
+    public sealed class ObjectCache<TKey, TValue>
         where TKey : class
     {
         private readonly Dictionary<TKey, TValue> index;

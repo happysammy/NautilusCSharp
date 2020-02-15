@@ -8,34 +8,33 @@
 
 namespace Nautilus.Serialization.Internal
 {
-    using MsgPack;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
     /// <summary>
-    /// Provides methods for packing objects to <see cref="MessagePackObject"/>s.
+    /// Provides methods for converting objects to strings to pack.
     /// </summary>
     internal static class ObjectPacker
     {
         private const string None = nameof(None);
 
         /// <summary>
-        /// Return a <see cref="MessagePackObject"/> from the given <see cref="Price"/>?.
+        /// Return a string to pack from the given <see cref="Price"/>?.
         /// </summary>
         /// <param name="price">The nullable price.</param>
-        /// <returns>The packed <see cref="MessagePackObject"/>.</returns>
-        internal static MessagePackObject Pack(Price? price)
+        /// <returns>The string to pack.</returns>
+        internal static string Pack(Price? price)
         {
             return price is null ? None : price.ToString();
         }
 
         /// <summary>
-        /// Returns a <see cref="MessagePackObject"/> from the given <see cref="ZonedDateTime"/>?.
+        /// Returns a string to pack from the given <see cref="ZonedDateTime"/>?.
         /// </summary>
         /// <param name="dateTime">The nullable zoned date time.</param>
-        /// <returns>The packed <see cref="MessagePackObject"/>.</returns>
-        internal static MessagePackObject Pack(ZonedDateTime? dateTime)
+        /// <returns>The string to pack.</returns>
+        internal static string Pack(ZonedDateTime? dateTime)
         {
             return dateTime is null ? None : dateTime.Value.ToIsoString();
         }

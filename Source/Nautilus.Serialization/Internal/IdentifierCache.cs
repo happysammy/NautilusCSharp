@@ -8,10 +8,12 @@
 
 namespace Nautilus.Serialization.Internal
 {
-    using MsgPack;
+    using System;
+    using System.Collections.Generic;
     using Nautilus.Common.Componentry;
     using Nautilus.DomainModel.Identifiers;
 
+#pragma warning disable CS8604
     /// <summary>
     /// Provides an identifier cache.
     /// </summary>
@@ -34,43 +36,48 @@ namespace Nautilus.Serialization.Internal
         }
 
         /// <summary>
-        /// Returns a TraderId extracted from the given <see cref="MessagePackObjectDictionary"/>.
+        /// Returns a TraderId extracted from the given unpacked dictionary.
         /// </summary>
         /// <param name="unpacked">The dictionary to extract from.</param>
         /// <returns>The extracted TraderId.</returns>
-        internal TraderId TraderId(MessagePackObjectDictionary unpacked)
+        internal TraderId TraderId(Dictionary<string, object> unpacked)
         {
-            return this.cachedTraderIds.Get(unpacked[nameof(this.TraderId)].AsString());
+            if (unpacked is null)
+            {
+                throw new ArgumentNullException(nameof(unpacked), "The unpacked argument was null.");
+            }
+
+            return this.cachedTraderIds.Get(unpacked[nameof(this.TraderId)].ToString());
         }
 
         /// <summary>
-        /// Returns an AccountId extracted from the given <see cref="MessagePackObject"/>.
+        /// Returns an AccountId extracted from the given unpacked dictionary.
         /// </summary>
         /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <returns>The extracted AccountId.</returns>
-        internal AccountId AccountId(MessagePackObjectDictionary unpacked)
+        internal AccountId AccountId(Dictionary<string, object> unpacked)
         {
-            return this.cachedAccountIds.Get(unpacked[nameof(this.AccountId)].AsString());
+            return this.cachedAccountIds.Get(unpacked[nameof(this.AccountId)].ToString());
         }
 
         /// <summary>
-        /// Returns a StrategyId extracted from the given <see cref="MessagePackObjectDictionary"/>.
+        /// Returns a StrategyId extracted from the given unpacked dictionary.
         /// </summary>
         /// <param name="unpacked">The dictionary to extract from.</param>
         /// <returns>The extracted StrategyId.</returns>
-        internal StrategyId StrategyId(MessagePackObjectDictionary unpacked)
+        internal StrategyId StrategyId(Dictionary<string, object> unpacked)
         {
-            return this.cachedStrategyIds.Get(unpacked[nameof(this.StrategyId)].AsString());
+            return this.cachedStrategyIds.Get(unpacked[nameof(this.StrategyId)].ToString());
         }
 
         /// <summary>
-        /// Returns a Symbol extracted from the given <see cref="MessagePackObject"/>.
+        /// Returns a Symbol extracted from the given unpacked dictionary.
         /// </summary>
         /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <returns>The extracted Symbol.</returns>
-        internal Symbol Symbol(MessagePackObjectDictionary unpacked)
+        internal Symbol Symbol(Dictionary<string, object> unpacked)
         {
-            return this.cachedSymbols.Get(unpacked[nameof(this.Symbol)].AsString());
+            return this.cachedSymbols.Get(unpacked[nameof(this.Symbol)].ToString());
         }
     }
 }

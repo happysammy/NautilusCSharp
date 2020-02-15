@@ -15,7 +15,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
     using Nautilus.Core.Extensions;
     using Nautilus.Data.Messages.Requests;
     using Nautilus.DomainModel.Identifiers;
-    using Nautilus.Serialization.MessagePack;
+    using Nautilus.Serialization.Serializers;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;
     using Xunit.Abstractions;

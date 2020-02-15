@@ -6,10 +6,11 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Serialization.MessagePack
+namespace Nautilus.Serialization.Serializers
 {
+    using System.Collections.Generic;
     using System.Globalization;
-    using MsgPack;
+    using MessagePack;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
@@ -18,6 +19,7 @@ namespace Nautilus.Serialization.MessagePack
     using Nautilus.DomainModel.Events;
     using Nautilus.Serialization.Internal;
 
+    #pragma warning disable CS8604
     /// <summary>
     /// Provides an <see cref="Event"/> message binary serializer for the MessagePack specification.
     /// </summary>
@@ -36,7 +38,7 @@ namespace Nautilus.Serialization.MessagePack
                 /// <inheritdoc />
         public byte[] Serialize(Event @event)
         {
-            var package = new MessagePackObjectDictionary
+            var package = new Dictionary<string, object>
             {
                 { nameof(Event.Type), @event.Type.Name },
                 { nameof(Event.Id), @event.Id.ToString() },
@@ -162,15 +164,15 @@ namespace Nautilus.Serialization.MessagePack
                     throw ExceptionFactory.InvalidSwitchArgument(@event, nameof(@event));
             }
 
-            return MsgPackSerializer.Serialize(package);
+            return MessagePackSerializer.Serialize(package);
         }
 
         /// <inheritdoc />
         public Event Deserialize(byte[] dataBytes)
         {
-            var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(dataBytes);
+            var unpacked = MessagePackSerializer.Deserialize<Dictionary<string, object>>(dataBytes);
 
-            var @event = unpacked[nameof(Event.Type)].AsString();
+            var @event = unpacked[nameof(Event.Type)].ToString();
             var id = ObjectExtractor.AsGuid(unpacked[nameof(Event.Id)]);
             var timestamp = ObjectExtractor.AsZonedDateTime(unpacked[nameof(Event.Timestamp)]);
 
@@ -187,7 +189,7 @@ namespace Nautilus.Serialization.MessagePack
                         ObjectExtractor.AsMoney(unpacked[nameof(AccountStateEvent.MarginUsedLiquidation)], currency),
                         ObjectExtractor.AsMoney(unpacked[nameof(AccountStateEvent.MarginUsedMaintenance)], currency),
                         ObjectExtractor.AsDecimal(unpacked[nameof(AccountStateEvent.MarginRatio)].ToString()),
-                        unpacked[nameof(AccountStateEvent.MarginCallStatus)].AsString(),
+                        unpacked[nameof(AccountStateEvent.MarginCallStatus)].ToString(),
                         id,
                         timestamp);
                 case nameof(OrderInitialized):
@@ -207,13 +209,13 @@ namespace Nautilus.Serialization.MessagePack
                 case nameof(OrderInvalid):
                     return new OrderInvalid(
                         ObjectExtractor.AsOrderId(unpacked),
-                        unpacked[nameof(OrderInvalid.InvalidReason)].AsString(),
+                        unpacked[nameof(OrderInvalid.InvalidReason)].ToString(),
                         id,
                         timestamp);
                 case nameof(OrderDenied):
                     return new OrderDenied(
                         ObjectExtractor.AsOrderId(unpacked),
-                        unpacked[nameof(OrderDenied.DeniedReason)].AsString(),
+                        unpacked[nameof(OrderDenied.DeniedReason)].ToString(),
                         id,
                         timestamp);
                 case nameof(OrderSubmitted):
@@ -237,7 +239,7 @@ namespace Nautilus.Serialization.MessagePack
                         this.identifierCache.AccountId(unpacked),
                         ObjectExtractor.AsOrderId(unpacked),
                         ObjectExtractor.AsZonedDateTime(unpacked[nameof(OrderRejected.RejectedTime)]),
-                        unpacked[nameof(OrderRejected.RejectedReason)].AsString(),
+                        unpacked[nameof(OrderRejected.RejectedReason)].ToString(),
                         id,
                         timestamp);
                 case nameof(OrderWorking):
@@ -269,7 +271,7 @@ namespace Nautilus.Serialization.MessagePack
                         ObjectExtractor.AsOrderId(unpacked),
                         ObjectExtractor.AsZonedDateTime(unpacked[nameof(OrderCancelReject.RejectedTime)]),
                         unpacked[nameof(OrderCancelReject.RejectedResponseTo)].ToString(),
-                        unpacked[nameof(OrderCancelReject.RejectedReason)].AsString(),
+                        unpacked[nameof(OrderCancelReject.RejectedReason)].ToString(),
                         id,
                         timestamp);
                 case nameof(OrderModified):

@@ -24,7 +24,7 @@ namespace NautilusExecutor
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Redis.Execution;
     using Nautilus.Scheduler;
-    using Nautilus.Serialization.MessagePack;
+    using Nautilus.Serialization.Serializers;
     using NodaTime;
     using StackExchange.Redis;
 

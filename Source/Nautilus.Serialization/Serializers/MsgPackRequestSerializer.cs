@@ -6,10 +6,10 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Serialization.MessagePack
+namespace Nautilus.Serialization.Serializers
 {
     using System.Collections.Generic;
-    using MsgPack;
+    using MessagePack;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
@@ -17,6 +17,7 @@ namespace Nautilus.Serialization.MessagePack
     using Nautilus.Data.Messages.Requests;
     using Nautilus.Serialization.Internal;
 
+#pragma warning disable CS8604
     /// <summary>
     /// Provides a <see cref="Request"/> message binary serializer for the MessagePack specification.
     /// </summary>
@@ -36,7 +37,7 @@ namespace Nautilus.Serialization.MessagePack
         /// <inheritdoc />
         public byte[] Serialize(Request request)
         {
-            var package = new MessagePackObjectDictionary
+            var package = new Dictionary<string, object>
             {
                 { nameof(Request.Type), request.Type.Name },
                 { nameof(Request.Id), request.Id.ToString() },
@@ -52,15 +53,15 @@ namespace Nautilus.Serialization.MessagePack
                     throw ExceptionFactory.InvalidSwitchArgument(request, nameof(request));
             }
 
-            return MsgPackSerializer.Serialize(package);
+            return MessagePackSerializer.Serialize(package);
         }
 
         /// <inheritdoc />
         public Request Deserialize(byte[] dataBytes)
         {
-            var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(dataBytes);
+            var unpacked = MessagePackSerializer.Deserialize<Dictionary<string, object>>(dataBytes);
 
-            var request = unpacked[nameof(Request.Type)].AsString();
+            var request = unpacked[nameof(Request.Type)].ToString();
             var id = ObjectExtractor.AsGuid(unpacked[nameof(Request.Id)]);
             var timestamp = ObjectExtractor.AsZonedDateTime(unpacked[nameof(Request.Timestamp)]);
 
@@ -68,7 +69,7 @@ namespace Nautilus.Serialization.MessagePack
             {
                 case nameof(DataRequest):
                     return new DataRequest(
-                        this.querySerializer.Deserialize(unpacked[nameof(DataRequest.Query)].AsBinary()),
+                        this.querySerializer.Deserialize((byte[])unpacked[nameof(DataRequest.Query)]),
                         id,
                         timestamp);
                 default:
