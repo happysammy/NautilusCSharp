@@ -10,7 +10,9 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
 {
     using System;
     using System.Collections.Generic;
+    using System.Data;
     using System.Diagnostics.CodeAnalysis;
+    using System.Runtime.Serialization;
     using Nautilus.Core.Correctness;
     using Xunit;
 
@@ -651,6 +653,32 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
             // Act
             // Assert
             Assert.Throws<ArgumentOutOfRangeException>(() => Debug.NotOutOfRangeDecimal(value, 1, 2, nameof(value)));
+        }
+
+        [Fact]
+        internal void HasAttribute_WhenDoesHaveAttribute_DoesNothing()
+        {
+            // Arrange
+            // Act
+            // Assert
+            Debug.HasAttribute<DataContractAttribute>(typeof(TestClass), nameof(TestClass));
+
+            // Assert
+            Assert.Throws<ArgumentException>(() => Condition.True(false, nameof(TestClass)));
+        }
+
+        [Fact]
+        internal void HasAttribute_WhenDoesNotHaveAttribute_Throws()
+        {
+            // Arrange
+            // Act
+            // Assert
+            Assert.Throws<ArgumentException>(() => Debug.HasAttribute<DataMemberAttribute>(typeof(TestClass), nameof(TestClass)));
+        }
+
+        [DataContract]
+        private sealed class TestClass
+        {
         }
     }
 }

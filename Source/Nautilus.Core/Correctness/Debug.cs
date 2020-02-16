@@ -407,5 +407,23 @@ namespace Nautilus.Core.Correctness
         {
             Condition.NotOutOfRangeDecimal(value, lowerBound, upperBound, paramName);
         }
+
+        /// <summary>
+        /// Check the object has the specified attribute. Exists as constraints do not allow checking of attributes.
+        /// </summary>
+        /// <typeparam name="TAttribute">The attribute to match.</typeparam>
+        /// <param name="argument">The argument to check.</param>
+        /// <param name="paramName">The parameter name.</param>
+        /// <exception cref="ArgumentException">If the argument does not have the attribute.</exception>
+        [Conditional("DEBUG")]
+        public static void HasAttribute<TAttribute>(Type argument, string paramName)
+            where TAttribute : Attribute
+        {
+            var attributes = argument.GetCustomAttributes(typeof(TAttribute), true);
+            if (attributes.Length == 0)
+            {
+                Condition.HasAttribute<TAttribute>(argument, paramName);
+            }
+        }
     }
 }

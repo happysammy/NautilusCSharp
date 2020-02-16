@@ -37,11 +37,7 @@ namespace Nautilus.Common.Data
         public DataBus(IComponentryContainer container)
         : base(container)
         {
-            Condition.NotNull(typeof(T), nameof(T));
-
-            // TODO: Add Condition method for the below
-            var attributes = typeof(T).GetCustomAttributes(typeof(ImmutableAttribute), true);
-            Condition.True(attributes.Length > 0, "The data type <T> is not defined as immutable.");
+            Condition.HasAttribute<ImmutableAttribute>(typeof(T), nameof(T));
 
             this.pipeline = new BroadcastBlock<object>(
                 CloneData,

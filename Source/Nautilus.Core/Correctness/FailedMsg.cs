@@ -17,7 +17,7 @@ namespace Nautilus.Core.Correctness
         /// Return the check failed message.
         /// </summary>
         /// <param name="description">The condition predicate description.</param>
-        /// <returns>The string.</returns>
+        /// <returns>The exception string.</returns>
         public static string WasFalse(string description)
         {
             return $"The condition predicate {description} was true.";
@@ -27,7 +27,7 @@ namespace Nautilus.Core.Correctness
         /// Return the check failed message.
         /// </summary>
         /// <param name="description">The condition predicate description.</param>
-        /// <returns>The string.</returns>
+        /// <returns>The exception string.</returns>
         public static string WasTrue(string description)
         {
             return $"The condition predicate {description} was false.";
@@ -37,7 +37,7 @@ namespace Nautilus.Core.Correctness
         /// Return the check failed message.
         /// </summary>
         /// <param name="paramName">The parameter being checked.</param>
-        /// <returns>The string.</returns>
+        /// <returns>The exception string.</returns>
         public static string WasNull(string paramName)
         {
             return $"The {paramName} was null.";
@@ -47,7 +47,7 @@ namespace Nautilus.Core.Correctness
         /// Return the check failed message.
         /// </summary>
         /// <param name="paramName">The parameter name being checked.</param>
-        /// <returns>The string.</returns>
+        /// <returns>The exception string.</returns>
         public static string WasNullEmptyOrWhitespace(string paramName)
         {
             return $"The {paramName} was null, empty or whitespace.";
@@ -58,7 +58,7 @@ namespace Nautilus.Core.Correctness
         /// </summary>
         /// <param name="value">The argument value being checked.</param>
         /// <param name="paramName">The parameter name being checked.</param>
-        /// <returns>The string.</returns>
+        /// <returns>The exception string.</returns>
         public static string WasDefault(object value, string paramName)
         {
             return $"The {paramName} was default, was {value}.";
@@ -70,7 +70,7 @@ namespace Nautilus.Core.Correctness
         /// <param name="value">The argument value being checked.</param>
         /// <param name="toEqual">The value the argument should not have equaled.</param>
         /// <param name="paramName">The parameter name being checked.</param>
-        /// <returns>The string.</returns>
+        /// <returns>The exception string.</returns>
         public static string WasEqualTo(object value, object toEqual, string paramName)
         {
             return $"The {paramName} was equal to {toEqual}, was {value}.";
@@ -82,7 +82,7 @@ namespace Nautilus.Core.Correctness
         /// <param name="value">The argument value being checked.</param>
         /// <param name="toEqual">The value the argument should have equaled.</param>
         /// <param name="paramName">The parameter name being checked.</param>
-        /// <returns>The string.</returns>
+        /// <returns>The exception string.</returns>
         public static string WasNotEqualTo(object value, object toEqual, string paramName)
         {
             return $"The {paramName} was not equal to {toEqual}, was {value}.";
@@ -92,7 +92,7 @@ namespace Nautilus.Core.Correctness
         /// Return the check failed message.
         /// </summary>
         /// <param name="paramName">The parameter name being checked.</param>
-        /// <returns>The string.</returns>
+        /// <returns>The exception string.</returns>
         public static string WasEmptyList(string paramName)
         {
             return $"The {paramName} list was empty.";
@@ -102,7 +102,7 @@ namespace Nautilus.Core.Correctness
         /// Return the check failed message.
         /// </summary>
         /// <param name="paramName">The parameter name being checked.</param>
-        /// <returns>The string.</returns>
+        /// <returns>The exception string.</returns>
         public static string WasEmptyDictionary(string paramName)
         {
             return $"The {paramName} dictionary was empty.";
@@ -114,7 +114,7 @@ namespace Nautilus.Core.Correctness
         /// <param name="element">The element being searched for.</param>
         /// <param name="paramName">The parameter name being checked.</param>
         /// <param name="collectionName">The collection being checked.</param>
-        /// <returns>The string.</returns>
+        /// <returns>The exception string.</returns>
         public static string WasNotInCollection(object element, string paramName, string collectionName)
         {
             return $"The {element} {paramName} was not found in the {collectionName} collection.";
@@ -126,7 +126,7 @@ namespace Nautilus.Core.Correctness
         /// <param name="element">The element being searched for.</param>
         /// <param name="paramName">The parameter name being checked.</param>
         /// <param name="collectionName">The collection being checked.</param>
-        /// <returns>The string.</returns>
+        /// <returns>The exception string.</returns>
         public static string WasInCollection(object element, string paramName, string collectionName)
         {
             return $"The {element} {paramName} was already in the {collectionName} collection.";
@@ -138,7 +138,7 @@ namespace Nautilus.Core.Correctness
         /// <param name="key">The key being searched for.</param>
         /// <param name="paramName">The parameter name being checked.</param>
         /// <param name="dictName">The dictionary being checked.</param>
-        /// <returns>The string.</returns>
+        /// <returns>The exception string.</returns>
         public static string WasNotInDictionary(object key, string paramName, string dictName)
         {
             return $"The {key} {paramName} key was not found in the {dictName} dictionary.";
@@ -150,7 +150,7 @@ namespace Nautilus.Core.Correctness
         /// <param name="key">The key being searched for.</param>
         /// <param name="paramName">The parameter name being checked.</param>
         /// <param name="dictName">The dictionary being checked.</param>
-        /// <returns>The string.</returns>
+        /// <returns>The exception string.</returns>
         public static string WasInDictionary(object key, string paramName, string dictName)
         {
             return $"The {key} {paramName} key was already in the {dictName} dictionary.";
@@ -161,7 +161,7 @@ namespace Nautilus.Core.Correctness
         /// </summary>
         /// <param name="value">The argument value being checked.</param>
         /// <param name="paramName">The parameter name being checked.</param>
-        /// <returns>The string.</returns>
+        /// <returns>The exception string.</returns>
         public static string WasNotPositive(object value, string paramName)
         {
             return $"The {paramName} was not positive (> 0), was {value}.";
@@ -172,7 +172,7 @@ namespace Nautilus.Core.Correctness
         /// </summary>
         /// <param name="value">The argument value being checked.</param>
         /// <param name="paramName">The parameter name being checked.</param>
-        /// <returns>The string.</returns>
+        /// <returns>The exception string.</returns>
         public static string WasNegative(object value, string paramName)
         {
             return $"The {paramName} was not greater than or equal to zero (>= 0), was {value}.";
@@ -185,7 +185,7 @@ namespace Nautilus.Core.Correctness
         /// <param name="lowerBound">The lower bound of the range.</param>
         /// <param name="upperBound">The upper bound of the range.</param>
         /// <param name="paramName">The parameter name being checked.</param>
-        /// <returns>The string.</returns>
+        /// <returns>The exception string.</returns>
         public static string WasOutOfRange(
             object value,
             object lowerBound,
@@ -193,6 +193,17 @@ namespace Nautilus.Core.Correctness
             string paramName)
         {
             return $"The {paramName} was out of range [{lowerBound}, {upperBound}], was {value}.";
+        }
+
+        /// <summary>
+        /// Return the check failed message.
+        /// </summary>
+        /// <param name="attributeName">The missing attribute.</param>
+        /// <param name="paramName">The parameter name being checked.</param>
+        /// <returns>The exception string.</returns>
+        public static string DidNotHaveAttribute(string attributeName, string paramName)
+        {
+            return $"The {paramName} did not have the {attributeName} attribute.";
         }
     }
 }
