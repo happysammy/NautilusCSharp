@@ -14,7 +14,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Network;
-    using Nautilus.Network.Encryption;
+    using Nautilus.Network.Configuration;
     using Nautilus.Network.Messages;
     using Nautilus.Serialization.MessageSerializers;
     using Nautilus.TestSuite.TestKit;

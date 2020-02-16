@@ -19,6 +19,11 @@ namespace Nautilus.Common.Configuration
         public static string Logging { get; } = nameof(Logging);
 
         /// <summary>
+        /// Gets the messaging configuration section string.
+        /// </summary>
+        public static string Messaging { get; } = nameof(Messaging);
+
+        /// <summary>
         /// Gets the logging configuration section string.
         /// </summary>
         public static string Network { get; } = nameof(Network);

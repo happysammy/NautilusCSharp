@@ -21,9 +21,9 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
     using Nautilus.Data.Providers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network;
-    using Nautilus.Network.Encryption;
+    using Nautilus.Network.Configuration;
     using Nautilus.Network.Messages;
-    using Nautilus.Serialization.Compressors;
+    using Nautilus.Serialization.Compression;
     using Nautilus.Serialization.DataSerializers;
     using Nautilus.Serialization.MessageSerializers;
     using Nautilus.TestSuite.TestKit;

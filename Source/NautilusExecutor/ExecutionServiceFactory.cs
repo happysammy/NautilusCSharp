@@ -24,7 +24,7 @@ namespace NautilusExecutor
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Redis.Execution;
     using Nautilus.Scheduler;
-    using Nautilus.Serialization.Compressors;
+    using Nautilus.Serialization.Compression;
     using Nautilus.Serialization.MessageSerializers;
     using NodaTime;
     using StackExchange.Redis;
@@ -74,11 +74,13 @@ namespace NautilusExecutor
                 new MsgPackCommandSerializer(),
                 new MsgPackEventSerializer());
 
+            var compressor = CompressorFactory.Create(config.MessagingConfig.CompressionCodec);
+
             var eventPublisher = new EventPublisher(
                 container,
                 new MsgPackEventSerializer(),
-                new LZ4Compressor(),
-                config.Encryption,
+                compressor,
+                config.MessagingConfig.EncryptionConfig,
                 config.EventsPort);
 
             var executionEngine = new ExecutionEngine(
@@ -99,9 +101,9 @@ namespace NautilusExecutor
                 container,
                 new MsgPackCommandSerializer(),
                 new MsgPackResponseSerializer(),
-                new LZ4Compressor(),
+                compressor,
                 commandRouter.Endpoint,
-                config.Encryption,
+                config.MessagingConfig.EncryptionConfig,
                 config.CommandsPort);
 
             var addresses = new Dictionary<Address, IEndpoint>

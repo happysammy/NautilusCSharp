@@ -10,7 +10,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 {
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
-    using Nautilus.Serialization.Compressors;
+    using Nautilus.Serialization.Compression;
     using Xunit;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
@@ -31,5 +31,19 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             // Assert
             Assert.Equal(message, Encoding.UTF8.GetString(decompressed));
         }
+
+        // [Fact]
+        // internal void LZ4Compressor_DecompressFromPython()
+        // {
+        //     // Arrange
+        //     var compressor = new LZ4Compressor();
+        //     var fromPython = Convert.FromBase64String("DAAAAMBoZWxsbyB3b3JsZCE=");
+        //
+        //     // Act
+        //     var decompressed = compressor.Decompress(fromPython, 12);
+        //
+        //     // Assert
+        //     Assert.Equal("hello world!", Encoding.UTF8.GetString(decompressed));
+        // }
     }
 }

@@ -44,11 +44,6 @@ namespace Nautilus.Serialization.MessageSerializers.Internal
         /// <returns>The extracted TraderId.</returns>
         internal TraderId TraderId(Dictionary<string, byte[]> unpacked)
         {
-            if (unpacked is null)
-            {
-                throw new ArgumentNullException(nameof(unpacked), "The unpacked argument was null.");
-            }
-
             return this.cachedTraderIds.Get(Decode(unpacked[nameof(this.TraderId)]));
         }
 

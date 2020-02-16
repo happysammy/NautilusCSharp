@@ -18,7 +18,7 @@ namespace Nautilus.Data.Providers
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network;
-    using Nautilus.Network.Encryption;
+    using Nautilus.Network.Configuration;
 
     /// <summary>
     /// Provides <see cref="Bar"/> data to requests.

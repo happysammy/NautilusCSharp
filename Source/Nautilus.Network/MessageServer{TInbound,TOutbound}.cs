@@ -21,6 +21,7 @@ namespace Nautilus.Network
     using Nautilus.Core.Types;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
+    using Nautilus.Network.Configuration;
     using Nautilus.Network.Encryption;
     using Nautilus.Network.Messages;
     using NetMQ;

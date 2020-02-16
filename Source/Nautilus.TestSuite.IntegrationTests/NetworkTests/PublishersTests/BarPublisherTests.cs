@@ -16,8 +16,8 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
     using Nautilus.Data.Publishers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network;
-    using Nautilus.Network.Encryption;
-    using Nautilus.Serialization.Compressors;
+    using Nautilus.Network.Configuration;
+    using Nautilus.Serialization.Compression;
     using Nautilus.Serialization.DataSerializers;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;

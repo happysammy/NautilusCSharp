@@ -6,8 +6,9 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Network.Encryption
+namespace Nautilus.Network.Configuration
 {
+    using Nautilus.Common.Enums;
     using Nautilus.Core.Correctness;
 
     /// <summary>
@@ -18,11 +19,12 @@ namespace Nautilus.Network.Encryption
         /// <summary>
         /// Initializes a new instance of the <see cref="EncryptionConfig"/> class.
         /// </summary>
-        /// <param name="useEncryption">If encryption should be used.</param>
+        /// <param name="algorithm">The specified cryptographic algorithm.</param>
         /// <param name="keysDirectory">The path to the keys directory.</param>
-        private EncryptionConfig(bool useEncryption, string keysDirectory)
+        private EncryptionConfig(CryptographicAlgorithm algorithm, string keysDirectory)
         {
-            this.UseEncryption = useEncryption;
+            this.UseEncryption = algorithm == CryptographicAlgorithm.None;
+            this.Algorithm = algorithm;
             this.KeysDirectory = keysDirectory;
         }
 
@@ -32,30 +34,35 @@ namespace Nautilus.Network.Encryption
         public bool UseEncryption { get; }
 
         /// <summary>
+        /// Gets the configurations cryptographic algorithm.
+        /// </summary>
+        public CryptographicAlgorithm Algorithm { get; }
+
+        /// <summary>
         /// Gets the path to the keys directory.
         /// </summary>
         public string KeysDirectory { get; }
 
         /// <summary>
-        /// Create a default encryption configuration as no encryption.
+        /// Create an encryption configuration.
         /// </summary>
-        /// <param name="useEncryption">If encryption should be used.</param>
+        /// <param name="algorithm">The specified cryptographic algorithm.</param>
         /// <param name="keysDirectory">The path to the keys directory.</param>
         /// <returns>The configuration.</returns>
-        public static EncryptionConfig Create(bool useEncryption, string keysDirectory)
+        public static EncryptionConfig Create(CryptographicAlgorithm algorithm, string keysDirectory)
         {
             Condition.NotNull(keysDirectory, nameof(keysDirectory));
 
-            return new EncryptionConfig(false, string.Empty);
+            return new EncryptionConfig(algorithm, string.Empty);
         }
 
         /// <summary>
-        /// Create a default encryption configuration as no encryption.
+        /// Create an encryption configuration with no encryption.
         /// </summary>
         /// <returns>The configuration.</returns>
         public static EncryptionConfig None()
         {
-            return new EncryptionConfig(false, string.Empty);
+            return new EncryptionConfig(CryptographicAlgorithm.None, string.Empty);
         }
     }
 }

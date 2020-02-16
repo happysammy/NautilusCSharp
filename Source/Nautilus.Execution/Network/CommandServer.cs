@@ -14,7 +14,7 @@ namespace Nautilus.Execution.Network
     using Nautilus.DomainModel.Commands;
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Network;
-    using Nautilus.Network.Encryption;
+    using Nautilus.Network.Configuration;
 
     /// <summary>
     /// Provides a command server which deserializes command messages and forwards them to the

@@ -12,7 +12,7 @@ namespace Nautilus.Data.Publishers
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network;
-    using Nautilus.Network.Encryption;
+    using Nautilus.Network.Configuration;
 
     /// <summary>
     /// Provides a publisher for <see cref="Tick"/> data.

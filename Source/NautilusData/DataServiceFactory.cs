@@ -26,7 +26,7 @@ namespace NautilusData
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Redis.Data;
     using Nautilus.Scheduler;
-    using Nautilus.Serialization.Compressors;
+    using Nautilus.Serialization.Compression;
     using Nautilus.Serialization.DataSerializers;
     using Nautilus.Serialization.MessageSerializers;
     using NodaTime;
@@ -60,28 +60,30 @@ namespace NautilusData
             var dataBusAdapter = DataBusFactory.Create(container);
             dataBusAdapter.Start();
 
+            var compressor = CompressorFactory.Create(config.MessagingConfig.CompressionCodec);
+
             var tickPublisher = new TickPublisher(
                 container,
                 dataBusAdapter,
                 new TickDataSerializer(),
-                new LZ4Compressor(),
-                config.Encryption,
+                compressor,
+                config.MessagingConfig.EncryptionConfig,
                 config.TickPublisherPort);
 
             var barPublisher = new BarPublisher(
                 container,
                 dataBusAdapter,
                 new BarDataSerializer(),
-                new LZ4Compressor(),
-                config.Encryption,
+                compressor,
+                config.MessagingConfig.EncryptionConfig,
                 config.BarPublisherPort);
 
             var instrumentPublisher = new InstrumentPublisher(
                 container,
                 dataBusAdapter,
                 new InstrumentDataSerializer(),
-                new LZ4Compressor(),
-                config.Encryption,
+                compressor,
+                config.MessagingConfig.EncryptionConfig,
                 config.InstrumentPublisherPort);
 
             var symbolConverter = new SymbolConverter(config.SymbolIndex);
@@ -129,8 +131,8 @@ namespace NautilusData
                 new TickDataSerializer(),
                 new MsgPackRequestSerializer(new MsgPackQuerySerializer()),
                 new MsgPackResponseSerializer(),
-                new LZ4Compressor(),
-                config.Encryption,
+                compressor,
+                config.MessagingConfig.EncryptionConfig,
                 config.TickRouterPort);
 
             var barProvider = new BarProvider(
@@ -139,8 +141,8 @@ namespace NautilusData
                 new BarDataSerializer(),
                 new MsgPackRequestSerializer(new MsgPackQuerySerializer()),
                 new MsgPackResponseSerializer(),
-                new LZ4Compressor(),
-                config.Encryption,
+                compressor,
+                config.MessagingConfig.EncryptionConfig,
                 config.BarRouterPort);
 
             var instrumentProvider = new InstrumentProvider(
@@ -149,8 +151,8 @@ namespace NautilusData
                 new InstrumentDataSerializer(),
                 new MsgPackRequestSerializer(new MsgPackQuerySerializer()),
                 new MsgPackResponseSerializer(),
-                new LZ4Compressor(),
-                config.Encryption,
+                compressor,
+                config.MessagingConfig.EncryptionConfig,
                 config.InstrumentRouterPort);
 
             var addresses = new Dictionary<Address, IEndpoint>

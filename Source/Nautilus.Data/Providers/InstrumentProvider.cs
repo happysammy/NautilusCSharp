@@ -17,7 +17,7 @@ namespace Nautilus.Data.Providers
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.Network;
-    using Nautilus.Network.Encryption;
+    using Nautilus.Network.Configuration;
 
     /// <summary>
     /// Provides <see cref="Instrument"/> data to requests.

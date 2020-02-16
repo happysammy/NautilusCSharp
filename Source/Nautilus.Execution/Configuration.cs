@@ -12,18 +12,19 @@ namespace Nautilus.Execution
     using System.Collections.Immutable;
     using System.IO;
     using Nautilus.Common.Configuration;
+    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.Fix;
     using Nautilus.Network;
-    using Nautilus.Network.Encryption;
+    using Nautilus.Network.Configuration;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
     using NodaTime;
 
-#pragma warning disable CS8602, CS8604
+#pragma warning disable CS8600, CS8602, CS8604
     /// <summary>
     /// Represents an <see cref="ExecutionService"/> configuration.
     /// </summary>
@@ -41,6 +42,17 @@ namespace Nautilus.Execution
             string symbolIndex)
         {
             this.LoggingAdapter = loggingAdapter;
+
+            // Messaging Settings
+            var messagingVersion = (string)configJson[ConfigSection.Messaging]["Version"];
+            var compression = ((string)configJson[ConfigSection.Messaging]["Compression"]).ToEnum<CompressionCodec>();
+            var encryption = ((string)configJson[ConfigSection.Messaging]["Encryption"]).ToEnum<CryptographicAlgorithm>();
+            var keysDirectory = (string)configJson[ConfigSection.Messaging]["KeysDirectory"];
+            this.MessagingConfig = new MessagingConfig(
+                messagingVersion,
+                compression,
+                encryption,
+                keysDirectory);
 
             // Network Settings
             this.CommandsPort = new NetworkPort((ushort)configJson[ConfigSection.Network]["CommandsPort"]);
@@ -93,9 +105,9 @@ namespace Nautilus.Execution
         public ILoggingAdapter LoggingAdapter { get; }
 
         /// <summary>
-        /// Gets the encryption configuration.
+        /// Gets the messaging configuration.
         /// </summary>
-        public EncryptionConfig Encryption { get; } = EncryptionConfig.None();
+        public MessagingConfig MessagingConfig { get; }
 
         /// <summary>
         /// Gets the configuration commands port.

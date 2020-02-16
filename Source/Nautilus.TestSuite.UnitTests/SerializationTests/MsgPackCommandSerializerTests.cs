@@ -187,8 +187,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         internal void Deserialize_AccountInquiry_FromPythonMsgPack_ReturnsExpectedCommand()
         {
             // Arrange
-            var hexString = "haRUeXBlrkFjY291bnRJbnF1aXJ5oklk2gAkOTJkZWZjNTMtM2M4YS00NWFkLThjMjItZDdiNmUzYmJiNzJlqVRpbWVzdGFtcLgxOTcwLTAxLTAxVDAwOjAwOjAwLjAwMFqoVHJhZGVySWSqVEVTVEVSLTAwMKlBY2NvdW50SWS2TkFVVElMVVMtMDAwLVNJTVVMQVRFRA==";
-            var commandBytes = Convert.FromBase64String(hexString);
+            var base64 = "haRUeXBlrkFjY291bnRJbnF1aXJ5oklk2gAkOTJkZWZjNTMtM2M4YS00NWFkLThjMjItZDdiNmUzYmJiNzJlqVRpbWVzdGFtcLgxOTcwLTAxLTAxVDAwOjAwOjAwLjAwMFqoVHJhZGVySWSqVEVTVEVSLTAwMKlBY2NvdW50SWS2TkFVVElMVVMtMDAwLVNJTVVMQVRFRA==";
+            var commandBytes = Convert.FromBase64String(base64);
 
             // Act
             var command = this.serializer.Deserialize(commandBytes) as AccountInquiry;

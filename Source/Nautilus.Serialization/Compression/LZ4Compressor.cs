@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Serialization.Compressors
+namespace Nautilus.Serialization.Compression
 {
     using K4os.Compression.LZ4;
     using Nautilus.Common.Interfaces;

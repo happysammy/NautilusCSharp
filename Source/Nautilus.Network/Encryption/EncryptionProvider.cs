@@ -10,6 +10,7 @@ namespace Nautilus.Network.Encryption
 {
     using System.IO;
     using System.Text;
+    using Nautilus.Network.Configuration;
     using NetMQ;
 
     /// <summary>

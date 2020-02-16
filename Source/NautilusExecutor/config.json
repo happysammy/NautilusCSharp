@@ -3,6 +3,13 @@
     "LogLevel": "Information"
   },
 
+  "Messaging": {
+    "Version": "1.0",
+    "Compression": "None",
+    "Encryption": "None",
+    "KeysDirectory": ""
+  },
+
   "Network": {
     "CommandsPort": 55555,
     "EventsPort": 55556,

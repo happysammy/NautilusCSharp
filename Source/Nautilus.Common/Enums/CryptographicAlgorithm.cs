@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="DataEncoding.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="CryptographicAlgorithm.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2020 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  https://nautechsystems.io
@@ -11,9 +11,9 @@ namespace Nautilus.Common.Enums
     using Nautilus.Core.Annotations;
 
     /// <summary>
-    /// Represents a binary to text data encoding specification.
+    /// Represents a cryptographic algorithm specification.
     /// </summary>
-    public enum DataEncoding
+    public enum CryptographicAlgorithm
     {
         /// <summary>
         /// The enumerator value is undefined (invalid).
@@ -22,18 +22,13 @@ namespace Nautilus.Common.Enums
         Undefined = 0,
 
         /// <summary>
-        /// The UTF-8 encoding specification.
+        /// There is encryption specified.
         /// </summary>
-        Utf8 = 1,
+        None = 1,
 
         /// <summary>
-        /// The BSON encoding specification.
+        /// The Curve25519 elliptic curve algorithm.
         /// </summary>
-        Bson = 2,
-
-        /// <summary>
-        /// The MsgPack encoding specification.
-        /// </summary>
-        MsgPack = 3,
+        Curve = 2,
     }
 }
