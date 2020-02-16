@@ -10,10 +10,8 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
 {
     using System;
     using System.Collections.Generic;
-    using System.Data;
     using System.Diagnostics.CodeAnalysis;
     using System.Runtime.Serialization;
-    using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Xunit;
 

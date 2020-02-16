@@ -189,7 +189,7 @@ namespace Nautilus.Scheduling.Internal
                     if (disposing)
                     {
                         // Clean up managed resources.
-                        this.source?.Dispose();
+                        this.source.Dispose();
                     }
 
                     // Clean up unmanaged resources.

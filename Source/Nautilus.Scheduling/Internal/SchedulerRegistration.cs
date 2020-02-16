@@ -6,10 +6,9 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Scheduler.Internal
+namespace Nautilus.Scheduling.Internal
 {
     using Nautilus.Scheduling;
-    using Nautilus.Scheduling.Internal;
 
     /// <summary>
     /// Represents a scheduler registration.

@@ -148,12 +148,6 @@ namespace Nautilus.Redis.Execution
                 while (events.Count > 0)
                 {
                     var nextEvent = (OrderEvent)this.eventSerializer.Deserialize(events.Dequeue());
-                    if (nextEvent is null)
-                    {
-                        this.Log.Error("Could not deserialize OrderEvent.");
-                        continue;
-                    }
-
                     order.Apply(nextEvent);
                 }
 
@@ -192,12 +186,6 @@ namespace Nautilus.Redis.Execution
                 while (events.Count > 0)
                 {
                     var nextEvent = (OrderFillEvent)this.eventSerializer.Deserialize(events.Dequeue());
-                    if (nextEvent is null)
-                    {
-                        this.Log.Error("Could not deserialize OrderFillEvent.");
-                        continue;
-                    }
-
                     position.Apply(nextEvent);
                 }
 
