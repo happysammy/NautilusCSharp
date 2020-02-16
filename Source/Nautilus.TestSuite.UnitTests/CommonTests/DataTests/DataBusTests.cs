@@ -267,8 +267,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.DataTests
             // Act
             this.dataBus.Endpoint.Send(subscribe1);
             this.dataBus.Endpoint.Send(subscribe2);
-
-            Task.Delay(200); // Allow subscriptions
+            Task.Delay(100).Wait(); // Allow subscriptions
 
             this.dataBus.PostData(tick1);
             this.dataBus.PostData(tick2);
@@ -277,18 +276,14 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.DataTests
             LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
 
             // Assert
-            // TODO: Test fails intermittently, possibly to do with async
-            // Assert.Contains(tick1, this.receiver.Messages);
-            // Assert.Contains(tick2, this.receiver.Messages);
+            Assert.Contains(tick1, this.receiver.Messages);
+            Assert.Contains(tick2, this.receiver.Messages);
             Assert.Contains(tick3, this.receiver.Messages);
-
-            // Assert.Contains(tick1, receiver2.Messages);
-
-            // Assert.Contains(tick2, receiver2.Messages);
+            Assert.Contains(tick1, receiver2.Messages);
+            Assert.Contains(tick2, receiver2.Messages);
             Assert.Contains(tick3, receiver2.Messages);
-
-            // Assert.Equal(3, this.receiver.Messages.Count);
-            // Assert.Equal(3, receiver2.Messages.Count);
+            Assert.Equal(3, this.receiver.Messages.Count);
+            Assert.Equal(3, receiver2.Messages.Count);
         }
     }
 }

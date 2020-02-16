@@ -6,11 +6,12 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Scheduler.Internal
+namespace Nautilus.Scheduling.Internal
 {
     using System;
     using System.Threading;
     using Nautilus.Core.Correctness;
+    using Nautilus.Scheduling;
 
     /// <summary>
     /// A <see cref="ICancelable"/> that wraps a <see cref="CancellationTokenSource"/>.

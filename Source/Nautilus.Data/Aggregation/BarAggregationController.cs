@@ -21,7 +21,7 @@ namespace Nautilus.Data.Aggregation
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging.Interfaces;
-    using Nautilus.Scheduler;
+    using Nautilus.Scheduling;
     using NodaTime;
 
     /// <summary>

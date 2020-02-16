@@ -58,22 +58,22 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
             public byte[][] Serialize(string[] dataObjects)
             {
-                throw new NotImplementedException();
+                throw new InvalidOperationException("Not implemented.");
             }
 
             public byte[] SerializeBlob(byte[][] dataObjectsArray, Dictionary<string, string> metadata)
             {
-                throw new NotImplementedException();
+                throw new InvalidOperationException("Not implemented.");
             }
 
             public string[] Deserialize(byte[][] dataBytesArray, object? metadata = null)
             {
-                throw new NotImplementedException();
+                throw new InvalidOperationException("Not implemented.");
             }
 
             public string[] DeserializeBlob(byte[] dataBytes)
             {
-                throw new NotImplementedException();
+                throw new InvalidOperationException("Not implemented.");
             }
 
             public byte[] Serialize(string message)

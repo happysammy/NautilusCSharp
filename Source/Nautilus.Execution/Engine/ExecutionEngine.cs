@@ -23,7 +23,7 @@ namespace Nautilus.Execution.Engine
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.Execution.Interfaces;
     using Nautilus.Messaging.Interfaces;
-    using Nautilus.Scheduler;
+    using Nautilus.Scheduling;
     using NodaTime;
 
     /// <summary>

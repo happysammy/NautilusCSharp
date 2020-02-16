@@ -18,7 +18,7 @@ namespace Nautilus.Service
     using Nautilus.Core.Extensions;
     using Nautilus.Fix;
     using Nautilus.Messaging;
-    using Nautilus.Scheduler;
+    using Nautilus.Scheduling;
     using NodaTime;
 
     /// <summary>

@@ -8,6 +8,9 @@
 
 namespace Nautilus.Scheduler.Internal
 {
+    using Nautilus.Scheduling;
+    using Nautilus.Scheduling.Internal;
+
     /// <summary>
     /// Represents a scheduler registration.
     /// </summary>

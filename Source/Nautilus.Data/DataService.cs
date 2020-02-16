@@ -21,7 +21,7 @@ namespace Nautilus.Data
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging;
-    using Nautilus.Scheduler;
+    using Nautilus.Scheduling;
     using Nautilus.Service;
     using NodaTime;
 

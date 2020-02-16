@@ -14,7 +14,7 @@ namespace Nautilus.Execution
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messaging;
     using Nautilus.Messaging;
-    using Nautilus.Scheduler;
+    using Nautilus.Scheduling;
     using Nautilus.Service;
 
     /// <summary>

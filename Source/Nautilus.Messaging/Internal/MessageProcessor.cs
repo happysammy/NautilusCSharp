@@ -34,7 +34,7 @@ namespace Nautilus.Messaging.Internal
         /// </summary>
         internal MessageProcessor()
         {
-            this.exceptionHandler = this.Rethrow;  // Default behaviour
+            this.exceptionHandler = this.Rethrow;
             this.unhandled = this.AddToUnhandledMessages;
 
             this.processor = new ActionBlock<object>(
@@ -167,6 +167,7 @@ namespace Nautilus.Messaging.Internal
             }
             catch (Exception ex)
             {
+                this.Unhandled(message);
                 this.Exceptions.Add(ex);
                 this.exceptionHandler(ex);
 

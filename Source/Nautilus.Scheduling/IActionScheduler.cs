@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Scheduler
+namespace Nautilus.Scheduling
 {
     using System;
     using NodaTime;

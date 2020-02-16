@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Scheduler
+namespace Nautilus.Scheduling
 {
     using System;
     using System.Collections.Concurrent;
@@ -21,6 +21,7 @@ namespace Nautilus.Scheduler
     using Nautilus.Core.Extensions;
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Scheduler.Internal;
+    using Nautilus.Scheduling.Internal;
     using NodaTime;
 
     /// <summary>

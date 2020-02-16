@@ -182,7 +182,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 new NetworkPort(testPort),
                 Guid.NewGuid());
             server.Start();
-            Task.Delay(100); // Allow server to start
+            Task.Delay(100).Wait(); // Allow server to start
 
             var requester1 = new RequestSocket(testAddress);
             var requester2 = new RequestSocket(testAddress);

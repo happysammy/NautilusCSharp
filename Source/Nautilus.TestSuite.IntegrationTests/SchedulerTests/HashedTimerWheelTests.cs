@@ -10,8 +10,8 @@ namespace Nautilus.TestSuite.IntegrationTests.SchedulerTests
 {
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
-    using Nautilus.Scheduler;
-    using Nautilus.Scheduler.Internal;
+    using Nautilus.Scheduling;
+    using Nautilus.Scheduling.Internal;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NodaTime;
     using Xunit;

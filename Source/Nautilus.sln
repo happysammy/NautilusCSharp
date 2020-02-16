@@ -51,7 +51,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Messaging", "Nauti
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Network", "Nautilus.Network\Nautilus.Network.csproj", "{8F5C4B6A-FE7D-4E20-9701-059F70965645}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Scheduler", "Nautilus.Scheduler\Nautilus.Scheduler.csproj", "{ECB6AD8B-6714-4619-91DD-C459709C5036}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Scheduling", "Nautilus.Scheduling\Nautilus.Scheduling.csproj", "{ECB6AD8B-6714-4619-91DD-C459709C5036}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Serialization", "Nautilus.Serialization\Nautilus.Serialization.csproj", "{FDF77D1F-4284-4DDC-9E10-F11AFA74535D}"
 EndProject

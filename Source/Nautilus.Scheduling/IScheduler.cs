@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Scheduler
+namespace Nautilus.Scheduling
 {
     /// <summary>
     /// Provides an interface which defines an action and message sending scheduler.

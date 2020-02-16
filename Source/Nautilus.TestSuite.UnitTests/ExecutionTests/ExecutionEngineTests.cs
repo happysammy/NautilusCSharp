@@ -18,7 +18,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Execution.Engine;
     using Nautilus.Execution.Interfaces;
-    using Nautilus.Scheduler;
+    using Nautilus.Scheduling;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;
