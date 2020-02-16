@@ -23,7 +23,7 @@ namespace Nautilus.Network.Configuration
         /// <param name="keysDirectory">The path to the keys directory.</param>
         private EncryptionConfig(CryptographicAlgorithm algorithm, string keysDirectory)
         {
-            this.UseEncryption = algorithm == CryptographicAlgorithm.None;
+            this.UseEncryption = algorithm != CryptographicAlgorithm.None;
             this.Algorithm = algorithm;
             this.KeysDirectory = keysDirectory;
         }
