@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Scheduler.Internal
+namespace Nautilus.Scheduling.Internal
 {
     using System.Diagnostics;
     using NodaTime;

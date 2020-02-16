@@ -6,11 +6,12 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Scheduler.Internal
+namespace Nautilus.Scheduling.Internal
 {
     using System;
     using System.Collections.Generic;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Scheduler.Internal;
 
     /// <summary>
     /// Represents a bucket.
