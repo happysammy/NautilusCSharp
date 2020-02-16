@@ -145,7 +145,7 @@ namespace Nautilus.Common.Componentry
         /// <param name="start">The start message.</param>
         protected virtual void OnStart(Start start)
         {
-            this.Log.Error($"Received {start} with OnStart() not overridden in implementation.");
+            this.Log.Warning($"Received {start} with OnStart() not overridden in implementation.");
         }
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace Nautilus.Common.Componentry
         /// <param name="stop">The stop message.</param>
         protected virtual void OnStop(Stop stop)
         {
-            this.Log.Error($"Received {stop} with OnStop() not overridden in implementation.");
+            this.Log.Warning($"Received {stop} with OnStop() not overridden in implementation.");
         }
 
         /// <summary>
