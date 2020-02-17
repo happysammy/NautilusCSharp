@@ -29,6 +29,6 @@ namespace Nautilus.Common.Enums
         /// <summary>
         /// The Curve25519 elliptic curve algorithm.
         /// </summary>
-        Curve = 2,
+        Curve25519 = 2,
     }
 }

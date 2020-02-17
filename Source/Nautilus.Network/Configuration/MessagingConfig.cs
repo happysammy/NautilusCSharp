@@ -21,16 +21,16 @@ namespace Nautilus.Network.Configuration
         /// <param name="apiVersion">The messaging API version.</param>
         /// <param name="compression">The messaging compression codec.</param>
         /// <param name="encryption">The messaging encryption cryptographic algorithm.</param>
-        /// <param name="keysDirectory">The messaging encryption cryptographic keys directory.</param>
+        /// <param name="keysPath">The messaging encryption cryptographic keys directory.</param>
         public MessagingConfig(
             string apiVersion,
             CompressionCodec compression,
             CryptographicAlgorithm encryption,
-            string keysDirectory)
+            string keysPath)
         {
             this.Version = apiVersion;
             this.CompressionCodec = compression;
-            this.EncryptionConfig = EncryptionConfig.Create(encryption, keysDirectory);
+            this.EncryptionConfig = EncryptionConfig.Create(encryption, keysPath);
         }
 
         /// <summary>

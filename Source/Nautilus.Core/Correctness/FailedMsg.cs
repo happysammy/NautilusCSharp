@@ -46,11 +46,13 @@ namespace Nautilus.Core.Correctness
         /// <summary>
         /// Return the check failed message.
         /// </summary>
+        /// <param name="value">The argument value.</param>
         /// <param name="paramName">The parameter name being checked.</param>
         /// <returns>The exception string.</returns>
-        public static string WasNullEmptyOrWhitespace(string paramName)
+        public static string WasNullEmptyOrWhitespace(string value, string paramName)
         {
-            return $"The {paramName} was null, empty or whitespace.";
+            var valueString = value != null ? $"'{value}'" : "null";
+            return $"The {paramName} was null, empty or whitespace, was {valueString}.";
         }
 
         /// <summary>

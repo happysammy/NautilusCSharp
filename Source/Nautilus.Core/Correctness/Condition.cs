@@ -63,7 +63,7 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// Check the argument is not null, empty or whitespace.
+        /// Check the argument is not a null, empty or all whitespace string.
         /// </summary>
         /// <param name="argument">The argument to check.</param>
         /// <param name="paramName">The parameter name.</param>
@@ -72,7 +72,7 @@ namespace Nautilus.Core.Correctness
         {
             if (string.IsNullOrWhiteSpace(argument))
             {
-                throw new ArgumentNullException(paramName, FailedMsg.WasNullEmptyOrWhitespace(paramName));
+                throw new ArgumentNullException(paramName, FailedMsg.WasNullEmptyOrWhitespace(argument, paramName));
             }
         }
 

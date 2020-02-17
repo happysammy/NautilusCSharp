@@ -13,6 +13,7 @@ namespace Nautilus.Data
     using System.Collections.Immutable;
     using System.IO;
     using System.Linq;
+    using System.Reflection;
     using Nautilus.Common.Configuration;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -50,12 +51,16 @@ namespace Nautilus.Data
             var messagingVersion = (string)configJson[ConfigSection.Messaging]["Version"];
             var compression = ((string)configJson[ConfigSection.Messaging]["Compression"]).ToEnum<CompressionCodec>();
             var encryption = ((string)configJson[ConfigSection.Messaging]["Encryption"]).ToEnum<CryptographicAlgorithm>();
-            var keysDirectory = (string)configJson[ConfigSection.Messaging]["KeysDirectory"];
+
+            var workingDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);
+            var keysDirectoryName = (string)configJson[ConfigSection.Messaging]["KeysDirectory"];
+            var keysPath = Path.Combine(workingDirectory, keysDirectoryName);
+
             this.MessagingConfig = new MessagingConfig(
                 messagingVersion,
                 compression,
                 encryption,
-                keysDirectory);
+                keysPath);
 
             // Network Settings
             this.TickRouterPort = new NetworkPort((ushort)configJson[ConfigSection.Network]["TickRouterPort"]);
@@ -67,10 +72,9 @@ namespace Nautilus.Data
 
             // FIX Settings
             var fixConfigFile = (string)configJson[ConfigSection.FIX44]["ConfigFile"]!;
-            var assemblyDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location)!;
-            var configPath = Path.GetFullPath(Path.Combine(assemblyDirectory, fixConfigFile));
+            var fixConfigPath = Path.GetFullPath(Path.Combine(workingDirectory, fixConfigFile));
 
-            var fixSettings = ConfigReader.LoadConfig(configPath);
+            var fixSettings = ConfigReader.LoadConfig(fixConfigPath);
             var broker = new Brokerage(fixSettings["Brokerage"]);
             var accountType = fixSettings["AccountType"].ToEnum<AccountType>();
             var accountCurrency = fixSettings["AccountCurrency"].ToEnum<Currency>();
@@ -94,7 +98,7 @@ namespace Nautilus.Data
                 broker,
                 accountType,
                 accountCurrency,
-                configPath,
+                fixConfigPath,
                 credentials,
                 sendAccountTag,
                 connectTime,

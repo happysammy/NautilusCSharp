@@ -5,9 +5,9 @@
 
   "Messaging": {
     "Version": "1.0",
-    "Compression": "None",
+    "Compression": "Snappy",
     "Encryption": "None",
-    "KeysDirectory": ""
+    "KeysDirectory": "Keys/"
   },
 
   "Network": {

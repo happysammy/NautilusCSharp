@@ -8,6 +8,7 @@
 
 namespace Nautilus.Network.Configuration
 {
+    using System;
     using Nautilus.Common.Enums;
     using Nautilus.Core.Correctness;
 
@@ -20,12 +21,12 @@ namespace Nautilus.Network.Configuration
         /// Initializes a new instance of the <see cref="EncryptionConfig"/> class.
         /// </summary>
         /// <param name="algorithm">The specified cryptographic algorithm.</param>
-        /// <param name="keysDirectory">The path to the keys directory.</param>
-        private EncryptionConfig(CryptographicAlgorithm algorithm, string keysDirectory)
+        /// <param name="keysPath">The path to the keys directory.</param>
+        private EncryptionConfig(CryptographicAlgorithm algorithm, string keysPath)
         {
             this.UseEncryption = algorithm != CryptographicAlgorithm.None;
             this.Algorithm = algorithm;
-            this.KeysDirectory = keysDirectory;
+            this.KeysPath = keysPath;
         }
 
         /// <summary>
@@ -41,7 +42,7 @@ namespace Nautilus.Network.Configuration
         /// <summary>
         /// Gets the path to the keys directory.
         /// </summary>
-        public string KeysDirectory { get; }
+        public string KeysPath { get; }
 
         /// <summary>
         /// Create an encryption configuration.
@@ -49,9 +50,10 @@ namespace Nautilus.Network.Configuration
         /// <param name="algorithm">The specified cryptographic algorithm.</param>
         /// <param name="keysDirectory">The path to the keys directory.</param>
         /// <returns>The configuration.</returns>
+        /// <exception cref="ArgumentException">If the keys directory is an empty or whitespace string.</exception>
         public static EncryptionConfig Create(CryptographicAlgorithm algorithm, string keysDirectory)
         {
-            Condition.NotNull(keysDirectory, nameof(keysDirectory));
+            Condition.NotEmptyOrWhiteSpace(keysDirectory, nameof(keysDirectory));
 
             return new EncryptionConfig(algorithm, string.Empty);
         }

@@ -26,8 +26,10 @@ namespace Nautilus.Network.Encryption
         public static void SetupSocket(EncryptionConfig config, NetMQSocket socket)
         {
             // Load keys
-            var publicKey = Encoding.UTF8.GetBytes(File.ReadAllText(config.KeysDirectory));
-            var secretKey = Encoding.UTF8.GetBytes(File.ReadAllText(config.KeysDirectory));
+            var publicKeyPath = Path.Combine(config.KeysPath, "server.key");
+            var secretKeyPath = Path.Combine(config.KeysPath, "server.key_secret");
+            var publicKey = Encoding.UTF8.GetBytes(File.ReadAllText(publicKeyPath));
+            var secretKey = Encoding.UTF8.GetBytes(File.ReadAllText(secretKeyPath));
             var certificate = new NetMQCertificate(publicKey, secretKey);
 
             socket.Options.CurveServer = true;

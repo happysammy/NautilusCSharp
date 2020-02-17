@@ -66,12 +66,18 @@ namespace Nautilus.Network
                 },
             };
 
+            this.NetworkAddress = new ZmqNetworkAddress(host, port);
+
             if (encryption.UseEncryption)
             {
                 EncryptionProvider.SetupSocket(encryption, this.socket);
+                this.Log.Information($"{encryption.Algorithm} encryption setup for {this.NetworkAddress}");
+            }
+            else
+            {
+                this.Log.Warning($"No encryption setup for {this.NetworkAddress}");
             }
 
-            this.NetworkAddress = new ZmqNetworkAddress(host, port);
             this.PublishedCount = 0;
         }
 
@@ -105,14 +111,14 @@ namespace Nautilus.Network
         protected override void OnStart(Start start)
         {
             this.socket.Bind(this.NetworkAddress.Value);
-            this.Log.Debug($"Bound {this.socket.GetType().Name} to {this.NetworkAddress}");
+            this.Log.Information($"Bound {this.socket.GetType().Name} to {this.NetworkAddress}");
         }
 
         /// <inheritdoc />
         protected override void OnStop(Stop stop)
         {
             this.socket.Unbind(this.NetworkAddress.Value);
-            this.Log.Debug($"Unbound {this.socket.GetType().Name} from {this.NetworkAddress}");
+            this.Log.Information($"Unbound {this.socket.GetType().Name} from {this.NetworkAddress}");
         }
 
         /// <summary>
