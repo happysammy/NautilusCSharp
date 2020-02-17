@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Serialization.Compression
+namespace Nautilus.Network.Compression
 {
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;

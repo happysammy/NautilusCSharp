@@ -11,7 +11,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
-    using Nautilus.Serialization.Compression;
+    using Nautilus.Network.Compression;
     using Xunit;
     using Xunit.Abstractions;
 

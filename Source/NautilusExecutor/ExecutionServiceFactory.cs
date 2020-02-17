@@ -22,9 +22,9 @@ namespace NautilusExecutor
     using Nautilus.Fxcm;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
+    using Nautilus.Network.Compression;
     using Nautilus.Redis.Execution;
     using Nautilus.Scheduling;
-    using Nautilus.Serialization.Compression;
     using Nautilus.Serialization.MessageSerializers;
     using NodaTime;
     using StackExchange.Redis;

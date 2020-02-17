@@ -34,6 +34,26 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         }
 
         [Fact]
+        internal void CanSerializeAndDeserialize_AccountInquiryCommands()
+        {
+            // Arrange
+            var command = new AccountInquiry(
+                TraderId.FromString("TESTER-000"),
+                new AccountId("FXCM", "028999999", "SIMULATED"),
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            // Act
+            var packed = this.serializer.Serialize(command);
+            var unpacked = (AccountInquiry)this.serializer.Deserialize(packed);
+
+            // Assert
+            Assert.Equal(command, unpacked);
+            this.output.WriteLine(Convert.ToBase64String(packed));
+            this.output.WriteLine(Encoding.UTF8.GetString(packed));
+        }
+
+        [Fact]
         internal void CanSerializeAndDeserialize_SubmitOrderCommands()
         {
             // Arrange
@@ -156,26 +176,6 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             // Act
             var packed = this.serializer.Serialize(command);
             var unpacked = (ModifyOrder)this.serializer.Deserialize(packed);
-
-            // Assert
-            Assert.Equal(command, unpacked);
-            this.output.WriteLine(Convert.ToBase64String(packed));
-            this.output.WriteLine(Encoding.UTF8.GetString(packed));
-        }
-
-        [Fact]
-        internal void CanSerializeAndDeserialize_CollateralInquiryCommands()
-        {
-            // Arrange
-            var command = new AccountInquiry(
-                TraderId.FromString("TESTER-000"),
-                new AccountId("FXCM", "028999999", "SIMULATED"),
-                Guid.NewGuid(),
-                StubZonedDateTime.UnixEpoch());
-
-            // Act
-            var packed = this.serializer.Serialize(command);
-            var unpacked = (AccountInquiry)this.serializer.Deserialize(packed);
 
             // Assert
             Assert.Equal(command, unpacked);

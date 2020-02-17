@@ -24,9 +24,9 @@ namespace NautilusData
     using Nautilus.Fxcm;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
+    using Nautilus.Network.Compression;
     using Nautilus.Redis.Data;
     using Nautilus.Scheduling;
-    using Nautilus.Serialization.Compression;
     using Nautilus.Serialization.DataSerializers;
     using Nautilus.Serialization.MessageSerializers;
     using NodaTime;

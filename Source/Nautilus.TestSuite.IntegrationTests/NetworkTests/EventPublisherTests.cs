@@ -18,8 +18,8 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
     using Nautilus.Execution.Network;
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Network;
+    using Nautilus.Network.Compression;
     using Nautilus.Network.Configuration;
-    using Nautilus.Serialization.Compression;
     using Nautilus.Serialization.MessageSerializers;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;

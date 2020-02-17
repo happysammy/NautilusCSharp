@@ -14,8 +14,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Message;
     using Nautilus.Network;
+    using Nautilus.Network.Compression;
     using Nautilus.Network.Configuration;
-    using Nautilus.Serialization.Compression;
     using Nautilus.Serialization.MessageSerializers;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
