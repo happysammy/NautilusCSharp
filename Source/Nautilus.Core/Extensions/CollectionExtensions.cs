@@ -58,7 +58,7 @@ namespace Nautilus.Core.Extensions
         }
 
         /// <summary>
-        /// Returns the contents of the dictionary in a single line string.
+        /// Returns the contents of the dictionary in a pretty printed single line string.
         /// </summary>
         /// <param name="dictionary">The dictionary to print.</param>
         /// <typeparam name="TKey">The type of key.</typeparam>

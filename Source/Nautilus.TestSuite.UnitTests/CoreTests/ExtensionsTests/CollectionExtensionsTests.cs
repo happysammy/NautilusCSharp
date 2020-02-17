@@ -9,6 +9,7 @@
 namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
 {
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core.Extensions;
     using Xunit;
@@ -17,7 +18,42 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
     public sealed class CollectionExtensionsTests
     {
         [Fact]
-        public void Count_WithEmptyEnumerable_ReturnsZero()
+        internal void Count_PerformanceTest_AchievesSpecification()
+        {
+            var iterations = 1000000;
+            var stopwatch = new Stopwatch();
+            var numbersList = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+
+            // Test extension method for IEnumerable
+            stopwatch.Start();
+
+            for (var i = 0; i < iterations; i++)
+            {
+                var x = numbersList.Count(); // Extension method
+            }
+
+            stopwatch.Stop();
+            var result1 = stopwatch.ElapsedMilliseconds;
+            stopwatch.Reset();
+
+            // Test built in count
+            stopwatch.Start();
+
+            for (var i = 0; i < iterations; i++)
+            {
+                var x = numbersList.Count; // Extension method
+            }
+
+            stopwatch.Stop();
+            var result2 = stopwatch.ElapsedMilliseconds;
+
+            // Assert
+            Assert.True(result1 < 50);
+            Assert.True(result1 > result2);  // The extension will never beat built in
+        }
+
+        [Fact]
+        internal void Count_WithEmptyEnumerable_ReturnsZero()
         {
             // Arrange
             var enumerable = new List<string>() as IEnumerable<string>;
@@ -30,7 +66,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
         }
 
         [Fact]
-        public void Count_WithNonZeroEnumerable_ReturnsCorrectCount()
+        internal void Count_WithNonZeroEnumerable_ReturnsCorrectCount()
         {
             // Arrange
             var enumerable = new List<string> { "hello", "world" } as IEnumerable<string>;
@@ -43,7 +79,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
         }
 
         [Fact]
-        public void SliceToLimitFromEnd_EmptyArray_ReturnsEmptyArray()
+        internal void SliceToLimitFromEnd_EmptyArray_ReturnsEmptyArray()
         {
             // Arrange
             var array = new int[0];
@@ -56,7 +92,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
         }
 
         [Fact]
-        public void SliceToLimitFromEnd_WithZeroLimit_ReturnsEmptyArray()
+        internal void SliceToLimitFromEnd_WithZeroLimit_ReturnsEmptyArray()
         {
             // Arrange
             var array = new[] { 0, 1, 2, 3 };
@@ -69,7 +105,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
         }
 
         [Fact]
-        public void SliceToLimitFromEnd_WithLimit_ReturnsCorrectlySlicedArray()
+        internal void SliceToLimitFromEnd_WithLimit_ReturnsCorrectlySlicedArray()
         {
             // Arrange
             var array = new[] { 0, 1, 2, 3 };
@@ -82,7 +118,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
         }
 
         [Fact]
-        public void Print_WithVariousDictionaries_ReturnsExpectedString()
+        internal void Print_WithVariousDictionaries_ReturnsExpectedString()
         {
             // Arrange
             var dict0 = new Dictionary<string, string>();
