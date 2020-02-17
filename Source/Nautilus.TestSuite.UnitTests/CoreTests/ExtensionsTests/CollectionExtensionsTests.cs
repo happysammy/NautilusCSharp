@@ -9,7 +9,6 @@
 namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
 {
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core.Extensions;
     using Xunit;
@@ -17,41 +16,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class CollectionExtensionsTests
     {
-        [Fact]
-        internal void Count_PerformanceTest_AchievesSpecification()
-        {
-            var iterations = 1000000;
-            var stopwatch = new Stopwatch();
-            var numbersList = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-
-            // Test extension method for IEnumerable
-            stopwatch.Start();
-
-            for (var i = 0; i < iterations; i++)
-            {
-                var x = numbersList.Count(); // Extension method
-            }
-
-            stopwatch.Stop();
-            var result1 = stopwatch.ElapsedMilliseconds;
-            stopwatch.Reset();
-
-            // Test built in count
-            stopwatch.Start();
-
-            for (var i = 0; i < iterations; i++)
-            {
-                var x = numbersList.Count; // Extension method
-            }
-
-            stopwatch.Stop();
-            var result2 = stopwatch.ElapsedMilliseconds;
-
-            // Assert
-            Assert.True(result1 < 50);
-            Assert.True(result1 > result2);  // The extension will never beat built in
-        }
-
         [Fact]
         internal void Count_WithEmptyEnumerable_ReturnsZero()
         {

@@ -94,18 +94,5 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
             // Assert
             Assert.Equal(result, input.IsAllUpperCase());
         }
-
-        [Fact]
-        internal void IsAllUpperCase_PerformanceTest_AchievesSpecification()
-        {
-            // Arrange
-            var toCheck = "THIS_IS_A_LONG_STRING_WHICH_MUST_BE_CHECKED_ALL_UPPER_CASE";
-
-            // Act
-            var result = PerformanceHarness.Test(() => toCheck.IsAllUpperCase(), 3, 100000);
-
-            // Assert
-            Assert.True(result.Milliseconds < 150);
-        }
     }
 }

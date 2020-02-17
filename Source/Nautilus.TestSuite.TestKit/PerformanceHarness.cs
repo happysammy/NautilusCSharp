@@ -14,7 +14,7 @@ namespace Nautilus.TestSuite.TestKit
     using System.Linq;
 
     /// <summary>
-    /// Provides a harness for performance benchmarking.
+    /// Provides a simple harness for performance benchmarking utilizing an internal stopwatch.
     /// </summary>
     public static class PerformanceHarness
     {
