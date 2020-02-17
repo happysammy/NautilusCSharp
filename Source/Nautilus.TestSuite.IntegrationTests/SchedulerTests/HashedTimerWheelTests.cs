@@ -221,7 +221,7 @@ namespace Nautilus.TestSuite.IntegrationTests.SchedulerTests
         {
             // Arrange
             // Act
-            var cancelable = this.scheduler.ScheduleSendRepeatedlyCancelable(
+            this.scheduler.ScheduleSendRepeatedlyCancelable(
                 Duration.Zero,
                 Duration.FromMilliseconds(10),
                 this.testReceiver.Endpoint,

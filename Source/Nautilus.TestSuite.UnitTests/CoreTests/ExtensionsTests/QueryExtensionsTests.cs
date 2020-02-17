@@ -46,8 +46,8 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
             Assert.Equal(ErrorMessage, testError);
         }
 
-        // Only instantiated within this class for testing purposes.
-        private class TestClass
+        // Only within this class for testing purposes
+        private sealed class TestClass
         {
         }
     }

@@ -9,8 +9,11 @@
 namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
 {
     using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core.Extensions;
+    using Nautilus.TestSuite.TestKit;
     using Xunit;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
@@ -75,6 +78,34 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
             // Act
             // Assert
             Assert.Equal(result, input.ToSnakeCase(false));
+        }
+
+        [Theory]
+        [InlineData("easy", false)]
+        [InlineData("camelCase", false)]
+        [InlineData("YES", true)]
+        [InlineData("YES1", true)]
+        [InlineData("@!YES1", true)]
+        [InlineData("@!no1", false)]
+        internal void IsAllUpperCase_WhenValidStrings_ReturnsExpectedResult(string input, bool result)
+        {
+            // Arrange
+            // Act
+            // Assert
+            Assert.Equal(result, input.IsAllUpperCase());
+        }
+
+        [Fact]
+        internal void IsAllUpperCase_PerformanceTest_AchievesSpecification()
+        {
+            // Arrange
+            var toCheck = "THIS_IS_A_LONG_STRING_WHICH_MUST_BE_CHECKED_ALL_UPPER_CASE";
+
+            // Act
+            var result = PerformanceHarness.Test(() => toCheck.IsAllUpperCase(), 3, 100000);
+
+            // Assert
+            Assert.True(result.Milliseconds < 150);
         }
     }
 }

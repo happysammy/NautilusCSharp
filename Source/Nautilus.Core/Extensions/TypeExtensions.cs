@@ -23,11 +23,11 @@ namespace Nautilus.Core.Extensions
         public static string NameFormatted(this Type type)
         {
             return type.IsGenericType
-                ? ParseGenericName(type)
+                ? GetGenericName(type)
                 : type.Name;
         }
 
-        private static string ParseGenericName(Type type)
+        private static string GetGenericName(Type type)
         {
             var typeName = type.Name.Split('`')[0];
             var genericArgs = type.GenericTypeArguments;
