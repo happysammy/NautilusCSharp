@@ -61,7 +61,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 this.container,
                 new MsgPackCommandSerializer(),
                 new MsgPackResponseSerializer(),
-                new BypassCompressor(),
+                new CompressorBypass(),
                 this.receiver,
                 EncryptionConfig.None(),
                 new NetworkPort(5553));

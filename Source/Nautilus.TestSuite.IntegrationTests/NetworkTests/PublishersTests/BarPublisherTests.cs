@@ -49,7 +49,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
                 container,
                 DataBusFactory.Create(container),
                 this.serializer,
-                new BypassCompressor(),
+                new CompressorBypass(),
                 EncryptionConfig.None(),
                 new NetworkPort(55511));
         }

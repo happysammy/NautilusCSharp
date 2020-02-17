@@ -27,9 +27,9 @@ namespace Nautilus.Serialization.Compression
             switch (codec)
             {
                 case CompressionCodec.None:
-                    return new BypassCompressor();
-                case CompressionCodec.LZ4:
-                    return new LZ4Compressor();
+                    return new CompressorBypass();
+                case CompressionCodec.Snappy:
+                    return new SnappyCompressor();
                 case CompressionCodec.Undefined:
                     goto default;
                 default:

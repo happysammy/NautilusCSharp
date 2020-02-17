@@ -31,7 +31,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 container,
                 dataBusAdapter,
                 new MockSerializer(),
-                new BypassCompressor(),
+                new CompressorBypass(),
                 encryption,
                 host,
                 port,

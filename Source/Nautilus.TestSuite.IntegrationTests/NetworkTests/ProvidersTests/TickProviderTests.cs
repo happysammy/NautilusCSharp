@@ -79,7 +79,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
                 this.dataSerializer,
                 this.requestSerializer,
                 this.responseSerializer,
-                new BypassCompressor(),
+                new CompressorBypass(),
                 EncryptionConfig.None(),
                 new NetworkPort(testPort));
             provider.Start();
@@ -128,7 +128,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
             // Arrange
             ushort testPort = 55723;
             var testAddress = $"tcp://localhost:{testPort}";
-            var compressor = new LZ4Compressor();
+            var compressor = new SnappyCompressor();
             var provider = new TickProvider(
                 this.container,
                 this.repository,
