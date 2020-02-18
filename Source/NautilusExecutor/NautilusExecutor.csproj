@@ -27,7 +27,6 @@
     <ProjectReference Include="..\Nautilus.Redis\Nautilus.Redis.csproj" />
     <ProjectReference Include="..\Nautilus.Scheduling\Nautilus.Scheduling.csproj" />
     <ProjectReference Include="..\Nautilus.Serialization\Nautilus.Serialization.csproj" />
-    <ProjectReference Include="..\NautilusExecutor.Api\NautilusExecutor.Api.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />

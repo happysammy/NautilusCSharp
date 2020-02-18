@@ -121,7 +121,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         {
             var encodedText = "WrongSize"; // Length - 1 not divisible by 5
 
-            Assert.Throws<ArgumentException>(() =>Z85Encoder.FromZ85String(encodedText));
+            Assert.Throws<ArgumentException>(() => Z85Encoder.FromZ85String(encodedText));
         }
 
         [Fact]

@@ -83,8 +83,12 @@ namespace NautilusExecutor
             var fixConfigSection = this.Configuration.GetSection(ConfigSection.FIX44);
             var fixDirectory = Path.Combine(workingDirectory, "FIX");
             FileManager.CopyAll(fixConfigSection["ConfigPath"], fixDirectory);
+
             var fixSettingsFile = FileManager.GetFirstFilename(fixDirectory, ".cfg");
             var fixSettings = ConfigReader.LoadConfig(fixSettingsFile);
+            var dataDictionary = Path.Combine(fixDirectory, fixSettings["DataDictionary"]);
+            Console.WriteLine(dataDictionary);
+            FileManager.Copy(dataDictionary, workingDirectory);
 
             var broker = new Brokerage(fixSettings["Brokerage"]);
             var accountType = fixSettings["AccountType"].ToEnum<AccountType>();
