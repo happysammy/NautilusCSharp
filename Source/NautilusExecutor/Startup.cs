@@ -41,12 +41,11 @@ namespace NautilusExecutor
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class.
         /// </summary>
-        /// <param name="configuration">The configuration.</param>
         /// <param name="environment">The hosting environment.</param>
-        public Startup(IConfiguration configuration, IHostingEnvironment environment)
+        /// <param name="configuration">The configuration.</param>
+        public Startup(IHostingEnvironment environment, IConfiguration configuration)
         {
             this.Environment = environment;
-            Console.WriteLine($"ENVIRONMENT={this.Environment}");
 
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
@@ -68,19 +67,23 @@ namespace NautilusExecutor
 
             var workingDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location)!;
 
-             // Messaging Configuration
+            // Messaging Configuration
             var messagingConfigSection = this.Configuration.GetSection(ConfigSection.Messaging);
+            var keysDirectory = Path.Combine(workingDirectory, "Keys");
+            FileManager.CopyAll(messagingConfigSection["KeysPath"], keysDirectory);
+
+            Console.WriteLine(keysDirectory);
             var messagingConfiguration = new MessagingConfiguration(
                 messagingConfigSection["Version"],
                 messagingConfigSection["Compression"].ToEnum<CompressionCodec>(),
                 messagingConfigSection["Encryption"].ToEnum<CryptographicAlgorithm>(),
-                messagingConfigSection["KeysPath"]);
+                keysDirectory);
 
             // FIX Configuration
             var fixConfigSection = this.Configuration.GetSection(ConfigSection.FIX44);
             var fixDirectory = Path.Combine(workingDirectory, "FIX");
-            FileSystemBuilder.MoveAll(fixConfigSection["ConfigPath"], fixDirectory);
-            var fixSettingsFile = FileSystemBuilder.GetFirstFilename(fixDirectory, ".cfg");
+            FileManager.CopyAll(fixConfigSection["ConfigPath"], fixDirectory);
+            var fixSettingsFile = FileManager.GetFirstFilename(fixDirectory, ".cfg");
             var fixSettings = ConfigReader.LoadConfig(fixSettingsFile);
 
             var broker = new Brokerage(fixSettings["Brokerage"]);
@@ -92,13 +95,13 @@ namespace NautilusExecutor
                 fixSettings["Password"]);
             var sendAccountTag = Convert.ToBoolean(fixSettings["SendAccountTag"]);
 
-            var connectionJob = fixConfigSection.GetSection("ConnectionJob");
+            var connectionJob = fixConfigSection.GetSection("ConnectJob");
             var connectDay = connectionJob["Day"].ToEnum<IsoDayOfWeek>();
             var connectHour = int.Parse(connectionJob["Hour"]);
             var connectMinute = int.Parse(connectionJob["Minute"]);
             var connectTime = (connectDay, new LocalTime(connectHour, connectMinute));
 
-            var disconnectionJob = fixConfigSection.GetSection("DisconnectionJob");
+            var disconnectionJob = fixConfigSection.GetSection("DisconnectJob");
             var disconnectDay = disconnectionJob["Day"].ToEnum<IsoDayOfWeek>();
             var disconnectHour = int.Parse(disconnectionJob["Hour"]);
             var disconnectMinute = int.Parse(disconnectionJob["Minute"]);
@@ -117,7 +120,7 @@ namespace NautilusExecutor
             var symbolMap = this.Configuration
                 .GetSection("SymbolMap")
                 .AsEnumerable()
-                .ToImmutableSortedDictionary();
+                .ToImmutableDictionary();
 
             var execConfig = new ServiceConfiguration(
                 loggingAdapter,

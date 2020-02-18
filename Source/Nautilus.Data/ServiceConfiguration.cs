@@ -40,28 +40,33 @@ namespace Nautilus.Data
         IConfigurationSection dataSection,
         MessagingConfiguration messagingConfig,
         FixConfiguration fixConfig,
-        ImmutableSortedDictionary<string, string> symbolMap)
+        ImmutableDictionary<string, string> symbolMap)
         {
             this.LoggingAdapter = loggingAdapter;
 
             // Network Configuration
             this.TickRouterPort = new NetworkPort(int.Parse(networkSection["TickRouterPort"]));
-            this.TickPublisherPort = new NetworkPort(int.Parse(networkSection["TickPublisherPort"]));
+            this.TickPublisherPort = new NetworkPort(int.Parse(networkSection["TickPubPort"]));
             this.BarRouterPort = new NetworkPort(int.Parse(networkSection["BarRouterPort"]));
-            this.BarPublisherPort = new NetworkPort(int.Parse(networkSection["BarPublisherPort"]));
+            this.BarPublisherPort = new NetworkPort(int.Parse(networkSection["BarPubPort"]));
             this.InstrumentRouterPort = new NetworkPort(int.Parse(networkSection["InstrumentRouterPort"]));
-            this.InstrumentPublisherPort = new NetworkPort(int.Parse(networkSection["InstrumentPublisherPort"]));
+            this.InstrumentPublisherPort = new NetworkPort(int.Parse(networkSection["InstrumentPubPort"]));
 
             this.MessagingConfiguration = messagingConfig;
             this.FixConfiguration = fixConfig;
 
-            // Data Configuration
-            this.SubscribingSymbols = dataSection["Symbols"]
-                .Select(x => Symbol.FromString(x.ToString()))
+            this.SubscribingSymbols = dataSection.GetSection("Symbols")
+                .AsEnumerable()
+                .Select(x => x.Value)
+                .Where(x => x != null)
+                .Distinct()
+                .Select(Symbol.FromString)
                 .ToImmutableList();
 
-            this.BarSpecifications = dataSection["BarSpecifications"]
-                .Select(bs => bs.ToString())
+            this.BarSpecifications = dataSection.GetSection("BarSpecifications")
+                .AsEnumerable()
+                .Select(x => x.Value)
+                .Where(x => x != null)
                 .Distinct()
                 .Select(BarSpecification.FromString)
                 .ToImmutableList();
@@ -131,7 +136,7 @@ namespace Nautilus.Data
         /// <summary>
         /// Gets the symbol conversion index.
         /// </summary>
-        public ImmutableSortedDictionary<string, string> SymbolMap { get; }
+        public ImmutableDictionary<string, string> SymbolMap { get; }
 
         /// <summary>
         /// Gets the subscribing symbols.

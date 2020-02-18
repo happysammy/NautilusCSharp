@@ -55,7 +55,7 @@ namespace Nautilus.Network.Configuration
         {
             Condition.NotEmptyOrWhiteSpace(keysDirectory, nameof(keysDirectory));
 
-            return new EncryptionConfig(algorithm, string.Empty);
+            return new EncryptionConfig(algorithm, keysDirectory);
         }
 
         /// <summary>

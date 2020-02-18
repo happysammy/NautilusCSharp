@@ -33,7 +33,7 @@ namespace Nautilus.Execution
             IConfigurationSection networkSection,
             MessagingConfiguration messagingConfig,
             FixConfiguration fixConfig,
-            ImmutableSortedDictionary<string, string> symbolMap)
+            ImmutableDictionary<string, string> symbolMap)
         {
             this.LoggingAdapter = loggingAdapter;
             this.MessagingConfiguration = messagingConfig;
@@ -86,6 +86,6 @@ namespace Nautilus.Execution
         /// <summary>
         /// Gets the symbol conversion index.
         /// </summary>
-        public ImmutableSortedDictionary<string, string> SymbolMap { get; }
+        public ImmutableDictionary<string, string> SymbolMap { get; }
     }
 }

@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="FileSystemBuilder.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="FileManager.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2020 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  https://nautechsystems.io
@@ -13,15 +13,36 @@ namespace Nautilus.Common.Configuration
     /// <summary>
     /// Provides a builder for required system directories and files.
     /// </summary>
-    public static class FileSystemBuilder
+    public static class FileManager
     {
+        /// <summary>
+        /// Move all files from the given file path to the given destination directory.
+        /// Note any directories and files at the destination will be overwritten.
+        /// </summary>
+        /// <param name="filePath">The path to the file to move.</param>
+        /// <param name="destinationPath">The path to move the files to.</param>
+        public static void Copy(string filePath, string destinationPath)
+        {
+            Directory.CreateDirectory(destinationPath);
+
+            if (!File.Exists(filePath))
+            {
+                throw new FileNotFoundException($"No file found at {filePath}.");
+            }
+
+            var file = Path.GetFileName(filePath);
+            var destFile = Path.Combine(destinationPath, file);
+
+            File.Copy(filePath, destFile, true);
+        }
+
         /// <summary>
         /// Move all files from the given file path to the given destination directory.
         /// Note any directories and files at the destination will be overwritten.
         /// </summary>
         /// <param name="filesPath">The path to the files to move.</param>
         /// <param name="destinationPath">The path to move the files to.</param>
-        public static void MoveAll(string filesPath, string destinationPath)
+        public static void CopyAll(string filesPath, string destinationPath)
         {
             Directory.CreateDirectory(destinationPath);
 
@@ -38,7 +59,7 @@ namespace Nautilus.Common.Configuration
                     continue;
                 }
 
-                var destFile = System.IO.Path.Combine(destinationPath, fileName);
+                var destFile = Path.Combine(destinationPath, fileName);
                 File.Copy(file, destFile, true);
             }
         }

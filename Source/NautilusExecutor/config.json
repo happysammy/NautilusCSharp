@@ -7,7 +7,7 @@
     "Version": "1.0",
     "Compression": "Snappy",
     "Encryption": "Curve25519",
-    "KeysPath": ""
+    "KeysPath": "/home/cjdsellers/Desktop/test_keys"
   },
 
   "Network": {
@@ -18,7 +18,7 @@
   },
 
   "FIX44": {
-    "ConfigPath": "",
+    "ConfigPath": "/home/cjdsellers/Desktop/fix_configurations/NautilusExecutor",
 
     "ConnectJob": {
       "Day": "Sunday",

@@ -58,6 +58,26 @@ namespace Nautilus.Core.Extensions
         }
 
         /// <summary>
+        /// Returns the contents of the list in a pretty printed single line string.
+        /// </summary>
+        /// <param name="list">The list to print.</param>
+        /// <typeparam name="T">The type of element.</typeparam>
+        /// <returns>The contents string.</returns>
+        public static string Print<T>(this List<T> list)
+            where T : class
+        {
+            var output = "[ ";
+            foreach (var element in list)
+            {
+                output += $"{element}, ";
+            }
+
+            output = output.TrimEnd(' ', ',') + " ]";
+
+            return output;
+        }
+
+        /// <summary>
         /// Returns the contents of the dictionary in a pretty printed single line string.
         /// </summary>
         /// <param name="dictionary">The dictionary to print.</param>

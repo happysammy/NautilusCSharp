@@ -9,7 +9,6 @@
 namespace Nautilus.Network.Encryption
 {
     using System.IO;
-    using System.Text;
     using Nautilus.Network.Configuration;
     using NetMQ;
 
@@ -28,9 +27,16 @@ namespace Nautilus.Network.Encryption
             // Load keys
             var publicKeyPath = Path.Combine(config.KeysPath, "server.key");
             var secretKeyPath = Path.Combine(config.KeysPath, "server.key_secret");
-            var publicKey = Encoding.UTF8.GetBytes(File.ReadAllText(publicKeyPath));
-            var secretKey = Encoding.UTF8.GetBytes(File.ReadAllText(secretKeyPath));
-            var certificate = new NetMQCertificate(publicKey, secretKey);
+
+            var publicKeyFileSplit = File.ReadAllText(publicKeyPath).Split("public-key = ");
+            var secretKeyFileSplit = File.ReadAllText(secretKeyPath).Split("secret-key = ");
+            var publicKey = publicKeyFileSplit[1].TrimStart('"').TrimEnd().TrimEnd('"');
+            var secretKey = secretKeyFileSplit[1].TrimStart('"').TrimEnd().TrimEnd('"');
+
+            var publicKeyEncoded = Z85Encoder.FromZ85String(publicKey);
+            var secretKeyEncoded = Z85Encoder.FromZ85String(secretKey);
+
+            var certificate = new NetMQCertificate(secretKeyEncoded, publicKeyEncoded);
 
             socket.Options.CurveServer = true;
             socket.Options.CurveCertificate = certificate;
