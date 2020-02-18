@@ -57,7 +57,7 @@ namespace Nautilus.Data
 
             // Data Configuration
             this.SubscribingSymbols = dataSection["Symbols"]
-                .Select(x => new Symbol(x.ToString(), "FXCM")) // TODO: Hard coded venue
+                .Select(x => Symbol.FromString(x.ToString()))
                 .ToImmutableList();
 
             this.BarSpecifications = dataSection["BarSpecifications"]
