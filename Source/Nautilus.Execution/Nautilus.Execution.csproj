@@ -29,11 +29,11 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+        <AdditionalFiles Include="..\stylecop.json" />
     </ItemGroup>
 
     <ItemGroup>
-        <AdditionalFiles Include="..\stylecop.json" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.1" />
     </ItemGroup>
 
 </Project>

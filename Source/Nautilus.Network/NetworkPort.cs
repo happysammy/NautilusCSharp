@@ -26,7 +26,7 @@ namespace Nautilus.Network
         /// </summary>
         /// <param name="port">The port number.</param>
         /// <exception cref="ArgumentOutOfRangeException">If the portNumber is out of range [0, 65535].</exception>
-        public NetworkPort(ushort port)
+        public NetworkPort(int port)
         {
             Condition.NotOutOfRangeInt32(port, 0, 65535, nameof(port));
 
@@ -37,7 +37,7 @@ namespace Nautilus.Network
         /// <summary>
         /// Gets the port number.
         /// </summary>
-        public ushort Value { get; }
+        public int Value { get; }
 
         /// <summary>
         /// Returns a string representation of this <see cref="NetworkPort"/>.

@@ -7,7 +7,7 @@
     "Version": "1.0",
     "Compression": "Snappy",
     "Encryption": "Curve25519",
-    "KeysDirectory": "Keys/"
+    "KeysPath": ""
   },
 
   "Network": {
@@ -18,7 +18,7 @@
   },
 
   "FIX44": {
-    "ConfigFile": "fix_fxcm4.cfg",
+    "ConfigPath": "",
 
     "ConnectJob": {
       "Day": "Sunday",

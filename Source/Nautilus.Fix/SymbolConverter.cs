@@ -18,14 +18,14 @@ namespace Nautilus.Fix
     /// </summary>
     public sealed class SymbolConverter
     {
-        private readonly ImmutableDictionary<string, string> indexBrokerNautilus;
-        private readonly ImmutableDictionary<string, string> indexNautilusBroker;
+        private readonly ImmutableSortedDictionary<string, string> indexBrokerNautilus;
+        private readonly ImmutableSortedDictionary<string, string> indexNautilusBroker;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SymbolConverter"/> class.
         /// </summary>
         /// <param name="indexBrokerNautilus">The symbol index broker to nautilus.</param>
-        public SymbolConverter(ImmutableDictionary<string, string> indexBrokerNautilus)
+        public SymbolConverter(ImmutableSortedDictionary<string, string> indexBrokerNautilus)
         {
             this.indexBrokerNautilus = indexBrokerNautilus;
 
@@ -35,7 +35,7 @@ namespace Nautilus.Fix
                 reversed[value] = key;
             }
 
-            this.indexNautilusBroker = reversed.ToImmutableDictionary();
+            this.indexNautilusBroker = reversed.ToImmutableSortedDictionary();
 
             this.BrokerSymbolCodes = this.indexBrokerNautilus.Keys.ToList();
         }

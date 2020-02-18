@@ -48,7 +48,7 @@ namespace NautilusData
         private static void UnhandledExceptionTrapper(object sender, UnhandledExceptionEventArgs ex)
         {
             Console.WriteLine(ex.ExceptionObject.ToString());
-            Console.WriteLine("Press Enter to continue");
+            Console.WriteLine("Press ENTER to continue");
             Console.ReadLine();
             Environment.Exit(1);
         }

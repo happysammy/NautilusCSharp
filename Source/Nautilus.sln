@@ -1,18 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configuration", "Configuration", "{EBD80DF0-D452-49F0-9BA4-925265E959F7}"
-ProjectSection(SolutionItems) = preProject
-	fix_fxcm1.cfg = Configuration\fix_fxcm1.cfg
-	fix_fxcm2.cfg = Configuration\fix_fxcm2.cfg
-	fix_fxcm3.cfg = Configuration\fix_fxcm3.cfg
-	fix_fxcm4.cfg = Configuration\fix_fxcm4.cfg
-	fix_fxcm3_md.cfg = Configuration\fix_fxcm3_md.cfg
-	fix_fxcm1_md.cfg = Configuration\fix_fxcm1_md.cfg
-	fix_fxcm2_md.cfg = Configuration\fix_fxcm2_md.cfg
-	fix_fxcm4_md.cfg = Configuration\fix_fxcm4_md.cfg
-EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Adapters", "Adapters", "{EF67F7D5-84AB-4AEA-A8E4-323B4BC9EBB9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Applications", "Applications", "{A4A5BDFD-FAD5-46AA-B36E-33A6675CF888}"
@@ -176,7 +164,6 @@ Global
 		{C49CF207-29E8-4838-9634-A99EE3CC29B2} = {594EE890-8228-4812-AC7E-9E55610EDF59}
 		{B5CA4594-2F7E-47B9-A1EC-E5640076D252} = {BE9D07AC-25B5-49D0-80A7-023E0198AD2C}
 		{8F5C4B6A-FE7D-4E20-9701-059F70965645} = {594EE890-8228-4812-AC7E-9E55610EDF59}
-		{EBD80DF0-D452-49F0-9BA4-925265E959F7} = {A4A5BDFD-FAD5-46AA-B36E-33A6675CF888}
 		{D3F2837D-750C-41E2-9129-2F284C3915D1} = {D7F18FA8-A682-45AB-A282-8C7F92C33871}
 		{4E729CD4-6836-424D-B3C7-4D5FFD723A51} = {D7F18FA8-A682-45AB-A282-8C7F92C33871}
 		{F5058BCF-C19A-4A04-962D-2B37F248FDA0} = {594EE890-8228-4812-AC7E-9E55610EDF59}

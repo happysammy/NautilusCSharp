@@ -35,7 +35,7 @@ namespace Nautilus.Execution
             IComponentryContainer container,
             IMessageBusAdapter messageBusAdapter,
             IEndpoint executionEngine,
-            Configuration config)
+            ServiceConfiguration config)
             : base(container, messageBusAdapter)
         {
             this.commandThrottler = new Throttler(

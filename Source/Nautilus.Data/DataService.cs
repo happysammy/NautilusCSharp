@@ -58,7 +58,7 @@ namespace Nautilus.Data
             DataBusAdapter dataBusAdapter,
             IScheduler scheduler,
             IDataGateway dataGateway,
-            Configuration config)
+            ServiceConfiguration config)
             : base(
                 container,
                 messageBusAdapter,

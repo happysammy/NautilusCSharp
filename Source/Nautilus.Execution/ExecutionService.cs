@@ -39,7 +39,7 @@ namespace Nautilus.Execution
             MessageBusAdapter messageBusAdapter,
             IScheduler scheduler,
             ITradingGateway tradingGateway,
-            Configuration config)
+            ServiceConfiguration config)
             : base(
                 container,
                 messageBusAdapter,

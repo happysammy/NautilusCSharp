@@ -10,6 +10,7 @@ namespace NautilusExecutor
 {
     using System.Collections.Generic;
     using Nautilus.Common.Componentry;
+    using Nautilus.Common.Configuration;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Logging;
     using Nautilus.Common.Messages.Commands;
@@ -39,8 +40,10 @@ namespace NautilusExecutor
         /// </summary>
         /// <param name="config">The configuration.</param>
         /// <returns>The service.</returns>
-        public static ExecutionService Create(Configuration config)
+        public static ExecutionService Create(ServiceConfiguration config)
         {
+            VersionChecker.Run(config.LoggingAdapter, "NAUTILUS EXECUTOR - Algorithmic Trading Execution Service");
+
             var clock = new Clock(DateTimeZone.Utc);
             var guidFactory = new GuidFactory();
             var container = new ComponentryContainer(
@@ -54,7 +57,7 @@ namespace NautilusExecutor
             var messagingAdapter = MessageBusFactory.Create(container);
             messagingAdapter.Start();
 
-            var symbolConverter = new SymbolConverter(config.SymbolIndex);
+            var symbolConverter = new SymbolConverter(config.SymbolMap);
 
             var fixClient = CreateFixClient(
                 container,
@@ -74,13 +77,13 @@ namespace NautilusExecutor
                 new MsgPackCommandSerializer(),
                 new MsgPackEventSerializer());
 
-            var compressor = CompressorFactory.Create(config.MessagingConfig.CompressionCodec);
+            var compressor = CompressorFactory.Create(config.MessagingConfiguration.CompressionCodec);
 
             var eventPublisher = new EventPublisher(
                 container,
                 new MsgPackEventSerializer(),
                 compressor,
-                config.MessagingConfig.EncryptionConfig,
+                config.MessagingConfiguration.EncryptionConfig,
                 config.EventsPort);
 
             var executionEngine = new ExecutionEngine(
@@ -103,7 +106,7 @@ namespace NautilusExecutor
                 new MsgPackResponseSerializer(),
                 compressor,
                 commandRouter.Endpoint,
-                config.MessagingConfig.EncryptionConfig,
+                config.MessagingConfiguration.EncryptionConfig,
                 config.CommandsPort);
 
             var addresses = new Dictionary<Address, IEndpoint>

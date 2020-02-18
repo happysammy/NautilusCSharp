@@ -10,6 +10,7 @@ namespace NautilusData
 {
     using System.Collections.Generic;
     using Nautilus.Common.Componentry;
+    using Nautilus.Common.Configuration;
     using Nautilus.Common.Data;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Logging;
@@ -42,8 +43,10 @@ namespace NautilusData
         /// </summary>
         /// <param name="config">The configuration.</param>
         /// <returns>The service.</returns>
-        public static DataService Create(Configuration config)
+        public static DataService Create(ServiceConfiguration config)
         {
+            VersionChecker.Run(config.LoggingAdapter, "NAUTILUS DATA - Algorithmic Trading Data Service");
+
             var clock = new Clock(DateTimeZone.Utc);
             var guidFactory = new GuidFactory();
             var container = new ComponentryContainer(
@@ -60,14 +63,14 @@ namespace NautilusData
             var dataBusAdapter = DataBusFactory.Create(container);
             dataBusAdapter.Start();
 
-            var compressor = CompressorFactory.Create(config.MessagingConfig.CompressionCodec);
+            var compressor = CompressorFactory.Create(config.MessagingConfiguration.CompressionCodec);
 
             var tickPublisher = new TickPublisher(
                 container,
                 dataBusAdapter,
                 new TickDataSerializer(),
                 compressor,
-                config.MessagingConfig.EncryptionConfig,
+                config.MessagingConfiguration.EncryptionConfig,
                 config.TickPublisherPort);
 
             var barPublisher = new BarPublisher(
@@ -75,7 +78,7 @@ namespace NautilusData
                 dataBusAdapter,
                 new BarDataSerializer(),
                 compressor,
-                config.MessagingConfig.EncryptionConfig,
+                config.MessagingConfiguration.EncryptionConfig,
                 config.BarPublisherPort);
 
             var instrumentPublisher = new InstrumentPublisher(
@@ -83,10 +86,10 @@ namespace NautilusData
                 dataBusAdapter,
                 new InstrumentDataSerializer(),
                 compressor,
-                config.MessagingConfig.EncryptionConfig,
+                config.MessagingConfiguration.EncryptionConfig,
                 config.InstrumentPublisherPort);
 
-            var symbolConverter = new SymbolConverter(config.SymbolIndex);
+            var symbolConverter = new SymbolConverter(config.SymbolMap);
 
             var fixClient = CreateFixClient(
                 container,
@@ -132,7 +135,7 @@ namespace NautilusData
                 new MsgPackRequestSerializer(new MsgPackQuerySerializer()),
                 new MsgPackResponseSerializer(),
                 compressor,
-                config.MessagingConfig.EncryptionConfig,
+                config.MessagingConfiguration.EncryptionConfig,
                 config.TickRouterPort);
 
             var barProvider = new BarProvider(
@@ -142,7 +145,7 @@ namespace NautilusData
                 new MsgPackRequestSerializer(new MsgPackQuerySerializer()),
                 new MsgPackResponseSerializer(),
                 compressor,
-                config.MessagingConfig.EncryptionConfig,
+                config.MessagingConfiguration.EncryptionConfig,
                 config.BarRouterPort);
 
             var instrumentProvider = new InstrumentProvider(
@@ -152,7 +155,7 @@ namespace NautilusData
                 new MsgPackRequestSerializer(new MsgPackQuerySerializer()),
                 new MsgPackResponseSerializer(),
                 compressor,
-                config.MessagingConfig.EncryptionConfig,
+                config.MessagingConfiguration.EncryptionConfig,
                 config.InstrumentRouterPort);
 
             var addresses = new Dictionary<Address, IEndpoint>
