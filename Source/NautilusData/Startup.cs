@@ -44,6 +44,11 @@ namespace NautilusData
                 .AddJsonFile("config.json", optional: false, reloadOnChange: true)
                 .AddJsonFile("symbols.json", optional: false, reloadOnChange: true);
 
+            if (this.Environment.IsDevelopment())
+            {
+                builder.AddUserSecrets<Startup>();
+            }
+
             this.Configuration = builder.Build();
 
             var logLevel = this.Configuration.GetSection(ConfigSection.Logging)["LogLevel"].ToEnum<LogEventLevel>();

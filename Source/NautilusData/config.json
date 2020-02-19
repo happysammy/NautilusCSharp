@@ -7,7 +7,7 @@
     "Version": "1.0",
     "Compression": "Snappy",
     "Encryption": "Curve25519",
-    "KeysPath": "/home/cjdsellers/Desktop/test_keys"
+    "KeysPath": ""
   },
 
   "Network": {
@@ -20,8 +20,8 @@
   },
 
   "FIX44": {
-    "ConfigPath": "/home/cjdsellers/Desktop/fix_configurations/",
-    "ConfigFile": "fix_fxcm1_md.cfg",
+    "ConfigPath": "",
+    "ConfigFile": "fix_fxcm4_md.cfg",
 
     "ConnectJob": {
       "Day": "Sunday",

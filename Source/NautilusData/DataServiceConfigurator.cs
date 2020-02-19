@@ -169,8 +169,6 @@ namespace NautilusData
 
             var symbolMap = symbolMap2.ToImmutableDictionary();
 
-            Console.WriteLine(symbolMap.Print());
-
             var dataConfig = new DataConfiguration(
                 symbolMap,
                 subscribingSymbols,
