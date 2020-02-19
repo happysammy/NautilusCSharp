@@ -15,7 +15,7 @@ namespace Nautilus.Core.Collections
     /// Represents a strongly typed list of unique objects which preserves insertion order.
     /// </summary>
     /// <typeparam name="T">The type of the objects.</typeparam>
-    public class UniqueList<T> : List<T>
+    public sealed class UniqueList<T> : List<T>
         where T : class
     {
         /// <summary>

@@ -21,7 +21,7 @@ namespace Nautilus.Execution.Engine
     /// <summary>
     /// Provides an in-memory execution database.
     /// </summary>
-    public class InMemoryExecutionDatabase : ExecutionDatabase, IExecutionDatabase
+    public sealed class InMemoryExecutionDatabase : ExecutionDatabase, IExecutionDatabase
     {
         private readonly Dictionary<OrderId, TraderId> indexOrderTrader;
         private readonly Dictionary<OrderId, AccountId> indexOrderAccount;
@@ -240,7 +240,7 @@ namespace Nautilus.Execution.Engine
             }
             else
             {
-                this.indexTraders[traderId] = new TraderIdentifierIndex(traderId);
+                this.indexTraders[traderId] = new TraderIdentifierIndex();
                 this.indexTraders[traderId].AddIdentifiers(order.Id, positionId, strategyId);
             }
 

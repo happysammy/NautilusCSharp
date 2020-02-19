@@ -18,7 +18,7 @@ namespace Nautilus.Messaging.Internal
     /// <summary>
     /// Provides an asynchronous message processor.
     /// </summary>
-    internal class MessageProcessor
+    internal sealed class MessageProcessor
     {
         private readonly ActionBlock<object> processor;
         private readonly CancellationTokenSource cts = new CancellationTokenSource();

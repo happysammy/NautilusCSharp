@@ -154,6 +154,14 @@ namespace NautilusData
             var barDataTrimTime = new LocalTime(barTrimHour, barTrimMinute);
             var barDataTrimWindowDays = int.Parse(trimJobBars["WindowDays"]);
 
+            var dataConfig = new DataConfiguration(
+                subscribingSymbols,
+                barSpecifications,
+                tickDataTrimTime,
+                barDataTrimTime,
+                tickDataTrimWindowDays,
+                barDataTrimWindowDays);
+
             // TODO: Refactor below
             var tempSymbolMap = configuration
                 .GetSection("SymbolMap")
@@ -168,15 +176,6 @@ namespace NautilusData
             }
 
             var symbolMap = symbolMap2.ToImmutableDictionary();
-
-            var dataConfig = new DataConfiguration(
-                symbolMap,
-                subscribingSymbols,
-                barSpecifications,
-                tickDataTrimTime,
-                barDataTrimTime,
-                tickDataTrimWindowDays,
-                barDataTrimWindowDays);
 
             return new ServiceConfiguration(
                 loggingAdapter,

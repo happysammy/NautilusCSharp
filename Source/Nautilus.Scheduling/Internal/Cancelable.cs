@@ -17,7 +17,7 @@ namespace Nautilus.Scheduling.Internal
     /// A <see cref="ICancelable"/> that wraps a <see cref="CancellationTokenSource"/>.
     /// When canceling this instance the underlying <see cref="CancellationTokenSource"/> is canceled as well.
     /// </summary>
-    internal class Cancelable : ICancelable, IDisposable
+    internal sealed class Cancelable : ICancelable, IDisposable
     {
         private readonly IActionScheduler scheduler;
         private readonly CancellationTokenSource source;

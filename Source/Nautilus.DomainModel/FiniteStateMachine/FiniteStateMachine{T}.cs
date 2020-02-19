@@ -17,7 +17,7 @@ namespace Nautilus.DomainModel.FiniteStateMachine
     /// table to determine trigger processing validity.
     /// </summary>
     /// <typeparam name="T">The state type.</typeparam>
-    internal class FiniteStateMachine<T>
+    internal sealed class FiniteStateMachine<T>
         where T : struct
     {
         private readonly ImmutableDictionary<StateTransition<T>, T> stateTransitionTable;

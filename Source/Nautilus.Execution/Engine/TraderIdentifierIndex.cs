@@ -14,7 +14,7 @@ namespace Nautilus.Execution.Engine
     /// <summary>
     /// Provides an identifier index for a trader.
     /// </summary>
-    public class TraderIdentifierIndex
+    public sealed class TraderIdentifierIndex
     {
         private readonly HashSet<OrderId> indexOrders;
         private readonly HashSet<PositionId> indexPositions;
@@ -26,22 +26,14 @@ namespace Nautilus.Execution.Engine
         /// <summary>
         /// Initializes a new instance of the <see cref="TraderIdentifierIndex"/> class.
         /// </summary>
-        /// <param name="traderId">The trader identifier.</param>
-        public TraderIdentifierIndex(TraderId traderId)
+        public TraderIdentifierIndex()
         {
             this.indexOrders = new HashSet<OrderId>();
             this.indexPositions = new HashSet<PositionId>();
             this.indexStrategies = new HashSet<StrategyId>();
             this.indexStrategyOrders = new Dictionary<StrategyId, HashSet<OrderId>>();
             this.indexStrategyPositions = new Dictionary<StrategyId, HashSet<PositionId>>();
-
-            this.TraderId = traderId;
         }
-
-        /// <summary>
-        /// Gets the indexes trader identifier.
-        /// </summary>
-        public TraderId TraderId { get; }
 
         /// <summary>
         /// Gets the indexes position identifiers.

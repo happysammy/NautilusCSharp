@@ -18,7 +18,7 @@ namespace Nautilus.Scheduling.Internal
     /// this ordering, but the addition of the Volatile guarantees it.
     /// </summary>
     /// <typeparam name="T">The type.</typeparam>
-    internal class AtomicReference<T>
+    internal sealed class AtomicReference<T>
         where T : class
     {
         private T? atomicValue;

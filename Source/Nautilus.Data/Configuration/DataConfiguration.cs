@@ -24,7 +24,6 @@ namespace Nautilus.Data.Configuration
         /// Initializes a new instance of the <see cref="DataConfiguration"/> class.
         /// </summary>
         public DataConfiguration(
-            ImmutableDictionary<string, string> symbolMap,
             ImmutableList<Symbol> subscribingSymbols,
             ImmutableList<BarSpecification> barSpecifications,
             LocalTime tickDataTrimTime,
@@ -32,7 +31,6 @@ namespace Nautilus.Data.Configuration
             int tickDataTrimWindowDays,
             int barDataTrimWindowDays)
         {
-            this.SymbolMap = symbolMap;
             this.SubscribingSymbols = subscribingSymbols;
             this.BarSpecifications = barSpecifications;
             this.TickDataTrimTime = tickDataTrimTime;
@@ -40,11 +38,6 @@ namespace Nautilus.Data.Configuration
             this.TickDataTrimWindowDays = tickDataTrimWindowDays;
             this.BarDataTrimWindowDays = barDataTrimWindowDays;
         }
-
-        /// <summary>
-        /// Gets the symbol conversion index.
-        /// </summary>
-        public ImmutableDictionary<string, string> SymbolMap { get; }
 
         /// <summary>
         /// Gets the subscribing symbols.

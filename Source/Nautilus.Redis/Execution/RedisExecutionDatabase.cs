@@ -27,7 +27,7 @@ namespace Nautilus.Redis.Execution
     /// <summary>
     /// Provides an execution database implemented with Redis.
     /// </summary>
-    public class RedisExecutionDatabase : ExecutionDatabase, IExecutionDatabase
+    public sealed class RedisExecutionDatabase : ExecutionDatabase, IExecutionDatabase
     {
         private readonly IServer redisServer;
         private readonly IDatabase redisDatabase;

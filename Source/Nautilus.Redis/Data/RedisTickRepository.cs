@@ -26,7 +26,7 @@ namespace Nautilus.Redis.Data
     /// <summary>
     /// Provides a repository for handling <see cref="Tick"/>s with Redis.
     /// </summary>
-    public class RedisTickRepository : RedisTimeSeriesRepository, ITickRepository
+    public sealed class RedisTickRepository : RedisTimeSeriesRepository, ITickRepository
     {
         private readonly IDataSerializer<Tick> serializer;
 
