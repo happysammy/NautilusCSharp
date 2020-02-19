@@ -157,6 +157,7 @@ namespace Nautilus.Scheduling.Internal
 
             // Take this object off the finalization queue and prevent finalization code for this object
             // from executing a second time.
+            // ReSharper disable once GCSuppressFinalizeForTypeWithoutDestructor
             GC.SuppressFinalize(this);
         }
 
