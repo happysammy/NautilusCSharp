@@ -16,7 +16,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Network;
     using Nautilus.Network.Compression;
-    using Nautilus.Network.Configuration;
+    using Nautilus.Network.Encryption;
     using Nautilus.Serialization.MessageSerializers;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NetMQ;
@@ -63,7 +63,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 new MsgPackResponseSerializer(),
                 new CompressorBypass(),
                 this.receiver,
-                EncryptionConfiguration.None(),
+                EncryptionSettings.None(),
                 new NetworkPort(5553));
 
 // var hexString = "85ac636f6d6d616e645f74797065ad6f726465725f636f6d6d616e64a56f72646572" +

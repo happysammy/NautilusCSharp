@@ -13,6 +13,7 @@ namespace Nautilus.Execution
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Message;
     using Nautilus.DomainModel.Commands;
+    using Nautilus.Execution.Configuration;
     using Nautilus.Messaging.Interfaces;
     using NodaTime;
 
@@ -35,7 +36,7 @@ namespace Nautilus.Execution
             IComponentryContainer container,
             IMessageBusAdapter messageBusAdapter,
             IEndpoint executionEngine,
-            ServiceConfiguration config)
+            NetworkConfiguration config)
             : base(container, messageBusAdapter)
         {
             this.commandThrottler = new Throttler(

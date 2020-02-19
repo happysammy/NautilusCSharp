@@ -15,7 +15,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using Nautilus.Core.Message;
     using Nautilus.Network;
     using Nautilus.Network.Compression;
-    using Nautilus.Network.Configuration;
+    using Nautilus.Network.Encryption;
     using Nautilus.Serialization.MessageSerializers;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
@@ -23,7 +23,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     {
         public MockMessageServer(
             IComponentryContainer container,
-            EncryptionConfiguration encryption,
+            EncryptionSettings encryption,
             NetworkAddress host,
             NetworkPort port,
             Guid id)

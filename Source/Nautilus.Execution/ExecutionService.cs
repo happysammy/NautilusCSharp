@@ -44,7 +44,7 @@ namespace Nautilus.Execution
                 container,
                 messageBusAdapter,
                 scheduler,
-                config.FixConfiguration)
+                config.FixConfig)
         {
             this.tradingGateway = tradingGateway;
 

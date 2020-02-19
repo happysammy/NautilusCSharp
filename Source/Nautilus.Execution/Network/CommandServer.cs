@@ -14,7 +14,7 @@ namespace Nautilus.Execution.Network
     using Nautilus.DomainModel.Commands;
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Network;
-    using Nautilus.Network.Configuration;
+    using Nautilus.Network.Encryption;
 
     /// <summary>
     /// Provides a command server which deserializes command messages and forwards them to the
@@ -40,7 +40,7 @@ namespace Nautilus.Execution.Network
             IMessageSerializer<Response> outboundSerializer,
             ICompressor compressor,
             IEndpoint commandRouter,
-            EncryptionConfiguration encryption,
+            EncryptionSettings encryption,
             NetworkPort port)
             : base(
                 container,

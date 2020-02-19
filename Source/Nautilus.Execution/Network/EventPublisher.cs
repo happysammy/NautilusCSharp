@@ -13,7 +13,7 @@ namespace Nautilus.Execution.Network
     using Nautilus.Core.Message;
     using Nautilus.DomainModel.Events;
     using Nautilus.Network;
-    using Nautilus.Network.Configuration;
+    using Nautilus.Network.Encryption;
 
     /// <summary>
     /// Provides an event publisher for the messaging server.
@@ -36,7 +36,7 @@ namespace Nautilus.Execution.Network
             IComponentryContainer container,
             ISerializer<Event> serializer,
             ICompressor compressor,
-            EncryptionConfiguration encryption,
+            EncryptionSettings encryption,
             NetworkPort port)
             : base(
                 container,

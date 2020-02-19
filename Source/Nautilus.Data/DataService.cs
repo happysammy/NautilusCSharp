@@ -63,7 +63,7 @@ namespace Nautilus.Data
                 container,
                 messageBusAdapter,
                 scheduler,
-                config.FixConfiguration)
+                config.FixConfig)
         {
             this.dataBus = dataBusAdapter;
             this.dataGateway = dataGateway;
@@ -80,13 +80,13 @@ namespace Nautilus.Data
                 ServiceAddress.InstrumentProvider,
             };
 
-            this.subscribingSymbols = config.SubscribingSymbols;
-            this.barSpecifications = config.BarSpecifications;
+            this.subscribingSymbols = config.DataConfig.SubscribingSymbols;
+            this.barSpecifications = config.DataConfig.BarSpecifications;
 
-            this.trimTimeTicks = config.TickDataTrimTime;
-            this.trimWindowDaysTicks = config.TickDataTrimWindowDays;
-            this.trimTimeBars = config.BarDataTrimTime;
-            this.trimWindowDaysBars = config.BarDataTrimWindowDays;
+            this.trimTimeTicks = config.DataConfig.TickDataTrimTime;
+            this.trimTimeBars = config.DataConfig.BarDataTrimTime;
+            this.trimWindowDaysTicks = config.DataConfig.TickDataTrimWindowDays;
+            this.trimWindowDaysBars = config.DataConfig.BarDataTrimWindowDays;
 
             this.RegisterConnectionAddress(ServiceAddress.DataGateway);
 

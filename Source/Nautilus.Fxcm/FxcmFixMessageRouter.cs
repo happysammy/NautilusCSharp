@@ -8,6 +8,7 @@
 
 namespace Nautilus.Fxcm
 {
+    using System.Collections.Immutable;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Aggregates;
@@ -37,15 +38,15 @@ namespace Nautilus.Fxcm
         /// </summary>
         /// <param name="container">The componentry container.</param>
         /// <param name="accountId">The account identifier for the router.</param>
-        /// <param name="symbolConverter">The symbol provider.</param>
+        /// <param name="symbolMap">The symbol provider.</param>
         public FxcmFixMessageRouter(
             IComponentryContainer container,
             AccountId accountId,
-            SymbolConverter symbolConverter)
+            ImmutableDictionary<string, string> symbolMap)
         : base(container)
         {
             this.accountId = accountId;
-            this.symbolConverter = symbolConverter;
+            this.symbolConverter = new SymbolConverter(symbolMap);
         }
 
         /// <inheritdoc />

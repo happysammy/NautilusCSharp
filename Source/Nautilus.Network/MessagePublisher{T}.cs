@@ -16,7 +16,6 @@ namespace Nautilus.Network
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core.Correctness;
     using Nautilus.Messaging.Interfaces;
-    using Nautilus.Network.Configuration;
     using Nautilus.Network.Encryption;
     using NetMQ;
     using NetMQ.Sockets;
@@ -45,7 +44,7 @@ namespace Nautilus.Network
             IComponentryContainer container,
             ISerializer<T> serializer,
             ICompressor compressor,
-            EncryptionConfiguration encryption,
+            EncryptionSettings encryption,
             NetworkAddress host,
             NetworkPort port,
             Guid id)

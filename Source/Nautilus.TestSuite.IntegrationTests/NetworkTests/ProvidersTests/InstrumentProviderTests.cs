@@ -21,7 +21,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
     using Nautilus.DomainModel.Entities;
     using Nautilus.Network;
     using Nautilus.Network.Compression;
-    using Nautilus.Network.Configuration;
+    using Nautilus.Network.Encryption;
     using Nautilus.Network.Messages;
     using Nautilus.Serialization.DataSerializers;
     using Nautilus.Serialization.MessageSerializers;
@@ -76,7 +76,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
                 this.requestSerializer,
                 this.responseSerializer,
                 new CompressorBypass(),
-                EncryptionConfiguration.None(),
+                EncryptionSettings.None(),
                 new NetworkPort(testPort));
             provider.Start();
             Task.Delay(100).Wait();  // Allow provider to start
@@ -127,7 +127,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
                 this.requestSerializer,
                 this.responseSerializer,
                 new CompressorBypass(),
-                EncryptionConfiguration.None(),
+                EncryptionSettings.None(),
                 new NetworkPort(testPort));
             provider.Start();
             Task.Delay(100).Wait();  // Allow provider to start
@@ -176,7 +176,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
                 this.requestSerializer,
                 this.responseSerializer,
                 new CompressorBypass(),
-                EncryptionConfiguration.None(),
+                EncryptionSettings.None(),
                 new NetworkPort(testPort));
             provider.Start();
             Task.Delay(100).Wait();
@@ -230,7 +230,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
                 this.requestSerializer,
                 this.responseSerializer,
                 new CompressorBypass(),
-                EncryptionConfiguration.None(),
+                EncryptionSettings.None(),
                 new NetworkPort(testPort));
             provider.Start();
             Task.Delay(100).Wait();  // Allow provider to start

@@ -8,8 +8,6 @@
 
 namespace Nautilus.Network.Encryption
 {
-    using System.IO;
-    using Nautilus.Network.Configuration;
     using NetMQ;
 
     /// <summary>
@@ -20,23 +18,11 @@ namespace Nautilus.Network.Encryption
         /// <summary>
         /// Setup Curve encryption.
         /// </summary>
-        /// <param name="config">The configuration for the encryption.</param>
+        /// <param name="settings">The encryption settings.</param>
         /// <param name="socket">The socket for the encryption.</param>
-        public static void SetupSocket(EncryptionConfiguration config, NetMQSocket socket)
+        public static void SetupSocket(EncryptionSettings settings, NetMQSocket socket)
         {
-            // Load keys
-            var publicKeyPath = Path.Combine(config.KeysPath, "server.key");
-            var secretKeyPath = Path.Combine(config.KeysPath, "server.key_secret");
-
-            var publicKeyFileSplit = File.ReadAllText(publicKeyPath).Split("public-key = ");
-            var secretKeyFileSplit = File.ReadAllText(secretKeyPath).Split("secret-key = ");
-            var publicKey = publicKeyFileSplit[1].TrimStart('"').TrimEnd().TrimEnd('"');
-            var secretKey = secretKeyFileSplit[1].TrimStart('"').TrimEnd().TrimEnd('"');
-
-            var publicKeyEncoded = Z85Encoder.FromZ85String(publicKey);
-            var secretKeyEncoded = Z85Encoder.FromZ85String(secretKey);
-
-            var certificate = new NetMQCertificate(secretKeyEncoded, publicKeyEncoded);
+            var certificate = new NetMQCertificate(settings.SecretKey, settings.PublicKey);
 
             socket.Options.CurveServer = true;
             socket.Options.CurveCertificate = certificate;

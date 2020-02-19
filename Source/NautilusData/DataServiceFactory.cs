@@ -9,6 +9,7 @@
 namespace NautilusData
 {
     using System.Collections.Generic;
+    using System.Collections.Immutable;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Configuration;
     using Nautilus.Common.Data;
@@ -63,39 +64,37 @@ namespace NautilusData
             var dataBusAdapter = DataBusFactory.Create(container);
             dataBusAdapter.Start();
 
-            var compressor = CompressorFactory.Create(config.MessagingConfiguration.CompressionCodec);
+            var compressor = CompressorFactory.Create(config.WireConfig.CompressionCodec);
 
             var tickPublisher = new TickPublisher(
                 container,
                 dataBusAdapter,
                 new TickDataSerializer(),
                 compressor,
-                config.MessagingConfiguration.EncryptionConfig,
-                config.TickPublisherPort);
+                config.WireConfig.EncryptionConfig,
+                config.NetworkConfig.TickPublisherPort);
 
             var barPublisher = new BarPublisher(
                 container,
                 dataBusAdapter,
                 new BarDataSerializer(),
                 compressor,
-                config.MessagingConfiguration.EncryptionConfig,
-                config.BarPublisherPort);
+                config.WireConfig.EncryptionConfig,
+                config.NetworkConfig.BarPublisherPort);
 
             var instrumentPublisher = new InstrumentPublisher(
                 container,
                 dataBusAdapter,
                 new InstrumentDataSerializer(),
                 compressor,
-                config.MessagingConfiguration.EncryptionConfig,
-                config.InstrumentPublisherPort);
-
-            var symbolConverter = new SymbolConverter(config.SymbolMap);
+                config.WireConfig.EncryptionConfig,
+                config.NetworkConfig.InstrumentPublisherPort);
 
             var fixClient = CreateFixClient(
                 container,
                 messagingAdapter,
-                config.FixConfiguration,
-                symbolConverter);
+                config.FixConfig,
+                config.SymbolMap);
 
             var dataGateway = FixDataGatewayFactory.Create(
                 container,
@@ -135,8 +134,8 @@ namespace NautilusData
                 new MsgPackRequestSerializer(new MsgPackQuerySerializer()),
                 new MsgPackResponseSerializer(),
                 compressor,
-                config.MessagingConfiguration.EncryptionConfig,
-                config.TickRouterPort);
+                config.WireConfig.EncryptionConfig,
+                config.NetworkConfig.TickRouterPort);
 
             var barProvider = new BarProvider(
                 container,
@@ -145,8 +144,8 @@ namespace NautilusData
                 new MsgPackRequestSerializer(new MsgPackQuerySerializer()),
                 new MsgPackResponseSerializer(),
                 compressor,
-                config.MessagingConfiguration.EncryptionConfig,
-                config.BarRouterPort);
+                config.WireConfig.EncryptionConfig,
+                config.NetworkConfig.BarRouterPort);
 
             var instrumentProvider = new InstrumentProvider(
                 container,
@@ -155,8 +154,8 @@ namespace NautilusData
                 new MsgPackRequestSerializer(new MsgPackQuerySerializer()),
                 new MsgPackResponseSerializer(),
                 compressor,
-                config.MessagingConfiguration.EncryptionConfig,
-                config.InstrumentRouterPort);
+                config.WireConfig.EncryptionConfig,
+                config.NetworkConfig.InstrumentRouterPort);
 
             var addresses = new Dictionary<Address, IEndpoint>
             {
@@ -195,7 +194,7 @@ namespace NautilusData
             IComponentryContainer container,
             IMessageBusAdapter messageBusAdapter,
             FixConfiguration configuration,
-            SymbolConverter symbolConverter)
+            ImmutableDictionary<string, string> symbolMap)
         {
             switch (configuration.Broker.Value)
             {
@@ -204,7 +203,7 @@ namespace NautilusData
                         container,
                         messageBusAdapter,
                         configuration,
-                        symbolConverter);
+                        symbolMap);
                 case "SIMULATION":
                     goto default;
                 case "IB":

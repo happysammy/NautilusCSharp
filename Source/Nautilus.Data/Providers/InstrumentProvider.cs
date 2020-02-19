@@ -17,7 +17,7 @@ namespace Nautilus.Data.Providers
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.Network;
-    using Nautilus.Network.Configuration;
+    using Nautilus.Network.Encryption;
 
     /// <summary>
     /// Provides <see cref="Instrument"/> data to requests.
@@ -45,7 +45,7 @@ namespace Nautilus.Data.Providers
             IMessageSerializer<Request> inboundSerializer,
             IMessageSerializer<Response> outboundSerializer,
             ICompressor compressor,
-            EncryptionConfiguration encryption,
+            EncryptionSettings encryption,
             NetworkPort port)
             : base(
                 container,

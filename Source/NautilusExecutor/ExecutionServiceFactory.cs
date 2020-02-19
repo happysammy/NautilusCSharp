@@ -9,6 +9,7 @@
 namespace NautilusExecutor
 {
     using System.Collections.Generic;
+    using System.Collections.Immutable;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Configuration;
     using Nautilus.Common.Interfaces;
@@ -57,13 +58,11 @@ namespace NautilusExecutor
             var messagingAdapter = MessageBusFactory.Create(container);
             messagingAdapter.Start();
 
-            var symbolConverter = new SymbolConverter(config.SymbolMap);
-
             var fixClient = CreateFixClient(
                 container,
                 messagingAdapter,
-                config.FixConfiguration,
-                symbolConverter);
+                config.FixConfig,
+                config.SymbolMap);
 
             var tradingGateway = FixTradingGatewayFactory.Create(
                 container,
@@ -77,14 +76,14 @@ namespace NautilusExecutor
                 new MsgPackCommandSerializer(),
                 new MsgPackEventSerializer());
 
-            var compressor = CompressorFactory.Create(config.MessagingConfiguration.CompressionCodec);
+            var compressor = CompressorFactory.Create(config.WireConfig.CompressionCodec);
 
             var eventPublisher = new EventPublisher(
                 container,
                 new MsgPackEventSerializer(),
                 compressor,
-                config.MessagingConfiguration.EncryptionConfig,
-                config.EventsPort);
+                config.WireConfig.EncryptionConfig,
+                config.NetworkConfig.EventsPort);
 
             var executionEngine = new ExecutionEngine(
                 container,
@@ -98,7 +97,7 @@ namespace NautilusExecutor
                 container,
                 messagingAdapter,
                 executionEngine.Endpoint,
-                config);
+                config.NetworkConfig);
 
             var commandServer = new CommandServer(
                 container,
@@ -106,8 +105,8 @@ namespace NautilusExecutor
                 new MsgPackResponseSerializer(),
                 compressor,
                 commandRouter.Endpoint,
-                config.MessagingConfiguration.EncryptionConfig,
-                config.CommandsPort);
+                config.WireConfig.EncryptionConfig,
+                config.NetworkConfig.CommandsPort);
 
             var addresses = new Dictionary<Address, IEndpoint>
             {
@@ -140,7 +139,7 @@ namespace NautilusExecutor
             IComponentryContainer container,
             IMessageBusAdapter messageBusAdapter,
             FixConfiguration configuration,
-            SymbolConverter symbolConverter)
+            ImmutableDictionary<string, string> symbolMap)
         {
             switch (configuration.Broker.Value)
             {
@@ -149,7 +148,7 @@ namespace NautilusExecutor
                         container,
                         messageBusAdapter,
                         configuration,
-                        symbolConverter);
+                        symbolMap);
                 case "SIMULATION":
                     goto default;
                 case "IB":

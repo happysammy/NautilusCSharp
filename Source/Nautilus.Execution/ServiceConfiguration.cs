@@ -9,10 +9,9 @@
 namespace Nautilus.Execution
 {
     using System.Collections.Immutable;
-    using Microsoft.Extensions.Configuration;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Execution.Configuration;
     using Nautilus.Fix;
-    using Nautilus.Network;
     using Nautilus.Network.Configuration;
 
     /// <summary>
@@ -24,27 +23,21 @@ namespace Nautilus.Execution
         /// Initializes a new instance of the <see cref="ServiceConfiguration"/> class.
         /// </summary>
         /// <param name="loggingAdapter">The service logging adapter.</param>
-        /// <param name="networkSection">The network configuration section.</param>
-        /// <param name="messagingConfig">The messaging configuration section.</param>
-        /// <param name="fixConfig">The FIX configuration section.</param>
+        /// <param name="fixConfig">The FIX configuration.</param>
+        /// <param name="wireConfig">The messaging configuration.</param>
+        /// <param name="networkConfig">The network configuration.</param>
         /// <param name="symbolMap">The service symbol map.</param>
         public ServiceConfiguration(
             ILoggingAdapter loggingAdapter,
-            IConfigurationSection networkSection,
-            MessagingConfiguration messagingConfig,
             FixConfiguration fixConfig,
+            WireConfiguration wireConfig,
+            NetworkConfiguration networkConfig,
             ImmutableDictionary<string, string> symbolMap)
         {
             this.LoggingAdapter = loggingAdapter;
-            this.MessagingConfiguration = messagingConfig;
-            this.FixConfiguration = fixConfig;
-
-            // Network Configuration
-            this.CommandsPort = new NetworkPort(int.Parse(networkSection["CommandsPort"]));
-            this.EventsPort = new NetworkPort(int.Parse(networkSection["EventsPort"]));
-            this.CommandsPerSecond = int.Parse(networkSection["CommandsPerSecond"]);
-            this.NewOrdersPerSecond = int.Parse(networkSection["NewOrdersPerSecond"]);
-
+            this.FixConfig = fixConfig;
+            this.WireConfig = wireConfig;
+            this.NetworkConfig = networkConfig;
             this.SymbolMap = symbolMap;
         }
 
@@ -54,34 +47,19 @@ namespace Nautilus.Execution
         public ILoggingAdapter LoggingAdapter { get; }
 
         /// <summary>
-        /// Gets the messaging configuration.
-        /// </summary>
-        public MessagingConfiguration MessagingConfiguration { get; }
-
-        /// <summary>
-        /// Gets the configuration commands port.
-        /// </summary>
-        public NetworkPort CommandsPort { get; }
-
-        /// <summary>
-        /// Gets the configuration events port.
-        /// </summary>
-        public NetworkPort EventsPort { get; }
-
-        /// <summary>
-        /// Gets the configuration maximum commands per second.
-        /// </summary>
-        public int CommandsPerSecond { get; }
-
-        /// <summary>
-        /// Gets the configuration maximum new orders per second.
-        /// </summary>
-        public int NewOrdersPerSecond { get; }
-
-        /// <summary>
         /// Gets the FIX configuration.
         /// </summary>
-        public FixConfiguration FixConfiguration { get; }
+        public FixConfiguration FixConfig { get; }
+
+        /// <summary>
+        /// Gets the messaging configuration.
+        /// </summary>
+        public WireConfiguration WireConfig { get; }
+
+        /// <summary>
+        /// Gets the network configuration.
+        /// </summary>
+        public NetworkConfiguration NetworkConfig { get; }
 
         /// <summary>
         /// Gets the symbol conversion index.

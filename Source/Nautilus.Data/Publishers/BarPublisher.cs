@@ -12,7 +12,7 @@ namespace Nautilus.Data.Publishers
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network;
-    using Nautilus.Network.Configuration;
+    using Nautilus.Network.Encryption;
 
     /// <summary>
     /// Provides a publisher for <see cref="Bar"/> data.
@@ -33,7 +33,7 @@ namespace Nautilus.Data.Publishers
             IDataBusAdapter dataBusAdapter,
             IDataSerializer<Bar> serializer,
             ICompressor compressor,
-            EncryptionConfiguration encryption,
+            EncryptionSettings encryption,
             NetworkPort port)
             : base(
                 container,

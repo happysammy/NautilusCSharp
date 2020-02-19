@@ -16,7 +16,7 @@ namespace Nautilus.Network.Encryption
     /// <summary>
     /// Providers a Z85 encoder.
     /// </summary>
-    public class Z85Encoder
+    public static class Z85Encoder
     {
         private static readonly char[] Chars =
         {

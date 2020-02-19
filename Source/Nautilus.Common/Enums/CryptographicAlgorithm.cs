@@ -22,7 +22,7 @@ namespace Nautilus.Common.Enums
         Undefined = 0,
 
         /// <summary>
-        /// There is encryption specified.
+        /// There is no encryption specified.
         /// </summary>
         None = 1,
 

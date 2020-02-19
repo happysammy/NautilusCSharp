@@ -18,7 +18,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
     using Nautilus.DomainModel.Entities;
     using Nautilus.Network;
     using Nautilus.Network.Compression;
-    using Nautilus.Network.Configuration;
+    using Nautilus.Network.Encryption;
     using Nautilus.Serialization.DataSerializers;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
@@ -51,7 +51,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
                 DataBusFactory.Create(container),
                 this.serializer,
                 new CompressorBypass(),
-                EncryptionConfiguration.None(),
+                EncryptionSettings.None(),
                 new NetworkPort(55512));
         }
 

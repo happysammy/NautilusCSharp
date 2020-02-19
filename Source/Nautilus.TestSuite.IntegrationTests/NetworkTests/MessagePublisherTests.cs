@@ -15,7 +15,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Network;
-    using Nautilus.Network.Configuration;
+    using Nautilus.Network.Encryption;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NetMQ;
@@ -56,7 +56,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             var publisher = new MockDataPublisher(
                 this.container,
                 DataBusFactory.Create(this.container),
-                EncryptionConfiguration.None(),
+                EncryptionSettings.None(),
                 NetworkAddress.LocalHost,
                 new NetworkPort(55555));
 
@@ -73,7 +73,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             var publisher = new MockDataPublisher(
                 this.container,
                 DataBusFactory.Create(this.container),
-                EncryptionConfiguration.None(),
+                EncryptionSettings.None(),
                 NetworkAddress.LocalHost,
                 new NetworkPort(55555));
             publisher.Start();

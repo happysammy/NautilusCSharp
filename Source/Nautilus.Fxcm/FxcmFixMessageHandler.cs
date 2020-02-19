@@ -10,6 +10,7 @@ namespace Nautilus.Fxcm
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.Immutable;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
@@ -64,19 +65,19 @@ namespace Nautilus.Fxcm
         /// <param name="container">The componentry container.</param>
         /// <param name="accountId">The account identifier for the handler.</param>
         /// <param name="accountCurrency">The account currency.</param>
-        /// <param name="symbolConverter">The instrument data provider.</param>
+        /// <param name="symbolMap">The symbol map.</param>
         /// <param name="useBrokerTimestampForTicks">The flag to use the brokers timestamp for ticks.</param>
         public FxcmFixMessageHandler(
             IComponentryContainer container,
             AccountId accountId,
             Currency accountCurrency,
-            SymbolConverter symbolConverter,
+            ImmutableDictionary<string, string> symbolMap,
             bool useBrokerTimestampForTicks = false)
             : base(container)
         {
             this.accountId = accountId;
             this.accountCurrency = accountCurrency;
-            this.symbolConverter = symbolConverter;
+            this.symbolConverter = new SymbolConverter(symbolMap);
             this.symbolCache = new ObjectCache<string, Symbol>(Symbol.FromString);
             this.orderIdIndex = new Dictionary<string, OrderId>();
             this.mdBidGroup = new MarketDataIncrementalRefresh.NoMDEntriesGroup();

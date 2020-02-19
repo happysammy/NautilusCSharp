@@ -64,7 +64,6 @@ namespace Nautilus.Core.Extensions
         /// <typeparam name="T">The type of element.</typeparam>
         /// <returns>The contents string.</returns>
         public static string Print<T>(this IList<T> list)
-            where T : class
         {
             var output = "[ ";
             foreach (var element in list)

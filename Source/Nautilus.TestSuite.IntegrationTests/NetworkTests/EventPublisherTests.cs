@@ -19,7 +19,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Network;
     using Nautilus.Network.Compression;
-    using Nautilus.Network.Configuration;
+    using Nautilus.Network.Encryption;
     using Nautilus.Serialization.MessageSerializers;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
@@ -66,7 +66,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 this.container,
                 new MsgPackEventSerializer(),
                 new CompressorBypass(),
-                EncryptionConfiguration.None(),
+                EncryptionSettings.None(),
                 new NetworkPort(56601));
             publisher.Start();
             Task.Delay(100).Wait(); // Allow publisher to start
