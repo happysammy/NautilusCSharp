@@ -5,7 +5,6 @@
     <LangVersion>8</LangVersion>
     <OutputType>Exe</OutputType>
     <Nullable>enable</Nullable>
-    <UserSecretsId>28e66145-8efd-42ea-b5b3-e40af1218ae1</UserSecretsId>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>

@@ -18,7 +18,8 @@
   },
 
   "FIX44": {
-    "ConfigPath": "/home/cjdsellers/Desktop/fix_configurations/NautilusExecutor",
+    "ConfigPath": "/home/cjdsellers/Desktop/fix_configurations/",
+    "ConfigFile": "fix_fxcm1.cfg",
 
     "ConnectJob": {
       "Day": "Sunday",

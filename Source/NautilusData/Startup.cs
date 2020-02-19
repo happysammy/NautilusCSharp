@@ -52,11 +52,6 @@ namespace NautilusData
                 .AddJsonFile("config.json", optional: false, reloadOnChange: true)
                 .AddJsonFile("symbols.json", optional: false, reloadOnChange: true);
 
-            if (this.Environment.IsDevelopment())
-            {
-                builder.AddUserSecrets<Startup>();
-            }
-
             this.Configuration = builder.Build();
 
             var logLevel = this.Configuration.GetSection(ConfigSection.Logging)["LogLevel"].ToEnum<LogEventLevel>();
@@ -77,12 +72,16 @@ namespace NautilusData
 
             // FIX Configuration
             var fixConfigSection = this.Configuration.GetSection(ConfigSection.FIX44);
-            var fixDirectory = Path.Combine(workingDirectory, "FIX");
-            FileManager.CopyAll(fixConfigSection["ConfigPath"], fixDirectory);
+            var fixConfigFileTarget = Path.Combine(fixConfigSection["ConfigPath"], fixConfigSection["ConfigFile"]);
+            var fixConfigFile = Path.Combine(workingDirectory, fixConfigSection["ConfigFile"]);
 
-            var fixSettingsFile = FileManager.GetFirstFilename(fixDirectory, ".cfg");
-            var fixSettings = ConfigReader.LoadConfig(fixSettingsFile);
-            var dataDictionary = Path.Combine(fixDirectory, fixSettings["DataDictionary"]);
+            // Move configuration file to working directory
+            FileManager.Copy(fixConfigFileTarget, workingDirectory);
+
+            var fixSettings = ConfigReader.LoadConfig(fixConfigFile);
+            var dataDictionary = Path.Combine(fixConfigSection["ConfigPath"], fixSettings["DataDictionary"]);
+
+            // Move data dictionary to working directory
             FileManager.Copy(dataDictionary, workingDirectory);
 
             var broker = new Brokerage(fixSettings["Brokerage"]);
@@ -110,7 +109,7 @@ namespace NautilusData
                 broker,
                 accountType,
                 accountCurrency,
-                fixSettingsFile,
+                fixConfigFile,
                 credentials,
                 sendAccountTag,
                 connectTime,

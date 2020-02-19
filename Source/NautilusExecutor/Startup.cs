@@ -52,15 +52,7 @@ namespace NautilusExecutor
                 .AddJsonFile("config.json", optional: false, reloadOnChange: true)
                 .AddJsonFile("symbols.json", optional: false, reloadOnChange: true);
 
-            if (this.Environment.IsDevelopment())
-            {
-                builder.AddUserSecrets<Startup>();
-                this.Configuration = builder.Build();
-            }
-            else
-            {
-                this.Configuration = builder.Build();
-            }
+            this.Configuration = builder.Build();
 
             var logLevel = this.Configuration.GetSection(ConfigSection.Logging)["LogLevel"].ToEnum<LogEventLevel>();
             var loggingAdapter = new SerilogLogger(logLevel);
@@ -69,25 +61,26 @@ namespace NautilusExecutor
 
             // Messaging Configuration
             var messagingConfigSection = this.Configuration.GetSection(ConfigSection.Messaging);
-            var keysDirectory = Path.Combine(workingDirectory, "Keys");
-            FileManager.CopyAll(messagingConfigSection["KeysPath"], keysDirectory);
+            FileManager.CopyAll(messagingConfigSection["KeysPath"], workingDirectory);
 
-            Console.WriteLine(keysDirectory);
             var messagingConfiguration = new MessagingConfiguration(
                 messagingConfigSection["Version"],
                 messagingConfigSection["Compression"].ToEnum<CompressionCodec>(),
                 messagingConfigSection["Encryption"].ToEnum<CryptographicAlgorithm>(),
-                keysDirectory);
+                workingDirectory);
 
             // FIX Configuration
             var fixConfigSection = this.Configuration.GetSection(ConfigSection.FIX44);
-            var fixDirectory = Path.Combine(workingDirectory, "FIX");
-            FileManager.CopyAll(fixConfigSection["ConfigPath"], fixDirectory);
+            var fixConfigFileTarget = Path.Combine(fixConfigSection["ConfigPath"], fixConfigSection["ConfigFile"]);
+            var fixConfigFile = Path.Combine(workingDirectory, fixConfigSection["ConfigFile"]);
 
-            var fixSettingsFile = FileManager.GetFirstFilename(fixDirectory, ".cfg");
-            var fixSettings = ConfigReader.LoadConfig(fixSettingsFile);
-            var dataDictionary = Path.Combine(fixDirectory, fixSettings["DataDictionary"]);
-            Console.WriteLine(dataDictionary);
+            // Move configuration file to working directory
+            FileManager.Copy(fixConfigFileTarget, workingDirectory);
+
+            var fixSettings = ConfigReader.LoadConfig(fixConfigFile);
+            var dataDictionary = Path.Combine(fixConfigSection["ConfigPath"], fixSettings["DataDictionary"]);
+
+            // Move data dictionary to working directory
             FileManager.Copy(dataDictionary, workingDirectory);
 
             var broker = new Brokerage(fixSettings["Brokerage"]);
@@ -115,7 +108,7 @@ namespace NautilusExecutor
                 broker,
                 accountType,
                 accountCurrency,
-                fixSettingsFile,
+                fixConfigFileTarget,
                 credentials,
                 sendAccountTag,
                 connectTime,

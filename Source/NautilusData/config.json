@@ -20,7 +20,8 @@
   },
 
   "FIX44": {
-    "ConfigPath": "/home/cjdsellers/Desktop/fix_configurations/NautilusData",
+    "ConfigPath": "/home/cjdsellers/Desktop/fix_configurations/",
+    "ConfigFile": "fix_fxcm1_md.cfg",
 
     "ConnectJob": {
       "Day": "Sunday",
