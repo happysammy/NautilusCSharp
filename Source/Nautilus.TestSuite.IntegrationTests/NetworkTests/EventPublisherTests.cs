@@ -66,7 +66,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 this.container,
                 new MsgPackEventSerializer(),
                 new CompressorBypass(),
-                EncryptionConfig.None(),
+                EncryptionConfiguration.None(),
                 new NetworkPort(56601));
             publisher.Start();
             Task.Delay(100).Wait(); // Allow publisher to start

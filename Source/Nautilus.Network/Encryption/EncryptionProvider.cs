@@ -22,7 +22,7 @@ namespace Nautilus.Network.Encryption
         /// </summary>
         /// <param name="config">The configuration for the encryption.</param>
         /// <param name="socket">The socket for the encryption.</param>
-        public static void SetupSocket(EncryptionConfig config, NetMQSocket socket)
+        public static void SetupSocket(EncryptionConfiguration config, NetMQSocket socket)
         {
             // Load keys
             var publicKeyPath = Path.Combine(config.KeysPath, "server.key");

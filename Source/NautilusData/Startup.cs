@@ -10,7 +10,9 @@ namespace NautilusData
 {
     using System;
     using System.Collections.Immutable;
+    using System.Collections.Specialized;
     using System.IO;
+    using System.Linq;
     using System.Reflection;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Builder;
@@ -60,15 +62,15 @@ namespace NautilusData
             var workingDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location)!;
 
             // Messaging Configuration
-            var messagingConfigSection = this.Configuration.GetSection(ConfigSection.Messaging);
-            var keysDirectory = Path.Combine(workingDirectory, "Keys");
-            FileManager.CopyAll(messagingConfigSection["KeysPath"], keysDirectory);
+            var messagingConfigSection = this.Configuration.GetSection(ConfigSection.Messaging)
+                .AsEnumerable()
+                .ToImmutableDictionary();
 
-            var messagingConfiguration = new MessagingConfiguration(
-                messagingConfigSection["Version"],
-                messagingConfigSection["Compression"].ToEnum<CompressionCodec>(),
-                messagingConfigSection["Encryption"].ToEnum<CryptographicAlgorithm>(),
-                messagingConfigSection["KeysPath"]);
+            Console.WriteLine(messagingConfigSection.Print());
+
+            FileManager.CopyAll(messagingConfigSection["Messaging:KeysPath"], workingDirectory);
+
+            var messagingConfiguration = MessagingConfiguration.Create(messagingConfigSection);
 
             // FIX Configuration
             var fixConfigSection = this.Configuration.GetSection(ConfigSection.FIX44);
@@ -133,14 +135,14 @@ namespace NautilusData
         }
 
         /// <summary>
-        /// Gets the ASP.NET Core configuration.
-        /// </summary>
-        public IConfiguration Configuration { get; }
-
-        /// <summary>
         /// Gets the ASP.NET Core hosting environment.
         /// </summary>
         public IHostingEnvironment Environment { get; }
+
+        /// <summary>
+        /// Gets the ASP.NET Core configuration.
+        /// </summary>
+        public IConfiguration Configuration { get; }
 
         /// <summary>
         /// Configures the ASP.NET Core web hosting services.

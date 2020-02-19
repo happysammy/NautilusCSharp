@@ -45,7 +45,7 @@ namespace Nautilus.Network
             IComponentryContainer container,
             ISerializer<T> serializer,
             ICompressor compressor,
-            EncryptionConfig encryption,
+            EncryptionConfiguration encryption,
             NetworkAddress host,
             NetworkPort port,
             Guid id)

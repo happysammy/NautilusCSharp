@@ -24,7 +24,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public MockDataPublisher(
             IComponentryContainer container,
             IDataBusAdapter dataBusAdapter,
-            EncryptionConfig encryption,
+            EncryptionConfiguration encryption,
             NetworkAddress host,
             NetworkPort port)
             : base(

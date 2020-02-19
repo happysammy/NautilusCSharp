@@ -36,7 +36,7 @@ namespace Nautilus.Execution.Network
             IComponentryContainer container,
             ISerializer<Event> serializer,
             ICompressor compressor,
-            EncryptionConfig encryption,
+            EncryptionConfiguration encryption,
             NetworkPort port)
             : base(
                 container,

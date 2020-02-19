@@ -46,7 +46,7 @@ namespace Nautilus.Network
             IDataBusAdapter dataBusAdapter,
             IDataSerializer<T> serializer,
             ICompressor compressor,
-            EncryptionConfig encryption,
+            EncryptionConfiguration encryption,
             NetworkAddress host,
             NetworkPort port,
             Guid id)

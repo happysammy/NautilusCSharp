@@ -33,7 +33,7 @@ namespace Nautilus.Data.Publishers
             IDataBusAdapter dataBusAdapter,
             IDataSerializer<Instrument> serializer,
             ICompressor compressor,
-            EncryptionConfig encryption,
+            EncryptionConfiguration encryption,
             NetworkPort port)
             : base(
                 container,

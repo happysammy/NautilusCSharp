@@ -76,7 +76,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
                 this.requestSerializer,
                 this.responseSerializer,
                 new CompressorBypass(),
-                EncryptionConfig.None(),
+                EncryptionConfiguration.None(),
                 new NetworkPort(testPort));
             provider.Start();
             Task.Delay(100).Wait();  // Allow provider to start
@@ -127,7 +127,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
                 this.requestSerializer,
                 this.responseSerializer,
                 new CompressorBypass(),
-                EncryptionConfig.None(),
+                EncryptionConfiguration.None(),
                 new NetworkPort(testPort));
             provider.Start();
             Task.Delay(100).Wait();  // Allow provider to start
@@ -176,7 +176,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
                 this.requestSerializer,
                 this.responseSerializer,
                 new CompressorBypass(),
-                EncryptionConfig.None(),
+                EncryptionConfiguration.None(),
                 new NetworkPort(testPort));
             provider.Start();
             Task.Delay(100).Wait();
@@ -230,7 +230,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
                 this.requestSerializer,
                 this.responseSerializer,
                 new CompressorBypass(),
-                EncryptionConfig.None(),
+                EncryptionConfiguration.None(),
                 new NetworkPort(testPort));
             provider.Start();
             Task.Delay(100).Wait();  // Allow provider to start

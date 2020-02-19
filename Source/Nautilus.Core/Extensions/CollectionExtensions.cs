@@ -63,7 +63,7 @@ namespace Nautilus.Core.Extensions
         /// <param name="list">The list to print.</param>
         /// <typeparam name="T">The type of element.</typeparam>
         /// <returns>The contents string.</returns>
-        public static string Print<T>(this List<T> list)
+        public static string Print<T>(this IList<T> list)
             where T : class
         {
             var output = "[ ";
@@ -84,7 +84,7 @@ namespace Nautilus.Core.Extensions
         /// <typeparam name="TKey">The type of key.</typeparam>
         /// <typeparam name="TValue">The type of value.</typeparam>
         /// <returns>The contents string.</returns>
-        public static string Print<TKey, TValue>(this Dictionary<TKey, TValue> dictionary)
+        public static string Print<TKey, TValue>(this IDictionary<TKey, TValue> dictionary)
             where TKey : class
         {
             var output = "{ ";

@@ -23,7 +23,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     {
         public MockMessageServer(
             IComponentryContainer container,
-            EncryptionConfig encryption,
+            EncryptionConfiguration encryption,
             NetworkAddress host,
             NetworkPort port,
             Guid id)

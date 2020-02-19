@@ -8,7 +8,10 @@
 
 namespace Nautilus.Network.Configuration
 {
+    using System.Collections.Immutable;
     using Nautilus.Common.Enums;
+    using Nautilus.Core.Correctness;
+    using Nautilus.Core.Extensions;
 
     /// <summary>
     /// Represents a messaging protocol configuration.
@@ -20,17 +23,18 @@ namespace Nautilus.Network.Configuration
         /// </summary>
         /// <param name="apiVersion">The messaging API version.</param>
         /// <param name="compression">The messaging compression codec.</param>
-        /// <param name="encryption">The messaging encryption cryptographic algorithm.</param>
-        /// <param name="keysPath">The messaging encryption cryptographic keys directory.</param>
-        public MessagingConfiguration(
+        /// <param name="encryptionConfig">The messaging encryption cryptographic algorithm.</param>
+        private MessagingConfiguration(
             string apiVersion,
             CompressionCodec compression,
-            CryptographicAlgorithm encryption,
-            string keysPath)
+            EncryptionConfiguration encryptionConfig)
         {
+            Condition.NotEmptyOrWhiteSpace(apiVersion, nameof(apiVersion));
+            Condition.NotEqualTo(compression, CompressionCodec.Undefined, nameof(compression));
+
             this.Version = apiVersion;
             this.CompressionCodec = compression;
-            this.EncryptionConfig = EncryptionConfig.Create(encryption, keysPath);
+            this.EncryptionConfig = encryptionConfig;
         }
 
         /// <summary>
@@ -46,7 +50,24 @@ namespace Nautilus.Network.Configuration
         /// <summary>
         /// Gets the messaging encryption configuration.
         /// </summary>
-        public EncryptionConfig EncryptionConfig { get; }
+        public EncryptionConfiguration EncryptionConfig { get; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MessagingConfiguration"/> class.
+        /// </summary>
+        /// <param name="configuration">The messaging configuration.</param>
+        /// <returns>The configuration.</returns>
+        public static MessagingConfiguration Create(ImmutableDictionary<string, string> configuration)
+        {
+            var encryptionConfig = EncryptionConfiguration.Create(
+                configuration["Messaging:Encryption"].ToEnum<CryptographicAlgorithm>(),
+                configuration["Messaging:KeysPath"]);
+
+            return new MessagingConfiguration(
+                configuration["Messaging:Version"],
+                configuration["Messaging:Compression"].ToEnum<CompressionCodec>(),
+                encryptionConfig);
+        }
 
         /// <summary>
         /// Return a default development environment messaging configuration with no compression or encryption.
@@ -57,8 +78,7 @@ namespace Nautilus.Network.Configuration
             return new MessagingConfiguration(
                 "1.0",
                 CompressionCodec.None,
-                CryptographicAlgorithm.None,
-                string.Empty);
+                EncryptionConfiguration.None());
         }
     }
 }

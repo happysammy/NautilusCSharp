@@ -63,7 +63,7 @@ namespace Nautilus.Network
             IMessageSerializer<TInbound> inboundSerializer,
             IMessageSerializer<TOutbound> outboundSerializer,
             ICompressor compressor,
-            EncryptionConfig encryption,
+            EncryptionConfiguration encryption,
             NetworkAddress host,
             NetworkPort port,
             Guid id)

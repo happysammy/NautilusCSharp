@@ -58,7 +58,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             // Act
             var server = new MockMessageServer(
                 this.container,
-                EncryptionConfig.None(),
+                EncryptionConfiguration.None(),
                 NetworkAddress.LocalHost,
                 new NetworkPort(55555),
                 Guid.NewGuid());
@@ -77,7 +77,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             // Act
             var server = new MockMessageServer(
                 this.container,
-                EncryptionConfig.None(),
+                EncryptionConfiguration.None(),
                 NetworkAddress.LocalHost,
                 new NetworkPort(55556),
                 Guid.NewGuid());
@@ -103,7 +103,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             var server = new MockMessageServer(
                 this.container,
-                EncryptionConfig.None(),
+                EncryptionConfiguration.None(),
                 NetworkAddress.LocalHost,
                 new NetworkPort(testPort),
                 Guid.NewGuid());
@@ -140,7 +140,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             var server = new MockMessageServer(
                 this.container,
-                EncryptionConfig.None(),
+                EncryptionConfiguration.None(),
                 NetworkAddress.LocalHost,
                 new NetworkPort(testPort),
                 Guid.NewGuid());
@@ -177,7 +177,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             var server = new MockMessageServer(
                 this.container,
-                EncryptionConfig.None(),
+                EncryptionConfiguration.None(),
                 NetworkAddress.LocalHost,
                 new NetworkPort(testPort),
                 Guid.NewGuid());
@@ -216,7 +216,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             var server = new MockMessageServer(
                 this.container,
-                EncryptionConfig.None(),
+                EncryptionConfiguration.None(),
                 NetworkAddress.LocalHost,
                 new NetworkPort(testPort),
                 Guid.NewGuid());
@@ -259,7 +259,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             var server = new MockMessageServer(
                 this.container,
-                EncryptionConfig.None(),
+                EncryptionConfiguration.None(),
                 NetworkAddress.LocalHost,
                 new NetworkPort(testPort),
                 Guid.NewGuid());
@@ -312,7 +312,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             var server = new MockMessageServer(
                 this.container,
-                EncryptionConfig.None(),
+                EncryptionConfiguration.None(),
                 NetworkAddress.LocalHost,
                 new NetworkPort(testPort),
                 Guid.NewGuid());
@@ -363,7 +363,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             var server = new MockMessageServer(
                 this.container,
-                EncryptionConfig.None(),
+                EncryptionConfiguration.None(),
                 NetworkAddress.LocalHost,
                 new NetworkPort(testPort),
                 Guid.NewGuid());
@@ -410,7 +410,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             var server = new MockMessageServer(
                 this.container,
-                EncryptionConfig.None(),
+                EncryptionConfiguration.None(),
                 NetworkAddress.LocalHost,
                 new NetworkPort(testPort),
                 Guid.NewGuid());
