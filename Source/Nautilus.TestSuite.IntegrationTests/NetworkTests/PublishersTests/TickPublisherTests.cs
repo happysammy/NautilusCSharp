@@ -31,7 +31,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
     {
         private const string TestAddress = "tcp://localhost:55606";
         private readonly ITestOutputHelper output;
-        private readonly MockLoggingAdapter loggingAdapter;
+        private readonly MockLogger logger;
         private readonly TickPublisher publisher;
 
         public TickPublisherTests(ITestOutputHelper output)
@@ -42,8 +42,8 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
             var containerFactory = new StubComponentryContainerProvider();
             var container = containerFactory
             .Create();
-            this.loggingAdapter = containerFactory
-            .LoggingAdapter;
+            this.logger = containerFactory
+            .Logger;
             this.publisher = new TickPublisher(
                 container,
                 DataBusFactory.Create(container),
@@ -80,14 +80,14 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
             var receivedTopic = subscriber.ReceiveFrameBytes();
             var receivedMessage = subscriber.ReceiveFrameBytes();
 
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Equal(tick.Symbol.Value, Encoding.UTF8.GetString(receivedTopic));
             Assert.Equal(tick.ToString(), Encoding.UTF8.GetString(receivedMessage));
 
             // Tear Down
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
             subscriber.Disconnect(TestAddress);
             subscriber.Dispose();
             this.publisher.Stop();

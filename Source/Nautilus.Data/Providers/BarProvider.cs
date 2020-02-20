@@ -9,6 +9,7 @@
 namespace Nautilus.Data.Providers
 {
     using System;
+    using Microsoft.Extensions.Logging;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Message;
     using Nautilus.Data.Interfaces;
@@ -68,7 +69,7 @@ namespace Nautilus.Data.Providers
         {
             try
             {
-                this.Log.Information($"<--[REQ] {request}.");
+                this.Logger.LogInformation($"<--[REQ] {request}.");
 
                 var dataType = request.Query["DataType"];
                 if (dataType != typeof(Bar[]).Name)
@@ -94,7 +95,7 @@ namespace Nautilus.Data.Providers
                 if (dataQuery.IsFailure)
                 {
                     this.SendQueryFailure(dataQuery.Message, request.Id);
-                    this.Log.Warning($"{request} QueryFailure({dataQuery.Message}).");
+                    this.Logger.LogWarning($"{request} QueryFailure({dataQuery.Message}).");
                     return;
                 }
 
@@ -106,12 +107,12 @@ namespace Nautilus.Data.Providers
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.Log.Information($"[RES]--> {response}.");
+                this.Logger.LogInformation($"[RES]--> {response}.");
                 this.SendMessage(response, request.Id);
             }
             catch (Exception ex)
             {
-                this.Log.Error($"{ex}");
+                this.Logger.LogError($"{ex}");
                 this.SendQueryFailure(ex.Message, request.Id);
             }
         }

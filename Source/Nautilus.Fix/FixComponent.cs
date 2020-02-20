@@ -8,9 +8,9 @@
 
 namespace Nautilus.Fix
 {
+    using Microsoft.Extensions.Logging;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Events;
-    using Nautilus.Core.Types;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.Fix.Interfaces;
     using QuickFix;
@@ -53,7 +53,7 @@ namespace Nautilus.Fix
         {
             this.clock = container.Clock;
             this.guidFactory = container.GuidFactory;
-            this.logger = container.LoggerFactory.Create(new Label(this.GetType().Name));
+            this.logger = container.LoggerFactory.CreateLogger(typeof(FixComponent));
             this.messageBusAdapter = messageBusAdapter;
 
             this.FixMessageHandler = messageHandler;
@@ -72,7 +72,7 @@ namespace Nautilus.Fix
         /// <summary>
         /// Gets the components logger.
         /// </summary>
-        public ILogger Log => this.logger;
+        public ILogger Logger => this.logger;
 
         /// <summary>
         /// Gets the account identifier.
@@ -152,11 +152,11 @@ namespace Nautilus.Fix
         {
             if (!this.MaintainConnection)
             {
-                this.Log.Error("QuickFix attempted to create a session with maintainConnection=false.");
+                this.Logger.LogError("QuickFix attempted to create a session with maintainConnection=false.");
                 return;
             }
 
-            this.Log.Debug($"Creating session {sessionId}...");
+            this.Logger.LogDebug($"Creating session {sessionId}...");
             this.SessionId = sessionId;
             this.session = Session.LookupSession(sessionId);
             this.FixMessageRouter.InitializeSession(this.session);
@@ -175,7 +175,7 @@ namespace Nautilus.Fix
                 this.clock.TimeNow());
 
             this.messageBusAdapter.SendToBus(connected, null, this.clock.TimeNow());
-            this.Log.Debug($"Connected to session {sessionId}");
+            this.Logger.LogDebug($"Connected to session {sessionId}");
         }
 
         /// <summary>
@@ -192,7 +192,7 @@ namespace Nautilus.Fix
 
             this.messageBusAdapter.SendToBus(disconnected, null, this.clock.TimeNow());
 
-            this.Log.Debug($"Disconnected from session {sessionId}");
+            this.Logger.LogDebug($"Disconnected from session {sessionId}");
         }
 
         /// <summary>
@@ -216,7 +216,7 @@ namespace Nautilus.Fix
                 message.SetField(new Username(this.credentials.Username));
                 message.SetField(new Password(this.credentials.Password));
 
-                this.Log.Debug("Authorizing session...");
+                this.Logger.LogDebug("Authorizing session...");
             }
 
             if (this.sendAccountTag)
@@ -404,7 +404,7 @@ namespace Nautilus.Fix
             // var logFactory = new ScreenLogFactory(settings);
             this.initiator = new SocketInitiator(this, storeFactory, settings, null);
 
-            this.Log.Debug("Starting initiator...");
+            this.Logger.LogDebug("Starting initiator...");
             this.initiator.Start();
             this.SocketStopped = false;
         }
@@ -415,7 +415,7 @@ namespace Nautilus.Fix
         protected void DisconnectFix()
         {
             this.MaintainConnection = false;
-            this.Log.Debug("Stopping initiator... ");
+            this.Logger.LogDebug("Stopping initiator... ");
             this.initiator?.Stop();
             this.SocketStopped = true;
         }

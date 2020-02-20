@@ -28,7 +28,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
     public sealed class MessageBusTests
     {
         private readonly ITestOutputHelper output;
-        private readonly MockLoggingAdapter loggingAdapter;
+        private readonly MockLogger logger;
         private readonly MockMessagingAgent receiver;
         private readonly MessageBus<Event> messageBus;
 
@@ -39,7 +39,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
 
             var containerFactory = new StubComponentryContainerProvider();
             var container = containerFactory.Create();
-            this.loggingAdapter = containerFactory.LoggingAdapter;
+            this.logger = containerFactory.Logger;
             this.receiver = new MockMessagingAgent();
             this.messageBus = new MessageBus<Event>(container);
 
@@ -84,7 +84,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
             // Act
             this.messageBus.Endpoint.Send(subscribe);
 
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Equal(0, this.messageBus.SubscriptionCount);
@@ -103,7 +103,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
             // Act
             this.messageBus.Endpoint.Send(subscribe);
 
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Contains(typeof(Event), this.messageBus.Subscriptions);
@@ -124,7 +124,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
             this.messageBus.Endpoint.Send(subscribe);
             this.messageBus.Endpoint.Send(subscribe);
 
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Equal(1, this.messageBus.Subscriptions[typeof(Event)].Count);
@@ -144,7 +144,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
             // Act
             this.messageBus.Endpoint.Send(subscribe);
 
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Contains(typeof(MarketOpened), this.messageBus.Subscriptions);
@@ -166,7 +166,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
             this.messageBus.Endpoint.Send(subscribe);
             this.messageBus.Endpoint.Send(subscribe);
 
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Contains(typeof(MarketOpened), this.messageBus.Subscriptions);
@@ -217,7 +217,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
             this.messageBus.Endpoint.Send(subscribe4);
             this.messageBus.Endpoint.Send(subscribe5);
 
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Contains(typeof(Event), this.messageBus.Subscriptions);
@@ -250,7 +250,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
             this.messageBus.Endpoint.Send(subscribe);
             this.messageBus.Endpoint.Send(unsubscribe);
 
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Equal(0, this.messageBus.SubscriptionCount);
@@ -276,7 +276,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
             this.messageBus.Endpoint.Send(subscribe);
             this.messageBus.Endpoint.Send(unsubscribe);
 
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Equal(0, this.messageBus.SubscriptionCount);
@@ -295,7 +295,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
             // Act
             this.messageBus.Endpoint.Send(unsubscribe);
 
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Equal(0, this.messageBus.SubscriptionCount);
@@ -314,7 +314,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
             // Act
             this.messageBus.Endpoint.Send(unsubscribe);
 
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Equal(0, this.messageBus.SubscriptionCount);
@@ -333,7 +333,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
             // Act
             this.messageBus.Endpoint.Send(unsubscribe);
 
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Equal(0, this.messageBus.SubscriptionCount);
@@ -404,7 +404,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
             this.messageBus.Endpoint.Send(unsubscribe2);
             this.messageBus.Endpoint.Send(unsubscribe3);
 
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Contains(typeof(Event), this.messageBus.Subscriptions);
@@ -434,7 +434,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
             // Act
             this.messageBus.Endpoint.Send(envelope);
 
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Contains(envelope, this.receiver.Messages);
@@ -459,7 +459,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
             // Act
             this.messageBus.Endpoint.Send(envelope);
 
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Contains(envelope, this.messageBus.DeadLetters);
@@ -484,7 +484,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
             // Act
             this.messageBus.Endpoint.Send(envelope);
 
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Equal(0, this.messageBus.SubscriptionCount);
@@ -517,7 +517,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
             // Act
             this.messageBus.Endpoint.Send(envelope);
 
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Contains(envelope, this.receiver.Messages);
@@ -550,7 +550,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
             // Act
             this.messageBus.Endpoint.Send(envelope);
 
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Contains(envelope, this.receiver.Messages);

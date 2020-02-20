@@ -10,6 +10,7 @@ namespace Nautilus.Execution.Engine
 {
     using System;
     using System.Collections.Generic;
+    using Microsoft.Extensions.Logging;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.CQS;
@@ -74,25 +75,25 @@ namespace Nautilus.Execution.Engine
         /// <inheritdoc />
         public override void LoadAccountsCache()
         {
-            this.Log.Information("Re-caching accounts from the database (does nothing for this implementation.)");
+            this.Logger.LogInformation("Re-caching accounts from the database (does nothing for this implementation.)");
         }
 
         /// <inheritdoc />
         public override void LoadOrdersCache()
         {
-            this.Log.Information("Re-caching orders from the database (does nothing for this implementation.)");
+            this.Logger.LogInformation("Re-caching orders from the database (does nothing for this implementation.)");
         }
 
         /// <inheritdoc />
         public override void LoadPositionsCache()
         {
-            this.Log.Information("Re-caching positions from the database (does nothing for this implementation.)");
+            this.Logger.LogInformation("Re-caching positions from the database (does nothing for this implementation.)");
         }
 
         /// <inheritdoc />
         public override void Flush()
         {
-            this.Log.Information("Flushing the database...");
+            this.Logger.LogInformation("Flushing the database...");
 
             this.ClearCaches();
 
@@ -119,7 +120,7 @@ namespace Nautilus.Execution.Engine
             this.indexPositionsOpen.Clear();
             this.indexPositionsClosed.Clear();
 
-            this.Log.Information("Database flushed.");
+            this.Logger.LogInformation("Database flushed.");
         }
 
         /// <inheritdoc />
@@ -178,7 +179,7 @@ namespace Nautilus.Execution.Engine
 
             this.CachedAccounts[account.Id] = account;
 
-            this.Log.Debug($"Added Account(Id={account.Id.Value}).");
+            this.Logger.LogDebug($"Added Account(Id={account.Id.Value}).");
 
             return CommandResult.Ok();
         }
@@ -247,7 +248,7 @@ namespace Nautilus.Execution.Engine
             this.indexOrders.Add(order.Id);
             this.CachedOrders[order.Id] = order;
 
-            this.Log.Debug($"Added Order(Id={order.Id.Value}).");
+            this.Logger.LogDebug($"Added Order(Id={order.Id.Value}).");
 
             return CommandResult.Ok();
         }
@@ -270,7 +271,7 @@ namespace Nautilus.Execution.Engine
             this.indexPositionBroker[position.Id] = position.IdBroker;
             this.CachedPositions[position.Id] = position;
 
-            this.Log.Debug($"Added Position(Id={position.Id.Value}).");
+            this.Logger.LogDebug($"Added Position(Id={position.Id.Value}).");
 
             return CommandResult.Ok();
         }
@@ -314,7 +315,7 @@ namespace Nautilus.Execution.Engine
                 return traderId;
             }
 
-            this.Log.Warning($"Cannot find TraderId for {orderId}.");
+            this.Logger.LogWarning($"Cannot find TraderId for {orderId}.");
             return null;
         }
 
@@ -326,7 +327,7 @@ namespace Nautilus.Execution.Engine
                 return traderId;
             }
 
-            this.Log.Warning($"Cannot find TraderId for {positionId}.");
+            this.Logger.LogWarning($"Cannot find TraderId for {positionId}.");
             return null;
         }
 
@@ -338,7 +339,7 @@ namespace Nautilus.Execution.Engine
                 return accountId;
             }
 
-            this.Log.Warning($"Cannot find AccountId for {orderId}.");
+            this.Logger.LogWarning($"Cannot find AccountId for {orderId}.");
             return null;
         }
 
@@ -350,7 +351,7 @@ namespace Nautilus.Execution.Engine
                 return accountId;
             }
 
-            this.Log.Warning($"Cannot find AccountId for {positionId} in the database.");
+            this.Logger.LogWarning($"Cannot find AccountId for {positionId} in the database.");
             return null;
         }
 
@@ -362,7 +363,7 @@ namespace Nautilus.Execution.Engine
                 return positionId;
             }
 
-            this.Log.Warning($"Cannot find PositionId for {orderId} in the database.");
+            this.Logger.LogWarning($"Cannot find PositionId for {orderId} in the database.");
             return null;
         }
 
@@ -374,7 +375,7 @@ namespace Nautilus.Execution.Engine
                 return positionId;
             }
 
-            this.Log.Warning($"Cannot find PositionId for {positionIdBroker} in the database.");
+            this.Logger.LogWarning($"Cannot find PositionId for {positionIdBroker} in the database.");
             return null;
         }
 

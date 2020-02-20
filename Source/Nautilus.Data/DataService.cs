@@ -10,6 +10,7 @@ namespace Nautilus.Data
 {
     using System;
     using System.Collections.Generic;
+    using Microsoft.Extensions.Logging;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Data;
     using Nautilus.Common.Interfaces;
@@ -153,7 +154,7 @@ namespace Nautilus.Data
 
         private void OnMessage(MarketOpened message)
         {
-            this.Log.Information($"Received {message}.");
+            this.Logger.LogInformation($"Received {message}.");
 
             // Forward message
             this.Send(message, ServiceAddress.BarAggregationController);
@@ -163,7 +164,7 @@ namespace Nautilus.Data
 
         private void OnMessage(MarketClosed message)
         {
-            this.Log.Information($"Received {message}.");
+            this.Logger.LogInformation($"Received {message}.");
 
             // Forward message
             this.Send(message, ServiceAddress.BarAggregationController);
@@ -173,7 +174,7 @@ namespace Nautilus.Data
 
         private void OnMessage(TrimTickData message)
         {
-            this.Log.Information($"Received {message}.");
+            this.Logger.LogInformation($"Received {message}.");
 
             // Forward message
             this.Send(message, ServiceAddress.TickRepository);
@@ -183,7 +184,7 @@ namespace Nautilus.Data
 
         private void OnMessage(TrimBarData message)
         {
-            this.Log.Information($"Received {message}.");
+            this.Logger.LogInformation($"Received {message}.");
 
             // Forward message
             this.Send(message, ServiceAddress.BarRepository);
@@ -214,7 +215,7 @@ namespace Nautilus.Data
                     marketOpened,
                     this.Endpoint);
 
-                this.Log.Information($"Created scheduled event {marketOpened}-{symbol} for {nextTime.ToIsoString()}");
+                this.Logger.LogInformation($"Created scheduled event {marketOpened}-{symbol} for {nextTime.ToIsoString()}");
             }
         }
 
@@ -241,7 +242,7 @@ namespace Nautilus.Data
                     marketClosed,
                     this.Endpoint);
 
-                this.Log.Information($"Created scheduled event {marketClosed}-{symbol} for {nextTime.ToIsoString()}");
+                this.Logger.LogInformation($"Created scheduled event {marketClosed}-{symbol} for {nextTime.ToIsoString()}");
             }
         }
 
@@ -263,7 +264,7 @@ namespace Nautilus.Data
                 job,
                 this.Endpoint);
 
-            this.Log.Information($"Created scheduled job {job} for {nextTime.ToIsoString()}");
+            this.Logger.LogInformation($"Created scheduled job {job} for {nextTime.ToIsoString()}");
         }
 
         private void CreateTrimBarDataJob()
@@ -285,7 +286,7 @@ namespace Nautilus.Data
                 job,
                 this.Endpoint);
 
-            this.Log.Information($"Created scheduled job {job} for {nextTime.ToIsoString()}");
+            this.Logger.LogInformation($"Created scheduled job {job} for {nextTime.ToIsoString()}");
         }
     }
 }

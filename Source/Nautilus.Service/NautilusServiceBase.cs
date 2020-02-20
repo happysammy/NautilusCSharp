@@ -10,6 +10,7 @@ namespace Nautilus.Service
 {
     using System;
     using System.Collections.Generic;
+    using Microsoft.Extensions.Logging;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
@@ -94,7 +95,7 @@ namespace Nautilus.Service
             }
             else
             {
-                this.Log.Warning($"Connection address {receiver} was already registered.");
+                this.Logger.LogWarning($"Connection address {receiver} was already registered.");
             }
         }
 
@@ -124,7 +125,7 @@ namespace Nautilus.Service
                 this.Send(start, this.connectionAddresses);
             }
 
-            this.Log.Information("Running...");
+            this.Logger.LogInformation("Running...");
         }
 
         /// <inheritdoc />
@@ -195,7 +196,7 @@ namespace Nautilus.Service
 
         private void OnMessage(SessionConnected message)
         {
-            this.Log.Information($"Connected to session {message.SessionId}.");
+            this.Logger.LogInformation($"Connected to session {message.SessionId}.");
 
             if (this.nextDisconnectTime.IsLessThanOrEqualTo(this.TimeNow()))
             {
@@ -209,11 +210,11 @@ namespace Nautilus.Service
         {
             if (this.maintainConnection)
             {
-                this.Log.Warning($"Disconnected from session {message.SessionId}.");
+                this.Logger.LogWarning($"Disconnected from session {message.SessionId}.");
             }
             else
             {
-                this.Log.Information($"Disconnected from session {message.SessionId}.");
+                this.Logger.LogInformation($"Disconnected from session {message.SessionId}.");
             }
 
             if (this.nextConnectTime.IsLessThanOrEqualTo(this.TimeNow()))
@@ -246,7 +247,7 @@ namespace Nautilus.Service
 
             this.nextConnectTime = nextTime;
 
-            this.Log.Information($"Created scheduled job {job} for {nextTime.ToIsoString()}");
+            this.Logger.LogInformation($"Created scheduled job {job} for {nextTime.ToIsoString()}");
         }
 
         private void CreateDisconnectFixJob()
@@ -271,7 +272,7 @@ namespace Nautilus.Service
 
             this.nextDisconnectTime = nextTime;
 
-            this.Log.Information($"Created scheduled job {job} for {nextTime.ToIsoString()}");
+            this.Logger.LogInformation($"Created scheduled job {job} for {nextTime.ToIsoString()}");
         }
     }
 }

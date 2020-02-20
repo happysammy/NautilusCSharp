@@ -37,7 +37,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
     public sealed class BarProviderTests : IDisposable
     {
         private readonly ITestOutputHelper output;
-        private readonly MockLoggingAdapter loggingAdapter;
+        private readonly MockLogger logger;
         private readonly IComponentryContainer container;
         private readonly IBarRepository repository;
         private readonly IDataSerializer<Bar> dataSerializer;
@@ -51,7 +51,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
 
             var containerFactory = new StubComponentryContainerProvider();
             this.container = containerFactory.Create();
-            this.loggingAdapter = containerFactory.LoggingAdapter;
+            this.logger = containerFactory.Logger;
             this.dataSerializer = new BarDataSerializer();
             this.repository = new MockBarRepository(this.dataSerializer);
             this.requestSerializer = new MsgPackRequestSerializer(new MsgPackQuerySerializer());
@@ -110,7 +110,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
             Assert.Equal(typeof(QueryFailure), response.Type);
 
             // Tear Down
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
             requester.Disconnect(testAddress);
             requester.Dispose();
             provider.Stop();
@@ -175,7 +175,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
             Assert.Equal(bar2, bars[1]);
 
             // Tear Down
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
             requester.Disconnect(testAddress);
             requester.Dispose();
             provider.Stop();

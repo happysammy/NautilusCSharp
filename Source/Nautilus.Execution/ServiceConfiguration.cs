@@ -9,7 +9,7 @@
 namespace Nautilus.Execution
 {
     using System.Collections.Immutable;
-    using Nautilus.Common.Interfaces;
+    using Microsoft.Extensions.Logging;
     using Nautilus.Execution.Configuration;
     using Nautilus.Fix;
     using Nautilus.Network.Configuration;
@@ -22,19 +22,19 @@ namespace Nautilus.Execution
         /// <summary>
         /// Initializes a new instance of the <see cref="ServiceConfiguration"/> class.
         /// </summary>
-        /// <param name="loggingAdapter">The service logging adapter.</param>
+        /// <param name="loggerFactory">The service logging adapter.</param>
         /// <param name="fixConfig">The FIX configuration.</param>
         /// <param name="wireConfig">The messaging configuration.</param>
         /// <param name="networkConfig">The network configuration.</param>
         /// <param name="symbolMap">The service symbol map.</param>
         public ServiceConfiguration(
-            ILoggingAdapter loggingAdapter,
+            ILoggerFactory loggerFactory,
             FixConfiguration fixConfig,
             WireConfiguration wireConfig,
             NetworkConfiguration networkConfig,
             ImmutableDictionary<string, string> symbolMap)
         {
-            this.LoggingAdapter = loggingAdapter;
+            this.LoggerFactory = loggerFactory;
             this.FixConfig = fixConfig;
             this.WireConfig = wireConfig;
             this.NetworkConfig = networkConfig;
@@ -44,7 +44,7 @@ namespace Nautilus.Execution
         /// <summary>
         /// Gets the systems logging adapter.
         /// </summary>
-        public ILoggingAdapter LoggingAdapter { get; }
+        public ILoggerFactory LoggerFactory { get; }
 
         /// <summary>
         /// Gets the FIX configuration.

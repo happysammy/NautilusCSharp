@@ -30,7 +30,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
         private readonly NetworkAddress localHost = new NetworkAddress("127.0.0.1");
         private readonly ITestOutputHelper output;
         private readonly IComponentryContainer container;
-        private readonly MockLoggingAdapter loggingAdapter;
+        private readonly MockLogger logger;
         private readonly IEndpoint receiver;
 
         public CommandRouterTests(ITestOutputHelper output)
@@ -40,7 +40,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             var containerFactory = new StubComponentryContainerProvider();
             this.container = containerFactory.Create();
-            this.loggingAdapter = containerFactory.LoggingAdapter;
+            this.logger = containerFactory.Logger;
             this.receiver = new MockMessagingAgent().Endpoint;
         }
 

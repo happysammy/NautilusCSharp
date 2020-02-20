@@ -8,67 +8,44 @@
 
 namespace NautilusData
 {
-    using System;
-    using System.IO;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
-    using Nautilus.Common.Configuration;
-    using Nautilus.Core.Extensions;
     using Nautilus.Data;
-    using Nautilus.Logging;
-    using Serilog;
-    using Serilog.Events;
 
     /// <summary>
     /// The main ASP.NET Core Startup class to configure and build the web hosting services.
     /// </summary>
     public sealed class Startup
     {
+        private readonly IHostingEnvironment env;
+        private readonly IConfiguration config;
+        private readonly ILoggerFactory loggerFactory;
         private readonly DataService dataService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class.
         /// </summary>
-        /// <param name="environment">The hosting environment.</param>
-        /// <param name="configuration">The configuration.</param>
-        public Startup(IHostingEnvironment environment, IConfiguration configuration)
+        /// <param name="env">The hosting environment.</param>
+        /// <param name="config">The configuration.</param>
+        /// <param name="loggerFactory">The logger factory.</param>
+        public Startup(
+            IHostingEnvironment env,
+            IConfiguration config,
+            ILoggerFactory loggerFactory)
         {
-            this.Environment = environment;
+            this.env = env;
+            this.config = config;
+            this.loggerFactory = loggerFactory;
 
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("config.json", optional: false, reloadOnChange: true)
-                .AddJsonFile("symbols.json", optional: false, reloadOnChange: true);
-
-            if (this.Environment.IsDevelopment())
-            {
-                builder.AddUserSecrets<Startup>();
-            }
-
-            this.Configuration = builder.Build();
-
-            var logLevel = this.Configuration.GetSection(ConfigSection.Logging)["LogLevel"].ToEnum<LogEventLevel>();
-            var loggingAdapter = new SerilogLogger(logLevel);
-
-            var dataServiceConfig = DataServiceConfigurator.Build(loggingAdapter, this.Configuration);
+            var dataServiceConfig = DataServiceConfigurator.Build(loggerFactory, config);
 
             this.dataService = DataServiceFactory.Create(dataServiceConfig);
             this.dataService.Start();
         }
-
-        /// <summary>
-        /// Gets the ASP.NET Core hosting environment.
-        /// </summary>
-        public IHostingEnvironment Environment { get; }
-
-        /// <summary>
-        /// Gets the ASP.NET Core configuration.
-        /// </summary>
-        public IConfiguration Configuration { get; }
 
         /// <summary>
         /// Configures the ASP.NET Core web hosting services.
@@ -76,13 +53,6 @@ namespace NautilusData
         /// <param name="services">The service collection.</param>
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddLogging(loggingBuilder =>
-            {
-                loggingBuilder.AddDebug();
-                loggingBuilder.AddSerilog();
-            });
-
-            AppDomain.CurrentDomain.DomainUnload += (o, e) => Log.CloseAndFlush();
         }
 
         /// <summary>
@@ -90,15 +60,11 @@ namespace NautilusData
         /// </summary>
         /// <param name="app">The application builder.</param>
         /// <param name="appLifetime">The application lifetime.</param>
-        /// <param name="env">The hosting environment.</param>
-        public void Configure(
-            IApplicationBuilder app,
-            IApplicationLifetime appLifetime,
-            IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IApplicationLifetime appLifetime)
         {
             appLifetime.ApplicationStopping.Register(this.OnShutdown);
 
-            if (env.IsDevelopment())
+            if (this.env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }

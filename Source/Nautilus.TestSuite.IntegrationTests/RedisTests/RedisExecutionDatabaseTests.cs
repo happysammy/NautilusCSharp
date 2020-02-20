@@ -29,7 +29,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     public sealed class RedisExecutionDatabaseTests : IDisposable
     {
         private readonly ITestOutputHelper output;
-        private readonly MockLoggingAdapter logger;
+        private readonly MockLogger logger;
         private readonly ConnectionMultiplexer redisConnection;
         private readonly RedisExecutionDatabase database;
 
@@ -39,7 +39,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             this.output = output;
 
             var containerFactory = new StubComponentryContainerProvider();
-            this.logger = containerFactory.LoggingAdapter;
+            this.logger = containerFactory.Logger;
             var container = containerFactory.Create();
 
             this.redisConnection = ConnectionMultiplexer.Connect("localhost:6379,allowAdmin=true");

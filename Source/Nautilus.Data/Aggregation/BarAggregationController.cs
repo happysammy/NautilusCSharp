@@ -11,6 +11,7 @@ namespace Nautilus.Data.Aggregation
     using System.Collections.Generic;
     using System.Collections.Immutable;
     using System.Linq;
+    using Microsoft.Extensions.Logging;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Data;
     using Nautilus.Common.Interfaces;
@@ -97,7 +98,7 @@ namespace Nautilus.Data.Aggregation
             }
             else
             {
-                this.Log.Warning($"No bar aggregator for {tick.Symbol} ticks.");
+                this.Logger.LogWarning($"No bar aggregator for {tick.Symbol} ticks.");
             }
         }
 
@@ -121,12 +122,12 @@ namespace Nautilus.Data.Aggregation
 
                 this.barAggregators.Add(message.Subscription.Symbol, barAggregator);
 
-                this.Log.Debug($"Created BarAggregator[{symbol}].");
+                this.Logger.LogDebug($"Created BarAggregator[{symbol}].");
             }
 
             if (this.subscriptions.ContainsKey(message.Subscription))
             {
-                this.Log.Error($"Already subscribed to {barType}.");
+                this.Logger.LogError($"Already subscribed to {barType}.");
                 return;
             }
 
@@ -151,7 +152,7 @@ namespace Nautilus.Data.Aggregation
                 this.subscriptions.Add(barType, null);
             }
 
-            this.Log.Information($"Building {message.Subscription} bars.");
+            this.Logger.LogInformation($"Building {message.Subscription} bars.");
         }
 
         private void CreateCloseBarDelegate(BarSpecification barSpec, IEndpoint aggregator)
@@ -170,7 +171,7 @@ namespace Nautilus.Data.Aggregation
 
             if (!this.barAggregators.ContainsKey(symbol) || !this.subscriptions.ContainsKey(barType))
             {
-                this.Log.Error($"Already unsubscribed from {barType}.");
+                this.Logger.LogError($"Already unsubscribed from {barType}.");
                 return;
             }
 
@@ -187,10 +188,10 @@ namespace Nautilus.Data.Aggregation
             if (this.subscriptions.All(s => s.Key.Symbol != symbol))
             {
                 this.barAggregators.Remove(symbol);
-                this.Log.Debug($"Removed BarAggregator[{symbol}].");
+                this.Logger.LogDebug($"Removed BarAggregator[{symbol}].");
             }
 
-            this.Log.Information($"Stopped building {message.Subscription} bars.");
+            this.Logger.LogInformation($"Stopped building {message.Subscription} bars.");
         }
 
         private void OnMessage(MarketOpened message)
@@ -217,7 +218,7 @@ namespace Nautilus.Data.Aggregation
 
                 this.subscriptions[barType] = scheduledCancelable;
 
-                this.Log.Debug($"MarketOpened: Started CloseBar job for {barType}.");
+                this.Logger.LogDebug($"MarketOpened: Started CloseBar job for {barType}.");
             }
         }
 
@@ -228,7 +229,7 @@ namespace Nautilus.Data.Aggregation
                 buildingJob?.Cancel();
                 this.subscriptions[barType] = null;
 
-                this.Log.Debug($"MarketClosed: Cancelled CloseBar job for {barType}.");
+                this.Logger.LogDebug($"MarketClosed: Cancelled CloseBar job for {barType}.");
             }
         }
 

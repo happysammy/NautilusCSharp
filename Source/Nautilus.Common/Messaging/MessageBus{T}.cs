@@ -11,6 +11,7 @@ namespace Nautilus.Common.Messaging
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Microsoft.Extensions.Logging;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
@@ -83,7 +84,7 @@ namespace Nautilus.Common.Messaging
         {
             foreach (var letter in this.deadLetters)
             {
-                this.Log.Warning($"[DEAD LETTER] {letter}.");
+                this.Logger.LogWarning($"[DEAD LETTER] {letter}.");
             }
         }
 
@@ -92,7 +93,7 @@ namespace Nautilus.Common.Messaging
             this.switchboard = message.Switchboard;
             this.switchboard.RegisterDeadLetterChannel(this.AddToDeadLetters);
 
-            this.Log.Debug("Switchboard initialized.");
+            this.Logger.LogDebug("Switchboard initialized.");
         }
 
         private void OnMessage(Subscribe<Type> message)
@@ -106,7 +107,7 @@ namespace Nautilus.Common.Messaging
 
             if (!type.IsSubclassOf(this.BusType))
             {
-                this.Log.Error($"Cannot subscribe to {type.Name} type messages " +
+                this.Logger.LogError($"Cannot subscribe to {type.Name} type messages " +
                                $"(only all {this.BusType.Name} or type of {this.BusType.Name} messages).");
                 return;
             }
@@ -130,7 +131,7 @@ namespace Nautilus.Common.Messaging
 
             if (!type.IsSubclassOf(this.BusType))
             {
-                this.Log.Error($"Cannot unsubscribe from {type.Name} type messages " +
+                this.Logger.LogError($"Cannot unsubscribe from {type.Name} type messages " +
                                $"(only all {this.BusType.Name} or type of {this.BusType.Name} messages).");
                 return;
             }
@@ -149,13 +150,13 @@ namespace Nautilus.Common.Messaging
             var subscriber = command.Subscriber;
             if (subscribers.Contains(subscriber))
             {
-                this.Log.Warning($"The {subscriber} is already subscribed to {command.Subscription.Name} messages.");
+                this.Logger.LogWarning($"The {subscriber} is already subscribed to {command.Subscription.Name} messages.");
                 return;
             }
 
             subscribers.Add(subscriber);
 
-            this.Log.Information($"Subscribed {subscriber} to {command.Subscription.Name} messages.");
+            this.Logger.LogInformation($"Subscribed {subscriber} to {command.Subscription.Name} messages.");
         }
 
         private void Unsubscribe(Unsubscribe<Type> command, List<Mailbox> subscribers)
@@ -163,13 +164,13 @@ namespace Nautilus.Common.Messaging
             var subscriber = command.Subscriber;
             if (!subscribers.Contains(subscriber))
             {
-                this.Log.Warning($"The {subscriber} is not subscribed to {command.Subscription.Name} messages.");
+                this.Logger.LogWarning($"The {subscriber} is not subscribed to {command.Subscription.Name} messages.");
                 return;
             }
 
             subscribers.Remove(subscriber);
 
-            this.Log.Information($"Unsubscribed {subscriber} from {command.Subscription.Name} messages.");
+            this.Logger.LogInformation($"Unsubscribed {subscriber} from {command.Subscription.Name} messages.");
         }
 
         private void OnReceive(IEnvelope envelope)
@@ -186,12 +187,12 @@ namespace Nautilus.Common.Messaging
             // Send point-to-point
             if (this.switchboard.SendToReceiver(envelope))
             {
-                this.Log.Verbose($"Sent[{this.ProcessedCount}] {envelope.Sender} -> {envelope} -> {envelope.Receiver}");
+                this.Logger.LogTrace($"Sent[{this.ProcessedCount}] {envelope.Sender} -> {envelope} -> {envelope.Receiver}");
             }
             else
             {
-                this.Log.Error($"{envelope.Receiver} address unknown to switchboard.");
-                this.Log.Error($"Sent[{this.ProcessedCount}] {envelope.Sender} -> {envelope} -> DeadLetters");
+                this.Logger.LogError($"{envelope.Receiver} address unknown to switchboard.");
+                this.Logger.LogError($"Sent[{this.ProcessedCount}] {envelope.Sender} -> {envelope} -> DeadLetters");
             }
         }
 
@@ -203,7 +204,7 @@ namespace Nautilus.Common.Messaging
                 for (var i = 0; i < this.subscriptionsAll.Count; i++)
                 {
                     this.subscriptionsAll[i].Endpoint.Send(envelope);
-                    this.Log.Verbose($"Published[{this.ProcessedCount}] {envelope.Sender} -> {envelope} -> {this.subscriptionsAll[i].Address}");
+                    this.Logger.LogTrace($"Published[{this.ProcessedCount}] {envelope.Sender} -> {envelope} -> {this.subscriptionsAll[i].Address}");
                 }
             }
 
@@ -212,7 +213,7 @@ namespace Nautilus.Common.Messaging
                 for (var i = 0; i < subscribers.Count; i++)
                 {
                     subscribers[i].Endpoint.Send(envelope);
-                    this.Log.Verbose($"Published[{this.ProcessedCount}] {envelope.Sender} -> {envelope} -> {subscribers[i].Address}");
+                    this.Logger.LogTrace($"Published[{this.ProcessedCount}] {envelope.Sender} -> {envelope} -> {subscribers[i].Address}");
                 }
             }
         }
@@ -221,7 +222,7 @@ namespace Nautilus.Common.Messaging
         {
             this.deadLetters.Add(message);
 
-            this.Log.Error($"Undeliverable message {message}.");
+            this.Logger.LogError($"Undeliverable message {message}.");
         }
 
         private IReadOnlyDictionary<Type, IReadOnlyCollection<Address>> BuildSubscribers()

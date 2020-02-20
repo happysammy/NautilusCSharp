@@ -13,33 +13,33 @@ namespace Nautilus.TestSuite.TestKit
     using Xunit.Abstractions;
 
     /// <summary>
-    /// Provides a convenient way of viewing the contents of a <see cref="MockLoggingAdapter"/>.
+    /// Provides a convenient way of viewing the contents of a <see cref="MockLogger"/>.
     /// </summary>
     public static class LogDumper
     {
         /// <summary>
         /// Writes the contents of the log to the output after the given delay.
         /// </summary>
-        /// <param name="loggingAdapter">The mock logging adapter.</param>
+        /// <param name="logger">The mock logging adapter.</param>
         /// <param name="output">The test output.</param>
         /// <param name="delayMilliseconds">The delay (milliseconds).</param>
         public static void DumpWithDelay(
-            MockLoggingAdapter loggingAdapter,
+            MockLogger logger,
             ITestOutputHelper output,
             int delayMilliseconds = 300)
         {
             Task.Delay(delayMilliseconds).Wait();
-            loggingAdapter.WriteStashToOutput(output);
+            logger.WriteStashToOutput(output);
         }
 
         /// <summary>
         /// Writes the contents of the log to the output.
         /// </summary>
-        /// <param name="loggingAdapter">The mock logging adapter.</param>
+        /// <param name="logger">The mock logging adapter.</param>
         /// <param name="output">The test output.</param>
-        public static void Dump(MockLoggingAdapter loggingAdapter, ITestOutputHelper output)
+        public static void Dump(MockLogger logger, ITestOutputHelper output)
         {
-            loggingAdapter.WriteStashToOutput(output);
+            logger.WriteStashToOutput(output);
         }
     }
 }

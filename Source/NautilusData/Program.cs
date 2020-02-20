@@ -13,12 +13,13 @@ namespace NautilusData
     using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Logging;
     using Serilog;
 
     /// <summary>
     /// The main entry point for the application.
     /// </summary>
-    public class Program
+    public sealed class Program
     {
         /// <summary>
         /// The main entry point for the program.
@@ -28,22 +29,39 @@ namespace NautilusData
         {
             AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionTrapper;
 
-            var config = new ConfigurationBuilder()
+            var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("hosting.json", true, true)
+                .AddJsonFile("hosting.json", optional: false, reloadOnChange: true)
+                .AddJsonFile("config.json", optional: false, reloadOnChange: true)
+                .AddJsonFile("symbols.json", optional: false, reloadOnChange: true)
+                .AddEnvironmentVariables()
                 .Build();
 
-            BuildWebHost(config, args).Run();
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(configuration)
+                .Enrich.FromLogContext()
+                .WriteTo.Debug()
+                .WriteTo.Console(
+                    outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{ThreadId:000}][{Level:u3}] {Message}{NewLine}{Exception}")
+                .CreateLogger();
+
+            AppDomain.CurrentDomain.DomainUnload += (o, e) => Log.CloseAndFlush();
+
+            try
+            {
+                Log.Information("Getting the motors running...");
+
+                CreateHostBuilder(configuration, args).Build().Run();
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "Host terminated unexpectedly");
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
-
-        private static IWebHost BuildWebHost(IConfiguration config, string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseConfiguration(config)
-                .UseKestrel()
-                .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseStartup<Startup>()
-                .UseSerilog()
-                .Build();
 
         private static void UnhandledExceptionTrapper(object sender, UnhandledExceptionEventArgs ex)
         {
@@ -51,6 +69,21 @@ namespace NautilusData
             Console.WriteLine("Press ENTER to continue");
             Console.ReadLine();
             Environment.Exit(1);
+        }
+
+        private static IWebHostBuilder CreateHostBuilder(IConfiguration config, string[] args)
+        {
+            return WebHost.CreateDefaultBuilder(args)
+                .UseConfiguration(config)
+                .UseStartup<Startup>()
+                .ConfigureLogging(logging =>
+                {
+                    logging.ClearProviders();
+                    logging.AddConsole();
+                })
+                .UseContentRoot(Directory.GetCurrentDirectory())
+                .UseSerilog()
+                .UseKestrel();
         }
     }
 }

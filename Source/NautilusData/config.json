@@ -1,6 +1,14 @@
 ﻿{
   "Logging": {
-    "LogLevel": "Information"
+    "LogLevel": {
+      "Default": "Debug",
+      "System": "Information",
+      "Microsoft": "Information"
+    },
+    "Console":
+    {
+      "IncludeScopes": true
+    }
   },
 
   "Messaging": {
@@ -21,7 +29,7 @@
 
   "FIX44": {
     "ConfigPath": "",
-    "ConfigFile": "fix_fxcm4_md.cfg",
+    "ConfigFile": "fix_fxcm3_md.cfg",
 
     "ConnectJob": {
       "Day": "Sunday",

@@ -11,6 +11,7 @@ namespace Nautilus.Common.Messaging
     using System;
     using System.Collections;
     using System.Threading.Tasks;
+    using Microsoft.Extensions.Logging;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
@@ -90,7 +91,7 @@ namespace Nautilus.Common.Messaging
             if (this.queue.Count <= 0)
             {
                 this.IsIdle = true;
-                this.Log.Verbose("Idle.");
+                this.Logger.LogTrace("Idle.");
 
                 return;
             }
@@ -100,7 +101,7 @@ namespace Nautilus.Common.Messaging
             if (this.IsIdle)
             {
                 this.IsIdle = false;
-                this.Log.Verbose("Active.");
+                this.Logger.LogTrace("Active.");
             }
 
             this.ProcessQueue();
@@ -120,7 +121,7 @@ namespace Nautilus.Common.Messaging
             {
                 Task.Run(this.RunTimer);
                 this.IsIdle = false;
-                this.Log.Verbose("Active.");
+                this.Logger.LogTrace("Active.");
             }
 
             while (this.vouchers > 0 && this.queue.Count > 0)
@@ -135,13 +136,13 @@ namespace Nautilus.Common.Messaging
                 this.receiver.Send(message);
                 this.vouchers--;
 
-                this.Log.Verbose($"Sent message {message} (total_count={this.totalCount}).");
+                this.Logger.LogTrace($"Sent message {message} (total_count={this.totalCount}).");
             }
 
             if (this.vouchers <= 0 && this.queue.Count > 0)
             {
                 // At message limit.
-                this.Log.Verbose($"At message limit of {this.limit} per {this.interval} (queued_count={this.queue.Count}).");
+                this.Logger.LogTrace($"At message limit of {this.limit} per {this.interval} (queued_count={this.queue.Count}).");
             }
         }
 

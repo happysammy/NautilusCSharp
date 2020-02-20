@@ -9,9 +9,9 @@
 namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
     using System.Diagnostics.CodeAnalysis;
+    using Microsoft.Extensions.Logging;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Logging;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class StubComponentryContainerProvider
@@ -20,25 +20,19 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             this.Clock = new StubClock();
             this.Clock.FreezeSetTime(StubZonedDateTime.UnixEpoch());
-            this.GuidFactory = new GuidFactory();
-            this.LoggingAdapter = new MockLoggingAdapter();
-            this.LoggerFactory = new LoggerFactory(this.LoggingAdapter);
+            this.Logger = new MockLogger();
         }
 
         public StubClock Clock { get; }
 
-        public IGuidFactory GuidFactory { get; }
-
-        public MockLoggingAdapter LoggingAdapter { get; }
-
-        public ILoggerFactory LoggerFactory { get; }
+        public MockLogger Logger { get; }
 
         public IComponentryContainer Create()
         {
             return new ComponentryContainer(
                 this.Clock,
-                this.GuidFactory,
-                this.LoggerFactory);
+                new GuidFactory(),
+                new LoggerFactory());
         }
     }
 }

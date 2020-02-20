@@ -10,6 +10,7 @@ namespace Nautilus.Data.Aggregation
 {
     using System;
     using System.Collections.Generic;
+    using Microsoft.Extensions.Logging;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
@@ -142,7 +143,7 @@ namespace Nautilus.Data.Aggregation
             }
             else
             {
-                this.Log.Warning($"Does not contain the {nameof(BarSpecification)}({message.Specification}).");
+                this.Logger.LogWarning($"Does not contain the {nameof(BarSpecification)}({message.Specification}).");
             }
         }
 
@@ -151,7 +152,7 @@ namespace Nautilus.Data.Aggregation
             var barSpec = message.Subscription.Specification;
             if (this.specifications.Contains(barSpec))
             {
-                this.Log.Warning($"Already subscribed to {message.Subscription} bars.");
+                this.Logger.LogWarning($"Already subscribed to {message.Subscription} bars.");
                 return;
             }
 
@@ -170,7 +171,7 @@ namespace Nautilus.Data.Aggregation
             var barSpec = message.Subscription.Specification;
             if (!this.specifications.Contains(barSpec))
             {
-                this.Log.Warning($"Already unsubscribed from {message.Subscription} bars.");
+                this.Logger.LogWarning($"Already unsubscribed from {message.Subscription} bars.");
                 return;
             }
 

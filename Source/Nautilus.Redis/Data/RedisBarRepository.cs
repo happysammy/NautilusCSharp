@@ -10,6 +10,7 @@ namespace Nautilus.Redis.Data
 {
     using System.Collections.Generic;
     using System.Linq;
+    using Microsoft.Extensions.Logging;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
@@ -91,7 +92,7 @@ namespace Nautilus.Redis.Data
             var key = KeyProvider.GetBarsKey(barType, new DateKey(bar.Timestamp));
             this.RedisDatabase.ListRightPush(key, bar.ToString());
 
-            this.Log.Debug($"Added 1 bar to {barType}");
+            this.Logger.LogDebug($"Added 1 bar to {barType}");
         }
 
         /// <inheritdoc />
@@ -128,14 +129,14 @@ namespace Nautilus.Redis.Data
                 }
             }
 
-            this.Log.Debug(
+            this.Logger.LogDebug(
                 $"Added {barsAddedCounter} bars to {barType}, BarsCount={this.BarsCount(barType)}");
         }
 
         /// <inheritdoc />
         public void TrimToDays(BarStructure barStructure, int trimToDays)
         {
-            this.Log.Information($"Trimming {barStructure} bar data to {trimToDays} rolling days. ");
+            this.Logger.LogInformation($"Trimming {barStructure} bar data to {trimToDays} rolling days. ");
 
             this.TrimToDays(
                 KeyProvider.GetBarsPattern().ToString(),
@@ -144,7 +145,7 @@ namespace Nautilus.Redis.Data
                 trimToDays,
                 barStructure.ToString());
 
-            this.Log.Information($"Trim job complete. BarsCount={this.BarsCount()}.");
+            this.Logger.LogInformation($"Trim job complete. BarsCount={this.BarsCount()}.");
         }
 
         /// <inheritdoc />
@@ -262,7 +263,7 @@ namespace Nautilus.Redis.Data
         {
             this.Add(data.BarType, data.Bar);
 
-            this.Log.Debug($"Received {data}");
+            this.Logger.LogDebug($"Received {data}");
         }
 
         private void OnData(BarDataFrame data)
@@ -272,7 +273,7 @@ namespace Nautilus.Redis.Data
 
         private void OnMessage(TrimBarData message)
         {
-            this.Log.Information($"Received {message}.");
+            this.Logger.LogInformation($"Received {message}.");
 
             foreach (var structure in message.BarStructures)
             {

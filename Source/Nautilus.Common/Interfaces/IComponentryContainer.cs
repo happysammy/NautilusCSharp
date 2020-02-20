@@ -8,6 +8,8 @@
 
 namespace Nautilus.Common.Interfaces
 {
+    using Microsoft.Extensions.Logging;
+
     /// <summary>
     /// The componentry container for constructing service components.
     /// </summary>

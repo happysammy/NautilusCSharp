@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="MockLoggingAdapter.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="MockLogger.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2020 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  https://nautechsystems.io
@@ -12,15 +12,13 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using System.Collections.Concurrent;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using Nautilus.Common.Interfaces;
+    using Microsoft.Extensions.Logging;
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
-    public sealed class MockLoggingAdapter : ILoggingAdapter
+    public sealed class MockLogger : ILogger, IDisposable
     {
         private readonly ConcurrentQueue<string> log = new ConcurrentQueue<string>();
-
-        public string AssemblyVersion => "1.0.0";
 
         public void WriteStashToOutput(ITestOutputHelper output)
         {
@@ -30,39 +28,35 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             }
         }
 
-        public void Verbose(string message)
+        public void Log<TState>(
+            LogLevel logLevel,
+            EventId eventId,
+            TState state,
+            Exception exception,
+            Func<TState, Exception, string> formatter)
         {
-            this.log.Enqueue("[VRB] " + message);
+            var message = string.Empty;
+
+            if (formatter != null)
+            {
+                message = formatter(state, exception);
+            }
+
+            this.log.Enqueue(message);
         }
 
-        public void Debug(string message)
+        public bool IsEnabled(LogLevel logLevel)
         {
-            this.log.Enqueue("[DBG] " + message);
+            return true;
         }
 
-        public void Information(string message)
+        public IDisposable BeginScope<TState>(TState state)
         {
-            this.log.Enqueue("[INF] " + message);
+            return this;
         }
 
-        public void Warning(string message)
+        public void Dispose()
         {
-            this.log.Enqueue("[WRN] " + message);
-        }
-
-        public void Error(string message)
-        {
-            this.log.Enqueue("[ERR] " + message);
-        }
-
-        public void Error(string message, Exception ex)
-        {
-            this.log.Enqueue("[ERR] " + message + Environment.NewLine + ex.Message);
-        }
-
-        public void Fatal(string message, Exception ex)
-        {
-            this.log.Enqueue("[FTL] " + message + Environment.NewLine + ex.Message);
         }
     }
 }

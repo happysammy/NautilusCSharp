@@ -10,6 +10,7 @@ namespace Nautilus.Network
 {
     using System;
     using System.Text;
+    using Microsoft.Extensions.Logging;
     using Nautilus.Common.Data;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -70,11 +71,11 @@ namespace Nautilus.Network
             if (encryption.UseEncryption)
             {
                 EncryptionProvider.SetupSocket(encryption, this.socket);
-                this.Log.Information($"{encryption.Algorithm} encryption setup for {this.NetworkAddress}");
+                this.Logger.LogInformation($"{encryption.Algorithm} encryption setup for {this.NetworkAddress}");
             }
             else
             {
-                this.Log.Warning($"No encryption setup for {this.NetworkAddress}");
+                this.Logger.LogWarning($"No encryption setup for {this.NetworkAddress}");
             }
 
             this.PublishedCount = 0;
@@ -110,14 +111,14 @@ namespace Nautilus.Network
         protected override void OnStart(Start start)
         {
             this.socket.Bind(this.NetworkAddress.Value);
-            this.Log.Information($"Bound {this.socket.GetType().Name} to {this.NetworkAddress}");
+            this.Logger.LogInformation($"Bound {this.socket.GetType().Name} to {this.NetworkAddress}");
         }
 
         /// <inheritdoc />
         protected override void OnStop(Stop stop)
         {
             this.socket.Unbind(this.NetworkAddress.Value);
-            this.Log.Information($"Unbound {this.socket.GetType().Name} from {this.NetworkAddress}");
+            this.Logger.LogInformation($"Unbound {this.socket.GetType().Name} from {this.NetworkAddress}");
         }
 
         /// <summary>
@@ -131,7 +132,7 @@ namespace Nautilus.Network
             this.socket.SendMultipartBytes(Encoding.UTF8.GetBytes(topic), publishable);
 
             this.PublishedCount++;
-            this.Log.Verbose($"[{this.PublishedCount}]--> Topic={topic}, Message={message}");
+            this.Logger.LogTrace($"[{this.PublishedCount}]--> Topic={topic}, Message={message}");
         }
     }
 }

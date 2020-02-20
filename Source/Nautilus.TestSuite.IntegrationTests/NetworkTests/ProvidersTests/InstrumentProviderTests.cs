@@ -36,7 +36,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
     public sealed class InstrumentProviderTests : IDisposable
     {
         private readonly ITestOutputHelper output;
-        private readonly MockLoggingAdapter loggingAdapter;
+        private readonly MockLogger logger;
         private readonly IComponentryContainer container;
         private readonly IInstrumentRepository repository;
         private readonly IDataSerializer<Instrument> dataSerializer;
@@ -50,7 +50,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
 
             var containerFactory = new StubComponentryContainerProvider();
             this.container = containerFactory.Create();
-            this.loggingAdapter = containerFactory.LoggingAdapter;
+            this.logger = containerFactory.Logger;
             this.dataSerializer = new InstrumentDataSerializer();
             this.repository = new MockInstrumentRepository(this.dataSerializer);
             this.requestSerializer = new MsgPackRequestSerializer(new MsgPackQuerySerializer());
@@ -105,7 +105,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
             Assert.Equal(typeof(QueryFailure), response.Type);
 
             // Tear Down
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
             requester.Disconnect(testAddress);
             requester.Dispose();
             provider.Stop();
@@ -154,7 +154,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
             Assert.Equal(typeof(QueryFailure), response.Type);
 
             // Tear Down
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
             requester.Disconnect(testAddress);
             requester.Dispose();
             provider.Stop();
@@ -208,7 +208,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
             Assert.Equal(instrument, data[0]);
 
             // Tear Down
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
             requester.Disconnect(testAddress);
             requester.Dispose();
             provider.Stop();
@@ -270,7 +270,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
             }
 
             // Tear Down
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
             requester.Disconnect(testAddress);
             requester.Dispose();
             provider.Stop();

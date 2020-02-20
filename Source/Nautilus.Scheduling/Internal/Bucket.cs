@@ -10,14 +10,14 @@ namespace Nautilus.Scheduling.Internal
 {
     using System;
     using System.Collections.Generic;
-    using Nautilus.Common.Interfaces;
+    using Microsoft.Extensions.Logging;
 
     /// <summary>
     /// Represents a bucket.
     /// </summary>
     internal sealed class Bucket
     {
-        private readonly ILogger log;
+        private readonly ILogger logger;
 
         private SchedulerRegistration? head;
         private SchedulerRegistration? tail;
@@ -27,10 +27,10 @@ namespace Nautilus.Scheduling.Internal
         /// <summary>
         /// Initializes a new instance of the <see cref="Bucket"/> class.
         /// </summary>
-        /// <param name="log">The logger.</param>
-        internal Bucket(ILogger log)
+        /// <param name="logger">The logger.</param>
+        internal Bucket(ILogger logger)
         {
-            this.log = log;
+            this.logger = logger;
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace Nautilus.Scheduling.Internal
                         }
                         catch (Exception ex)
                         {
-                            this.log.Error($"Error while executing scheduled task {current}", ex);
+                            this.logger.LogError($"Error while executing scheduled task {current}", ex);
                             var nextErrored = current.Next;
                             this.Remove(current);
                             current = nextErrored;

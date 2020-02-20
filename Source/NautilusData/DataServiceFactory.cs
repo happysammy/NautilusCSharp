@@ -14,7 +14,6 @@ namespace NautilusData
     using Nautilus.Common.Configuration;
     using Nautilus.Common.Data;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Logging;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Correctness;
@@ -46,14 +45,14 @@ namespace NautilusData
         /// <returns>The service.</returns>
         public static DataService Create(ServiceConfiguration config)
         {
-            VersionChecker.Run(config.LoggingAdapter, "NAUTILUS DATA - Algorithmic Trading Data Service");
+            VersionChecker.Run(config.LoggerFactory, "NAUTILUS DATA - Algorithmic Trading Data Service");
 
             var clock = new Clock(DateTimeZone.Utc);
             var guidFactory = new GuidFactory();
             var container = new ComponentryContainer(
                 clock,
                 guidFactory,
-                new LoggerFactory(config.LoggingAdapter));
+                config.LoggerFactory);
 
             var scheduler = new HashedWheelTimerScheduler(container);
             scheduler.Start();

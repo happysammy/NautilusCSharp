@@ -21,7 +21,7 @@ namespace Nautilus.TestSuite.IntegrationTests.SchedulerTests
     public sealed class HashedTimerWheelTests
     {
         private readonly ITestOutputHelper output;
-        private readonly MockLoggingAdapter loggingAdapter;
+        private readonly MockLogger logger;
         private readonly MockMessagingAgent testReceiver;
         private readonly HashedWheelTimerScheduler scheduler;
 
@@ -34,7 +34,7 @@ namespace Nautilus.TestSuite.IntegrationTests.SchedulerTests
 
             var containerFactory = new StubComponentryContainerProvider();
             var container = containerFactory.Create();
-            this.loggingAdapter = containerFactory.LoggingAdapter;
+            this.logger = containerFactory.Logger;
             this.testReceiver = new MockMessagingAgent();
             this.testReceiver.RegisterHandler<string>(this.testReceiver.OnMessage);
             this.scheduler = new HashedWheelTimerScheduler(container);

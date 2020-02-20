@@ -23,7 +23,7 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
     {
         private readonly ITestOutputHelper output;
         private readonly IComponentryContainer container;
-        private readonly MockLoggingAdapter loggingAdapter;
+        private readonly MockLogger logger;
         private readonly MockMessagingAgent receiver;
 
         public ThrottlerTests(ITestOutputHelper output)
@@ -33,7 +33,7 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
 
             var containerFactory = new StubComponentryContainerProvider();
             this.container = containerFactory.Create();
-            this.loggingAdapter = containerFactory.LoggingAdapter;
+            this.logger = containerFactory.Logger;
             this.receiver = new MockMessagingAgent();
             this.receiver.RegisterHandler<string>(this.receiver.OnMessage);
         }
@@ -65,7 +65,7 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
             // Should receive the next 10 messages
             var count2 = this.receiver.Messages.Count;
 
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Equal(10, count1);
@@ -106,7 +106,7 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
             // Receives the next 100 messages
             var count2 = this.receiver.Messages.Count;
 
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Equal(10, count1);

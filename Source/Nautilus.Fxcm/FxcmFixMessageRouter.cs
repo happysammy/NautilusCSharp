@@ -9,6 +9,7 @@
 namespace Nautilus.Fxcm
 {
     using System.Collections.Immutable;
+    using Microsoft.Extensions.Logging;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Aggregates;
@@ -85,7 +86,7 @@ namespace Nautilus.Fxcm
             var brokerSymbolCode = this.symbolConverter.GetBrokerSymbolCode(symbol.Code);
             if (brokerSymbolCode is null)
             {
-                this.Log.Error($"Cannot find broker symbol for {symbol.Code}.");
+                this.Logger.LogError($"Cannot find broker symbol for {symbol.Code}.");
                 return;
             }
 
@@ -108,7 +109,7 @@ namespace Nautilus.Fxcm
             var brokerSymbolCode = this.symbolConverter.GetBrokerSymbolCode(symbol.Code);
             if (brokerSymbolCode is null)
             {
-                this.Log.Error($"Cannot find broker symbol for {symbol.Code}.");
+                this.Logger.LogError($"Cannot find broker symbol for {symbol.Code}.");
                 return;
             }
 
@@ -140,7 +141,7 @@ namespace Nautilus.Fxcm
             var brokerSymbolCode = this.symbolConverter.GetBrokerSymbolCode(order.Symbol.Code);
             if (brokerSymbolCode is null)
             {
-                this.Log.Error($"Cannot find broker symbol for {order.Symbol.Code}.");
+                this.Logger.LogError($"Cannot find broker symbol for {order.Symbol.Code}.");
                 return;
             }
 
@@ -160,7 +161,7 @@ namespace Nautilus.Fxcm
             var brokerSymbolCode = this.symbolConverter.GetBrokerSymbolCode(atomicOrder.Symbol.Code);
             if (brokerSymbolCode is null)
             {
-                this.Log.Error($"Cannot find broker symbol for {atomicOrder.Symbol.Code}.");
+                this.Logger.LogError($"Cannot find broker symbol for {atomicOrder.Symbol.Code}.");
                 return;
             }
 
@@ -192,7 +193,7 @@ namespace Nautilus.Fxcm
             var brokerSymbolCode = this.symbolConverter.GetBrokerSymbolCode(order.Symbol.Code);
             if (brokerSymbolCode is null)
             {
-                this.Log.Error($"Cannot find broker symbol for {order.Symbol.Code}.");
+                this.Logger.LogError($"Cannot find broker symbol for {order.Symbol.Code}.");
                 return;
             }
 
@@ -212,7 +213,7 @@ namespace Nautilus.Fxcm
             var brokerSymbolCode = this.symbolConverter.GetBrokerSymbolCode(order.Symbol.Code);
             if (brokerSymbolCode is null)
             {
-                this.Log.Error($"Cannot find broker symbol for {order.Symbol.Code}.");
+                this.Logger.LogError($"Cannot find broker symbol for {order.Symbol.Code}.");
                 return;
             }
 
@@ -228,7 +229,7 @@ namespace Nautilus.Fxcm
         {
             if (this.session is null)
             {
-                this.Log.Error($"Cannot send FIX message (the session is null).");
+                this.Logger.LogError($"Cannot send FIX message (the session is null).");
                 return;
             }
 
@@ -240,7 +241,7 @@ namespace Nautilus.Fxcm
         [System.Diagnostics.Conditional("DEBUG")]
         private void LogMessageSent(Message message)
         {
-            this.Log.Debug($"{Protocol}{Sent} {message.GetType().Name}");
+            this.Logger.LogDebug($"{Protocol}{Sent} {message.GetType().Name}");
         }
     }
 }

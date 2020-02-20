@@ -11,6 +11,7 @@ namespace Nautilus.Redis.Data.Base
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Microsoft.Extensions.Logging;
     using Nautilus.Common.Data;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
@@ -126,9 +127,9 @@ namespace Nautilus.Redis.Data.Base
         /// <inheritdoc />
         protected override void OnStop(Stop stop)
         {
-            this.Log.Debug("Saving database...");
+            this.Logger.LogDebug("Saving database...");
             this.SnapshotDatabase();
-            this.Log.Information("Database saved.");
+            this.Logger.LogInformation("Database saved.");
         }
 
         /// <summary>
@@ -246,12 +247,12 @@ namespace Nautilus.Redis.Data.Base
 
             if (!this.KeyExists(key))
             {
-                this.Log.Error($"Cannot find {key} to delete in the database");
+                this.Logger.LogError($"Cannot find {key} to delete in the database");
             }
 
             this.RedisDatabase.KeyDelete(key);
 
-            this.Log.Information($"Deleted {key} from the database");
+            this.Logger.LogInformation($"Deleted {key} from the database");
         }
 
         /// <summary>

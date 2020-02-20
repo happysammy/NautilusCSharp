@@ -8,6 +8,7 @@
 
 namespace Nautilus.Common.Componentry
 {
+    using Microsoft.Extensions.Logging;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
 

@@ -26,7 +26,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
     public sealed class BarAggregatorTests
     {
         private readonly ITestOutputHelper output;
-        private readonly MockLoggingAdapter logger;
+        private readonly MockLogger logger;
         private readonly MockMessagingAgent receiver;
         private readonly Symbol symbol;
         private readonly BarAggregator barAggregator;
@@ -39,7 +39,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.symbol = new Symbol("AUDUSD", new Venue("FXCM"));
             var containerFactory = new StubComponentryContainerProvider();
             var container = containerFactory.Create();
-            this.logger = containerFactory.LoggingAdapter;
+            this.logger = containerFactory.Logger;
             this.receiver = new MockMessagingAgent();
             this.receiver.RegisterHandler<BarData>(this.receiver.OnMessage);
 

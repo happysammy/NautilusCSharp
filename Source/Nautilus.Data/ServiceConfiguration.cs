@@ -9,7 +9,7 @@
 namespace Nautilus.Data
 {
     using System.Collections.Immutable;
-    using Nautilus.Common.Interfaces;
+    using Microsoft.Extensions.Logging;
     using Nautilus.Data.Configuration;
     using Nautilus.Fix;
     using Nautilus.Network.Configuration;
@@ -22,21 +22,21 @@ namespace Nautilus.Data
         /// <summary>
         /// Initializes a new instance of the <see cref="ServiceConfiguration"/> class.
         /// </summary>
-        /// <param name="loggingAdapter">The service logging adapter.</param>
+        /// <param name="loggerFactory">The service logging adapter.</param>
         /// <param name="fixConfig">The FIX configuration.</param>
         /// <param name="wireConfig">The wire configuration.</param>
         /// <param name="networkConfig">The network configuration.</param>
         /// <param name="dataConfig">The data configuration.</param>
         /// <param name="symbolMap">The symbol map.</param>
         public ServiceConfiguration(
-        ILoggingAdapter loggingAdapter,
-        FixConfiguration fixConfig,
-        WireConfiguration wireConfig,
-        NetworkConfiguration networkConfig,
-        DataConfiguration dataConfig,
-        ImmutableDictionary<string, string> symbolMap)
+            ILoggerFactory loggerFactory,
+            FixConfiguration fixConfig,
+            WireConfiguration wireConfig,
+            NetworkConfiguration networkConfig,
+            DataConfiguration dataConfig,
+            ImmutableDictionary<string, string> symbolMap)
         {
-            this.LoggingAdapter = loggingAdapter;
+            this.LoggerFactory = loggerFactory;
             this.FixConfig = fixConfig;
             this.WireConfig = wireConfig;
             this.NetworkConfig = networkConfig;
@@ -47,7 +47,7 @@ namespace Nautilus.Data
         /// <summary>
         /// Gets the systems logging adapter.
         /// </summary>
-        public ILoggingAdapter LoggingAdapter { get; }
+        public ILoggerFactory LoggerFactory { get; }
 
         /// <summary>
         /// Gets the FIX configuration.

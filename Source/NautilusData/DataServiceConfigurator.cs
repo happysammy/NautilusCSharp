@@ -15,9 +15,9 @@ namespace NautilusData
     using System.Linq;
     using System.Reflection;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Logging;
     using Nautilus.Common.Configuration;
     using Nautilus.Common.Enums;
-    using Nautilus.Common.Interfaces;
     using Nautilus.Core.Extensions;
     using Nautilus.Data;
     using Nautilus.Data.Configuration;
@@ -38,10 +38,10 @@ namespace NautilusData
         /// <summary>
         /// Builds the service configuration.
         /// </summary>
-        /// <param name="loggingAdapter">The logging adapter.</param>
+        /// <param name="loggerFactory">The logging adapter.</param>
         /// <param name="configuration">The application configuration.</param>
         /// <returns>The configuration.</returns>
-        public static ServiceConfiguration Build(ILoggingAdapter loggingAdapter, IConfiguration configuration)
+        public static ServiceConfiguration Build(ILoggerFactory loggerFactory, IConfiguration configuration)
         {
             var workingDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location)!;
 
@@ -178,7 +178,7 @@ namespace NautilusData
             var symbolMap = symbolMap2.ToImmutableDictionary();
 
             return new ServiceConfiguration(
-                loggingAdapter,
+                loggerFactory,
                 fixConfig,
                 wireConfig,
                 networkConfig,

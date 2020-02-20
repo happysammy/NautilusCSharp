@@ -27,7 +27,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
     public sealed class InMemoryExecutionDatabaseTests
     {
         private readonly ITestOutputHelper output;
-        private readonly MockLoggingAdapter logger;
+        private readonly MockLogger logger;
         private readonly IExecutionDatabase database;
 
         public InMemoryExecutionDatabaseTests(ITestOutputHelper output)
@@ -36,7 +36,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             this.output = output;
 
             var containerFactory = new StubComponentryContainerProvider();
-            this.logger = containerFactory.LoggingAdapter;
+            this.logger = containerFactory.Logger;
             var container = containerFactory.Create();
             this.database = new InMemoryExecutionDatabase(container);
         }

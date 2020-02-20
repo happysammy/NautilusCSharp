@@ -30,7 +30,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
     {
         private readonly ITestOutputHelper output;
         private readonly IComponentryContainer container;
-        private readonly MockLoggingAdapter loggingAdapter;
+        private readonly MockLogger logger;
         private readonly MockSerializer serializer;
         private readonly MsgPackResponseSerializer responseSerializer;
 
@@ -41,7 +41,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             var containerFactory = new StubComponentryContainerProvider();
             this.container = containerFactory.Create();
-            this.loggingAdapter = containerFactory.LoggingAdapter;
+            this.logger = containerFactory.Logger;
             this.serializer = new MockSerializer();
             this.responseSerializer = new MsgPackResponseSerializer();
         }
@@ -88,7 +88,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             Assert.Equal(ComponentState.Running, server.ComponentState);
 
             // Tear Down
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
             server.Stop();
             Task.Delay(100).Wait(); // Allow server to stop
             server.Dispose();
@@ -123,7 +123,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             Assert.Equal(1, server.CountSent);
 
             // Tear Down
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
             requester1.Disconnect(testAddress);
             requester1.Dispose();
             server.Stop();
@@ -160,7 +160,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             Assert.Equal(1, server.CountSent);
 
             // Tear Down
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
             requester1.Disconnect(testAddress);
             requester1.Dispose();
             server.Stop();
@@ -199,7 +199,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             Assert.Equal(1, server.CountSent);
 
             // Tear Down
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
             requester1.Disconnect(testAddress);
             requester1.Dispose();
             server.Stop();
@@ -242,7 +242,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             Assert.Contains(message, server.ReceivedMessages);
 
             // Tear Down
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
             requester.Disconnect(testAddress);
             requester.Dispose();
             server.Stop();
@@ -295,7 +295,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             Assert.Equal(2, server.CountSent);
 
             // Tear Down
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
             requester.Disconnect(testAddress);
             requester.Dispose();
             server.Stop();
@@ -346,7 +346,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             Assert.DoesNotContain(message2, server.ReceivedMessages);
 
             // Tear Down
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
             requester.Disconnect(testAddress);
             requester.Dispose();
             server.Stop();
@@ -393,7 +393,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             Assert.Equal("TEST-998", server.ReceivedMessages[^2].Payload);
 
             // Tear Down
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
             requester.Disconnect(testAddress);
             requester.Dispose();
             server.Stop();
@@ -441,7 +441,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 this.responseSerializer.Deserialize(requester2.ReceiveFrameBytes());
             }
 
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Equal(2000, server.ReceivedMessages.Count);
@@ -453,7 +453,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             Assert.Equal("TEST-998 from 1", server.ReceivedMessages[^4].Payload);
 
             // Tear Down
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
             requester1.Disconnect(testAddress);
             requester2.Disconnect(testAddress);
             requester1.Dispose();

@@ -31,7 +31,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
     {
         private const string TestAddress = "tcp://localhost:55511";
         private readonly ITestOutputHelper output;
-        private readonly MockLoggingAdapter loggingAdapter;
+        private readonly MockLogger logger;
         private readonly BarDataSerializer serializer;
         private readonly BarPublisher publisher;
 
@@ -42,7 +42,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
 
             var containerFactory = new StubComponentryContainerProvider();
             var container = containerFactory.Create();
-            this.loggingAdapter = containerFactory.LoggingAdapter;
+            this.logger = containerFactory.Logger;
             this.serializer = new BarDataSerializer();
 
             this.publisher = new BarPublisher(
@@ -89,7 +89,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
             Assert.Equal(bar, this.serializer.Deserialize(message));
 
             // Tear Down
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
             subscriber.Disconnect(TestAddress);
             subscriber.Dispose();
             this.publisher.Stop();

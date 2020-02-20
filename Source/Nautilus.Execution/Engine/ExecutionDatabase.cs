@@ -9,6 +9,7 @@
 namespace Nautilus.Execution.Engine
 {
     using System.Collections.Generic;
+    using Microsoft.Extensions.Logging;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Aggregates;
@@ -70,11 +71,11 @@ namespace Nautilus.Execution.Engine
         /// <inheritdoc/>
         public void ClearCaches()
         {
-            this.Log.Debug($"Clearing caches...");
+            this.Logger.LogDebug($"Clearing caches...");
             this.CachedAccounts.Clear();
             this.CachedOrders.Clear();
             this.CachedPositions.Clear();
-            this.Log.Information($"Caches cleared.");
+            this.Logger.LogInformation($"Caches cleared.");
         }
 
         /// <inheritdoc />
@@ -83,13 +84,13 @@ namespace Nautilus.Execution.Engine
             foreach (var orderId in this.GetOrderWorkingIds())
             {
                 this.GetOrder(orderId);  // Check working
-                this.Log.Warning($"Residual working order {orderId}.");
+                this.Logger.LogWarning($"Residual working order {orderId}.");
             }
 
             foreach (var positionId in this.GetPositionOpenIds())
             {
                 this.GetPosition(positionId);  // Check open
-                this.Log.Warning($"Residual open position {positionId}.");
+                this.Logger.LogWarning($"Residual open position {positionId}.");
             }
         }
 
@@ -275,7 +276,7 @@ namespace Nautilus.Execution.Engine
                 var order = this.GetOrder(orderId);
                 if (order is null)
                 {
-                    this.Log.Error($"Cannot find {orderId} in the cache.");
+                    this.Logger.LogError($"Cannot find {orderId} in the cache.");
                     continue;  // Do not add null order to dictionary
                 }
 
@@ -293,13 +294,13 @@ namespace Nautilus.Execution.Engine
                 var order = this.GetOrder(orderId);
                 if (order is null)
                 {
-                    this.Log.Error($"Cannot find {orderId} in the cache.");
+                    this.Logger.LogError($"Cannot find {orderId} in the cache.");
                     continue; // Do not add null order to dictionary
                 }
 
                 if (!order.IsWorking)
                 {
-                    this.Log.Error($"The {orderId} was found not working.");
+                    this.Logger.LogError($"The {orderId} was found not working.");
                     continue;  // Do not add non-working order to dictionary
                 }
 
@@ -317,13 +318,13 @@ namespace Nautilus.Execution.Engine
                 var order = this.GetOrder(orderId);
                 if (order is null)
                 {
-                    this.Log.Error($"Cannot find {orderId} in the cache.");
+                    this.Logger.LogError($"Cannot find {orderId} in the cache.");
                     continue; // Do not add null order to dictionary
                 }
 
                 if (!order.IsCompleted)
                 {
-                    this.Log.Error($"The {orderId} was found not completed.");
+                    this.Logger.LogError($"The {orderId} was found not completed.");
                     continue;  // Do not add non-completed order to dictionary
                 }
 
@@ -341,7 +342,7 @@ namespace Nautilus.Execution.Engine
                 var position = this.GetPosition(positionId);
                 if (position is null)
                 {
-                    this.Log.Error($"Cannot find {positionId} in the cache.");
+                    this.Logger.LogError($"Cannot find {positionId} in the cache.");
                     continue;  // Do not add null position to dictionary
                 }
 
@@ -359,13 +360,13 @@ namespace Nautilus.Execution.Engine
                 var position = this.GetPosition(positionId);
                 if (position is null)
                 {
-                    this.Log.Error($"Cannot find {positionId} in the cache.");
+                    this.Logger.LogError($"Cannot find {positionId} in the cache.");
                     continue;  // Do not add null position to dictionary
                 }
 
                 if (!position.IsOpen)
                 {
-                    this.Log.Error($"The {positionId} was found not open.");
+                    this.Logger.LogError($"The {positionId} was found not open.");
                     continue;  // Do not add non-open position to dictionary
                 }
 
@@ -383,13 +384,13 @@ namespace Nautilus.Execution.Engine
                 var position = this.GetPosition(positionId);
                 if (position is null)
                 {
-                    this.Log.Error($"Cannot find {positionId} in the cache.");
+                    this.Logger.LogError($"Cannot find {positionId} in the cache.");
                     continue;  // Do not add null position to dictionary
                 }
 
                 if (!position.IsClosed)
                 {
-                    this.Log.Error($"The {positionId} was found not closed.");
+                    this.Logger.LogError($"The {positionId} was found not closed.");
                     continue;  // Do not add non-closed position to dictionary
                 }
 

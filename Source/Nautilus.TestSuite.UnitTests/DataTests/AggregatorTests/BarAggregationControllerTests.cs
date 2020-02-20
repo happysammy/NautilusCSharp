@@ -27,7 +27,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
     public sealed class BarAggregationControllerTests
     {
         private readonly ITestOutputHelper output;
-        private readonly MockLoggingAdapter logger;
+        private readonly MockLogger logger;
         private readonly MockMessagingAgent receiver;
         private readonly BarAggregationController controller;
 
@@ -37,7 +37,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.output = output;
 
             var containerFactory = new StubComponentryContainerProvider();
-            this.logger = containerFactory.LoggingAdapter;
+            this.logger = containerFactory.Logger;
             this.receiver = new MockMessagingAgent();
             var container = containerFactory.Create();
             var dataBusAdapter = DataBusFactory.Create(container);

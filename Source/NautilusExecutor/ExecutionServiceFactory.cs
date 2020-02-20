@@ -13,7 +13,6 @@ namespace NautilusExecutor
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Configuration;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Logging;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Correctness;
@@ -43,14 +42,14 @@ namespace NautilusExecutor
         /// <returns>The service.</returns>
         public static ExecutionService Create(ServiceConfiguration config)
         {
-            VersionChecker.Run(config.LoggingAdapter, "NAUTILUS EXECUTOR - Algorithmic Trading Execution Service");
+            VersionChecker.Run(config.LoggerFactory, "NAUTILUS EXECUTOR - Algorithmic Trading Execution Service");
 
             var clock = new Clock(DateTimeZone.Utc);
             var guidFactory = new GuidFactory();
             var container = new ComponentryContainer(
                 clock,
                 guidFactory,
-                new LoggerFactory(config.LoggingAdapter));
+                config.LoggerFactory);
 
             var scheduler = new HashedWheelTimerScheduler(container);
             scheduler.Start();

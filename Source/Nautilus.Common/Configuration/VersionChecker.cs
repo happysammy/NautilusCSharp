@@ -13,7 +13,7 @@ namespace Nautilus.Common.Configuration
     using System.Reflection;
     using System.Runtime.InteropServices;
     using System.Runtime.Versioning;
-    using Nautilus.Common.Interfaces;
+    using Microsoft.Extensions.Logging;
     using Nautilus.Core.Correctness;
 
     /// <summary>
@@ -24,38 +24,39 @@ namespace Nautilus.Common.Configuration
         /// <summary>
         /// Runs the version checker which produces log events.
         /// </summary>
-        /// <param name="log">The logger.</param>
+        /// <param name="loggerFactory">The logger factory.</param>
         /// <param name="serviceTitle">The service title string.</param>
-        public static void Run(ILoggingAdapter log, string serviceTitle)
+        public static void Run(ILoggerFactory loggerFactory, string serviceTitle)
         {
             Condition.NotEmptyOrWhiteSpace(serviceTitle, nameof(serviceTitle));
 
-            log.Information("=================================================================");
-            log.Information(@"  _   _           _    _  _______  _____  _      _    _   _____ ");
-            log.Information(@" | \ | |    /\   | |  | ||__   __||_   _|| |    | |  | | / ____|");
-            log.Information(@" |  \| |   /  \  | |  | |   | |     | |  | |    | |  | || (___  ");
-            log.Information(@" | . ` |  / /\ \ | |  | |   | |     | |  | |    | |  | | \___ \ ");
-            log.Information(@" | |\  | / ____ \| |__| |   | |    _| |_ | |____| |__| | ____) |");
-            log.Information(@" |_| \_|/_/    \_\\____/    |_|   |_____||______|\____/ |_____/ ");
-            log.Information("                                                                 ");
-            log.Information($" {serviceTitle}");
-            log.Information(" by Nautech Systems Pty Ltd.");
-            log.Information(" Copyright (C) 2015-2020 All rights reserved.");
-            log.Information("=================================================================");
-            log.Information(" SYSTEM SPECIFICATION");
-            log.Information("=================================================================");
-            log.Information($"CPU architecture: {RuntimeInformation.ProcessArchitecture}");
-            log.Information($"CPU(s): {Environment.ProcessorCount}");
-            log.Information($"RAM-Avail: {Math.Round((decimal)Environment.WorkingSet / 1000000, 2)} GB");
-            log.Information($"OS: {Environment.OSVersion}");
-            log.Information($"Is64BitOperatingSystem={Environment.Is64BitOperatingSystem}");
-            log.Information($"Is64BitProcess={Environment.Is64BitProcess}");
-            log.Information("=================================================================");
-            log.Information(" VERSIONING");
-            log.Information("=================================================================");
-            log.Information($"{GetNetCoreVersion()}");
-            log.Information($"Nautilus {FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion}");
-            log.Information("=================================================================");
+            var logger = loggerFactory.CreateLogger(typeof(VersionChecker));
+            logger.LogInformation("=================================================================");
+            logger.LogInformation(@"  _   _           _    _  _______  _____  _      _    _   _____ ");
+            logger.LogInformation(@" | \ | |    /\   | |  | ||__   __||_   _|| |    | |  | | / ____|");
+            logger.LogInformation(@" |  \| |   /  \  | |  | |   | |     | |  | |    | |  | || (___  ");
+            logger.LogInformation(@" | . ` |  / /\ \ | |  | |   | |     | |  | |    | |  | | \___ \ ");
+            logger.LogInformation(@" | |\  | / ____ \| |__| |   | |    _| |_ | |____| |__| | ____) |");
+            logger.LogInformation(@" |_| \_|/_/    \_\\____/    |_|   |_____||______|\____/ |_____/ ");
+            logger.LogInformation("                                                                 ");
+            logger.LogInformation($" {serviceTitle}");
+            logger.LogInformation(" by Nautech Systems Pty Ltd.");
+            logger.LogInformation(" Copyright (C) 2015-2020 All rights reserved.");
+            logger.LogInformation("=================================================================");
+            logger.LogInformation(" SYSTEM SPECIFICATION");
+            logger.LogInformation("=================================================================");
+            logger.LogInformation($"CPU architecture: {RuntimeInformation.ProcessArchitecture}");
+            logger.LogInformation($"CPU(s): {Environment.ProcessorCount}");
+            logger.LogInformation($"RAM-Avail: {Math.Round((decimal)Environment.WorkingSet / 1000000, 2)} GB");
+            logger.LogInformation($"OS: {Environment.OSVersion}");
+            logger.LogInformation($"Is64BitOperatingSystem={Environment.Is64BitOperatingSystem}");
+            logger.LogInformation($"Is64BitProcess={Environment.Is64BitProcess}");
+            logger.LogInformation("=================================================================");
+            logger.LogInformation(" VERSIONING");
+            logger.LogInformation("=================================================================");
+            logger.LogInformation($"{GetNetCoreVersion()}");
+            logger.LogInformation($"Nautilus {FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion}");
+            logger.LogInformation("=================================================================");
         }
 
         private static string GetNetCoreVersion()

@@ -40,7 +40,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
     public sealed class TickProviderTests : IDisposable
     {
         private readonly ITestOutputHelper output;
-        private readonly MockLoggingAdapter loggingAdapter;
+        private readonly MockLogger logger;
         private readonly IComponentryContainer container;
         private readonly ITickRepository repository;
         private readonly IDataSerializer<Tick> dataSerializer;
@@ -54,7 +54,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
 
             var containerFactory = new StubComponentryContainerProvider();
             this.container = containerFactory.Create();
-            this.loggingAdapter = containerFactory.LoggingAdapter;
+            this.logger = containerFactory.Logger;
             this.dataSerializer = new TickDataSerializer();
             this.repository = new MockTickRepository(this.container, this.dataSerializer, DataBusFactory.Create(this.container));
             this.requestSerializer = new MsgPackRequestSerializer(new MsgPackQuerySerializer());
@@ -108,13 +108,13 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
             requester.SendFrame(this.requestSerializer.Serialize(dataRequest));
             var response = (QueryFailure)this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
 
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Equal(typeof(QueryFailure), response.Type);
 
             // Tear Down
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
             requester.Disconnect(testAddress);
             requester.Dispose();
             provider.Stop();
@@ -174,7 +174,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
             var response = (DataResponse)this.responseSerializer.Deserialize(compressor.Decompress(requester.ReceiveFrameBytes()));
             var ticks = this.dataSerializer.DeserializeBlob(response.Data);
 
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Equal(typeof(DataResponse), response.Type);
@@ -183,7 +183,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
             Assert.Equal(tick2, ticks[1]);
 
             // Tear Down
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
             requester.Disconnect(testAddress);
             requester.Dispose();
             provider.Stop();

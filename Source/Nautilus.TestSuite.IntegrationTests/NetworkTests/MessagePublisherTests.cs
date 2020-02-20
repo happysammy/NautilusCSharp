@@ -31,7 +31,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
         private readonly ITestOutputHelper output;
         private readonly IComponentryContainer container;
-        private readonly MockLoggingAdapter loggingAdapter;
+        private readonly MockLogger logger;
 
         public MessagePublisherTests(ITestOutputHelper output)
         {
@@ -40,7 +40,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             var containerFactory = new StubComponentryContainerProvider();
             this.container = containerFactory.Create();
-            this.loggingAdapter = containerFactory.LoggingAdapter;
+            this.logger = containerFactory.Logger;
         }
 
         public void Dispose()
@@ -100,7 +100,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             Assert.Equal(1, publisher.PublishedCount);
 
             // Tear Down
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
             subscriber.Disconnect(testAddress);
             subscriber.Dispose();
             publisher.Stop();

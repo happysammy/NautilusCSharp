@@ -12,6 +12,7 @@ namespace Nautilus.Common.Data
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks.Dataflow;
+    using Microsoft.Extensions.Logging;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
@@ -91,7 +92,7 @@ namespace Nautilus.Common.Data
             var type = message.Subscription;
             if (message.Subscription != this.BusType)
             {
-                this.Log.Error($"Cannot subscribe to {type.Name} data (only {this.BusType.Name} data).");
+                this.Logger.LogError($"Cannot subscribe to {type.Name} data (only {this.BusType.Name} data).");
                 return;
             }
 
@@ -99,13 +100,13 @@ namespace Nautilus.Common.Data
 
             if (this.subscriptions.Contains(subscriber))
             {
-                this.Log.Warning($"The {subscriber} is already subscribed to {this.BusType.Name} data.");
+                this.Logger.LogWarning($"The {subscriber} is already subscribed to {this.BusType.Name} data.");
                 return;  // Design time error
             }
 
             this.pipeline.LinkTo(subscriber.Endpoint.GetLink());
             this.subscriptions.Add(subscriber);
-            this.Log.Information($"Subscribed {subscriber} to {this.BusType.Name} data.");
+            this.Logger.LogInformation($"Subscribed {subscriber} to {this.BusType.Name} data.");
         }
 
         private void OnMessage(Unsubscribe<Type> message)
@@ -113,7 +114,7 @@ namespace Nautilus.Common.Data
             var type = message.Subscription;
             if (message.Subscription != this.BusType)
             {
-                this.Log.Error($"Cannot unsubscribe from {type.Name} data (only {this.BusType.Name} data).");
+                this.Logger.LogError($"Cannot unsubscribe from {type.Name} data (only {this.BusType.Name} data).");
                 return;
             }
 
@@ -121,13 +122,13 @@ namespace Nautilus.Common.Data
 
             if (!this.subscriptions.Contains(subscriber))
             {
-                this.Log.Warning($"The {subscriber} is not subscribed to {this.BusType.Name} data.");
+                this.Logger.LogWarning($"The {subscriber} is not subscribed to {this.BusType.Name} data.");
                 return;
             }
 
             // TODO: Currently can't easily 'unlink' a subscriber from the broadcast block
             this.subscriptions.Remove(subscriber);
-            this.Log.Information($"Unsubscribed {subscriber} from {this.BusType.Name} data.");
+            this.Logger.LogInformation($"Unsubscribed {subscriber} from {this.BusType.Name} data.");
         }
     }
 }

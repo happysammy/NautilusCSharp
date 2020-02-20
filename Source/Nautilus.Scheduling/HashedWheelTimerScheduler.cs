@@ -13,6 +13,7 @@ namespace Nautilus.Scheduling
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
+    using Microsoft.Extensions.Logging;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
@@ -73,7 +74,7 @@ namespace Nautilus.Scheduling
         public HashedWheelTimerScheduler(IComponentryContainer container)
             : base(container)
         {
-            this.wheel = CreateWheel(DefaultTicksPerWheel, this.Log);
+            this.wheel = CreateWheel(DefaultTicksPerWheel, this.Logger);
             this.mask = this.wheel.Length - 1;
             this.tickDuration = DurationToTicksWithCheck(Duration.FromMilliseconds(MinTickDurationMs), this.wheel.Length);
 
@@ -86,7 +87,7 @@ namespace Nautilus.Scheduling
             var stoppedTask = this.OnStop();
             if (!stoppedTask.Wait(this.shutdownTimeout))
             {
-                this.Log.Warning($"Failed to shutdown scheduler within {this.shutdownTimeout}");
+                this.Logger.LogWarning($"Failed to shutdown scheduler within {this.shutdownTimeout}");
                 return;
             }
 
@@ -99,7 +100,7 @@ namespace Nautilus.Scheduling
                 }
                 catch (Exception ex)
                 {
-                    this.Log.Error("Exception while executing timer task.", ex);
+                    this.Logger.LogError("Exception while executing timer task.", ex);
                 }
                 finally
                 {

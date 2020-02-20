@@ -26,7 +26,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.DataTests
     public sealed class DataBusTests
     {
         private readonly ITestOutputHelper output;
-        private readonly MockLoggingAdapter loggingAdapter;
+        private readonly MockLogger logger;
         private readonly MockMessagingAgent receiver;
         private readonly DataBus<Tick> dataBus;
 
@@ -38,7 +38,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.DataTests
             var containerFactory = new StubComponentryContainerProvider();
             var container = containerFactory.Create();
 
-            this.loggingAdapter = containerFactory.LoggingAdapter;
+            this.logger = containerFactory.Logger;
             this.receiver = new MockMessagingAgent();
             this.dataBus = new DataBus<Tick>(container);
             this.receiver.RegisterHandler<Tick>(this.receiver.OnMessage);
@@ -68,7 +68,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.DataTests
             // Act
             this.dataBus.Endpoint.Send(subscribe);
 
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Equal(0, this.dataBus.Subscriptions.Count);
@@ -87,7 +87,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.DataTests
             // Act
             this.dataBus.Endpoint.Send(subscribe);
 
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Contains(this.receiver.Mailbox.Address, this.dataBus.Subscriptions);
@@ -108,7 +108,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.DataTests
             this.dataBus.Endpoint.Send(subscribe);
             this.dataBus.Endpoint.Send(subscribe);
 
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Equal(1, this.dataBus.Subscriptions.Count);
@@ -136,7 +136,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.DataTests
             this.dataBus.Endpoint.Send(subscribe1);
             this.dataBus.Endpoint.Send(subscribe2);
 
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Contains(this.receiver.Mailbox.Address, this.dataBus.Subscriptions);
@@ -157,7 +157,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.DataTests
             // Act
             this.dataBus.Endpoint.Send(unsubscribe);
 
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Equal(0, this.dataBus.Subscriptions.Count);
@@ -183,7 +183,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.DataTests
             this.dataBus.Endpoint.Send(subscribe);
             this.dataBus.Endpoint.Send(unsubscribe);
 
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Equal(0, this.dataBus.Subscriptions.Count);
@@ -218,7 +218,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.DataTests
             this.dataBus.Endpoint.Send(subscribe2);
             this.dataBus.Endpoint.Send(unsubscribe);
 
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Equal(1, this.dataBus.Subscriptions.Count);
@@ -235,7 +235,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.DataTests
             this.dataBus.PostData(tick);
             this.dataBus.PostData(tick);
 
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Equal(0, this.dataBus.Subscriptions.Count);
@@ -273,7 +273,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.DataTests
             this.dataBus.PostData(tick2);
             this.dataBus.PostData(tick3);
 
-            LogDumper.DumpWithDelay(this.loggingAdapter, this.output);
+            LogDumper.DumpWithDelay(this.logger, this.output);
 
             // Assert
             Assert.Contains(tick1, this.receiver.Messages);

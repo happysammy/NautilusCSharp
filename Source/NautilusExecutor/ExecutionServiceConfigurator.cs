@@ -14,9 +14,9 @@ namespace NautilusExecutor
     using System.IO;
     using System.Reflection;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Logging;
     using Nautilus.Common.Configuration;
     using Nautilus.Common.Enums;
-    using Nautilus.Common.Interfaces;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
@@ -36,10 +36,10 @@ namespace NautilusExecutor
         /// <summary>
         /// Builds the service configuration.
         /// </summary>
-        /// <param name="loggingAdapter">The logging adapter.</param>
+        /// <param name="loggerFactory">The logger factory.</param>
         /// <param name="configuration">The application configuration.</param>
         /// <returns>The configuration.</returns>
-        public static ServiceConfiguration Build(ILoggingAdapter loggingAdapter, IConfiguration configuration)
+        public static ServiceConfiguration Build(ILoggerFactory loggerFactory, IConfiguration configuration)
         {
             var workingDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location)!;
 
@@ -134,7 +134,7 @@ namespace NautilusExecutor
             var symbolMap = symbolMap2.ToImmutableDictionary();
 
             return new ServiceConfiguration(
-                loggingAdapter,
+                loggerFactory,
                 fixConfig,
                 wireConfig,
                 networkConfig,
