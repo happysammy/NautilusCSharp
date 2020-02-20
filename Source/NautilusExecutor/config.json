@@ -2,39 +2,34 @@
   "Logging": {
     "LogLevel": {
       "Default": "Information",
+      "Security": "Debug",
       "System": "Information",
       "Microsoft": "Information"
     }
   },
-
   "Serilog": {
     "MinimumLevel": "Information"
   },
-
   "Messaging": {
     "Version": "1.0",
     "Compression": "Snappy",
     "Encryption": "Curve25519",
     "KeysPath": ""
   },
-
   "Network": {
     "CommandsPort": 55555,
     "EventsPort": 55556,
     "CommandsPerSecond": 100,
     "NewOrdersPerSecond": 15
   },
-
   "FIX44": {
     "ConfigPath": "",
     "ConfigFile": "fix_fxcm3.cfg",
-
     "ConnectJob": {
       "Day": "Sunday",
       "Hour": 20,
       "Minute": 0
     },
-
     "DisconnectJob": {
       "Day": "Saturday",
       "Hour": 21,

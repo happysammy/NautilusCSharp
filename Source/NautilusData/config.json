@@ -2,22 +2,20 @@
   "Logging": {
     "LogLevel": {
       "Default": "Information",
+      "Security": "Debug",
       "System": "Information",
       "Microsoft": "Information"
     }
   },
-
   "Serilog": {
     "MinimumLevel": "Information"
   },
-
   "Messaging": {
     "Version": "1.0",
     "Compression": "Snappy",
     "Encryption": "Curve25519",
     "KeysPath": ""
   },
-
   "Network": {
     "TickRouterPort": 55501,
     "TickPubPort": 55502,
@@ -26,24 +24,20 @@
     "InstrumentRouterPort": 55505,
     "InstrumentPubPort": 55506
   },
-
   "FIX44": {
     "ConfigPath": "",
     "ConfigFile": "fix_fxcm3_md.cfg",
-
     "ConnectJob": {
       "Day": "Sunday",
       "Hour": 20,
       "Minute": 0
     },
-
     "DisconnectJob": {
       "Day": "Saturday",
       "Hour": 21,
       "Minute": 0
     }
   },
-
   "Data": {
     "Symbols": [
       "AUDCAD.FXCM",
@@ -85,7 +79,6 @@
       "DE30EUR.FXCM",
       "DE10YB.FXCM"
     ],
-
     "BarSpecifications": [
       "1-MINUTE[ASK]",
       "1-MINUTE[MID]",
@@ -94,13 +87,11 @@
       "1-HOUR[MID]",
       "1-HOUR[BID]"
     ],
-
     "TrimJobTicks": {
       "Hour": 22,
       "Minute": 0,
       "WindowDays": 2
     },
-
     "TrimJobBars": {
       "Hour": 22,
       "Minute": 0,

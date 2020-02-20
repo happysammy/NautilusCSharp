@@ -113,8 +113,8 @@ namespace NautilusExecutor
 
             var networkSection = configuration.GetSection(ConfigSection.Network);
             var networkConfig = new NetworkConfiguration(
-                new NetworkPort(int.Parse(networkSection["CommandsPort"])),
-                new NetworkPort(int.Parse(networkSection["EventsPort"])),
+                new NetworkPort(ushort.Parse(networkSection["CommandsPort"])),
+                new NetworkPort(ushort.Parse(networkSection["EventsPort"])),
                 int.Parse(networkSection["CommandsPerSecond"]),
                 int.Parse(networkSection["NewOrdersPerSecond"]));
 

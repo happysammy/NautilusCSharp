@@ -40,7 +40,12 @@ namespace NautilusExecutor
                 .AddEnvironmentVariables()
                 .Build();
 
-            var logTemplate = "{Timestamp:yyyy-MM-ddTHH:mm:ss.fff} [{ThreadId:000}][{Level:u3}] [{SourceContext}] [{EventId}] {Message}{NewLine}{Exception}";
+            var logTemplate = "{Timestamp:yyyy-MM-ddTHH:mm:ss.fff} " +
+                              "[{ThreadId:000}][{Level:u3}] " +
+                              "[{SourceContext}] " +
+                              "[{EventId}] " +
+                              "{Message}{NewLine}{Exception}";
+
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(configuration)
                 .Enrich.With(new ThreadIdEnricher())

@@ -25,10 +25,10 @@ namespace Nautilus.Network
         /// Initializes a new instance of the <see cref="NetworkPort"/> class.
         /// </summary>
         /// <param name="port">The port number.</param>
-        /// <exception cref="ArgumentOutOfRangeException">If the portNumber is out of range [0, 65535].</exception>
-        public NetworkPort(int port)
+        /// <exception cref="ArgumentOutOfRangeException">If the portNumber is out of range [49152, 65535].</exception>
+        public NetworkPort(ushort port)
         {
-            Condition.NotOutOfRangeInt32(port, 0, 65535, nameof(port));
+            Condition.NotOutOfRangeInt32(port, 49152, 65535, nameof(port));
 
             this.Value = port;
             this.valueString = port.ToString();
