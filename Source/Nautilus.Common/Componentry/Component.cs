@@ -9,8 +9,6 @@
 namespace Nautilus.Common.Componentry
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using Microsoft.Extensions.Logging;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -28,8 +26,6 @@ namespace Nautilus.Common.Componentry
     {
         private readonly IZonedClock clock;
         private readonly IGuidFactory guidFactory;
-        private readonly List<ZonedDateTime> startedTimes;
-        private readonly List<ZonedDateTime> stoppedTimes;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Component"/> class.
@@ -39,8 +35,6 @@ namespace Nautilus.Common.Componentry
         {
             this.clock = container.Clock;
             this.guidFactory = container.GuidFactory;
-            this.startedTimes = new List<ZonedDateTime>();
-            this.stoppedTimes = new List<ZonedDateTime>();
 
             this.Name = new Label(this.GetType().NameFormatted());
             this.Address = new Address(this.Name.Value);
@@ -82,18 +76,6 @@ namespace Nautilus.Common.Componentry
         /// </summary>
         /// <returns>A <see cref="ZonedDateTime"/>.</returns>
         public ZonedDateTime InitializedTime { get; }
-
-        /// <summary>
-        /// Gets the time the component was initialized.
-        /// </summary>
-        /// <returns>A <see cref="ZonedDateTime"/>.</returns>
-        public IReadOnlyList<ZonedDateTime> StartedTimes => this.startedTimes.ToList().AsReadOnly();
-
-        /// <summary>
-        /// Gets the time the component was initialized.
-        /// </summary>
-        /// <returns>A <see cref="ZonedDateTime"/>.</returns>
-        public IReadOnlyList<ZonedDateTime> StoppedTimes => this.stoppedTimes.ToList().AsReadOnly();
 
         /// <summary>
         /// Gets the components logger.
@@ -176,7 +158,6 @@ namespace Nautilus.Common.Componentry
             this.Logger.LogDebug($"Starting from message {message}...");
 
             this.OnStart(message);
-            this.startedTimes.Add(this.TimeNow());
             this.ComponentState = ComponentState.Running;
 
             this.Logger.LogInformation($"{this.ComponentState}...");
@@ -192,7 +173,6 @@ namespace Nautilus.Common.Componentry
             }
 
             this.OnStop(message);
-            this.stoppedTimes.Add(this.TimeNow());
             this.ComponentState = ComponentState.Stopped;
 
             this.Logger.LogInformation($"{this.ComponentState}.");

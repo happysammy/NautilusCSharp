@@ -22,7 +22,6 @@
     <ProjectReference Include="..\Nautilus.Data\Nautilus.Data.csproj" />
     <ProjectReference Include="..\Nautilus.Execution\Nautilus.Execution.csproj" />
     <ProjectReference Include="..\Nautilus.Fxcm\Nautilus.Fxcm.csproj" />
-    <ProjectReference Include="..\Nautilus.Logging\Nautilus.Logging.csproj" />
     <ProjectReference Include="..\Nautilus.Redis\Nautilus.Redis.csproj" />
     <ProjectReference Include="..\Nautilus.Scheduling\Nautilus.Scheduling.csproj" />
     <ProjectReference Include="..\Nautilus.Serialization\Nautilus.Serialization.csproj" />
@@ -30,6 +29,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="3.2.0" />
+    <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.0" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="config.json">

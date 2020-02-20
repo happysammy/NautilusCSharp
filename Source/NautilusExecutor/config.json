@@ -1,6 +1,10 @@
 ﻿{
   "Logging": {
-    "LogLevel": "Information"
+    "LogLevel": {
+      "Default": "Debug",
+      "System": "Information",
+      "Microsoft": "Information"
+    }
   },
 
   "Messaging": {

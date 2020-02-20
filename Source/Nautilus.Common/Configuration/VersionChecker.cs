@@ -24,13 +24,12 @@ namespace Nautilus.Common.Configuration
         /// <summary>
         /// Runs the version checker which produces log events.
         /// </summary>
-        /// <param name="loggerFactory">The logger factory.</param>
-        /// <param name="serviceTitle">The service title string.</param>
-        public static void Run(ILoggerFactory loggerFactory, string serviceTitle)
+        /// <param name="logger">The logger for the version check.</param>
+        /// <param name="serviceHeader">The service header string.</param>
+        public static void Run(ILogger logger, string serviceHeader)
         {
-            Condition.NotEmptyOrWhiteSpace(serviceTitle, nameof(serviceTitle));
+            Condition.NotEmptyOrWhiteSpace(serviceHeader, nameof(serviceHeader));
 
-            var logger = loggerFactory.CreateLogger(typeof(VersionChecker));
             logger.LogInformation("=================================================================");
             logger.LogInformation(@"  _   _           _    _  _______  _____  _      _    _   _____ ");
             logger.LogInformation(@" | \ | |    /\   | |  | ||__   __||_   _|| |    | |  | | / ____|");
@@ -39,7 +38,7 @@ namespace Nautilus.Common.Configuration
             logger.LogInformation(@" | |\  | / ____ \| |__| |   | |    _| |_ | |____| |__| | ____) |");
             logger.LogInformation(@" |_| \_|/_/    \_\\____/    |_|   |_____||______|\____/ |_____/ ");
             logger.LogInformation("                                                                 ");
-            logger.LogInformation($" {serviceTitle}");
+            logger.LogInformation($" {serviceHeader}");
             logger.LogInformation(" by Nautech Systems Pty Ltd.");
             logger.LogInformation(" Copyright (C) 2015-2020 All rights reserved.");
             logger.LogInformation("=================================================================");

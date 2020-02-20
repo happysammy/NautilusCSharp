@@ -45,7 +45,9 @@ namespace NautilusData
         /// <returns>The service.</returns>
         public static DataService Create(ServiceConfiguration config)
         {
-            VersionChecker.Run(config.LoggerFactory, "NAUTILUS DATA - Algorithmic Trading Data Service");
+            VersionChecker.Run(
+                config.LoggerFactory.CreateLogger(nameof(DataService)),
+                "NAUTILUS DATA - Algorithmic Trading Data Service");
 
             var clock = new Clock(DateTimeZone.Utc);
             var guidFactory = new GuidFactory();

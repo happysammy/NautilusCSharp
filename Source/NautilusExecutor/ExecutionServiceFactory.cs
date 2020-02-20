@@ -42,7 +42,9 @@ namespace NautilusExecutor
         /// <returns>The service.</returns>
         public static ExecutionService Create(ServiceConfiguration config)
         {
-            VersionChecker.Run(config.LoggerFactory, "NAUTILUS EXECUTOR - Algorithmic Trading Execution Service");
+            VersionChecker.Run(
+                config.LoggerFactory.CreateLogger(nameof(ExecutionService)),
+                "NAUTILUS DATA - Algorithmic Trading Data Service");
 
             var clock = new Clock(DateTimeZone.Utc);
             var guidFactory = new GuidFactory();

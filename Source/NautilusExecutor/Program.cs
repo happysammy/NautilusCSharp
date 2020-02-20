@@ -14,7 +14,9 @@ namespace NautilusExecutor
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
+    using NautilusExecutor.Logging;
     using Serilog;
+    using Serilog.Events;
 
     /// <summary>
     /// The main entry point for the application.
@@ -37,25 +39,28 @@ namespace NautilusExecutor
                 .AddEnvironmentVariables()
                 .Build();
 
+            var logTemplate = "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{ThreadId:000}][{Level:u3}] [{SourceContext}] [{EventId}] {Message}{NewLine}{Exception}";
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(configuration)
+                .MinimumLevel.Debug()
                 .Enrich.FromLogContext()
-                .WriteTo.Debug()
-                .WriteTo.Console(
-                    outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{ThreadId:000}][{Level:u3}] {Message}{NewLine}{Exception}")
+                .Enrich.With(new ThreadIdEnricher())
+                .WriteTo.Console(restrictedToMinimumLevel: LogEventLevel.Verbose, logTemplate)
+                .WriteTo.RollingFile(
+                    "Logs/Nautilus-Log-{Date}.txt",
+                    restrictedToMinimumLevel: LogEventLevel.Debug,
+                    logTemplate)
                 .CreateLogger();
 
             AppDomain.CurrentDomain.DomainUnload += (o, e) => Log.CloseAndFlush();
 
             try
             {
-                Log.Information("Getting the motors running...");
-
                 CreateHostBuilder(configuration, args).Build().Run();
             }
             catch (Exception ex)
             {
-                Log.Fatal(ex, "Host terminated unexpectedly");
+                Log.Fatal(ex, "Host terminated unexpectedly.");
             }
             finally
             {
@@ -75,14 +80,13 @@ namespace NautilusExecutor
         {
             return WebHost.CreateDefaultBuilder(args)
                 .UseConfiguration(config)
-                .UseStartup<Startup>()
                 .ConfigureLogging(logging =>
                 {
                     logging.ClearProviders();
-                    logging.AddConsole();
+                    logging.AddSerilog(Log.Logger);
                 })
+                .UseStartup<Startup>()
                 .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseSerilog()
                 .UseKestrel();
         }
     }
