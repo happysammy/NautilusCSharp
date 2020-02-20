@@ -40,16 +40,14 @@ namespace NautilusData
                 .AddEnvironmentVariables()
                 .Build();
 
-            var logTemplate = "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{ThreadId:000}][{Level:u3}] [{SourceContext}] [{EventId}] {Message}{NewLine}{Exception}";
+            var logTemplate = "{Timestamp:yyyy-MM-ddTHH:mm:ss.fff} [{ThreadId:000}][{Level:u3}] [{SourceContext}] [{EventId}] {Message}{NewLine}{Exception}";
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(configuration)
-                .MinimumLevel.Debug()
-                .Enrich.FromLogContext()
                 .Enrich.With(new ThreadIdEnricher())
-                .WriteTo.Console(restrictedToMinimumLevel: LogEventLevel.Verbose, logTemplate)
+                .WriteTo.Console(outputTemplate: logTemplate)
                 .WriteTo.RollingFile(
                     "Logs/Nautilus-Log-{Date}.txt",
-                    restrictedToMinimumLevel: LogEventLevel.Debug,
+                    restrictedToMinimumLevel: LogEventLevel.Debug, // Mitigate enormous log files
                     logTemplate)
                 .CreateLogger();
 

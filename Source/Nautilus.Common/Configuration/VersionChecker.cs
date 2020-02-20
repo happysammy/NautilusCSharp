@@ -31,13 +31,13 @@ namespace Nautilus.Common.Configuration
             Condition.NotEmptyOrWhiteSpace(serviceHeader, nameof(serviceHeader));
 
             logger.LogInformation("=================================================================");
-            logger.LogInformation(@"  _   _           _    _  _______  _____  _      _    _   _____ ");
-            logger.LogInformation(@" | \ | |    /\   | |  | ||__   __||_   _|| |    | |  | | / ____|");
-            logger.LogInformation(@" |  \| |   /  \  | |  | |   | |     | |  | |    | |  | || (___  ");
-            logger.LogInformation(@" | . ` |  / /\ \ | |  | |   | |     | |  | |    | |  | | \___ \ ");
-            logger.LogInformation(@" | |\  | / ____ \| |__| |   | |    _| |_ | |____| |__| | ____) |");
-            logger.LogInformation(@" |_| \_|/_/    \_\\____/    |_|   |_____||______|\____/ |_____/ ");
-            logger.LogInformation("                                                                 ");
+            logger.LogInformation(@"   _   _   ___   _   _  _____  _____  _      _   _  _____   ");
+            logger.LogInformation(@"  | \ | | / _ \ | | | ||_   _||_   _|| |    | | | |/  ___|  ");
+            logger.LogInformation(@"  |  \| |/ /_\ \| | | |  | |    | |  | |    | | | |\ `--.   ");
+            logger.LogInformation(@"  | . ` ||  _  || | | |  | |    | |  | |    | | | | `--. \  ");
+            logger.LogInformation(@"  | |\  || | | || |_| |  | |   _| |_ | |____| |_| |/\__/ /  ");
+            logger.LogInformation(@"  \_| \_/\_| |_/ \___/   \_/   \___/ \_____/ \___/ \____/   ");
+            logger.LogInformation("                                                             ");
             logger.LogInformation($" {serviceHeader}");
             logger.LogInformation(" by Nautech Systems Pty Ltd.");
             logger.LogInformation(" Copyright (C) 2015-2020 All rights reserved.");

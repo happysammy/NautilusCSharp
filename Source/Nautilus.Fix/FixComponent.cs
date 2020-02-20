@@ -53,7 +53,7 @@ namespace Nautilus.Fix
         {
             this.clock = container.Clock;
             this.guidFactory = container.GuidFactory;
-            this.logger = container.LoggerFactory.CreateLogger(typeof(FixComponent));
+            this.logger = container.LoggerFactory.CreateLogger(this.GetType().Name);
             this.messageBusAdapter = messageBusAdapter;
 
             this.FixMessageHandler = messageHandler;
