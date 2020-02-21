@@ -94,7 +94,7 @@ namespace Nautilus.Messaging.Internal
             var type = typeof(TMessage);
             if (this.registeredHandlers.Any(h => h.Key == type))
             {
-                throw new ArgumentException($"Cannot register handler " +
+                throw new ArgumentException("Cannot register handler " +
                                             $"(the internal handlers already contain a handler for {type} type messages).");
             }
 

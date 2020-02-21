@@ -91,10 +91,9 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CollectionsTests
         internal void Add_WhenElementNotUnique_DoesNotAddToList()
         {
             // Arrange
-            var unique = new UniqueList<string>("abc");
+            var unique = new UniqueList<string>("abc") { "abc" };
 
             // Act
-            unique.Add("abc");
 
             // Assert
             Assert.Single(unique);
@@ -104,13 +103,9 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CollectionsTests
         internal void Add_WhenSomeElementsUnique_OnlyAddsUniqueElementsInInsertionOrder()
         {
             // Arrange
-            var unique = new UniqueList<string>("abc");
+            var unique = new UniqueList<string>("abc") { "abc", "123", "123", "456" };
 
             // Act
-            unique.Add("abc");
-            unique.Add("123");
-            unique.Add("123");
-            unique.Add("456");
 
             // Assert
             Assert.Equal(3, unique.Count);

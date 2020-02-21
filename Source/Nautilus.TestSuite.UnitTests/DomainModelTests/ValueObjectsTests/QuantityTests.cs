@@ -92,7 +92,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         [InlineData(1, 1, 0)]
         [InlineData(200, 100, 100)]
         [InlineData(200000, 100000, 100000)]
-        internal void Substract_VariousAmounts_ReturnsExpectedResult(int amount1, int amount2, int expected)
+        internal void Subtract_VariousAmounts_ReturnsExpectedResult(int amount1, int amount2, int expected)
         {
             // Arrange
             var quantity1 = Quantity.Create(amount1);

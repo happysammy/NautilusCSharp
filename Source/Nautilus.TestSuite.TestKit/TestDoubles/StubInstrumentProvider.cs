@@ -20,7 +20,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public static ForexInstrument AUDUSD()
         {
             var instrument = new ForexInstrument(
-                    new Symbol($"AUDUSD", new Venue("FXCM")),
+                    new Symbol("AUDUSD", new Venue("FXCM")),
                     new BrokerSymbol("AUD/USD"),
                     5,
                     0,
@@ -42,7 +42,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public static ForexInstrument EURUSD()
         {
             var instrument = new ForexInstrument(
-                    new Symbol($"EURUSD", new Venue("FXCM")),
+                    new Symbol("EURUSD", new Venue("FXCM")),
                     new BrokerSymbol("EUR/USD"),
                     5,
                     0,

@@ -53,7 +53,7 @@ namespace Nautilus.Fix
                 return;
             }
 
-            this.Logger.LogDebug($"Connecting...");
+            this.Logger.LogDebug("Connecting...");
             this.ConnectFix();
         }
 

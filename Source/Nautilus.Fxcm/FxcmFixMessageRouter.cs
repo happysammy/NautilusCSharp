@@ -229,7 +229,7 @@ namespace Nautilus.Fxcm
         {
             if (this.session is null)
             {
-                this.Logger.LogError($"Cannot send FIX message (the session is null).");
+                this.Logger.LogError("Cannot send FIX message (the session is null).");
                 return;
             }
 

@@ -26,7 +26,6 @@ namespace Nautilus.Fix
     {
         private readonly IZonedClock clock;
         private readonly IGuidFactory guidFactory;
-        private readonly ILogger logger;
         private readonly IMessageBusAdapter messageBusAdapter;
         private readonly FixCredentials credentials;
         private readonly string configPath;
@@ -53,7 +52,7 @@ namespace Nautilus.Fix
         {
             this.clock = container.Clock;
             this.guidFactory = container.GuidFactory;
-            this.logger = container.LoggerFactory.CreateLogger(this.GetType().Name);
+            this.Logger = container.LoggerFactory.CreateLogger(this.GetType().Name);
             this.messageBusAdapter = messageBusAdapter;
 
             this.FixMessageHandler = messageHandler;
@@ -72,7 +71,7 @@ namespace Nautilus.Fix
         /// <summary>
         /// Gets the components logger.
         /// </summary>
-        public ILogger Logger => this.logger;
+        public ILogger Logger { get; }
 
         /// <summary>
         /// Gets the account identifier.

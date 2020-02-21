@@ -58,7 +58,7 @@ namespace Nautilus.Data.Integrity
                 if (bars[i + 1].Timestamp == bars[i].Timestamp)
                 {
                     anomalyList.Add(
-                        $"DataAnomaly: Duplicate bars " +
+                        "DataAnomaly: Duplicate bars " +
                         $"at index {i} and {i + 1} for {bars[i].Timestamp.ToIsoString()}");
                 }
             }
@@ -76,7 +76,7 @@ namespace Nautilus.Data.Integrity
                 if (bars[i + 1].Timestamp.IsLessThan(bars[i].Timestamp))
                 {
                     anomalyList.Add(
-                        $"DataAnomaly: Bars are out of order " +
+                        "DataAnomaly: Bars are out of order " +
                         $"at index {i} at {bars[i].Timestamp.ToIsoString()}, " +
                         $"next bar at {bars[i + 1].Timestamp.ToIsoString()}");
                 }
@@ -95,7 +95,7 @@ namespace Nautilus.Data.Integrity
                 if (bars[i + 1].Timestamp - bars[i].Timestamp != barType.Specification.Duration)
                 {
                     anomalyList.Add(
-                        $"DataAnomaly: Missing bar "
+                        "DataAnomaly: Missing bar "
                       + $"at index {i} at {bars[i].Timestamp.ToIsoString()}, "
                       + $"next bar at {bars[i + 1].Timestamp.ToIsoString()}");
                 }

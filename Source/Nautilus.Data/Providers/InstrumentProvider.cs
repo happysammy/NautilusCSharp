@@ -141,7 +141,7 @@ namespace Nautilus.Data.Providers
                 }
                 else
                 {
-                    this.SendQueryFailure($"Invalid Instrument query, must contain 'Symbol' or 'Venue'", request.Id);
+                    this.SendQueryFailure("Invalid Instrument query, must contain 'Symbol' or 'Venue'", request.Id);
                 }
             }
             catch (Exception ex)

@@ -33,7 +33,7 @@ namespace Nautilus.Network.Compression
                 case CompressionCodec.Undefined:
                     goto default;
                 default:
-                    throw ExceptionFactory.InvalidSwitchArgument(codec, nameof(@codec));
+                    throw ExceptionFactory.InvalidSwitchArgument(codec, nameof(codec));
             }
         }
     }
