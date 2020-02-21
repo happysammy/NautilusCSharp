@@ -12,6 +12,7 @@ namespace Nautilus.Redis.Execution
     using System.Linq;
     using Microsoft.Extensions.Logging;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Logging;
     using Nautilus.Core.CQS;
     using Nautilus.Core.Message;
     using Nautilus.DomainModel.Aggregates;
@@ -65,8 +66,9 @@ namespace Nautilus.Redis.Execution
             }
             else
             {
-                this.Logger.LogWarning($"{nameof(this.OptionLoadCaches)} is {this.OptionLoadCaches} " +
-                                 $"(this should only be done in a testing environment).");
+                this.Logger.LogWarning(
+                    LogId.Database,
+                    $"{nameof(this.OptionLoadCaches)} is {this.OptionLoadCaches} (this should only be done in a testing environment).");
             }
         }
 
@@ -78,14 +80,14 @@ namespace Nautilus.Redis.Execution
         /// <inheritdoc />
         public override void LoadAccountsCache()
         {
-            this.Logger.LogDebug("Re-caching accounts from the database...");
+            this.Logger.LogDebug(LogId.Database, "Re-caching accounts from the database...");
 
             this.CachedAccounts.Clear();
 
             var accountKeys = this.redisServer.Keys(pattern: KeyProvider.AccountsKey).ToArray();
             if (accountKeys.Length == 0)
             {
-                this.Logger.LogInformation("No accounts found in the database.");
+                this.Logger.LogInformation(LogId.Database, "No accounts found in the database.");
                 return;
             }
 
@@ -94,14 +96,14 @@ namespace Nautilus.Redis.Execution
                 var events = new Queue<RedisValue>(this.redisDatabase.ListRange(key));
                 if (events.Count == 0)
                 {
-                    this.Logger.LogError($"Cannot load account {key} from the database (no events persisted).");
+                    this.Logger.LogError(LogId.Database, $"Cannot load account {key} from the database (no events persisted).");
                     continue;
                 }
 
                 var initial = this.eventSerializer.Deserialize(events.Dequeue());
                 if (initial.Type != typeof(AccountStateEvent))
                 {
-                    this.Logger.LogError($"Cannot load account {key} from the database (event not AccountStateEvent, was {initial.Type}).");
+                    this.Logger.LogError(LogId.Database, $"Cannot load account {key} from the database (event not AccountStateEvent, was {initial.Type}).");
                     continue;
                 }
 
@@ -111,21 +113,21 @@ namespace Nautilus.Redis.Execution
 
             foreach (var kvp in this.CachedAccounts)
             {
-                this.Logger.LogInformation($"Cached {kvp.Key}.");
+                this.Logger.LogInformation(LogId.Database, $"Cached {kvp.Key}.");
             }
         }
 
         /// <inheritdoc />
         public override void LoadOrdersCache()
         {
-            this.Logger.LogDebug("Re-caching orders from the database...");
+            this.Logger.LogDebug(LogId.Database, "Re-caching orders from the database...");
 
             this.CachedOrders.Clear();
 
             var orderKeys = this.redisServer.Keys(pattern: KeyProvider.OrdersKey).ToArray();
             if (orderKeys.Length == 0)
             {
-                this.Logger.LogInformation("No orders found in the database.");
+                this.Logger.LogInformation(LogId.Database, "No orders found in the database.");
                 return;
             }
 
@@ -134,14 +136,14 @@ namespace Nautilus.Redis.Execution
                 var events = new Queue<RedisValue>(this.redisDatabase.ListRange(key));
                 if (events.Count == 0)
                 {
-                    this.Logger.LogError($"Cannot load order {key} from the database (no events persisted).");
+                    this.Logger.LogError(LogId.Database, $"Cannot load order {key} from the database (no events persisted).");
                     continue;
                 }
 
                 var initial = this.eventSerializer.Deserialize(events.Dequeue());
                 if (initial.Type != typeof(OrderInitialized))
                 {
-                    this.Logger.LogError($"Cannot load order {key} from the database (first event not OrderInitialized, was {initial.Type}).");
+                    this.Logger.LogError(LogId.Database, $"Cannot load order {key} from the database (first event not OrderInitialized, was {initial.Type}).");
                     continue;
                 }
 
@@ -155,20 +157,20 @@ namespace Nautilus.Redis.Execution
                 this.CachedOrders[order.Id] = order;
             }
 
-            this.Logger.LogInformation($"Cached {this.CachedOrders.Count} order(s).");
+            this.Logger.LogInformation(LogId.Database, $"Cached {this.CachedOrders.Count} order(s).");
         }
 
         /// <inheritdoc />
         public override void LoadPositionsCache()
         {
-            this.Logger.LogDebug("Re-caching positions from the database...");
+            this.Logger.LogDebug(LogId.Database, "Re-caching positions from the database...");
 
             this.CachedPositions.Clear();
 
             var positionKeys = this.redisServer.Keys(pattern: KeyProvider.PositionsKey).ToArray();
             if (positionKeys.Length == 0)
             {
-                this.Logger.LogInformation("No positions found in the database.");
+                this.Logger.LogInformation(LogId.Database, "No positions found in the database.");
                 return;
             }
 
@@ -177,7 +179,7 @@ namespace Nautilus.Redis.Execution
                 var events = new Queue<RedisValue>(this.redisDatabase.ListRange(key));
                 if (events.Count == 0)
                 {
-                    this.Logger.LogError($"Cannot load position {key} from the database (no events persisted).");
+                    this.Logger.LogError(LogId.Database, $"Cannot load position {key} from the database (no events persisted).");
                     continue;
                 }
 
@@ -193,7 +195,7 @@ namespace Nautilus.Redis.Execution
                 this.CachedPositions[position.Id] = position;
             }
 
-            this.Logger.LogInformation($"Cached {this.CachedPositions.Count} position(s).");
+            this.Logger.LogInformation(LogId.Database, $"Cached {this.CachedPositions.Count} position(s).");
         }
 
         /// <inheritdoc />
@@ -201,9 +203,9 @@ namespace Nautilus.Redis.Execution
         {
             this.ClearCaches();
 
-            this.Logger.LogDebug("Flushing database...");
+            this.Logger.LogDebug(LogId.Database, "Flushing database...");
             this.redisServer.FlushDatabase();
-            this.Logger.LogInformation("Database flushed.");
+            this.Logger.LogInformation(LogId.Database, "Database flushed.");
         }
 
         /// <inheritdoc />
@@ -295,7 +297,7 @@ namespace Nautilus.Redis.Execution
 
             this.CachedOrders[order.Id] = order;
 
-            this.Logger.LogDebug($"Added Order(Id={order.Id.Value}).");
+            this.Logger.LogDebug(LogId.Database, $"Added Order(Id={order.Id.Value}).");
 
             return CommandResult.Ok();
         }
@@ -317,7 +319,7 @@ namespace Nautilus.Redis.Execution
             else
             {
                 // The position should always be open when being added
-                this.Logger.LogError($"The added {position} was not open.");
+                this.Logger.LogError(LogId.Database, $"The added {position} was not open.");
             }
 
             this.redisDatabase.HashSet(KeyProvider.IndexBrokerIdPositionKey(position.AccountId), new[] { new HashEntry(position.IdBroker.Value, position.Id.Value) }, CommandFlags.FireAndForget);
@@ -325,7 +327,7 @@ namespace Nautilus.Redis.Execution
 
             this.CachedPositions[position.Id] = position;
 
-            this.Logger.LogDebug($"Added Position(Id={position.Id.Value}).");
+            this.Logger.LogDebug(LogId.Database, $"Added Position(Id={position.Id.Value}).");
 
             return CommandResult.Ok();
         }

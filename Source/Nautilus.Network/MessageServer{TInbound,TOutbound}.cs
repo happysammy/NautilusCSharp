@@ -16,6 +16,7 @@ namespace Nautilus.Network
     using Microsoft.Extensions.Logging;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Logging;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Message;
@@ -90,11 +91,11 @@ namespace Nautilus.Network
             if (encryption.UseEncryption)
             {
                 EncryptionProvider.SetupSocket(encryption, this.socket);
-                this.Logger.LogInformation($"{encryption.Algorithm} encryption setup for {this.NetworkAddress}");
+                this.Logger.LogInformation(LogId.Networking, $"{encryption.Algorithm} encryption setup for {this.NetworkAddress}");
             }
             else
             {
-                this.Logger.LogWarning($"No encryption setup for {this.NetworkAddress}");
+                this.Logger.LogWarning(LogId.Networking, $"No encryption setup for {this.NetworkAddress}");
             }
 
             this.CountReceived = 0;
@@ -140,7 +141,7 @@ namespace Nautilus.Network
         protected override void OnStart(Start start)
         {
             this.socket.Bind(this.NetworkAddress.Value);
-            this.Logger.LogInformation($"Bound {this.socket.GetType().Name} to {this.NetworkAddress}");
+            this.Logger.LogInformation(LogId.Networking, $"Bound {this.socket.GetType().Name} to {this.NetworkAddress}");
 
             Task.Run(this.StartWork, this.cts.Token);
         }
@@ -150,7 +151,7 @@ namespace Nautilus.Network
         {
             this.cts.Cancel();
             this.socket.Unbind(this.NetworkAddress.Value);
-            this.Logger.LogInformation($"Unbound {this.socket.GetType().Name} from {this.NetworkAddress}");
+            this.Logger.LogInformation(LogId.Networking, $"Unbound {this.socket.GetType().Name} from {this.NetworkAddress}");
         }
 
         /// <summary>
@@ -208,15 +209,17 @@ namespace Nautilus.Network
             }
             else
             {
-                this.Logger.LogError($"Cannot send message {outbound} " +
-                               $"(no receiver address found for {correlationId}).");
+                this.Logger.LogError(
+                    LogId.Networking,
+                    $"Cannot send message {outbound} no receiver address found for {correlationId}).");
                 return;
             }
 
             if (!receiver.HasBytesValue)
             {
-                this.Logger.LogError($"Cannot send message {outbound} " +
-                               $"(no receiver address found for {correlationId}).");
+                this.Logger.LogError(
+                    LogId.Networking,
+                    $"Cannot send message {outbound} (no receiver address found for {correlationId}).");
                 return;
             }
 
@@ -230,7 +233,7 @@ namespace Nautilus.Network
                 this.ReceiveMessage();
             }
 
-            this.Logger.LogDebug("Stopped receiving messages.");
+            this.Logger.LogDebug(LogId.Networking, "Stopped receiving messages.");
             return Task.CompletedTask;
         }
 
@@ -241,7 +244,7 @@ namespace Nautilus.Network
             // msg[2] payload
             var frames = this.socket.ReceiveMultipartBytes();
             this.CountReceived++;
-            this.Logger.LogTrace($"<--[{this.CountReceived}] Received {frames.Count} byte[] frames.");
+            this.Logger.LogTrace(LogId.Networking, $"<--[{this.CountReceived}] Received {frames.Count} byte[] frames.");
 
             if (frames.Count < ExpectedFrameCount)
             {
@@ -264,7 +267,9 @@ namespace Nautilus.Network
         {
             if (frames.Count == 0)
             {
-                this.Logger.LogError(errorMsg.Remove(errorMsg.Length - 1, 1) + "with no reply address.");
+                this.Logger.LogError(
+                    LogId.Networking,
+                    errorMsg.Remove(errorMsg.Length - 1, 1) + "with no reply address.");
                 return;
             }
 
@@ -282,7 +287,9 @@ namespace Nautilus.Network
                 {
                     this.SendToSelf(received);
 
-                    this.Logger.LogTrace($"<--[{this.CountReceived}] {received} from Address({sender.StringValue}).");
+                    this.Logger.LogTrace(
+                        LogId.Networking,
+                        $"<--[{this.CountReceived}] {received} from Address({sender.StringValue}).");
                 }
                 else
                 {
@@ -326,7 +333,7 @@ namespace Nautilus.Network
                 sendable);
 
             this.CountSent++;
-            this.Logger.LogTrace($"[{this.CountSent}]--> {outbound} to Address({receiver}).");
+            this.Logger.LogTrace(LogId.Networking, $"[{this.CountSent}]--> {outbound} to Address({receiver}).");
         }
     }
 }

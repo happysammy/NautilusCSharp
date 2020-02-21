@@ -6,40 +6,38 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Common.Enums
+namespace Nautilus.Common.Logging
 {
-    using Nautilus.Core.Annotations;
+    using Microsoft.Extensions.Logging;
 
     /// <summary>
     /// Represents a <see cref="Nautilus"/> specific log event identifier.
     /// </summary>
-    public enum LogId
+    public static class LogId
     {
         /// <summary>
-        /// The enumerator value is undefined (invalid).
+        /// Gets the event identifier for component operation events.
         /// </summary>
-        [InvalidValue]
-        Undefined = 0,
+        public static EventId Operation { get; } = new EventId(0, nameof(Operation));
 
         /// <summary>
-        /// The event identifier groups component operation events.
+        /// Gets the event identifier for disk input-output events.
         /// </summary>
-        Operation = 1,
+        public static EventId Disk { get; } = new EventId(1, nameof(Disk));
 
         /// <summary>
-        /// The event identifier groups input output events.
+        /// Gets the event identifier for networking events.
         /// </summary>
-        // ReSharper disable once InconsistentNaming (correct name)
-        IO = 2,
+        public static EventId Networking { get; } = new EventId(2, nameof(Networking));
 
         /// <summary>
-        /// The event identifier groups database events.
+        /// Gets the event identifier for database events.
         /// </summary>
-        Database = 3,
+        public static EventId Database { get; } = new EventId(3, nameof(Database));
 
         /// <summary>
-        /// The event identifier groups trading events.
+        /// Gets the event identifier for trading events.
         /// </summary>
-        Trading = 4,
+        public static EventId Trading { get; } = new EventId(4, nameof(Trading));
     }
 }

@@ -16,6 +16,7 @@ namespace Nautilus.Redis.Data
     using Microsoft.Extensions.Logging;
     using Nautilus.Common.Data;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Logging;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
@@ -93,7 +94,7 @@ namespace Nautilus.Redis.Data
         {
             this.redisDatabase.KeyDelete(KeyProvider.GetInstrumentsKey(symbol));
 
-            this.Logger.LogInformation($"Instrument {symbol.Value} deleted.");
+            this.Logger.LogInformation(LogId.Database, $"Instrument {symbol.Value} deleted.");
         }
 
         /// <inheritdoc />
@@ -117,14 +118,14 @@ namespace Nautilus.Redis.Data
             {
                 this.cache.Add(symbol, instrument);
                 this.Write(instrument);
-                this.Logger.LogInformation($"Added Instrument {symbol.Value}.");
+                this.Logger.LogInformation(LogId.Database, $"Added Instrument {symbol.Value}.");
                 return;
             }
 
             var instrumentBuilder = new InstrumentBuilder(this.cache[symbol]).Update(instrument);
             if (instrumentBuilder.Changes.Count == 0)
             {
-                this.Logger.LogInformation($"Instrument {symbol.Value} unchanged in cache.");
+                this.Logger.LogInformation(LogId.Database, $"Instrument {symbol.Value} unchanged in cache.");
                 return;
             }
 
@@ -138,7 +139,7 @@ namespace Nautilus.Redis.Data
             this.cache[symbol] = updatedInstrument;
             this.Write(instrument);
 
-            this.Logger.LogInformation($"Updated instrument {symbol.Value}" + changesString + ".");
+            this.Logger.LogInformation(LogId.Database, $"Updated instrument {symbol.Value}" + changesString + ".");
         }
 
         /// <inheritdoc />
@@ -285,9 +286,9 @@ namespace Nautilus.Redis.Data
         /// <inheritdoc />
         protected override void OnStop(Stop stop)
         {
-            this.Logger.LogDebug("Saving database...");
+            this.Logger.LogDebug(LogId.Database, "Saving database...");
             this.SnapshotDatabase();
-            this.Logger.LogInformation("Database saved.");
+            this.Logger.LogInformation(LogId.Database, "Database saved.");
         }
 
         private void OnData(Instrument instrument)

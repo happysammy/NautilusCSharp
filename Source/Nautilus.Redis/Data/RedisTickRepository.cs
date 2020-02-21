@@ -12,6 +12,7 @@ namespace Nautilus.Redis.Data
     using System.Linq;
     using Microsoft.Extensions.Logging;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Logging;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.CQS;
@@ -74,7 +75,7 @@ namespace Nautilus.Redis.Data
         /// <inheritdoc />
         public void TrimToDays(int trimToDays)
         {
-            this.Logger.LogInformation($"Trimming tick data to {trimToDays} rolling days. ");
+            this.Logger.LogInformation(LogId.Database, $"Trimming tick data to {trimToDays} rolling days. ");
 
             this.TrimToDays(
                 KeyProvider.GetTicksPattern(),
@@ -82,7 +83,7 @@ namespace Nautilus.Redis.Data
                 4,
                 trimToDays);
 
-            this.Logger.LogInformation($"Trim job complete. TicksCount={this.TicksCount()}.");
+            this.Logger.LogInformation(LogId.Database, $"Trim job complete. TicksCount={this.TicksCount()}.");
         }
 
         /// <inheritdoc />
@@ -179,7 +180,7 @@ namespace Nautilus.Redis.Data
 
         private void OnMessage(TrimTickData message)
         {
-            this.Logger.LogInformation($"Received {message}.");
+            this.Logger.LogInformation(LogId.Database, $"Received {message}.");
 
             this.TrimToDays(message.RollingDays);
         }

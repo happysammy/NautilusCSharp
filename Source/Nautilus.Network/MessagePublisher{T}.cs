@@ -14,6 +14,7 @@ namespace Nautilus.Network
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Logging;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core.Correctness;
     using Nautilus.Messaging.Interfaces;
@@ -70,11 +71,11 @@ namespace Nautilus.Network
             if (encryption.UseEncryption)
             {
                 EncryptionProvider.SetupSocket(encryption, this.socket);
-                this.Logger.LogInformation($"{encryption.Algorithm} encryption setup for {this.NetworkAddress}");
+                this.Logger.LogInformation(LogId.Networking, $"{encryption.Algorithm} encryption setup for {this.NetworkAddress}");
             }
             else
             {
-                this.Logger.LogWarning($"No encryption setup for {this.NetworkAddress}");
+                this.Logger.LogWarning(LogId.Networking, $"No encryption setup for {this.NetworkAddress}");
             }
 
             this.CountPublished = 0;
@@ -112,14 +113,14 @@ namespace Nautilus.Network
         protected override void OnStart(Start start)
         {
             this.socket.Bind(this.NetworkAddress.Value);
-            this.Logger.LogInformation($"Bound {this.socket.GetType().Name} to {this.NetworkAddress}");
+            this.Logger.LogInformation(LogId.Networking, $"Bound {this.socket.GetType().Name} to {this.NetworkAddress}");
         }
 
         /// <inheritdoc />
         protected override void OnStop(Stop stop)
         {
             this.socket.Unbind(this.NetworkAddress.Value);
-            this.Logger.LogInformation($"Unbound {this.socket.GetType().Name} from {this.NetworkAddress}");
+            this.Logger.LogInformation(LogId.Networking, $"Unbound {this.socket.GetType().Name} from {this.NetworkAddress}");
         }
 
         /// <summary>
@@ -133,7 +134,7 @@ namespace Nautilus.Network
             this.socket.SendMultipartBytes(Encoding.UTF8.GetBytes(topic), publishable);
 
             this.CountPublished++;
-            this.Logger.LogTrace($"[{this.CountPublished}]--> Topic={topic}, Message={message}");
+            this.Logger.LogTrace(LogId.Networking, $"[{this.CountPublished}]--> Topic={topic}, Message={message}");
         }
     }
 }

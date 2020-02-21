@@ -12,6 +12,7 @@ namespace Nautilus.Redis.Data
     using System.Linq;
     using Microsoft.Extensions.Logging;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Logging;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.CQS;
@@ -92,7 +93,7 @@ namespace Nautilus.Redis.Data
             var key = KeyProvider.GetBarsKey(barType, new DateKey(bar.Timestamp));
             this.RedisDatabase.ListRightPush(key, bar.ToString());
 
-            this.Logger.LogDebug($"Added 1 bar to {barType}");
+            this.Logger.LogDebug(LogId.Database, $"Added 1 bar to {barType}");
         }
 
         /// <inheritdoc />
@@ -130,6 +131,7 @@ namespace Nautilus.Redis.Data
             }
 
             this.Logger.LogDebug(
+                LogId.Database,
                 $"Added {barsAddedCounter} bars to {barType}, BarsCount={this.BarsCount(barType)}");
         }
 
@@ -145,7 +147,7 @@ namespace Nautilus.Redis.Data
                 trimToDays,
                 barStructure.ToString());
 
-            this.Logger.LogInformation($"Trim job complete. BarsCount={this.BarsCount()}.");
+            this.Logger.LogInformation(LogId.Database, $"Trim job complete. BarsCount={this.BarsCount()}.");
         }
 
         /// <inheritdoc />
@@ -263,7 +265,7 @@ namespace Nautilus.Redis.Data
         {
             this.Add(data.BarType, data.Bar);
 
-            this.Logger.LogDebug($"Received {data}");
+            this.Logger.LogDebug(LogId.Database, $"Received {data}");
         }
 
         private void OnData(BarDataFrame data)
@@ -273,7 +275,7 @@ namespace Nautilus.Redis.Data
 
         private void OnMessage(TrimBarData message)
         {
-            this.Logger.LogInformation($"Received {message}.");
+            this.Logger.LogInformation(LogId.Database, $"Received {message}.");
 
             foreach (var structure in message.BarStructures)
             {
