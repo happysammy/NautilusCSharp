@@ -19,7 +19,8 @@ namespace Nautilus.Core.CQS
     [Immutable]
     public sealed class CommandResult : Result
     {
-        private static readonly CommandResult OkResult = new CommandResult(false, "No result message");
+        private const string NoResult = "No result message";
+        private static readonly CommandResult OkResult = new CommandResult(false, NoResult);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandResult"/> class.
@@ -71,7 +72,8 @@ namespace Nautilus.Core.CQS
         {
             Debug.NotEmpty(results, nameof(results));
 
-            return results.FirstOrDefault(c => c.IsFailure);
+            // ReSharper disable once ConstantNullCoalescingCondition (can be null)
+            return results.FirstOrDefault(c => c.IsFailure) ?? Ok();
         }
 
         /// <summary>
