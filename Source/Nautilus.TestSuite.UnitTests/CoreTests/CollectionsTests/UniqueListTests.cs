@@ -8,6 +8,7 @@
 
 namespace Nautilus.TestSuite.UnitTests.CoreTests.CollectionsTests
 {
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core.Collections;
@@ -61,19 +62,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CollectionsTests
         }
 
         [Fact]
-        internal void Copy_WithOneElement_ReturnsIdenticalList()
-        {
-            // Arrange
-            var unique = new UniqueList<string>("0");
-
-            // Act
-            var copy = unique.Copy();
-
-            // Assert
-            Assert.Equal(unique, copy);
-        }
-
-        [Fact]
         internal void Add_WhenNoElements_AddsToList()
         {
             // Arrange
@@ -112,6 +100,31 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CollectionsTests
             Assert.Equal("abc", unique[0]);
             Assert.Equal("123", unique[1]);
             Assert.Equal("456", unique[2]);
+        }
+
+        [Fact]
+        internal void Add_AtIndex_Throws()
+        {
+            // Arrange
+            var unique = new UniqueList<string>("abc");
+
+            // Act
+            // Assert
+            Assert.Single(unique);
+            Assert.Throws<InvalidOperationException>(() => unique[1] = "321");
+        }
+
+        [Fact]
+        internal void Copy_WithOneElement_ReturnsIdenticalList()
+        {
+            // Arrange
+            var unique = new UniqueList<string>("0");
+
+            // Act
+            var copy = unique.Copy();
+
+            // Assert
+            Assert.Equal(unique, copy);
         }
 
         [Fact]
@@ -241,10 +254,21 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CollectionsTests
             var unique = new UniqueList<string> { "0", "1" };
 
             // Act
-            var result = unique[^1];
+            var result = unique.Last();
 
             // Assert
             Assert.Equal("1", result);
+        }
+
+        [Fact]
+        internal void Last_WithNoElements_Throws()
+        {
+            // Arrange
+            var unique = new UniqueList<string>();
+
+            // Act
+            // Assert
+            Assert.Throws<ArgumentOutOfRangeException>(() => unique.Last());
         }
 
         [Fact]

@@ -38,8 +38,9 @@ namespace Nautilus.Core.CQS
         /// Initializes a new instance of the <see cref="QueryResult{T}"/> class.
         /// </summary>
         /// <param name="value">The query value.</param>
-        private QueryResult(T value)
-            : base(false, "No result message")
+        /// <param name="message">The optional result message.</param>
+        private QueryResult(T value, string message = "No result message")
+            : base(false, message)
         {
             this.value = value;
         }
@@ -71,9 +72,7 @@ namespace Nautilus.Core.CQS
         /// <returns>The query result of T.</returns>
         public static QueryResult<T> Ok(T value, string message)
         {
-            Debug.NotEmptyOrWhiteSpace(message, nameof(message));
-
-            return new QueryResult<T>(value);
+            return new QueryResult<T>(value, message);
         }
 
         /// <summary>
@@ -83,8 +82,6 @@ namespace Nautilus.Core.CQS
         /// <returns>The query result of T.</returns>
         public static QueryResult<T> Fail(string error)
         {
-            Debug.NotEmptyOrWhiteSpace(error, nameof(error));
-
             return new QueryResult<T>(error);
         }
     }

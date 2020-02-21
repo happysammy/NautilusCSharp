@@ -32,6 +32,22 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CQSTests
         }
 
         [Fact]
+        public void Ok_WithGenericResultAndMessage_ReturnsOk()
+        {
+            // Arrange
+            var testClass = new TestClass();
+
+            // Act
+            var result = QueryResult<TestClass>.Ok(testClass, "Success!");
+
+            // Assert
+            Assert.True(result.IsSuccess);
+            Assert.False(result.IsFailure);
+            Assert.Equal(testClass, result.Value);
+            Assert.Equal("Success!", result.Message);
+        }
+
+        [Fact]
         public void Fail_GenericWithValueInputs_ReturnsExpectedResult()
         {
             // Arrange

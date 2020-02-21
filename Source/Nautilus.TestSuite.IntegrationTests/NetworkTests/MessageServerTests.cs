@@ -80,7 +80,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 NetworkAddress.LocalHost,
                 new NetworkPort(55556));
             server.Start();
-            Task.Delay(100).Wait(); // Allow server to start
+            Task.Delay(300).Wait(); // Allow server to start
 
             // Assert
             Assert.Equal(ComponentState.Running, server.ComponentState);
@@ -105,7 +105,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 NetworkAddress.LocalHost,
                 new NetworkPort(testPort));
             server.Start();
-            Task.Delay(100).Wait(); // Allow server to initiate
+            Task.Delay(300).Wait(); // Allow server to initiate
 
             var requester1 = new RequestSocket(testAddress);
             requester1.Connect(testAddress);
@@ -141,7 +141,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 NetworkAddress.LocalHost,
                 new NetworkPort(testPort));
             server.Start();
-            Task.Delay(100).Wait(); // Allow server to initiate
+            Task.Delay(300).Wait(); // Allow server to initiate
 
             var requester1 = new RequestSocket(testAddress);
             requester1.Connect(testAddress);
@@ -177,7 +177,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 NetworkAddress.LocalHost,
                 new NetworkPort(testPort));
             server.Start();
-            Task.Delay(100).Wait(); // Allow server to start
+            Task.Delay(300).Wait(); // Allow server to start
 
             var requester1 = new RequestSocket(testAddress);
             var requester2 = new RequestSocket(testAddress);
@@ -215,7 +215,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 NetworkAddress.LocalHost,
                 new NetworkPort(testPort));
             server.Start();
-            Task.Delay(100).Wait(); // Allow server to start
+            Task.Delay(300).Wait(); // Allow server to start
 
             var requester = new RequestSocket(testAddress);
             requester.Connect(testAddress);
@@ -257,7 +257,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 NetworkAddress.LocalHost,
                 new NetworkPort(testPort));
             server.Start();
-            Task.Delay(100).Wait(); // Allow server to start
+            Task.Delay(300).Wait(); // Allow server to start
 
             var requester = new RequestSocket(testAddress);
             requester.Connect(testAddress);
@@ -309,7 +309,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 NetworkAddress.LocalHost,
                 new NetworkPort(testPort));
             server.Start();
-            Task.Delay(100).Wait(); // Allow server to start
+            Task.Delay(300).Wait(); // Allow server to start
 
             var requester = new RequestSocket(testAddress);
             requester.Connect(testAddress);
@@ -359,7 +359,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 NetworkAddress.LocalHost,
                 new NetworkPort(testPort));
             server.Start();
-            Task.Delay(100).Wait(); // Allow server to start
+            Task.Delay(300).Wait(); // Allow server to start
 
             var requester = new RequestSocket(testAddress);
             requester.Connect(testAddress);
@@ -405,7 +405,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 NetworkAddress.LocalHost,
                 new NetworkPort(testPort));
             server.Start();
-            Task.Delay(100).Wait(); // Allow server to start
+            Task.Delay(300).Wait(); // Allow server to start
 
             var requester1 = new RequestSocket(testAddress);
             var requester2 = new RequestSocket(testAddress);

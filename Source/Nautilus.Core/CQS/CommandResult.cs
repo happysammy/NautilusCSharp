@@ -19,8 +19,7 @@ namespace Nautilus.Core.CQS
     [Immutable]
     public sealed class CommandResult : Result
     {
-        private const string NoResult = "No result message";
-        private static readonly CommandResult OkResult = new CommandResult(false, NoResult);
+        private static readonly CommandResult OkResult = new CommandResult(false, nameof(Ok));
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandResult"/> class.

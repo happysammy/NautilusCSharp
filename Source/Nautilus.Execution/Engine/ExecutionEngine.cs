@@ -13,6 +13,7 @@ namespace Nautilus.Execution.Engine
     using Microsoft.Extensions.Logging;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Logging;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Message;
@@ -73,7 +74,7 @@ namespace Nautilus.Execution.Engine
             this.bufferModify = new Dictionary<OrderId, ModifyOrder>();
             this.gtdExpiryBackupTokens = new Dictionary<OrderId, ICancelable>();
 
-            this.OptionGtdExpiryBackups = gtdExpiryBackups;
+            this.GtdExpiryBackups = gtdExpiryBackups;
 
             // Commands
             this.RegisterHandler<SubmitOrder>(this.OnMessage);
@@ -108,13 +109,13 @@ namespace Nautilus.Execution.Engine
             this.Subscribe<OrderFilled>();
             this.Subscribe<AccountStateEvent>();
 
-            this.Logger.LogInformation($"{nameof(this.OptionGtdExpiryBackups)} is {this.OptionGtdExpiryBackups}");
+            this.Logger.LogInformation(LogId.Operation, $"{nameof(this.GtdExpiryBackups)} is {this.GtdExpiryBackups}");
         }
 
         /// <summary>
         /// Gets a value indicating whether GTD order expiry cancel backups are turned on.
         /// </summary>
-        public bool OptionGtdExpiryBackups { get; }
+        public bool GtdExpiryBackups { get; }
 
         /// <summary>
         /// Gets the count of commands executed.
@@ -130,7 +131,7 @@ namespace Nautilus.Execution.Engine
         private void OnMessage(SubmitOrder command)
         {
             this.CommandCount++;
-            this.Logger.LogInformation($"{Received}{Command} {command}.");
+            this.Logger.LogInformation(LogId.Operation, $"{Received}{Command} {command}.");
 
             var result = this.database.AddOrder(
                 command.Order,
@@ -158,14 +159,14 @@ namespace Nautilus.Execution.Engine
             }
             else
             {
-                this.Logger.LogError($"Cannot execute command {command} ({result.Message}).");
+                this.Logger.LogError(LogId.Database, $"Cannot execute command {command} ({result.Message}).");
             }
         }
 
         private void OnMessage(SubmitAtomicOrder command)
         {
             this.CommandCount++;
-            this.Logger.LogInformation($"{Received}{Command} {command}.");
+            this.Logger.LogInformation(LogId.Operation, $"{Received}{Command} {command}.");
 
             var result = this.database.AddAtomicOrder(
                 command.AtomicOrder,
@@ -217,7 +218,7 @@ namespace Nautilus.Execution.Engine
             }
             else
             {
-                this.Logger.LogError($"Cannot execute command {command} {result.Message}");
+                this.Logger.LogError(LogId.Database, $"Cannot execute command {command} {result.Message}");
             }
         }
 
@@ -229,13 +230,13 @@ namespace Nautilus.Execution.Engine
             var order = this.database.GetOrder(command.OrderId);
             if (order is null)
             {
-                this.Logger.LogError($"Cannot execute command {command} (order was not found in the memory cache).");
+                this.Logger.LogError(LogId.Database, $"Cannot execute command {command} (order was not found in the memory cache).");
                 return;
             }
 
             if (order.IsCompleted)
             {
-                this.Logger.LogWarning($"{Received}{Command} {command} and (order is already completed).");
+                this.Logger.LogWarning(LogId.Database, $"{Received}{Command} {command} and (order is already completed).");
             }
 
             this.gateway.CancelOrder(order);
@@ -249,21 +250,21 @@ namespace Nautilus.Execution.Engine
             var order = this.database.GetOrder(command.OrderId);
             if (order is null)
             {
-                this.Logger.LogError($"Cannot execute command {command} (order was not found in the memory cache).");
+                this.Logger.LogError(LogId.Database, $"Cannot execute command {command} (order was not found in the memory cache).");
                 return;
             }
 
             if (!order.IsWorking)
             {
                 this.bufferModify[command.OrderId] = command;
-                this.Logger.LogWarning($"Buffering command {command} (order not yet working).");
+                this.Logger.LogWarning(LogId.Operation, $"Buffering command {command} (order not yet working).");
                 return;
             }
 
             if (this.bufferModify.ContainsKey(command.OrderId))
             {
                 this.bufferModify[command.OrderId] = command;
-                this.Logger.LogDebug($"Buffering command {command} (order already being modified).");
+                this.Logger.LogDebug(LogId.Operation, $"Buffering command {command} (order already being modified).");
                 return;
             }
 
@@ -287,7 +288,7 @@ namespace Nautilus.Execution.Engine
         private void OnMessage(OrderSubmitted @event)
         {
             this.EventCount++;
-            this.Logger.LogInformation($"{Received}{Event} {@event}.");
+            this.Logger.LogInformation(LogId.Operation, $"{Received}{Event} {@event}.");
 
             this.ProcessOrderEvent(@event);
             this.SendToEventPublisher(@event);
@@ -296,7 +297,7 @@ namespace Nautilus.Execution.Engine
         private void OnMessage(OrderAccepted @event)
         {
             this.EventCount++;
-            this.Logger.LogInformation($"{Received}{Event} {@event}.");
+            this.Logger.LogInformation(LogId.Operation, $"{Received}{Event} {@event}.");
 
             this.ProcessOrderEvent(@event);
             this.SendToEventPublisher(@event);
@@ -305,7 +306,7 @@ namespace Nautilus.Execution.Engine
         private void OnMessage(OrderRejected @event)
         {
             this.EventCount++;
-            this.Logger.LogWarning($"{Received}{Event} {@event}.");
+            this.Logger.LogWarning(LogId.Operation, $"{Received}{Event} {@event}.");
 
             this.ProcessOrderEvent(@event);
             this.ClearModifyBuffer(@event.OrderId);
@@ -316,14 +317,14 @@ namespace Nautilus.Execution.Engine
         private void OnMessage(OrderWorking @event)
         {
             this.EventCount++;
-            this.Logger.LogInformation($"{Received}{Event} {@event}.");
+            this.Logger.LogInformation(LogId.Operation, $"{Received}{Event} {@event}.");
 
             var order = this.ProcessOrderEvent(@event);
             if (order != null)
             {
                 this.ProcessModifyBuffer(order);
 
-                if (this.OptionGtdExpiryBackups && this.IsExpiredGtdOrder(order))
+                if (this.GtdExpiryBackups && this.IsExpiredGtdOrder(order))
                 {
                     // Creates a scheduled CancelOrder backup command for the expiry time
                     this.CreateGtdCancelBackup(order);
@@ -336,7 +337,7 @@ namespace Nautilus.Execution.Engine
         private void OnMessage(OrderModified @event)
         {
             this.EventCount++;
-            this.Logger.LogInformation($"{Received}{Event} {@event}.");
+            this.Logger.LogInformation(LogId.Operation, $"{Received}{Event} {@event}.");
 
             var order = this.ProcessOrderEvent(@event);
             if (order != null)
@@ -350,7 +351,7 @@ namespace Nautilus.Execution.Engine
         private void OnMessage(OrderCancelReject @event)
         {
             this.EventCount++;
-            this.Logger.LogWarning($"{Received}{Event} {@event}.");
+            this.Logger.LogWarning(LogId.Operation, $"{Received}{Event} {@event}.");
 
             this.SendToEventPublisher(@event);
         }
@@ -358,7 +359,7 @@ namespace Nautilus.Execution.Engine
         private void OnMessage(OrderExpired @event)
         {
             this.EventCount++;
-            this.Logger.LogInformation($"{Received}{Event} {@event}.");
+            this.Logger.LogInformation(LogId.Operation, $"{Received}{Event} {@event}.");
 
             this.ProcessOrderEvent(@event);
             this.ClearModifyBuffer(@event.OrderId);
@@ -369,7 +370,7 @@ namespace Nautilus.Execution.Engine
         private void OnMessage(OrderCancelled @event)
         {
             this.EventCount++;
-            this.Logger.LogInformation($"{Received}{Event} {@event}.");
+            this.Logger.LogInformation(LogId.Operation, $"{Received}{Event} {@event}.");
 
             this.ProcessOrderEvent(@event);
             this.ClearModifyBuffer(@event.OrderId);
@@ -380,7 +381,7 @@ namespace Nautilus.Execution.Engine
         private void OnMessage(OrderPartiallyFilled @event)
         {
             this.EventCount++;
-            this.Logger.LogWarning($"{Received}{Event} {@event}.");
+            this.Logger.LogWarning(LogId.Operation, $"{Received}{Event} {@event}.");
 
             this.ProcessOrderEvent(@event);
             this.HandleOrderFillEvent(@event);
@@ -390,7 +391,7 @@ namespace Nautilus.Execution.Engine
         private void OnMessage(OrderFilled @event)
         {
             this.EventCount++;
-            this.Logger.LogInformation($"{Received}{Event} {@event}.");
+            this.Logger.LogInformation(LogId.Operation, $"{Received}{Event} {@event}.");
 
             this.ProcessOrderEvent(@event);
             this.HandleOrderFillEvent(@event);
@@ -402,7 +403,7 @@ namespace Nautilus.Execution.Engine
         private void OnMessage(AccountStateEvent @event)
         {
             this.EventCount++;
-            this.Logger.LogInformation($"{Received}{Event} {@event}.");
+            this.Logger.LogInformation(LogId.Operation, $"{Received}{Event} {@event}.");
 
             var account = this.database.GetAccount(@event.AccountId);
             if (account is null)
@@ -425,7 +426,9 @@ namespace Nautilus.Execution.Engine
             if (order is null)
             {
                 // This should never happen
-                this.Logger.LogWarning($"Cannot apply event {@event} to any order ({@event.OrderId} not found in the cache.");
+                this.Logger.LogWarning(
+                    LogId.Database,
+                    $"Cannot apply event {@event} to any order ({@event.OrderId} not found in the cache.");
             }
             else
             {
@@ -449,7 +452,9 @@ namespace Nautilus.Execution.Engine
             var positionId = this.database.GetPositionId(@event.OrderId) ?? this.database.GetPositionId(@event.AccountId, @event.PositionIdBroker);
             if (positionId is null)
             {
-                this.Logger.LogError($"Cannot process event {@event} (no PositionId found for event).");
+                this.Logger.LogError(
+                    LogId.Database,
+                    $"Cannot process event {@event} (no PositionId found for event).");
                 return;
             }
 
@@ -458,7 +463,7 @@ namespace Nautilus.Execution.Engine
             {
                 // Position does not exist - create new position
                 position = new Position(positionId, @event);
-                this.database.AddPosition(position).OnFailure(msg => this.Logger.LogError(msg));
+                this.database.AddPosition(position);
             }
             else
             {
@@ -479,11 +484,11 @@ namespace Nautilus.Execution.Engine
                         order,
                         modifyOrder.ModifiedQuantity,
                         modifyOrder.ModifiedPrice);
-                    this.Logger.LogDebug($"{Command}{Sent} {modifyOrder} to TradingGateway.");
+                    this.Logger.LogDebug(LogId.Operation, $"{Command}{Sent} {modifyOrder} to TradingGateway.");
                 }
 
                 this.bufferModify.Remove(order.Id);
-                this.Logger.LogDebug($"Cleared command {modifyOrder} from buffer.");
+                this.Logger.LogDebug(LogId.Operation, $"Cleared command {modifyOrder} from buffer.");
             }
         }
 
@@ -492,7 +497,7 @@ namespace Nautilus.Execution.Engine
             if (this.bufferModify.ContainsKey(orderId))
             {
                 this.bufferModify.Remove(orderId);
-                this.Logger.LogDebug($"Cleared ModifyOrder buffer for {orderId}.");
+                this.Logger.LogDebug(LogId.Operation, $"Cleared ModifyOrder buffer for {orderId}.");
             }
         }
 
@@ -511,7 +516,9 @@ namespace Nautilus.Execution.Engine
                 if (traderId is null)
                 {
                     // This should never happen
-                    this.Logger.LogError($"Cannot schedule backup CancelOrder command (cannot find TraderId for {order.Id}).");
+                    this.Logger.LogError(
+                        LogId.Database,
+                        $"Cannot schedule backup CancelOrder command (cannot find TraderId for {order.Id}).");
                     return;
                 }
 
@@ -519,7 +526,9 @@ namespace Nautilus.Execution.Engine
                 if (accountId is null)
                 {
                     // This should never happen
-                    this.Logger.LogError($"Cannot schedule backup CancelOrder command (cannot find AccountId for {order.Id}).");
+                    this.Logger.LogError(
+                        LogId.Database,
+                        $"Cannot schedule backup CancelOrder command (cannot find AccountId for {order.Id}).");
                     return;
                 }
 
@@ -535,12 +544,16 @@ namespace Nautilus.Execution.Engine
                 var token = this.scheduler.ScheduleSendOnceCancelable(delay, this.Endpoint, cancelOrder, this.Endpoint);
                 this.gtdExpiryBackupTokens[order.Id] = token;
 
-                this.Logger.LogDebug($"Scheduled GTD CancelOrder backup for {order.ExpireTime.Value.ToIsoString()}.");
+                this.Logger.LogDebug(
+                    LogId.Operation,
+                    $"Scheduled GTD CancelOrder backup for {order.ExpireTime.Value.ToIsoString()}.");
             }
             else
             {
                 // This should never happen
-                this.Logger.LogError($"Cannot schedule backup CancelOrder (no expire time set for GTD order {order.Id}).");
+                this.Logger.LogError(
+                    LogId.Operation,
+                    $"Cannot schedule backup CancelOrder (no expire time set for GTD order {order.Id}).");
             }
         }
 
@@ -550,7 +563,7 @@ namespace Nautilus.Execution.Engine
             {
                 token.Cancel();
                 this.gtdExpiryBackupTokens.Remove(orderId);
-                this.Logger.LogDebug($"Cleared GtdExpiryBackup for {orderId}.");
+                this.Logger.LogDebug(LogId.Operation, $"Cleared GtdExpiryBackup for {orderId}.");
             }
         }
 
@@ -559,7 +572,9 @@ namespace Nautilus.Execution.Engine
             var traderId = this.database.GetTraderId(@event.OrderId);
             if (traderId is null)
             {
-                this.Logger.LogError($"Cannot send event {@event} to publisher (no TraderId found for order).");
+                this.Logger.LogError(
+                    LogId.Operation,
+                    $"Cannot send event {@event} to publisher (no TraderId found for order).");
                 return;
             }
 
@@ -569,7 +584,7 @@ namespace Nautilus.Execution.Engine
         private void SendToEventPublisher(Event @event)
         {
             this.eventPublisher.Send(@event);
-            this.Logger.LogDebug($"{Event}{Sent} {@event} to EventPublisher.");
+            this.Logger.LogDebug(LogId.Operation, $"{Event}{Sent} {@event} to EventPublisher.");
         }
     }
 }
