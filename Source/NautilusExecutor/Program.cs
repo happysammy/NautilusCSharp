@@ -16,7 +16,7 @@ namespace NautilusExecutor
     using Microsoft.Extensions.Logging;
     using NautilusExecutor.Logging;
     using Serilog;
-    using Serilog.Events;
+    using Serilog.Debugging;
 
     /// <summary>
     /// The main entry point for the application.
@@ -48,13 +48,13 @@ namespace NautilusExecutor
 
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(configuration)
+                .Enrich.FromLogContext()
                 .Enrich.With(new ThreadIdEnricher())
                 .WriteTo.Console(outputTemplate: logTemplate)
-                .WriteTo.RollingFile(
-                    "Logs/Nautilus-Log-{Date}.txt",
-                    restrictedToMinimumLevel: LogEventLevel.Debug, // Mitigate enormous log files
-                    logTemplate)
+                .WriteTo.RollingFile("Logs/Nautilus-Log-{Date}.txt", outputTemplate: logTemplate)
                 .CreateLogger();
+
+            SelfLog.Enable(msg => Log.Logger.Debug(msg));
 
             AppDomain.CurrentDomain.DomainUnload += (o, e) => Log.CloseAndFlush();
 
@@ -87,8 +87,10 @@ namespace NautilusExecutor
                 .ConfigureLogging(logging =>
                 {
                     logging.ClearProviders();
+                    logging.AddEventSourceLogger();
                     logging.AddSerilog(Log.Logger);
                 })
+                .UseSerilog()
                 .UseStartup<Startup>()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseKestrel();

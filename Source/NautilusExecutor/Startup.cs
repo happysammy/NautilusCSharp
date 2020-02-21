@@ -15,6 +15,7 @@ namespace NautilusExecutor
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Nautilus.Execution;
+    using Serilog;
 
     /// <summary>
     /// The main ASP.NET Core Startup class to configure and build the web hosting services.
@@ -42,8 +43,8 @@ namespace NautilusExecutor
             this.loggerFactory = loggerFactory;
 
             var execServiceConfig = ExecutionServiceConfigurator.Build(loggerFactory, config);
-
             this.executionService = ExecutionServiceFactory.Create(execServiceConfig);
+
             this.executionService.Start();
         }
 
@@ -67,6 +68,7 @@ namespace NautilusExecutor
             if (this.env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseSerilogRequestLogging();
             }
         }
 

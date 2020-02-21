@@ -15,6 +15,7 @@ namespace NautilusData
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Nautilus.Data;
+    using Serilog;
 
     /// <summary>
     /// The main ASP.NET Core Startup class to configure and build the web hosting services.
@@ -42,8 +43,8 @@ namespace NautilusData
             this.loggerFactory = loggerFactory;
 
             var dataServiceConfig = DataServiceConfigurator.Build(loggerFactory, config);
-
             this.dataService = DataServiceFactory.Create(dataServiceConfig);
+
             this.dataService.Start();
         }
 
@@ -67,6 +68,7 @@ namespace NautilusData
             if (this.env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseSerilogRequestLogging();
             }
         }
 

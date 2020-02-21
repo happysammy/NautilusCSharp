@@ -48,7 +48,7 @@ namespace Nautilus.Common.Componentry
             this.RegisterUnhandled(this.Unhandled);
 
             this.InitializedTime = this.clock.TimeNow();
-            this.Logger.LogDebug("Initialized.");
+            this.Logger.LogDebug("Initialized.", LogId.Operation);
         }
 
         /// <summary>
@@ -128,7 +128,9 @@ namespace Nautilus.Common.Componentry
         /// <param name="start">The start message.</param>
         protected virtual void OnStart(Start start)
         {
-            this.Logger.LogWarning($"Received {start} with OnStart() not overridden in implementation.");
+            this.Logger.LogWarning(
+                $"Received {start} with OnStart() not overridden in implementation.",
+                LogId.Operation);
         }
 
         /// <summary>
@@ -139,7 +141,9 @@ namespace Nautilus.Common.Componentry
         /// <param name="stop">The stop message.</param>
         protected virtual void OnStop(Stop stop)
         {
-            this.Logger.LogWarning($"Received {stop} with OnStop() not overridden in implementation.");
+            this.Logger.LogWarning(
+                $"Received {stop} with OnStop() not overridden in implementation.",
+                LogId.Operation);
         }
 
         /// <summary>
@@ -150,17 +154,17 @@ namespace Nautilus.Common.Componentry
         {
             this.SendToSelf(envelope.Message);
 
-            this.Logger.LogTrace($"Received {envelope}.");
+            this.Logger.LogTrace($"Received {envelope}.", LogId.Operation);
         }
 
         private void OnMessage(Start message)
         {
-            this.Logger.LogDebug($"Starting from message {message}...");
+            this.Logger.LogDebug($"Starting from message {message}...", LogId.Operation);
 
             this.OnStart(message);
             this.ComponentState = ComponentState.Running;
 
-            this.Logger.LogInformation($"{this.ComponentState}...");
+            this.Logger.LogInformation($"{this.ComponentState}...", LogId.Operation);
         }
 
         private void OnMessage(Stop message)
@@ -169,13 +173,15 @@ namespace Nautilus.Common.Componentry
 
             if (this.ComponentState != ComponentState.Running)
             {
-                this.Logger.LogError($"Stop message when component not already running, was {this.ComponentState}.");
+                this.Logger.LogError(
+                    $"Stop message when component not already running, was {this.ComponentState}.",
+                    LogId.Operation);
             }
 
             this.OnStop(message);
             this.ComponentState = ComponentState.Stopped;
 
-            this.Logger.LogInformation($"{this.ComponentState}.");
+            this.Logger.LogInformation($"{this.ComponentState}.", LogId.Operation);
         }
 
         private void HandleException(Exception ex)
@@ -195,7 +201,7 @@ namespace Nautilus.Common.Componentry
 
         private void Unhandled(object message)
         {
-            this.Logger.LogError($"Unhandled message: {message}.");
+            this.Logger.LogError($"Unhandled message: {message}.", LogId.Operation);
             this.AddToUnhandledMessages(message);
         }
     }
