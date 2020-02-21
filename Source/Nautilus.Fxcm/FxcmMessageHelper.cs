@@ -213,27 +213,27 @@ namespace Nautilus.Fxcm
         /// <returns>The <see cref="OrderType"/>.</returns>
         public static OrderType GetOrderType(string fixType)
         {
-            if (fixType == nameof(OrdType.MARKET))
+            if (fixType == OrdType.MARKET.ToString())
             {
                 return OrderType.Market;
             }
 
-            if (fixType == nameof(OrdType.STOP))
+            if (fixType == OrdType.STOP.ToString())
             {
                 return OrderType.Stop;
             }
 
-            if (fixType == nameof(OrdType.STOP_LIMIT))
+            if (fixType == OrdType.STOP_LIMIT.ToString())
             {
                 return OrderType.StopLimit;
             }
 
-            if (fixType == nameof(OrdType.LIMIT))
+            if (fixType == OrdType.LIMIT.ToString())
             {
                 return OrderType.Limit;
             }
 
-            if (fixType == nameof(OrdType.MARKET_IF_TOUCHED))
+            if (fixType == OrdType.MARKET_IF_TOUCHED.ToString())
             {
                 return OrderType.MIT;
             }
