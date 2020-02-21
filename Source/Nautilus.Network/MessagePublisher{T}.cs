@@ -56,8 +56,7 @@ namespace Nautilus.Network
             {
                 Options =
                 {
-                    Identity = Encoding.Unicode.GetBytes($"{nameof(Nautilus)}-{this.GetType().Name}"),
-                    SendHighWatermark = 10000,
+                    Identity = Encoding.Unicode.GetBytes($"{nameof(Nautilus)}-{this.Name.Value}"),
                     Linger = TimeSpan.FromSeconds(1),
                 },
             };
