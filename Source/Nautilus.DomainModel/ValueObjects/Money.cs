@@ -15,7 +15,7 @@ namespace Nautilus.DomainModel.ValueObjects
     using Nautilus.DomainModel.Enums;
 
     /// <summary>
-    /// Represents the concept of money.
+    /// Represents the 'concept' of money.
     /// </summary>
     [Immutable]
     public sealed class Money : DecimalNumber

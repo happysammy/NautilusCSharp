@@ -26,10 +26,8 @@ namespace Nautilus.Core.Primitives
         /// </summary>
         /// <param name="value">The decimal value.</param>
         /// <param name="precision">The decimal precision.</param>
-        protected DecimalNumber(decimal value, int precision)
+        protected DecimalNumber(decimal value, ushort precision)
         {
-            Debug.NotNegativeInt32(precision, nameof(precision));
-
             this.Value = Math.Round(value, precision);
             this.Precision = precision;
         }
@@ -37,7 +35,7 @@ namespace Nautilus.Core.Primitives
         /// <summary>
         /// Gets the decimal precision.
         /// </summary>
-        public int Precision { get; }
+        public ushort Precision { get; }
 
         /// <summary>
         /// Gets the value of the decimal number.

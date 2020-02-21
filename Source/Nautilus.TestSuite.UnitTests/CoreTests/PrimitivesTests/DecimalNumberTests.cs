@@ -65,6 +65,9 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.PrimitivesTests
 
             // Act
             // Assert
+            // ReSharper disable once SuspiciousTypeConversion.Global
+            Assert.False(number0.Equals("string"));
+            Assert.False(number0 == null);
             Assert.True(number1 == number2);
             Assert.True(number1 == decimal.One);
             Assert.True(decimal.One == number1);
@@ -125,10 +128,23 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.PrimitivesTests
             Assert.Equal(decimal.One.GetHashCode(), number1.GetHashCode());
         }
 
+        [Fact]
+        internal void ToString_ReturnsExpectedString()
+        {
+            // Arrange
+            var number0 = new TestDecimal(decimal.Zero, 0);
+            var number1 = new TestDecimal(decimal.Zero);
+
+            // Act
+            // Assert
+            Assert.Equal("0", number0.ToString());
+            Assert.Equal("0.0", number1.ToString());
+        }
+
         private sealed class TestDecimal : DecimalNumber
         {
-            public TestDecimal(decimal value)
-                : base(value, 1)
+            public TestDecimal(decimal value, ushort precision = 1)
+                : base(value, precision)
             {
             }
         }

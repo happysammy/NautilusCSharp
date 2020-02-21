@@ -73,10 +73,10 @@ namespace Nautilus.Data.Aggregation
                     return tick.Ask;
                 case PriceType.Mid:
                     var decimalsPlusOne = tick.Bid.Precision + 1;
-                    return Price.Create(
-                        Math.Round((tick.Bid + tick.Ask) / 2, decimalsPlusOne),
-                        decimalsPlusOne);
+                    var midPrice = Math.Round((tick.Bid + tick.Ask) / 2, decimalsPlusOne);
+                    return Price.Create(midPrice, (ushort)decimalsPlusOne);
                 case PriceType.Last:
+                case PriceType.Undefined:
                     goto default;
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(priceType, nameof(priceType));

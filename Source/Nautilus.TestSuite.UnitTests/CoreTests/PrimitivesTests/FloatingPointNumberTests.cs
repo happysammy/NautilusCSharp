@@ -65,6 +65,9 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.PrimitivesTests
 
             // Act
             // Assert
+            // ReSharper disable once SuspiciousTypeConversion.Global
+            Assert.False(number0.Equals("string"));
+            Assert.False(number0 == null);
             Assert.True(number1 == number2);
             Assert.True(number1 == 1);
             Assert.True(1 == number1);
@@ -123,6 +126,22 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.PrimitivesTests
             Assert.Equal(0, number0.GetHashCode());
             Assert.Equal(0.GetHashCode(), number0.GetHashCode());
             Assert.Equal(1.0.GetHashCode(), number1.GetHashCode());
+        }
+
+        [Fact]
+        internal void ToString_ReturnsExpectedString()
+        {
+            // Arrange
+            var number0 = new TestFloat(0);
+            var number1 = new TestFloat(1000);
+
+            // Act
+            var result0 = number0.ToString();
+            var result1 = number1.ToString();
+
+            // Assert
+            Assert.Equal("0", result0);
+            Assert.Equal("1000", result1);
         }
 
         private sealed class TestFloat : FloatingPointNumber

@@ -28,7 +28,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// </summary>
         /// <param name="value">The volume value.</param>
         /// <param name="precision">The precision of the volume.</param>
-        private Volume(decimal value, int precision)
+        private Volume(decimal value, ushort precision)
             : base(value, precision)
         {
             Debug.NotNegativeDecimal(value, nameof(value));
@@ -74,7 +74,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <param name="value">The volume value.</param>
         /// <returns>A <see cref="Quantity"/>.</returns>
         /// <param name="precision">The precision of the volume.</param>
-        public static Volume Create(decimal value, int precision)
+        public static Volume Create(decimal value, ushort precision)
         {
             return new Volume(value, precision);
         }
