@@ -18,6 +18,7 @@ namespace NautilusExecutor
     using Nautilus.Common.Configuration;
     using Nautilus.Common.Enums;
     using Nautilus.Core.Extensions;
+    using Nautilus.Core.Types;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.Execution;
@@ -93,13 +94,13 @@ namespace NautilusExecutor
             var connectDay = connectionJob["Day"].ToEnum<IsoDayOfWeek>();
             var connectHour = int.Parse(connectionJob["Hour"]);
             var connectMinute = int.Parse(connectionJob["Minute"]);
-            var connectTime = (connectDay, new LocalTime(connectHour, connectMinute));
+            var connectWeeklyTime = new WeeklyTime(connectDay, new LocalTime(connectHour, connectMinute));
 
             var disconnectionJob = fixConfigSection.GetSection("DisconnectJob");
             var disconnectDay = disconnectionJob["Day"].ToEnum<IsoDayOfWeek>();
             var disconnectHour = int.Parse(disconnectionJob["Hour"]);
             var disconnectMinute = int.Parse(disconnectionJob["Minute"]);
-            var disconnectTime = (disconnectDay, new LocalTime(disconnectHour, disconnectMinute));
+            var disconnectWeeklyTime = new WeeklyTime(disconnectDay, new LocalTime(disconnectHour, disconnectMinute));
 
             var fixConfig = new FixConfiguration(
                 broker,
@@ -108,8 +109,8 @@ namespace NautilusExecutor
                 fixConfigFile,
                 credentials,
                 sendAccountTag,
-                connectTime,
-                disconnectTime);
+                connectWeeklyTime,
+                disconnectWeeklyTime);
 
             var networkSection = configuration.GetSection(ConfigSection.Network);
             var networkConfig = new NetworkConfiguration(

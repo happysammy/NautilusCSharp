@@ -18,6 +18,7 @@ namespace Nautilus.Data
     using Nautilus.Common.Messages.Events;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Extensions;
+    using Nautilus.Core.Types;
     using Nautilus.Data.Messages.Commands;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
@@ -194,13 +195,12 @@ namespace Nautilus.Data
 
         private void CreateMarketOpenedJob()
         {
-            var jobDay = IsoDayOfWeek.Sunday;
-            var jobTime = new LocalTime(21, 00);
+            var weeklyTime = new WeeklyTime(IsoDayOfWeek.Sunday, new LocalTime(21, 00));
             var now = this.InstantNow();
 
             foreach (var symbol in this.subscribingSymbols)
             {
-                var nextTime = TimingProvider.GetNextUtc(jobDay, jobTime, now);
+                var nextTime = TimingProvider.GetNextUtc(weeklyTime, now);
                 var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, this.InstantNow());
 
                 var marketOpened = new MarketOpened(
@@ -221,13 +221,12 @@ namespace Nautilus.Data
 
         private void CreateMarketClosedJob()
         {
-            var jobDay = IsoDayOfWeek.Saturday;
-            var jobTime = new LocalTime(20, 00);
+            var weeklyTime = new WeeklyTime(IsoDayOfWeek.Saturday, new LocalTime(20, 00));
             var now = this.InstantNow();
 
             foreach (var symbol in this.subscribingSymbols)
             {
-                var nextTime = TimingProvider.GetNextUtc(jobDay, jobTime, now);
+                var nextTime = TimingProvider.GetNextUtc(weeklyTime, now);
                 var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, this.InstantNow());
 
                 var marketClosed = new MarketClosed(

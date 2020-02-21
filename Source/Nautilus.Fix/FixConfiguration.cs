@@ -10,9 +10,9 @@ namespace Nautilus.Fix
 {
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
+    using Nautilus.Core.Types;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
-    using NodaTime;
 
     /// <summary>
     /// Represents the configuration for a FIX session.
@@ -29,8 +29,8 @@ namespace Nautilus.Fix
         /// <param name="configPath">The FIX configuration file path.</param>
         /// <param name="credentials">The FIX credentials.</param>
         /// <param name="sendAccountTag">The option flag to send account tags with messages.</param>
-        /// <param name="connectTime">The time to connect FIX sessions.</param>
-        /// <param name="disconnectTime">The time to disconnect FIX sessions.</param>
+        /// <param name="connectWeeklyTime">The time to connect FIX sessions.</param>
+        /// <param name="disconnectWeeklyTime">The time to disconnect FIX sessions.</param>
         public FixConfiguration(
             Brokerage broker,
             AccountType accountType,
@@ -38,8 +38,8 @@ namespace Nautilus.Fix
             string configPath,
             FixCredentials credentials,
             bool sendAccountTag,
-            (IsoDayOfWeek DayOfWeek, LocalTime Time) connectTime,
-            (IsoDayOfWeek DayOfWeek, LocalTime Time) disconnectTime)
+            WeeklyTime connectWeeklyTime,
+            WeeklyTime disconnectWeeklyTime)
         {
             Condition.NotEmptyOrWhiteSpace(configPath, nameof(configPath));
 
@@ -50,8 +50,8 @@ namespace Nautilus.Fix
             this.ConfigPath = configPath;
             this.Credentials = credentials;
             this.SendAccountTag = sendAccountTag;
-            this.ConnectTime = connectTime;
-            this.DisconnectTime = disconnectTime;
+            this.ConnectWeeklyTime = connectWeeklyTime;
+            this.DisconnectWeeklyTime = disconnectWeeklyTime;
         }
 
         /// <summary>
@@ -90,13 +90,13 @@ namespace Nautilus.Fix
         public bool SendAccountTag { get; }
 
         /// <summary>
-        /// Gets the day of week and time for connecting FIX sessions.
+        /// Gets the weekly time for connecting the FIX session.
         /// </summary>
-        public (IsoDayOfWeek DayOfWeek, LocalTime Time) ConnectTime { get; }
+        public WeeklyTime ConnectWeeklyTime { get; }
 
         /// <summary>
-        /// Gets the day of week and time for disconnecting FIX sessions.
+        /// Gets the weekly time for disconnecting the FIX session.
         /// </summary>
-        public (IsoDayOfWeek DayOfWeek, LocalTime Time) DisconnectTime { get; }
+        public WeeklyTime DisconnectWeeklyTime { get; }
     }
 }

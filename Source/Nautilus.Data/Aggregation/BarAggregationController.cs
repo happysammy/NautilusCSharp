@@ -18,6 +18,7 @@ namespace Nautilus.Data.Aggregation
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messages.Events;
     using Nautilus.Core.Extensions;
+    using Nautilus.Core.Types;
     using Nautilus.Data.Messages.Commands;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
@@ -85,8 +86,8 @@ namespace Nautilus.Data.Aggregation
         private static bool IsMarketOpen(Instant now)
         {
             return TimingProvider.IsOutsideInterval(
-                (IsoDayOfWeek.Saturday, new LocalTime(20, 00)),
-                (IsoDayOfWeek.Sunday, new LocalTime(21, 00)),
+                new WeeklyTime(IsoDayOfWeek.Saturday, new LocalTime(20, 00)),
+                new WeeklyTime(IsoDayOfWeek.Sunday, new LocalTime(21, 00)),
                 now);
         }
 

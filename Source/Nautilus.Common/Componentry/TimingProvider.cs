@@ -11,6 +11,7 @@ namespace Nautilus.Common.Componentry
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
+    using Nautilus.Core.Types;
     using NodaTime;
 
     /// <summary>
@@ -24,7 +25,7 @@ namespace Nautilus.Common.Componentry
         /// <param name="weekly">The weekly day and time.</param>
         /// <param name="now">The current time instant.</param>
         /// <returns>The <see cref="ZonedDateTime"/> for this week.</returns>
-        public static ZonedDateTime ThisWeek((IsoDayOfWeek DayOfWeek, LocalTime Time) weekly, [CanBeDefault] Instant now)
+        public static ZonedDateTime ThisWeek(WeeklyTime weekly, [CanBeDefault] Instant now)
         {
             Debug.NotDefault(weekly.DayOfWeek, nameof(weekly.DayOfWeek));
 
@@ -53,10 +54,7 @@ namespace Nautilus.Common.Componentry
         /// <param name="end">The end of the weekly interval.</param>
         /// <param name="now">The current time instant.</param>
         /// <returns>True if now is inside the given interval, else false.</returns>
-        public static bool IsInsideInterval(
-            (IsoDayOfWeek DayOfWeek, LocalTime Time) start,
-            (IsoDayOfWeek DayOfWeek, LocalTime Time) end,
-            [CanBeDefault] Instant now)
+        public static bool IsInsideInterval(WeeklyTime start, WeeklyTime end, [CanBeDefault] Instant now)
         {
             Debug.NotDefault(start.DayOfWeek, nameof(start.DayOfWeek));
             Debug.NotDefault(end.DayOfWeek, nameof(end.DayOfWeek));
@@ -82,10 +80,7 @@ namespace Nautilus.Common.Componentry
         /// <param name="end">The end of the weekly interval.</param>
         /// <param name="now">The current time instant.</param>
         /// <returns>True if now is outside the given interval, else false.</returns>
-        public static bool IsOutsideInterval(
-            (IsoDayOfWeek DayOfWeek, LocalTime Time) start,
-            (IsoDayOfWeek DayOfWeek, LocalTime Time) end,
-            [CanBeDefault] Instant now)
+        public static bool IsOutsideInterval(WeeklyTime start, WeeklyTime end, [CanBeDefault] Instant now)
         {
             Debug.NotDefault(start.DayOfWeek, nameof(start.DayOfWeek));
             Debug.NotDefault(end.DayOfWeek, nameof(end.DayOfWeek));
@@ -110,9 +105,7 @@ namespace Nautilus.Common.Componentry
         /// <param name="target">The target time of day.</param>
         /// <param name="now">The current time instant.</param>
         /// <returns>The next date time (UTC).</returns>
-        public static ZonedDateTime GetNextUtc(
-            [CanBeDefault] LocalTime target,
-            [CanBeDefault] Instant now)
+        public static ZonedDateTime GetNextUtc([CanBeDefault] LocalTime target, [CanBeDefault] Instant now)
         {
             var localNow = now.InZone(DateTimeZone.Utc).LocalDateTime;
             var localTarget = new LocalDateTime(
@@ -137,21 +130,15 @@ namespace Nautilus.Common.Componentry
         /// <summary>
         /// Returns the duration to the next day of week and time of day (UTC).
         /// </summary>
-        /// <param name="dayOfWeek">The day of week.</param>
-        /// <param name="timeOfDay">The time of day.</param>
+        /// <param name="weekly">The weekly time.</param>
         /// <param name="now">The current time instant.</param>
         /// <returns>The next date time (UTC).</returns>
-        public static ZonedDateTime GetNextUtc(
-            IsoDayOfWeek dayOfWeek,
-            [CanBeDefault] LocalTime timeOfDay,
-            [CanBeDefault] Instant now)
+        public static ZonedDateTime GetNextUtc(WeeklyTime weekly, [CanBeDefault] Instant now)
         {
-            Debug.NotDefault(dayOfWeek, nameof(dayOfWeek));
-
             var localNow = now.InZone(DateTimeZone.Utc).LocalDateTime;
             var localNext = localNow
-                .Date.With(DateAdjusters.NextOrSame(dayOfWeek))
-                .At(timeOfDay);
+                .Date.With(DateAdjusters.NextOrSame(weekly.DayOfWeek))
+                .At(weekly.Time);
 
             // Handle "we're already on the right day-of-week, but later in the day"
             if (localNext <= localNow)

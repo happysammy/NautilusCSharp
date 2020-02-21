@@ -17,6 +17,7 @@ namespace Nautilus.Service
     using Nautilus.Common.Messages.Events;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Extensions;
+    using Nautilus.Core.Types;
     using Nautilus.Fix;
     using Nautilus.Messaging;
     using Nautilus.Scheduling;
@@ -28,9 +29,9 @@ namespace Nautilus.Service
     public abstract class NautilusServiceBase : MessageBusConnected
     {
         private readonly MessageBusAdapter messageBus;
-        private readonly (IsoDayOfWeek Day, LocalTime Time) scheduledConnect;
-        private readonly (IsoDayOfWeek Day, LocalTime Time) scheduledDisconnect;
         private readonly List<Address> connectionAddresses = new List<Address>();
+        private readonly WeeklyTime connectWeeklyTime;
+        private readonly WeeklyTime disconnectWeeklyTime;
 
         private ZonedDateTime nextConnectTime;
         private ZonedDateTime nextDisconnectTime;
@@ -53,16 +54,10 @@ namespace Nautilus.Service
         {
             this.messageBus = messageBusAdapter;
             this.Scheduler = scheduler;
-            this.scheduledConnect = config.ConnectTime;
-            this.scheduledDisconnect = config.DisconnectTime;
-            this.nextConnectTime = TimingProvider.GetNextUtc(
-                this.scheduledConnect.Day,
-                this.scheduledConnect.Time,
-                this.InstantNow());
-            this.nextDisconnectTime = TimingProvider.GetNextUtc(
-                this.scheduledDisconnect.Day,
-                this.scheduledDisconnect.Time,
-                this.InstantNow());
+            this.connectWeeklyTime = config.ConnectWeeklyTime;
+            this.disconnectWeeklyTime = config.DisconnectWeeklyTime;
+            this.nextConnectTime = TimingProvider.GetNextUtc(this.connectWeeklyTime, this.InstantNow());
+            this.nextDisconnectTime = TimingProvider.GetNextUtc(this.disconnectWeeklyTime, this.InstantNow());
             this.maintainConnection = false;
 
             // Commands
@@ -103,8 +98,8 @@ namespace Nautilus.Service
         protected override void OnStart(Start start)
         {
             if (TimingProvider.IsInsideInterval(
-                this.scheduledDisconnect,
-                this.scheduledConnect,
+                this.disconnectWeeklyTime,
+                this.connectWeeklyTime,
                 this.InstantNow()))
             {
                 // Inside disconnection schedule weekly interval
@@ -173,8 +168,8 @@ namespace Nautilus.Service
 
         private bool IsTimeToConnect()
         {
-            var connectThisWeek = TimingProvider.ThisWeek(this.scheduledConnect, this.InstantNow());
-            var disconnectThisWeek = TimingProvider.ThisWeek(this.scheduledDisconnect, this.InstantNow());
+            var connectThisWeek = TimingProvider.ThisWeek(this.connectWeeklyTime, this.InstantNow());
+            var disconnectThisWeek = TimingProvider.ThisWeek(this.disconnectWeeklyTime, this.InstantNow());
 
             var now = this.TimeNow();
             return now.IsLessThan(disconnectThisWeek) || now.IsGreaterThan(connectThisWeek);
@@ -228,10 +223,7 @@ namespace Nautilus.Service
         private void CreateConnectFixJob()
         {
             var now = this.InstantNow();
-            var nextTime = TimingProvider.GetNextUtc(
-                this.scheduledConnect.Day,
-                this.scheduledConnect.Time,
-                now);
+            var nextTime = TimingProvider.GetNextUtc(this.connectWeeklyTime, now);
             var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, now);
 
             var job = new Connect(
@@ -253,10 +245,7 @@ namespace Nautilus.Service
         private void CreateDisconnectFixJob()
         {
             var now = this.InstantNow();
-            var nextTime = TimingProvider.GetNextUtc(
-                this.scheduledDisconnect.Day,
-                this.scheduledDisconnect.Time,
-                now);
+            var nextTime = TimingProvider.GetNextUtc(this.disconnectWeeklyTime, now);
             var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, now);
 
             var job = new Disconnect(

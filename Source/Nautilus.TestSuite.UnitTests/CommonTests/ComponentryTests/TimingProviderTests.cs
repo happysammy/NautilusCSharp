@@ -10,6 +10,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.ComponentryTests
 {
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Common.Componentry;
+    using Nautilus.Core.Types;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NodaTime;
     using Xunit;
@@ -51,8 +52,8 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.ComponentryTests
             var utcNow = new ZonedDateTime(localUtc, DateTimeZone.Utc, Offset.Zero);
 
             // Act
-            var start = (IsoDayOfWeek.Saturday, new LocalTime(20, 00));
-            var end = (IsoDayOfWeek.Sunday, new LocalTime(21, 00));
+            var start = new WeeklyTime(IsoDayOfWeek.Saturday, new LocalTime(20, 00));
+            var end = new WeeklyTime(IsoDayOfWeek.Sunday, new LocalTime(21, 00));
             var result = TimingProvider.IsInsideInterval(start, end, utcNow.ToInstant());
 
             // Assert
@@ -92,8 +93,8 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.ComponentryTests
             var utcNow = new ZonedDateTime(localUtc, DateTimeZone.Utc, Offset.Zero);
 
             // Act
-            var start = (IsoDayOfWeek.Saturday, new LocalTime(20, 00));
-            var end = (IsoDayOfWeek.Sunday, new LocalTime(21, 00));
+            var start = new WeeklyTime(IsoDayOfWeek.Saturday, new LocalTime(20, 00));
+            var end = new WeeklyTime(IsoDayOfWeek.Sunday, new LocalTime(21, 00));
             var result = TimingProvider.IsOutsideInterval(start, end, utcNow.ToInstant());
 
             // Assert
@@ -107,7 +108,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.ComponentryTests
             var utcNow = StubZonedDateTime.UnixEpoch();
 
             // Act
-            var result = TimingProvider.GetNextUtc(IsoDayOfWeek.Sunday, LocalTime.Midnight, utcNow.ToInstant());
+            var result = TimingProvider.GetNextUtc(new WeeklyTime(IsoDayOfWeek.Sunday, LocalTime.Midnight), utcNow.ToInstant());
 
             // Assert
             Assert.Equal(StubZonedDateTime.UnixEpoch() + Duration.FromDays(3), result);
