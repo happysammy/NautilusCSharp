@@ -18,7 +18,6 @@ namespace Nautilus.Network
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Logging;
     using Nautilus.Common.Messages.Commands;
-    using Nautilus.Core.Correctness;
     using Nautilus.Core.Message;
     using Nautilus.Core.Types;
     using Nautilus.Messaging;
@@ -58,7 +57,6 @@ namespace Nautilus.Network
         /// <param name="encryption">The encryption configuration.</param>
         /// <param name="host">The consumer host address.</param>
         /// <param name="port">The consumer port.</param>
-        /// <param name="id">The consumer identifier.</param>
         protected MessageServer(
             IComponentryContainer container,
             IMessageSerializer<TInbound> inboundSerializer,
@@ -66,12 +64,9 @@ namespace Nautilus.Network
             ICompressor compressor,
             EncryptionSettings encryption,
             NetworkAddress host,
-            NetworkPort port,
-            Guid id)
+            NetworkPort port)
             : base(container)
         {
-            Condition.NotDefault(id, nameof(id));
-
             this.inboundSerializer = inboundSerializer;
             this.outboundSerializer = outboundSerializer;
             this.compressor = compressor;
@@ -82,7 +77,6 @@ namespace Nautilus.Network
                 Options =
                 {
                     Linger = TimeSpan.FromSeconds(1),
-                    Identity = Encoding.Unicode.GetBytes(id.ToString()),
                 },
             };
 

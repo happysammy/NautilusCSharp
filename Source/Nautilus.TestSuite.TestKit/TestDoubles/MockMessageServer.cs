@@ -8,7 +8,6 @@
 
 namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
-    using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Common.Interfaces;
@@ -25,8 +24,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             IComponentryContainer container,
             EncryptionSettings encryption,
             NetworkAddress host,
-            NetworkPort port,
-            Guid id)
+            NetworkPort port)
             : base(
                 container,
                 new MockSerializer(),
@@ -34,8 +32,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 new CompressorBypass(),
                 encryption,
                 host,
-                port,
-                id)
+                port)
         {
             this.ReceivedMessages = new List<MockMessage>();
 

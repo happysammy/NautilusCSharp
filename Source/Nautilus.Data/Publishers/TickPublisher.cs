@@ -8,7 +8,6 @@
 
 namespace Nautilus.Data.Publishers
 {
-    using System;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network;
@@ -42,8 +41,7 @@ namespace Nautilus.Data.Publishers
                 compressor,
                 encryption,
                 Network.NetworkAddress.LocalHost,
-                port,
-                Guid.NewGuid())
+                port)
         {
             this.RegisterHandler<Tick>(this.OnMessage);
 

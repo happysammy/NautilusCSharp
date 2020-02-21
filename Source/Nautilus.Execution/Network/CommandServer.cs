@@ -8,7 +8,6 @@
 
 namespace Nautilus.Execution.Network
 {
-    using System;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Message;
     using Nautilus.DomainModel.Commands;
@@ -49,8 +48,7 @@ namespace Nautilus.Execution.Network
                 compressor,
                 encryption,
                 Nautilus.Network.NetworkAddress.LocalHost,
-                port,
-                Guid.NewGuid())
+                port)
         {
             this.commandRouter = commandRouter;
 

@@ -16,7 +16,6 @@ namespace Nautilus.Network
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Logging;
     using Nautilus.Common.Messages.Commands;
-    using Nautilus.Core.Correctness;
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Network.Encryption;
     using NetMQ;
@@ -41,19 +40,15 @@ namespace Nautilus.Network
         /// <param name="encryption">The encryption configuration.</param>
         /// <param name="host">The publishers host address.</param>
         /// <param name="port">The publishers port.</param>
-        /// <param name="id">The publishers identifier.</param>
         protected MessagePublisher(
             IComponentryContainer container,
             ISerializer<T> serializer,
             ICompressor compressor,
             EncryptionSettings encryption,
             NetworkAddress host,
-            NetworkPort port,
-            Guid id)
+            NetworkPort port)
             : base(container)
         {
-            Condition.NotDefault(id, nameof(id));
-
             this.serializer = serializer;
             this.compressor = compressor;
 
@@ -61,8 +56,9 @@ namespace Nautilus.Network
             {
                 Options =
                 {
+                    Identity = Encoding.Unicode.GetBytes($"{nameof(Nautilus)}-{this.GetType().Name}"),
+                    SendHighWatermark = 10000,
                     Linger = TimeSpan.FromSeconds(1),
-                    Identity = Encoding.Unicode.GetBytes(id.ToString()),
                 },
             };
 

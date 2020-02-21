@@ -34,8 +34,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 new CompressorBypass(),
                 encryption,
                 host,
-                port,
-                Guid.NewGuid())
+                port)
         {
             this.RegisterHandler<(string, string)>(this.OnMessage);
         }

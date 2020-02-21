@@ -56,8 +56,7 @@ namespace Nautilus.Data.Providers
                 compressor,
                 encryption,
                 Network.NetworkAddress.LocalHost,
-                port,
-                Guid.NewGuid())
+                port)
         {
             this.repository = repository;
             this.dataSerializer = dataSerializer;
