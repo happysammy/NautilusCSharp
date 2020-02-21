@@ -24,7 +24,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             IComponentryContainer container,
             EncryptionSettings encryption,
             NetworkAddress host,
-            NetworkPort port)
+            Port port)
             : base(
                 container,
                 new MockSerializer(),

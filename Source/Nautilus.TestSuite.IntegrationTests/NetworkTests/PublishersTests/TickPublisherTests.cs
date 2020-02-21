@@ -50,7 +50,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
                 new TickDataSerializer(),
                 new CompressorBypass(),
                 EncryptionSettings.None(),
-                new NetworkPort(55606));
+                new Port(55606));
         }
 
         public void Dispose()

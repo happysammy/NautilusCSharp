@@ -8,7 +8,6 @@
 
 namespace Nautilus.TestSuite.UnitTests.CoreTests.CQSTests
 {
-    using System;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core.CQS;
     using Xunit;

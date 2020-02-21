@@ -40,7 +40,7 @@ namespace Nautilus.Execution.Network
             ICompressor compressor,
             IEndpoint commandRouter,
             EncryptionSettings encryption,
-            NetworkPort port)
+            Port port)
             : base(
                 container,
                 inboundSerializer,

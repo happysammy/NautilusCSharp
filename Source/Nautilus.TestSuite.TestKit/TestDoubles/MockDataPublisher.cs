@@ -26,7 +26,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             IDataBusAdapter dataBusAdapter,
             EncryptionSettings encryption,
             NetworkAddress host,
-            NetworkPort port)
+            Port port)
             : base(
                 container,
                 dataBusAdapter,

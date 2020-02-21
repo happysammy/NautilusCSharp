@@ -33,7 +33,7 @@ namespace Nautilus.Data.Publishers
             IDataSerializer<Tick> serializer,
             ICompressor compressor,
             EncryptionSettings encryption,
-            NetworkPort port)
+            Port port)
             : base(
                 container,
                 dataBusAdapter,

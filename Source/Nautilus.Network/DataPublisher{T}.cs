@@ -47,7 +47,7 @@ namespace Nautilus.Network
             ICompressor compressor,
             EncryptionSettings encryption,
             NetworkAddress host,
-            NetworkPort port)
+            Port port)
             : base(container, dataBusAdapter)
         {
             this.serializer = serializer;

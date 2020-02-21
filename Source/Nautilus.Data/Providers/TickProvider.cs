@@ -48,7 +48,7 @@ namespace Nautilus.Data.Providers
             IMessageSerializer<Response> outboundSerializer,
             ICompressor compressor,
             EncryptionSettings encryption,
-            NetworkPort port)
+            Port port)
             : base(
                 container,
                 inboundSerializer,

@@ -21,8 +21,8 @@ namespace Nautilus.Execution.Configuration
         /// Initializes a new instance of the <see cref="NetworkConfiguration"/> class.
         /// </summary>
         public NetworkConfiguration(
-            NetworkPort commandsPort,
-            NetworkPort eventsPort,
+            Port commandsPort,
+            Port eventsPort,
             int commandsPerSecond,
             int newOrdersPerSecond)
         {
@@ -35,12 +35,12 @@ namespace Nautilus.Execution.Configuration
         /// <summary>
         /// Gets the configuration commands port.
         /// </summary>
-        public NetworkPort CommandsPort { get; }
+        public Port CommandsPort { get; }
 
         /// <summary>
         /// Gets the configuration events port.
         /// </summary>
-        public NetworkPort EventsPort { get; }
+        public Port EventsPort { get; }
 
         /// <summary>
         /// Gets the configuration maximum commands per second.

@@ -21,12 +21,12 @@ namespace Nautilus.Data.Configuration
         /// Initializes a new instance of the <see cref="NetworkConfiguration"/> class.
         /// </summary>
         public NetworkConfiguration(
-            NetworkPort tickRouterPort,
-            NetworkPort tickPublisherPort,
-            NetworkPort barRouterPort,
-            NetworkPort barPublisherPort,
-            NetworkPort instrumentRouterPort,
-            NetworkPort instrumentPublisherPort)
+            Port tickRouterPort,
+            Port tickPublisherPort,
+            Port barRouterPort,
+            Port barPublisherPort,
+            Port instrumentRouterPort,
+            Port instrumentPublisherPort)
         {
             this.TickRouterPort = tickRouterPort;
             this.TickPublisherPort = tickPublisherPort;
@@ -39,31 +39,31 @@ namespace Nautilus.Data.Configuration
         /// <summary>
         /// Gets the network configuration tick request port.
         /// </summary>
-        public NetworkPort TickRouterPort { get; }
+        public Port TickRouterPort { get; }
 
         /// <summary>
         /// Gets the network configuration tick subscribe port.
         /// </summary>
-        public NetworkPort TickPublisherPort { get; }
+        public Port TickPublisherPort { get; }
 
         /// <summary>
         /// Gets the network configuration bar request port.
         /// </summary>
-        public NetworkPort BarRouterPort { get; }
+        public Port BarRouterPort { get; }
 
         /// <summary>
         /// Gets the network configuration bar subscribe port.
         /// </summary>
-        public NetworkPort BarPublisherPort { get; }
+        public Port BarPublisherPort { get; }
 
         /// <summary>
         /// Gets the network configuration instrument request port.
         /// </summary>
-        public NetworkPort InstrumentRouterPort { get; }
+        public Port InstrumentRouterPort { get; }
 
         /// <summary>
         /// Gets the network configuration instrument subscribe port.
         /// </summary>
-        public NetworkPort InstrumentPublisherPort { get; }
+        public Port InstrumentPublisherPort { get; }
     }
 }

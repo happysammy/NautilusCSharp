@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="NetworkPort.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="Port.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2020 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   https://nautechsystems.io
@@ -17,16 +17,16 @@ namespace Nautilus.Network
     /// IANA port collision.
     /// </summary>
     [Immutable]
-    public sealed class NetworkPort
+    public sealed class Port
     {
         private readonly string valueString;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NetworkPort"/> class.
+        /// Initializes a new instance of the <see cref="Port"/> class.
         /// </summary>
         /// <param name="port">The port number.</param>
         /// <exception cref="ArgumentOutOfRangeException">If the portNumber is out of range [49152, 65535].</exception>
-        public NetworkPort(ushort port)
+        public Port(ushort port)
         {
             Condition.NotOutOfRangeInt32(port, 49152, 65535, nameof(port));
 
@@ -40,7 +40,7 @@ namespace Nautilus.Network
         public int Value { get; }
 
         /// <summary>
-        /// Returns a string representation of this <see cref="NetworkPort"/>.
+        /// Returns a string representation of this <see cref="Port"/>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
         public override string ToString() => this.valueString;

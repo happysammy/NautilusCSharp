@@ -58,7 +58,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 DataBusFactory.Create(this.container),
                 EncryptionSettings.None(),
                 NetworkAddress.LocalHost,
-                new NetworkPort(55555));
+                new Port(55555));
 
             // Assert
             Assert.Equal("tcp://127.0.0.1:55555", publisher.NetworkAddress.Value);
@@ -75,7 +75,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 DataBusFactory.Create(this.container),
                 EncryptionSettings.None(),
                 NetworkAddress.LocalHost,
-                new NetworkPort(55555));
+                new Port(55555));
             publisher.Start();
             Task.Delay(100).Wait(); // Allow publisher to start
 

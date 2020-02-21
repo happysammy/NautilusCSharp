@@ -60,7 +60,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 this.container,
                 EncryptionSettings.None(),
                 NetworkAddress.LocalHost,
-                new NetworkPort(55555));
+                new Port(55555));
 
             // Assert
             Assert.Equal("tcp://127.0.0.1:55555", server.NetworkAddress.ToString());
@@ -78,7 +78,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 this.container,
                 EncryptionSettings.None(),
                 NetworkAddress.LocalHost,
-                new NetworkPort(55556));
+                new Port(55556));
             server.Start();
             Task.Delay(300).Wait(); // Allow server to start
 
@@ -103,7 +103,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 this.container,
                 EncryptionSettings.None(),
                 NetworkAddress.LocalHost,
-                new NetworkPort(testPort));
+                new Port(testPort));
             server.Start();
             Task.Delay(300).Wait(); // Allow server to initiate
 
@@ -139,7 +139,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 this.container,
                 EncryptionSettings.None(),
                 NetworkAddress.LocalHost,
-                new NetworkPort(testPort));
+                new Port(testPort));
             server.Start();
             Task.Delay(300).Wait(); // Allow server to initiate
 
@@ -175,7 +175,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 this.container,
                 EncryptionSettings.None(),
                 NetworkAddress.LocalHost,
-                new NetworkPort(testPort));
+                new Port(testPort));
             server.Start();
             Task.Delay(300).Wait(); // Allow server to start
 
@@ -213,7 +213,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 this.container,
                 EncryptionSettings.None(),
                 NetworkAddress.LocalHost,
-                new NetworkPort(testPort));
+                new Port(testPort));
             server.Start();
             Task.Delay(300).Wait(); // Allow server to start
 
@@ -255,7 +255,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 this.container,
                 EncryptionSettings.None(),
                 NetworkAddress.LocalHost,
-                new NetworkPort(testPort));
+                new Port(testPort));
             server.Start();
             Task.Delay(300).Wait(); // Allow server to start
 
@@ -307,7 +307,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 this.container,
                 EncryptionSettings.None(),
                 NetworkAddress.LocalHost,
-                new NetworkPort(testPort));
+                new Port(testPort));
             server.Start();
             Task.Delay(300).Wait(); // Allow server to start
 
@@ -357,7 +357,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 this.container,
                 EncryptionSettings.None(),
                 NetworkAddress.LocalHost,
-                new NetworkPort(testPort));
+                new Port(testPort));
             server.Start();
             Task.Delay(300).Wait(); // Allow server to start
 
@@ -403,7 +403,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 this.container,
                 EncryptionSettings.None(),
                 NetworkAddress.LocalHost,
-                new NetworkPort(testPort));
+                new Port(testPort));
             server.Start();
             Task.Delay(300).Wait(); // Allow server to start
 

@@ -116,12 +116,12 @@ namespace NautilusData
 
             var networkSection = configuration.GetSection(ConfigSection.Network);
             var networkConfig = new NetworkConfiguration(
-                new NetworkPort(ushort.Parse(networkSection["TickRouterPort"])),
-                new NetworkPort(ushort.Parse(networkSection["TickPubPort"])),
-                new NetworkPort(ushort.Parse(networkSection["BarRouterPort"])),
-                new NetworkPort(ushort.Parse(networkSection["BarPubPort"])),
-                new NetworkPort(ushort.Parse(networkSection["InstrumentRouterPort"])),
-                new NetworkPort(ushort.Parse(networkSection["InstrumentPubPort"])));
+                new Port(ushort.Parse(networkSection["TickRouterPort"])),
+                new Port(ushort.Parse(networkSection["TickPubPort"])),
+                new Port(ushort.Parse(networkSection["BarRouterPort"])),
+                new Port(ushort.Parse(networkSection["BarPubPort"])),
+                new Port(ushort.Parse(networkSection["InstrumentRouterPort"])),
+                new Port(ushort.Parse(networkSection["InstrumentPubPort"])));
 
             // Data Configuration
             var dataSection = configuration.GetSection(ConfigSection.Data);

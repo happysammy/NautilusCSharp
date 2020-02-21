@@ -52,7 +52,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
                 this.serializer,
                 new CompressorBypass(),
                 EncryptionSettings.None(),
-                new NetworkPort(55512));
+                new Port(55512));
         }
 
         public void Dispose()
