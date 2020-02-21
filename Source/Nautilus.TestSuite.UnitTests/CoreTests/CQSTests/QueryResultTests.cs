@@ -60,18 +60,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CQSTests
             Assert.Equal("error message", result.Message);
         }
 
-        [Fact]
-        public void ActionInvoke_AttemptingToAccessValueWithNoValue_Throws()
-        {
-            // Arrange
-            var result = QueryResult<TestClass>.Fail("error message");
-
-            // Act
-            // Assert
-            Assert.True(result.IsFailure);
-            Assert.Throws<InvalidOperationException>(() => ((Action)(() => { TestClass testClass = result.Value; })).Invoke());
-        }
-
         // Only instantiated within this class for testing purposes.
         private sealed class TestClass
         {

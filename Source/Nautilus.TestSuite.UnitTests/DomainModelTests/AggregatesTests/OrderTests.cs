@@ -269,11 +269,6 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Arrange
             var order = new StubOrderBuilder().BuildStopMarketOrder();
 
-            if (order.Price is null)
-            {
-                throw new InvalidOperationException("Order must have a price.");
-            }
-
             var event1 = StubEventMessageProvider.OrderSubmittedEvent(order);
             var event2 = StubEventMessageProvider.OrderAcceptedEvent(order);
             var event3 = StubEventMessageProvider.OrderWorkingEvent(order);
@@ -296,11 +291,6 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var order = new StubOrderBuilder()
                .WithQuantity(Quantity.Create(100000))
                .BuildStopMarketOrder();
-
-            if (order.Price is null)
-            {
-                throw new InvalidOperationException("Order must have a price.");
-            }
 
             var event1 = StubEventMessageProvider.OrderSubmittedEvent(order);
             var event2 = StubEventMessageProvider.OrderAcceptedEvent(order);
@@ -329,10 +319,6 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var order = new StubOrderBuilder().BuildStopMarketOrder();
-            if (order.Price is null)
-            {
-                throw new InvalidOperationException("Order must have a price.");
-            }
 
             var event1 = StubEventMessageProvider.OrderSubmittedEvent(order);
             var event2 = StubEventMessageProvider.OrderAcceptedEvent(order);

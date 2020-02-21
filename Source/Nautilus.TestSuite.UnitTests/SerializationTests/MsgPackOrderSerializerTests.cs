@@ -136,12 +136,6 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var unpacked = this.serializer.DeserializeNullable(packed);
 
             // Assert
-            if (unpacked is null)
-            {
-                Assert.True(false);
-                return; // Avoid potential null dereference warning
-            }
-
             Assert.Equal(order, unpacked);
             Assert.Equal(order.Symbol, unpacked.Symbol);
             Assert.Equal(order.OrderType, unpacked.OrderType);
