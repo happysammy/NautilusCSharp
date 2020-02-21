@@ -71,7 +71,7 @@ namespace Nautilus.Core.CQS
         {
             Debug.NotEmpty(results, nameof(results));
 
-            return results.FirstOrDefault(c => c.IsFailure) ?? Ok();
+            return results.FirstOrDefault(c => c.IsFailure);
         }
 
         /// <summary>
