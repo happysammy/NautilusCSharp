@@ -39,6 +39,32 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         }
 
         [Fact]
+        internal void CanSerializeAndDeserialize_Connected()
+        {
+            // Arrange
+            var correlationId = Guid.NewGuid();
+
+            var response = new Connected(
+                "NautilusData.TickProvider",
+                "Trader001_2020-01-01T01:00:00.000",
+                correlationId,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            // Act
+            var packed = this.serializer.Serialize(response);
+            var unpacked = (Connected)this.serializer.Deserialize(packed);
+
+            // Assert
+            Assert.Equal(response, unpacked);
+            Assert.Equal(correlationId, unpacked.CorrelationId);
+            Assert.Equal("NautilusData.TickProvider", unpacked.ServiceName);
+            Assert.Equal("Trader001_2020-01-01T01:00:00.000", unpacked.SessionId);
+            this.output.WriteLine(Convert.ToBase64String(packed));
+            this.output.WriteLine(Encoding.UTF8.GetString(packed));
+        }
+
+        [Fact]
         internal void CanSerializeAndDeserialize_MessageReceived()
         {
             // Arrange

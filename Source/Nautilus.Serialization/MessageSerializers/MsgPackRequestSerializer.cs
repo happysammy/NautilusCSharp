@@ -14,6 +14,7 @@ namespace Nautilus.Serialization.MessageSerializers
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Message;
     using Nautilus.Data.Messages.Requests;
+    using Nautilus.Network.Messages;
     using Nautilus.Serialization.MessageSerializers.Internal;
 
     /// <summary>
@@ -44,6 +45,9 @@ namespace Nautilus.Serialization.MessageSerializers
 
             switch (request)
             {
+                case Connect req:
+                    package.Add(nameof(req.SocketIdentifier), ObjectSerializer.Serialize(req.SocketIdentifier));
+                    break;
                 case DataRequest req:
                     package.Add(nameof(req.Query), this.querySerializer.Serialize(req.Query));
                     break;
@@ -65,6 +69,11 @@ namespace Nautilus.Serialization.MessageSerializers
 
             switch (request)
             {
+                case nameof(Connect):
+                    return new Connect(
+                        ObjectDeserializer.AsString(unpacked[nameof(Connect.SocketIdentifier)]),
+                        id,
+                        timestamp);
                 case nameof(DataRequest):
                     return new DataRequest(
                         this.querySerializer.Deserialize(unpacked[nameof(DataRequest.Query)]),

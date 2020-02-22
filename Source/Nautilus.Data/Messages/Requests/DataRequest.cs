@@ -37,6 +37,7 @@ namespace Nautilus.Data.Messages.Requests
                 requestId,
                 requestTimestamp)
         {
+            Condition.NotEmpty(query, nameof(query));
             Debug.NotDefault(requestId, nameof(requestId));
             Debug.NotDefault(requestTimestamp, nameof(requestTimestamp));
 

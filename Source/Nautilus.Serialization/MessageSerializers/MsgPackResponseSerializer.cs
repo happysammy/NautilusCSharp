@@ -37,6 +37,10 @@ namespace Nautilus.Serialization.MessageSerializers
 
             switch (response)
             {
+                case Connected res:
+                    package.Add(nameof(res.ServiceName), ObjectSerializer.Serialize(res.ServiceName));
+                    package.Add(nameof(res.SessionId), ObjectSerializer.Serialize(res.SessionId));
+                    break;
                 case MessageReceived res:
                     package.Add(nameof(res.ReceivedType), ObjectSerializer.Serialize(res.ReceivedType));
                     break;
@@ -70,6 +74,13 @@ namespace Nautilus.Serialization.MessageSerializers
 
             switch (response)
             {
+                case nameof(Connected):
+                    return new Connected(
+                        ObjectDeserializer.AsString(unpacked[nameof(Connected.ServiceName)]),
+                        ObjectDeserializer.AsString(unpacked[nameof(Connected.SessionId)]),
+                        correlationId,
+                        id,
+                        timestamp);
                 case nameof(MessageReceived):
                     return new MessageReceived(
                         ObjectDeserializer.AsString(unpacked[nameof(MessageReceived.ReceivedType)]),

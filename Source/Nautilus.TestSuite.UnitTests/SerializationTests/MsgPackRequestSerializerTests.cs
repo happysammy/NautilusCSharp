@@ -15,6 +15,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
     using Nautilus.Core.Extensions;
     using Nautilus.Data.Messages.Requests;
     using Nautilus.DomainModel.Identifiers;
+    using Nautilus.Network.Messages;
     using Nautilus.Serialization.MessageSerializers;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;
@@ -29,6 +30,26 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         {
             // Fixture Setup
             this.output = output;
+        }
+
+        [Fact]
+        internal void CanSerializeAndDeserialize_ConnectRequests()
+        {
+            // Arrange
+            var serializer = new MsgPackRequestSerializer(new MsgPackQuerySerializer());
+
+            var request = new Connect(
+                "Trader001-CommandSender",
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            // Act
+            var packed = serializer.Serialize(request);
+            var unpacked = (Connect)serializer.Deserialize(packed);
+
+            // Assert
+            Assert.Equal(request, unpacked);
+            Assert.Equal("Trader001-CommandSender", unpacked.SocketIdentifier);
         }
 
         [Fact]

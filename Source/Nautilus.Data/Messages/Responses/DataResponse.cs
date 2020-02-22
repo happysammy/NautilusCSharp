@@ -43,6 +43,7 @@ namespace Nautilus.Data.Messages.Responses
                 responseId,
                 responseTimestamp)
         {
+            Condition.NotEmptyOrWhiteSpace(dataType, nameof(dataType));
             Debug.NotDefault(responseId, nameof(responseId));
             Debug.NotDefault(responseTimestamp, nameof(responseTimestamp));
 
