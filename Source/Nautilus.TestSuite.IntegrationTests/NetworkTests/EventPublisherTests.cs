@@ -21,8 +21,9 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
     using Nautilus.Network.Compression;
     using Nautilus.Network.Encryption;
     using Nautilus.Serialization.MessageSerializers;
-    using Nautilus.TestSuite.TestKit;
-    using Nautilus.TestSuite.TestKit.TestDoubles;
+    using Nautilus.TestSuite.TestKit.Components;
+    using Nautilus.TestSuite.TestKit.Mocks;
+    using Nautilus.TestSuite.TestKit.Stubs;
     using NetMQ;
     using NetMQ.Sockets;
     using Xunit;
@@ -34,7 +35,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
         private readonly NetworkAddress localHost = new NetworkAddress("127.0.0.1");
         private readonly ITestOutputHelper output;
         private readonly IComponentryContainer container;
-        private readonly MockLogger logger;
         private readonly IMessageBusAdapter messageBusAdapter;
         private readonly IEndpoint receiver;
 
@@ -43,12 +43,10 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             // Fixture Setup
             this.output = output;
 
-            var containerFactory = new StubComponentryContainerProvider();
-            this.container = containerFactory.Create();
-            this.logger = containerFactory.Logger;
+            this.container = TestComponentryContainer.Create(output);
             var service = new MockMessageBusProvider(this.container);
             this.messageBusAdapter = service.Adapter;
-            this.receiver = new MockMessagingAgent().Endpoint;
+            this.receiver = new MockComponent(this.container).Endpoint;
         }
 
         public void Dispose()
@@ -95,7 +93,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             Assert.Equal(typeof(OrderRejected), @event.GetType());
 
             // Tear Down
-            LogDumper.DumpWithDelay(this.logger, this.output);
             subscriber.Disconnect(testAddress);
             subscriber.Dispose();
             publisher.Stop();

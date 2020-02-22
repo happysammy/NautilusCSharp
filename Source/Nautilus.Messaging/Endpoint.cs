@@ -8,6 +8,7 @@
 
 namespace Nautilus.Messaging
 {
+    using System.Threading.Tasks;
     using System.Threading.Tasks.Dataflow;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
@@ -53,7 +54,7 @@ namespace Nautilus.Messaging
         public static bool operator !=(Endpoint left,  Endpoint right) => !(left == right);
 
         /// <inheritdoc />
-        public void Send(object message) => this.target.Post(message);
+        public Task<bool> Send(object message) => this.target.SendAsync(message);
 
         /// <inheritdoc />
         public ITargetBlock<object> GetLink()

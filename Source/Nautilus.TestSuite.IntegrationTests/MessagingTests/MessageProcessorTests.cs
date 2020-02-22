@@ -13,8 +13,10 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
+    using Nautilus.Common.Interfaces;
     using Nautilus.Messaging.Internal;
-    using Nautilus.TestSuite.TestKit.TestDoubles;
+    using Nautilus.TestSuite.TestKit.Components;
+    using Nautilus.TestSuite.TestKit.Mocks;
     using Xunit;
     using Xunit.Abstractions;
 
@@ -22,11 +24,13 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
     public sealed class MessageProcessorTests
     {
         private readonly ITestOutputHelper output;
+        private readonly IComponentryContainer container;
 
         public MessageProcessorTests(ITestOutputHelper output)
         {
             // Fixture Setup
             this.output = output;
+            this.container = TestComponentryContainer.Create(this.output);
         }
 
         [Fact]
@@ -65,9 +69,8 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
             processor.RegisterUnhandled(receiver.Add);
 
             // Act
-            processor.Endpoint.Send(1);
-
-            Task.Delay(200).Wait();
+            processor.Endpoint.Send(1).Wait();
+            processor.GracefulStop().Wait();
 
             // Assert
             Assert.Contains(1, receiver);
@@ -84,9 +87,8 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
             processor.RegisterHandler<object>(receiver.Add);
 
             // Act
-            processor.Endpoint.Send(1);
-
-            Task.Delay(200).Wait();
+            processor.Endpoint.Send(1).Wait();
+            processor.GracefulStop().Wait();
 
             // Assert
             Assert.Contains(1, receiver);
@@ -102,9 +104,8 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
             processor.RegisterHandler<string>(ThisWillBlowUp);
 
             // Act
-            processor.Endpoint.Send("BOOM!");
-
-            Task.Delay(100).Wait();
+            processor.Endpoint.Send("BOOM!").Wait();
+            processor.GracefulStop().Wait();
 
             // Assert
             Assert.Single(processor.Exceptions);
@@ -120,9 +121,8 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
             var processor = new MessageProcessor();
 
             // Act
-            processor.Endpoint.Send("test");
-
-            Task.Delay(200).Wait();
+            processor.Endpoint.Send("test").Wait();
+            processor.GracefulStop().Wait();
 
             // Assert
             Assert.Contains("test", processor.UnhandledMessages);
@@ -139,9 +139,8 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
             processor.RegisterHandler<string>(receiver.Add);
 
             // Act
-            processor.Endpoint.Send("test");
-
-            Task.Delay(200).Wait();
+            processor.Endpoint.Send("test").Wait();
+            processor.GracefulStop().Wait();
 
             // Assert
             Assert.Single(processor.HandlerTypes);
@@ -156,15 +155,14 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
         internal void GivenMessagesOfDifferentTypes_WhenHandlersRegistered_ThenStoresInReceiver()
         {
             // Arrange
-            var receiver = new MockMessagingAgent();
+            var receiver = new MockComponent(this.container);
             receiver.RegisterHandler<string>(receiver.OnMessage);
             receiver.RegisterHandler<int>(receiver.OnMessage);
 
             // Act
             receiver.Endpoint.Send("test");
-            receiver.Endpoint.Send(2);
-
-            Task.Delay(200).Wait();
+            receiver.Endpoint.Send(2).Wait();
+            receiver.Stop().Wait();
 
             // Assert
             Assert.Contains(typeof(string), receiver.HandlerTypes);
@@ -172,7 +170,7 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
             Assert.True(receiver.Messages[0].Equals("test"));
             Assert.True(receiver.Messages[1].Equals(2));
             Assert.Equal(0, receiver.InputCount);
-            Assert.Equal(2, receiver.ProcessedCount);
+            Assert.Equal(3, receiver.ProcessedCount);
             Assert.Equal(2, receiver.Messages.Count);
         }
 
@@ -180,7 +178,7 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
         internal void GivenManyMessagesOfDifferentTypes_WhenHandlersRegistered_ThenStoresInReceiver()
         {
             // Arrange
-            var receiver = new MockMessagingAgent();
+            var receiver = new MockComponent(this.container);
             receiver.RegisterHandler<string>(receiver.OnMessage);
             receiver.RegisterHandler<int>(receiver.OnMessage);
 
@@ -192,9 +190,8 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
             receiver.Endpoint.Send("3");
             receiver.Endpoint.Send(3);
             receiver.Endpoint.Send("4");
-            receiver.Endpoint.Send(4);
-
-            Task.Delay(200).Wait();
+            receiver.Endpoint.Send(4).Wait();
+            receiver.Stop().Wait();
 
             Assert.True(receiver.Messages[0].Equals("1"));
             Assert.True(receiver.Messages[1].Equals(1));
@@ -205,7 +202,7 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
             Assert.True(receiver.Messages[6].Equals("4"));
             Assert.True(receiver.Messages[7].Equals(4));
             Assert.Equal(0, receiver.InputCount);
-            Assert.Equal(8, receiver.ProcessedCount);
+            Assert.Equal(9, receiver.ProcessedCount);
             Assert.Equal(8, receiver.Messages.Count);
         }
 
@@ -213,50 +210,48 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
         internal void GivenMessagesOfDifferentTypes_WithWorkDelay_ProcessesSynchronously()
         {
             // Arrange
-            var receiver = new MockMessagingAgent();
+            var receiver = new MockComponent(this.container);
             receiver.RegisterHandler<string>(receiver.OnMessageWithWorkDelay);
             receiver.RegisterHandler<int>(receiver.OnMessage);
 
             // Act
             receiver.Endpoint.Send("test");
-            receiver.Endpoint.Send(2);
-
-            Task.Delay(200).Wait();
+            receiver.Endpoint.Send(2).Wait();
+            receiver.Stop().Wait();
 
             // Assert
             Assert.Contains("test", receiver.Messages);
-            Assert.Single(receiver.Messages);
-            Assert.Equal(1, receiver.InputCount);
-            Assert.Equal(1, receiver.ProcessedCount);
+            Assert.Equal(2, receiver.Messages.Count);
+            Assert.Equal(0, receiver.InputCount);
+            Assert.Equal(3, receiver.ProcessedCount);
         }
 
         [Fact]
         internal void GivenManyMessages_WithWorkDelay_ProcessesSynchronously()
         {
             // Arrange
-            var receiver = new MockMessagingAgent();
+            var receiver = new MockComponent(this.container);
             receiver.RegisterHandler<string>(receiver.OnMessageWithWorkDelay);
 
             // Act
             receiver.Endpoint.Send("1");
             receiver.Endpoint.Send("2");
             receiver.Endpoint.Send("3");
-            receiver.Endpoint.Send("4");
-
-            Task.Delay(200).Wait();
+            receiver.Endpoint.Send("4").Wait();
+            receiver.Stop().Wait();
 
             // Assert
-            Assert.Contains("1", receiver.Messages);
-            Assert.Single(receiver.Messages);
-            Assert.Equal(3, receiver.InputCount);
-            Assert.Equal(1, receiver.ProcessedCount);
+            Assert.Contains("4", receiver.Messages);
+            Assert.Equal(4, receiver.Messages.Count);
+            Assert.Equal(0, receiver.InputCount);
+            Assert.Equal(5, receiver.ProcessedCount);
         }
 
         [Fact]
         internal void MessagingPerformanceTest()
         {
             // Arrange
-            var receiver = new MockMessagingAgent();
+            var receiver = new MockComponent(this.container);
             receiver.RegisterHandler<int>(receiver.OnMessage);
 
             var stopwatch = new Stopwatch();

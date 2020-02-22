@@ -18,28 +18,22 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Scheduling;
-    using Nautilus.TestSuite.TestKit;
-    using Nautilus.TestSuite.TestKit.TestDoubles;
+    using Nautilus.TestSuite.TestKit.Components;
+    using Nautilus.TestSuite.TestKit.Mocks;
+    using Nautilus.TestSuite.TestKit.Stubs;
     using Xunit;
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class BarAggregationControllerTests
     {
-        private readonly ITestOutputHelper output;
-        private readonly MockLogger logger;
-        private readonly MockMessagingAgent receiver;
+        private readonly MockComponent receiver;
         private readonly BarAggregationController controller;
 
         public BarAggregationControllerTests(ITestOutputHelper output)
         {
             // Fixture Setup
-            this.output = output;
-
-            var containerFactory = new StubComponentryContainerProvider();
-            this.logger = containerFactory.Logger;
-            this.receiver = new MockMessagingAgent();
-            var container = containerFactory.Create();
+            var container = TestComponentryContainer.Create(output);
             var dataBusAdapter = DataBusFactory.Create(container);
             var scheduler = new HashedWheelTimerScheduler(container);
 
@@ -47,6 +41,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 container,
                 dataBusAdapter,
                 scheduler);
+
+            this.receiver = new MockComponent(container);
         }
 
         [Fact]
@@ -71,9 +67,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
 
             // Act
             this.controller.Endpoint.Send(subscribe1);
-            this.controller.Endpoint.Send(subscribe2);
-
-            LogDumper.DumpWithDelay(this.logger, this.output);
+            this.controller.Endpoint.Send(subscribe2).Wait();
+            this.controller.Stop().Wait();
+            Task.Delay(100).Wait();  // TODO: Intermittent test sometimes Specifications.Count == 1
 
             // Assert
             Assert.Equal(1, this.controller.BarAggregators.Count);
@@ -105,9 +101,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             // Act
             this.controller.Endpoint.Send(subscribe1);
             this.controller.Endpoint.Send(subscribe2);
-            this.controller.Endpoint.Send(subscribe2);
-
-            LogDumper.DumpWithDelay(this.logger, this.output);
+            this.controller.Endpoint.Send(subscribe2).Wait();
+            this.controller.Stop().Wait();
 
             // Assert
             Assert.Equal(1, this.controller.BarAggregators.Count);
@@ -156,9 +151,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.controller.Endpoint.Send(subscribe1);
             this.controller.Endpoint.Send(subscribe2);
             this.controller.Endpoint.Send(subscribe3);
-            this.controller.Endpoint.Send(subscribe4);
-
-            LogDumper.DumpWithDelay(this.logger, this.output);
+            this.controller.Endpoint.Send(subscribe4).Wait();
+            this.controller.Stop().Wait();
 
             // Assert
             Assert.Equal(2, this.controller.BarAggregators.Count);
@@ -198,11 +192,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.controller.Endpoint.Send(subscribe2);
 
             // Act
-            Task.Delay(100).Wait();
-
-            this.controller.Endpoint.Send(unsubscribe);
-
-            LogDumper.DumpWithDelay(this.logger, this.output);
+            this.controller.Endpoint.Send(unsubscribe).Wait();
+            this.controller.Stop().Wait();
 
             // Assert
             Assert.Equal(1, this.controller.Subscriptions.Count);
@@ -240,12 +231,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.controller.Endpoint.Send(subscribe2);
 
             // Act
-            Task.Delay(100).Wait();
-
             this.controller.Endpoint.Send(unsubscribe);
-            this.controller.Endpoint.Send(unsubscribe);
-
-            LogDumper.DumpWithDelay(this.logger, this.output);
+            this.controller.Endpoint.Send(unsubscribe).Wait();
+            this.controller.Stop().Wait();
 
             // Assert
             Assert.Equal(1, this.controller.Subscriptions.Count);
@@ -319,14 +307,11 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.controller.Endpoint.Send(subscribe4);
 
             // Act
-            Task.Delay(100).Wait();
-
             this.controller.Endpoint.Send(unsubscribe1);
             this.controller.Endpoint.Send(unsubscribe2);
             this.controller.Endpoint.Send(unsubscribe3);
-            this.controller.Endpoint.Send(unsubscribe4);
-
-            LogDumper.DumpWithDelay(this.logger, this.output);
+            this.controller.Endpoint.Send(unsubscribe4).Wait();
+            this.controller.Stop().Wait();
 
             // Assert
             Assert.Equal(0, this.controller.Subscriptions.Count);

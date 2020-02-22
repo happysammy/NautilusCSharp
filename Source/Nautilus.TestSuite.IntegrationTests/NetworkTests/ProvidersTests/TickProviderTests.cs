@@ -28,8 +28,9 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
     using Nautilus.Network.Messages;
     using Nautilus.Serialization.DataSerializers;
     using Nautilus.Serialization.MessageSerializers;
-    using Nautilus.TestSuite.TestKit;
-    using Nautilus.TestSuite.TestKit.TestDoubles;
+    using Nautilus.TestSuite.TestKit.Components;
+    using Nautilus.TestSuite.TestKit.Mocks;
+    using Nautilus.TestSuite.TestKit.Stubs;
     using NetMQ;
     using NetMQ.Sockets;
     using NodaTime;
@@ -39,8 +40,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class TickProviderTests : IDisposable
     {
-        private readonly ITestOutputHelper output;
-        private readonly MockLogger logger;
         private readonly IComponentryContainer container;
         private readonly ITickRepository repository;
         private readonly IDataSerializer<Tick> dataSerializer;
@@ -50,11 +49,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
         public TickProviderTests(ITestOutputHelper output)
         {
             // Fixture Setup
-            this.output = output;
-
-            var containerFactory = new StubComponentryContainerProvider();
-            this.container = containerFactory.Create();
-            this.logger = containerFactory.Logger;
+            this.container = TestComponentryContainer.Create(output);
             this.dataSerializer = new TickDataSerializer();
             this.repository = new MockTickRepository(this.container, this.dataSerializer, DataBusFactory.Create(this.container));
             this.requestSerializer = new MsgPackRequestSerializer(new MsgPackQuerySerializer());
@@ -82,8 +77,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
                 new CompressorBypass(),
                 EncryptionSettings.None(),
                 new Port(testPort));
-            provider.Start();
-            Task.Delay(100).Wait();  // Allow provider to start
+            provider.Start().Wait();
 
             var symbol = new Symbol("AUDUSD", new Venue("FXCM"));
             var requester = new RequestSocket();
@@ -108,17 +102,13 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
             requester.SendFrame(this.requestSerializer.Serialize(dataRequest));
             var response = (QueryFailure)this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
 
-            LogDumper.DumpWithDelay(this.logger, this.output);
-
             // Assert
             Assert.Equal(typeof(QueryFailure), response.Type);
 
             // Tear Down
-            LogDumper.DumpWithDelay(this.logger, this.output);
             requester.Disconnect(testAddress);
             requester.Dispose();
-            provider.Stop();
-            Task.Delay(100).Wait(); // Allow server to stop
+            provider.Stop().Wait();
             provider.Dispose();
         }
 
@@ -174,8 +164,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
             var response = (DataResponse)this.responseSerializer.Deserialize(compressor.Decompress(requester.ReceiveFrameBytes()));
             var ticks = this.dataSerializer.DeserializeBlob(response.Data);
 
-            LogDumper.DumpWithDelay(this.logger, this.output);
-
             // Assert
             Assert.Equal(typeof(DataResponse), response.Type);
             Assert.Equal(2, ticks.Length);
@@ -183,11 +171,9 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
             Assert.Equal(tick2, ticks[1]);
 
             // Tear Down
-            LogDumper.DumpWithDelay(this.logger, this.output);
             requester.Disconnect(testAddress);
             requester.Dispose();
-            provider.Stop();
-            Task.Delay(100).Wait(); // Allow server to stop
+            provider.Stop().Wait();
             provider.Dispose();
         }
     }

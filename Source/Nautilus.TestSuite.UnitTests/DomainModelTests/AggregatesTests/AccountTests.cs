@@ -15,7 +15,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.TestSuite.TestKit.TestDoubles;
+    using Nautilus.TestSuite.TestKit.Components;
+    using Nautilus.TestSuite.TestKit.Stubs;
     using Xunit;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Suppression is OK within the Test Suite.")]
@@ -25,7 +26,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
         public AccountTests()
         {
-            this.clock = new StubClock();
+            this.clock = new TestClock();
         }
 
         [Fact]

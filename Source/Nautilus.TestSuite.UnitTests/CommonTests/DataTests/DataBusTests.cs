@@ -12,12 +12,14 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.DataTests
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
     using Nautilus.Common.Data;
+    using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core.Message;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.TestSuite.TestKit;
-    using Nautilus.TestSuite.TestKit.TestDoubles;
+    using Nautilus.TestSuite.TestKit.Components;
+    using Nautilus.TestSuite.TestKit.Mocks;
+    using Nautilus.TestSuite.TestKit.Stubs;
     using NodaTime;
     using Xunit;
     using Xunit.Abstractions;
@@ -25,23 +27,18 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.DataTests
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class DataBusTests
     {
-        private readonly ITestOutputHelper output;
-        private readonly MockLogger logger;
-        private readonly MockMessagingAgent receiver;
+        private readonly IComponentryContainer container;
+        private readonly MockComponent receiver;
         private readonly DataBus<Tick> dataBus;
 
         public DataBusTests(ITestOutputHelper output)
         {
             // Fixture Setup
-            this.output = output;
-
-            var containerFactory = new StubComponentryContainerProvider();
-            var container = containerFactory.Create();
-
-            this.logger = containerFactory.Logger;
-            this.receiver = new MockMessagingAgent();
-            this.dataBus = new DataBus<Tick>(container);
+            this.container = TestComponentryContainer.Create(output);
+            this.receiver = new MockComponent(this.container, "1");
+            this.dataBus = new DataBus<Tick>(this.container);
             this.receiver.RegisterHandler<Tick>(this.receiver.OnMessage);
+            this.dataBus.Start().Wait();
         }
 
         [Fact]
@@ -67,8 +64,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.DataTests
 
             // Act
             this.dataBus.Endpoint.Send(subscribe);
-
-            LogDumper.DumpWithDelay(this.logger, this.output);
+            this.dataBus.Stop().Wait();
 
             // Assert
             Assert.Equal(0, this.dataBus.Subscriptions.Count);
@@ -86,8 +82,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.DataTests
 
             // Act
             this.dataBus.Endpoint.Send(subscribe);
-
-            LogDumper.DumpWithDelay(this.logger, this.output);
+            this.dataBus.Stop().Wait();
 
             // Assert
             Assert.Contains(this.receiver.Mailbox.Address, this.dataBus.Subscriptions);
@@ -107,8 +102,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.DataTests
             // Act
             this.dataBus.Endpoint.Send(subscribe);
             this.dataBus.Endpoint.Send(subscribe);
-
-            LogDumper.DumpWithDelay(this.logger, this.output);
+            this.dataBus.Stop().Wait();
 
             // Assert
             Assert.Equal(1, this.dataBus.Subscriptions.Count);
@@ -118,7 +112,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.DataTests
         internal void GivenSubscribe_WithMultipleSubscribers_SubscribesCorrectly()
         {
             // Arrange
-            var receiver2 = new MockMessagingAgent("TickReceiver2");
+            var receiver2 = new MockComponent(this.container, "2");
 
             var subscribe1 = new Subscribe<Type>(
                 typeof(Tick),
@@ -135,8 +129,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.DataTests
             // Act
             this.dataBus.Endpoint.Send(subscribe1);
             this.dataBus.Endpoint.Send(subscribe2);
-
-            LogDumper.DumpWithDelay(this.logger, this.output);
+            this.dataBus.Stop().Wait();
 
             // Assert
             Assert.Contains(this.receiver.Mailbox.Address, this.dataBus.Subscriptions);
@@ -156,8 +149,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.DataTests
 
             // Act
             this.dataBus.Endpoint.Send(unsubscribe);
-
-            LogDumper.DumpWithDelay(this.logger, this.output);
+            this.dataBus.Stop().Wait();
 
             // Assert
             Assert.Equal(0, this.dataBus.Subscriptions.Count);
@@ -182,8 +174,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.DataTests
             // Act
             this.dataBus.Endpoint.Send(subscribe);
             this.dataBus.Endpoint.Send(unsubscribe);
-
-            LogDumper.DumpWithDelay(this.logger, this.output);
+            this.dataBus.Stop().Wait();
 
             // Assert
             Assert.Equal(0, this.dataBus.Subscriptions.Count);
@@ -193,7 +184,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.DataTests
         internal void GivenMultipleSubscribeAndUnsubscribe_HandlesCorrectly()
         {
             // Arrange
-            var receiver2 = new MockMessagingAgent("TickReceiver2");
+            var receiver2 = new MockComponent(this.container, "2");
 
             var subscribe1 = new Subscribe<Type>(
                 typeof(Tick),
@@ -216,9 +207,8 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.DataTests
             // Act
             this.dataBus.Endpoint.Send(subscribe1);
             this.dataBus.Endpoint.Send(subscribe2);
-            this.dataBus.Endpoint.Send(unsubscribe);
-
-            LogDumper.DumpWithDelay(this.logger, this.output);
+            this.dataBus.Endpoint.Send(unsubscribe).Wait();
+            this.dataBus.Stop().Wait();
 
             // Assert
             Assert.Equal(1, this.dataBus.Subscriptions.Count);
@@ -234,8 +224,8 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.DataTests
             this.dataBus.PostData(tick);
             this.dataBus.PostData(tick);
             this.dataBus.PostData(tick);
-
-            LogDumper.DumpWithDelay(this.logger, this.output);
+            this.dataBus.Stop().Wait();
+            this.dataBus.StopData().Wait();
 
             // Assert
             Assert.Equal(0, this.dataBus.Subscriptions.Count);
@@ -245,7 +235,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.DataTests
         internal void GivenData_WhenSubscribers_SendsDataToSubscriber()
         {
             // Arrange
-            var receiver2 = new MockMessagingAgent("TickReceiver2");
+            var receiver2 = new MockComponent(this.container, "2");
             receiver2.RegisterHandler<Tick>(receiver2.OnMessage);
 
             var subscribe1 = new Subscribe<Type>(
@@ -273,7 +263,10 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.DataTests
             this.dataBus.PostData(tick2);
             this.dataBus.PostData(tick3);
 
-            LogDumper.DumpWithDelay(this.logger, this.output);
+            this.dataBus.Stop().Wait();
+            this.dataBus.StopData().Wait();
+            this.receiver.Stop().Wait();
+            receiver2.Stop().Wait();
 
             // Assert
             Assert.Contains(tick1, this.receiver.Messages);

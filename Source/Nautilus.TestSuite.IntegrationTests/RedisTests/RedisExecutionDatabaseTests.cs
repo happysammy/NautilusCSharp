@@ -11,6 +11,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
@@ -19,8 +20,8 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     using Nautilus.Redis;
     using Nautilus.Redis.Execution;
     using Nautilus.Serialization.MessageSerializers;
-    using Nautilus.TestSuite.TestKit;
-    using Nautilus.TestSuite.TestKit.TestDoubles;
+    using Nautilus.TestSuite.TestKit.Components;
+    using Nautilus.TestSuite.TestKit.Stubs;
     using StackExchange.Redis;
     using Xunit;
     using Xunit.Abstractions;
@@ -28,23 +29,17 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class RedisExecutionDatabaseTests : IDisposable
     {
-        private readonly ITestOutputHelper output;
-        private readonly MockLogger logger;
+        private readonly IComponentryContainer container;
         private readonly ConnectionMultiplexer redisConnection;
         private readonly RedisExecutionDatabase database;
 
         public RedisExecutionDatabaseTests(ITestOutputHelper output)
         {
             // Fixture Setup
-            this.output = output;
-
-            var containerFactory = new StubComponentryContainerProvider();
-            this.logger = containerFactory.Logger;
-            var container = containerFactory.Create();
-
+            this.container = TestComponentryContainer.Create(output);
             this.redisConnection = ConnectionMultiplexer.Connect("localhost:6379,allowAdmin=true");
             this.database = new RedisExecutionDatabase(
-                container,
+                this.container,
                 this.redisConnection,
                 new MsgPackCommandSerializer(),
                 new MsgPackEventSerializer());
@@ -61,13 +56,10 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         {
             // Arrange
             // Act
-            var containerFactory = new StubComponentryContainerProvider();
-            var container = containerFactory.Create();
-
             var redisConnection2 = ConnectionMultiplexer.Connect("localhost:6379,allowAdmin=true");
             var database2 = new RedisExecutionDatabase(
-                container,
-                this.redisConnection,
+                this.container,
+                redisConnection2,
                 new MsgPackCommandSerializer(),
                 new MsgPackEventSerializer(),
                 false);
@@ -197,8 +189,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             // Act
             this.database.AddAccount(account);
 
-            LogDumper.Dump(this.logger, this.output);
-
             // Assert
             Assert.Equal(account, this.database.GetAccount(account.Id));
             Assert.Equal(account.Id, this.database.GetAccountIds().First());
@@ -216,8 +206,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             // Act
             this.database.AddOrder(order, traderId, accountId, strategyId, positionId);
-
-            LogDumper.Dump(this.logger, this.output);
 
             // Assert
             Assert.Equal(order, this.database.GetOrder(order.Id));
@@ -248,8 +236,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             // Act
             this.database.ClearCaches();
 
-            LogDumper.Dump(this.logger, this.output);
-
             // Assert
             Assert.Empty(this.database.GetOrders());
             Assert.Empty(this.database.GetOrders(traderId));
@@ -272,8 +258,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             // Act
             this.database.ClearCaches();
-
-            LogDumper.Dump(this.logger, this.output);
 
             // Assert
             Assert.Empty(this.database.GetOrders());
@@ -308,8 +292,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             // Act
             this.database.ClearCaches();
 
-            LogDumper.Dump(this.logger, this.output);
-
             // Assert
             Assert.Empty(this.database.GetOrders());
             Assert.Empty(this.database.GetOrders(traderId));
@@ -337,8 +319,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             // Act
             this.database.ClearCaches();
 
-            LogDumper.Dump(this.logger, this.output);
-
             // Assert
             Assert.Null(this.database.GetOrder(order.Id));
         }
@@ -357,8 +337,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             // Act
             this.database.Flush();
-
-            LogDumper.Dump(this.logger, this.output);
 
             // Assert
             Assert.Null(this.database.GetTraderId(order.Id));
@@ -443,8 +421,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             // Act
             this.database.AddAtomicOrder(atomicOrder, traderId, accountId, strategyId, positionId);
 
-            LogDumper.Dump(this.logger, this.output);
-
             // Assert
             Assert.Equal(atomicOrder.Entry, this.database.GetOrder(atomicOrder.Entry.Id));
             Assert.Equal(atomicOrder.StopLoss, this.database.GetOrder(atomicOrder.StopLoss.Id));
@@ -488,8 +464,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             // Act
             this.database.AddAtomicOrder(atomicOrder, traderId, accountId, strategyId, positionId);
-
-            LogDumper.Dump(this.logger, this.output);
 
             // Assert
             Assert.Equal(atomicOrder.Entry, this.database.GetOrder(atomicOrder.Entry.Id));
@@ -539,8 +513,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             // Act
             this.database.ClearCaches();
 
-            LogDumper.Dump(this.logger, this.output);
-
             // Assert
             Assert.Empty(this.database.GetPositions());
             Assert.Empty(this.database.GetPositions(traderId));
@@ -570,8 +542,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             // Act
             this.database.ClearCaches();
-
-            LogDumper.Dump(this.logger, this.output);
 
             // Assert
             Assert.Empty(this.database.GetPositionsOpen());
@@ -655,8 +625,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             // Act
             this.database.AddPosition(position);
 
-            LogDumper.Dump(this.logger, this.output);
-
             // Assert
             Assert.Equal(position, this.database.GetPosition(positionId));
             Assert.Contains(position.Id, this.database.GetPositions());
@@ -683,8 +651,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             // Act
             this.database.UpdateAccount(account);
-
-            LogDumper.Dump(this.logger, this.output);
 
             // Assert
             Assert.True(true); // Does not throw
@@ -715,8 +681,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             // Act
             this.database.UpdateAccount(account);
 
-            LogDumper.Dump(this.logger, this.output);
-
             // Assert
             Assert.True(true); // Does not throw
         }
@@ -743,8 +707,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             // Act
             this.database.UpdateOrder(order);
-
-            LogDumper.Dump(this.logger, this.output);
 
             // Assert
             Assert.Contains(order.Id, this.database.GetOrderIds());
@@ -779,8 +741,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             // Act
             this.database.UpdateOrder(order);
-
-            LogDumper.Dump(this.logger, this.output);
 
             // Assert
             Assert.Contains(order.Id, this.database.GetOrderIds());
@@ -817,8 +777,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             // Act
             position.Apply(StubEventMessageProvider.OrderFilledEvent(order));
             this.database.UpdatePosition(position);
-
-            LogDumper.Dump(this.logger, this.output);
 
             // Assert
             Assert.Equal(position, this.database.GetPosition(positionId));
@@ -860,8 +818,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             // Act
             position.Apply(StubEventMessageProvider.OrderFilledEvent(order2));
             this.database.UpdatePosition(position);
-
-            LogDumper.Dump(this.logger, this.output);
 
             // Assert
             Assert.Equal(position, this.database.GetPosition(positionId));
@@ -911,8 +867,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             position.Apply(StubEventMessageProvider.OrderFilledEvent(order3));
             this.database.UpdatePosition(position);
 
-            LogDumper.Dump(this.logger, this.output);
-
             // Assert
             Assert.Equal(position, this.database.GetPosition(positionId));
             Assert.Contains(position.Id, this.database.GetPositionsOpen());
@@ -951,8 +905,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             // Act
             this.database.LoadAccountsCache();
 
-            LogDumper.Dump(this.logger, this.output);
-
             // Assert
             Assert.Equal(account.Id, this.database.GetAccountIds().FirstOrDefault());
         }
@@ -988,8 +940,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             // Act
             this.database.LoadOrdersCache();
 
-            LogDumper.Dump(this.logger, this.output);
-
             // Assert
             Assert.Equal(order1, this.database.GetOrders()[order1.Id]);
             Assert.Equal(order2, this.database.GetOrders()[order2.Id]);
@@ -1024,8 +974,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             // Act
             this.database.LoadPositionsCache();
-
-            LogDumper.Dump(this.logger, this.output);
 
             // Assert
         }

@@ -9,6 +9,7 @@
 namespace Nautilus.Common.Componentry
 {
     using System;
+    using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -32,14 +33,14 @@ namespace Nautilus.Common.Componentry
         /// Initializes a new instance of the <see cref="Component"/> class.
         /// </summary>
         /// <param name="container">The components componentry container.</param>
-        protected Component(IComponentryContainer container)
+        /// <param name="subName">The sub-name for the component.</param>
+        protected Component(IComponentryContainer container, string subName = "")
         {
             this.clock = container.Clock;
             this.guidFactory = container.GuidFactory;
 
-            this.Name = new Label(this.GetType().NameFormatted());
-            this.Address = new Address(this.Name.Value);
-            this.Mailbox = new Mailbox(this.Address, this.Endpoint);
+            this.Name = new Label(this.GetType().NameFormatted() + SetSubName(subName));
+            this.Mailbox = new Mailbox(new Address(this.Name.Value), this.Endpoint);
             this.Logger = container.LoggerFactory.CreateLogger(this.Name.Value);
             this.ComponentState = ComponentState.Initialized;
 
@@ -58,19 +59,9 @@ namespace Nautilus.Common.Componentry
         public Label Name { get; }
 
         /// <summary>
-        /// Gets the components messaging address.
-        /// </summary>
-        public Address Address { get; }
-
-        /// <summary>
         /// Gets the components messaging mailbox.
         /// </summary>
         public Mailbox Mailbox { get; }
-
-        /// <summary>
-        /// Gets the components current state.
-        /// </summary>
-        public ComponentState ComponentState { get; private set; }
 
         /// <summary>
         /// Gets the time the component was initialized.
@@ -79,9 +70,43 @@ namespace Nautilus.Common.Componentry
         public ZonedDateTime InitializedTime { get; }
 
         /// <summary>
+        /// Gets the components current state.
+        /// </summary>
+        public ComponentState ComponentState { get; private set; }
+
+        /// <summary>
         /// Gets the components logger.
         /// </summary>
         protected ILogger Logger { get; }
+
+        /// <summary>
+        /// Sends a new <see cref="Start"/> message to the component.
+        /// </summary>
+        /// <returns>The asynchronous operation.</returns>
+        public Task Start()
+        {
+            this.SendToSelf(new Start(this.NewGuid(), this.TimeNow())).Wait();
+
+            while (this.ComponentState != ComponentState.Running)
+            {
+            }
+
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Sends a new <see cref="Stop"/> message to the component.
+        /// </summary>
+        /// <param name="timeoutMilliseconds">The timeout in milliseconds.</param>
+        /// <returns>The asynchronous operation.</returns>
+        public async Task<bool> Stop(int timeoutMilliseconds = 2000)
+        {
+            this.SendToSelf(new Stop(this.NewGuid(), this.TimeNow())).Wait();
+
+            await Task.WhenAny(this.GracefulStop(), Task.Delay(timeoutMilliseconds));
+
+            return this.ComponentState == ComponentState.Stopped;
+        }
 
         /// <summary>
         /// Returns the current time of the service clock.
@@ -89,7 +114,7 @@ namespace Nautilus.Common.Componentry
         /// <returns>
         /// A <see cref="ZonedDateTime"/>.
         /// </returns>
-        public ZonedDateTime TimeNow() => this.clock.TimeNow();
+        protected ZonedDateTime TimeNow() => this.clock.TimeNow();
 
         /// <summary>
         /// Returns the current instant of the service clock.
@@ -97,29 +122,13 @@ namespace Nautilus.Common.Componentry
         /// <returns>
         /// An <see cref="Instant"/>.
         /// </returns>
-        public Instant InstantNow() => this.clock.InstantNow();
+        protected Instant InstantNow() => this.clock.InstantNow();
 
         /// <summary>
         /// Returns a new <see cref="Guid"/> from the systems <see cref="Guid"/> factory.
         /// </summary>
         /// <returns>A <see cref="Guid"/>.</returns>
-        public Guid NewGuid() => this.guidFactory.Generate();
-
-        /// <summary>
-        /// Sends a new <see cref="Start"/> message to the component.
-        /// </summary>
-        public void Start()
-        {
-            this.SendToSelf(new Start(this.NewGuid(), this.TimeNow()));
-        }
-
-        /// <summary>
-        /// Sends a new <see cref="Stop"/> message to the component.
-        /// </summary>
-        public void Stop()
-        {
-            this.SendToSelf(new Stop(this.NewGuid(), this.TimeNow()));
-        }
+        protected Guid NewGuid() => this.guidFactory.Generate();
 
         /// <summary>
         /// Actions to be performed on component start. Called when a Start message is received.
@@ -129,7 +138,10 @@ namespace Nautilus.Common.Componentry
         /// <param name="start">The start message.</param>
         protected virtual void OnStart(Start start)
         {
-            this.Logger.LogWarning(LogId.Operation, $"Received {start} with OnStart() not overridden in implementation.", start.Id);
+            this.Logger.LogWarning(
+                LogId.Operation,
+                $"Received {start} with OnStart() not overridden in implementation.",
+                start.Id);
         }
 
         /// <summary>
@@ -140,7 +152,10 @@ namespace Nautilus.Common.Componentry
         /// <param name="stop">The stop message.</param>
         protected virtual void OnStop(Stop stop)
         {
-            this.Logger.LogWarning(LogId.Operation, $"Received {stop} with OnStop() not overridden in implementation.", stop.Id);
+            this.Logger.LogWarning(
+                LogId.Operation,
+                $"Received {stop} with OnStop() not overridden in implementation.",
+                stop.Id);
         }
 
         /// <summary>
@@ -152,6 +167,16 @@ namespace Nautilus.Common.Componentry
             this.SendToSelf(envelope.Message);
 
             this.Logger.LogTrace(LogId.Operation, $"Received {envelope}.", envelope.Id, envelope.Message.Id);
+        }
+
+        private static string SetSubName(string subName)
+        {
+            if (subName != string.Empty)
+            {
+                subName = $"-{subName}";
+            }
+
+            return subName;
         }
 
         private void OnMessage(Start message)
@@ -170,7 +195,10 @@ namespace Nautilus.Common.Componentry
 
             if (this.ComponentState != ComponentState.Running)
             {
-                this.Logger.LogError(LogId.Operation, $"Stop message when component not already running, was {this.ComponentState}.", message.Id);
+                this.Logger.LogWarning(
+                    LogId.Operation,
+                    $"Stop message when component not already running, was {this.ComponentState}.",
+                    message.Id);
             }
 
             this.OnStop(message);

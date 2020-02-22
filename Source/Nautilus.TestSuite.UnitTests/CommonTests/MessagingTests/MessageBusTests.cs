@@ -11,6 +11,8 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using System.Threading.Tasks;
+    using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messages.Events;
     using Nautilus.Common.Messaging;
@@ -19,29 +21,25 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
-    using Nautilus.TestSuite.TestKit;
-    using Nautilus.TestSuite.TestKit.TestDoubles;
+    using Nautilus.TestSuite.TestKit.Components;
+    using Nautilus.TestSuite.TestKit.Mocks;
+    using Nautilus.TestSuite.TestKit.Stubs;
     using Xunit;
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class MessageBusTests
     {
-        private readonly ITestOutputHelper output;
-        private readonly MockLogger logger;
-        private readonly MockMessagingAgent receiver;
+        private readonly IComponentryContainer container;
+        private readonly MockComponent receiver;
         private readonly MessageBus<Event> messageBus;
 
         public MessageBusTests(ITestOutputHelper output)
         {
             // Fixture Setup
-            this.output = output;
-
-            var containerFactory = new StubComponentryContainerProvider();
-            var container = containerFactory.Create();
-            this.logger = containerFactory.Logger;
-            this.receiver = new MockMessagingAgent();
-            this.messageBus = new MessageBus<Event>(container);
+            this.container = TestComponentryContainer.Create(output);
+            this.receiver = new MockComponent(this.container, "1");
+            this.messageBus = new MessageBus<Event>(this.container);
 
             var addresses = new Dictionary<Address, IEndpoint>
             {
@@ -52,8 +50,8 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
 
             this.messageBus.Endpoint.Send(new InitializeSwitchboard(
                 Switchboard.Create(addresses),
-                Guid.NewGuid(),
-                containerFactory.Clock.TimeNow()));
+                this.container.GuidFactory.Generate(),
+                this.container.Clock.TimeNow()));
 
             this.receiver.RegisterHandler<IEnvelope>(this.receiver.OnMessage);
         }
@@ -84,8 +82,6 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
             // Act
             this.messageBus.Endpoint.Send(subscribe);
 
-            LogDumper.DumpWithDelay(this.logger, this.output);
-
             // Assert
             Assert.Equal(0, this.messageBus.SubscriptionCount);
         }
@@ -102,8 +98,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
 
             // Act
             this.messageBus.Endpoint.Send(subscribe);
-
-            LogDumper.DumpWithDelay(this.logger, this.output);
+            Task.Delay(100).Wait(); // Allow threads to complete for assertions (will refactor)
 
             // Assert
             Assert.Contains(typeof(Event), this.messageBus.Subscriptions);
@@ -123,8 +118,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
             // Act
             this.messageBus.Endpoint.Send(subscribe);
             this.messageBus.Endpoint.Send(subscribe);
-
-            LogDumper.DumpWithDelay(this.logger, this.output);
+            Task.Delay(100).Wait(); // Allow threads to complete for assertions (will refactor)
 
             // Assert
             Assert.Equal(1, this.messageBus.Subscriptions[typeof(Event)].Count);
@@ -143,8 +137,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
 
             // Act
             this.messageBus.Endpoint.Send(subscribe);
-
-            LogDumper.DumpWithDelay(this.logger, this.output);
+            Task.Delay(100).Wait(); // Allow threads to complete for assertions (will refactor)
 
             // Assert
             Assert.Contains(typeof(MarketOpened), this.messageBus.Subscriptions);
@@ -165,8 +158,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
             // Act
             this.messageBus.Endpoint.Send(subscribe);
             this.messageBus.Endpoint.Send(subscribe);
-
-            LogDumper.DumpWithDelay(this.logger, this.output);
+            Task.Delay(100).Wait(); // Allow threads to complete for assertions (will refactor)
 
             // Assert
             Assert.Contains(typeof(MarketOpened), this.messageBus.Subscriptions);
@@ -178,7 +170,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
         internal void GivenMultipleSubscribe_HandlesCorrectly()
         {
             // Arrange
-            var receiver2 = new MockMessagingAgent("MockMessagingAgent2");
+            var receiver2 = new MockComponent(this.container, "2");
 
             var subscribe1 = new Subscribe<Type>(
                 typeof(Event),
@@ -215,9 +207,10 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
             this.messageBus.Endpoint.Send(subscribe2);
             this.messageBus.Endpoint.Send(subscribe3);
             this.messageBus.Endpoint.Send(subscribe4);
-            this.messageBus.Endpoint.Send(subscribe5);
-
-            LogDumper.DumpWithDelay(this.logger, this.output);
+            this.messageBus.Endpoint.Send(subscribe5).Wait();
+            this.messageBus.Stop().Wait();
+            this.receiver.Stop().Wait();
+            receiver2.Stop().Wait();
 
             // Assert
             Assert.Contains(typeof(Event), this.messageBus.Subscriptions);
@@ -249,8 +242,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
             // Act
             this.messageBus.Endpoint.Send(subscribe);
             this.messageBus.Endpoint.Send(unsubscribe);
-
-            LogDumper.DumpWithDelay(this.logger, this.output);
+            Task.Delay(100).Wait(); // Allow threads to complete for assertions (will refactor)
 
             // Assert
             Assert.Equal(0, this.messageBus.SubscriptionCount);
@@ -275,8 +267,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
             // Act
             this.messageBus.Endpoint.Send(subscribe);
             this.messageBus.Endpoint.Send(unsubscribe);
-
-            LogDumper.DumpWithDelay(this.logger, this.output);
+            Task.Delay(100).Wait(); // Allow threads to complete for assertions (will refactor)
 
             // Assert
             Assert.Equal(0, this.messageBus.SubscriptionCount);
@@ -294,8 +285,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
 
             // Act
             this.messageBus.Endpoint.Send(unsubscribe);
-
-            LogDumper.DumpWithDelay(this.logger, this.output);
+            Task.Delay(100).Wait(); // Allow threads to complete for assertions (will refactor)
 
             // Assert
             Assert.Equal(0, this.messageBus.SubscriptionCount);
@@ -313,8 +303,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
 
             // Act
             this.messageBus.Endpoint.Send(unsubscribe);
-
-            LogDumper.DumpWithDelay(this.logger, this.output);
+            Task.Delay(100).Wait(); // Allow threads to complete for assertions (will refactor)
 
             // Assert
             Assert.Equal(0, this.messageBus.SubscriptionCount);
@@ -332,8 +321,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
 
             // Act
             this.messageBus.Endpoint.Send(unsubscribe);
-
-            LogDumper.DumpWithDelay(this.logger, this.output);
+            Task.Delay(100).Wait(); // Allow threads to complete for assertions (will refactor)
 
             // Assert
             Assert.Equal(0, this.messageBus.SubscriptionCount);
@@ -343,7 +331,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
         internal void GivenMultipleSubscribe_ThenUnsubscribe_HandlesCorrectly()
         {
             // Arrange
-            var receiver2 = new MockMessagingAgent("MockMessagingAgent2");
+            var receiver2 = new MockComponent(this.container);
 
             var subscribe1 = new Subscribe<Type>(
                 typeof(Event),
@@ -403,8 +391,9 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
             this.messageBus.Endpoint.Send(unsubscribe1);
             this.messageBus.Endpoint.Send(unsubscribe2);
             this.messageBus.Endpoint.Send(unsubscribe3);
-
-            LogDumper.DumpWithDelay(this.logger, this.output);
+            this.messageBus.Stop().Wait();
+            this.receiver.Stop().Wait();
+            receiver2.Stop().Wait();
 
             // Assert
             Assert.Contains(typeof(Event), this.messageBus.Subscriptions);
@@ -433,8 +422,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
 
             // Act
             this.messageBus.Endpoint.Send(envelope);
-
-            LogDumper.DumpWithDelay(this.logger, this.output);
+            Task.Delay(100).Wait(); // Allow threads to complete for assertions (will refactor)
 
             // Assert
             Assert.Contains(envelope, this.receiver.Messages);
@@ -458,8 +446,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
 
             // Act
             this.messageBus.Endpoint.Send(envelope);
-
-            LogDumper.DumpWithDelay(this.logger, this.output);
+            Task.Delay(100).Wait(); // Allow threads to complete for assertions (will refactor)
 
             // Assert
             Assert.Contains(envelope, this.messageBus.DeadLetters);
@@ -483,8 +470,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
 
             // Act
             this.messageBus.Endpoint.Send(envelope);
-
-            LogDumper.DumpWithDelay(this.logger, this.output);
+            Task.Delay(100).Wait(); // Allow threads to complete for assertions (will refactor)
 
             // Assert
             Assert.Equal(0, this.messageBus.SubscriptionCount);
@@ -516,8 +502,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
 
             // Act
             this.messageBus.Endpoint.Send(envelope);
-
-            LogDumper.DumpWithDelay(this.logger, this.output);
+            Task.Delay(100).Wait(); // Allow threads to complete for assertions (will refactor)
 
             // Assert
             Assert.Contains(envelope, this.receiver.Messages);
@@ -549,8 +534,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
 
             // Act
             this.messageBus.Endpoint.Send(envelope);
-
-            LogDumper.DumpWithDelay(this.logger, this.output);
+            Task.Delay(100).Wait(); // Allow threads to complete for assertions (will refactor)
 
             // Assert
             Assert.Contains(envelope, this.receiver.Messages);

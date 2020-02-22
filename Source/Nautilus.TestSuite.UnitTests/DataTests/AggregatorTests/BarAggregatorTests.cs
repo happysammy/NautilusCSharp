@@ -16,8 +16,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.TestSuite.TestKit;
-    using Nautilus.TestSuite.TestKit.TestDoubles;
+    using Nautilus.TestSuite.TestKit.Components;
+    using Nautilus.TestSuite.TestKit.Mocks;
+    using Nautilus.TestSuite.TestKit.Stubs;
     using NodaTime;
     using Xunit;
     using Xunit.Abstractions;
@@ -25,23 +26,17 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class BarAggregatorTests
     {
-        private readonly ITestOutputHelper output;
-        private readonly MockLogger logger;
-        private readonly MockMessagingAgent receiver;
-        private readonly Symbol symbol;
+        private readonly MockComponent receiver;
         private readonly BarAggregator barAggregator;
+        private readonly Symbol symbol;
 
         public BarAggregatorTests(ITestOutputHelper output)
         {
             // Fixture Setup
-            this.output = output;
-
-            this.symbol = new Symbol("AUDUSD", new Venue("FXCM"));
-            var containerFactory = new StubComponentryContainerProvider();
-            var container = containerFactory.Create();
-            this.logger = containerFactory.Logger;
-            this.receiver = new MockMessagingAgent();
+            var container = TestComponentryContainer.Create(output);
+            this.receiver = new MockComponent(container);
             this.receiver.RegisterHandler<BarData>(this.receiver.OnMessage);
+            this.symbol = new Symbol("AUDUSD", new Venue("FXCM"));
 
             this.barAggregator = new BarAggregator(
                 container,
@@ -60,9 +55,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.barAggregator.Endpoint.Send(closeBar);
-
-            LogDumper.DumpWithDelay(this.logger, this.output);
+            this.barAggregator.Endpoint.Send(closeBar).Wait();
+            this.barAggregator.Stop().Wait();
+            this.receiver.Stop().Wait();
 
             // Assert
             Assert.Empty(this.barAggregator.Specifications);
@@ -82,9 +77,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.barAggregator.Endpoint.Send(subscribe);
-
-            LogDumper.DumpWithDelay(this.logger, this.output);
+            this.barAggregator.Endpoint.Send(subscribe).Wait();
+            this.barAggregator.Stop().Wait();
+            this.receiver.Stop().Wait();
 
             // Assert
             Assert.Single(this.barAggregator.Specifications);
@@ -105,9 +100,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
 
             // Act
             this.barAggregator.Endpoint.Send(subscribe);
-            this.barAggregator.Endpoint.Send(subscribe);
-
-            LogDumper.DumpWithDelay(this.logger, this.output);
+            this.barAggregator.Endpoint.Send(subscribe).Wait();
+            this.barAggregator.Stop().Wait();
+            this.receiver.Stop().Wait();
 
             // Assert
             Assert.Single(this.barAggregator.Specifications);
@@ -136,9 +131,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.barAggregator.Endpoint.Send(subscribe);
 
             // Act
-            this.barAggregator.Endpoint.Send(closeBar);
-
-            LogDumper.DumpWithDelay(this.logger, this.output);
+            this.barAggregator.Endpoint.Send(closeBar).Wait();
+            this.barAggregator.Stop().Wait();
+            this.receiver.Stop().Wait();
 
             // Assert
             Assert.Empty(this.receiver.Messages);
@@ -175,9 +170,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.barAggregator.Endpoint.Send(tick);
 
             // Act
-            this.barAggregator.Endpoint.Send(closeBar);
-
-            LogDumper.DumpWithDelay(this.logger, this.output);
+            this.barAggregator.Endpoint.Send(closeBar).Wait();
+            this.barAggregator.Stop().Wait();
+            this.receiver.Stop().Wait();
 
             // Assert
             Assert.Empty(this.receiver.Messages);
@@ -214,9 +209,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.barAggregator.Endpoint.Send(tick);
 
             // Act
-            this.barAggregator.Endpoint.Send(closeBar);
-
-            LogDumper.DumpWithDelay(this.logger, this.output);
+            this.barAggregator.Endpoint.Send(closeBar).Wait();
+            this.barAggregator.Stop().Wait();
+            this.receiver.Stop().Wait();
 
             // Assert
             Assert.Single(this.receiver.Messages);
@@ -271,9 +266,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.barAggregator.Endpoint.Send(tick2);
 
             // Act
-            this.barAggregator.Endpoint.Send(closeBar2);
-
-            LogDumper.DumpWithDelay(this.logger, this.output);
+            this.barAggregator.Endpoint.Send(closeBar2).Wait();
+            this.barAggregator.Stop().Wait();
+            this.receiver.Stop().Wait();
 
             // Assert
             Assert.Equal(2, this.receiver.Messages.Count);
@@ -283,7 +278,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
         }
 
         [Fact]
-        internal void GivenCloseBarMessage_WhenMultipleSubscriptions1_ThenReturnsExpectedBar()
+        internal void GivenCloseBarMessage_WhenMultipleSubscriptions_ThenReturnsExpectedBar()
         {
             // Arrange
             var subscribe1 = new Subscribe<BarType>(
@@ -346,9 +341,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.barAggregator.Endpoint.Send(tick3);
 
             // Act
-            this.barAggregator.Endpoint.Send(closeBar2);
-
-            LogDumper.DumpWithDelay(this.logger, this.output);
+            this.barAggregator.Endpoint.Send(closeBar2).Wait();
+            this.barAggregator.Stop().Wait();
+            this.receiver.Stop().Wait();
 
             // Assert
             Assert.Equal(2, this.receiver.Messages.Count);
@@ -397,9 +392,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.barAggregator.Endpoint.Send(tick2);
 
             // Act
-            this.barAggregator.Endpoint.Send(closeBar);
-
-            LogDumper.DumpWithDelay(this.logger, this.output);
+            this.barAggregator.Endpoint.Send(closeBar).Wait();
+            this.barAggregator.Stop().Wait();
+            this.receiver.Stop().Wait();
 
             // Assert
             Assert.Single(this.receiver.Messages);

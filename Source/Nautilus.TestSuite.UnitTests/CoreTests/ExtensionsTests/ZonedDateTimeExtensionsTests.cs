@@ -10,7 +10,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
 {
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core.Extensions;
-    using Nautilus.TestSuite.TestKit.TestDoubles;
+    using Nautilus.TestSuite.TestKit.Stubs;
     using NodaTime;
     using Xunit;
 

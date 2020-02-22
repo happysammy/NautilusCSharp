@@ -10,7 +10,8 @@ namespace Nautilus.TestSuite.UnitTests.TestKitTests.TestDoublesTests
 {
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
-    using Nautilus.TestSuite.TestKit.TestDoubles;
+    using Nautilus.TestSuite.TestKit.Components;
+    using Nautilus.TestSuite.TestKit.Stubs;
     using NodaTime;
     using Xunit;
 
@@ -21,7 +22,7 @@ namespace Nautilus.TestSuite.UnitTests.TestKitTests.TestDoublesTests
         internal void TimeNow_WithStubSystemClock_ReturnsStubbedDateTime()
         {
             // Arrange
-            var stubClock = new StubClock();
+            var stubClock = new TestClock();
 
             // Act
             stubClock.FreezeSetTime(StubZonedDateTime.UnixEpoch());
@@ -34,7 +35,7 @@ namespace Nautilus.TestSuite.UnitTests.TestKitTests.TestDoublesTests
         internal void FreezeSetTime_WithStubSystemClockFrozenThenUnFrozen_ReturnsExpectedTimes()
         {
             // Arrange
-            var stubClock = new StubClock();
+            var stubClock = new TestClock();
 
             // Act
             stubClock.FreezeSetTime(StubZonedDateTime.UnixEpoch());
@@ -51,7 +52,7 @@ namespace Nautilus.TestSuite.UnitTests.TestKitTests.TestDoublesTests
         internal void FreezeTimeNow_WithStubSystemClock_ReturnsExpectedTime()
         {
             // Arrange
-            var stubClock = new StubClock();
+            var stubClock = new TestClock();
 
             // Act
             stubClock.FreezeTimeNow();
@@ -67,7 +68,7 @@ namespace Nautilus.TestSuite.UnitTests.TestKitTests.TestDoublesTests
         internal void GetTimeZone_ReturnsCorrectTimeZone()
         {
             // Arrange
-            var stubClock = new StubClock();
+            var stubClock = new TestClock();
 
             // Act
             var result = stubClock.GetTimeZone();

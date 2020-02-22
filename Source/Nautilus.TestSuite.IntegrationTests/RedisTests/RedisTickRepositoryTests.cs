@@ -17,8 +17,8 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     using Nautilus.Redis.Data;
     using Nautilus.Redis.Data.Internal;
     using Nautilus.Serialization.DataSerializers;
-    using Nautilus.TestSuite.TestKit;
-    using Nautilus.TestSuite.TestKit.TestDoubles;
+    using Nautilus.TestSuite.TestKit.Components;
+    using Nautilus.TestSuite.TestKit.Stubs;
     using NodaTime;
     using StackExchange.Redis;
     using Xunit;
@@ -27,20 +27,13 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsShouldBeDocumented", Justification = "Test Suite")]
     public sealed class RedisTickRepositoryTests : IDisposable
     {
-        private readonly ITestOutputHelper output;
-        private readonly MockLogger logger;
         private readonly ConnectionMultiplexer redisConnection;
         private readonly RedisTickRepository repository;
 
         public RedisTickRepositoryTests(ITestOutputHelper output)
         {
             // Fixture Setup
-            this.output = output;
-
-            var containerFactory = new StubComponentryContainerProvider();
-            this.logger = containerFactory.Logger;
-            var container = containerFactory.Create();
-
+            var container = TestComponentryContainer.Create(output);
             this.redisConnection = ConnectionMultiplexer.Connect("localhost:6379,allowAdmin=true");
             this.repository = new RedisTickRepository(
                 container,
@@ -124,8 +117,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             // Act
             var result = this.repository.GetKeysSorted(KeyProvider.GetTicksPattern(audusd));
-
-            LogDumper.Dump(this.logger, this.output);
 
             // Assert
             Assert.Equal(3, result.Value.Length);
@@ -265,8 +256,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             // Act
             var result = this.repository.GetTicks(audusd);
 
-            this.output.WriteLine(result.Message);
-
             // Assert
             Assert.Equal(1, this.repository.TicksCount());
             Assert.Equal(1, this.repository.TicksCount(audusd));
@@ -289,8 +278,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
                 audusd,
                 new DateKey(StubZonedDateTime.UnixEpoch() - Duration.FromDays(2)),
                 new DateKey(StubZonedDateTime.UnixEpoch()));
-
-            this.output.WriteLine(result.Message);
 
             // Assert
             Assert.Equal(1, this.repository.TicksCount());
@@ -322,8 +309,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
                 audusd,
                 new DateKey(StubZonedDateTime.UnixEpoch()),
                 new DateKey(StubZonedDateTime.UnixEpoch() + Duration.FromDays(4)));
-
-            LogDumper.Dump(this.logger, this.output);
 
             // Assert
             Assert.Equal(5, this.repository.TicksCount());

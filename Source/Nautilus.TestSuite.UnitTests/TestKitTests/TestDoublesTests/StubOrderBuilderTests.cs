@@ -12,7 +12,7 @@ namespace Nautilus.TestSuite.UnitTests.TestKitTests.TestDoublesTests
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.TestSuite.TestKit.TestDoubles;
+    using Nautilus.TestSuite.TestKit.Stubs;
     using NodaTime;
     using Xunit;
 

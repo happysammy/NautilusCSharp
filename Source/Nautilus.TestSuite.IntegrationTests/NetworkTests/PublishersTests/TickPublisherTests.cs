@@ -19,8 +19,8 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
     using Nautilus.Network.Compression;
     using Nautilus.Network.Encryption;
     using Nautilus.Serialization.DataSerializers;
-    using Nautilus.TestSuite.TestKit;
-    using Nautilus.TestSuite.TestKit.TestDoubles;
+    using Nautilus.TestSuite.TestKit.Components;
+    using Nautilus.TestSuite.TestKit.Stubs;
     using NetMQ;
     using NetMQ.Sockets;
     using Xunit;
@@ -30,20 +30,12 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
     public sealed class TickPublisherTests : IDisposable
     {
         private const string TestAddress = "tcp://localhost:55606";
-        private readonly ITestOutputHelper output;
-        private readonly MockLogger logger;
         private readonly TickPublisher publisher;
 
         public TickPublisherTests(ITestOutputHelper output)
         {
             // Fixture Setup
-            this.output = output;
-
-            var containerFactory = new StubComponentryContainerProvider();
-            var container = containerFactory
-            .Create();
-            this.logger = containerFactory
-            .Logger;
+            var container = TestComponentryContainer.Create(output);
             this.publisher = new TickPublisher(
                 container,
                 DataBusFactory.Create(container),
@@ -80,14 +72,11 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
             var receivedTopic = subscriber.ReceiveFrameBytes();
             var receivedMessage = subscriber.ReceiveFrameBytes();
 
-            LogDumper.DumpWithDelay(this.logger, this.output);
-
             // Assert
             Assert.Equal(tick.Symbol.Value, Encoding.UTF8.GetString(receivedTopic));
             Assert.Equal(tick.ToString(), Encoding.UTF8.GetString(receivedMessage));
 
             // Tear Down
-            LogDumper.DumpWithDelay(this.logger, this.output);
             subscriber.Disconnect(TestAddress);
             subscriber.Dispose();
             this.publisher.Stop();

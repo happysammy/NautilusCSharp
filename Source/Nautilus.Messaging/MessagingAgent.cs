@@ -10,6 +10,7 @@ namespace Nautilus.Messaging
 {
     using System;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Nautilus.Messaging.Internal;
 
     /// <summary>
@@ -63,6 +64,24 @@ namespace Nautilus.Messaging
         }
 
         /// <summary>
+        /// Immediately kills the internal messaging processor.
+        /// </summary>
+        /// <returns>The async operation.</returns>
+        public Task Kill()
+        {
+            return this.processor.Kill();
+        }
+
+        /// <summary>
+        /// Gracefully stops the internal messaging processor.
+        /// </summary>
+        /// <returns>The async operation.</returns>
+        protected Task<bool> GracefulStop()
+        {
+            return this.processor.GracefulStop();
+        }
+
+        /// <summary>
         /// Register the given handler to receive exceptions raised by the processor.
         /// </summary>ve
         /// <param name="handler">The handler to register.</param>
@@ -84,9 +103,10 @@ namespace Nautilus.Messaging
         /// Send the given message to this agents own endpoint.
         /// </summary>
         /// <param name="message">The message to send.</param>
-        protected void SendToSelf(object message)
+        /// <returns>The result of the task.</returns>
+        protected Task SendToSelf(object message)
         {
-            this.Endpoint.Send(message);
+            return this.Endpoint.Send(message);
         }
 
         /// <summary>

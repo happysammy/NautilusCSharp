@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.TestKit.TestDoubles
+namespace Nautilus.TestSuite.TestKit.Stubs
 {
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;

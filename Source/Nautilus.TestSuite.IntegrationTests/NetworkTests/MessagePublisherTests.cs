@@ -16,8 +16,8 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
     using Nautilus.Common.Interfaces;
     using Nautilus.Network;
     using Nautilus.Network.Encryption;
-    using Nautilus.TestSuite.TestKit;
-    using Nautilus.TestSuite.TestKit.TestDoubles;
+    using Nautilus.TestSuite.TestKit.Components;
+    using Nautilus.TestSuite.TestKit.Mocks;
     using NetMQ;
     using NetMQ.Sockets;
     using Xunit;
@@ -28,19 +28,12 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
     public sealed class MessagePublisherTests : IDisposable
     {
         private const string TestTopic = "TEST";
-
-        private readonly ITestOutputHelper output;
         private readonly IComponentryContainer container;
-        private readonly MockLogger logger;
 
         public MessagePublisherTests(ITestOutputHelper output)
         {
             // Fixture Setup
-            this.output = output;
-
-            var containerFactory = new StubComponentryContainerProvider();
-            this.container = containerFactory.Create();
-            this.logger = containerFactory.Logger;
+            this.container = TestComponentryContainer.Create(output);
         }
 
         public void Dispose()
@@ -100,7 +93,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             Assert.Equal(1, publisher.PublishedCount);
 
             // Tear Down
-            LogDumper.DumpWithDelay(this.logger, this.output);
             subscriber.Disconnect(testAddress);
             subscriber.Dispose();
             publisher.Stop();

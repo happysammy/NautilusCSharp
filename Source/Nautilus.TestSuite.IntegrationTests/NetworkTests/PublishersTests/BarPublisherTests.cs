@@ -19,8 +19,8 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
     using Nautilus.Network.Compression;
     using Nautilus.Network.Encryption;
     using Nautilus.Serialization.DataSerializers;
-    using Nautilus.TestSuite.TestKit;
-    using Nautilus.TestSuite.TestKit.TestDoubles;
+    using Nautilus.TestSuite.TestKit.Components;
+    using Nautilus.TestSuite.TestKit.Stubs;
     using NetMQ;
     using NetMQ.Sockets;
     using Xunit;
@@ -30,19 +30,13 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
     public sealed class BarPublisherTests : IDisposable
     {
         private const string TestAddress = "tcp://localhost:55511";
-        private readonly ITestOutputHelper output;
-        private readonly MockLogger logger;
         private readonly BarDataSerializer serializer;
         private readonly BarPublisher publisher;
 
         public BarPublisherTests(ITestOutputHelper output)
         {
             // Fixture Setup
-            this.output = output;
-
-            var containerFactory = new StubComponentryContainerProvider();
-            var container = containerFactory.Create();
-            this.logger = containerFactory.Logger;
+            var container = TestComponentryContainer.Create(output);
             this.serializer = new BarDataSerializer();
 
             this.publisher = new BarPublisher(
@@ -89,11 +83,9 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
             Assert.Equal(bar, this.serializer.Deserialize(message));
 
             // Tear Down
-            LogDumper.DumpWithDelay(this.logger, this.output);
             subscriber.Disconnect(TestAddress);
             subscriber.Dispose();
-            this.publisher.Stop();
-            Task.Delay(100).Wait(); // Allow server to stop
+            this.publisher.Stop().Wait();
             this.publisher.Dispose();
         }
     }

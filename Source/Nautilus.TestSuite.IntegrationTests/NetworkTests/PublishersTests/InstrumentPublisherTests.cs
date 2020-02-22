@@ -20,8 +20,8 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
     using Nautilus.Network.Compression;
     using Nautilus.Network.Encryption;
     using Nautilus.Serialization.DataSerializers;
-    using Nautilus.TestSuite.TestKit;
-    using Nautilus.TestSuite.TestKit.TestDoubles;
+    using Nautilus.TestSuite.TestKit.Components;
+    using Nautilus.TestSuite.TestKit.Stubs;
     using NetMQ;
     using NetMQ.Sockets;
     using Xunit;
@@ -31,19 +31,13 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
     public sealed class InstrumentPublisherTests : IDisposable
     {
         private const string TestAddress = "tcp://localhost:55512";
-        private readonly ITestOutputHelper output;
-        private readonly MockLogger logger;
         private readonly IDataSerializer<Instrument> serializer;
         private readonly InstrumentPublisher publisher;
 
         public InstrumentPublisherTests(ITestOutputHelper output)
         {
             // Fixture Setup
-            this.output = output;
-
-            var containerFactory = new StubComponentryContainerProvider();
-            var container = containerFactory.Create();
-            this.logger = containerFactory.Logger;
+            var container = TestComponentryContainer.Create(output);
             this.serializer = new InstrumentDataSerializer();
 
             this.publisher = new InstrumentPublisher(
@@ -85,7 +79,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
             Assert.Equal(instrument, this.serializer.Deserialize(message));
 
             // Tear Down
-            LogDumper.DumpWithDelay(this.logger, this.output);
             subscriber.Disconnect(TestAddress);
             subscriber.Dispose();
             this.publisher.Stop();

@@ -12,6 +12,11 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.TypesTests
     using Nautilus.Core.Types;
     using Xunit;
 
+    // Required warning suppression for tests
+    // (do not remove even if compiler doesn't initially complain).
+#pragma warning disable 8602
+#pragma warning disable 8604
+#pragma warning disable 8625
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class IdentifierTests
     {

@@ -12,6 +12,7 @@ namespace Nautilus.Execution
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Message;
+    using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Commands;
     using Nautilus.Execution.Configuration;
     using Nautilus.Messaging.Interfaces;
@@ -23,7 +24,7 @@ namespace Nautilus.Execution
     public sealed class CommandRouter : MessageBusConnected
     {
         private readonly Throttler commandThrottler;
-        private readonly Throttler newOrderThrottler;
+        private readonly Throttler orderThrottler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandRouter"/> class.
@@ -43,13 +44,15 @@ namespace Nautilus.Execution
                 container,
                 executionEngine,
                 Duration.FromSeconds(1),
-                config.CommandsPerSecond);
+                config.CommandsPerSecond,
+                nameof(Command));
 
-            this.newOrderThrottler = new Throttler(
+            this.orderThrottler = new Throttler(
                 container,
                 this.commandThrottler.Endpoint,
                 Duration.FromSeconds(1),
-                config.NewOrdersPerSecond);
+                config.NewOrdersPerSecond,
+                nameof(Order));
 
             this.RegisterHandler<SubmitOrder>(this.OnMessage);
             this.RegisterHandler<SubmitAtomicOrder>(this.OnMessage);
@@ -62,7 +65,7 @@ namespace Nautilus.Execution
         protected override void OnStart(Start message)
         {
             this.commandThrottler.Start();
-            this.newOrderThrottler.Start();
+            this.orderThrottler.Start();
         }
 
         /// <inheritdoc />
@@ -70,17 +73,17 @@ namespace Nautilus.Execution
         {
             // Forward stop message
             this.commandThrottler.Stop();
-            this.newOrderThrottler.Stop();
+            this.orderThrottler.Stop();
         }
 
         private void OnMessage(SubmitOrder message)
         {
-            this.newOrderThrottler.Endpoint.Send(message);
+            this.orderThrottler.Endpoint.Send(message);
         }
 
         private void OnMessage(SubmitAtomicOrder message)
         {
-            this.newOrderThrottler.Endpoint.Send(message);
+            this.orderThrottler.Endpoint.Send(message);
         }
 
         private void OnMessage(CancelOrder message)

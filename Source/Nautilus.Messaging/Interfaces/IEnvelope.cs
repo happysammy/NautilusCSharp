@@ -54,17 +54,5 @@ namespace Nautilus.Messaging.Interfaces
         /// <param name="other">The other object.</param>
         /// <returns>True if the message identifier equals the other identifier, otherwise false.</returns>
         bool Equals(IEnvelope other);
-
-        /// <summary>
-        /// Returns the hash code for this <see cref="IEnvelope"/>.
-        /// </summary>
-        /// <returns>The hash code <see cref="int"/>.</returns>
-        int GetHashCode();
-
-        /// <summary>
-        /// Returns a string representation of this <see cref="IEnvelope"/>.
-        /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        string ToString();
     }
 }

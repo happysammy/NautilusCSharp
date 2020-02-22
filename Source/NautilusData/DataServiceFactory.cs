@@ -185,8 +185,8 @@ namespace NautilusData
             addresses.Add(ServiceAddress.DataService, dataService.Endpoint);
             messagingAdapter.Send(new InitializeSwitchboard(
                 Switchboard.Create(addresses),
-                dataService.NewGuid(),
-                dataService.TimeNow()));
+                guidFactory.Generate(),
+                clock.TimeNow()));
 
             return dataService;
         }

@@ -12,7 +12,8 @@ namespace Nautilus.TestSuite.IntegrationTests.SchedulerTests
     using System.Threading.Tasks;
     using Nautilus.Scheduling;
     using Nautilus.Scheduling.Internal;
-    using Nautilus.TestSuite.TestKit.TestDoubles;
+    using Nautilus.TestSuite.TestKit.Components;
+    using Nautilus.TestSuite.TestKit.Mocks;
     using NodaTime;
     using Xunit;
     using Xunit.Abstractions;
@@ -20,9 +21,7 @@ namespace Nautilus.TestSuite.IntegrationTests.SchedulerTests
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class HashedTimerWheelTests
     {
-        private readonly ITestOutputHelper output;
-        private readonly MockLogger logger;
-        private readonly MockMessagingAgent testReceiver;
+        private readonly MockComponent testReceiver;
         private readonly HashedWheelTimerScheduler scheduler;
 
         private int testActionCount;
@@ -30,12 +29,8 @@ namespace Nautilus.TestSuite.IntegrationTests.SchedulerTests
         public HashedTimerWheelTests(ITestOutputHelper output)
         {
             // Fixture Setup
-            this.output = output;
-
-            var containerFactory = new StubComponentryContainerProvider();
-            var container = containerFactory.Create();
-            this.logger = containerFactory.Logger;
-            this.testReceiver = new MockMessagingAgent();
+            var container = TestComponentryContainer.Create(output);
+            this.testReceiver = new MockComponent(container);
             this.testReceiver.RegisterHandler<string>(this.testReceiver.OnMessage);
             this.scheduler = new HashedWheelTimerScheduler(container);
         }
@@ -49,7 +44,6 @@ namespace Nautilus.TestSuite.IntegrationTests.SchedulerTests
 
             // Assert
             Assert.True(result > 20);
-            this.output.WriteLine(result.ToString());
         }
 
         [Fact]

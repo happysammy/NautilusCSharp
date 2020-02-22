@@ -74,7 +74,7 @@ namespace Nautilus.Common.Messaging
             this.messageBusAdapter.Send(
                 message,
                 receiver,
-                this.Address,
+                this.Mailbox.Address,
                 this.TimeNow());
         }
 
@@ -94,7 +94,7 @@ namespace Nautilus.Common.Messaging
                 this.messageBusAdapter.Send(
                     message,
                     receivers[i],
-                    this.Address,
+                    this.Mailbox.Address,
                     this.TimeNow());
             }
         }
@@ -107,7 +107,10 @@ namespace Nautilus.Common.Messaging
         protected void SendToBus<T>(T message)
             where T : Message
         {
-            this.messageBusAdapter.SendToBus(message, this.Address, this.TimeNow());
+            this.messageBusAdapter.SendToBus(
+                message,
+                this.Mailbox.Address,
+                this.TimeNow());
         }
     }
 }

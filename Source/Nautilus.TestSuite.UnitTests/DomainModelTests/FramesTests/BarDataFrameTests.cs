@@ -11,7 +11,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FramesTests
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.DomainModel.Frames;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.TestSuite.TestKit.TestDoubles;
+    using Nautilus.TestSuite.TestKit.Stubs;
     using Newtonsoft.Json;
     using NodaTime;
     using Xunit;

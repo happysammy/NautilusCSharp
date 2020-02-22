@@ -21,7 +21,7 @@ namespace Nautilus.Messaging.Internal
     internal sealed class MessageProcessor
     {
         private readonly ActionBlock<object> processor;
-        private readonly CancellationTokenSource cts = new CancellationTokenSource();
+        private readonly CancellationTokenSource cancellationSource = new CancellationTokenSource();
         private readonly List<KeyValuePair<Type, Handler>> registeredHandlers = new List<KeyValuePair<Type, Handler>>();
 
         private Action<Exception> exceptionHandler;
@@ -45,7 +45,7 @@ namespace Nautilus.Messaging.Internal
                 new ExecutionDataflowBlockOptions
                 {
                     BoundedCapacity = (int)Math.Pow(2, 22),
-                    CancellationToken = this.cts.Token,
+                    CancellationToken = this.cancellationSource.Token,
                     EnsureOrdered = true,
                     MaxDegreeOfParallelism = 1,
                 });
@@ -83,6 +83,44 @@ namespace Nautilus.Messaging.Internal
         /// Gets the list of unhandled messages.
         /// </summary>
         public List<object> UnhandledMessages { get; } = new List<object>();
+
+        /// <summary>
+        /// Gracefully stops the message processor by waiting for all currently accepted messages to
+        /// be processed. Messages received after this command will not be processed.
+        /// </summary>
+        /// <returns>The result of the operation.</returns>
+        public Task<bool> GracefulStop()
+        {
+            try
+            {
+                this.processor.Complete();
+                Task.WhenAll(this.processor.Completion).Wait();
+
+                return Task.FromResult(true);
+            }
+            catch (AggregateException)
+            {
+                return Task.FromResult(false);
+            }
+        }
+
+        /// <summary>
+        /// Immediately kills the message processor.
+        /// </summary>
+        /// <returns>The result of the operation.</returns>
+        public Task Kill()
+        {
+            try
+            {
+                this.cancellationSource.Cancel();
+                Task.WhenAll(this.processor.Completion).Wait();
+            }
+            catch (AggregateException)
+            {
+            }
+
+            return Task.CompletedTask;
+        }
 
         /// <summary>
         /// Register the given message type with the gin handler.
@@ -139,6 +177,7 @@ namespace Nautilus.Messaging.Internal
         private void Unhandled(object message)
         {
             this.unhandled(message);
+            this.ProcessedCount++;
         }
 
         private void BuildHandlers()
@@ -149,14 +188,13 @@ namespace Nautilus.Messaging.Internal
 
         private Task HandleMessage(object message)
         {
-            this.ProcessedCount++;
-
             try
             {
                 for (var i = 0; i < this.handlersLength; i++)
                 {
                     if (this.handlers[i].Handle(message).Result)
                     {
+                        this.ProcessedCount++;
                         return Task.CompletedTask;
                     }
                 }

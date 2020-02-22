@@ -40,12 +40,14 @@ namespace Nautilus.Common.Messaging
         /// <param name="receiver">The receiver service.</param>
         /// <param name="intervalDuration">The throttle timer interval.</param>
         /// <param name="limit">The message limit per interval.</param>
+        /// <param name="subName">The sub-name for the throttler.</param>
         public Throttler(
             IComponentryContainer container,
             IEndpoint receiver,
             Duration intervalDuration,
-            int limit)
-            : base(container)
+            int limit,
+            string subName)
+            : base(container, subName)
         {
             Condition.PositiveInt32((int)intervalDuration.TotalMilliseconds, nameof(intervalDuration.TotalMilliseconds));
             Condition.PositiveInt32(limit, nameof(limit));
@@ -68,6 +70,11 @@ namespace Nautilus.Common.Messaging
         /// Gets the queue count for the throttler.
         /// </summary>
         public int QueueCount => this.queue.Count;
+
+        /// <summary>
+        /// Gets a value indicating whether the throttler is active.
+        /// </summary>
+        public bool IsActive => !this.IsIdle;
 
         /// <summary>
         /// Gets a value indicating whether the throttler is idle.

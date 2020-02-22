@@ -11,10 +11,15 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.TypesTests
     using System;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core.Types;
-    using Nautilus.TestSuite.TestKit.TestDoubles;
+    using Nautilus.TestSuite.TestKit.Stubs;
     using NodaTime;
     using Xunit;
 
+    // Required warning suppression for tests
+    // (do not remove even if compiler doesn't initially complain).
+#pragma warning disable 8602
+#pragma warning disable 8604
+#pragma warning disable 8625
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class MessageTests
     {

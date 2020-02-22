@@ -130,8 +130,8 @@ namespace NautilusExecutor
             addresses.Add(ServiceAddress.ExecutionService, executionService.Endpoint);
             messagingAdapter.Send(new InitializeSwitchboard(
                 Switchboard.Create(addresses),
-                executionService.NewGuid(),
-                executionService.TimeNow()));
+                guidFactory.Generate(),
+                clock.TimeNow()));
 
             return executionService;
         }

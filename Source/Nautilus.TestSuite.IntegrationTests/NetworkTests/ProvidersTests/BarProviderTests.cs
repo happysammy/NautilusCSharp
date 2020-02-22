@@ -26,8 +26,9 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
     using Nautilus.Network.Messages;
     using Nautilus.Serialization.DataSerializers;
     using Nautilus.Serialization.MessageSerializers;
-    using Nautilus.TestSuite.TestKit;
-    using Nautilus.TestSuite.TestKit.TestDoubles;
+    using Nautilus.TestSuite.TestKit.Components;
+    using Nautilus.TestSuite.TestKit.Mocks;
+    using Nautilus.TestSuite.TestKit.Stubs;
     using NetMQ;
     using NetMQ.Sockets;
     using Xunit;
@@ -36,8 +37,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class BarProviderTests : IDisposable
     {
-        private readonly ITestOutputHelper output;
-        private readonly MockLogger logger;
         private readonly IComponentryContainer container;
         private readonly IBarRepository repository;
         private readonly IDataSerializer<Bar> dataSerializer;
@@ -47,11 +46,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
         public BarProviderTests(ITestOutputHelper output)
         {
             // Fixture Setup
-            this.output = output;
-
-            var containerFactory = new StubComponentryContainerProvider();
-            this.container = containerFactory.Create();
-            this.logger = containerFactory.Logger;
+            this.container = TestComponentryContainer.Create(output);
             this.dataSerializer = new BarDataSerializer();
             this.repository = new MockBarRepository(this.dataSerializer);
             this.requestSerializer = new MsgPackRequestSerializer(new MsgPackQuerySerializer());
@@ -110,11 +105,9 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
             Assert.Equal(typeof(QueryFailure), response.Type);
 
             // Tear Down
-            LogDumper.DumpWithDelay(this.logger, this.output);
             requester.Disconnect(testAddress);
             requester.Dispose();
-            provider.Stop();
-            Task.Delay(100).Wait(); // Allow server to stop
+            provider.Stop().Wait();
             provider.Dispose();
         }
 
@@ -134,8 +127,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
                 compressor,
                 EncryptionSettings.None(),
                 new Port(testPort));
-            provider.Start();
-            Task.Delay(100).Wait();
+            provider.Start().Wait();
 
             var barType = StubBarType.AUDUSD_OneMinuteAsk();
             var bar1 = StubBarProvider.Build();
@@ -175,11 +167,9 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
             Assert.Equal(bar2, bars[1]);
 
             // Tear Down
-            LogDumper.DumpWithDelay(this.logger, this.output);
             requester.Disconnect(testAddress);
             requester.Dispose();
-            provider.Stop();
-            Task.Delay(100).Wait(); // Allow server to stop
+            provider.Stop().Wait();
             provider.Dispose();
         }
     }

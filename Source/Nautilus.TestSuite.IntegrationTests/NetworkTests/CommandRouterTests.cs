@@ -11,7 +11,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
-    using Microsoft.Extensions.Logging;
     using Nautilus.Common.Interfaces;
     using Nautilus.Execution.Network;
     using Nautilus.Messaging.Interfaces;
@@ -19,7 +18,8 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
     using Nautilus.Network.Compression;
     using Nautilus.Network.Encryption;
     using Nautilus.Serialization.MessageSerializers;
-    using Nautilus.TestSuite.TestKit.TestDoubles;
+    using Nautilus.TestSuite.TestKit.Components;
+    using Nautilus.TestSuite.TestKit.Mocks;
     using NetMQ;
     using NetMQ.Sockets;
     using Xunit;
@@ -29,20 +29,14 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
     public sealed class CommandRouterTests : IDisposable
     {
         private readonly NetworkAddress localHost = new NetworkAddress("127.0.0.1");
-        private readonly ITestOutputHelper output;
         private readonly IComponentryContainer container;
-        private readonly ILogger logger;
         private readonly IEndpoint receiver;
 
         public CommandRouterTests(ITestOutputHelper output)
         {
             // Fixture Setup
-            this.output = output;
-
-            var containerFactory = new StubComponentryContainerProvider();
-            this.container = containerFactory.Create();
-            this.logger = containerFactory.Logger;
-            this.receiver = new MockMessagingAgent().Endpoint;
+            this.container = TestComponentryContainer.Create(output);
+            this.receiver = new MockComponent(this.container).Endpoint;
         }
 
         public void Dispose()

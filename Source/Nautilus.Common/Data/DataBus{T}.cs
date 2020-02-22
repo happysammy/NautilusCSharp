@@ -11,6 +11,8 @@ namespace Nautilus.Common.Data
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
     using System.Threading.Tasks.Dataflow;
     using Microsoft.Extensions.Logging;
     using Nautilus.Common.Componentry;
@@ -28,6 +30,7 @@ namespace Nautilus.Common.Data
     {
         // The BroadcastBlock<T> ensures that the current element is broadcast to any linked targets
         // before allowing the element to be overwritten.
+        private readonly CancellationTokenSource cancellationSource = new CancellationTokenSource();
         private readonly BroadcastBlock<object> pipeline;
         private readonly List<Mailbox> subscriptions;
 
@@ -44,6 +47,7 @@ namespace Nautilus.Common.Data
                 CloneData,
                 new ExecutionDataflowBlockOptions
             {
+                CancellationToken = this.cancellationSource.Token,
                 BoundedCapacity = (int)Math.Pow(2, 22),
             });
 
@@ -70,6 +74,44 @@ namespace Nautilus.Common.Data
         public void PostData(T data)
         {
             this.pipeline.Post(data!); // data cannot be null (checked in constructor)
+        }
+
+        /// <summary>
+        /// Gracefully stops the message processor by waiting for all currently accepted messages to
+        /// be processed. Messages received after this command will not be processed.
+        /// </summary>
+        /// <returns>The result of the operation.</returns>
+        public Task<bool> StopData()
+        {
+            try
+            {
+                this.pipeline.Complete();
+                Task.WhenAll(this.pipeline.Completion).Wait();
+
+                return Task.FromResult(true);
+            }
+            catch (AggregateException)
+            {
+                return Task.FromResult(false);
+            }
+        }
+
+        /// <summary>
+        /// Immediately kills the message processor.
+        /// </summary>
+        /// <returns>The result of the operation.</returns>
+        public Task KillData()
+        {
+            try
+            {
+                this.cancellationSource.Cancel();
+                Task.WhenAll(this.pipeline.Completion).Wait();
+            }
+            catch (AggregateException)
+            {
+            }
+
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />

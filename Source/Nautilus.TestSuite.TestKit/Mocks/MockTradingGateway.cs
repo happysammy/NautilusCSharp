@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.TestKit.TestDoubles
+namespace Nautilus.TestSuite.TestKit.Mocks
 {
     using System.Collections.Generic;
     using Nautilus.Common.Componentry;

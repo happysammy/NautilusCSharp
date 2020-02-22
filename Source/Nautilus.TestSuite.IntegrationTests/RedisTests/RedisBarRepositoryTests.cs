@@ -10,7 +10,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
     using Nautilus.Common.Data;
     using Nautilus.Data.Keys;
     using Nautilus.DomainModel.Enums;
@@ -20,8 +19,8 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     using Nautilus.Redis.Data;
     using Nautilus.Redis.Data.Internal;
     using Nautilus.Serialization.DataSerializers;
-    using Nautilus.TestSuite.TestKit;
-    using Nautilus.TestSuite.TestKit.TestDoubles;
+    using Nautilus.TestSuite.TestKit.Components;
+    using Nautilus.TestSuite.TestKit.Stubs;
     using NodaTime;
     using StackExchange.Redis;
     using Xunit;
@@ -31,7 +30,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     public sealed class RedisBarRepositoryTests : IDisposable
     {
         private readonly ITestOutputHelper output;
-        private readonly MockLogger logger;
         private readonly ConnectionMultiplexer redisConnection;
         private readonly RedisBarRepository repository;
 
@@ -40,10 +38,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             // Fixture Setup
             this.output = output;
 
-            var containerFactory = new StubComponentryContainerProvider();
-            this.logger = containerFactory.Logger;
-            var container = containerFactory.Create();
-
+            var container = TestComponentryContainer.Create(output);
             this.redisConnection = ConnectionMultiplexer.Connect("localhost:6379,allowAdmin=true");
             this.repository = new RedisBarRepository(
                 container,
@@ -164,7 +159,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var result = this.repository.GetBars(barType);
 
             // Assert
-            this.output.WriteLine(result.Message);
             this.PrintRepositoryStatus(barType);
             Assert.True(result.IsFailure);
             Assert.Equal(0, this.repository.BarsCount());
@@ -205,10 +199,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             // Act
             var result = this.repository.GetBars(barType);
 
-            LogDumper.Dump(this.logger, this.output);
-
             // Assert
-            this.output.WriteLine(result.Message);
             Assert.True(result.IsSuccess);
             Assert.Equal(1, this.repository.BarsCount());
             Assert.Single(result.Value.Bars);
@@ -233,7 +224,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var result = this.repository.GetBars(barType);
 
             // Assert
-            this.output.WriteLine(result.Message);
             Assert.True(result.IsSuccess);
             Assert.Equal(5, this.repository.BarsCount());
             Assert.Equal(5, this.repository.BarsCount(barType));
@@ -380,7 +370,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             // Assert
             Assert.True(result.IsSuccess);
             Assert.Equal(2, result.Value.Length);
-            result.Value.ToList().ForEach(k => this.output.WriteLine(k));
         }
 
         [Theory]
@@ -403,8 +392,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             // Act
             var result = KeyProvider.GetDateKeys(fromDateTime, toDateTime);
-
-            result.ForEach(dk => this.output.WriteLine(dk.ToString()));
 
             // Assert
             Assert.Equal(dateKeyCount, result.Count);
@@ -526,7 +513,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var result = this.repository.GetBars(barType);
 
             // Assert
-            this.output.WriteLine(result.Message);
             Assert.True(result.IsFailure);
         }
 
@@ -543,7 +529,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var result = this.repository.GetBars(barType, 100);
 
             // Assert
-            this.output.WriteLine(result.Message);
             Assert.True(result.IsSuccess);
             Assert.Equal(1, result.Value.Count);
             Assert.Equal(bar, result.Value.Bars[0]);
@@ -564,7 +549,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var result = this.repository.GetBars(barType);
 
             // Assert
-            this.output.WriteLine(result.Message);
             Assert.True(result.IsSuccess);
             Assert.Equal(3, result.Value.Count);
             Assert.Equal(bar1, result.Value.Bars[0]);
@@ -587,7 +571,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var result = this.repository.GetBars(barType, 2);
 
             // Assert
-            this.output.WriteLine(result.Message);
             Assert.True(result.IsSuccess);
             Assert.Equal(2, result.Value.Count);
             Assert.Equal(bar2, result.Value.Bars[0]);
@@ -609,7 +592,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var result = this.repository.GetBars(barType);
 
             // Assert
-            this.output.WriteLine(result.Message);
             Assert.True(result.IsSuccess);
             Assert.Equal(3, result.Value.Bars.Length);
         }
@@ -628,7 +610,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var result = this.repository.GetBars(barType);
 
             // Assert
-            this.output.WriteLine(result.Message);
             Assert.True(result.IsSuccess);
             Assert.Equal(3, result.Value.Bars.Length);
         }
@@ -656,16 +637,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
                 3,
                 4,
                 BarStructure.Minute.ToString());
-
-            foreach (var symbol in result)
-            {
-                this.output.WriteLine(symbol.Key);
-
-                foreach (var key in symbol.Value)
-                {
-                    this.output.WriteLine(key);
-                }
-            }
 
             // Assert
             Assert.Single(result.Keys);

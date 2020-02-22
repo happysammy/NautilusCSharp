@@ -13,11 +13,15 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
     using System.Text;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Serialization.MessageSerializers.Internal;
-    using Nautilus.TestSuite.TestKit.TestDoubles;
+    using Nautilus.TestSuite.TestKit.Stubs;
     using NodaTime;
     using Xunit;
     using Xunit.Abstractions;
 
+    // Required warning suppression for tests
+    // (do not remove even if compiler doesn't initially complain).
+#pragma warning disable 8602
+#pragma warning disable 8604
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class MsgPackOrderSerializerTests
     {

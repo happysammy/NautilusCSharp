@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.TestKit.TestDoubles
+namespace Nautilus.TestSuite.TestKit.Mocks
 {
     using System;
     using System.Diagnostics.CodeAnalysis;

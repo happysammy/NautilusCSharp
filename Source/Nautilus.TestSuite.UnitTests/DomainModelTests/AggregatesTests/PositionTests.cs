@@ -15,7 +15,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.TestSuite.TestKit.TestDoubles;
+    using Nautilus.TestSuite.TestKit.Stubs;
     using NodaTime;
     using Xunit;
 

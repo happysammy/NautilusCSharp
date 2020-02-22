@@ -9,6 +9,7 @@
 namespace Nautilus.Common.Messaging
 {
     using System;
+    using System.Threading.Tasks;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core.Annotations;
@@ -103,9 +104,7 @@ namespace Nautilus.Common.Messaging
         /// </summary>
         public void Start()
         {
-            this.cmdBus.Start();
-            this.evtBus.Start();
-            this.docBus.Start();
+            Task.WaitAll(this.cmdBus.Start(), this.cmdBus.Start(), this.cmdBus.Start());
         }
 
         /// <summary>
@@ -113,9 +112,7 @@ namespace Nautilus.Common.Messaging
         /// </summary>
         public void Stop()
         {
-            this.cmdBus.Stop();
-            this.evtBus.Stop();
-            this.docBus.Stop();
+            Task.WaitAll(this.cmdBus.Stop(), this.cmdBus.Stop(), this.cmdBus.Stop());
         }
 
         private void SendToBus(Type type, Message message)

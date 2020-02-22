@@ -11,7 +11,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.ComponentryTests
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Common.Componentry;
     using Nautilus.Core.Types;
-    using Nautilus.TestSuite.TestKit.TestDoubles;
+    using Nautilus.TestSuite.TestKit.Stubs;
     using NodaTime;
     using Xunit;
 

@@ -37,7 +37,7 @@ namespace Nautilus.Network
         where TInbound : Message
         where TOutbound : Response
     {
-        private const int ExpectedFrameCount = 3;
+        private const int ExpectedFrameCount = 4;
 
         private readonly IMessageSerializer<TInbound> inboundSerializer;
         private readonly IMessageSerializer<TOutbound> outboundSerializer;
@@ -234,28 +234,58 @@ namespace Nautilus.Network
 
         private void ReceiveMessage()
         {
-            // msg[0] reply address
-            // msg[1] should be empty byte array delimiter
-            // msg[2] payload
+            this.Logger.LogCritical("HERE");
             var frames = this.socket.ReceiveMultipartBytes();
             this.CountReceived++;
             this.Logger.LogTrace(LogId.Networking, $"<--[{this.CountReceived}] Received {frames.Count} byte[] frames.");
 
+            // Check for expected frames
             if (frames.Count < ExpectedFrameCount)
             {
                 var errorMsg = $"Message was malformed (expected {ExpectedFrameCount} frames, received {frames.Count}).";
                 this.Reject(frames, errorMsg);
             }
 
-            if (frames[2].Length == 0)
+            // Deconstruct message
+            // msg[0] reply address
+            // msg[1] should be empty byte array delimiter
+            // msg[2] length header
+            // msg[3] payload
+            var headerSender = frames[0];
+            var headerLength = frames[2];
+            var payload = frames[3];
+
+            // Check there is a message payload
+            if (payload.Length == 0)
             {
                 var errorMsg = "Message payload was empty.";
                 this.Reject(frames, errorMsg);
+                return;
             }
-            else
+
+            // Get expected decompressed length
+            uint length;
+            try
             {
-                this.DeserializeMessage(this.compressor.Decompress(frames[2]), new Address(frames[0], Encoding.ASCII.GetString));
+                length = BitConverter.ToUInt32(headerLength);
             }
+            catch (ArgumentOutOfRangeException)
+            {
+                var errorMsg = "Message length checksum was malformed.";
+                this.Reject(frames, errorMsg);
+                return;
+            }
+
+            var decompressed = this.compressor.Decompress(payload);
+            if (decompressed.Length != length)
+            {
+                var errorMsg = $"Message decompressed length checksum was not equal to {length}, " +
+                               $"was {decompressed.Length}.";
+                this.Reject(frames, errorMsg);
+            }
+
+            var sender = new Address(headerSender, Encoding.ASCII.GetString);
+            this.DeserializeMessage(decompressed, length, sender);
         }
 
         private void Reject(List<byte[]> frames, string errorMsg)
@@ -271,7 +301,7 @@ namespace Nautilus.Network
             this.SendRejected(errorMsg, new Address(frames[0], Encoding.ASCII.GetString));
         }
 
-        private void DeserializeMessage(byte[] payload, Address sender)
+        private void DeserializeMessage(byte[] payload, uint length, Address sender)
         {
             try
             {
@@ -317,15 +347,20 @@ namespace Nautilus.Network
             }
 
             this.SendMessage(rejected, receiver);
+            this.Logger.LogWarning(LogId.Networking, rejectedMessage);
         }
 
         private void SendMessage(TOutbound outbound, Address receiver)
         {
-            var sendable = this.compressor.Compress(this.outboundSerializer.Serialize(outbound));
+            var serialized = this.outboundSerializer.Serialize(outbound);
+            var length = BitConverter.GetBytes((ushort)serialized.Length);
+            var payload = this.compressor.Compress(serialized);
+
             this.socket.SendMultipartBytes(
                 receiver.BytesValue,
                 this.delimiter,
-                sendable);
+                length,
+                payload);
 
             this.CountSent++;
             this.Logger.LogTrace(LogId.Networking, $"[{this.CountSent}]--> {outbound} to Address({receiver}).");

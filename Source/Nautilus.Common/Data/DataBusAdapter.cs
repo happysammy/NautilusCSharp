@@ -11,6 +11,7 @@ namespace Nautilus.Common.Data
     using System;
     using System.Collections.Generic;
     using System.Collections.Immutable;
+    using System.Threading.Tasks;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core.Annotations;
@@ -104,9 +105,7 @@ namespace Nautilus.Common.Data
         /// </summary>
         public void Start()
         {
-            this.tickBus.Start();
-            this.barBus.Start();
-            this.instrumentBus.Start();
+            Task.WaitAll(this.tickBus.Start(), this.barBus.Start(), this.instrumentBus.Start());
         }
 
         /// <summary>
@@ -114,9 +113,7 @@ namespace Nautilus.Common.Data
         /// </summary>
         public void Stop()
         {
-            this.tickBus.Stop();
-            this.barBus.Stop();
-            this.instrumentBus.Stop();
+            Task.WaitAll(this.tickBus.Stop(), this.barBus.Stop(), this.instrumentBus.Stop());
         }
 
         private void Send(Type subscription, Message message)

@@ -18,26 +18,20 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Execution.Engine;
     using Nautilus.Execution.Interfaces;
-    using Nautilus.TestSuite.TestKit;
-    using Nautilus.TestSuite.TestKit.TestDoubles;
+    using Nautilus.TestSuite.TestKit.Components;
+    using Nautilus.TestSuite.TestKit.Stubs;
     using Xunit;
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class InMemoryExecutionDatabaseTests
     {
-        private readonly ITestOutputHelper output;
-        private readonly MockLogger logger;
         private readonly IExecutionDatabase database;
 
         public InMemoryExecutionDatabaseTests(ITestOutputHelper output)
         {
             // Fixture Setup
-            this.output = output;
-
-            var containerFactory = new StubComponentryContainerProvider();
-            this.logger = containerFactory.Logger;
-            var container = containerFactory.Create();
+            var container = TestComponentryContainer.Create(output);
             this.database = new InMemoryExecutionDatabase(container);
         }
 
@@ -164,8 +158,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             // Act
             this.database.AddOrder(order, traderId, accountId, strategyId, positionId);
 
-            LogDumper.Dump(this.logger, this.output);
-
             // Assert
             Assert.Equal(order, this.database.GetOrder(order.Id));
             Assert.Equal(positionId, this.database.GetPositionId(order.Id));
@@ -196,8 +188,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             // Act
             this.database.ClearCaches();
 
-            LogDumper.Dump(this.logger, this.output);
-
             // Assert
             Assert.Empty(this.database.GetOrders());
             Assert.Empty(this.database.GetOrders(traderId));
@@ -220,8 +210,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Act
             this.database.ClearCaches();
-
-            LogDumper.Dump(this.logger, this.output);
 
             // Assert
             Assert.Empty(this.database.GetOrders());
@@ -256,8 +244,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             // Act
             this.database.ClearCaches();
 
-            LogDumper.Dump(this.logger, this.output);
-
             // Assert
             Assert.Empty(this.database.GetOrders());
             Assert.Empty(this.database.GetOrders(traderId));
@@ -285,8 +271,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             // Act
             this.database.ClearCaches();
 
-            LogDumper.Dump(this.logger, this.output);
-
             // Assert
             Assert.Null(this.database.GetOrder(order.Id));
         }
@@ -305,8 +289,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Act
             this.database.Flush();
-
-            LogDumper.Dump(this.logger, this.output);
 
             // Assert
             Assert.Null(this.database.GetTraderId(order.Id));
@@ -327,8 +309,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Act
             this.database.AddAccount(account);
-
-            LogDumper.Dump(this.logger, this.output);
 
             // Assert
             Assert.Equal(account, this.database.GetAccount(account.Id));
@@ -407,8 +387,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             // Act
             this.database.AddAtomicOrder(atomicOrder, traderId, accountId, strategyId, positionId);
 
-            LogDumper.Dump(this.logger, this.output);
-
             // Assert
             Assert.Equal(atomicOrder.Entry, this.database.GetOrder(atomicOrder.Entry.Id));
             Assert.Equal(atomicOrder.StopLoss, this.database.GetOrder(atomicOrder.StopLoss.Id));
@@ -452,8 +430,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Act
             this.database.AddAtomicOrder(atomicOrder, traderId, accountId, strategyId, positionId);
-
-            LogDumper.Dump(this.logger, this.output);
 
             // Assert
             Assert.Equal(atomicOrder.Entry, this.database.GetOrder(atomicOrder.Entry.Id));
@@ -503,8 +479,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             // Act
             this.database.ClearCaches();
 
-            LogDumper.Dump(this.logger, this.output);
-
             // Assert
             Assert.Empty(this.database.GetPositions());
             Assert.Empty(this.database.GetPositions(traderId));
@@ -534,8 +508,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Act
             this.database.ClearCaches();
-
-            LogDumper.Dump(this.logger, this.output);
 
             // Assert
             Assert.Empty(this.database.GetPositionsOpen());
@@ -619,8 +591,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             // Act
             this.database.AddPosition(position);
 
-            LogDumper.Dump(this.logger, this.output);
-
             // Assert
             Assert.Equal(position, this.database.GetPosition(positionId));
             Assert.Contains(position.Id, this.database.GetPositions());
@@ -647,8 +617,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Act
             this.database.UpdateAccount(account);
-
-            LogDumper.Dump(this.logger, this.output);
 
             // Assert
             Assert.True(true); // Does not throw
@@ -679,8 +647,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             // Act
             this.database.UpdateAccount(account);
 
-            LogDumper.Dump(this.logger, this.output);
-
             // Assert
             Assert.True(true); // Does not throw
         }
@@ -707,8 +673,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Act
             this.database.UpdateOrder(order);
-
-            LogDumper.Dump(this.logger, this.output);
 
             // Assert
             Assert.Contains(order.Id, this.database.GetOrderIds());
@@ -743,8 +707,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Act
             this.database.UpdateOrder(order);
-
-            LogDumper.Dump(this.logger, this.output);
 
             // Assert
             Assert.Contains(order.Id, this.database.GetOrderIds());
@@ -781,8 +743,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             // Act
             position.Apply(StubEventMessageProvider.OrderFilledEvent(order));
             this.database.UpdatePosition(position);
-
-            LogDumper.Dump(this.logger, this.output);
 
             // Assert
             Assert.Equal(position, this.database.GetPosition(positionId));
@@ -824,8 +784,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             // Act
             position.Apply(StubEventMessageProvider.OrderFilledEvent(order2));
             this.database.UpdatePosition(position);
-
-            LogDumper.Dump(this.logger, this.output);
 
             // Assert
             Assert.Equal(position, this.database.GetPosition(positionId));
@@ -874,8 +832,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             // Act
             position.Apply(StubEventMessageProvider.OrderFilledEvent(order3));
             this.database.UpdatePosition(position);
-
-            LogDumper.Dump(this.logger, this.output);
 
             // Assert
             Assert.Equal(position, this.database.GetPosition(positionId));
