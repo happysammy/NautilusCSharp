@@ -76,8 +76,7 @@
       "SPX500.FXCM",
       "AUS200.FXCM",
       "EUSTX50.FXCM",
-      "DE30EUR.FXCM",
-      "DE10YB.FXCM"
+      "DE30EUR.FXCM"
     ],
     "BarSpecifications": [
       "1-MINUTE[ASK]",

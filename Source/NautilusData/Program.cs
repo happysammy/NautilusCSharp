@@ -51,7 +51,6 @@ namespace NautilusData
                 .Enrich.FromLogContext()
                 .Enrich.With(new ThreadIdEnricher())
                 .WriteTo.Console(outputTemplate: logTemplate)
-                .WriteTo.RollingFile("Logs/Nautilus-Log-{Date}.txt", outputTemplate: logTemplate)
                 .CreateLogger();
 
             SelfLog.Enable(msg => Log.Logger.Debug(msg));
