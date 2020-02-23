@@ -11,7 +11,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
-    using System.Threading.Tasks;
     using Nautilus.Common.Data;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Message;
@@ -32,7 +31,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
     using Nautilus.TestSuite.TestKit.Mocks;
     using Nautilus.TestSuite.TestKit.Stubs;
     using NetMQ;
-    using NetMQ.Sockets;
     using NodaTime;
     using Xunit;
     using Xunit.Abstractions;
@@ -45,6 +43,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
         private readonly IDataSerializer<Tick> dataSerializer;
         private readonly IMessageSerializer<Request> requestSerializer;
         private readonly IMessageSerializer<Response> responseSerializer;
+        private readonly ICompressor compressor;
 
         public TickProviderTests(ITestOutputHelper output)
         {
@@ -54,6 +53,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
             this.repository = new MockTickRepository(this.container, this.dataSerializer, DataBusFactory.Create(this.container));
             this.requestSerializer = new MsgPackRequestSerializer(new MsgPackQuerySerializer());
             this.responseSerializer = new MsgPackResponseSerializer();
+            this.compressor = new CompressorBypass();
         }
 
         public void Dispose()
@@ -65,8 +65,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
         internal void GivenTickDataRequest_WithNoTicks_ReturnsQueryFailedMessage()
         {
             // Arrange
-            ushort testPort = 55722;
-            var testAddress = $"tcp://localhost:{testPort}";
+            var testAddress = new ZmqNetworkAddress(NetworkAddress.LocalHost, new Port(55722));
 
             var provider = new TickProvider(
                 this.container,
@@ -74,15 +73,21 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
                 this.dataSerializer,
                 this.requestSerializer,
                 this.responseSerializer,
-                new CompressorBypass(),
+                this.compressor,
                 EncryptionSettings.None(),
-                new Port(testPort));
+                testAddress.Port);
             provider.Start().Wait();
 
+            var requester = new MockRequester(
+                this.container,
+                this.requestSerializer,
+                this.responseSerializer,
+                this.compressor,
+                EncryptionSettings.None(),
+                testAddress);
+            requester.Start().Wait();
+
             var symbol = new Symbol("AUDUSD", new Venue("FXCM"));
-            var requester = new RequestSocket();
-            requester.Connect(testAddress);
-            Task.Delay(100).Wait();  // Allow socket to connect
 
             var query = new Dictionary<string, string>
             {
@@ -93,20 +98,19 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
                 { "Limit", "0" },
             };
 
-            var dataRequest = new DataRequest(
+            var request = new DataRequest(
                 query,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            requester.SendFrame(this.requestSerializer.Serialize(dataRequest));
-            var response = (QueryFailure)this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
+            var response = (QueryFailure)requester.Send(request);
 
             // Assert
             Assert.Equal(typeof(QueryFailure), response.Type);
 
             // Tear Down
-            requester.Disconnect(testAddress);
+            requester.Stop().Wait();
             requester.Dispose();
             provider.Stop().Wait();
             provider.Dispose();
@@ -116,20 +120,27 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
         internal void GivenTickDataRequest_WithTicks_ReturnsValidTickDataResponse()
         {
             // Arrange
-            ushort testPort = 55723;
-            var testAddress = $"tcp://localhost:{testPort}";
-            var compressor = new SnappyCompressor();
+            var testAddress = new ZmqNetworkAddress(NetworkAddress.LocalHost, new Port(55723));
+
             var provider = new TickProvider(
                 this.container,
                 this.repository,
                 this.dataSerializer,
                 this.requestSerializer,
                 this.responseSerializer,
-                compressor,
+                this.compressor,
                 EncryptionSettings.None(),
-                new Port(testPort));
-            provider.Start();
-            Task.Delay(100).Wait();  // Allow provider to start
+                testAddress.Port);
+            provider.Start().Wait();
+
+            var requester = new MockRequester(
+                this.container,
+                this.requestSerializer,
+                this.responseSerializer,
+                this.compressor,
+                EncryptionSettings.None(),
+                testAddress);
+            requester.Start().Wait();
 
             var datetimeFrom = StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1);
             var datetimeTo = datetimeFrom + Duration.FromMinutes(1);
@@ -141,10 +152,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
             this.repository.Add(tick1);
             this.repository.Add(tick2);
 
-            var requester = new RequestSocket();
-            requester.Connect(testAddress);
-            Task.Delay(100).Wait();  // Allow socket to connect
-
             var query = new Dictionary<string, string>
             {
                 { "DataType", "Tick[]" },
@@ -154,14 +161,14 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
                 { "Limit", "0" },
             };
 
-            var dataRequest = new DataRequest(
+            var request = new DataRequest(
                 query,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            requester.SendFrame(compressor.Compress(this.requestSerializer.Serialize(dataRequest)));
-            var response = (DataResponse)this.responseSerializer.Deserialize(compressor.Decompress(requester.ReceiveFrameBytes()));
+            var response = (DataResponse)requester.Send(request);
+
             var ticks = this.dataSerializer.DeserializeBlob(response.Data);
 
             // Assert
@@ -171,7 +178,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
             Assert.Equal(tick2, ticks[1]);
 
             // Tear Down
-            requester.Disconnect(testAddress);
+            requester.Stop().Wait();
             requester.Dispose();
             provider.Stop().Wait();
             provider.Dispose();

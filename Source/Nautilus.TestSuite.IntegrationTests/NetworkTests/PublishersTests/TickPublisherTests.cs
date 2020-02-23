@@ -43,6 +43,8 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
                 new CompressorBypass(),
                 EncryptionSettings.None(),
                 new Port(55606));
+
+            this.publisher.Start().Wait();
         }
 
         public void Dispose()
@@ -54,33 +56,32 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
         internal void GivenTickMessage_WithSubscriber_PublishesMessage()
         {
             // Arrange
-            this.publisher.Start();
-            Task.Delay(100).Wait(); // Allow publisher to start
-
             var symbol = new Symbol("AUDUSD", new Venue("FXCM"));
 
             var subscriber = new SubscriberSocket(TestAddress);
             subscriber.Connect(TestAddress);
             subscriber.Subscribe(symbol.Value);
-            Task.Delay(100).Wait();
+
+            Task.Delay(100).Wait();  // Allow subscribers to connect
 
             var tick = StubTickProvider.Create(symbol);
 
             // Act
             this.publisher.Endpoint.Send(tick);
 
-            var receivedTopic = subscriber.ReceiveFrameBytes();
-            var receivedMessage = subscriber.ReceiveFrameBytes();
+            var topic = subscriber.ReceiveFrameBytes();
+            var length = subscriber.ReceiveFrameBytes();
+            var message = subscriber.ReceiveFrameBytes();
 
             // Assert
-            Assert.Equal(tick.Symbol.Value, Encoding.UTF8.GetString(receivedTopic));
-            Assert.Equal(tick.ToString(), Encoding.UTF8.GetString(receivedMessage));
+            Assert.Equal(tick.Symbol.Value, Encoding.UTF8.GetString(topic));
+            Assert.Equal(44U, BitConverter.ToUInt32(length));
+            Assert.Equal(tick.ToString(), Encoding.UTF8.GetString(message));
 
             // Tear Down
             subscriber.Disconnect(TestAddress);
             subscriber.Dispose();
-            this.publisher.Stop();
-            Task.Delay(100).Wait(); // Allow server to stop
+            this.publisher.Stop().Wait();
             this.publisher.Dispose();
         }
     }

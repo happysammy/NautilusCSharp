@@ -56,7 +56,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             // Assert
             Assert.Equal("tcp://127.0.0.1:55555", publisher.NetworkAddress.Value);
             Assert.Equal(ComponentState.Initialized, publisher.ComponentState);
-            Assert.Equal(0, publisher.PublishedCount);
+            Assert.Equal(0, publisher.CountPublished);
         }
 
         [Fact]
@@ -69,8 +69,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 EncryptionSettings.None(),
                 NetworkAddress.LocalHost,
                 new Port(55555));
-            publisher.Start();
-            Task.Delay(100).Wait(); // Allow publisher to start
+            publisher.Start().Wait();
 
             const string testAddress = "tcp://localhost:55555";
             var subscriber = new SubscriberSocket(testAddress);
@@ -80,23 +79,23 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             Task.Delay(100).Wait(); // Allow sockets to subscribe
 
             // Act
-            const string message = "1234,1234";
-            publisher.Endpoint.Send((TestTopic, message));
+            const string toSend = "1234,1234";
+            publisher.Endpoint.Send((TestTopic, toSend));
 
-            var receivedTopic = subscriber.ReceiveFrameBytes();
-            var receivedMessage = subscriber.ReceiveFrameBytes();
+            var topic = subscriber.ReceiveFrameBytes();
+            var length = subscriber.ReceiveFrameBytes();
+            var message = subscriber.ReceiveFrameBytes();
 
             // Assert
-            Assert.Equal(TestTopic, Encoding.UTF8.GetString(receivedTopic));
-            Assert.Equal(message, Encoding.UTF8.GetString(receivedMessage));
+            Assert.Equal(TestTopic, Encoding.UTF8.GetString(topic));
+            Assert.Equal(toSend, Encoding.UTF8.GetString(message));
             Assert.Equal(ComponentState.Running, publisher.ComponentState);
-            Assert.Equal(1, publisher.PublishedCount);
+            Assert.Equal(1, publisher.CountPublished);
 
             // Tear Down
             subscriber.Disconnect(testAddress);
             subscriber.Dispose();
-            publisher.Stop();
-            Task.Delay(100).Wait(); // Allow server to stop
+            publisher.Stop().Wait();
             publisher.Dispose();
         }
     }

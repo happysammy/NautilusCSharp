@@ -74,7 +74,7 @@ namespace Nautilus.Network
                 this.Logger.LogWarning(LogId.Networking, $"No encryption setup for {this.NetworkAddress}");
             }
 
-            this.PublishedCount = 0;
+            this.CountPublished = 0;
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace Nautilus.Network
         /// <summary>
         /// Gets the server received message count.
         /// </summary>
-        public int PublishedCount { get; private set; }
+        public int CountPublished { get; private set; }
 
         /// <summary>
         /// Dispose of the socket.
@@ -124,11 +124,14 @@ namespace Nautilus.Network
         /// <param name="message">The message to publish.</param>
         protected void Publish(string topic, T message)
         {
-            var publishable = this.compressor.Compress(this.serializer.Serialize(message));
-            this.socket.SendMultipartBytes(Encoding.UTF8.GetBytes(topic), publishable);
+            var serialized = this.serializer.Serialize(message);
+            var length = BitConverter.GetBytes((uint)serialized.Length);
+            var payload = this.compressor.Compress(serialized);
+            this.socket.SendMultipartBytes(Encoding.UTF8.GetBytes(topic), length, payload);
 
-            this.PublishedCount++;
-            this.Logger.LogTrace(LogId.Networking, $"[{this.PublishedCount}]--> Topic={topic}, Message={message}");
+            this.CountPublished++;
+            this.Logger.LogTrace(LogId.Networking, $"HeaderLength={serialized.Length:N0}, Payload={payload.Length:N0} bytes");
+            this.Logger.LogTrace(LogId.Networking, $"[{this.CountPublished}]--> Topic={topic}, Message={message}");
         }
     }
 }

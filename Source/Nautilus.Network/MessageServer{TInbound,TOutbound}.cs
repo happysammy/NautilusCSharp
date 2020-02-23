@@ -14,6 +14,7 @@ namespace Nautilus.Network
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
+    using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Logging;
@@ -26,7 +27,6 @@ namespace Nautilus.Network
     using Nautilus.Network.Messages;
     using NetMQ;
     using NetMQ.Sockets;
-    using Component = Nautilus.Common.Componentry.Component;
 
     /// <summary>
     /// The base class for all messaging servers.
@@ -86,11 +86,15 @@ namespace Nautilus.Network
             if (encryption.UseEncryption)
             {
                 EncryptionProvider.SetupSocket(encryption, this.socket);
-                this.Logger.LogInformation(LogId.Networking, $"{encryption.Algorithm} encryption setup for {this.NetworkAddress}");
+                this.Logger.LogInformation(
+                    LogId.Networking,
+                    $"{encryption.Algorithm} encryption setup for {this.NetworkAddress}");
             }
             else
             {
-                this.Logger.LogWarning(LogId.Networking, $"No encryption setup for {this.NetworkAddress}");
+                this.Logger.LogWarning(
+                    LogId.Networking,
+                    $"No encryption setup for {this.NetworkAddress}");
             }
 
             this.CountReceived = 0;
@@ -119,7 +123,7 @@ namespace Nautilus.Network
         /// </summary>
         public void Dispose()
         {
-            if (this.ComponentState is ComponentState.Running)
+            if (this.ComponentState == ComponentState.Running)
             {
                 throw new InvalidOperationException("Cannot dispose a running component.");
             }
@@ -136,7 +140,9 @@ namespace Nautilus.Network
         protected override void OnStart(Start start)
         {
             this.socket.Bind(this.NetworkAddress.Value);
-            this.Logger.LogInformation(LogId.Networking, $"Bound {this.socket.GetType().Name} to {this.NetworkAddress}");
+            this.Logger.LogInformation(
+                LogId.Networking,
+                $"Bound {this.socket.GetType().Name} to {this.NetworkAddress}");
 
             Task.Run(this.StartWork, this.cts.Token);
         }
@@ -146,7 +152,9 @@ namespace Nautilus.Network
         {
             this.cts.Cancel();
             this.socket.Unbind(this.NetworkAddress.Value);
-            this.Logger.LogInformation(LogId.Networking, $"Unbound {this.socket.GetType().Name} from {this.NetworkAddress}");
+            this.Logger.LogInformation(
+                LogId.Networking,
+                $"Unbound {this.socket.GetType().Name} from {this.NetworkAddress}");
         }
 
         /// <summary>
@@ -234,16 +242,18 @@ namespace Nautilus.Network
 
         private void ReceiveMessage()
         {
-            this.Logger.LogCritical("HERE");
             var frames = this.socket.ReceiveMultipartBytes();
             this.CountReceived++;
-            this.Logger.LogTrace(LogId.Networking, $"<--[{this.CountReceived}] Received {frames.Count} byte[] frames.");
+            this.Logger.LogTrace(
+                LogId.Networking,
+                $"<--[{this.CountReceived}] Received {frames.Count} byte[] frames.");
 
             // Check for expected frames
-            if (frames.Count < ExpectedFrameCount)
+            if (frames.Count != ExpectedFrameCount)
             {
                 var errorMsg = $"Message was malformed (expected {ExpectedFrameCount} frames, received {frames.Count}).";
                 this.Reject(frames, errorMsg);
+                return;
             }
 
             // Deconstruct message
@@ -276,6 +286,9 @@ namespace Nautilus.Network
                 return;
             }
 
+            this.Logger.LogTrace(LogId.Networking, $"HeaderLength={length:N0}, Bytes={payload.Length:N0}");
+
+            // Decompress message
             var decompressed = this.compressor.Decompress(payload);
             if (decompressed.Length != length)
             {
@@ -284,6 +297,7 @@ namespace Nautilus.Network
                 this.Reject(frames, errorMsg);
             }
 
+            // Deserialize message
             var sender = new Address(headerSender, Encoding.ASCII.GetString);
             this.DeserializeMessage(decompressed, length, sender);
         }
@@ -311,10 +325,6 @@ namespace Nautilus.Network
                 if (received.Type.IsSubclassOf(typeof(TInbound)) || received.Type == typeof(TInbound))
                 {
                     this.SendToSelf(received);
-
-                    this.Logger.LogTrace(
-                        LogId.Networking,
-                        $"<--[{this.CountReceived}] {received} from Address({sender.StringValue}).");
                 }
                 else
                 {
@@ -326,8 +336,8 @@ namespace Nautilus.Network
             }
             catch (Exception ex)
             {
-                var message = "Unable to deserialize message.";
-                this.Logger.LogError(message + Environment.NewLine + ex);
+                var message = $"Unable to deserialize message due {ex.GetType().Name}.";
+                this.Logger.LogError(LogId.Networking, ex, message, payload);
                 this.SendRejected(message, sender);
             }
         }
@@ -353,7 +363,7 @@ namespace Nautilus.Network
         private void SendMessage(TOutbound outbound, Address receiver)
         {
             var serialized = this.outboundSerializer.Serialize(outbound);
-            var length = BitConverter.GetBytes((ushort)serialized.Length);
+            var length = BitConverter.GetBytes((uint)serialized.Length);
             var payload = this.compressor.Compress(serialized);
 
             this.socket.SendMultipartBytes(

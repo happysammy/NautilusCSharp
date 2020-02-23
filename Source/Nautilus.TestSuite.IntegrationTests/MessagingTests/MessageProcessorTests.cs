@@ -206,47 +206,6 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
         }
 
         [Fact]
-        internal void GivenMessagesOfDifferentTypes_WithWorkDelay_ProcessesSynchronously()
-        {
-            // Arrange
-            var receiver = new MockComponent(this.container);
-            receiver.RegisterHandler<string>(receiver.OnMessageWithWorkDelay);
-            receiver.RegisterHandler<int>(receiver.OnMessage);
-
-            // Act
-            receiver.Endpoint.Send("test");
-            receiver.Endpoint.Send(2).Wait();
-            receiver.Stop().Wait();
-
-            // Assert
-            Assert.Contains("test", receiver.Messages);
-            Assert.Equal(2, receiver.Messages.Count);
-            Assert.Equal(0, receiver.InputCount);
-            Assert.Equal(3, receiver.ProcessedCount);
-        }
-
-        [Fact]
-        internal void GivenManyMessages_WithWorkDelay_ProcessesSynchronously()
-        {
-            // Arrange
-            var receiver = new MockComponent(this.container);
-            receiver.RegisterHandler<string>(receiver.OnMessageWithWorkDelay);
-
-            // Act
-            receiver.Endpoint.Send("1");
-            receiver.Endpoint.Send("2");
-            receiver.Endpoint.Send("3");
-            receiver.Endpoint.Send("4").Wait();
-            receiver.Stop().Wait();
-
-            // Assert
-            Assert.Contains("4", receiver.Messages);
-            Assert.Equal(4, receiver.Messages.Count);
-            Assert.Equal(0, receiver.InputCount);
-            Assert.Equal(5, receiver.ProcessedCount);
-        }
-
-        [Fact]
         internal void MessagingPerformanceTest()
         {
             // Arrange

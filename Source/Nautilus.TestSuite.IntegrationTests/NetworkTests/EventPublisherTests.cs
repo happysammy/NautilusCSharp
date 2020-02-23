@@ -66,8 +66,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 new CompressorBypass(),
                 EncryptionSettings.None(),
                 new Port(56601));
-            publisher.Start();
-            Task.Delay(100).Wait(); // Allow publisher to start
+            publisher.Start().Wait();
 
             var subscriber = new SubscriberSocket(testAddress);
             subscriber.Connect(testAddress);
@@ -85,6 +84,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             this.output.WriteLine("Waiting for published events...");
 
             var topic = subscriber.ReceiveFrameBytes();
+            var length = subscriber.ReceiveFrameBytes();
             var message = subscriber.ReceiveFrameBytes();
             var @event = serializer.Deserialize(message);
 
@@ -95,8 +95,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             // Tear Down
             subscriber.Disconnect(testAddress);
             subscriber.Dispose();
-            publisher.Stop();
-            Task.Delay(100).Wait(); // Allow server to stop
+            publisher.Stop().Wait();
             publisher.Dispose();
         }
     }

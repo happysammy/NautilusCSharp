@@ -11,7 +11,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
-    using System.Threading.Tasks;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Message;
     using Nautilus.Data.Interfaces;
@@ -30,7 +29,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
     using Nautilus.TestSuite.TestKit.Mocks;
     using Nautilus.TestSuite.TestKit.Stubs;
     using NetMQ;
-    using NetMQ.Sockets;
     using Xunit;
     using Xunit.Abstractions;
 
@@ -42,6 +40,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
         private readonly IDataSerializer<Bar> dataSerializer;
         private readonly IMessageSerializer<Request> requestSerializer;
         private readonly IMessageSerializer<Response> responseSerializer;
+        private readonly ICompressor compressor;
 
         public BarProviderTests(ITestOutputHelper output)
         {
@@ -51,6 +50,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
             this.repository = new MockBarRepository(this.dataSerializer);
             this.requestSerializer = new MsgPackRequestSerializer(new MsgPackQuerySerializer());
             this.responseSerializer = new MsgPackResponseSerializer();
+            this.compressor = new CompressorBypass();
         }
 
         public void Dispose()
@@ -62,8 +62,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
         internal void GivenBarDataRequest_WithNoBars_ReturnsQueryFailedMessage()
         {
             // Arrange
-            ushort testPort = 55523;
-            var testAddress = $"tcp://localhost:{55523}";
+            var testAddress = new ZmqNetworkAddress(NetworkAddress.LocalHost, new Port(55523));
 
             var provider = new BarProvider(
                 this.container,
@@ -71,16 +70,21 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
                 this.dataSerializer,
                 this.requestSerializer,
                 this.responseSerializer,
-                new CompressorBypass(),
+                this.compressor,
                 EncryptionSettings.None(),
-                new Port(testPort));
-            provider.Start();
-            Task.Delay(100).Wait();  // Allow provider to start
+                testAddress.Port);
+            provider.Start().Wait();
+
+            var requester = new MockRequester(
+                this.container,
+                this.requestSerializer,
+                this.responseSerializer,
+                this.compressor,
+                EncryptionSettings.None(),
+                testAddress);
+            requester.Start().Wait();
 
             var barType = StubBarType.AUDUSD_OneMinuteAsk();
-
-            var requester = new RequestSocket();
-            requester.Connect(testAddress);
 
             var query = new Dictionary<string, string>
             {
@@ -98,14 +102,13 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            requester.SendFrame(this.requestSerializer.Serialize(request));
-            var response = (QueryFailure)this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
+            var response = (QueryFailure)requester.Send(request);
 
             // Assert
             Assert.Equal(typeof(QueryFailure), response.Type);
 
             // Tear Down
-            requester.Disconnect(testAddress);
+            requester.Stop().Wait();
             requester.Dispose();
             provider.Stop().Wait();
             provider.Dispose();
@@ -115,19 +118,27 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
         internal void GivenBarDataRequest_WithBars_ReturnsValidBarDataResponse()
         {
             // Arrange
-            ushort testPort = 55524;
-            var testAddress = $"tcp://localhost:{testPort}";
-            var compressor = new SnappyCompressor();
+            var testAddress = new ZmqNetworkAddress(NetworkAddress.LocalHost, new Port(55524));
+
             var provider = new BarProvider(
                 this.container,
                 this.repository,
                 this.dataSerializer,
                 this.requestSerializer,
                 this.responseSerializer,
-                compressor,
+                this.compressor,
                 EncryptionSettings.None(),
-                new Port(testPort));
+                testAddress.Port);
             provider.Start().Wait();
+
+            var requester = new MockRequester(
+                this.container,
+                this.requestSerializer,
+                this.responseSerializer,
+                this.compressor,
+                EncryptionSettings.None(),
+                testAddress);
+            requester.Start().Wait();
 
             var barType = StubBarType.AUDUSD_OneMinuteAsk();
             var bar1 = StubBarProvider.Build();
@@ -135,9 +146,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
 
             this.repository.Add(barType, bar1);
             this.repository.Add(barType, bar2);
-
-            var requester = new RequestSocket();
-            requester.Connect(testAddress);
 
             var query = new Dictionary<string, string>
             {
@@ -155,9 +163,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            requester.SendFrame(compressor.Compress(this.requestSerializer.Serialize(request)));
-            var received = compressor.Decompress(requester.ReceiveFrameBytes());
-            var response = (DataResponse)this.responseSerializer.Deserialize(received);
+            var response = (DataResponse)requester.Send(request);
             var bars = this.dataSerializer.DeserializeBlob(response.Data);
 
             // Assert
@@ -167,7 +173,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
             Assert.Equal(bar2, bars[1]);
 
             // Tear Down
-            requester.Disconnect(testAddress);
+            requester.Stop().Wait();
             requester.Dispose();
             provider.Stop().Wait();
             provider.Dispose();

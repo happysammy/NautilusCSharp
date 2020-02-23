@@ -29,7 +29,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
     using Nautilus.TestSuite.TestKit.Mocks;
     using Nautilus.TestSuite.TestKit.Stubs;
     using NetMQ;
-    using NetMQ.Sockets;
     using Xunit;
     using Xunit.Abstractions;
 
@@ -41,6 +40,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
         private readonly IDataSerializer<Instrument> dataSerializer;
         private readonly IMessageSerializer<Request> requestSerializer;
         private readonly IMessageSerializer<Response> responseSerializer;
+        private readonly ICompressor compressor;
 
         public InstrumentProviderTests(ITestOutputHelper output)
         {
@@ -50,6 +50,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
             this.repository = new MockInstrumentRepository(this.dataSerializer);
             this.requestSerializer = new MsgPackRequestSerializer(new MsgPackQuerySerializer());
             this.responseSerializer = new MsgPackResponseSerializer();
+            this.compressor = new CompressorBypass();
         }
 
         public void Dispose()
@@ -61,8 +62,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
         internal void GivenInstrumentRequest_WithNoInstruments_ReturnsQueryFailedMessage()
         {
             // Arrange
-            ushort testPort = 55620;
-            var testAddress = $"tcp://localhost:{testPort}";
+            var testAddress = new ZmqNetworkAddress(NetworkAddress.LocalHost, new Port(55620));
 
             var provider = new InstrumentProvider(
                 this.container,
@@ -70,14 +70,19 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
                 this.dataSerializer,
                 this.requestSerializer,
                 this.responseSerializer,
-                new CompressorBypass(),
+                this.compressor,
                 EncryptionSettings.None(),
-                new Port(testPort));
-            provider.Start();
-            Task.Delay(100).Wait();  // Allow provider to start
+                testAddress.Port);
+            provider.Start().Wait();
 
-            var requester = new RequestSocket();
-            requester.Connect(testAddress);
+            var requester = new MockRequester(
+                this.container,
+                this.requestSerializer,
+                this.responseSerializer,
+                this.compressor,
+                EncryptionSettings.None(),
+                testAddress);
+            requester.Start().Wait();
 
             var instrument = StubInstrumentProvider.AUDUSD();
 
@@ -93,14 +98,13 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            requester.SendFrame(this.requestSerializer.Serialize(request));
-            var response = (QueryFailure)this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
+            var response = (QueryFailure)requester.Send(request);
 
             // Assert
             Assert.Equal(typeof(QueryFailure), response.Type);
 
             // Tear Down
-            requester.Disconnect(testAddress);
+            requester.Stop().Wait();
             requester.Dispose();
             provider.Stop().Wait();
             provider.Dispose();
@@ -110,8 +114,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
         internal void GivenInstrumentsRequest_WithNoInstruments_ReturnsQueryFailedMessage()
         {
             // Arrange
-            ushort testPort = 55621;
-            var testAddress = $"tcp://localhost:{testPort}";
+            var testAddress = new ZmqNetworkAddress(NetworkAddress.LocalHost, new Port(55621));
 
             var provider = new InstrumentProvider(
                 this.container,
@@ -121,12 +124,18 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
                 this.responseSerializer,
                 new CompressorBypass(),
                 EncryptionSettings.None(),
-                new Port(testPort));
+                testAddress.Port);
             provider.Start();
             Task.Delay(100).Wait();  // Allow provider to start
 
-            var requester = new RequestSocket();
-            requester.Connect(testAddress);
+            var requester = new MockRequester(
+                this.container,
+                this.requestSerializer,
+                this.responseSerializer,
+                this.compressor,
+                EncryptionSettings.None(),
+                testAddress);
+            requester.Start().Wait();
 
             var query = new Dictionary<string, string>
             {
@@ -140,14 +149,13 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            requester.SendFrame(this.requestSerializer.Serialize(request));
-            var response = (QueryFailure)this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
+            var response = (QueryFailure)requester.Send(request);
 
             // Assert
             Assert.Equal(typeof(QueryFailure), response.Type);
 
             // Tear Down
-            requester.Disconnect(testAddress);
+            requester.Stop().Wait();
             requester.Dispose();
             provider.Stop().Wait();
             provider.Dispose();
@@ -157,8 +165,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
         internal void GivenInstrumentRequest_WithInstrument_ReturnsValidInstrumentResponse()
         {
             // Arrange
-            ushort testPort = 55622;
-            var testAddress = $"tcp://localhost:{testPort}";
+            var testAddress = new ZmqNetworkAddress(NetworkAddress.LocalHost, new Port(55622));
 
             var provider = new InstrumentProvider(
                 this.container,
@@ -166,14 +173,19 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
                 this.dataSerializer,
                 this.requestSerializer,
                 this.responseSerializer,
-                new CompressorBypass(),
+                this.compressor,
                 EncryptionSettings.None(),
-                new Port(testPort));
-            provider.Start();
-            Task.Delay(100).Wait();
+                testAddress.Port);
+            provider.Start().Wait();
 
-            var requester = new RequestSocket();
-            requester.Connect(testAddress);
+            var requester = new MockRequester(
+                this.container,
+                this.requestSerializer,
+                this.responseSerializer,
+                this.compressor,
+                EncryptionSettings.None(),
+                testAddress);
+            requester.Start().Wait();
 
             var instrument = StubInstrumentProvider.AUDUSD();
             this.repository.Add(instrument);
@@ -190,8 +202,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            requester.SendFrame(this.requestSerializer.Serialize(request));
-            var response = (DataResponse)this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
+            var response = (DataResponse)requester.Send(request);
             var data = this.dataSerializer.DeserializeBlob(response.Data);
 
             // Assert
@@ -199,7 +210,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
             Assert.Equal(instrument, data[0]);
 
             // Tear Down
-            requester.Disconnect(testAddress);
+            requester.Stop().Wait();
             requester.Dispose();
             provider.Stop().Wait();
             provider.Dispose();
@@ -209,8 +220,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
         internal void GivenInstrumentsRequest_WithInstruments_ReturnsValidInstrumentResponse()
         {
             // Arrange
-            ushort testPort = 55623;
-            var testAddress = $"tcp://localhost:{testPort}";
+            var testAddress = new ZmqNetworkAddress(NetworkAddress.LocalHost, new Port(55623));
 
             var provider = new InstrumentProvider(
                 this.container,
@@ -218,15 +228,19 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
                 this.dataSerializer,
                 this.requestSerializer,
                 this.responseSerializer,
-                new CompressorBypass(),
+                this.compressor,
                 EncryptionSettings.None(),
-                new Port(testPort));
-            provider.Start();
-            Task.Delay(100).Wait();  // Allow provider to start
+                testAddress.Port);
+            provider.Start().Wait();
 
-            var requester = new RequestSocket();
-            requester.Connect(testAddress);
-            Task.Delay(100).Wait();  // Allow socket to connect
+            var requester = new MockRequester(
+                this.container,
+                this.requestSerializer,
+                this.responseSerializer,
+                this.compressor,
+                EncryptionSettings.None(),
+                testAddress);
+            requester.Start().Wait();
 
             var instrument1 = StubInstrumentProvider.AUDUSD();
             var instrument2 = StubInstrumentProvider.EURUSD();
@@ -245,8 +259,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            requester.SendFrame(this.requestSerializer.Serialize(request));
-            var response = (DataResponse)this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
+            var response = (DataResponse)requester.Send(request);
             var data = this.dataSerializer.DeserializeBlob(response.Data);
 
             // Assert
@@ -259,7 +272,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
             }
 
             // Tear Down
-            requester.Disconnect(testAddress);
+            requester.Stop().Wait();
             requester.Dispose();
             provider.Stop().Wait();
             provider.Dispose();

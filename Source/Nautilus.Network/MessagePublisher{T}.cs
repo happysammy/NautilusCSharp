@@ -125,10 +125,13 @@ namespace Nautilus.Network
         /// <param name="message">The message to publish.</param>
         protected void Publish(string topic, T message)
         {
-            var publishable = this.compressor.Compress(this.serializer.Serialize(message));
-            this.socket.SendMultipartBytes(Encoding.UTF8.GetBytes(topic), publishable);
+            var serialized = this.serializer.Serialize(message);
+            var length = BitConverter.GetBytes((uint)serialized.Length);
+            var payload = this.compressor.Compress(serialized);
+            this.socket.SendMultipartBytes(Encoding.UTF8.GetBytes(topic), length, payload);
 
             this.CountPublished++;
+            this.Logger.LogTrace(LogId.Networking, $"HeaderLength={serialized.Length:N0}, Payload={payload.Length:N0} bytes");
             this.Logger.LogTrace(LogId.Networking, $"[{this.CountPublished}]--> Topic={topic}, Message={message}");
         }
     }

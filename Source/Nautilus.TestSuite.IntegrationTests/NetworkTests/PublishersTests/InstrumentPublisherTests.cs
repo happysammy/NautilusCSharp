@@ -72,17 +72,18 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
             this.publisher.Endpoint.Send(instrument);
 
             var topic = subscriber.ReceiveFrameBytes();
+            var length = subscriber.ReceiveFrameBytes();
             var message = subscriber.ReceiveFrameBytes();
 
             // Assert
             Assert.Equal(instrument.Symbol.Value, Encoding.UTF8.GetString(topic));
+            Assert.Equal(446U, BitConverter.ToUInt32(length));
             Assert.Equal(instrument, this.serializer.Deserialize(message));
 
             // Tear Down
             subscriber.Disconnect(TestAddress);
             subscriber.Dispose();
-            this.publisher.Stop();
-            Task.Delay(100).Wait(); // Allow server to stop
+            this.publisher.Stop().Wait();
             this.publisher.Dispose();
         }
     }

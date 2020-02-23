@@ -10,6 +10,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+    using System.Runtime.InteropServices.ComTypes;
     using System.Text;
     using System.Threading.Tasks;
     using Nautilus.Common.Data;
@@ -75,10 +76,12 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
             this.publisher.Endpoint.Send(data);
 
             var topic = subscriber.ReceiveFrameBytes();
+            var length = subscriber.ReceiveFrameBytes();
             var message = subscriber.ReceiveFrameBytes();
 
             // Assert
             Assert.Equal(barType.ToString(), Encoding.UTF8.GetString(topic));
+            Assert.Equal(64U, BitConverter.ToUInt32(length));
             Assert.Equal(bar.ToString(), Encoding.UTF8.GetString(message));
             Assert.Equal(bar, this.serializer.Deserialize(message));
 
