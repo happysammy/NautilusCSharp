@@ -64,7 +64,7 @@ namespace Nautilus.TestSuite.TestKit.Components
             return new TestComponentryContainer(
                 clock,
                 new TestGuidFactory(),
-                new LoggerFactory(new ILoggerProvider[] { new TestLoggerProvider(output) }));
+                new LoggerFactory(new[] { new TestLoggerProvider(output) }));
         }
     }
 }

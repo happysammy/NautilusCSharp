@@ -10,7 +10,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
-    using System.Runtime.InteropServices.ComTypes;
     using System.Text;
     using System.Threading.Tasks;
     using Nautilus.Common.Data;
