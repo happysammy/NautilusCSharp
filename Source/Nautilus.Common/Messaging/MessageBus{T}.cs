@@ -25,7 +25,7 @@ namespace Nautilus.Common.Messaging
     /// Provides a generic message bus.
     /// </summary>
     /// <typeparam name="T">The bus message type.</typeparam>
-    public sealed class MessageBus<T> : Component
+    public sealed class MessageBus<T> : MessagingComponent
         where T : Message
     {
         private readonly List<object> deadLetters;

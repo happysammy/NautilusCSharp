@@ -25,7 +25,7 @@ namespace Nautilus.TestSuite.TestKit.Mocks
     /// <summary>
     /// Provides a mock requester for testing.
     /// </summary>
-    public sealed class MockRequester : Component
+    public sealed class MockRequester : MessagingComponent
     {
         private readonly IMessageSerializer<Request> outboundSerializer;
         private readonly IMessageSerializer<Response> inboundSerializer;

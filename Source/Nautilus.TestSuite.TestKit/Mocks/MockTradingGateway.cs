@@ -21,7 +21,7 @@ namespace Nautilus.TestSuite.TestKit.Mocks
     /// <summary>
     /// Provides a mock trading gateway for testing.
     /// </summary>
-    public sealed class MockTradingGateway : Component, ITradingGateway
+    public sealed class MockTradingGateway : MessagingComponent, ITradingGateway
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MockTradingGateway"/> class.

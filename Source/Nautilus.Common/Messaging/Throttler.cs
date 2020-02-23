@@ -22,7 +22,7 @@ namespace Nautilus.Common.Messaging
     /// <summary>
     /// Provides a message throttler.
     /// </summary>
-    public sealed class Throttler : Component
+    public sealed class Throttler : MessagingComponent
     {
         private readonly IEndpoint receiver;
         private readonly TimeSpan interval;

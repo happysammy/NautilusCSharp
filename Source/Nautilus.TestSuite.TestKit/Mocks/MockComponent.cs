@@ -8,6 +8,7 @@
 
 namespace Nautilus.TestSuite.TestKit.Mocks
 {
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
@@ -16,7 +17,7 @@ namespace Nautilus.TestSuite.TestKit.Mocks
     using Nautilus.DomainModel.ValueObjects;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
-    public sealed class MockComponent : Component
+    public sealed class MockComponent : MessagingComponent
     {
         private readonly int workDelayMilliseconds;
 
@@ -31,6 +32,16 @@ namespace Nautilus.TestSuite.TestKit.Mocks
         }
 
         public List<object> Messages { get; }
+
+        /// <summary>
+        /// Register the message type with the given handler.
+        /// </summary>
+        /// <typeparam name="TMessage">The message type.</typeparam>
+        /// <param name="handler">The handler to register.</param>
+        public new void RegisterHandler<TMessage>(Action<TMessage> handler)
+        {
+            base.RegisterHandler(handler);
+        }
 
         public void OnMessage(object message)
         {

@@ -15,6 +15,7 @@ namespace Nautilus.Core.Types
     /// <summary>
     /// Represents a particular time every week.
     /// </summary>
+    [Immutable]
     public sealed class WeeklyTime
     {
         /// <summary>

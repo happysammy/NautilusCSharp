@@ -25,7 +25,7 @@ namespace Nautilus.Data.Aggregation
     /// <summary>
     /// Provides a bar aggregator for a certain symbol.
     /// </summary>
-    public sealed class BarAggregator : Component
+    public sealed class BarAggregator : MessagingComponent
     {
         private readonly IEndpoint parent;
         private readonly Symbol symbol;

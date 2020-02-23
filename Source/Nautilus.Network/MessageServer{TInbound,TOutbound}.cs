@@ -33,7 +33,7 @@ namespace Nautilus.Network
     /// </summary>
     /// <typeparam name="TInbound">The inbound message type.</typeparam>
     /// <typeparam name="TOutbound">The outbound response type.</typeparam>
-    public abstract class MessageServer<TInbound, TOutbound> : Component, IDisposable
+    public abstract class MessageServer<TInbound, TOutbound> : MessagingComponent, IDisposable
         where TInbound : Message
         where TOutbound : Response
     {

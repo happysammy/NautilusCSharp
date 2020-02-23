@@ -17,7 +17,7 @@ namespace Nautilus.Common.Data
     /// <summary>
     /// The base class for all components which are connected to the message bus.
     /// </summary>
-    public abstract class DataBusConnected : Component
+    public abstract class DataBusConnected : MessagingComponent
     {
         private readonly IDataBusAdapter dataBusAdapter;
 

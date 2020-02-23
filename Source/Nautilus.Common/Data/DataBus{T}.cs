@@ -26,7 +26,7 @@ namespace Nautilus.Common.Data
     /// Provides a generic data bus.
     /// </summary>
     /// <typeparam name="T">The bus data type.</typeparam>
-    public sealed class DataBus<T> : Component
+    public sealed class DataBus<T> : MessagingComponent
     {
         // The BroadcastBlock<T> ensures that the current element is broadcast to any linked targets
         // before allowing the element to be overwritten.

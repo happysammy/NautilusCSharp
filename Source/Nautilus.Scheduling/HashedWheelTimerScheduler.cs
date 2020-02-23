@@ -37,7 +37,7 @@ namespace Nautilus.Scheduling
     /// Further reading: http://www.cs.columbia.edu/~nahum/w6998/papers/sosp87-timing-wheels.pdf
     /// Presentation: http://www.cse.wustl.edu/~cdgill/courses/cs6874/TimingWheels.ppt.
     /// </summary>
-    public sealed class HashedWheelTimerScheduler : Component, IScheduler, IDisposable
+    public sealed class HashedWheelTimerScheduler : MessagingComponent, IScheduler, IDisposable
     {
         private const int DefaultTicksPerWheel = 512;
         private const int TwoPower30 = 1073741824;

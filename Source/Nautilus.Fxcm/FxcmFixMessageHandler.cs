@@ -93,8 +93,6 @@ namespace Nautilus.Fxcm
             {
                 this.tickTimestampProvider = this.TimeNow;
             }
-
-            this.RegisterExceptionHandler(this.HandleException);
         }
 
         /// <summary>
@@ -527,6 +525,7 @@ namespace Nautilus.Fxcm
             }
         }
 
+        // TODO: Exception handling not being used
         private void HandleException(Exception ex)
         {
             switch (ex)

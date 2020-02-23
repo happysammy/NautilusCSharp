@@ -25,7 +25,7 @@ namespace Nautilus.Network
     /// Provides a generic message publisher.
     /// </summary>
     /// <typeparam name="T">The publishing message type.</typeparam>
-    public abstract class MessagePublisher<T> : Component, IDisposable
+    public abstract class MessagePublisher<T> : MessagingComponent, IDisposable
     {
         private readonly ISerializer<T> serializer;
         private readonly ICompressor compressor;

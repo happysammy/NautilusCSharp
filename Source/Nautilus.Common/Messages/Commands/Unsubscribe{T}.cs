@@ -52,11 +52,6 @@ namespace Nautilus.Common.Messages.Commands
         public T Subscription { get; }
 
         /// <summary>
-        /// Gets the commands subscription type.
-        /// </summary>
-        public Type SubscriptionType => typeof(T);
-
-        /// <summary>
         /// Gets the commands subscriber mailbox.
         /// </summary>
         public Mailbox Subscriber { get; }

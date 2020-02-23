@@ -113,7 +113,6 @@ namespace NautilusExecutor
             {
                 { ServiceAddress.Scheduler, scheduler.Endpoint },
                 { ServiceAddress.ExecutionEngine, executionEngine.Endpoint },
-                { ServiceAddress.ExecutionDatabase, executionDatabase.Endpoint },
                 { ServiceAddress.CommandRouter, commandRouter.Endpoint },
                 { ServiceAddress.CommandServer, commandServer.Endpoint },
                 { ServiceAddress.EventPublisher, eventPublisher.Endpoint },

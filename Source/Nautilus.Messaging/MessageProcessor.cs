@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Messaging.Internal
+namespace Nautilus.Messaging
 {
     using System;
     using System.Collections.Generic;
@@ -14,11 +14,12 @@ namespace Nautilus.Messaging.Internal
     using System.Threading;
     using System.Threading.Tasks;
     using System.Threading.Tasks.Dataflow;
+    using Nautilus.Messaging.Internal;
 
     /// <summary>
     /// Provides an asynchronous message processor.
     /// </summary>
-    internal sealed class MessageProcessor
+    public sealed class MessageProcessor
     {
         private readonly ActionBlock<object> processor;
         private readonly CancellationTokenSource cancellationSource = new CancellationTokenSource();
@@ -32,7 +33,7 @@ namespace Nautilus.Messaging.Internal
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageProcessor"/> class.
         /// </summary>
-        internal MessageProcessor()
+        public MessageProcessor()
         {
             this.exceptionHandler = this.Rethrow;
             this.unhandled = this.AddToUnhandledMessages;

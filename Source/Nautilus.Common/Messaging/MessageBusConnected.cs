@@ -19,7 +19,7 @@ namespace Nautilus.Common.Messaging
     /// <summary>
     /// The base class for all components which are connected to the message bus.
     /// </summary>
-    public abstract class MessageBusConnected : Component
+    public abstract class MessageBusConnected : MessagingComponent
     {
         private readonly IMessageBusAdapter messageBusAdapter;
 
