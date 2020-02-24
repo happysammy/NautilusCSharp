@@ -24,7 +24,7 @@
   },
   "FIX44": {
     "ConfigPath": "",
-    "ConfigFile": "fix_fxcm3.cfg",
+    "ConfigFile": "fix_fxcm1.cfg",
     "ConnectJob": {
       "Day": "Sunday",
       "Hour": 20,
