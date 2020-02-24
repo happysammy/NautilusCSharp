@@ -68,14 +68,14 @@ namespace NautilusExecutor
             finally
             {
                 Log.CloseAndFlush();
+                Environment.Exit(1);
             }
         }
 
         private static void UnhandledExceptionTrapper(object sender, UnhandledExceptionEventArgs ex)
         {
-            Console.WriteLine(ex.ExceptionObject.ToString());
-            Console.WriteLine("Press ENTER to continue");
-            Console.ReadLine();
+            Log.Fatal("Unhandled exception from background thread", ex, sender);
+            Log.CloseAndFlush();
             Environment.Exit(1);
         }
 

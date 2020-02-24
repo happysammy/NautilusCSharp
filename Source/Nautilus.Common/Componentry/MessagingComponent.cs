@@ -201,7 +201,7 @@ namespace Nautilus.Common.Componentry
 
         private void OnMessage(Start message)
         {
-            this.Logger.LogInformation(LogId.Operation, $"Starting from message {message}...", message.Id);
+            this.Logger.LogDebug(LogId.Operation, $"Starting from message {message}...", message.Id);
 
             this.OnStart(message);
             this.ComponentState = ComponentState.Running;
@@ -211,7 +211,7 @@ namespace Nautilus.Common.Componentry
 
         private void OnMessage(Stop message)
         {
-            this.Logger.LogInformation(LogId.Operation, $"Stopping from message {message}...", message.Id);
+            this.Logger.LogDebug(LogId.Operation, $"Stopping from message {message}...", message.Id);
 
             if (this.ComponentState != ComponentState.Running)
             {

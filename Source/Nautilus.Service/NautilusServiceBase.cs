@@ -97,6 +97,8 @@ namespace Nautilus.Service
         /// <inheritdoc />
         protected override void OnStart(Start start)
         {
+            this.Logger.LogInformation($"Starting {this.GetType().Name}...");
+
             if (TimingProvider.IsInsideInterval(
                 this.disconnectWeeklyTime,
                 this.connectWeeklyTime,
