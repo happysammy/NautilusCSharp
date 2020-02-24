@@ -10,7 +10,6 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Common.Interfaces;
     using Nautilus.Messaging;
@@ -206,30 +205,30 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
         }
 
         [Fact]
+        [SuppressMessage("ReSharper", "SA1116", Justification = "Easier to read")]
         internal void MessagingPerformanceTest()
         {
             // Arrange
             var receiver = new MockComponent(this.container);
             receiver.RegisterHandler<int>(receiver.OnMessage);
 
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-
-            // Act
-            for (var i = 0; i < 1000000; i++)
+            PerformanceHarness.Test(() =>
             {
-                receiver.Endpoint.Send(i);
-                receiver.Endpoint.Send(i);
-            }
+                for (var i = 0; i < 1000000; i++)
+                {
+                    receiver.Endpoint.Send(i);
+                    receiver.Endpoint.Send(i);
+                }
 
-            while (receiver.ProcessedCount < 2000000)
-            {
-                // Wait
-            }
+                while (receiver.ProcessedCount < 2000000)
+                {
+                    // Wait
+                }
+            },
+                1,
+                1,
+                this.Output);
 
-            stopwatch.Stop();
-
-            this.Output.WriteLine(stopwatch.ElapsedMilliseconds.ToString());
             this.Output.WriteLine(receiver.Messages.Count.ToString());
 
             // ~1350 ms for 1000000 messages with Task<bool> being returned by handler

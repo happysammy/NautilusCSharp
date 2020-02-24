@@ -12,6 +12,7 @@ namespace Nautilus.TestSuite.TestKit
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
+    using Xunit.Abstractions;
 
     /// <summary>
     /// Provides a simple harness for performance benchmarking utilizing an internal stopwatch.
@@ -26,9 +27,9 @@ namespace Nautilus.TestSuite.TestKit
         /// <param name="underTest">The action under test.</param>
         /// <param name="runs">The number of runs to perform.</param>
         /// <param name="iterations">The number of iterations per run.</param>
-        /// <param name="printOutput">If the performance results should be printed to the console.</param>
+        /// <param name="output">The optional test output.</param>
         /// <returns>The minimum duration run.</returns>
-        public static TimeSpan Test(Action underTest, int runs, int iterations, bool printOutput = true)
+        public static TimeSpan Test(Action underTest, int runs, int iterations, ITestOutputHelper? output = null)
         {
             var stopwatch = new Stopwatch();
             var results = new List<TimeSpan>();
@@ -50,11 +51,9 @@ namespace Nautilus.TestSuite.TestKit
             var minimumTicks = Convert.ToInt64(results.Min(timeSpan => timeSpan.Ticks));
             var minimumTimesSpan = new TimeSpan(minimumTicks);
 
-            if (printOutput)
-            {
-                Console.WriteLine($"Performance test: {underTest} {minimumTimesSpan.Milliseconds}ms minimum " +
-                                  $"of {runs:N0} runs @ {iterations:N0} each run.");
-            }
+            output?.WriteLine($"Performance test: {underTest.Method.Name} " +
+                              $"{minimumTimesSpan.Milliseconds}ms minimum " +
+                              $"of {runs:N0} runs @ {iterations:N0} each run.");
 
             return minimumTimesSpan;
         }
