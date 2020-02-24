@@ -12,18 +12,16 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Messaging.Internal;
+    using Nautilus.TestSuite.TestKit;
     using Xunit;
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
-    public sealed class HandlerTests
+    public sealed class HandlerTests : TestBase
     {
-        private readonly ITestOutputHelper output;
-
         public HandlerTests(ITestOutputHelper output)
+            : base(output)
         {
-            // Fixture Setup
-            this.output = output;
         }
 
         [Fact]

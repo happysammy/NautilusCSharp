@@ -17,19 +17,17 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.Network.Messages;
     using Nautilus.Serialization.MessageSerializers;
+    using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.Stubs;
     using Xunit;
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
-    public sealed class MsgPackRequestSerializerTests
+    public sealed class MsgPackRequestSerializerTests : TestBase
     {
-        private readonly ITestOutputHelper output;
-
         public MsgPackRequestSerializerTests(ITestOutputHelper output)
+            : base(output)
         {
-            // Fixture Setup
-            this.output = output;
         }
 
         [Fact]
@@ -103,8 +101,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             Assert.Equal(symbol.ToString(), unpacked.Query["Symbol"]);
             Assert.Equal(dateTime.ToIso8601String(), unpacked.Query["FromDateTime"]);
             Assert.Equal(dateTime.ToIso8601String(), unpacked.Query["ToDateTime"]);
-            this.output.WriteLine(Convert.ToBase64String(packed));
-            this.output.WriteLine(Encoding.UTF8.GetString(packed));
+            this.Output.WriteLine(Convert.ToBase64String(packed));
+            this.Output.WriteLine(Encoding.UTF8.GetString(packed));
         }
     }
 }

@@ -12,19 +12,17 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
     using Nautilus.Serialization.DataSerializers;
+    using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.Stubs;
     using Xunit;
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
-    public sealed class BsonInstrumentSerializerTests
+    public sealed class BsonInstrumentSerializerTests : TestBase
     {
-        private readonly ITestOutputHelper output;
-
         public BsonInstrumentSerializerTests(ITestOutputHelper output)
+            : base(output)
         {
-            // Fixture Setup
-            this.output = output;
         }
 
         [Fact]
@@ -40,8 +38,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             // Assert
             Assert.Equal(instrument, unpacked);
-            this.output.WriteLine(Convert.ToBase64String(packed));
-            this.output.WriteLine(Encoding.UTF8.GetString(packed));
+            this.Output.WriteLine(Convert.ToBase64String(packed));
+            this.Output.WriteLine(Encoding.UTF8.GetString(packed));
         }
     }
 }

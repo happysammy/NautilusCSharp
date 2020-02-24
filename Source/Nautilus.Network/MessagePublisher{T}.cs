@@ -99,10 +99,19 @@ namespace Nautilus.Network
                 throw new InvalidOperationException("Cannot dispose a running component.");
             }
 
-            if (!this.socket.IsDisposed)
+            try
             {
-                this.socket.Dispose();
+                if (!this.socket.IsDisposed)
+                {
+                    this.socket.Dispose();
+                }
             }
+            catch (Exception ex)
+            {
+                this.Logger.LogCritical(LogId.Networking, ex.Message, ex);
+            }
+
+            this.Logger.LogInformation(LogId.Operation, "Disposed.");
         }
 
         /// <inheritdoc />

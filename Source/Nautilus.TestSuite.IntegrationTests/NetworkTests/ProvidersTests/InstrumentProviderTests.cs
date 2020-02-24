@@ -25,15 +25,15 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
     using Nautilus.Network.Messages;
     using Nautilus.Serialization.DataSerializers;
     using Nautilus.Serialization.MessageSerializers;
+    using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.Components;
     using Nautilus.TestSuite.TestKit.Mocks;
     using Nautilus.TestSuite.TestKit.Stubs;
-    using NetMQ;
     using Xunit;
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
-    public sealed class InstrumentProviderTests : IDisposable
+    public sealed class InstrumentProviderTests : TestBase
     {
         private readonly IComponentryContainer container;
         private readonly IInstrumentRepository repository;
@@ -43,6 +43,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
         private readonly ICompressor compressor;
 
         public InstrumentProviderTests(ITestOutputHelper output)
+            : base(output)
         {
             // Fixture Setup
             this.container = TestComponentryContainer.Create(output);
@@ -51,11 +52,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
             this.requestSerializer = new MsgPackRequestSerializer(new MsgPackQuerySerializer());
             this.responseSerializer = new MsgPackResponseSerializer();
             this.compressor = new CompressorBypass();
-        }
-
-        public void Dispose()
-        {
-            NetMQConfig.Cleanup(false);
         }
 
         [Fact]
@@ -104,10 +100,17 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
             Assert.Equal(typeof(QueryFailure), response.Type);
 
             // Tear Down
-            requester.Stop().Wait();
-            requester.Dispose();
-            provider.Stop().Wait();
-            provider.Dispose();
+            try
+            {
+                requester.Stop().Wait();
+                requester.Dispose();
+                provider.Stop().Wait();
+                provider.Dispose();
+            }
+            catch (Exception ex)
+            {
+                this.Output.WriteLine(ex.Message);
+            }
         }
 
         [Fact]
@@ -155,10 +158,17 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
             Assert.Equal(typeof(QueryFailure), response.Type);
 
             // Tear Down
-            requester.Stop().Wait();
-            requester.Dispose();
-            provider.Stop().Wait();
-            provider.Dispose();
+            try
+            {
+                requester.Stop().Wait();
+                requester.Dispose();
+                provider.Stop().Wait();
+                provider.Dispose();
+            }
+            catch (Exception ex)
+            {
+                this.Output.WriteLine(ex.Message);
+            }
         }
 
         [Fact]
@@ -210,10 +220,17 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
             Assert.Equal(instrument, data[0]);
 
             // Tear Down
-            requester.Stop().Wait();
-            requester.Dispose();
-            provider.Stop().Wait();
-            provider.Dispose();
+            try
+            {
+                requester.Stop().Wait();
+                requester.Dispose();
+                provider.Stop().Wait();
+                provider.Dispose();
+            }
+            catch (Exception ex)
+            {
+                this.Output.WriteLine(ex.Message);
+            }
         }
 
         [Fact]
@@ -272,10 +289,17 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
             }
 
             // Tear Down
-            requester.Stop().Wait();
-            requester.Dispose();
-            provider.Stop().Wait();
-            provider.Dispose();
+            try
+            {
+                requester.Stop().Wait();
+                requester.Dispose();
+                provider.Stop().Wait();
+                provider.Dispose();
+            }
+            catch (Exception ex)
+            {
+                this.Output.WriteLine(ex.Message);
+            }
         }
     }
 }

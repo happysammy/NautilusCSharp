@@ -8,7 +8,6 @@
 
 namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 {
-    using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
     using System.Threading.Tasks;
@@ -21,6 +20,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
     using Nautilus.Network.Compression;
     using Nautilus.Network.Encryption;
     using Nautilus.Serialization.MessageSerializers;
+    using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.Components;
     using Nautilus.TestSuite.TestKit.Mocks;
     using Nautilus.TestSuite.TestKit.Stubs;
@@ -30,28 +30,21 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
-    public sealed class EventPublisherTests : IDisposable
+    public sealed class EventPublisherTests : TestBase
     {
         private readonly NetworkAddress localHost = new NetworkAddress("127.0.0.1");
-        private readonly ITestOutputHelper output;
         private readonly IComponentryContainer container;
         private readonly IMessageBusAdapter messageBusAdapter;
         private readonly IEndpoint receiver;
 
         public EventPublisherTests(ITestOutputHelper output)
+            : base(output)
         {
             // Fixture Setup
-            this.output = output;
-
             this.container = TestComponentryContainer.Create(output);
             var service = new MockMessageBusProvider(this.container);
             this.messageBusAdapter = service.Adapter;
             this.receiver = new MockComponent(this.container).Endpoint;
-        }
-
-        public void Dispose()
-        {
-            NetMQConfig.Cleanup(false);
         }
 
         [Fact]
@@ -81,7 +74,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             // Act
             publisher.Endpoint.Send(tradeEvent);
-            this.output.WriteLine("Waiting for published events...");
+            this.Output.WriteLine("Waiting for published events...");
 
             var topic = subscriber.ReceiveFrameBytes();
             var length = subscriber.ReceiveFrameBytes();

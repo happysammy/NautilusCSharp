@@ -19,6 +19,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     using Nautilus.Redis.Data;
     using Nautilus.Redis.Data.Internal;
     using Nautilus.Serialization.DataSerializers;
+    using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.Components;
     using Nautilus.TestSuite.TestKit.Stubs;
     using NodaTime;
@@ -27,17 +28,15 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsShouldBeDocumented", Justification = "Test Suite")]
-    public sealed class RedisBarRepositoryTests : IDisposable
+    public sealed class RedisBarRepositoryTests : TestBase, IDisposable
     {
-        private readonly ITestOutputHelper output;
         private readonly ConnectionMultiplexer redisConnection;
         private readonly RedisBarRepository repository;
 
         public RedisBarRepositoryTests(ITestOutputHelper output)
+            : base(output)
         {
             // Fixture Setup
-            this.output = output;
-
             var container = TestComponentryContainer.Create(output);
             this.redisConnection = ConnectionMultiplexer.Connect("localhost:6379,allowAdmin=true");
             this.repository = new RedisBarRepository(
@@ -673,7 +672,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             if (barsQuery.IsFailure)
             {
-                this.output.WriteLine(barsQuery.Message);
+                this.Output.WriteLine(barsQuery.Message);
 
                 return;
             }
@@ -682,7 +681,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             foreach (var bar in bars)
             {
-                this.output.WriteLine(bar.ToString());
+                this.Output.WriteLine(bar.ToString());
             }
         }
     }

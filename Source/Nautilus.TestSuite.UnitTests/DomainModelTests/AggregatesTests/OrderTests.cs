@@ -15,19 +15,18 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.Stubs;
     using NodaTime;
     using Xunit;
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
-    public sealed class OrderTests
+    public sealed class OrderTests : TestBase
     {
-        private readonly ITestOutputHelper output;
-
         public OrderTests(ITestOutputHelper output)
+            : base(output)
         {
-            this.output = output;
         }
 
         [Fact]
@@ -433,8 +432,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Act
             var result = order1.Equals(order2);
 
-            this.output.WriteLine(order1.ToString());
-            this.output.WriteLine(order2.ToString());
+            this.Output.WriteLine(order1.ToString());
+            this.Output.WriteLine(order2.ToString());
 
             // Assert
             Assert.True(result);

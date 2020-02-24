@@ -20,6 +20,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
     using Nautilus.Network.Compression;
     using Nautilus.Network.Encryption;
     using Nautilus.Serialization.DataSerializers;
+    using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.Components;
     using Nautilus.TestSuite.TestKit.Stubs;
     using NetMQ;
@@ -28,13 +29,14 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
-    public sealed class InstrumentPublisherTests : IDisposable
+    public sealed class InstrumentPublisherTests : TestBase
     {
         private const string TestAddress = "tcp://localhost:55512";
         private readonly IDataSerializer<Instrument> serializer;
         private readonly InstrumentPublisher publisher;
 
         public InstrumentPublisherTests(ITestOutputHelper output)
+            : base(output)
         {
             // Fixture Setup
             var container = TestComponentryContainer.Create(output);
@@ -47,11 +49,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
                 new CompressorBypass(),
                 EncryptionSettings.None(),
                 new Port(55512));
-        }
-
-        public void Dispose()
-        {
-            NetMQConfig.Cleanup(false);
         }
 
         [Fact]
@@ -81,10 +78,18 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
             Assert.Equal(instrument, this.serializer.Deserialize(message));
 
             // Tear Down
-            subscriber.Disconnect(TestAddress);
-            subscriber.Dispose();
-            this.publisher.Stop().Wait();
-            this.publisher.Dispose();
+            try
+            {
+                subscriber.Disconnect(TestAddress);
+                subscriber.Dispose();
+                this.publisher.Stop().Wait();
+                this.publisher.Dispose();
+            }
+            catch (Exception ex)
+            {
+                // Temporary to mitigate NetMQ.Core.Utils.Proactor.Loop() problem on disconnect
+                this.Output.WriteLine(ex.Message);
+            }
         }
     }
 }

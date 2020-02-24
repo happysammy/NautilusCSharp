@@ -21,21 +21,21 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
     using Nautilus.Network.Messages;
     using Nautilus.Serialization.DataSerializers;
     using Nautilus.Serialization.MessageSerializers;
+    using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.Stubs;
     using NodaTime;
     using Xunit;
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
-    public sealed class MsgPackResponseSerializerTests
+    public sealed class MsgPackResponseSerializerTests : TestBase
     {
-        private readonly ITestOutputHelper output;
         private readonly MsgPackResponseSerializer serializer;
 
         public MsgPackResponseSerializerTests(ITestOutputHelper output)
+            : base(output)
         {
             // Fixture Setup
-            this.output = output;
             this.serializer = new MsgPackResponseSerializer();
         }
 
@@ -62,8 +62,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             Assert.Equal(correlationId, unpacked.CorrelationId);
             Assert.Equal("NautilusData.TickProvider", unpacked.ServiceName);
             Assert.Equal("Trader-001-1970-01-01-0", unpacked.SessionId.Value);
-            this.output.WriteLine(Convert.ToBase64String(packed));
-            this.output.WriteLine(Encoding.UTF8.GetString(packed));
+            this.Output.WriteLine(Convert.ToBase64String(packed));
+            this.Output.WriteLine(Encoding.UTF8.GetString(packed));
         }
 
         [Fact]
@@ -89,8 +89,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             Assert.Equal(correlationId, unpacked.CorrelationId);
             Assert.Equal("NautilusData.TickProvider", unpacked.ServiceName);
             Assert.Equal("Trader-001-1970-01-01-0", unpacked.SessionId.Value);
-            this.output.WriteLine(Convert.ToBase64String(packed));
-            this.output.WriteLine(Encoding.UTF8.GetString(packed));
+            this.Output.WriteLine(Convert.ToBase64String(packed));
+            this.Output.WriteLine(Encoding.UTF8.GetString(packed));
         }
 
         [Fact]
@@ -114,8 +114,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             Assert.Equal(response, unpacked);
             Assert.Equal(correlationId, unpacked.CorrelationId);
             Assert.Equal(messageType, unpacked.ReceivedType);
-            this.output.WriteLine(Convert.ToBase64String(packed));
-            this.output.WriteLine(Encoding.UTF8.GetString(packed));
+            this.Output.WriteLine(Convert.ToBase64String(packed));
+            this.Output.WriteLine(Encoding.UTF8.GetString(packed));
         }
 
         [Fact]
@@ -139,8 +139,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             Assert.Equal(response, unpacked);
             Assert.Equal(correlationId, unpacked.CorrelationId);
             Assert.Equal(message, unpacked.Message);
-            this.output.WriteLine(Convert.ToBase64String(packed));
-            this.output.WriteLine(Encoding.UTF8.GetString(packed));
+            this.Output.WriteLine(Convert.ToBase64String(packed));
+            this.Output.WriteLine(Encoding.UTF8.GetString(packed));
         }
 
         [Fact]
@@ -164,8 +164,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             Assert.Equal(response, unpacked);
             Assert.Equal(correlationId, unpacked.CorrelationId);
             Assert.Equal(message, unpacked.Message);
-            this.output.WriteLine(Convert.ToBase64String(packed));
-            this.output.WriteLine(Encoding.UTF8.GetString(packed));
+            this.Output.WriteLine(Convert.ToBase64String(packed));
+            this.Output.WriteLine(Encoding.UTF8.GetString(packed));
         }
 
         [Fact]
@@ -219,8 +219,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             Assert.Equal(tick1, deserializedData[0]);
             Assert.Equal(tick2, deserializedData[1]);
             Assert.Equal(correlationId, deserializedResponse.CorrelationId);
-            this.output.WriteLine(Convert.ToBase64String(serializedResponse));
-            this.output.WriteLine(Encoding.UTF8.GetString(serializedResponse));
+            this.Output.WriteLine(Convert.ToBase64String(serializedResponse));
+            this.Output.WriteLine(Encoding.UTF8.GetString(serializedResponse));
         }
 
         [Fact]
@@ -260,8 +260,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             Assert.Equal(response, deserializedResponse);
             Assert.Equal(bars, deserializedData);
             Assert.Equal(correlationId, deserializedResponse.CorrelationId);
-            this.output.WriteLine(Convert.ToBase64String(serializedResponse));
-            this.output.WriteLine(Encoding.UTF8.GetString(serializedResponse));
+            this.Output.WriteLine(Convert.ToBase64String(serializedResponse));
+            this.Output.WriteLine(Encoding.UTF8.GetString(serializedResponse));
         }
 
         [Fact]
@@ -295,8 +295,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             Assert.Equal(response, deserializedResponse);
             Assert.Equal(instrument, deserializedData[0]);
             Assert.Equal(correlationId, deserializedResponse.CorrelationId);
-            this.output.WriteLine(Convert.ToBase64String(serializedResponse));
-            this.output.WriteLine(Encoding.UTF8.GetString(serializedResponse));
+            this.Output.WriteLine(Convert.ToBase64String(serializedResponse));
+            this.Output.WriteLine(Encoding.UTF8.GetString(serializedResponse));
         }
     }
 }

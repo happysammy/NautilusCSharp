@@ -60,7 +60,7 @@ namespace Nautilus.TestSuite.TestKit.Mocks
             {
                 Options =
                 {
-                    Identity = Encoding.Unicode.GetBytes($"{nameof(Nautilus)}-{this.Name.Value}"),
+                    Identity = Encoding.Unicode.GetBytes(this.Name.Value),
                     Linger = TimeSpan.FromSeconds(1),
                 },
             };
@@ -110,12 +110,19 @@ namespace Nautilus.TestSuite.TestKit.Mocks
                 throw new InvalidOperationException("Cannot dispose a running component.");
             }
 
-            if (!this.socket.IsDisposed)
+            try
             {
-                this.socket.Dispose();
+                if (!this.socket.IsDisposed)
+                {
+                    this.socket.Dispose();
+                }
+            }
+            catch (Exception ex)
+            {
+                this.Logger.LogCritical(ex.Message);
             }
 
-            this.Logger.LogDebug("Disposed.");
+            this.Logger.LogInformation("Disposed.");
         }
 
         /// <summary>

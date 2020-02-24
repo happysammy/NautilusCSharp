@@ -102,6 +102,8 @@ namespace Nautilus.Network
             {
                 this.socket.Dispose();
             }
+
+            this.Logger.LogInformation(LogId.Operation, "Disposed.");
         }
 
         /// <inheritdoc />

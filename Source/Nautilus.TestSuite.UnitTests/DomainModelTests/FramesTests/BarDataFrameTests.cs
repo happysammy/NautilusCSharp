@@ -11,6 +11,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FramesTests
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.DomainModel.Frames;
     using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.Stubs;
     using Newtonsoft.Json;
     using NodaTime;
@@ -18,15 +19,14 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FramesTests
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
-    public sealed class BarDataFrameTests
+    public sealed class BarDataFrameTests : TestBase
     {
-        private readonly ITestOutputHelper output;
         private readonly BarType stubBarType;
 
         public BarDataFrameTests(ITestOutputHelper output)
+            : base(output)
         {
             // Fixture Setup
-            this.output = output;
             this.stubBarType = StubBarType.AUDUSD_OneMinuteAsk();
         }
 
@@ -102,7 +102,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FramesTests
             var result = JsonConvert.SerializeObject(barDataFrame);
 
             // Assert
-            this.output.WriteLine(result);
+            this.Output.WriteLine(result);
         }
 
         [Fact]
@@ -124,7 +124,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FramesTests
             var result = JsonConvert.SerializeObject(barDataFrame);
 
             // Assert
-            this.output.WriteLine(result);
+            this.Output.WriteLine(result);
         }
     }
 }

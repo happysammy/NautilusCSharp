@@ -135,12 +135,19 @@ namespace Nautilus.Network
                 throw new InvalidOperationException("Cannot dispose a running component.");
             }
 
-            if (!this.socket.IsDisposed)
+            try
             {
-                this.socket.Dispose();
+                if (!this.socket.IsDisposed)
+                {
+                    this.socket.Dispose();
+                }
+            }
+            catch (Exception ex)
+            {
+                this.Logger.LogCritical(LogId.Networking, ex.Message, ex);
             }
 
-            this.Logger.LogDebug("Disposed.");
+            this.Logger.LogInformation(LogId.Operation, "Disposed.");
         }
 
         /// <inheritdoc />
@@ -372,13 +379,13 @@ namespace Nautilus.Network
                 // Peer not previously connected to a session
                 sessionId = new SessionId(connect.TraderId, this.TimeNow());
                 this.peers.TryAdd(connect.TraderId, sessionId);
-                message = $"{connect.TraderId.Value} connected to session {sessionId.Value}.";
+                message = $"Connected to session {sessionId.Value} at {this.NetworkAddress}";
                 this.Logger.LogInformation(LogId.Networking, message);
             }
             else
             {
                 // Peer already connected to a session
-                message = $"{connect.TraderId.Value} was already connected to session {sessionId.Value}.";
+                message = $"Already connected to session {sessionId.Value} at {this.NetworkAddress}";
                 this.Logger.LogWarning(LogId.Networking, message);
             }
 
@@ -406,7 +413,7 @@ namespace Nautilus.Network
             if (sessionId is null)
             {
                 // Peer not previously connected to a session
-                message = $"{disconnect.TraderId.Value} had no session.";
+                message = $"No session to disconnect at {this.NetworkAddress}.";
                 sessionId = SessionId.None();
                 this.Logger.LogWarning(LogId.Networking, message);
             }
@@ -414,7 +421,7 @@ namespace Nautilus.Network
             {
                 // Peer connected to a session
                 this.peers.TryRemove(disconnect.TraderId, out var _); // Pop from dictionary
-                message = $"{disconnect.TraderId.Value} disconnected from session {sessionId.Value}.";
+                message = $"Disconnected from session {sessionId.Value} at {this.NetworkAddress}";
                 this.Logger.LogInformation(LogId.Networking, message);
             }
 

@@ -13,6 +13,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
     using System.Text;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Serialization.MessageSerializers.Internal;
+    using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.Stubs;
     using NodaTime;
     using Xunit;
@@ -23,15 +24,14 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 #pragma warning disable 8602
 #pragma warning disable 8604
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
-    public sealed class MsgPackOrderSerializerTests
+    public sealed class MsgPackOrderSerializerTests : TestBase
     {
-        private readonly ITestOutputHelper output;
         private readonly OrderSerializer serializer;
 
         public MsgPackOrderSerializerTests(ITestOutputHelper output)
+            : base(output)
         {
             // Fixture Setup
-            this.output = output;
             this.serializer = new OrderSerializer();
         }
 
@@ -56,8 +56,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             Assert.Equal(order.Label, unpacked.Label);
             Assert.Equal(order.Quantity, unpacked.Quantity);
             Assert.Equal(order.ExpireTime, unpacked.ExpireTime);
-            this.output.WriteLine(Convert.ToBase64String(packed));
-            this.output.WriteLine(Encoding.UTF8.GetString(packed));
+            this.Output.WriteLine(Convert.ToBase64String(packed));
+            this.Output.WriteLine(Encoding.UTF8.GetString(packed));
         }
 
         [Fact]
@@ -79,8 +79,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             Assert.Equal(order.Label, unpacked.Label);
             Assert.Equal(order.Quantity, unpacked.Quantity);
             Assert.Equal(order.ExpireTime, unpacked.ExpireTime);
-            this.output.WriteLine(Convert.ToBase64String(packed));
-            this.output.WriteLine(Encoding.UTF8.GetString(packed));
+            this.Output.WriteLine(Convert.ToBase64String(packed));
+            this.Output.WriteLine(Encoding.UTF8.GetString(packed));
         }
 
         [Fact]
@@ -102,8 +102,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             Assert.Equal(order.Label, unpacked.Label);
             Assert.Equal(order.Quantity, unpacked.Quantity);
             Assert.Equal(order.ExpireTime, unpacked.ExpireTime);
-            this.output.WriteLine(Convert.ToBase64String(packed));
-            this.output.WriteLine(Encoding.UTF8.GetString(packed));
+            this.Output.WriteLine(Convert.ToBase64String(packed));
+            this.Output.WriteLine(Encoding.UTF8.GetString(packed));
         }
 
         [Fact]
@@ -125,8 +125,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             Assert.Equal(order.Label, unpacked.Label);
             Assert.Equal(order.Quantity, unpacked.Quantity);
             Assert.Equal(order.ExpireTime, unpacked.ExpireTime);
-            this.output.WriteLine(Convert.ToBase64String(packed));
-            this.output.WriteLine(Encoding.UTF8.GetString(packed));
+            this.Output.WriteLine(Convert.ToBase64String(packed));
+            this.Output.WriteLine(Encoding.UTF8.GetString(packed));
         }
 
         [Fact]
@@ -148,8 +148,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             Assert.Equal(order.Label, unpacked.Label);
             Assert.Equal(order.Quantity, unpacked.Quantity);
             Assert.Equal(order.ExpireTime, unpacked.ExpireTime);
-            this.output.WriteLine(Convert.ToBase64String(packed));
-            this.output.WriteLine(Encoding.UTF8.GetString(packed));
+            this.Output.WriteLine(Convert.ToBase64String(packed));
+            this.Output.WriteLine(Encoding.UTF8.GetString(packed));
         }
 
         [Fact]
@@ -162,8 +162,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             // Assert
             Assert.Null(unpacked);
-            this.output.WriteLine(Convert.ToBase64String(packed));
-            this.output.WriteLine(Encoding.UTF8.GetString(packed));
+            this.Output.WriteLine(Convert.ToBase64String(packed));
+            this.Output.WriteLine(Encoding.UTF8.GetString(packed));
         }
 
         [Fact]

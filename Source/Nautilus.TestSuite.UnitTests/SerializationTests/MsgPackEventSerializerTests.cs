@@ -16,6 +16,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Serialization.MessageSerializers;
+    using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.Stubs;
     using NodaTime;
     using Xunit;
@@ -25,15 +26,14 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
     // (do not remove even if compiler doesn't initially complain).
 #pragma warning disable 8604
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
-    public sealed class MsgPackEventSerializerTests
+    public sealed class MsgPackEventSerializerTests : TestBase
     {
-        private readonly ITestOutputHelper output;
         private readonly MsgPackEventSerializer serializer;
 
         public MsgPackEventSerializerTests(ITestOutputHelper output)
+            : base(output)
         {
             // Fixture Setup
-            this.output = output;
             this.serializer = new MsgPackEventSerializer();
         }
 
@@ -61,7 +61,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             // Assert
             Assert.Equal("FXCM-D123456-SIMULATED", accountEvent.AccountId.Value);
             Assert.Equal(accountEvent, unpacked);
-            this.output.WriteLine(Convert.ToBase64String(packed));
+            this.Output.WriteLine(Convert.ToBase64String(packed));
         }
 
         [Fact]
@@ -89,7 +89,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             // Assert
             Assert.Equal(initialized, unpacked);
-            this.output.WriteLine(Convert.ToBase64String(packed));
+            this.Output.WriteLine(Convert.ToBase64String(packed));
         }
 
         [Fact]
@@ -109,7 +109,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             // Assert
             Assert.Equal(invalid, unpacked);
-            this.output.WriteLine(Convert.ToBase64String(packed));
+            this.Output.WriteLine(Convert.ToBase64String(packed));
         }
 
         [Fact]
@@ -129,7 +129,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             // Assert
             Assert.Equal(denied, unpacked);
-            this.output.WriteLine(Convert.ToBase64String(packed));
+            this.Output.WriteLine(Convert.ToBase64String(packed));
         }
 
         [Fact]
@@ -150,7 +150,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             // Assert
             Assert.Equal(submitted, unpacked);
-            this.output.WriteLine(Convert.ToBase64String(packed));
+            this.Output.WriteLine(Convert.ToBase64String(packed));
         }
 
         [Fact]
@@ -173,7 +173,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             // Assert
             Assert.Equal(accepted, unpacked);
-            this.output.WriteLine(Convert.ToBase64String(packed));
+            this.Output.WriteLine(Convert.ToBase64String(packed));
         }
 
         [Fact]
@@ -195,7 +195,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             // Assert
             Assert.Equal(rejected, unpacked);
-            this.output.WriteLine(Convert.ToBase64String(packed));
+            this.Output.WriteLine(Convert.ToBase64String(packed));
         }
 
         [Fact]
@@ -225,7 +225,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             // Assert
             Assert.Equal(working, unpacked);
-            this.output.WriteLine(Convert.ToBase64String(packed));
+            this.Output.WriteLine(Convert.ToBase64String(packed));
         }
 
         [Fact]
@@ -259,7 +259,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             // Assert
             Assert.Equal(working, unpacked);
-            this.output.WriteLine(Convert.ToBase64String(packed));
+            this.Output.WriteLine(Convert.ToBase64String(packed));
         }
 
         [Fact]
@@ -280,7 +280,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             // Assert
             Assert.Equal(cancelled, unpacked);
-            this.output.WriteLine(Convert.ToBase64String(packed));
+            this.Output.WriteLine(Convert.ToBase64String(packed));
         }
 
         [Fact]
@@ -303,7 +303,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             // Assert
             Assert.Equal(cancelReject, unpacked);
-            this.output.WriteLine(Convert.ToBase64String(packed));
+            this.Output.WriteLine(Convert.ToBase64String(packed));
         }
 
         [Fact]
@@ -327,7 +327,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             // Assert
             Assert.Equal(modified, unpacked);
-            this.output.WriteLine(Convert.ToBase64String(packed));
+            this.Output.WriteLine(Convert.ToBase64String(packed));
         }
 
         [Fact]
@@ -348,7 +348,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             // Assert
             Assert.Equal(expired, unpacked);
-            this.output.WriteLine(Convert.ToBase64String(packed));
+            this.Output.WriteLine(Convert.ToBase64String(packed));
         }
 
         [Fact]
@@ -379,7 +379,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             // Assert
             Assert.Equal(partiallyFilled, unpacked);
-            this.output.WriteLine(Convert.ToBase64String(packed));
+            this.Output.WriteLine(Convert.ToBase64String(packed));
         }
 
         [Fact]
@@ -410,7 +410,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             // Assert
             Assert.Equal(filled, unpacked);
-            this.output.WriteLine(Convert.ToBase64String(packed));
+            this.Output.WriteLine(Convert.ToBase64String(packed));
         }
     }
 }

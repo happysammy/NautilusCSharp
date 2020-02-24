@@ -23,6 +23,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
     using Nautilus.Network.Encryption;
     using Nautilus.Network.Messages;
     using Nautilus.Serialization.MessageSerializers;
+    using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.Components;
     using Nautilus.TestSuite.TestKit.Mocks;
     using Nautilus.TestSuite.TestKit.Stubs;
@@ -32,23 +33,19 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
-    public sealed class MessageServerTests : IDisposable
+    public sealed class MessageServerTests : TestBase
     {
         private readonly IComponentryContainer container;
         private readonly ISerializer<Request> requestSerializer;
         private readonly ISerializer<Response> responseSerializer;
 
         public MessageServerTests(ITestOutputHelper output)
+            : base(output)
         {
             // Fixture Setup
             this.container = TestComponentryContainer.Create(output);
             this.requestSerializer = new MsgPackRequestSerializer(new MsgPackQuerySerializer());
             this.responseSerializer = new MsgPackResponseSerializer();
-        }
-
-        public void Dispose()
-        {
-            NetMQConfig.Cleanup(false);
         }
 
         [Fact]
@@ -102,14 +99,14 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 new Port(testPort));
             server.Start().Wait();
 
-            var requester1 = new RequestSocket(testAddress);
-            requester1.Connect(testAddress);
+            var requester = new RequestSocket(testAddress);
+            requester.Connect(testAddress);
 
             Task.Delay(100).Wait(); // Allow requester to connect
 
             // Act
-            requester1.SendMultipartBytes(BitConverter.GetBytes(0U), new byte[] { });
-            var response1 = this.responseSerializer.Deserialize(requester1.ReceiveMultipartBytes()[1]);
+            requester.SendMultipartBytes(BitConverter.GetBytes(0U), new byte[] { });
+            var response1 = this.responseSerializer.Deserialize(requester.ReceiveMultipartBytes()[1]);
 
             // Assert
             Assert.Equal(typeof(MessageRejected), response1.Type);
@@ -117,10 +114,17 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             Assert.Equal(1, server.CountSent);
 
             // Tear Down
-            requester1.Disconnect(testAddress);
-            requester1.Dispose();
-            server.Stop().Wait();
-            server.Dispose();
+            try
+            {
+                requester.Disconnect(testAddress);
+                requester.Dispose();
+                server.Stop().Wait();
+                server.Dispose();
+            }
+            catch (Exception ex)
+            {
+                this.Output.WriteLine(ex.Message);
+            }
         }
 
         [Fact]
@@ -137,14 +141,14 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 new Port(testPort));
             server.Start().Wait();
 
-            var requester1 = new RequestSocket(testAddress);
-            requester1.Connect(testAddress);
+            var requester = new RequestSocket(testAddress);
+            requester.Connect(testAddress);
 
             Task.Delay(100).Wait(); // Allow requester to connect
 
             // Act
-            requester1.SendMultipartBytes(BitConverter.GetBytes(0U), new byte[] { }, new byte[] { }); // Two payloads incorrect
-            var response1 = this.responseSerializer.Deserialize(requester1.ReceiveMultipartBytes()[1]);
+            requester.SendMultipartBytes(BitConverter.GetBytes(0U), new byte[] { }, new byte[] { }); // Two payloads incorrect
+            var response1 = this.responseSerializer.Deserialize(requester.ReceiveMultipartBytes()[1]);
 
             // Assert
             Assert.Equal(typeof(MessageRejected), response1.Type);
@@ -152,10 +156,17 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             Assert.Equal(1, server.CountSent);
 
             // Tear Down
-            requester1.Disconnect(testAddress);
-            requester1.Dispose();
-            server.Stop().Wait();
-            server.Dispose();
+            try
+            {
+                requester.Disconnect(testAddress);
+                requester.Dispose();
+                server.Stop().Wait();
+                server.Dispose();
+            }
+            catch (Exception ex)
+            {
+                this.Output.WriteLine(ex.Message);
+            }
         }
 
         [Fact]
@@ -189,10 +200,19 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             Assert.Equal(1, server.CountSent);
 
             // Tear Down
-            requester1.Disconnect(testAddress);
-            requester1.Dispose();
-            server.Stop().Wait();
-            server.Dispose();
+            try
+            {
+                requester1.Disconnect(testAddress);
+                requester2.Disconnect(testAddress);
+                requester1.Dispose();
+                requester2.Dispose();
+                server.Stop().Wait();
+                server.Dispose();
+            }
+            catch (Exception ex)
+            {
+                this.Output.WriteLine(ex.Message);
+            }
         }
 
         [Fact]
@@ -228,13 +248,20 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             Assert.Equal(typeof(Connected), response.Type);
             Assert.Equal(1, server.CountReceived);
             Assert.Equal(1, server.CountSent);
-            Assert.Equal("Trader-001 connected to session Trader-001-1970-01-01-0.", response.Message);
+            Assert.Equal("Connected to session Trader-001-1970-01-01-0 at tcp://127.0.0.1:55559", response.Message);
 
             // Tear Down
-            requester.Disconnect(testAddress);
-            requester.Dispose();
-            server.Stop().Wait();
-            server.Dispose();
+            try
+            {
+                requester.Disconnect(testAddress);
+                requester.Dispose();
+                server.Stop().Wait();
+                server.Dispose();
+            }
+            catch (Exception ex)
+            {
+                this.Output.WriteLine(ex.Message);
+            }
         }
 
         [Fact]
@@ -281,14 +308,21 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             Assert.Equal(typeof(Disconnected), response2.Type);
             Assert.Equal(2, server.CountReceived);
             Assert.Equal(2, server.CountSent);
-            Assert.Equal("Trader-001 connected to session Trader-001-1970-01-01-0.", response1.Message);
-            Assert.Equal("Trader-001 disconnected from session Trader-001-1970-01-01-0.", response2.Message);
+            Assert.Equal("Connected to session Trader-001-1970-01-01-0 at tcp://127.0.0.1:55560", response1.Message);
+            Assert.Equal("Disconnected from session Trader-001-1970-01-01-0 at tcp://127.0.0.1:55560", response2.Message);
 
             // Tear Down
-            requester.Disconnect(testAddress);
-            requester.Dispose();
-            server.Stop().Wait();
-            server.Dispose();
+            try
+            {
+                requester.Disconnect(testAddress);
+                requester.Dispose();
+                server.Stop().Wait();
+                server.Dispose();
+            }
+            catch (Exception ex)
+            {
+                this.Output.WriteLine(ex.Message);
+            }
         }
 
         [Fact]
@@ -326,10 +360,17 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             Assert.Equal(1, server.CountSent);
 
             // Tear Down
-            requester.Disconnect(testAddress);
-            requester.Dispose();
-            server.Stop().Wait();
-            server.Dispose();
+            try
+            {
+                requester.Disconnect(testAddress);
+                requester.Dispose();
+                server.Stop().Wait();
+                server.Dispose();
+            }
+            catch (Exception ex)
+            {
+                this.Output.WriteLine(ex.Message);
+            }
         }
 
         [Fact]
@@ -377,10 +418,17 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             Assert.Equal(2, server.CountSent);
 
             // Tear Down
-            requester.Disconnect(testAddress);
-            requester.Dispose();
-            server.Stop().Wait();
-            server.Dispose();
+            try
+            {
+                requester.Disconnect(testAddress);
+                requester.Dispose();
+                server.Stop().Wait();
+                server.Dispose();
+            }
+            catch (Exception ex)
+            {
+                this.Output.WriteLine(ex.Message);
+            }
         }
 
         [Fact]
@@ -424,9 +472,17 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             Assert.Equal(typeof(Connected), response1.Type);
 
             // Tear Down
-            requester.Disconnect(testAddress);
-            requester.Dispose();
-            server.Dispose();  // server already stopped
+            try
+            {
+                requester.Disconnect(testAddress);
+                requester.Dispose();
+                server.Stop().Wait();
+                server.Dispose();  // server already stopped
+            }
+            catch (Exception ex)
+            {
+                this.Output.WriteLine(ex.Message);
+            }
         }
 
         [Fact]
@@ -471,10 +527,17 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             Assert.Equal("TEST-998", server.ReceivedMessages[^2].Query.FirstOrDefault().Value);
 
             // Tear Down
-            requester.Disconnect(testAddress);
-            requester.Dispose();
-            server.Stop().Wait();
-            server.Dispose();
+            try
+            {
+                requester.Disconnect(testAddress);
+                requester.Dispose();
+                server.Stop().Wait();
+                server.Dispose();
+            }
+            catch (Exception ex)
+            {
+                this.Output.WriteLine(ex.Message);
+            }
         }
 
         [Fact]
@@ -530,12 +593,19 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             Assert.Equal("TEST-998 from 1", server.ReceivedMessages[^4].Query.FirstOrDefault().Value);
 
             // Tear Down
-            requester1.Disconnect(testAddress);
-            requester2.Disconnect(testAddress);
-            requester1.Dispose();
-            requester2.Dispose();
-            server.Stop().Wait();
-            server.Dispose();
+            try
+            {
+                requester1.Disconnect(testAddress);
+                requester2.Disconnect(testAddress);
+                requester1.Dispose();
+                requester2.Dispose();
+                server.Stop().Wait();
+                server.Dispose();
+            }
+            catch (Exception ex)
+            {
+                this.Output.WriteLine(ex.Message);
+            }
         }
     }
 }

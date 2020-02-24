@@ -8,7 +8,6 @@
 
 namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 {
-    using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
     using Nautilus.Common.Data;
@@ -25,7 +24,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
     using Encoding = System.Text.Encoding;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
-    public sealed class MessagePublisherTests : IDisposable
+    public sealed class MessagePublisherTests
     {
         private const string TestTopic = "TEST";
         private readonly IComponentryContainer container;
@@ -34,11 +33,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
         {
             // Fixture Setup
             this.container = TestComponentryContainer.Create(output);
-        }
-
-        public void Dispose()
-        {
-            NetMQConfig.Cleanup(false);
         }
 
         [Fact]

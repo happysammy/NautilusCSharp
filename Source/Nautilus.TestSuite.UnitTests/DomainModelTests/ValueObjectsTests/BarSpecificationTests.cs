@@ -11,18 +11,16 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.TestSuite.TestKit;
     using Xunit;
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
-    public sealed class BarSpecificationTests
+    public sealed class BarSpecificationTests : TestBase
     {
-        private readonly ITestOutputHelper output;
-
         public BarSpecificationTests(ITestOutputHelper output)
+            : base(output)
         {
-            // Fixture Setup
-            this.output = output;
         }
 
         [Fact]

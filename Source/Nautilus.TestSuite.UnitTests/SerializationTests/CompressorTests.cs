@@ -12,17 +12,16 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
     using Nautilus.Network.Compression;
+    using Nautilus.TestSuite.TestKit;
     using Xunit;
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
-    public sealed class CompressorTests
+    public sealed class CompressorTests : TestBase
     {
-        private readonly ITestOutputHelper output;
-
         public CompressorTests(ITestOutputHelper output)
+            : base(output)
         {
-            this.output = output;
         }
 
         [Fact]
@@ -39,7 +38,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             // Assert
             Assert.Equal(message, Encoding.UTF8.GetString(decompressed));
-            this.output.WriteLine(BitConverter.ToString(compressed));
+            this.Output.WriteLine(BitConverter.ToString(compressed));
         }
 
         [Fact]

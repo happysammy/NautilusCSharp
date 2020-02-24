@@ -14,19 +14,17 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Redis.Data.Internal;
+    using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.Stubs;
     using Xunit;
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
-    public sealed class InstrumentBuilderTests
+    public sealed class InstrumentBuilderTests : TestBase
     {
-        private readonly ITestOutputHelper output;
-
         public InstrumentBuilderTests(ITestOutputHelper output)
+            : base(output)
         {
-            // Fixture Setup
-            this.output = output;
         }
 
         [Fact]
@@ -95,7 +93,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             foreach (var change in instrumentBuilder.Changes)
             {
-                this.output.WriteLine(change);
+                this.Output.WriteLine(change);
             }
         }
     }

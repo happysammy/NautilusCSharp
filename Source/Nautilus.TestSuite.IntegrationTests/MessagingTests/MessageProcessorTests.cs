@@ -14,22 +14,22 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Common.Interfaces;
     using Nautilus.Messaging;
+    using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.Components;
     using Nautilus.TestSuite.TestKit.Mocks;
     using Xunit;
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
-    public sealed class MessageProcessorTests
+    public sealed class MessageProcessorTests : TestBase
     {
-        private readonly ITestOutputHelper output;
         private readonly IComponentryContainer container;
 
         public MessageProcessorTests(ITestOutputHelper output)
+            : base(output)
         {
             // Fixture Setup
-            this.output = output;
-            this.container = TestComponentryContainer.Create(this.output);
+            this.container = TestComponentryContainer.Create(this.Output);
         }
 
         [Fact]
@@ -229,8 +229,8 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
 
             stopwatch.Stop();
 
-            this.output.WriteLine(stopwatch.ElapsedMilliseconds.ToString());
-            this.output.WriteLine(receiver.Messages.Count.ToString());
+            this.Output.WriteLine(stopwatch.ElapsedMilliseconds.ToString());
+            this.Output.WriteLine(receiver.Messages.Count.ToString());
 
             // ~1350 ms for 1000000 messages with Task<bool> being returned by handler
             // ~1250 ms for 1000000 messages with bool being returned by handler
