@@ -15,6 +15,7 @@ namespace Nautilus.Fxcm
     using Microsoft.Extensions.Logging;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Logging;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
@@ -133,81 +134,89 @@ namespace Nautilus.Fxcm
         {
             Debug.NotNull(this.dataGateway, nameof(this.dataGateway));
 
-            var responseId = message.GetField(Tags.SecurityResponseID);
-            var result = FxcmMessageHelper.GetSecurityRequestResult(message.SecurityRequestResult);
-            this.Logger.LogDebug($"{Received}{FIX} {nameof(SecurityList)}(ResponseId={responseId}, Result={result}).");
-
-            var instruments = new List<Instrument>();
-            var groupCount = Convert.ToInt32(message.NoRelatedSym.ToString());
-            var group = new SecurityList.NoRelatedSymGroup();
-
-            for (var i = 1; i <= groupCount; i++)
+            try
             {
-                message.GetGroup(i, group);
+                var responseId = message.GetField(Tags.SecurityResponseID);
+                var result = FxcmMessageHelper.GetSecurityRequestResult(message.SecurityRequestResult);
+                this.Logger.LogDebug($"{Received}{FIX} {nameof(SecurityList)}(ResponseId={responseId}, Result={result}).");
 
-                var brokerSymbolCode = group.GetField(Tags.Symbol);
-                var symbol = this.GetSymbol(brokerSymbolCode);
-                var brokerSymbol = new BrokerSymbol(brokerSymbolCode);
-                var securityType = FxcmMessageHelper.GetSecurityType(group.GetString(FxcmTags.ProductID));
-                var tickPrecision = group.GetInt(FxcmTags.SymPrecision);
-                var tickSize = group.GetDecimal(FxcmTags.SymPointSize) * 0.1m;  // Field 9002 gives 'point' size (* 0.1m to get tick size)
-                var roundLot = group.GetInt(Tags.RoundLot);
-                var minStopDistanceEntry = group.GetInt(FxcmTags.CondDistEntryStop);
-                var minLimitDistanceEntry = group.GetInt(FxcmTags.CondDistEntryLimit);
-                var minStopDistance = group.GetInt(FxcmTags.CondDistStop);
-                var minLimitDistance = group.GetInt(FxcmTags.CondDistLimit);
-                var minTradeSize = group.GetInt(FxcmTags.MinQuantity);
-                var maxTradeSize = group.GetInt(FxcmTags.MaxQuantity);
-                var rolloverInterestBuy = group.GetDecimal(FxcmTags.SymInterestBuy);
-                var rolloverInterestSell = group.GetDecimal(FxcmTags.SymInterestSell);
+                var instruments = new List<Instrument>();
+                var groupCount = Convert.ToInt32(message.NoRelatedSym.ToString());
+                var group = new SecurityList.NoRelatedSymGroup();
 
-                if (securityType == SecurityType.Forex)
+                for (var i = 1; i <= groupCount; i++)
                 {
-                    var forexCcy = new ForexInstrument(
-                        symbol,
-                        brokerSymbol,
-                        tickPrecision,
-                        0,
-                        minStopDistanceEntry,
-                        minLimitDistanceEntry,
-                        minStopDistance,
-                        minLimitDistance,
-                        Price.Create(tickSize),
-                        Quantity.Create(roundLot),
-                        Quantity.Create(minTradeSize),
-                        Quantity.Create(maxTradeSize),
-                        rolloverInterestBuy,
-                        rolloverInterestSell,
-                        this.TimeNow());
+                    message.GetGroup(i, group);
 
-                    instruments.Add(forexCcy);
-                }
-                else
-                {
-                    var instrument = new Instrument(
-                        symbol,
-                        brokerSymbol,
-                        group.GetField(Tags.Currency).ToEnum<Nautilus.DomainModel.Enums.Currency>(),
-                        securityType,
-                        tickPrecision,
-                        0,
-                        minStopDistanceEntry,
-                        minLimitDistanceEntry,
-                        minStopDistance,
-                        minLimitDistance,
-                        Price.Create(tickSize),
-                        Quantity.Create(roundLot),
-                        Quantity.Create(minTradeSize),
-                        Quantity.Create(maxTradeSize),
-                        rolloverInterestBuy,
-                        rolloverInterestSell,
-                        this.TimeNow());
+                    var brokerSymbolCode = group.GetField(Tags.Symbol);
+                    var symbol = this.GetSymbol(brokerSymbolCode);
+                    var brokerSymbol = new BrokerSymbol(brokerSymbolCode);
+                    var securityType = FxcmMessageHelper.GetSecurityType(group.GetString(FxcmTags.ProductID));
+                    var tickPrecision = (ushort)group.GetInt(FxcmTags.SymPrecision);
+                    var tickSize = group.GetDecimal(FxcmTags.SymPointSize) * 0.1m;  // Field 9002 gives 'point' size (* 0.1m to get tick size)
+                    var roundLot = group.GetInt(Tags.RoundLot);
+                    var minStopDistanceEntry = (ushort)group.GetInt(FxcmTags.CondDistEntryStop);
+                    var minLimitDistanceEntry = (ushort)group.GetInt(FxcmTags.CondDistEntryLimit);
+                    var minStopDistance = (ushort)group.GetInt(FxcmTags.CondDistStop);
+                    var minLimitDistance = (ushort)group.GetInt(FxcmTags.CondDistLimit);
+                    var minTradeSize = group.GetInt(FxcmTags.MinQuantity);
+                    var maxTradeSize = group.GetInt(FxcmTags.MaxQuantity);
+                    var rolloverInterestBuy = group.GetDecimal(FxcmTags.SymInterestBuy);
+                    var rolloverInterestSell = group.GetDecimal(FxcmTags.SymInterestSell);
 
-                    instruments.Add(instrument);
+                    if (securityType == SecurityType.Forex)
+                    {
+                        var forexCcy = new ForexInstrument(
+                            symbol,
+                            brokerSymbol,
+                            tickPrecision,
+                            0,
+                            minStopDistanceEntry,
+                            minLimitDistanceEntry,
+                            minStopDistance,
+                            minLimitDistance,
+                            Price.Create(tickSize),
+                            Quantity.Create(roundLot),
+                            Quantity.Create(minTradeSize),
+                            Quantity.Create(maxTradeSize),
+                            rolloverInterestBuy,
+                            rolloverInterestSell,
+                            this.TimeNow());
+
+                        instruments.Add(forexCcy);
+                    }
+                    else
+                    {
+                        var instrument = new Instrument(
+                            symbol,
+                            brokerSymbol,
+                            group.GetField(Tags.Currency).ToEnum<Nautilus.DomainModel.Enums.Currency>(),
+                            securityType,
+                            tickPrecision,
+                            0,
+                            minStopDistanceEntry,
+                            minLimitDistanceEntry,
+                            minStopDistance,
+                            minLimitDistance,
+                            Price.Create(tickSize),
+                            Quantity.Create(roundLot),
+                            Quantity.Create(minTradeSize),
+                            Quantity.Create(maxTradeSize),
+                            rolloverInterestBuy,
+                            rolloverInterestSell,
+                            this.TimeNow());
+
+                        instruments.Add(instrument);
+                    }
                 }
+
+                this.dataGateway?.OnData(instruments);
             }
-
-            this.dataGateway?.OnData(instruments);
+            catch (Exception ex)
+            {
+                this.Logger.LogError(LogId.Networking, ex.Message, ex);
+                throw;
+            }
         }
 
         /// <inheritdoc />

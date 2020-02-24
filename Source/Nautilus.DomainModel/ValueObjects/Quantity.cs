@@ -27,7 +27,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// </summary>
         /// <param name="value">The quantity value.</param>
         /// <param name="precision">The precision of the quantity.</param>
-        private Quantity(decimal value, ushort precision)
+        private Quantity(decimal value, byte precision)
             : base(value, precision)
         {
             Condition.NotNegativeDecimal(value, nameof(value));
@@ -67,7 +67,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <param name="value">The quantity value.</param>
         /// <returns>A <see cref="Quantity"/>.</returns>
         /// <param name="precision">The precision of the quantity.</param>
-        public static Quantity Create(decimal value, ushort precision)
+        public static Quantity Create(decimal value, byte precision)
         {
             return new Quantity(value, precision);
         }

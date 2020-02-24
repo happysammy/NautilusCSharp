@@ -25,7 +25,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// </summary>
         /// <param name="value">The price value.</param>
         /// <param name="precision">The price decimal precision.</param>
-        private Price(decimal value, ushort precision)
+        private Price(decimal value, byte precision)
             : base(value, precision)
         {
             Condition.NotNegativeDecimal(value, nameof(value));
@@ -59,7 +59,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <param name="value">The price value.</param>
         /// <param name="precision">The price precision.</param>
         /// <returns>A <see cref="Price"/>.</returns>
-        public static Price Create(decimal value, ushort precision)
+        public static Price Create(decimal value, byte precision)
         {
             return new Price(value, precision);
         }

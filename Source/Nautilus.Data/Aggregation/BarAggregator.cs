@@ -74,7 +74,7 @@ namespace Nautilus.Data.Aggregation
                 case PriceType.Mid:
                     var decimalsPlusOne = tick.Bid.Precision + 1;
                     var midPrice = Math.Round((tick.Bid + tick.Ask) / 2, decimalsPlusOne);
-                    return Price.Create(midPrice, (ushort)decimalsPlusOne);
+                    return Price.Create(midPrice, (byte)decimalsPlusOne);
                 case PriceType.Last:
                 case PriceType.Undefined:
                     goto default;

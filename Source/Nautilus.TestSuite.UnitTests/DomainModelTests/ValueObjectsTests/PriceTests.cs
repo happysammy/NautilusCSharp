@@ -45,7 +45,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         [InlineData(424242, 0, 424242)]
         internal void Create_VariousValuesWithDecimalPrecision_ReturnsExpectedValue(
             decimal value,
-            ushort decimals,
+            byte decimals,
             decimal expected)
         {
             // Arrange
@@ -127,7 +127,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         [InlineData(100000, 0, "100000")]
         internal void ToString_VariousValues_ReturnsExpectedString(
             decimal value,
-            ushort decimals,
+            byte decimals,
             string expected)
         {
             // Arrange

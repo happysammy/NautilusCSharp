@@ -21,7 +21,7 @@ namespace Nautilus.Core.Extensions
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The number of decimal places.</returns>
-        public static ushort GetDecimalPlaces(this decimal value)
+        public static byte GetDecimalPlaces(this decimal value)
         {
             return BitConverter.GetBytes(decimal.GetBits(value)[3])[2];
         }

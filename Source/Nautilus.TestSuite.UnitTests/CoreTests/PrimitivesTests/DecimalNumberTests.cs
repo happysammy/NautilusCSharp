@@ -148,7 +148,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.PrimitivesTests
 
         private sealed class TestDecimal : DecimalNumber
         {
-            public TestDecimal(decimal value, ushort precision = 1)
+            public TestDecimal(decimal value, byte precision = 1)
                 : base(value, precision)
             {
             }
