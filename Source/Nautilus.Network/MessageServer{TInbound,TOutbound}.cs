@@ -156,6 +156,12 @@ namespace Nautilus.Network
         protected override void OnStop(Stop stop)
         {
             this.cts.Cancel();
+
+            foreach (var peer in this.peers)
+            {
+                // TODO: Disconnect session
+            }
+
             this.socket.Unbind(this.NetworkAddress.Value);
             this.Logger.LogInformation(
                 LogId.Networking,
@@ -290,8 +296,7 @@ namespace Nautilus.Network
                 return;
             }
 
-            // TODO: Log method on debug
-            this.Logger.LogTrace(LogId.Networking, $"HeaderLength={length:N0}, Bytes={payload.Length:N0}");
+            this.LogSizes(length, (uint)payload.Length);
 
             // Decompress message
             var decompressed = this.compressor.Decompress(payload);
@@ -324,6 +329,7 @@ namespace Nautilus.Network
         {
             try
             {
+                // length reserved for LZ4 implementation
                 var received = this.inboundSerializer.Deserialize(payload);
                 this.correlationIndex[received.Id] = sender;
 
@@ -355,22 +361,26 @@ namespace Nautilus.Network
 
         private void HandleConnection(Connect connect, Address sender, SessionId? sessionId)
         {
-            var message = sessionId is null
-                ? "OK"
-                : $"The peer {connect.TraderId.Value} was already connected to session {sessionId}.";
-
+            string message;
             if (sessionId is null)
             {
+                // Peer not previously connected to a session
+                sessionId = new SessionId(connect.TraderId, this.TimeNow());
+                this.peers[sender] = sessionId;
+                message = $"{connect.TraderId.Value} connected to session {sessionId.Value}.";
+                this.Logger.LogInformation(LogId.Networking, message);
+            }
+            else
+            {
+                // Peer already connected to a session
+                message = $"{connect.TraderId.Value} was already connected to session {sessionId.Value}.";
                 this.Logger.LogWarning(LogId.Networking, message);
             }
-
-            var newSessionId = new SessionId(connect.TraderId, this.TimeNow());
-            this.peers[sender] = newSessionId;
 
             var connected = new Connected(
                 this.Name.Value,
                 message,
-                newSessionId,
+                sessionId,
                 connect.Id,
                 this.NewGuid(),
                 this.TimeNow()) as TOutbound;
@@ -386,14 +396,20 @@ namespace Nautilus.Network
 
         private void HandleDisconnection(Disconnect disconnect, Address sender, SessionId? sessionId)
         {
-            var message = sessionId is null
-                ? $"The peer {disconnect.TraderId} had no session."
-                : "Ok";
-
+            string message;
             if (sessionId is null)
             {
+                // Peer not previously connected to a session
+                message = $"{disconnect.TraderId} had no session.";
                 sessionId = SessionId.None();
                 this.Logger.LogWarning(LogId.Networking, message);
+            }
+            else
+            {
+                // Peer connected to a session
+                this.peers.Remove(sender);
+                message = $"{disconnect.TraderId.Value} disconnected from session {sessionId.Value}.";
+                this.Logger.LogInformation(LogId.Networking, message);
             }
 
             var disconnected = new Disconnected(
@@ -451,6 +467,12 @@ namespace Nautilus.Network
         private void LogReceived(List<byte[]> frames)
         {
             this.Logger.LogTrace(LogId.Networking, $"<--[{this.CountReceived}] Received {frames.Count} byte[] frames.");
+        }
+
+        [Conditional("DEBUG")]
+        private void LogSizes(uint headerLength, uint compressedLength)
+        {
+            this.Logger.LogTrace(LogId.Networking, $"HeaderLength={headerLength:N0} bytes, Compressed={compressedLength:N0} bytes");
         }
 
         [Conditional("DEBUG")]

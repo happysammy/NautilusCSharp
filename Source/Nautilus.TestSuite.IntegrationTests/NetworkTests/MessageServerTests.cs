@@ -228,7 +228,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             Assert.Equal(typeof(Connected), response.Type);
             Assert.Equal(1, server.CountReceived);
             Assert.Equal(1, server.CountSent);
-            Assert.Equal("OK", response.Message);
+            Assert.Equal("Trader-001 connected to session Trader-001-1970-01-01-0.", response.Message);
 
             // Tear Down
             requester.Disconnect(testAddress);
