@@ -238,10 +238,64 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
         }
 
         [Fact]
+        internal void GivenDisconnectMessage_WhenConnected_SendsDisconnectedToSender()
+        {
+            // Arrange
+            const int testPort = 55560;
+            var testAddress = "tcp://127.0.0.1:" + testPort;
+
+            var server = new MockMessageServer(
+                this.container,
+                EncryptionSettings.None(),
+                NetworkAddress.LocalHost,
+                new Port(testPort));
+            server.Start().Wait();
+
+            var requester = new RequestSocket(testAddress);
+
+            requester.Connect(testAddress);
+
+            Task.Delay(100).Wait(); // Allow requester to connect
+
+            // Act
+            var connect = new Connect(
+                new TraderId("Trader", "001"),
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            var serialized1 = this.requestSerializer.Serialize(connect);
+            requester.SendMultipartBytes(BitConverter.GetBytes((uint)serialized1.Length), serialized1);
+            var response1 = (Connected)this.responseSerializer.Deserialize(requester.ReceiveMultipartBytes()[1]);
+
+            var disconnect = new Disconnect(
+                new TraderId("Trader", "001"),
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            var serialized2 = this.requestSerializer.Serialize(disconnect);
+            requester.SendMultipartBytes(BitConverter.GetBytes((uint)serialized2.Length), serialized2);
+            var response2 = (Disconnected)this.responseSerializer.Deserialize(requester.ReceiveMultipartBytes()[1]);
+
+            // Assert
+            Assert.Equal(typeof(Connected), response1.Type);
+            Assert.Equal(typeof(Disconnected), response2.Type);
+            Assert.Equal(2, server.CountReceived);
+            Assert.Equal(2, server.CountSent);
+            Assert.Equal("Trader-001 connected to session Trader-001-1970-01-01-0.", response1.Message);
+            Assert.Equal("Trader-001 disconnected from session Trader-001-1970-01-01-0.", response2.Message);
+
+            // Tear Down
+            requester.Disconnect(testAddress);
+            requester.Dispose();
+            server.Stop().Wait();
+            server.Dispose();
+        }
+
+        [Fact]
         internal void GivenOneMessage_SendsResponseToSender()
         {
             // Arrange
-            const int testPort = 55559;
+            const int testPort = 55561;
             var testAddress = "tcp://127.0.0.1:" + testPort;
 
             var server = new MockMessageServer(
@@ -282,7 +336,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
         internal void GivenMultipleMessages_StoresAndSendsResponsesToSender()
         {
             // Arrange
-            const int testPort = 55560;
+            const int testPort = 55562;
             var testAddress = "tcp://127.0.0.1:" + testPort;
 
             var server = new MockMessageServer(
@@ -333,7 +387,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
         internal void ServerCanBeStopped()
         {
             // Arrange
-            const int testPort = 55561;
+            const int testPort = 55563;
             var testAddress = "tcp://127.0.0.1:" + testPort;
 
             var server = new MockMessageServer(
@@ -379,7 +433,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
         internal void Given1000Messages_StoresAndSendsResponsesToSenderInOrder()
         {
             // Arrange
-            const int testPort = 55562;
+            const int testPort = 55564;
             var testAddress = "tcp://127.0.0.1:" + testPort;
 
             var server = new MockMessageServer(
@@ -427,7 +481,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
         internal void Given1000Messages_FromDifferentSenders_StoresAndSendsResponsesToSendersInOrder()
         {
             // Arrange
-            const int testPort = 55563;
+            const int testPort = 55565;
             var testAddress = "tcp://127.0.0.1:" + testPort;
 
             var server = new MockMessageServer(

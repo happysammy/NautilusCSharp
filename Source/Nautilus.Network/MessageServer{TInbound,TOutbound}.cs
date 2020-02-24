@@ -22,6 +22,7 @@ namespace Nautilus.Network
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core.Message;
     using Nautilus.Core.Types;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Network.Encryption;
@@ -45,7 +46,7 @@ namespace Nautilus.Network
         private readonly ICompressor compressor;
         private readonly CancellationTokenSource cts;
         private readonly RouterSocket socket;
-        private readonly Dictionary<Address, SessionId> peers;
+        private readonly Dictionary<TraderId, SessionId> peers;
         private readonly Dictionary<Guid, Address> correlationIndex;
         private readonly byte[] delimiter = { };
 
@@ -83,7 +84,7 @@ namespace Nautilus.Network
                 },
             };
 
-            this.peers = new Dictionary<Address, SessionId>();
+            this.peers = new Dictionary<TraderId, SessionId>();
             this.correlationIndex = new Dictionary<Guid, Address>();
 
             this.NetworkAddress = new ZmqNetworkAddress(host, port);
@@ -157,9 +158,9 @@ namespace Nautilus.Network
         {
             this.cts.Cancel();
 
-            foreach (var peer in this.peers)
+            foreach (var session in this.peers.Values)
             {
-                // TODO: Disconnect session
+                this.Logger.LogError(LogId.Networking, $"Server was still connected to session {session.Value}.");
             }
 
             this.socket.Unbind(this.NetworkAddress.Value);
@@ -256,7 +257,7 @@ namespace Nautilus.Network
             var frames = this.socket.ReceiveMultipartBytes();
 
             this.CountReceived++;
-            this.LogReceived(frames);
+            this.LogFrames(frames);
 
             // Check for expected frames
             if (frames.Count != ExpectedFrameCount)
@@ -340,13 +341,15 @@ namespace Nautilus.Network
                     return;
                 }
 
+                this.LogReceived(received);
+
                 switch (received)
                 {
                     case Connect connect:
-                        this.HandleConnection(connect, sender, this.peers.GetValueOrDefault(sender));
+                        this.HandleConnection(connect, sender);
                         return;
                     case Disconnect disconnect:
-                        this.HandleDisconnection(disconnect, sender, this.peers.GetValueOrDefault(sender));
+                        this.HandleDisconnection(disconnect, sender);
                         return;
                 }
 
@@ -359,14 +362,15 @@ namespace Nautilus.Network
             }
         }
 
-        private void HandleConnection(Connect connect, Address sender, SessionId? sessionId)
+        private void HandleConnection(Connect connect, Address sender)
         {
+            var sessionId = this.peers.GetValueOrDefault(connect.TraderId);
             string message;
             if (sessionId is null)
             {
                 // Peer not previously connected to a session
                 sessionId = new SessionId(connect.TraderId, this.TimeNow());
-                this.peers[sender] = sessionId;
+                this.peers[connect.TraderId] = sessionId;
                 message = $"{connect.TraderId.Value} connected to session {sessionId.Value}.";
                 this.Logger.LogInformation(LogId.Networking, message);
             }
@@ -394,20 +398,21 @@ namespace Nautilus.Network
             this.SendMessage(connected, sender);
         }
 
-        private void HandleDisconnection(Disconnect disconnect, Address sender, SessionId? sessionId)
+        private void HandleDisconnection(Disconnect disconnect, Address sender)
         {
+            var sessionId = this.peers.GetValueOrDefault(disconnect.TraderId);
             string message;
             if (sessionId is null)
             {
                 // Peer not previously connected to a session
-                message = $"{disconnect.TraderId} had no session.";
+                message = $"{disconnect.TraderId.Value} had no session.";
                 sessionId = SessionId.None();
                 this.Logger.LogWarning(LogId.Networking, message);
             }
             else
             {
                 // Peer connected to a session
-                this.peers.Remove(sender);
+                this.peers.Remove(disconnect.TraderId);
                 message = $"{disconnect.TraderId.Value} disconnected from session {sessionId.Value}.";
                 this.Logger.LogInformation(LogId.Networking, message);
             }
@@ -464,9 +469,15 @@ namespace Nautilus.Network
         }
 
         [Conditional("DEBUG")]
-        private void LogReceived(List<byte[]> frames)
+        private void LogFrames(List<byte[]> frames)
         {
             this.Logger.LogTrace(LogId.Networking, $"<--[{this.CountReceived}] Received {frames.Count} byte[] frames.");
+        }
+
+        [Conditional("DEBUG")]
+        private void LogReceived(TInbound message)
+        {
+            this.Logger.LogTrace(LogId.Networking, $"<--[{this.CountReceived}] Received {message}");
         }
 
         [Conditional("DEBUG")]
