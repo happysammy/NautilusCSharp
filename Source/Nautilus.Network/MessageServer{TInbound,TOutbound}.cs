@@ -9,6 +9,7 @@
 namespace Nautilus.Network
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Text;
@@ -46,8 +47,8 @@ namespace Nautilus.Network
         private readonly ICompressor compressor;
         private readonly CancellationTokenSource cts;
         private readonly RouterSocket socket;
-        private readonly Dictionary<TraderId, SessionId> peers;
-        private readonly Dictionary<Guid, Address> correlationIndex;
+        private readonly ConcurrentDictionary<TraderId, SessionId> peers;
+        private readonly ConcurrentDictionary<Guid, Address> correlationIndex;
         private readonly byte[] delimiter = { };
 
         /// <summary>
@@ -84,8 +85,8 @@ namespace Nautilus.Network
                 },
             };
 
-            this.peers = new Dictionary<TraderId, SessionId>();
-            this.correlationIndex = new Dictionary<Guid, Address>();
+            this.peers = new ConcurrentDictionary<TraderId, SessionId>();
+            this.correlationIndex = new ConcurrentDictionary<Guid, Address>();
 
             this.NetworkAddress = new ZmqNetworkAddress(host, port);
 
@@ -370,7 +371,7 @@ namespace Nautilus.Network
             {
                 // Peer not previously connected to a session
                 sessionId = new SessionId(connect.TraderId, this.TimeNow());
-                this.peers[connect.TraderId] = sessionId;
+                this.peers.TryAdd(connect.TraderId, sessionId);
                 message = $"{connect.TraderId.Value} connected to session {sessionId.Value}.";
                 this.Logger.LogInformation(LogId.Networking, message);
             }
@@ -412,7 +413,7 @@ namespace Nautilus.Network
             else
             {
                 // Peer connected to a session
-                this.peers.Remove(disconnect.TraderId);
+                this.peers.TryRemove(disconnect.TraderId, out var _); // Pop from dictionary
                 message = $"{disconnect.TraderId.Value} disconnected from session {sessionId.Value}.";
                 this.Logger.LogInformation(LogId.Networking, message);
             }

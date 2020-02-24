@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="ZonedDateTimeExtensionsTests.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="NodaTimeExtensionsTests.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2020 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  https://nautechsystems.io
@@ -15,10 +15,10 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
     using Xunit;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
-    public sealed class ZonedDateTimeExtensionsTests
+    public sealed class NodaTimeExtensionsTests
     {
         [Fact]
-        internal void ToIsoString_WithValidZonedDateTime_ReturnsExpectedString()
+        internal void ToIso8601String_WithValidZonedDateTime_ReturnsExpectedString()
         {
             // Arrange
             var zonedDateTime = StubZonedDateTime.UnixEpoch();
@@ -28,6 +28,19 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
 
             // Assert
             Assert.Equal("1970-01-01T00:00:00.000Z", result);
+        }
+
+        [Fact]
+        internal void ToIso8601String_WithValidLocalDate_ReturnsExpectedString()
+        {
+            // Arrange
+            var zonedDateTime = StubZonedDateTime.UnixEpoch();
+
+            // Act
+            var result = zonedDateTime.Date.ToIso8601String();
+
+            // Assert
+            Assert.Equal("1970-01-01", result);
         }
 
         [Fact]
