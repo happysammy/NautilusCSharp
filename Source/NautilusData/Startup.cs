@@ -8,7 +8,7 @@
 
 namespace NautilusData
 {
-    using System.Threading.Tasks;
+    using System;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
@@ -22,9 +22,6 @@ namespace NautilusData
     /// </summary>
     public sealed class Startup
     {
-        private readonly IHostingEnvironment env;
-        private readonly IConfiguration config;
-        private readonly ILoggerFactory loggerFactory;
         private readonly DataService dataService;
 
         /// <summary>
@@ -38,15 +35,24 @@ namespace NautilusData
             IConfiguration config,
             ILoggerFactory loggerFactory)
         {
-            this.env = env;
-            this.config = config;
-            this.loggerFactory = loggerFactory;
+            this.Environment = env;
+            this.Configuration = config;
 
             var dataServiceConfig = DataServiceConfigurator.Build(loggerFactory, config);
             this.dataService = DataServiceFactory.Create(dataServiceConfig);
 
             this.dataService.Start();
         }
+
+        /// <summary>
+        /// Gets the hosting environment.
+        /// </summary>
+        public IHostingEnvironment Environment { get; }
+
+        /// <summary>
+        /// Gets the configuration.
+        /// </summary>
+        public IConfiguration Configuration { get; }
 
         /// <summary>
         /// Configures the ASP.NET Core web hosting services.
@@ -65,7 +71,7 @@ namespace NautilusData
         {
             appLifetime.ApplicationStopping.Register(this.OnShutdown);
 
-            if (this.env.IsDevelopment())
+            if (this.Environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSerilogRequestLogging();
@@ -75,6 +81,12 @@ namespace NautilusData
         private void OnShutdown()
         {
             this.dataService.Stop().Wait();
+
+            if (this.Environment.IsDevelopment())
+            {
+                Console.WriteLine("Press any key to close console...");
+                Console.ReadKey();
+            }
         }
     }
 }
