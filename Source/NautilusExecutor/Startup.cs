@@ -74,9 +74,7 @@ namespace NautilusExecutor
 
         private void OnShutdown()
         {
-            this.executionService.Stop();
-
-            Task.Delay(2000).Wait();
+            this.executionService.Stop().Wait();
         }
     }
 }

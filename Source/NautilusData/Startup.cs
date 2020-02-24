@@ -74,9 +74,7 @@ namespace NautilusData
 
         private void OnShutdown()
         {
-            this.dataService.Stop();
-
-            Task.Delay(2000).Wait();
+            this.dataService.Stop().Wait();
         }
     }
 }

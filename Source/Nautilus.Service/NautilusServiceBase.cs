@@ -126,6 +126,8 @@ namespace Nautilus.Service
         /// <inheritdoc />
         protected override void OnStop(Stop stop)
         {
+            this.Logger.LogInformation($"Stopping {this.GetType().Name}...");
+
             this.maintainConnection = false;  // Avoid immediate reconnection
             this.Send(stop, this.connectionAddresses);
             this.OnServiceStop(stop);
