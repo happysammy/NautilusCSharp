@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="ZonedDateTimeExtensions.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="NodaTimeExtensions.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2020 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  https://nautechsystems.io
@@ -17,14 +17,41 @@ namespace Nautilus.Core.Extensions
     /// <summary>
     /// Provides useful comparison operations for the <see cref="ZonedDateTime"/> type.
     /// </summary>
-    public static class ZonedDateTimeExtensions
+    public static class NodaTimeExtensions
     {
-        private const string IsoStringParsePattern = "yyyy-MM-ddTHH:mm:ss.fff";
+        private const string Iso8601DateTimeParsePattern = "yyyy-MM-ddTHH:mm:ss.fff";
+        private const string Iso8601DateParsePattern = "yyyy-MM-dd";
 
         private static readonly ZonedDateTimePattern NodaIsoStringParsePattern =
             ZonedDateTimePattern.CreateWithInvariantCulture(
-                IsoStringParsePattern,
+                Iso8601DateTimeParsePattern,
                 DateTimeZoneProviders.Tzdb);
+
+        /// <summary>
+        /// Returns a string formatted to the millisecond (ISO-8601) from the given
+        /// <see cref="ZonedDateTime"/>.
+        /// </summary>
+        /// <param name="time">The time.</param>
+        /// <returns>A <see cref="string"/>.</returns>
+        public static string ToIso8601String(this ZonedDateTime time)
+        {
+            Debug.NotDefault(time, nameof(time));
+
+            return time.ToString(Iso8601DateTimeParsePattern, CultureInfo.InvariantCulture.DateTimeFormat) + "Z";
+        }
+
+        /// <summary>
+        /// Returns a string formatted to the millisecond (ISO-8601) from the given
+        /// <see cref="ZonedDateTime"/>.
+        /// </summary>
+        /// <param name="date">The date.</param>
+        /// <returns>A <see cref="string"/>.</returns>
+        public static string ToIso8601String(this LocalDate date)
+        {
+            Debug.NotDefault(date, nameof(date));
+
+            return date.ToString(Iso8601DateParsePattern, CultureInfo.InvariantCulture.DateTimeFormat);
+        }
 
         /// <summary>
         /// Returns a <see cref="ZonedDateTime"/> parsed from the given (ISO-8601) string.
@@ -75,33 +102,6 @@ namespace Nautilus.Core.Extensions
                 .CreateWithInvariantCulture(parsePattern, DateTimeZoneProviders.Tzdb)
                 .Parse(dateTime)
                 .GetValueOrThrow();
-        }
-
-        /// <summary>
-        /// Returns a string formatted to the millisecond (ISO-8601) from the given
-        /// <see cref="ZonedDateTime"/>.
-        /// </summary>
-        /// <param name="time">The time.</param>
-        /// <returns>A <see cref="string"/>.</returns>
-        public static string ToIsoString(this ZonedDateTime time)
-        {
-            Debug.NotDefault(time, nameof(time));
-
-            return time.ToString(IsoStringParsePattern, CultureInfo.InvariantCulture.DateTimeFormat) + "Z";
-        }
-
-        /// <summary>
-        /// Returns a string formatted as per the given parse pattern <see cref="string"/>.
-        /// </summary>
-        /// <param name="time">The time to convert..</param>
-        /// <param name="parsePattern">The parse pattern to convert to.</param>
-        /// <returns>A <see cref="string"/>.</returns>
-        public static string ToStringWithParsePattern(this ZonedDateTime time, string parsePattern)
-        {
-            Debug.NotDefault(time, nameof(time));
-            Condition.NotEmptyOrWhiteSpace(parsePattern, nameof(parsePattern));
-
-            return time.ToString(parsePattern, CultureInfo.InvariantCulture.DateTimeFormat) + "Z";
         }
 
         /// <summary>

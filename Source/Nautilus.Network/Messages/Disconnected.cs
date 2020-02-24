@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="Connected.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="Disconnected.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2020 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  https://nautechsystems.io
@@ -18,18 +18,18 @@ namespace Nautilus.Network.Messages
     /// Represents a response confirming the connection of a session.
     /// </summary>
     [Immutable]
-    public sealed class Connected : Response
+    public sealed class Disconnected : Response
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Connected"/> class.
+        /// Initializes a new instance of the <see cref="Disconnected"/> class.
         /// </summary>
         /// <param name="serviceName">The service name.</param>
         /// <param name="sessionId">The the connections session identifier.</param>
-        /// <param name="message">The connection message.</param>
+        /// <param name="message">The disconnection message.</param>
         /// <param name="correlationId">The response correlation identifier.</param>
         /// <param name="id">The response identifier.</param>
         /// <param name="timestamp">The response timestamp.</param>
-        public Connected(
+        public Disconnected(
             string serviceName,
             string message,
             SessionId sessionId,
@@ -37,7 +37,7 @@ namespace Nautilus.Network.Messages
             Guid id,
             ZonedDateTime timestamp)
             : base(
-                typeof(Connected),
+                typeof(Disconnected),
                 correlationId,
                 id,
                 timestamp)

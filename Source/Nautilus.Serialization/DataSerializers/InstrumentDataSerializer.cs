@@ -57,7 +57,7 @@ namespace Nautilus.Serialization.DataSerializers
                 { nameof(Instrument.MaxTradeSize), dataObject.MaxTradeSize.ToString() },
                 { nameof(Instrument.RolloverInterestBuy), dataObject.RolloverInterestBuy.ToString(CultureInfo.InvariantCulture) },
                 { nameof(Instrument.RolloverInterestSell), dataObject.RolloverInterestSell.ToString(CultureInfo.InvariantCulture) },
-                { nameof(Instrument.Timestamp), dataObject.Timestamp.ToIsoString() },
+                { nameof(Instrument.Timestamp), dataObject.Timestamp.ToIso8601String() },
             }.ToDictionary();
 
             if (dataObject is ForexInstrument forexCcy)

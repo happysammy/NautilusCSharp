@@ -87,13 +87,13 @@
       "1-HOUR[BID]"
     ],
     "TrimJobTicks": {
-      "Hour": 22,
-      "Minute": 0,
+      "Hour": 0,
+      "Minute": 2,
       "WindowDays": 2
     },
     "TrimJobBars": {
-      "Hour": 22,
-      "Minute": 0,
+      "Hour": 0,
+      "Minute": 1,
       "WindowDays": 10
     }
   }

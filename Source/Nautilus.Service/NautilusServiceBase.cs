@@ -61,8 +61,8 @@ namespace Nautilus.Service
             this.maintainConnection = false;
 
             // Commands
-            this.RegisterHandler<Connect>(this.OnMessage);
-            this.RegisterHandler<Disconnect>(this.OnMessage);
+            this.RegisterHandler<ConnectSession>(this.OnMessage);
+            this.RegisterHandler<DisconnectSession>(this.OnMessage);
 
             // Events
             this.RegisterHandler<SessionConnected>(this.OnMessage);
@@ -175,18 +175,18 @@ namespace Nautilus.Service
             return now.IsLessThan(disconnectThisWeek) || now.IsGreaterThan(connectThisWeek);
         }
 
-        private void OnMessage(Connect connect)
+        private void OnMessage(ConnectSession connectSession)
         {
             // Forward message
             this.maintainConnection = true;
-            this.Send(connect, this.connectionAddresses);
+            this.Send(connectSession, this.connectionAddresses);
         }
 
-        private void OnMessage(Disconnect disconnect)
+        private void OnMessage(DisconnectSession disconnectSession)
         {
             // Forward message
             this.maintainConnection = false;  // Avoid immediate reconnection
-            this.Send(disconnect, this.connectionAddresses);
+            this.Send(disconnectSession, this.connectionAddresses);
         }
 
         private void OnMessage(SessionConnected message)
@@ -226,7 +226,7 @@ namespace Nautilus.Service
             var nextTime = TimingProvider.GetNextUtc(this.connectWeeklyTime, now);
             var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, now);
 
-            var job = new Connect(
+            var job = new ConnectSession(
                 nextTime,
                 this.NewGuid(),
                 this.TimeNow());
@@ -239,7 +239,7 @@ namespace Nautilus.Service
 
             this.nextConnectTime = nextTime;
 
-            this.Logger.LogInformation($"Created scheduled job {job} for {nextTime.ToIsoString()}");
+            this.Logger.LogInformation($"Created scheduled job {job} for {nextTime.ToIso8601String()}");
         }
 
         private void CreateDisconnectFixJob()
@@ -248,7 +248,7 @@ namespace Nautilus.Service
             var nextTime = TimingProvider.GetNextUtc(this.disconnectWeeklyTime, now);
             var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, now);
 
-            var job = new Disconnect(
+            var job = new DisconnectSession(
                 nextTime,
                 this.NewGuid(),
                 this.TimeNow());
@@ -261,7 +261,7 @@ namespace Nautilus.Service
 
             this.nextDisconnectTime = nextTime;
 
-            this.Logger.LogInformation($"Created scheduled job {job} for {nextTime.ToIsoString()}");
+            this.Logger.LogInformation($"Created scheduled job {job} for {nextTime.ToIso8601String()}");
         }
     }
 }

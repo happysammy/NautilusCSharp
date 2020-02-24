@@ -59,7 +59,7 @@ namespace Nautilus.Data.Integrity
                 {
                     anomalyList.Add(
                         "DataAnomaly: Duplicate bars " +
-                        $"at index {i} and {i + 1} for {bars[i].Timestamp.ToIsoString()}");
+                        $"at index {i} and {i + 1} for {bars[i].Timestamp.ToIso8601String()}");
                 }
             }
         }
@@ -77,8 +77,8 @@ namespace Nautilus.Data.Integrity
                 {
                     anomalyList.Add(
                         "DataAnomaly: Bars are out of order " +
-                        $"at index {i} at {bars[i].Timestamp.ToIsoString()}, " +
-                        $"next bar at {bars[i + 1].Timestamp.ToIsoString()}");
+                        $"at index {i} at {bars[i].Timestamp.ToIso8601String()}, " +
+                        $"next bar at {bars[i + 1].Timestamp.ToIso8601String()}");
                 }
             }
         }
@@ -96,8 +96,8 @@ namespace Nautilus.Data.Integrity
                 {
                     anomalyList.Add(
                         "DataAnomaly: Missing bar "
-                      + $"at index {i} at {bars[i].Timestamp.ToIsoString()}, "
-                      + $"next bar at {bars[i + 1].Timestamp.ToIsoString()}");
+                      + $"at index {i} at {bars[i].Timestamp.ToIso8601String()}, "
+                      + $"next bar at {bars[i + 1].Timestamp.ToIso8601String()}");
                 }
             }
         }
@@ -109,7 +109,7 @@ namespace Nautilus.Data.Integrity
             ZonedDateTime toDateTime)
         {
             return QueryResult<List<string>>.Ok(
-                anomalyList, $"Data integrity check for {barType} from {fromDateTime.ToIsoString()} to {toDateTime.ToIsoString()} passed with no data anomalies");
+                anomalyList, $"Data integrity check for {barType} from {fromDateTime.ToIso8601String()} to {toDateTime.ToIso8601String()} passed with no data anomalies");
         }
 
         private static QueryResult<List<string>> FailResult(
@@ -119,7 +119,7 @@ namespace Nautilus.Data.Integrity
             ZonedDateTime toDateTime)
         {
             return QueryResult<List<string>>.Ok(
-                anomalyList, $"Data integrity check for {barType} from {fromDateTime.ToIsoString()} to {toDateTime.ToIsoString()} failed with {anomalyList.Count} anomalies");
+                anomalyList, $"Data integrity check for {barType} from {fromDateTime.ToIso8601String()} to {toDateTime.ToIso8601String()} failed with {anomalyList.Count} anomalies");
         }
     }
 }

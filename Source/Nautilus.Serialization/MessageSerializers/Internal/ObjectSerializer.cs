@@ -81,7 +81,7 @@ namespace Nautilus.Serialization.MessageSerializers.Internal
         /// <returns>The serialized object.</returns>
         internal static byte[] Serialize(ZonedDateTime dateTime)
         {
-            return Encode(dateTime.ToIsoString());
+            return Encode(dateTime.ToIso8601String());
         }
 
         /// <summary>
@@ -133,7 +133,7 @@ namespace Nautilus.Serialization.MessageSerializers.Internal
         /// <returns>The serialized object.</returns>
         internal static byte[] Serialize(ZonedDateTime? dateTime)
         {
-            return dateTime is null ? None : Encode(dateTime.Value.ToIsoString());
+            return dateTime is null ? None : Encode(dateTime.Value.ToIso8601String());
         }
     }
 }

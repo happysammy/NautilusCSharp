@@ -546,7 +546,7 @@ namespace Nautilus.Execution.Engine
 
                 this.Logger.LogDebug(
                     LogId.Operation,
-                    $"Scheduled GTD CancelOrder backup for {order.ExpireTime.Value.ToIsoString()}.");
+                    $"Scheduled GTD CancelOrder backup for {order.ExpireTime.Value.ToIso8601String()}.");
             }
             else
             {

@@ -9,11 +9,16 @@
 namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Message;
+    using Nautilus.Data.Messages.Requests;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.Network;
     using Nautilus.Network.Encryption;
     using Nautilus.Network.Messages;
@@ -30,14 +35,14 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
     public sealed class MessageServerTests : IDisposable
     {
         private readonly IComponentryContainer container;
-        private readonly MockSerializer serializer;
-        private readonly MsgPackResponseSerializer responseSerializer;
+        private readonly ISerializer<Request> requestSerializer;
+        private readonly ISerializer<Response> responseSerializer;
 
         public MessageServerTests(ITestOutputHelper output)
         {
             // Fixture Setup
             this.container = TestComponentryContainer.Create(output);
-            this.serializer = new MockSerializer();
+            this.requestSerializer = new MsgPackRequestSerializer(new MsgPackQuerySerializer());
             this.responseSerializer = new MsgPackResponseSerializer();
         }
 
@@ -191,7 +196,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
         }
 
         [Fact]
-        internal void GivenOneMessage_StoresAndSendsResponseToSender()
+        internal void GivenConnectMessage_WhenNotAlreadyConnected_SendsConnectedResponseToSender()
         {
             // Arrange
             const int testPort = 55559;
@@ -210,20 +215,61 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             Task.Delay(100).Wait(); // Allow requester to connect
 
             // Act
-            var message = new MockMessage(
-                "TEST",
+            var message = new Connect(
+                new TraderId("Trader", "001"),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            var serialized = this.serializer.Serialize(message);
-            requester.SendMultipartBytes(BitConverter.GetBytes((uint)serialized.Length), this.serializer.Serialize(message));
+            var serialized = this.requestSerializer.Serialize(message);
+            requester.SendMultipartBytes(BitConverter.GetBytes((uint)serialized.Length), serialized);
+            var response = (Connected)this.responseSerializer.Deserialize(requester.ReceiveMultipartBytes()[1]);
+
+            // Assert
+            Assert.Equal(typeof(Connected), response.Type);
+            Assert.Equal(1, server.CountReceived);
+            Assert.Equal(1, server.CountSent);
+            Assert.Equal("OK", response.Message);
+
+            // Tear Down
+            requester.Disconnect(testAddress);
+            requester.Dispose();
+            server.Stop().Wait();
+            server.Dispose();
+        }
+
+        [Fact]
+        internal void GivenOneMessage_SendsResponseToSender()
+        {
+            // Arrange
+            const int testPort = 55559;
+            var testAddress = "tcp://127.0.0.1:" + testPort;
+
+            var server = new MockMessageServer(
+                this.container,
+                EncryptionSettings.None(),
+                NetworkAddress.LocalHost,
+                new Port(testPort));
+            server.Start().Wait();
+
+            var requester = new RequestSocket(testAddress);
+            requester.Connect(testAddress);
+
+            Task.Delay(100).Wait(); // Allow requester to connect
+
+            // Act
+            var message = new Connect(
+                new TraderId("Trader", "001"),
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            var serialized = this.requestSerializer.Serialize(message);
+            requester.SendMultipartBytes(BitConverter.GetBytes((uint)serialized.Length), this.requestSerializer.Serialize(message));
             var response = this.responseSerializer.Deserialize(requester.ReceiveMultipartBytes()[1]);
 
             // Assert
-            Assert.Equal(typeof(MessageReceived), response.Type);
+            Assert.Equal(typeof(Connected), response.Type);
             Assert.Equal(1, server.CountReceived);
             Assert.Equal(1, server.CountSent);
-            Assert.Contains(message, server.ReceivedMessages);
 
             // Tear Down
             requester.Disconnect(testAddress);
@@ -252,29 +298,27 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             Task.Delay(100).Wait(); // Allow requester to connect
 
             // Act
-            var message1 = new MockMessage(
-                "TEST1",
+            var message1 = new Connect(
+                new TraderId("Trader", "001"),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            var message2 = new MockMessage(
-                "TEST2",
+            var message2 = new Connect(
+                new TraderId("Trader", "002"),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            var serialized1 = this.serializer.Serialize(message1);
+            var serialized1 = this.requestSerializer.Serialize(message1);
             requester.SendMultipartBytes(BitConverter.GetBytes((uint)serialized1.Length), serialized1);
             var response1 = this.responseSerializer.Deserialize(requester.ReceiveMultipartBytes()[1]);
 
-            var serialized2 = this.serializer.Serialize(message2);
+            var serialized2 = this.requestSerializer.Serialize(message2);
             requester.SendMultipartBytes(BitConverter.GetBytes((uint)serialized2.Length), serialized2);
             var response2 = this.responseSerializer.Deserialize(requester.ReceiveMultipartBytes()[1]);
 
             // Assert
-            Assert.Contains(message1, server.ReceivedMessages);
-            Assert.Contains(message2, server.ReceivedMessages);
-            Assert.Equal(typeof(MessageReceived), response1.Type);
-            Assert.Equal(typeof(MessageReceived), response2.Type);
+            Assert.Equal(typeof(Connected), response1.Type);
+            Assert.Equal(typeof(Connected), response2.Type);
             Assert.Equal(2, server.CountReceived);
             Assert.Equal(2, server.CountSent);
 
@@ -304,28 +348,26 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             Task.Delay(100).Wait(); // Allow requester to connect
 
-            var message1 = new MockMessage(
-                "TEST1",
+            var message1 = new Connect(
+                new TraderId("Trader", "001"),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            var serialized = this.serializer.Serialize(message1);
+            var serialized = this.requestSerializer.Serialize(message1);
             requester.SendMultipartBytes(BitConverter.GetBytes((uint)serialized.Length), serialized);
             var response1 = this.responseSerializer.Deserialize(requester.ReceiveMultipartBytes()[1]);
 
             // Act
             server.Stop().Wait();
 
-            var message2 = new MockMessage(
-                "AFTER-STOP",
+            var message2 = new Connect(
+                new TraderId("Trader", "001"),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
-            requester.SendFrame(this.serializer.Serialize(message2));
+            requester.SendFrame(this.requestSerializer.Serialize(message2));
 
             // Assert
-            Assert.Equal(typeof(MessageReceived), response1.Type);
-            Assert.Contains(message1, server.ReceivedMessages);
-            Assert.DoesNotContain(message2, server.ReceivedMessages);
+            Assert.Equal(typeof(Connected), response1.Type);
 
             // Tear Down
             requester.Disconnect(testAddress);
@@ -355,12 +397,12 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             // Act
             for (var i = 0; i < 1000; i++)
             {
-                var message = new MockMessage(
-                    $"TEST-{i}",
+                var message = new DataRequest(
+                    new Dictionary<string, string> { { "Payload", $"TEST-{i}" } },
                     Guid.NewGuid(),
                     StubZonedDateTime.UnixEpoch());
 
-                var serialized = this.serializer.Serialize(message);
+                var serialized = this.requestSerializer.Serialize(message);
                 requester.SendMultipartBytes(BitConverter.GetBytes((uint)serialized.Length), serialized);
                 requester.ReceiveMultipartBytes();
             }
@@ -371,8 +413,8 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             Assert.Equal(1000, server.ReceivedMessages.Count);
             Assert.Equal(1000, server.CountReceived);
             Assert.Equal(1000, server.CountSent);
-            Assert.Equal("TEST-999", server.ReceivedMessages[^1].Payload);
-            Assert.Equal("TEST-998", server.ReceivedMessages[^2].Payload);
+            Assert.Equal("TEST-999", server.ReceivedMessages[^1].Query.FirstOrDefault().Value);
+            Assert.Equal("TEST-998", server.ReceivedMessages[^2].Query.FirstOrDefault().Value);
 
             // Tear Down
             requester.Disconnect(testAddress);
@@ -405,21 +447,21 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             // Act
             for (var i = 0; i < 1000; i++)
             {
-                var message1 = new MockMessage(
-                    $"TEST-{i} from 1",
+                var message1 = new DataRequest(
+                    new Dictionary<string, string> { { "Payload", $"TEST-{i} from 1" } },
                     Guid.NewGuid(),
                     StubZonedDateTime.UnixEpoch());
 
-                var message2 = new MockMessage(
-                    $"TEST-{i} from 2",
+                var message2 = new DataRequest(
+                    new Dictionary<string, string> { { "Payload", $"TEST-{i} from 2" } },
                     Guid.NewGuid(),
                     StubZonedDateTime.UnixEpoch());
 
-                var serialized1 = this.serializer.Serialize(message1);
+                var serialized1 = this.requestSerializer.Serialize(message1);
                 requester1.SendMultipartBytes(BitConverter.GetBytes(serialized1.Length), serialized1);
                 requester1.ReceiveMultipartBytes();
 
-                var serialized2 = this.serializer.Serialize(message2);
+                var serialized2 = this.requestSerializer.Serialize(message2);
                 requester2.SendMultipartBytes(BitConverter.GetBytes(serialized2.Length), serialized2);
                 requester2.ReceiveMultipartBytes();
             }
@@ -428,10 +470,10 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             Assert.Equal(2000, server.ReceivedMessages.Count);
             Assert.Equal(2000, server.CountReceived);
             Assert.Equal(2000, server.CountSent);
-            Assert.Equal("TEST-999 from 2", server.ReceivedMessages[^1].Payload);
-            Assert.Equal("TEST-999 from 1", server.ReceivedMessages[^2].Payload);
-            Assert.Equal("TEST-998 from 2", server.ReceivedMessages[^3].Payload);
-            Assert.Equal("TEST-998 from 1", server.ReceivedMessages[^4].Payload);
+            Assert.Equal("TEST-999 from 2", server.ReceivedMessages[^1].Query.FirstOrDefault().Value);
+            Assert.Equal("TEST-999 from 1", server.ReceivedMessages[^2].Query.FirstOrDefault().Value);
+            Assert.Equal("TEST-998 from 2", server.ReceivedMessages[^3].Query.FirstOrDefault().Value);
+            Assert.Equal("TEST-998 from 1", server.ReceivedMessages[^4].Query.FirstOrDefault().Value);
 
             // Tear Down
             requester1.Disconnect(testAddress);

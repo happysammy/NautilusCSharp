@@ -12,13 +12,14 @@ namespace Nautilus.TestSuite.TestKit.Mocks
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Message;
+    using Nautilus.Data.Messages.Requests;
     using Nautilus.Network;
     using Nautilus.Network.Compression;
     using Nautilus.Network.Encryption;
     using Nautilus.Serialization.MessageSerializers;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
-    public sealed class MockMessageServer : MessageServer<MockMessage, Response>
+    public sealed class MockMessageServer : MessageServer<Request, Response>
     {
         public MockMessageServer(
             IComponentryContainer container,
@@ -27,21 +28,21 @@ namespace Nautilus.TestSuite.TestKit.Mocks
             Port port)
             : base(
                 container,
-                new MockSerializer(),
+                new MsgPackRequestSerializer(new MsgPackQuerySerializer()),
                 new MsgPackResponseSerializer(),
                 new CompressorBypass(),
                 encryption,
                 host,
                 port)
         {
-            this.ReceivedMessages = new List<MockMessage>();
+            this.ReceivedMessages = new List<DataRequest>();
 
-            this.RegisterHandler<MockMessage>(this.OnMessage);
+            this.RegisterHandler<DataRequest>(this.OnMessage);
         }
 
-        public List<MockMessage> ReceivedMessages { get; }
+        public List<DataRequest> ReceivedMessages { get; }
 
-        private void OnMessage(MockMessage message)
+        private void OnMessage(DataRequest message)
         {
             this.ReceivedMessages.Add(message);
 

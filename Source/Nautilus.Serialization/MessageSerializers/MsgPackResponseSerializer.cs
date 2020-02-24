@@ -40,6 +40,12 @@ namespace Nautilus.Serialization.MessageSerializers
                 case Connected res:
                     package.Add(nameof(res.ServiceName), ObjectSerializer.Serialize(res.ServiceName));
                     package.Add(nameof(res.SessionId), ObjectSerializer.Serialize(res.SessionId));
+                    package.Add(nameof(res.Message), ObjectSerializer.Serialize(res.Message));
+                    break;
+                case Disconnected res:
+                    package.Add(nameof(res.ServiceName), ObjectSerializer.Serialize(res.ServiceName));
+                    package.Add(nameof(res.SessionId), ObjectSerializer.Serialize(res.SessionId));
+                    package.Add(nameof(res.Message), ObjectSerializer.Serialize(res.Message));
                     break;
                 case MessageReceived res:
                     package.Add(nameof(res.ReceivedType), ObjectSerializer.Serialize(res.ReceivedType));
@@ -77,7 +83,16 @@ namespace Nautilus.Serialization.MessageSerializers
                 case nameof(Connected):
                     return new Connected(
                         ObjectDeserializer.AsString(unpacked[nameof(Connected.ServiceName)]),
-                        ObjectDeserializer.AsString(unpacked[nameof(Connected.SessionId)]),
+                        ObjectDeserializer.AsString(unpacked[nameof(Connected.Message)]),
+                        ObjectDeserializer.AsSessionId(unpacked),
+                        correlationId,
+                        id,
+                        timestamp);
+                case nameof(Disconnected):
+                    return new Disconnected(
+                        ObjectDeserializer.AsString(unpacked[nameof(Disconnected.ServiceName)]),
+                        ObjectDeserializer.AsString(unpacked[nameof(Disconnected.Message)]),
+                        ObjectDeserializer.AsSessionId(unpacked),
                         correlationId,
                         id,
                         timestamp);

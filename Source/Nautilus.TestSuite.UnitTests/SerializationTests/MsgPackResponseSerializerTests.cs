@@ -17,10 +17,10 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.Network;
     using Nautilus.Network.Messages;
     using Nautilus.Serialization.DataSerializers;
     using Nautilus.Serialization.MessageSerializers;
-    using Nautilus.TestSuite.TestKit.Mocks;
     using Nautilus.TestSuite.TestKit.Stubs;
     using NodaTime;
     using Xunit;
@@ -47,7 +47,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             var response = new Connected(
                 "NautilusData.TickProvider",
-                "Trader001_2020-01-01T01:00:00.000",
+                "Ok",
+                new SessionId(new TraderId("Trader", "001"), StubZonedDateTime.UnixEpoch()),
                 correlationId,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -60,7 +61,34 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             Assert.Equal(response, unpacked);
             Assert.Equal(correlationId, unpacked.CorrelationId);
             Assert.Equal("NautilusData.TickProvider", unpacked.ServiceName);
-            Assert.Equal("Trader001_2020-01-01T01:00:00.000", unpacked.SessionId);
+            Assert.Equal("Trader-001-1970-01-01-0", unpacked.SessionId.Value);
+            this.output.WriteLine(Convert.ToBase64String(packed));
+            this.output.WriteLine(Encoding.UTF8.GetString(packed));
+        }
+
+        [Fact]
+        internal void CanSerializeAndDeserialize_Disconnected()
+        {
+            // Arrange
+            var correlationId = Guid.NewGuid();
+
+            var response = new Disconnected(
+                "NautilusData.TickProvider",
+                "Ok",
+                new SessionId(new TraderId("Trader", "001"), StubZonedDateTime.UnixEpoch()),
+                correlationId,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            // Act
+            var packed = this.serializer.Serialize(response);
+            var unpacked = (Disconnected)this.serializer.Deserialize(packed);
+
+            // Assert
+            Assert.Equal(response, unpacked);
+            Assert.Equal(correlationId, unpacked.CorrelationId);
+            Assert.Equal("NautilusData.TickProvider", unpacked.ServiceName);
+            Assert.Equal("Trader-001-1970-01-01-0", unpacked.SessionId.Value);
             this.output.WriteLine(Convert.ToBase64String(packed));
             this.output.WriteLine(Encoding.UTF8.GetString(packed));
         }
@@ -69,7 +97,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         internal void CanSerializeAndDeserialize_MessageReceived()
         {
             // Arrange
-            var messageType = nameof(MockMessage);
+            var messageType = nameof(Connect);
             var correlationId = Guid.NewGuid();
 
             var response = new MessageReceived(

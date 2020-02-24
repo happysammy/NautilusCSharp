@@ -9,6 +9,7 @@
 namespace Nautilus.Network
 {
     using System;
+    using System.Diagnostics;
     using System.Text;
     using Microsoft.Extensions.Logging;
     using Nautilus.Common.Data;
@@ -130,8 +131,23 @@ namespace Nautilus.Network
             this.socket.SendMultipartBytes(Encoding.UTF8.GetBytes(topic), length, payload);
 
             this.CountPublished++;
-            this.Logger.LogTrace(LogId.Networking, $"HeaderLength={serialized.Length:N0}, Payload={payload.Length:N0} bytes");
-            this.Logger.LogTrace(LogId.Networking, $"[{this.CountPublished}]--> Topic={topic}, Message={message}");
+            this.LogPublished(topic, message, serialized.Length, payload.Length);
+        }
+
+        [Conditional("DEBUG")]
+        private void LogPublished(
+            string topic,
+            T message,
+            int serializedLength,
+            int compressedLength)
+        {
+            var logMessage = $"[{this.CountPublished}]--> " +
+                             $"Topic={topic}, " +
+                             $"Serialized={serializedLength:N0} bytes, " +
+                             $"Compressed={compressedLength:N0} bytes, " +
+                             $"Message={message}";
+
+            this.Logger.LogTrace(LogId.Networking, logMessage);
         }
     }
 }

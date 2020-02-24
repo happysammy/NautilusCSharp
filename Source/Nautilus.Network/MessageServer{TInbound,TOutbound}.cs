@@ -10,6 +10,7 @@ namespace Nautilus.Network
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
@@ -44,7 +45,8 @@ namespace Nautilus.Network
         private readonly ICompressor compressor;
         private readonly CancellationTokenSource cts;
         private readonly RouterSocket socket;
-        private readonly Dictionary<Guid, Address> correlationIndex = new Dictionary<Guid, Address>();
+        private readonly Dictionary<Address, SessionId> peers;
+        private readonly Dictionary<Guid, Address> correlationIndex;
         private readonly byte[] delimiter = { };
 
         /// <summary>
@@ -80,6 +82,9 @@ namespace Nautilus.Network
                     Linger = TimeSpan.FromSeconds(1),
                 },
             };
+
+            this.peers = new Dictionary<Address, SessionId>();
+            this.correlationIndex = new Dictionary<Guid, Address>();
 
             this.NetworkAddress = new ZmqNetworkAddress(host, port);
 
@@ -243,10 +248,9 @@ namespace Nautilus.Network
         private void ReceiveMessage()
         {
             var frames = this.socket.ReceiveMultipartBytes();
+
             this.CountReceived++;
-            this.Logger.LogTrace(
-                LogId.Networking,
-                $"<--[{this.CountReceived}] Received {frames.Count} byte[] frames.");
+            this.LogReceived(frames);
 
             // Check for expected frames
             if (frames.Count != ExpectedFrameCount)
@@ -286,6 +290,7 @@ namespace Nautilus.Network
                 return;
             }
 
+            // TODO: Log method on debug
             this.Logger.LogTrace(LogId.Networking, $"HeaderLength={length:N0}, Bytes={payload.Length:N0}");
 
             // Decompress message
@@ -319,27 +324,93 @@ namespace Nautilus.Network
         {
             try
             {
-                var received = this.inboundSerializer.Deserialize(payload); // failing here
+                var received = this.inboundSerializer.Deserialize(payload);
                 this.correlationIndex[received.Id] = sender;
 
-                if (received.Type.IsSubclassOf(typeof(TInbound)) || received.Type == typeof(TInbound))
-                {
-                    this.SendToSelf(received);
-                }
-                else
+                if (!received.Type.IsSubclassOf(typeof(TInbound)) && received.Type != typeof(TInbound))
                 {
                     var errorMessage = $"Message type {received.Type} not valid at this address {this.NetworkAddress}.";
                     this.SendRejected(errorMessage, sender);
-
-                    this.Logger.LogError(errorMessage);
+                    return;
                 }
+
+                switch (received)
+                {
+                    case Connect connect:
+                        this.HandleConnection(connect, sender, this.peers.GetValueOrDefault(sender));
+                        return;
+                    case Disconnect disconnect:
+                        this.HandleDisconnection(disconnect, sender, this.peers.GetValueOrDefault(sender));
+                        return;
+                }
+
+                this.SendToSelf(received);
             }
             catch (Exception ex)
             {
-                var message = $"Unable to deserialize message due {ex.GetType().Name}.";
-                this.Logger.LogError(LogId.Networking, ex, message, payload);
-                this.SendRejected(message, sender);
+                var errorMessage = $"Unable to deserialize message due {ex.GetType().Name}, {ex.Message}";
+                this.SendRejected(errorMessage, sender);
             }
+        }
+
+        private void HandleConnection(Connect connect, Address sender, SessionId? sessionId)
+        {
+            var message = sessionId is null
+                ? "OK"
+                : $"The peer {connect.TraderId.Value} was already connected to session {sessionId}.";
+
+            if (sessionId is null)
+            {
+                this.Logger.LogWarning(LogId.Networking, message);
+            }
+
+            var newSessionId = new SessionId(connect.TraderId, this.TimeNow());
+            this.peers[sender] = newSessionId;
+
+            var connected = new Connected(
+                this.Name.Value,
+                message,
+                newSessionId,
+                connect.Id,
+                this.NewGuid(),
+                this.TimeNow()) as TOutbound;
+
+            // Exists to avoid warning CS8604 (this should never happen anyway due to generic type constraints)
+            if (connected is null)
+            {
+                throw new InvalidOperationException($"The message was not of type {typeof(TOutbound)}.");
+            }
+
+            this.SendMessage(connected, sender);
+        }
+
+        private void HandleDisconnection(Disconnect disconnect, Address sender, SessionId? sessionId)
+        {
+            var message = sessionId is null
+                ? $"The peer {disconnect.TraderId} had no session."
+                : "Ok";
+
+            if (sessionId is null)
+            {
+                sessionId = SessionId.None();
+                this.Logger.LogWarning(LogId.Networking, message);
+            }
+
+            var disconnected = new Disconnected(
+                this.Name.Value,
+                message,
+                sessionId,
+                disconnect.Id,
+                this.NewGuid(),
+                this.TimeNow()) as TOutbound;
+
+            // Exists to avoid warning CS8604 (this should never happen anyway due to generic type constraints)
+            if (disconnected is null)
+            {
+                throw new InvalidOperationException($"The message was not of type {typeof(TOutbound)}.");
+            }
+
+            this.SendMessage(disconnected, sender);
         }
 
         private void SendRejected(string rejectedMessage, Address receiver)
@@ -373,6 +444,18 @@ namespace Nautilus.Network
                 payload);
 
             this.CountSent++;
+            this.LogSent(outbound, receiver);
+        }
+
+        [Conditional("DEBUG")]
+        private void LogReceived(List<byte[]> frames)
+        {
+            this.Logger.LogTrace(LogId.Networking, $"<--[{this.CountReceived}] Received {frames.Count} byte[] frames.");
+        }
+
+        [Conditional("DEBUG")]
+        private void LogSent(TOutbound outbound, Address receiver)
+        {
             this.Logger.LogTrace(LogId.Networking, $"[{this.CountSent}]--> {outbound} to Address({receiver}).");
         }
     }

@@ -59,7 +59,7 @@ namespace Nautilus.Serialization.MessageSerializers.Internal
                 { nameof(Order.Price), ObjectSerializer.Serialize(order.Price) },
                 { nameof(Order.TimeInForce), Encode(order.TimeInForce.ToString()) },
                 { nameof(Order.ExpireTime), ObjectSerializer.Serialize(order.ExpireTime) },
-                { nameof(Order.Timestamp), Encode(order.Timestamp.ToIsoString()) },
+                { nameof(Order.Timestamp), Encode(order.Timestamp.ToIso8601String()) },
                 { nameof(Order.InitId), Encode(order.InitialEvent.Id.ToString()) },
             });
         }

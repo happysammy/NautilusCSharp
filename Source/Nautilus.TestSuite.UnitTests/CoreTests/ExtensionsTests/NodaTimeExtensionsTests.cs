@@ -24,30 +24,17 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
             var zonedDateTime = StubZonedDateTime.UnixEpoch();
 
             // Act
-            var result = zonedDateTime.ToIsoString();
+            var result = zonedDateTime.ToIso8601String();
 
             // Assert
             Assert.Equal("1970-01-01T00:00:00.000Z", result);
         }
 
         [Fact]
-        internal void ToStringWithParsePattern_WithValidZonedDateTimeAndParsePattern_ReturnsExpectedString()
-        {
-            // Arrange
-            var zonedDateTime = StubZonedDateTime.UnixEpoch();
-
-            // Act
-            var result = zonedDateTime.ToStringWithParsePattern("yyyy.MM.dd HH:mm:ss");
-
-            // Assert
-            Assert.Equal("1970.01.01 00:00:00Z", result);
-        }
-
-        [Fact]
         internal void ToZonedDateTimeFromIso_WithValidString_ReturnsExpectedTime()
         {
             // Arrange
-            var zonedDateTimeString = StubZonedDateTime.UnixEpoch().ToIsoString();
+            var zonedDateTimeString = StubZonedDateTime.UnixEpoch().ToIso8601String();
 
             // Act
             var result = zonedDateTimeString.ToZonedDateTimeFromIso();
@@ -66,7 +53,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
             var result = dateTimeString.ToZonedDateTime("yyyy.MM.dd HH:mm:ss");
 
             // Assert
-            Assert.Equal("2018-01-12T23:59:00.000Z", result.ToIsoString());
+            Assert.Equal("2018-01-12T23:59:00.000Z", result.ToIso8601String());
         }
 
         [Fact]

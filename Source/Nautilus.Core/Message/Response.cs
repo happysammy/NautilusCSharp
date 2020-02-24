@@ -49,7 +49,7 @@ namespace Nautilus.Core.Message
         public Guid CorrelationId { get; }
 
         /// <summary>
-        /// Returns a string representation of this <see cref="Message"/>.
+        /// Returns the string representation of this object.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
         public override string ToString() => $"{this.Type.Name}(CorrelationId={this.CorrelationId})";

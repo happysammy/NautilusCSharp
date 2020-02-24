@@ -166,6 +166,6 @@ namespace Nautilus.DomainModel.ValueObjects
                                              $"{this.Ask}," +
                                              $"{this.BidSize}," +
                                              $"{this.AskSize}," +
-                                             $"{this.Timestamp.ToIsoString()}";
+                                             $"{this.Timestamp.ToIso8601String()}";
     }
 }

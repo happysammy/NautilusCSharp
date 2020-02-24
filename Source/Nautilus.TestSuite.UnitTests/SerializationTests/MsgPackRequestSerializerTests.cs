@@ -39,7 +39,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var serializer = new MsgPackRequestSerializer(new MsgPackQuerySerializer());
 
             var request = new Connect(
-                "Trader001-CommandSender",
+                new TraderId("Trader", "001"),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -49,7 +49,27 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             // Assert
             Assert.Equal(request, unpacked);
-            Assert.Equal("Trader001-CommandSender", unpacked.SocketIdentifier);
+            Assert.Equal("Trader-001", unpacked.TraderId.Value);
+        }
+
+        [Fact]
+        internal void CanSerializeAndDeserialize_DisconnectRequests()
+        {
+            // Arrange
+            var serializer = new MsgPackRequestSerializer(new MsgPackQuerySerializer());
+
+            var request = new Disconnect(
+                new TraderId("Trader", "001"),
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            // Act
+            var packed = serializer.Serialize(request);
+            var unpacked = (Disconnect)serializer.Deserialize(packed);
+
+            // Assert
+            Assert.Equal(request, unpacked);
+            Assert.Equal("Trader-001", unpacked.TraderId.Value);
         }
 
         [Fact]
@@ -64,8 +84,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             {
                 { "DataType", "Tick[]" },
                 { "Symbol", symbol.ToString() },
-                { "FromDateTime", dateTime.ToIsoString() },
-                { "ToDateTime", dateTime.ToIsoString() },
+                { "FromDateTime", dateTime.ToIso8601String() },
+                { "ToDateTime", dateTime.ToIso8601String() },
             };
 
             var request = new DataRequest(
@@ -81,8 +101,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             Assert.Equal(request, unpacked);
             Assert.Equal("Tick[]", unpacked.Query["DataType"]);
             Assert.Equal(symbol.ToString(), unpacked.Query["Symbol"]);
-            Assert.Equal(dateTime.ToIsoString(), unpacked.Query["FromDateTime"]);
-            Assert.Equal(dateTime.ToIsoString(), unpacked.Query["ToDateTime"]);
+            Assert.Equal(dateTime.ToIso8601String(), unpacked.Query["FromDateTime"]);
+            Assert.Equal(dateTime.ToIso8601String(), unpacked.Query["ToDateTime"]);
             this.output.WriteLine(Convert.ToBase64String(packed));
             this.output.WriteLine(Encoding.UTF8.GetString(packed));
         }

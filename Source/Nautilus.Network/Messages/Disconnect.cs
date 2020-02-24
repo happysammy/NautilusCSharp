@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="Connect.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="Disconnect.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2020 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  https://nautechsystems.io
@@ -16,23 +16,23 @@ namespace Nautilus.Network.Messages
     using NodaTime;
 
     /// <summary>
-    /// Represents a request to connect to a session.
+    /// Represents a request to disconnect from a session.
     /// </summary>
     [Immutable]
-    public sealed class Connect : Request
+    public sealed class Disconnect : Request
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Connect"/> class.
+        /// Initializes a new instance of the <see cref="Disconnect"/> class.
         /// </summary>
         /// <param name="traderId">The trader identifier.</param>
         /// <param name="id">The response identifier.</param>
         /// <param name="timestamp">The response timestamp.</param>
-        public Connect(
+        public Disconnect(
             TraderId traderId,
             Guid id,
             ZonedDateTime timestamp)
             : base(
-                typeof(Connect),
+                typeof(Disconnect),
                 id,
                 timestamp)
         {

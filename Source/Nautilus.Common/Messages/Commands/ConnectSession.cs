@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="Connect.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="ConnectSession.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2020 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  https://nautechsystems.io
@@ -16,22 +16,22 @@ namespace Nautilus.Common.Messages.Commands
     using NodaTime;
 
     /// <summary>
-    /// Represents a scheduled command to connect a component.
+    /// Represents a scheduled command to connect a session.
     /// </summary>
     [Immutable]
-    public sealed class Connect : Command, IScheduledJob
+    public sealed class ConnectSession : Command, IScheduledJob
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Connect"/> class.
+        /// Initializes a new instance of the <see cref="ConnectSession"/> class.
         /// </summary>
         /// <param name="scheduledTime">The commands scheduled time.</param>
         /// <param name="id">The commands identifier.</param>
         /// <param name="timestamp">The commands creation timestamp.</param>
-        public Connect(
+        public ConnectSession(
             ZonedDateTime scheduledTime,
             Guid id,
             ZonedDateTime timestamp)
-            : base(typeof(Connect), id, timestamp)
+            : base(typeof(ConnectSession), id, timestamp)
         {
             Debug.NotDefault(scheduledTime, nameof(scheduledTime));
 

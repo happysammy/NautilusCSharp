@@ -319,7 +319,7 @@ namespace Nautilus.Redis.Data
                     new HashEntry(nameof(ForexInstrument.MaxTradeSize), forexCcy.MaxTradeSize.ToString()),
                     new HashEntry(nameof(ForexInstrument.RolloverInterestBuy), forexCcy.RolloverInterestBuy.ToString(CultureInfo.InvariantCulture)),
                     new HashEntry(nameof(ForexInstrument.RolloverInterestSell), forexCcy.RolloverInterestSell.ToString(CultureInfo.InvariantCulture)),
-                    new HashEntry(nameof(ForexInstrument.Timestamp), forexCcy.Timestamp.ToIsoString()),
+                    new HashEntry(nameof(ForexInstrument.Timestamp), forexCcy.Timestamp.ToIso8601String()),
                 };
 
                 this.redisDatabase.HashSet(KeyProvider.GetInstrumentsKey(instrument.Symbol), forexHash);
@@ -343,7 +343,7 @@ namespace Nautilus.Redis.Data
                 new HashEntry(nameof(Instrument.MaxTradeSize), instrument.MaxTradeSize.ToString()),
                 new HashEntry(nameof(Instrument.RolloverInterestBuy), instrument.RolloverInterestBuy.ToString(CultureInfo.InvariantCulture)),
                 new HashEntry(nameof(Instrument.RolloverInterestSell), instrument.RolloverInterestSell.ToString(CultureInfo.InvariantCulture)),
-                new HashEntry(nameof(Instrument.Timestamp), instrument.Timestamp.ToIsoString()),
+                new HashEntry(nameof(Instrument.Timestamp), instrument.Timestamp.ToIso8601String()),
             };
 
             this.redisDatabase.HashSet(KeyProvider.GetInstrumentsKey(instrument.Symbol), instrumentHash);

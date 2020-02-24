@@ -46,7 +46,10 @@ namespace Nautilus.Serialization.MessageSerializers
             switch (request)
             {
                 case Connect req:
-                    package.Add(nameof(req.SocketIdentifier), ObjectSerializer.Serialize(req.SocketIdentifier));
+                    package.Add(nameof(req.TraderId), ObjectSerializer.Serialize(req.TraderId));
+                    break;
+                case Disconnect req:
+                    package.Add(nameof(req.TraderId), ObjectSerializer.Serialize(req.TraderId));
                     break;
                 case DataRequest req:
                     package.Add(nameof(req.Query), this.querySerializer.Serialize(req.Query));
@@ -71,7 +74,12 @@ namespace Nautilus.Serialization.MessageSerializers
             {
                 case nameof(Connect):
                     return new Connect(
-                        ObjectDeserializer.AsString(unpacked[nameof(Connect.SocketIdentifier)]),
+                        ObjectDeserializer.AsTraderId(unpacked),
+                        id,
+                        timestamp);
+                case nameof(Disconnect):
+                    return new Disconnect(
+                        ObjectDeserializer.AsTraderId(unpacked),
                         id,
                         timestamp);
                 case nameof(DataRequest):

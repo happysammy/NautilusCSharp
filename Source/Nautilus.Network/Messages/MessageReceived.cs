@@ -49,5 +49,11 @@ namespace Nautilus.Network.Messages
         /// Gets the responses received message type.
         /// </summary>
         public string ReceivedType { get; }
+
+        /// <summary>
+        /// Returns the string representation of this object.
+        /// </summary>
+        /// <returns>A <see cref="string"/>.</returns>
+        public override string ToString() => $"{this.Type.Name}(ReceivedType={this.ReceivedType}, CorrelationId={this.CorrelationId})";
     }
 }

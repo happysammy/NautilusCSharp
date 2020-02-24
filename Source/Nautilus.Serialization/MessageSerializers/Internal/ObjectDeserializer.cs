@@ -16,6 +16,7 @@ namespace Nautilus.Serialization.MessageSerializers.Internal
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.Network;
     using NodaTime;
 
     /// <summary>
@@ -55,6 +56,26 @@ namespace Nautilus.Serialization.MessageSerializers.Internal
         internal static Guid AsGuid(byte[] unpacked)
         {
             return Guid.Parse(Decode(unpacked));
+        }
+
+        /// <summary>
+        /// Returns a SessionId extracted from the given unpacked dictionary.
+        /// </summary>
+        /// <param name="unpacked">The dictionary to extract from.</param>
+        /// <returns>The extracted SessionId.</returns>
+        internal static SessionId AsSessionId(Dictionary<string, byte[]> unpacked)
+        {
+            return new SessionId(Decode(unpacked[nameof(SessionId)]));
+        }
+
+        /// <summary>
+        /// Returns a TraderId extracted from the given unpacked dictionary.
+        /// </summary>
+        /// <param name="unpacked">The dictionary to extract from.</param>
+        /// <returns>The extracted TraderId.</returns>
+        internal static TraderId AsTraderId(Dictionary<string, byte[]> unpacked)
+        {
+            return TraderId.FromString(Decode(unpacked[nameof(TraderId)]));
         }
 
         /// <summary>

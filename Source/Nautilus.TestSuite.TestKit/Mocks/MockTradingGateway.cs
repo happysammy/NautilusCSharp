@@ -34,8 +34,8 @@ namespace Nautilus.TestSuite.TestKit.Mocks
             this.ReceivedObjects = new List<object>();
 
             // Commands
-            this.RegisterHandler<Connect>(this.OnMessage);
-            this.RegisterHandler<Disconnect>(this.OnMessage);
+            this.RegisterHandler<ConnectSession>(this.OnMessage);
+            this.RegisterHandler<DisconnectSession>(this.OnMessage);
 
             // Events
             this.RegisterHandler<OrderSubmitted>(this.OnMessage);
@@ -107,12 +107,12 @@ namespace Nautilus.TestSuite.TestKit.Mocks
             this.ReceivedObjects.Add(order);
         }
 
-        private void OnMessage(Connect message)
+        private void OnMessage(ConnectSession message)
         {
             this.ReceivedObjects.Add(message);
         }
 
-        private void OnMessage(Disconnect message)
+        private void OnMessage(DisconnectSession message)
         {
             this.ReceivedObjects.Add(message);
         }

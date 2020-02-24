@@ -215,7 +215,7 @@ namespace Nautilus.Data
                     marketOpened,
                     this.Endpoint);
 
-                this.Logger.LogInformation($"Created scheduled event {marketOpened}-{symbol} for {nextTime.ToIsoString()}");
+                this.Logger.LogInformation($"Created scheduled event {marketOpened}-{symbol} for {nextTime.ToIso8601String()}");
             }
         }
 
@@ -241,7 +241,7 @@ namespace Nautilus.Data
                     marketClosed,
                     this.Endpoint);
 
-                this.Logger.LogInformation($"Created scheduled event {marketClosed}-{symbol} for {nextTime.ToIsoString()}");
+                this.Logger.LogInformation($"Created scheduled event {marketClosed}-{symbol} for {nextTime.ToIso8601String()}");
             }
         }
 
@@ -263,7 +263,7 @@ namespace Nautilus.Data
                 job,
                 this.Endpoint);
 
-            this.Logger.LogInformation($"Created scheduled job {job} for {nextTime.ToIsoString()}");
+            this.Logger.LogInformation($"Created scheduled job {job} for {nextTime.ToIso8601String()}");
         }
 
         private void CreateTrimBarDataJob()
@@ -285,7 +285,7 @@ namespace Nautilus.Data
                 job,
                 this.Endpoint);
 
-            this.Logger.LogInformation($"Created scheduled job {job} for {nextTime.ToIsoString()}");
+            this.Logger.LogInformation($"Created scheduled job {job} for {nextTime.ToIso8601String()}");
         }
     }
 }

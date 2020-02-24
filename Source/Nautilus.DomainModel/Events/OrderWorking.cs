@@ -145,7 +145,7 @@ namespace Nautilus.DomainModel.Events
         public override string ToString()
         {
             var expireTimeString = this.ExpireTime.HasValue
-                ? " " + this.ExpireTime.Value.ToIsoString()
+                ? " " + this.ExpireTime.Value.ToIso8601String()
                 : string.Empty;
 
             return $"{this.Type.Name}(" +
