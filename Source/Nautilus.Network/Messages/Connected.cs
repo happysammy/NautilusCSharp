@@ -24,8 +24,8 @@ namespace Nautilus.Network.Messages
         /// Initializes a new instance of the <see cref="Connected"/> class.
         /// </summary>
         /// <param name="serviceName">The service name.</param>
-        /// <param name="sessionId">The the connections session identifier.</param>
-        /// <param name="message">The connection message.</param>
+        /// <param name="sessionId">The connected session identifier.</param>
+        /// <param name="message">The connected message.</param>
         /// <param name="correlationId">The response correlation identifier.</param>
         /// <param name="id">The response identifier.</param>
         /// <param name="timestamp">The response timestamp.</param>

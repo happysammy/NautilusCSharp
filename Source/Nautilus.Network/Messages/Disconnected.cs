@@ -24,8 +24,8 @@ namespace Nautilus.Network.Messages
         /// Initializes a new instance of the <see cref="Disconnected"/> class.
         /// </summary>
         /// <param name="serviceName">The service name.</param>
-        /// <param name="sessionId">The the connections session identifier.</param>
-        /// <param name="message">The disconnection message.</param>
+        /// <param name="sessionId">The disconnected session identifier.</param>
+        /// <param name="message">The disconnected message.</param>
         /// <param name="correlationId">The response correlation identifier.</param>
         /// <param name="id">The response identifier.</param>
         /// <param name="timestamp">The response timestamp.</param>
