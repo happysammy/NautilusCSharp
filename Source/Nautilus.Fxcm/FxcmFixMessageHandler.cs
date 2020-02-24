@@ -118,14 +118,14 @@ namespace Nautilus.Fxcm
         [SystemBoundary]
         public void OnMessage(BusinessMessageReject message)
         {
-            this.Logger.LogWarning($"{Received}{FIX} {nameof(BusinessMessageReject)}");
+            this.Logger.LogWarning(LogId.Networking, $"{Received}{FIX} {nameof(BusinessMessageReject)}");
         }
 
         /// <inheritdoc />
         [SystemBoundary]
         public void OnMessage(Email message)
         {
-            this.Logger.LogWarning($"{Received}{FIX} {nameof(Email)}");
+            this.Logger.LogWarning(LogId.Networking, $"{Received}{FIX} {nameof(Email)}");
         }
 
         /// <inheritdoc />
@@ -134,111 +134,103 @@ namespace Nautilus.Fxcm
         {
             Debug.NotNull(this.dataGateway, nameof(this.dataGateway));
 
-            try
+            var responseId = message.GetField(Tags.SecurityResponseID);
+            var result = FxcmMessageHelper.GetSecurityRequestResult(message.SecurityRequestResult);
+            this.Logger.LogDebug(LogId.Networking, $"{Received}{FIX} {nameof(SecurityList)}(ResponseId={responseId}, Result={result}).");
+
+            var instruments = new List<Instrument>();
+            var groupCount = Convert.ToInt32(message.NoRelatedSym.ToString());
+            var group = new SecurityList.NoRelatedSymGroup();
+
+            for (var i = 1; i <= groupCount; i++)
             {
-                var responseId = message.GetField(Tags.SecurityResponseID);
-                var result = FxcmMessageHelper.GetSecurityRequestResult(message.SecurityRequestResult);
-                this.Logger.LogDebug($"{Received}{FIX} {nameof(SecurityList)}(ResponseId={responseId}, Result={result}).");
+                message.GetGroup(i, group);
 
-                var instruments = new List<Instrument>();
-                var groupCount = Convert.ToInt32(message.NoRelatedSym.ToString());
-                var group = new SecurityList.NoRelatedSymGroup();
+                var brokerSymbolCode = group.GetField(Tags.Symbol);
+                var symbol = this.GetSymbol(brokerSymbolCode);
+                var brokerSymbol = new BrokerSymbol(brokerSymbolCode);
+                var securityType = FxcmMessageHelper.GetSecurityType(group.GetString(FxcmTags.ProductID));
+                var tickPrecision = group.GetInt(FxcmTags.SymPrecision);
+                var tickSize = group.GetDecimal(FxcmTags.SymPointSize) * 0.1m;  // Field 9002 gives 'point' size (* 0.1m to get tick size)
+                var roundLot = group.GetInt(Tags.RoundLot);
+                var minStopDistanceEntry = group.GetInt(FxcmTags.CondDistEntryStop);
+                var minLimitDistanceEntry = group.GetInt(FxcmTags.CondDistEntryLimit);
+                var minStopDistance = group.GetInt(FxcmTags.CondDistStop);
+                var minLimitDistance = group.GetInt(FxcmTags.CondDistLimit);
+                var minTradeSize = group.GetInt(FxcmTags.MinQuantity);
+                var maxTradeSize = group.GetInt(FxcmTags.MaxQuantity);
+                var rolloverInterestBuy = group.GetDecimal(FxcmTags.SymInterestBuy);
+                var rolloverInterestSell = group.GetDecimal(FxcmTags.SymInterestSell);
 
-                for (var i = 1; i <= groupCount; i++)
+                if (securityType == SecurityType.Forex)
                 {
-                    message.GetGroup(i, group);
+                    var forexCcy = new ForexInstrument(
+                        symbol,
+                        brokerSymbol,
+                        tickPrecision,
+                        0,
+                        minStopDistanceEntry,
+                        minLimitDistanceEntry,
+                        minStopDistance,
+                        minLimitDistance,
+                        Price.Create(tickSize),
+                        Quantity.Create(roundLot),
+                        Quantity.Create(minTradeSize),
+                        Quantity.Create(maxTradeSize),
+                        rolloverInterestBuy,
+                        rolloverInterestSell,
+                        this.TimeNow());
 
-                    var brokerSymbolCode = group.GetField(Tags.Symbol);
-                    var symbol = this.GetSymbol(brokerSymbolCode);
-                    var brokerSymbol = new BrokerSymbol(brokerSymbolCode);
-                    var securityType = FxcmMessageHelper.GetSecurityType(group.GetString(FxcmTags.ProductID));
-                    var tickPrecision = group.GetInt(FxcmTags.SymPrecision);
-                    var tickSize = group.GetDecimal(FxcmTags.SymPointSize) * 0.1m;  // Field 9002 gives 'point' size (* 0.1m to get tick size)
-                    var roundLot = group.GetInt(Tags.RoundLot);
-                    var minStopDistanceEntry = group.GetInt(FxcmTags.CondDistEntryStop);
-                    var minLimitDistanceEntry = group.GetInt(FxcmTags.CondDistEntryLimit);
-                    var minStopDistance = group.GetInt(FxcmTags.CondDistStop);
-                    var minLimitDistance = group.GetInt(FxcmTags.CondDistLimit);
-                    var minTradeSize = group.GetInt(FxcmTags.MinQuantity);
-                    var maxTradeSize = group.GetInt(FxcmTags.MaxQuantity);
-                    var rolloverInterestBuy = group.GetDecimal(FxcmTags.SymInterestBuy);
-                    var rolloverInterestSell = group.GetDecimal(FxcmTags.SymInterestSell);
-
-                    if (securityType == SecurityType.Forex)
-                    {
-                        var forexCcy = new ForexInstrument(
-                            symbol,
-                            brokerSymbol,
-                            tickPrecision,
-                            0,
-                            minStopDistanceEntry,
-                            minLimitDistanceEntry,
-                            minStopDistance,
-                            minLimitDistance,
-                            Price.Create(tickSize),
-                            Quantity.Create(roundLot),
-                            Quantity.Create(minTradeSize),
-                            Quantity.Create(maxTradeSize),
-                            rolloverInterestBuy,
-                            rolloverInterestSell,
-                            this.TimeNow());
-
-                        instruments.Add(forexCcy);
-                    }
-                    else
-                    {
-                        var instrument = new Instrument(
-                            symbol,
-                            brokerSymbol,
-                            group.GetField(Tags.Currency).ToEnum<Nautilus.DomainModel.Enums.Currency>(),
-                            securityType,
-                            tickPrecision,
-                            0,
-                            minStopDistanceEntry,
-                            minLimitDistanceEntry,
-                            minStopDistance,
-                            minLimitDistance,
-                            Price.Create(tickSize),
-                            Quantity.Create(roundLot),
-                            Quantity.Create(minTradeSize),
-                            Quantity.Create(maxTradeSize),
-                            rolloverInterestBuy,
-                            rolloverInterestSell,
-                            this.TimeNow());
-
-                        instruments.Add(instrument);
-                    }
+                    instruments.Add(forexCcy);
                 }
+                else
+                {
+                    var instrument = new Instrument(
+                        symbol,
+                        brokerSymbol,
+                        group.GetField(Tags.Currency).ToEnum<Nautilus.DomainModel.Enums.Currency>(),
+                        securityType,
+                        tickPrecision,
+                        0,
+                        minStopDistanceEntry,
+                        minLimitDistanceEntry,
+                        minStopDistance,
+                        minLimitDistance,
+                        Price.Create(tickSize),
+                        Quantity.Create(roundLot),
+                        Quantity.Create(minTradeSize),
+                        Quantity.Create(maxTradeSize),
+                        rolloverInterestBuy,
+                        rolloverInterestSell,
+                        this.TimeNow());
 
-                this.dataGateway?.OnData(instruments);
+                    instruments.Add(instrument);
+                }
             }
-            catch (Exception ex)
-            {
-                this.Logger.LogError(LogId.Networking, ex.Message, ex);
-                throw;
-            }
+
+            this.dataGateway?.OnData(instruments);
         }
 
         /// <inheritdoc />
         [SystemBoundary]
         public void OnMessage(QuoteStatusReport message)
         {
-            this.Logger.LogTrace($"{Received}{FIX} {nameof(QuoteStatusReport)}");
-            this.Logger.LogInformation(message.Product.ToString());
+            this.Logger.LogTrace(LogId.Networking, $"{Received}{FIX} {nameof(QuoteStatusReport)}");
+            this.Logger.LogInformation(LogId.Networking, message.Product.ToString());
         }
 
         /// <inheritdoc />
         [SystemBoundary]
         public void OnMessage(TradingSessionStatus message)
         {
-            this.Logger.LogWarning($"{Received}{FIX} Unhandled {nameof(TradingSessionStatus)}");
+            this.Logger.LogWarning(LogId.Networking, $"{Received}{FIX} Unhandled {nameof(TradingSessionStatus)}");
         }
 
         /// <inheritdoc />
         [SystemBoundary]
         public void OnMessage(MarketDataRequestReject message)
         {
-            this.Logger.LogWarning($"{Received}{FIX} {nameof(MarketDataRequestReject)}(Text={message.GetField(Tags.Text)}).");
+            this.Logger.LogWarning(LogId.Networking, $"{Received}{FIX} {nameof(MarketDataRequestReject)}(Text={message.GetField(Tags.Text)}).");
         }
 
         /// <inheritdoc />
@@ -247,31 +239,18 @@ namespace Nautilus.Fxcm
         {
             Debug.NotNull(this.dataGateway, nameof(this.dataGateway));
 
-            try
-            {
-                message.GetGroup(1, this.mdBidGroup);
-                message.GetGroup(2, this.mdAskGroup);
+            message.GetGroup(1, this.mdBidGroup);
+            message.GetGroup(2, this.mdAskGroup);
 
-                var tick = new Tick(
-                    this.GetSymbol(message.GetField(Tags.Symbol)),
-                    Price.Create(this.mdBidGroup.GetDecimal(Tags.MDEntryPx)),
-                    Price.Create(this.mdAskGroup.GetDecimal(Tags.MDEntryPx)),
-                    Volume.One(),
-                    Volume.One(),
-                    this.tickTimestampProvider());
+            var tick = new Tick(
+                this.GetSymbol(message.GetField(Tags.Symbol)),
+                Price.Create(this.mdBidGroup.GetDecimal(Tags.MDEntryPx)),
+                Price.Create(this.mdAskGroup.GetDecimal(Tags.MDEntryPx)),
+                Volume.One(),
+                Volume.One(),
+                this.tickTimestampProvider());
 
-                this.dataGateway?.OnData(tick);
-            }
-            catch (Exception ex)
-            {
-                if (ex is FormatException || ex is OverflowException)
-                {
-                    this.Logger.LogError("Could not parse decimal.");
-                    return;
-                }
-
-                this.Logger.LogCritical(ex.Message, ex);
-            }
+            this.dataGateway?.OnData(tick);
         }
 
         /// <inheritdoc />
@@ -281,7 +260,7 @@ namespace Nautilus.Fxcm
             var inquiryId = message.GetField(Tags.CollInquiryID);
             var accountNumber = message.GetField(Tags.Account);
 
-            this.Logger.LogDebug($"{Received}{FIX} {nameof(CollateralInquiryAck)}(InquiryId={inquiryId}, AccountNumber={accountNumber}).");
+            this.Logger.LogDebug(LogId.Networking, $"{Received}{FIX} {nameof(CollateralInquiryAck)}(InquiryId={inquiryId}, AccountNumber={accountNumber}).");
         }
 
         /// <inheritdoc />
@@ -355,7 +334,7 @@ namespace Nautilus.Fxcm
         [SystemBoundary]
         public void OnMessage(PositionReport message)
         {
-            this.Logger.LogDebug($"{Received}{FIX} {nameof(PositionReport)}({message.Account})");
+            this.Logger.LogDebug(LogId.Networking, $"{Received}{FIX} {nameof(PositionReport)}({message.Account})");
         }
 
         /// <inheritdoc />
@@ -364,7 +343,7 @@ namespace Nautilus.Fxcm
         {
             Debug.NotNull(this.tradingGateway, nameof(this.tradingGateway));
 
-            this.Logger.LogDebug($"{Received}{FIX} {nameof(OrderCancelReject)}");
+            this.Logger.LogDebug(LogId.Networking, $"{Received}{FIX} {nameof(OrderCancelReject)}");
 
             var orderId = this.GetOrderId(message);
             var rejectedTime = FxcmMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
@@ -393,7 +372,7 @@ namespace Nautilus.Fxcm
             {
                 case OrdStatus.REJECTED:
                 {
-                    this.Logger.LogDebug($"{Received}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.REJECTED)})");
+                    this.Logger.LogDebug(LogId.Networking, $"{Received}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.REJECTED)})");
 
                     this.tradingGateway?.Send(this.GenerateOrderRejectedEvent(message));
                     break;
@@ -401,7 +380,7 @@ namespace Nautilus.Fxcm
 
                 case OrdStatus.PENDING_NEW:
                 {
-                    this.Logger.LogDebug($"{Received}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.PENDING_NEW)}).");
+                    this.Logger.LogDebug(LogId.Networking, $"{Received}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.PENDING_NEW)}).");
 
                     // Do nothing
                     break;
@@ -410,7 +389,7 @@ namespace Nautilus.Fxcm
                 case OrdStatus.NEW:
                 {
                     var fxcmOrdStatus = message.GetField(FxcmTags.OrdStatus);
-                    this.Logger.LogDebug($"{Received}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.NEW)}-{fxcmOrdStatus})");
+                    this.Logger.LogDebug(LogId.Networking, $"{Received}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.NEW)}-{fxcmOrdStatus})");
 
                     switch (fxcmOrdStatus)
                     {
@@ -436,7 +415,7 @@ namespace Nautilus.Fxcm
 
                             break;
                         default:
-                            this.Logger.LogError($"Cannot process event (FXCMOrdStatus {fxcmOrdStatus} not recognized).");
+                            this.Logger.LogError(LogId.Networking, $"Cannot process event (FXCMOrdStatus {fxcmOrdStatus} not recognized).");
                             break;
                     }
 
@@ -445,7 +424,7 @@ namespace Nautilus.Fxcm
 
                 case OrdStatus.PENDING_CANCEL:
                 {
-                    this.Logger.LogDebug($"{Received}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.PENDING_CANCEL)}).");
+                    this.Logger.LogDebug(LogId.Networking, $"{Received}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.PENDING_CANCEL)}).");
 
                     // Do nothing
                     break;
@@ -453,7 +432,7 @@ namespace Nautilus.Fxcm
 
                 case OrdStatus.CANCELED:
                 {
-                    this.Logger.LogDebug($"{Received}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.CANCELED)})");
+                    this.Logger.LogDebug(LogId.Networking, $"{Received}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.CANCELED)})");
 
                     this.tradingGateway?.Send(this.GenerateOrderCancelledEvent(message));
                     break;
@@ -461,7 +440,7 @@ namespace Nautilus.Fxcm
 
                 case OrdStatus.REPLACED:
                 {
-                    this.Logger.LogDebug($"{Received}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.REPLACED)})");
+                    this.Logger.LogDebug(LogId.Networking, $"{Received}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.REPLACED)})");
 
                     this.tradingGateway?.Send(this.GenerateOrderModifiedEvent(message));
                     break;
@@ -469,7 +448,7 @@ namespace Nautilus.Fxcm
 
                 case OrdStatus.EXPIRED:
                 {
-                    this.Logger.LogDebug($"{Received}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.EXPIRED)})");
+                    this.Logger.LogDebug(LogId.Networking, $"{Received}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.EXPIRED)})");
 
                     this.tradingGateway?.Send(this.GenerateOrderExpiredEvent(message));
                     break;
@@ -477,7 +456,7 @@ namespace Nautilus.Fxcm
 
                 case OrdStatus.STOPPED:
                 {
-                    this.Logger.LogDebug($"{Received}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.STOPPED)}).");
+                    this.Logger.LogDebug(LogId.Networking, $"{Received}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.STOPPED)}).");
 
                     // Order is executing
                     break;
@@ -485,7 +464,7 @@ namespace Nautilus.Fxcm
 
                 case OrdStatus.FILLED:
                 {
-                    this.Logger.LogDebug($"{Received}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.EXPIRED)})");
+                    this.Logger.LogDebug(LogId.Networking, $"{Received}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.EXPIRED)})");
 
                     this.tradingGateway?.Send(this.GenerateOrderFilledEvent(message));
                     break;
@@ -493,7 +472,7 @@ namespace Nautilus.Fxcm
 
                 case OrdStatus.PARTIALLY_FILLED:
                 {
-                    this.Logger.LogDebug($"{Received}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.PARTIALLY_FILLED)})");
+                    this.Logger.LogDebug(LogId.Networking, $"{Received}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.PARTIALLY_FILLED)})");
 
                     this.tradingGateway?.Send(this.GenerateOrderPartiallyFilledEvent(message));
                     break;
@@ -501,31 +480,31 @@ namespace Nautilus.Fxcm
 
                 case OrdStatus.SUSPENDED:
                 {
-                    this.Logger.LogWarning($"{Received}{FIX} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.SUSPENDED)}).");
+                    this.Logger.LogWarning(LogId.Networking, $"{Received}{FIX} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.SUSPENDED)}).");
                     break;
                 }
 
                 case OrdStatus.CALCULATED:
                 {
-                    this.Logger.LogWarning($"{Received}{FIX} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.CALCULATED)}).");
+                    this.Logger.LogWarning(LogId.Networking, $"{Received}{FIX} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.CALCULATED)}).");
                     break;
                 }
 
                 case OrdStatus.DONE_FOR_DAY:
                 {
-                    this.Logger.LogWarning($"{Received}{FIX} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.DONE_FOR_DAY)}).");
+                    this.Logger.LogWarning(LogId.Networking, $"{Received}{FIX} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.DONE_FOR_DAY)}).");
                     break;
                 }
 
                 case OrdStatus.PENDING_REPLACE:
                 {
-                    this.Logger.LogWarning($"{Received}{FIX} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.PENDING_REPLACE)}).");
+                    this.Logger.LogWarning(LogId.Networking, $"{Received}{FIX} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.PENDING_REPLACE)}).");
                     break;
                 }
 
                 case OrdStatus.ACCEPTED_FOR_BIDDING:
                 {
-                    this.Logger.LogWarning($"{Received}{FIX} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.ACCEPTED_FOR_BIDDING)}).");
+                    this.Logger.LogWarning(LogId.Networking, $"{Received}{FIX} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.ACCEPTED_FOR_BIDDING)}).");
                     break;
                 }
 
@@ -546,7 +525,6 @@ namespace Nautilus.Fxcm
                     break;
                 default:
                     this.Logger.LogCritical(ex.Message, ex);
-
                     throw ex;
             }
         }

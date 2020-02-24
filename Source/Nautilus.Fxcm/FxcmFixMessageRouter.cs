@@ -8,10 +8,12 @@
 
 namespace Nautilus.Fxcm
 {
+    using System;
     using System.Collections.Immutable;
     using Microsoft.Extensions.Logging;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Logging;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Identifiers;
@@ -233,9 +235,15 @@ namespace Nautilus.Fxcm
                 return;
             }
 
-            this.session.Send(message);
-
-            this.LogMessageSent(message);
+            try
+            {
+                this.session.Send(message);
+                this.LogMessageSent(message);
+            }
+            catch (Exception ex)
+            {
+                this.Logger.LogError(LogId.Networking, ex.Message, ex);
+            }
         }
 
         [System.Diagnostics.Conditional("DEBUG")]

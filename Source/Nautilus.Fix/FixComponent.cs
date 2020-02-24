@@ -8,8 +8,10 @@
 
 namespace Nautilus.Fix
 {
+    using System;
     using Microsoft.Extensions.Logging;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Logging;
     using Nautilus.Common.Messages.Events;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.Fix.Interfaces;
@@ -231,7 +233,22 @@ namespace Nautilus.Fix
         /// <param name="sessionId">The session id.</param>
         public void FromApp(Message message, SessionID sessionId)
         {
-            this.Crack(message, sessionId);
+            try
+            {
+                // Wrapped in error handling due not entirely trusting QuickFix
+                this.Crack(message, sessionId);
+            }
+            catch (Exception ex)
+            {
+                if (ex is UnsupportedMessageType)
+                {
+                    this.Logger.LogWarning(LogId.Networking, ex.Message, ex);
+                }
+                else
+                {
+                    this.Logger.LogError(LogId.Networking, ex.Message, ex);
+                }
+            }
         }
 
         /// <summary>

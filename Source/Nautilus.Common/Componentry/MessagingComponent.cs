@@ -237,7 +237,6 @@ namespace Nautilus.Common.Componentry
                     break;
                 default:
                     this.Logger.LogCritical(ex.Message, ex);
-
                     throw ex;
             }
         }
