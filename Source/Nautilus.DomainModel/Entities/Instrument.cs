@@ -48,12 +48,12 @@ namespace Nautilus.DomainModel.Entities
             BrokerSymbol brokerSymbol,
             Currency quoteCurrency,
             SecurityType securityType,
-            ushort pricePrecision,
-            ushort sizePrecision,
-            ushort minStopDistanceEntry,
-            ushort minLimitDistanceEntry,
-            ushort minStopDistance,
-            ushort minLimitDistance,
+            int pricePrecision,
+            int sizePrecision,
+            int minStopDistanceEntry,
+            int minLimitDistanceEntry,
+            int minStopDistance,
+            int minLimitDistance,
             Price tickSize,
             Quantity roundLotSize,
             Quantity minTradeSize,
@@ -112,32 +112,32 @@ namespace Nautilus.DomainModel.Entities
         /// <summary>
         /// Gets the instruments price decimal precision.
         /// </summary>
-        public ushort PricePrecision { get; }
+        public int PricePrecision { get; }
 
         /// <summary>
         /// Gets the instruments quantity decimal precision.
         /// </summary>
-        public ushort SizePrecision { get; }
+        public int SizePrecision { get; }
 
         /// <summary>
         /// Gets the instruments minimum stop distance for entry.
         /// </summary>
-        public ushort MinStopDistanceEntry { get; }
+        public int MinStopDistanceEntry { get; }
 
         /// <summary>
         /// Gets the instruments minimum limit distance for entry.
         /// </summary>
-        public ushort MinLimitDistanceEntry { get; }
+        public int MinLimitDistanceEntry { get; }
 
         /// <summary>
         /// Gets the instruments minimum stop distance.
         /// </summary>
-        public ushort MinStopDistance { get; }
+        public int MinStopDistance { get; }
 
         /// <summary>
         /// Gets the instruments minimum limit distance.
         /// </summary>
-        public ushort MinLimitDistance { get; }
+        public int MinLimitDistance { get; }
 
         /// <summary>
         /// Gets the instruments tick size.

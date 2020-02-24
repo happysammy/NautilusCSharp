@@ -33,7 +33,7 @@ namespace Nautilus.DomainModel.Aggregates
         private Quantity buyQuantity;
         private Quantity sellQuantity;
         private decimal relativeQuantity;
-        private byte precision;
+        private int precision;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Position"/> class.

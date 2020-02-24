@@ -61,17 +61,17 @@ namespace Nautilus.Redis.Data.Internal
 
         private SecurityType SecurityType { get; }
 
-        private ushort PricePrecision { get; }
+        private int PricePrecision { get; }
 
-        private ushort SizePrecision { get; }
+        private int SizePrecision { get; }
 
-        private ushort MinStopDistanceEntry { get; set; }
+        private int MinStopDistanceEntry { get; set; }
 
-        private ushort MinLimitDistanceEntry { get; set; }
+        private int MinLimitDistanceEntry { get; set; }
 
-        private ushort MinStopDistance { get; set; }
+        private int MinStopDistance { get; set; }
 
-        private ushort MinLimitDistance { get; set; }
+        private int MinLimitDistance { get; set; }
 
         private Price TickSize { get; }
 
