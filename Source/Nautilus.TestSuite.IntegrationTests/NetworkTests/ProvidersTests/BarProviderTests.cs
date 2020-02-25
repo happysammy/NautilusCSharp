@@ -27,6 +27,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
     using Nautilus.Serialization.MessageSerializers;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.Components;
+    using Nautilus.TestSuite.TestKit.Fixtures;
     using Nautilus.TestSuite.TestKit.Mocks;
     using Nautilus.TestSuite.TestKit.Stubs;
     using Xunit;
@@ -71,7 +72,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
                 testAddress.Port);
             provider.Start().Wait();
 
-            var requester = new MockRequester(
+            var requester = new TestDealer(
                 this.container,
                 this.requestSerializer,
                 this.responseSerializer,
@@ -134,7 +135,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
                 testAddress.Port);
             provider.Start().Wait();
 
-            var requester = new MockRequester(
+            var requester = new TestDealer(
                 this.container,
                 this.requestSerializer,
                 this.responseSerializer,
@@ -176,17 +177,10 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
             Assert.Equal(bar2, bars[1]);
 
             // Tear Down
-            try
-            {
-                requester.Stop().Wait();
-                requester.Dispose();
-                provider.Stop().Wait();
-                provider.Dispose();
-            }
-            catch (Exception ex)
-            {
-                this.Output.WriteLine(ex.Message);
-            }
+            requester.Stop().Wait();
+            requester.Dispose();
+            provider.Stop().Wait();
+            provider.Dispose();
         }
     }
 }

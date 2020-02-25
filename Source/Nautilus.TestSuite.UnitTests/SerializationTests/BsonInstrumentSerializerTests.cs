@@ -13,6 +13,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
     using System.Text;
     using Nautilus.Serialization.DataSerializers;
     using Nautilus.TestSuite.TestKit;
+    using Nautilus.TestSuite.TestKit.Fixtures;
     using Nautilus.TestSuite.TestKit.Stubs;
     using Xunit;
     using Xunit.Abstractions;

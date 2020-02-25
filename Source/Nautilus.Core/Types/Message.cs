@@ -23,18 +23,22 @@ namespace Nautilus.Core.Types
         /// <summary>
         /// Initializes a new instance of the <see cref="Message"/> class.
         /// </summary>
-        /// <param name="type">The message type.</param>
+        /// <param name="messageType">The message type.</param>
+        /// <param name="type">The message class.</param>
         /// <param name="id">The message identifier.</param>
         /// <param name="timestamp">The message timestamp.</param>
         protected Message(
+            string messageType,
             Type type,
             Guid id,
             ZonedDateTime timestamp)
         {
+            Debug.NotEmptyOrWhiteSpace(messageType, nameof(messageType));
             Debug.EqualTo(type, this.GetType(), nameof(type));
             Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
+            this.MessageType = messageType;
             this.Type = type;
             this.Id = id;
             this.Timestamp = timestamp;
@@ -42,6 +46,11 @@ namespace Nautilus.Core.Types
 
         /// <summary>
         /// Gets the message type.
+        /// </summary>
+        public string MessageType { get; }
+
+        /// <summary>
+        /// Gets the message class type.
         /// </summary>
         public Type Type { get; }
 

@@ -19,7 +19,7 @@ namespace Nautilus.Execution.Network
     /// Provides a command server which deserializes command messages and forwards them to the
     /// specified receiver endpoint.
     /// </summary>
-    public sealed class CommandServer : MessageServer<Command, Response>
+    public sealed class CommandServer : MessageServer
     {
         private readonly IEndpoint commandRouter;
 
@@ -27,31 +27,33 @@ namespace Nautilus.Execution.Network
         /// Initializes a new instance of the <see cref="CommandServer"/> class.
         /// </summary>
         /// <param name="container">The component setup container.</param>
-        /// <param name="inboundSerializer">The inbound message serializer.</param>
-        /// <param name="outboundSerializer">The outbound message serializer.</param>
+        /// <param name="requestSerializer">The request serializer.</param>
+        /// <param name="responseSerializer">The response serializer.</param>
+        /// <param name="commandSerializer">The command serializer.</param>
         /// <param name="compressor">The message compressor.</param>
         /// <param name="commandRouter">The command router endpoint.</param>
         /// <param name="encryption">The encryption configuration.</param>
         /// <param name="port">The consumers port.</param>
         public CommandServer(
             IComponentryContainer container,
-            IMessageSerializer<Command> inboundSerializer,
-            IMessageSerializer<Response> outboundSerializer,
+            IMessageSerializer<Request> requestSerializer,
+            IMessageSerializer<Response> responseSerializer,
+            IMessageSerializer<Command> commandSerializer,
             ICompressor compressor,
             IEndpoint commandRouter,
             EncryptionSettings encryption,
             Port port)
             : base(
                 container,
-                inboundSerializer,
-                outboundSerializer,
+                requestSerializer,
+                responseSerializer,
                 compressor,
                 encryption,
-                Nautilus.Network.NetworkAddress.LocalHost,
-                port)
+                ZmqNetworkAddress.LocalHost(port))
         {
             this.commandRouter = commandRouter;
 
+            this.RegisterSerializer(commandSerializer);
             this.RegisterHandler<SubmitOrder>(this.OnMessage);
             this.RegisterHandler<SubmitAtomicOrder>(this.OnMessage);
             this.RegisterHandler<CancelOrder>(this.OnMessage);

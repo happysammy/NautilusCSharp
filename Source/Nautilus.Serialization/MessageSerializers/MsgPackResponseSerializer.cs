@@ -38,12 +38,12 @@ namespace Nautilus.Serialization.MessageSerializers
             switch (response)
             {
                 case Connected res:
-                    package.Add(nameof(res.ServiceName), ObjectSerializer.Serialize(res.ServiceName));
+                    package.Add(nameof(res.ServerId), ObjectSerializer.Serialize(res.ServerId));
                     package.Add(nameof(res.SessionId), ObjectSerializer.Serialize(res.SessionId));
                     package.Add(nameof(res.Message), ObjectSerializer.Serialize(res.Message));
                     break;
                 case Disconnected res:
-                    package.Add(nameof(res.ServiceName), ObjectSerializer.Serialize(res.ServiceName));
+                    package.Add(nameof(res.ServerId), ObjectSerializer.Serialize(res.ServerId));
                     package.Add(nameof(res.SessionId), ObjectSerializer.Serialize(res.SessionId));
                     package.Add(nameof(res.Message), ObjectSerializer.Serialize(res.Message));
                     break;
@@ -82,16 +82,16 @@ namespace Nautilus.Serialization.MessageSerializers
             {
                 case nameof(Connected):
                     return new Connected(
-                        ObjectDeserializer.AsString(unpacked[nameof(Connected.ServiceName)]),
                         ObjectDeserializer.AsString(unpacked[nameof(Connected.Message)]),
+                        ObjectDeserializer.AsString(unpacked[nameof(Connected.ServerId)]),
                         ObjectDeserializer.AsSessionId(unpacked),
                         correlationId,
                         id,
                         timestamp);
                 case nameof(Disconnected):
                     return new Disconnected(
-                        ObjectDeserializer.AsString(unpacked[nameof(Disconnected.ServiceName)]),
                         ObjectDeserializer.AsString(unpacked[nameof(Disconnected.Message)]),
+                        ObjectDeserializer.AsString(unpacked[nameof(Disconnected.ServerId)]),
                         ObjectDeserializer.AsSessionId(unpacked),
                         correlationId,
                         id,

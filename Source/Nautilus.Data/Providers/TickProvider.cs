@@ -24,7 +24,7 @@ namespace Nautilus.Data.Providers
     /// <summary>
     /// Provides <see cref="Tick"/> data to requests.
     /// </summary>
-    public sealed class TickProvider : MessageServer<Request, Response>
+    public sealed class TickProvider : MessageServer
     {
         private readonly ITickRepositoryReadOnly repository;
         private readonly IDataSerializer<Tick> dataSerializer;
@@ -35,8 +35,8 @@ namespace Nautilus.Data.Providers
         /// <param name="container">The componentry container.</param>
         /// <param name="repository">The tick repository.</param>
         /// <param name="dataSerializer">The data serializer.</param>
-        /// <param name="inboundSerializer">The inbound message serializer.</param>
-        /// <param name="outboundSerializer">The outbound message serializer.</param>
+        /// <param name="requestSerializer">The inbound message serializer.</param>
+        /// <param name="responseSerializer">The outbound message serializer.</param>
         /// <param name="compressor">The data compressor.</param>
         /// <param name="encryption">The encryption configuration.</param>
         /// <param name="port">The port.</param>
@@ -44,19 +44,18 @@ namespace Nautilus.Data.Providers
             IComponentryContainer container,
             ITickRepositoryReadOnly repository,
             IDataSerializer<Tick> dataSerializer,
-            IMessageSerializer<Request> inboundSerializer,
-            IMessageSerializer<Response> outboundSerializer,
+            IMessageSerializer<Request> requestSerializer,
+            IMessageSerializer<Response> responseSerializer,
             ICompressor compressor,
             EncryptionSettings encryption,
             Port port)
             : base(
                 container,
-                inboundSerializer,
-                outboundSerializer,
+                requestSerializer,
+                responseSerializer,
                 compressor,
                 encryption,
-                Network.NetworkAddress.LocalHost,
-                port)
+                ZmqNetworkAddress.LocalHost(port))
         {
             this.repository = repository;
             this.dataSerializer = dataSerializer;

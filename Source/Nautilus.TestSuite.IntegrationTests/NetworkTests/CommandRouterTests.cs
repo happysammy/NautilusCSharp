@@ -8,6 +8,7 @@
 
 namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 {
+    using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
     using Nautilus.Common.Interfaces;
@@ -18,19 +19,22 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
     using Nautilus.Network.Encryption;
     using Nautilus.Serialization.MessageSerializers;
     using Nautilus.TestSuite.TestKit.Components;
+    using Nautilus.TestSuite.TestKit.Fixtures;
     using Nautilus.TestSuite.TestKit.Mocks;
+    using NetMQ;
     using NetMQ.Sockets;
     using Xunit;
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
-    public sealed class CommandRouterTests
+    public sealed class CommandRouterTests : NetMQTestBase
     {
         private readonly NetworkAddress localHost = new NetworkAddress("127.0.0.1");
         private readonly IComponentryContainer container;
         private readonly IEndpoint receiver;
 
         public CommandRouterTests(ITestOutputHelper output)
+            : base(output)
         {
             // Fixture Setup
             this.container = TestComponentryContainer.Create(output);
@@ -47,8 +51,9 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             var commandConsumer = new CommandServer(
                 this.container,
-                new MsgPackCommandSerializer(),
+                new MsgPackRequestSerializer(new MsgPackQuerySerializer()),
                 new MsgPackResponseSerializer(),
+                new MsgPackCommandSerializer(),
                 new CompressorBypass(),
                 this.receiver,
                 EncryptionSettings.None(),

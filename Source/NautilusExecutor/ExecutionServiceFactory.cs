@@ -70,18 +70,23 @@ namespace NautilusExecutor
                 messagingAdapter,
                 fixClient);
 
+            var requestSerializer = new MsgPackRequestSerializer(new MsgPackQuerySerializer());
+            var responseSerializer = new MsgPackResponseSerializer();
+            var commandSerializer = new MsgPackCommandSerializer();
+            var eventSerializer = new MsgPackEventSerializer();
+
             var connection = ConnectionMultiplexer.Connect("localhost:6379,allowAdmin=true");
             var executionDatabase = new RedisExecutionDatabase(
                 container,
                 connection,
-                new MsgPackCommandSerializer(),
-                new MsgPackEventSerializer());
+                commandSerializer,
+                eventSerializer);
 
             var compressor = CompressorFactory.Create(config.WireConfig.CompressionCodec);
 
             var eventPublisher = new EventPublisher(
                 container,
-                new MsgPackEventSerializer(),
+                eventSerializer,
                 compressor,
                 config.WireConfig.EncryptionConfig,
                 config.NetworkConfig.EventsPort);
@@ -102,13 +107,15 @@ namespace NautilusExecutor
 
             var commandServer = new CommandServer(
                 container,
-                new MsgPackCommandSerializer(),
-                new MsgPackResponseSerializer(),
+                requestSerializer,
+                responseSerializer,
+                commandSerializer,
                 compressor,
                 commandRouter.Endpoint,
                 config.WireConfig.EncryptionConfig,
                 config.NetworkConfig.CommandsPort);
 
+            // TODO: Refactor to auto generate
             var addresses = new Dictionary<Address, IEndpoint>
             {
                 { ServiceAddress.Scheduler, scheduler.Endpoint },

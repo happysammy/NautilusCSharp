@@ -9,9 +9,9 @@
 namespace Nautilus.Network
 {
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Types;
-    using Nautilus.DomainModel.Identifiers;
     using NodaTime;
 
     /// <summary>
@@ -32,11 +32,12 @@ namespace Nautilus.Network
         /// <summary>
         /// Initializes a new instance of the <see cref="SessionId"/> class.
         /// </summary>
-        /// <param name="traderId">The session identifiers trader id.</param>
+        /// <param name="clientId">The client identifier.</param>
         /// <param name="dateTime">The date time the session was established.</param>
-        public SessionId(TraderId traderId, ZonedDateTime dateTime)
-         : this($"{traderId.Value}-{dateTime.Date.ToIso8601String()}-{dateTime.TickOfDay}")
+        public SessionId(string clientId, ZonedDateTime dateTime)
+         : this($"{clientId}-{dateTime.Date.ToIso8601String()}-{dateTime.TickOfDay}")
         {
+            Condition.NotEmptyOrWhiteSpace(clientId, nameof(clientId));
         }
 
         /// <summary>

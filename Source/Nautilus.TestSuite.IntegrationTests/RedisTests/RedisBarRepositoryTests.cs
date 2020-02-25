@@ -21,6 +21,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     using Nautilus.Serialization.DataSerializers;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.Components;
+    using Nautilus.TestSuite.TestKit.Fixtures;
     using Nautilus.TestSuite.TestKit.Stubs;
     using NodaTime;
     using StackExchange.Redis;

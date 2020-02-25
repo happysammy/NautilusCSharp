@@ -1,39 +1,36 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="MockMessageServer.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="MessageServerFacade.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2020 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  https://nautechsystems.io
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.TestKit.Mocks
+namespace Nautilus.TestSuite.TestKit.Facades
 {
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Message;
     using Nautilus.Data.Messages.Requests;
     using Nautilus.Network;
-    using Nautilus.Network.Compression;
     using Nautilus.Network.Encryption;
     using Nautilus.Serialization.MessageSerializers;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
-    public sealed class MockMessageServer : MessageServer<Request, Response>
+    public sealed class MessageServerFacade : MessageServer
     {
-        public MockMessageServer(
+        public MessageServerFacade(
             IComponentryContainer container,
+            ICompressor compressor,
             EncryptionSettings encryption,
-            NetworkAddress host,
-            Port port)
+            ZmqNetworkAddress address)
             : base(
                 container,
                 new MsgPackRequestSerializer(new MsgPackQuerySerializer()),
                 new MsgPackResponseSerializer(),
-                new CompressorBypass(),
+                compressor,
                 encryption,
-                host,
-                port)
+                address)
         {
             this.ReceivedMessages = new List<DataRequest>();
 

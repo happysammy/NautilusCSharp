@@ -31,6 +31,7 @@ namespace Nautilus.Core.Message
             Guid id,
             ZonedDateTime timestamp)
             : base(
+                nameof(Command),
                 type,
                 id,
                 timestamp)

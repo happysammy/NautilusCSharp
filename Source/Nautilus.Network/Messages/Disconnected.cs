@@ -23,15 +23,15 @@ namespace Nautilus.Network.Messages
         /// <summary>
         /// Initializes a new instance of the <see cref="Disconnected"/> class.
         /// </summary>
-        /// <param name="serviceName">The service name.</param>
-        /// <param name="sessionId">The disconnected session identifier.</param>
         /// <param name="message">The disconnected message.</param>
+        /// <param name="serverId">The server identifier.</param>
+        /// <param name="sessionId">The disconnected session identifier.</param>
         /// <param name="correlationId">The response correlation identifier.</param>
         /// <param name="id">The response identifier.</param>
         /// <param name="timestamp">The response timestamp.</param>
         public Disconnected(
-            string serviceName,
             string message,
+            string serverId,
             SessionId sessionId,
             Guid correlationId,
             Guid id,
@@ -42,25 +42,25 @@ namespace Nautilus.Network.Messages
                 id,
                 timestamp)
         {
-            Debug.NotEmptyOrWhiteSpace(serviceName, nameof(serviceName));
             Debug.NotEmptyOrWhiteSpace(message, nameof(message));
+            Debug.NotEmptyOrWhiteSpace(serverId, nameof(serverId));
             Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
-            this.ServiceName = serviceName;
             this.Message = message;
+            this.ServerId = serverId;
             this.SessionId = sessionId;
         }
-
-        /// <summary>
-        /// Gets the responses service name.
-        /// </summary>
-        public string ServiceName { get; }
 
         /// <summary>
         /// Gets the responses message.
         /// </summary>
         public string Message { get; }
+
+        /// <summary>
+        /// Gets the responses service name.
+        /// </summary>
+        public string ServerId { get; }
 
         /// <summary>
         /// Gets the responses session identifier.

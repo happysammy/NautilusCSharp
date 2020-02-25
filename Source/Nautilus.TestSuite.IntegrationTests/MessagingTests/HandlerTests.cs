@@ -13,6 +13,7 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Messaging.Internal;
     using Nautilus.TestSuite.TestKit;
+    using Nautilus.TestSuite.TestKit.Fixtures;
     using Xunit;
     using Xunit.Abstractions;
 

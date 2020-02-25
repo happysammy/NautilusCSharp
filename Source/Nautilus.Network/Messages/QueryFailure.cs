@@ -23,12 +23,12 @@ namespace Nautilus.Network.Messages
         /// <summary>
         /// Initializes a new instance of the <see cref="QueryFailure"/> class.
         /// </summary>
-        /// <param name="failureMessage">The query failure message.</param>
+        /// <param name="message">The query failure message.</param>
         /// <param name="correlationId">The response correlation identifier.</param>
         /// <param name="id">The response identifier.</param>
         /// <param name="timestamp">The response timestamp.</param>
         public QueryFailure(
-            string failureMessage,
+            string message,
             Guid correlationId,
             Guid id,
             ZonedDateTime timestamp)
@@ -38,11 +38,11 @@ namespace Nautilus.Network.Messages
                 id,
                 timestamp)
         {
-            Debug.NotEmptyOrWhiteSpace(failureMessage, nameof(failureMessage));
+            Debug.NotEmptyOrWhiteSpace(message, nameof(message));
             Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
-            this.Message = failureMessage;
+            this.Message = message;
         }
 
         /// <summary>

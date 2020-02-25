@@ -17,6 +17,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Serialization.MessageSerializers;
     using Nautilus.TestSuite.TestKit;
+    using Nautilus.TestSuite.TestKit.Fixtures;
     using Nautilus.TestSuite.TestKit.Stubs;
     using NodaTime;
     using Xunit;

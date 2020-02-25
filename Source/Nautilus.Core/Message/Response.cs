@@ -33,6 +33,7 @@ namespace Nautilus.Core.Message
             Guid id,
             ZonedDateTime timestamp)
             : base(
+                nameof(Response),
                 type,
                 id,
                 timestamp)

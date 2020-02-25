@@ -11,10 +11,8 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
     using System;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core.Extensions;
-    using Nautilus.Core.Message;
     using Nautilus.Core.Types;
     using Nautilus.Messaging;
-    using Nautilus.Network;
     using Xunit;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
@@ -49,12 +47,12 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
         {
             // Arrange
             // Act
-            var result1 = typeof(MessageServer<Request, Response>).Name;
-            var result2 = typeof(MessageServer<Request, Response>).NameFormatted();
+            var result1 = typeof(Func<int, int, string>).Name;
+            var result2 = typeof(Func<int, int, string>).NameFormatted();
 
             // Assert
-            Assert.Equal("MessageServer`2", result1);
-            Assert.Equal("MessageServer<Request,Response>", result2);
+            Assert.Equal("Func`3", result1);
+            Assert.Equal("Func<Int32,Int32,String>", result2);
         }
     }
 }

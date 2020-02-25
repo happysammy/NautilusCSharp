@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.TestKit
+namespace Nautilus.TestSuite.TestKit.Performance
 {
     using System;
     using System.Collections.Generic;

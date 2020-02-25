@@ -68,7 +68,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.TypesTests
         private sealed class TestMessage : Message
         {
             public TestMessage(Guid id, ZonedDateTime timestamp)
-                : base(typeof(TestMessage), id, timestamp)
+                : base(nameof(Message), typeof(TestMessage), id, timestamp)
             {
             }
         }

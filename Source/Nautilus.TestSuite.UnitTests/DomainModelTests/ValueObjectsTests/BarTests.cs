@@ -11,6 +11,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit;
+    using Nautilus.TestSuite.TestKit.Fixtures;
     using Nautilus.TestSuite.TestKit.Stubs;
     using NodaTime;
     using Xunit;

@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="MessageServer{TInbound,TOutbound}.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="MessageServer.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2020 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   https://nautechsystems.io
@@ -23,7 +23,6 @@ namespace Nautilus.Network
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core.Message;
     using Nautilus.Core.Types;
-    using Nautilus.DomainModel.Identifiers;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Network.Encryption;
@@ -34,45 +33,41 @@ namespace Nautilus.Network
     /// <summary>
     /// The base class for all messaging servers.
     /// </summary>
-    /// <typeparam name="TInbound">The inbound message type.</typeparam>
-    /// <typeparam name="TOutbound">The outbound response type.</typeparam>
-    public abstract class MessageServer<TInbound, TOutbound> : MessagingComponent, IDisposable
-        where TInbound : Message
-        where TOutbound : Response
+    public abstract class MessageServer : MessagingComponent, IDisposable
     {
-        private const int ExpectedFrameCount = 4;
+        private const int ExpectedFrameCount = 4; // Version 1.0
 
-        private readonly IMessageSerializer<TInbound> inboundSerializer;
-        private readonly IMessageSerializer<TOutbound> outboundSerializer;
+        private readonly IMessageSerializer<Request> requestSerializer;
+        private readonly IMessageSerializer<Response> responseSerializer;
         private readonly ICompressor compressor;
-        private readonly CancellationTokenSource cts;
         private readonly RouterSocket socket;
-        private readonly ConcurrentDictionary<TraderId, SessionId> peers;
+        private readonly ConcurrentDictionary<string, SessionId> peers;
         private readonly ConcurrentDictionary<Guid, Address> correlationIndex;
-        private readonly byte[] delimiter = { };
+        private readonly CancellationTokenSource cts;
+
+        // TODO: Temporary hack
+        private IMessageSerializer<Command>? commandSerializer;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MessageServer{TInbound, TOutbound}"/> class.
+        /// Initializes a new instance of the <see cref="MessageServer"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
-        /// <param name="inboundSerializer">The inbound message serializer.</param>
-        /// <param name="outboundSerializer">The outbound message serializer.</param>
+        /// <param name="requestSerializer">The request serializer.</param>
+        /// <param name="responseSerializer">The response serializer.</param>
         /// <param name="compressor">The message compressor.</param>
         /// <param name="encryption">The encryption configuration.</param>
-        /// <param name="host">The consumer host address.</param>
-        /// <param name="port">The consumer port.</param>
+        /// <param name="networkAddress">The zmq network address.</param>
         protected MessageServer(
             IComponentryContainer container,
-            IMessageSerializer<TInbound> inboundSerializer,
-            IMessageSerializer<TOutbound> outboundSerializer,
+            IMessageSerializer<Request> requestSerializer,
+            IMessageSerializer<Response> responseSerializer,
             ICompressor compressor,
             EncryptionSettings encryption,
-            NetworkAddress host,
-            Port port)
+            ZmqNetworkAddress networkAddress)
             : base(container)
         {
-            this.inboundSerializer = inboundSerializer;
-            this.outboundSerializer = outboundSerializer;
+            this.requestSerializer = requestSerializer;
+            this.responseSerializer = responseSerializer;
             this.compressor = compressor;
 
             this.cts = new CancellationTokenSource();
@@ -80,15 +75,16 @@ namespace Nautilus.Network
             {
                 Options =
                 {
-                    Identity = Encoding.Unicode.GetBytes($"{nameof(Nautilus)}-{this.Name.Value}"),
+                    Identity = Encoding.UTF8.GetBytes($"{nameof(Nautilus)}-{this.Name.Value}"),
                     Linger = TimeSpan.FromSeconds(1),
+                    RouterMandatory = true,
                 },
             };
 
-            this.peers = new ConcurrentDictionary<TraderId, SessionId>();
+            this.peers = new ConcurrentDictionary<string, SessionId>();
             this.correlationIndex = new ConcurrentDictionary<Guid, Address>();
 
-            this.NetworkAddress = new ZmqNetworkAddress(host, port);
+            this.NetworkAddress = networkAddress;
 
             if (encryption.UseEncryption)
             {
@@ -150,13 +146,31 @@ namespace Nautilus.Network
             this.Logger.LogInformation(LogId.Operation, "Disposed.");
         }
 
+        /// <summary>
+        /// Register the given serializer to deserialize inbound messages of type T.
+        /// </summary>
+        /// <param name="serializer">The serializer.</param>
+        /// <typeparam name="T">The type of message.</typeparam>
+        protected void RegisterSerializer<T>(IMessageSerializer<T> serializer)
+            where T : Message
+        {
+            if (typeof(T).Name == nameof(Command))
+            {
+                this.commandSerializer = serializer as IMessageSerializer<Command>;
+            }
+            else
+            {
+                throw new InvalidOperationException("Only Command serializers supported.");
+            }
+        }
+
         /// <inheritdoc />
         protected override void OnStart(Start start)
         {
             this.socket.Bind(this.NetworkAddress.Value);
-            this.Logger.LogInformation(
-                LogId.Networking,
-                $"Bound {this.socket.GetType().Name} to {this.NetworkAddress}");
+
+            var logMsg = $"Bound {this.socket.GetType().Name} to {this.NetworkAddress}";
+            this.Logger.LogInformation(LogId.Networking, logMsg);
 
             Task.Run(this.StartWork, this.cts.Token);
         }
@@ -172,9 +186,9 @@ namespace Nautilus.Network
             }
 
             this.socket.Unbind(this.NetworkAddress.Value);
-            this.Logger.LogInformation(
-                LogId.Networking,
-                $"Unbound {this.socket.GetType().Name} from {this.NetworkAddress}");
+
+            var logMsg = $"Unbound {this.socket.GetType().Name} from {this.NetworkAddress}";
+            this.Logger.LogInformation(LogId.Networking, logMsg);
         }
 
         /// <summary>
@@ -187,13 +201,7 @@ namespace Nautilus.Network
                 receivedMessage.Type.Name,
                 receivedMessage.Id,
                 Guid.NewGuid(),
-                this.TimeNow()) as TOutbound;
-
-            // Exists to avoid warning CS8604 (this should never happen anyway due to generic type constraints)
-            if (received is null)
-            {
-                throw new InvalidOperationException($"The message was not of type {typeof(TOutbound)}.");
-            }
+                this.TimeNow());
 
             this.SendMessage(received, receivedMessage.Id);
         }
@@ -209,13 +217,7 @@ namespace Nautilus.Network
                 failureMessage,
                 correlationId,
                 Guid.NewGuid(),
-                this.TimeNow()) as TOutbound;
-
-            // Exists to avoid warning CS8604 (this should never happen anyway due to generic type constraints)
-            if (failure is null)
-            {
-                throw new InvalidOperationException($"The message was not of type {typeof(TOutbound)}.");
-            }
+                this.TimeNow());
 
             this.SendMessage(failure, correlationId);
         }
@@ -225,7 +227,7 @@ namespace Nautilus.Network
         /// </summary>
         /// <param name="outbound">The outbound message to send.</param>
         /// <param name="correlationId">The correlation identifier for the receiver address.</param>
-        protected void SendMessage(TOutbound outbound, Guid correlationId)
+        protected void SendMessage(Response outbound, Guid correlationId)
         {
             if (this.correlationIndex.Remove(correlationId, out var receiver))
             {
@@ -262,10 +264,23 @@ namespace Nautilus.Network
 
         private void ReceiveMessage()
         {
-            var frames = this.socket.ReceiveMultipartBytes();
+            List<byte[]> frames;
+            try
+            {
+                frames = this.socket.ReceiveMultipartBytes();
+            }
+            catch (Exception ex)
+            {
+                // Interaction with NetMQ
+                this.Logger.LogError(LogId.Networking, ex.Message, ex);
+                return;
+            }
+            finally
+            {
+                this.CountReceived++;
+            }
 
-            this.CountReceived++;
-            this.LogFrames(frames);
+            this.LogFrames(frames.Count);
 
             // Check for expected frames
             if (frames.Count != ExpectedFrameCount)
@@ -277,48 +292,72 @@ namespace Nautilus.Network
 
             // Deconstruct message
             // msg[0] reply address
-            // msg[1] should be empty byte array delimiter
-            // msg[2] length header
+            // msg[1] header: payload message type
+            // msg[2] header: payload uncompressed size
             // msg[3] payload
             var headerSender = frames[0];
-            var headerLength = frames[2];
+            var headerType = frames[1];
+            var headerSize = frames[2];
             var payload = frames[3];
+
+            // Get sender address
+            Address sender;
+            try
+            {
+                sender = new Address(headerSender, Encoding.UTF8.GetString);
+            }
+            catch (ArgumentException)
+            {
+                var errorMsg = "Message sender address was malformed.";
+                this.Reject(frames, errorMsg);
+                return;
+            }
+
+            // Get message type
+            string type;
+            try
+            {
+                type = Encoding.UTF8.GetString(headerType);
+            }
+            catch (ArgumentException)
+            {
+                var errorMsg = "Message type header was malformed.";
+                this.SendRejected(errorMsg, sender);
+                return;
+            }
+
+            // Get expected uncompressed size
+            long size;
+            try
+            {
+                size = BitConverter.ToInt64(headerSize);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                var errorMsg = "Message size header was malformed.";
+                this.SendRejected(errorMsg, sender);
+                return;
+            }
+
+            this.LogSizes(size, payload.Length);
 
             // Check there is a message payload
             if (payload.Length == 0)
             {
                 var errorMsg = "Message payload was empty.";
-                this.Reject(frames, errorMsg);
+                this.SendRejected(errorMsg, sender);
                 return;
             }
-
-            // Get expected decompressed length
-            uint length;
-            try
-            {
-                length = BitConverter.ToUInt32(headerLength);
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-                var errorMsg = "Message length checksum was malformed.";
-                this.Reject(frames, errorMsg);
-                return;
-            }
-
-            this.LogSizes(length, (uint)payload.Length);
 
             // Decompress message
             var decompressed = this.compressor.Decompress(payload);
-            if (decompressed.Length != length)
+            if (decompressed.Length != size)
             {
-                var errorMsg = $"Message decompressed length checksum was not equal to {length}, " +
-                               $"was {decompressed.Length}.";
-                this.Reject(frames, errorMsg);
+                var errorMsg = $"Message decompressed size {decompressed.Length} != header size {size}.";
+                this.SendRejected(errorMsg, sender);
             }
 
-            // Deserialize message
-            var sender = new Address(headerSender, Encoding.ASCII.GetString);
-            this.DeserializeMessage(decompressed, length, sender);
+            this.HandleMessage(type, decompressed, sender);
         }
 
         private void Reject(List<byte[]> frames, string errorMsg)
@@ -331,27 +370,36 @@ namespace Nautilus.Network
                 return;
             }
 
-            this.SendRejected(errorMsg, new Address(frames[0], Encoding.ASCII.GetString));
+            var receiver = new Address(frames[0], Encoding.UTF8.GetString);
+            this.SendRejected(errorMsg, receiver);
         }
 
-        private void DeserializeMessage(byte[] payload, uint length, Address sender)
+        private void HandleMessage(string type, byte[] payload, Address sender)
+        {
+            switch (type)
+            {
+                case nameof(Request):
+                    this.HandleRequest(payload, sender);
+                    break;
+                case nameof(Command) when this.commandSerializer != null:
+                    this.HandleCommand(payload, sender, this.commandSerializer);
+                    break;
+                default:
+                {
+                    var errorMessage = $"Message type '{type}' is not valid at this address {this.NetworkAddress}.";
+                    this.SendRejected(errorMessage, sender);
+                    break;
+                }
+            }
+        }
+
+        private void HandleRequest(byte[] payload, Address sender)
         {
             try
             {
-                // length reserved for LZ4 implementation
-                var received = this.inboundSerializer.Deserialize(payload);
-                this.correlationIndex[received.Id] = sender;
-
-                if (!received.Type.IsSubclassOf(typeof(TInbound)) && received.Type != typeof(TInbound))
-                {
-                    var errorMessage = $"Message type {received.Type} not valid at this address {this.NetworkAddress}.";
-                    this.SendRejected(errorMessage, sender);
-                    return;
-                }
-
-                this.LogReceived(received);
-
-                switch (received)
+                var message = this.requestSerializer.Deserialize(payload);
+                this.correlationIndex[message.Id] = sender;
+                switch (message)
                 {
                     case Connect connect:
                         this.HandleConnection(connect, sender);
@@ -359,9 +407,28 @@ namespace Nautilus.Network
                     case Disconnect disconnect:
                         this.HandleDisconnection(disconnect, sender);
                         return;
+                    default:
+                        this.SendToSelf(message);
+                        break;
                 }
+            }
+            catch (Exception ex)
+            {
+                var errorMessage = $"Unable to deserialize message due {ex.GetType().Name}, {ex.Message}";
+                this.SendRejected(errorMessage, sender);
+            }
+        }
 
-                this.SendToSelf(received);
+        private void HandleCommand(byte[] payload, Address sender, IMessageSerializer<Command> serializer)
+        {
+            try
+            {
+                var message = serializer.Deserialize(payload);
+
+                this.correlationIndex[message.Id] = sender;
+                this.LogReceived(message.ToString());
+
+                this.SendToSelf(message);
             }
             catch (Exception ex)
             {
@@ -372,72 +439,60 @@ namespace Nautilus.Network
 
         private void HandleConnection(Connect connect, Address sender)
         {
-            var sessionId = this.peers.GetValueOrDefault(connect.TraderId);
+            var sessionId = this.peers.GetValueOrDefault(connect.ClientId);
             string message;
             if (sessionId is null)
             {
                 // Peer not previously connected to a session
-                sessionId = new SessionId(connect.TraderId, this.TimeNow());
-                this.peers.TryAdd(connect.TraderId, sessionId);
-                message = $"Connected to session {sessionId.Value} at {this.NetworkAddress}";
+                sessionId = new SessionId(connect.ClientId, this.TimeNow());
+                this.peers.TryAdd(connect.ClientId, sessionId);
+                message = $"{sender.StringValue} connected to session {sessionId.Value} at {this.NetworkAddress}";
                 this.Logger.LogInformation(LogId.Networking, message);
             }
             else
             {
                 // Peer already connected to a session
-                message = $"Already connected to session {sessionId.Value} at {this.NetworkAddress}";
+                message = $"{sender.StringValue} already connected to session {sessionId.Value} at {this.NetworkAddress}";
                 this.Logger.LogWarning(LogId.Networking, message);
             }
 
             var connected = new Connected(
-                this.Name.Value,
                 message,
+                this.Name.Value,
                 sessionId,
                 connect.Id,
                 this.NewGuid(),
-                this.TimeNow()) as TOutbound;
-
-            // Exists to avoid warning CS8604 (this should never happen anyway due to generic type constraints)
-            if (connected is null)
-            {
-                throw new InvalidOperationException($"The message was not of type {typeof(TOutbound)}.");
-            }
+                this.TimeNow());
 
             this.SendMessage(connected, sender);
         }
 
         private void HandleDisconnection(Disconnect disconnect, Address sender)
         {
-            var sessionId = this.peers.GetValueOrDefault(disconnect.TraderId);
+            var sessionId = this.peers.GetValueOrDefault(disconnect.ClientId);
             string message;
             if (sessionId is null)
             {
                 // Peer not previously connected to a session
-                message = $"No session to disconnect at {this.NetworkAddress}.";
+                message = $"{sender.StringValue} has no session to disconnect at {this.NetworkAddress}.";
                 sessionId = SessionId.None();
                 this.Logger.LogWarning(LogId.Networking, message);
             }
             else
             {
                 // Peer connected to a session
-                this.peers.TryRemove(disconnect.TraderId, out var _); // Pop from dictionary
-                message = $"Disconnected from session {sessionId.Value} at {this.NetworkAddress}";
+                this.peers.TryRemove(disconnect.ClientId, out var _); // Pop from dictionary
+                message = $"{sender.StringValue} disconnected from session {sessionId.Value} at {this.NetworkAddress}";
                 this.Logger.LogInformation(LogId.Networking, message);
             }
 
             var disconnected = new Disconnected(
-                this.Name.Value,
                 message,
+                this.Name.Value,
                 sessionId,
                 disconnect.Id,
                 this.NewGuid(),
-                this.TimeNow()) as TOutbound;
-
-            // Exists to avoid warning CS8604 (this should never happen anyway due to generic type constraints)
-            if (disconnected is null)
-            {
-                throw new InvalidOperationException($"The message was not of type {typeof(TOutbound)}.");
-            }
+                this.TimeNow());
 
             this.SendMessage(disconnected, sender);
         }
@@ -448,56 +503,59 @@ namespace Nautilus.Network
                 rejectedMessage,
                 Guid.Empty,
                 Guid.NewGuid(),
-                this.TimeNow()) as TOutbound;
-
-            // Exists to avoid warning CS8604 (this should never happen anyway due to generic type constraints)
-            if (rejected is null)
-            {
-                throw new InvalidOperationException($"The message was not of type {typeof(TOutbound)}.");
-            }
+                this.TimeNow());
 
             this.SendMessage(rejected, receiver);
             this.Logger.LogWarning(LogId.Networking, rejectedMessage);
         }
 
-        private void SendMessage(TOutbound outbound, Address receiver)
+        private void SendMessage(Response outbound, Address receiver)
         {
-            var serialized = this.outboundSerializer.Serialize(outbound);
-            var length = BitConverter.GetBytes((uint)serialized.Length);
-            var payload = this.compressor.Compress(serialized);
+            try
+            {
+                var serialized = this.responseSerializer.Serialize(outbound);
+                var type = Encoding.UTF8.GetBytes(outbound.Type.Name);
+                var size = BitConverter.GetBytes((long)serialized.Length);
+                var payload = this.compressor.Compress(serialized);
 
-            this.socket.SendMultipartBytes(
-                receiver.BytesValue,
-                this.delimiter,
-                length,
-                payload);
+                this.socket.SendMultipartBytes(
+                    receiver.BytesValue,
+                    type,
+                    size,
+                    payload);
 
-            this.CountSent++;
-            this.LogSent(outbound, receiver);
+                this.CountSent++;
+                this.LogSent(outbound.ToString(), receiver.StringValue);
+            }
+            catch (Exception ex)
+            {
+                // Interaction with NetMQ
+                this.Logger.LogError(LogId.Networking, ex.Message, ex);
+            }
         }
 
         [Conditional("DEBUG")]
-        private void LogFrames(List<byte[]> frames)
+        private void LogFrames(int framesCount)
         {
-            this.Logger.LogTrace(LogId.Networking, $"<--[{this.CountReceived}] Received {frames.Count} byte[] frames.");
+            this.Logger.LogTrace(LogId.Networking, $"<--[{this.CountReceived}] Received {framesCount} byte[] frames.");
         }
 
         [Conditional("DEBUG")]
-        private void LogReceived(TInbound message)
+        private void LogReceived(string message)
         {
             this.Logger.LogTrace(LogId.Networking, $"<--[{this.CountReceived}] Received {message}");
         }
 
         [Conditional("DEBUG")]
-        private void LogSizes(uint headerLength, uint compressedLength)
+        private void LogSizes(long headerLength, long compressedLength)
         {
             this.Logger.LogTrace(LogId.Networking, $"HeaderLength={headerLength:N0} bytes, Compressed={compressedLength:N0} bytes");
         }
 
         [Conditional("DEBUG")]
-        private void LogSent(TOutbound outbound, Address receiver)
+        private void LogSent(string outbound, string receiver)
         {
-            this.Logger.LogTrace(LogId.Networking, $"[{this.CountSent}]--> {outbound} to Address({receiver}).");
+            this.Logger.LogTrace(LogId.Networking, $"[{this.CountSent}]--> {outbound} to {receiver}.");
         }
     }
 }

@@ -65,12 +65,17 @@ namespace NautilusData
             var dataBusAdapter = DataBusFactory.Create(container);
             dataBusAdapter.Start();
 
+            var tickDataSerializer = new TickDataSerializer();
+            var barDataSerializer = new BarDataSerializer();
+            var instrumentDataSerializer = new InstrumentDataSerializer();
+            var requestSerializer = new MsgPackRequestSerializer(new MsgPackQuerySerializer());
+            var responseSerializer = new MsgPackResponseSerializer();
             var compressor = CompressorFactory.Create(config.WireConfig.CompressionCodec);
 
             var tickPublisher = new TickPublisher(
                 container,
                 dataBusAdapter,
-                new TickDataSerializer(),
+                tickDataSerializer,
                 compressor,
                 config.WireConfig.EncryptionConfig,
                 config.NetworkConfig.TickPublisherPort);
@@ -78,7 +83,7 @@ namespace NautilusData
             var barPublisher = new BarPublisher(
                 container,
                 dataBusAdapter,
-                new BarDataSerializer(),
+                barDataSerializer,
                 compressor,
                 config.WireConfig.EncryptionConfig,
                 config.NetworkConfig.BarPublisherPort);
@@ -86,7 +91,7 @@ namespace NautilusData
             var instrumentPublisher = new InstrumentPublisher(
                 container,
                 dataBusAdapter,
-                new InstrumentDataSerializer(),
+                instrumentDataSerializer,
                 compressor,
                 config.WireConfig.EncryptionConfig,
                 config.NetworkConfig.InstrumentPublisherPort);
@@ -107,19 +112,19 @@ namespace NautilusData
             var tickRepository = new RedisTickRepository(
                 container,
                 dataBusAdapter,
-                new TickDataSerializer(),
+                tickDataSerializer,
                 connection);
 
             var barRepository = new RedisBarRepository(
                 container,
                 dataBusAdapter,
-                new BarDataSerializer(),
+                barDataSerializer,
                 connection);
 
             var instrumentRepository = new RedisInstrumentRepository(
                 container,
                 dataBusAdapter,
-                new InstrumentDataSerializer(),
+                instrumentDataSerializer,
                 connection);
             instrumentRepository.CacheAll();
 
@@ -131,9 +136,9 @@ namespace NautilusData
             var tickProvider = new TickProvider(
                 container,
                 tickRepository,
-                new TickDataSerializer(),
-                new MsgPackRequestSerializer(new MsgPackQuerySerializer()),
-                new MsgPackResponseSerializer(),
+                tickDataSerializer,
+                requestSerializer,
+                responseSerializer,
                 compressor,
                 config.WireConfig.EncryptionConfig,
                 config.NetworkConfig.TickRouterPort);
@@ -141,9 +146,9 @@ namespace NautilusData
             var barProvider = new BarProvider(
                 container,
                 barRepository,
-                new BarDataSerializer(),
-                new MsgPackRequestSerializer(new MsgPackQuerySerializer()),
-                new MsgPackResponseSerializer(),
+                barDataSerializer,
+                requestSerializer,
+                responseSerializer,
                 compressor,
                 config.WireConfig.EncryptionConfig,
                 config.NetworkConfig.BarRouterPort);
@@ -151,13 +156,14 @@ namespace NautilusData
             var instrumentProvider = new InstrumentProvider(
                 container,
                 instrumentRepository,
-                new InstrumentDataSerializer(),
-                new MsgPackRequestSerializer(new MsgPackQuerySerializer()),
-                new MsgPackResponseSerializer(),
+                instrumentDataSerializer,
+                requestSerializer,
+                responseSerializer,
                 compressor,
                 config.WireConfig.EncryptionConfig,
                 config.NetworkConfig.InstrumentRouterPort);
 
+            // TODO: Refactor to auto generate
             var addresses = new Dictionary<Address, IEndpoint>
             {
                 { ServiceAddress.Scheduler, scheduler.Endpoint },

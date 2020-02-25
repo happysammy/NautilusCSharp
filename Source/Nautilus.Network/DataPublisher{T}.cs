@@ -58,7 +58,7 @@ namespace Nautilus.Network
             {
                 Options =
                 {
-                    Identity = Encoding.Unicode.GetBytes($"{nameof(Nautilus)}-{this.Name.Value}"),
+                    Identity = Encoding.UTF8.GetBytes($"{nameof(Nautilus)}-{this.Name.Value}"),
                     Linger = TimeSpan.FromSeconds(1),
                 },
             };
@@ -128,9 +128,9 @@ namespace Nautilus.Network
         protected void Publish(string topic, T message)
         {
             var serialized = this.serializer.Serialize(message);
-            var length = BitConverter.GetBytes((uint)serialized.Length);
+            var size = BitConverter.GetBytes(serialized.Length);
             var payload = this.compressor.Compress(serialized);
-            this.socket.SendMultipartBytes(Encoding.UTF8.GetBytes(topic), length, payload);
+            this.socket.SendMultipartBytes(Encoding.UTF8.GetBytes(topic), size, payload);
 
             this.CountPublished++;
             this.LogPublished(topic, message, serialized.Length, payload.Length);

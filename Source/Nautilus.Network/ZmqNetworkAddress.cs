@@ -44,6 +44,26 @@ namespace Nautilus.Network
         public string Value { get; }
 
         /// <summary>
+        /// Returns a <see cref="ZmqNetworkAddress"/> for local host at the given port.
+        /// </summary>
+        /// <param name="port">The port number.</param>
+        /// <returns>The network address.</returns>
+        public static ZmqNetworkAddress LocalHost(int port)
+        {
+            return new ZmqNetworkAddress(NetworkAddress.LocalHost, new Port(port));
+        }
+
+        /// <summary>
+        /// Returns a <see cref="ZmqNetworkAddress"/> for local host at the given port.
+        /// </summary>
+        /// <param name="port">The port.</param>
+        /// <returns>The network address.</returns>
+        public static ZmqNetworkAddress LocalHost(Port port)
+        {
+            return new ZmqNetworkAddress(NetworkAddress.LocalHost, port);
+        }
+
+        /// <summary>
         /// Returns a string representation of this <see cref="ZmqNetworkAddress"/>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>

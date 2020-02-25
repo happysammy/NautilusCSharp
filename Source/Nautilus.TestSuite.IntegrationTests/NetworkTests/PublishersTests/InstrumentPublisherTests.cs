@@ -20,8 +20,8 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
     using Nautilus.Network.Compression;
     using Nautilus.Network.Encryption;
     using Nautilus.Serialization.DataSerializers;
-    using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.Components;
+    using Nautilus.TestSuite.TestKit.Fixtures;
     using Nautilus.TestSuite.TestKit.Stubs;
     using NetMQ;
     using NetMQ.Sockets;
@@ -29,7 +29,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
-    public sealed class InstrumentPublisherTests : TestBase
+    public sealed class InstrumentPublisherTests : NetMQTestBase
     {
         private const string TestAddress = "tcp://localhost:55512";
         private readonly IDataSerializer<Instrument> serializer;

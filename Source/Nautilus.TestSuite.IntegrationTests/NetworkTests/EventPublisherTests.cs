@@ -8,6 +8,7 @@
 
 namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 {
+    using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
     using System.Threading.Tasks;
@@ -20,8 +21,8 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
     using Nautilus.Network.Compression;
     using Nautilus.Network.Encryption;
     using Nautilus.Serialization.MessageSerializers;
-    using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.Components;
+    using Nautilus.TestSuite.TestKit.Fixtures;
     using Nautilus.TestSuite.TestKit.Mocks;
     using Nautilus.TestSuite.TestKit.Stubs;
     using NetMQ;
@@ -30,7 +31,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
-    public sealed class EventPublisherTests : TestBase
+    public sealed class EventPublisherTests : NetMQTestBase
     {
         private readonly NetworkAddress localHost = new NetworkAddress("127.0.0.1");
         private readonly IComponentryContainer container;

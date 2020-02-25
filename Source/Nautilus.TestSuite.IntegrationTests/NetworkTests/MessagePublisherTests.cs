@@ -8,6 +8,7 @@
 
 namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 {
+    using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
     using Nautilus.Common.Data;
@@ -16,6 +17,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
     using Nautilus.Network;
     using Nautilus.Network.Encryption;
     using Nautilus.TestSuite.TestKit.Components;
+    using Nautilus.TestSuite.TestKit.Fixtures;
     using Nautilus.TestSuite.TestKit.Mocks;
     using NetMQ;
     using NetMQ.Sockets;
@@ -24,12 +26,13 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
     using Encoding = System.Text.Encoding;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
-    public sealed class MessagePublisherTests
+    public sealed class MessagePublisherTests : NetMQTestBase
     {
         private const string TestTopic = "TEST";
         private readonly IComponentryContainer container;
 
         public MessagePublisherTests(ITestOutputHelper output)
+            : base(output)
         {
             // Fixture Setup
             this.container = TestComponentryContainer.Create(output);

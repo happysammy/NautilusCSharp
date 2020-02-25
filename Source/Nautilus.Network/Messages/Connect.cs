@@ -12,7 +12,6 @@ namespace Nautilus.Network.Messages
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Message;
-    using Nautilus.DomainModel.Identifiers;
     using NodaTime;
 
     /// <summary>
@@ -24,11 +23,11 @@ namespace Nautilus.Network.Messages
         /// <summary>
         /// Initializes a new instance of the <see cref="Connect"/> class.
         /// </summary>
-        /// <param name="traderId">The trader identifier.</param>
+        /// <param name="clientId">The client identifier.</param>
         /// <param name="id">The response identifier.</param>
         /// <param name="timestamp">The response timestamp.</param>
         public Connect(
-            TraderId traderId,
+            string clientId,
             Guid id,
             ZonedDateTime timestamp)
             : base(
@@ -39,12 +38,12 @@ namespace Nautilus.Network.Messages
             Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
-            this.TraderId = traderId;
+            this.ClientId = clientId;
         }
 
         /// <summary>
-        /// Gets the senders trader identifier.
+        /// Gets the senders client identifier.
         /// </summary>
-        public TraderId TraderId { get; }
+        public string ClientId { get; }
     }
 }
