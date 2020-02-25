@@ -10,7 +10,6 @@ namespace Nautilus.TestSuite.UnitTests.TestKitTests
 {
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
-    using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.Performance;
     using Xunit;
 

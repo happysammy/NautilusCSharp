@@ -8,7 +8,6 @@
 
 namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 {
-    using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
     using Nautilus.Common.Interfaces;
@@ -21,7 +20,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
     using Nautilus.TestSuite.TestKit.Components;
     using Nautilus.TestSuite.TestKit.Fixtures;
     using Nautilus.TestSuite.TestKit.Mocks;
-    using NetMQ;
     using NetMQ.Sockets;
     using Xunit;
     using Xunit.Abstractions;

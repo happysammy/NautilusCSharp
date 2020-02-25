@@ -24,10 +24,12 @@ namespace Nautilus.Network.Messages
         /// Initializes a new instance of the <see cref="Disconnect"/> class.
         /// </summary>
         /// <param name="clientId">The client identifier.</param>
+        /// <param name="sessionId">The session identifier to disconnect from.</param>
         /// <param name="id">The response identifier.</param>
         /// <param name="timestamp">The response timestamp.</param>
         public Disconnect(
             string clientId,
+            SessionId sessionId,
             Guid id,
             ZonedDateTime timestamp)
             : base(
@@ -39,11 +41,17 @@ namespace Nautilus.Network.Messages
             Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.ClientId = clientId;
+            this.SessionId = sessionId;
         }
 
         /// <summary>
-        /// Gets the senders trader identifier.
+        /// Gets the requests client identifier.
         /// </summary>
         public string ClientId { get; }
+
+        /// <summary>
+        /// Gets the requests session identifier.
+        /// </summary>
+        public SessionId SessionId { get; }
     }
 }

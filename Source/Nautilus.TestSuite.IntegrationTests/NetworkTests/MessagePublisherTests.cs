@@ -8,7 +8,6 @@
 
 namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 {
-    using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
     using Nautilus.Common.Data;

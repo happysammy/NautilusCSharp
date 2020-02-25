@@ -15,7 +15,7 @@ namespace Nautilus.Network.Messages
     using NodaTime;
 
     /// <summary>
-    /// Represents a response confirming the connection of a session.
+    /// Represents a response confirming the disconnection of a session.
     /// </summary>
     [Immutable]
     public sealed class Disconnected : Response
@@ -58,7 +58,7 @@ namespace Nautilus.Network.Messages
         public string Message { get; }
 
         /// <summary>
-        /// Gets the responses service name.
+        /// Gets the responses server identifier.
         /// </summary>
         public string ServerId { get; }
 

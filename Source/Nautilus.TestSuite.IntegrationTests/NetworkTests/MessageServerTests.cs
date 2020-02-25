@@ -273,6 +273,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             var disconnect = new Disconnect(
                 dealer.Name.Value,
+                response1.SessionId,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 

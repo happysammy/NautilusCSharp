@@ -42,7 +42,7 @@ namespace Nautilus.Network.Messages
         }
 
         /// <summary>
-        /// Gets the senders client identifier.
+        /// Gets the requests client identifier.
         /// </summary>
         public string ClientId { get; }
     }

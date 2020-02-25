@@ -50,6 +50,7 @@ namespace Nautilus.Serialization.MessageSerializers
                     break;
                 case Disconnect req:
                     package.Add(nameof(req.ClientId), ObjectSerializer.Serialize(req.ClientId));
+                    package.Add(nameof(req.SessionId), ObjectSerializer.Serialize(req.SessionId));
                     break;
                 case DataRequest req:
                     package.Add(nameof(req.Query), this.querySerializer.Serialize(req.Query));
@@ -80,6 +81,7 @@ namespace Nautilus.Serialization.MessageSerializers
                 case nameof(Disconnect):
                     return new Disconnect(
                         ObjectDeserializer.AsString(unpacked[nameof(Disconnect.ClientId)]),
+                        ObjectDeserializer.AsSessionId(unpacked),
                         id,
                         timestamp);
                 case nameof(DataRequest):

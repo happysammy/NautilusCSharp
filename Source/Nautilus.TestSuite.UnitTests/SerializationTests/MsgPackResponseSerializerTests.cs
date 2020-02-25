@@ -21,7 +21,6 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
     using Nautilus.Network.Messages;
     using Nautilus.Serialization.DataSerializers;
     using Nautilus.Serialization.MessageSerializers;
-    using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.Fixtures;
     using Nautilus.TestSuite.TestKit.Stubs;
     using NodaTime;
