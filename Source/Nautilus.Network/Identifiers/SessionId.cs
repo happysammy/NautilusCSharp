@@ -6,10 +6,9 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Network
+namespace Nautilus.Network.Identifiers
 {
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Types;
     using NodaTime;
@@ -34,10 +33,9 @@ namespace Nautilus.Network
         /// </summary>
         /// <param name="clientId">The client identifier.</param>
         /// <param name="dateTime">The date time the session was established.</param>
-        public SessionId(string clientId, ZonedDateTime dateTime)
-         : this($"{clientId}-{dateTime.Date.ToIso8601String()}-{dateTime.TickOfDay}")
+        public SessionId(ClientId clientId, ZonedDateTime dateTime)
+         : this($"{clientId.Value}-{dateTime.Date.ToIso8601String()}-{dateTime.TickOfDay}")
         {
-            Condition.NotEmptyOrWhiteSpace(clientId, nameof(clientId));
         }
 
         /// <summary>

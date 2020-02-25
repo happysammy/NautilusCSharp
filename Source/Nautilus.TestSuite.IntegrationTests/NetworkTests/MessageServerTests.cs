@@ -221,7 +221,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             dealer.Start().Wait();
 
             var connect = new Connect(
-                dealer.Name.Value,
+                dealer.ClientId,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -265,14 +265,14 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             dealer.Start().Wait();
 
             var connect = new Connect(
-                dealer.Name.Value,
+                dealer.ClientId,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             var response1 = (Connected)dealer.Send(connect);
 
             var disconnect = new Disconnect(
-                dealer.Name.Value,
+                dealer.ClientId,
                 response1.SessionId,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -329,12 +329,12 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             // Act
             var connect1 = new Connect(
-                dealer1.Name.Value,
+                dealer1.ClientId,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             var connect2 = new Connect(
-                dealer2.Name.Value,
+                dealer2.ClientId,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 

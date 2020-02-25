@@ -12,6 +12,7 @@ namespace Nautilus.Network.Messages
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Message;
+    using Nautilus.Network.Identifiers;
     using NodaTime;
 
     /// <summary>
@@ -28,7 +29,7 @@ namespace Nautilus.Network.Messages
         /// <param name="id">The response identifier.</param>
         /// <param name="timestamp">The response timestamp.</param>
         public Disconnect(
-            string clientId,
+            ClientId clientId,
             SessionId sessionId,
             Guid id,
             ZonedDateTime timestamp)
@@ -47,7 +48,7 @@ namespace Nautilus.Network.Messages
         /// <summary>
         /// Gets the requests client identifier.
         /// </summary>
-        public string ClientId { get; }
+        public ClientId ClientId { get; }
 
         /// <summary>
         /// Gets the requests session identifier.

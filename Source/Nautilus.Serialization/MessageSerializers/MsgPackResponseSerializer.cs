@@ -83,7 +83,7 @@ namespace Nautilus.Serialization.MessageSerializers
                 case nameof(Connected):
                     return new Connected(
                         ObjectDeserializer.AsString(unpacked[nameof(Connected.Message)]),
-                        ObjectDeserializer.AsString(unpacked[nameof(Connected.ServerId)]),
+                        ObjectDeserializer.AsServerId(unpacked),
                         ObjectDeserializer.AsSessionId(unpacked),
                         correlationId,
                         id,
@@ -91,7 +91,7 @@ namespace Nautilus.Serialization.MessageSerializers
                 case nameof(Disconnected):
                     return new Disconnected(
                         ObjectDeserializer.AsString(unpacked[nameof(Disconnected.Message)]),
-                        ObjectDeserializer.AsString(unpacked[nameof(Disconnected.ServerId)]),
+                        ObjectDeserializer.AsServerId(unpacked),
                         ObjectDeserializer.AsSessionId(unpacked),
                         correlationId,
                         id,

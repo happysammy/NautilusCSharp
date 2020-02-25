@@ -17,7 +17,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Network;
+    using Nautilus.Network.Identifiers;
     using Nautilus.Network.Messages;
     using Nautilus.Serialization.DataSerializers;
     using Nautilus.Serialization.MessageSerializers;
@@ -47,8 +47,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             var response = new Connected(
                 "Ok",
-                "NautilusData.TickProvider",
-                new SessionId("Trader-001", StubZonedDateTime.UnixEpoch()),
+                new ServerId("NautilusData.TickProvider"),
+                new SessionId(new ClientId("Trader-001"), StubZonedDateTime.UnixEpoch()),
                 correlationId,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -60,7 +60,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             // Assert
             Assert.Equal(response, unpacked);
             Assert.Equal(correlationId, unpacked.CorrelationId);
-            Assert.Equal("NautilusData.TickProvider", unpacked.ServerId);
+            Assert.Equal("NautilusData.TickProvider", unpacked.ServerId.Value);
             Assert.Equal("Trader-001-1970-01-01-0", unpacked.SessionId.Value);
             this.Output.WriteLine(Convert.ToBase64String(packed));
             this.Output.WriteLine(Encoding.UTF8.GetString(packed));
@@ -74,8 +74,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             var response = new Disconnected(
                 "Ok",
-                "NautilusData.TickProvider",
-                new SessionId("Trader-001", StubZonedDateTime.UnixEpoch()),
+                new ServerId("NautilusData.TickProvider"),
+                new SessionId(new ClientId("Trader-001"), StubZonedDateTime.UnixEpoch()),
                 correlationId,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -87,7 +87,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             // Assert
             Assert.Equal(response, unpacked);
             Assert.Equal(correlationId, unpacked.CorrelationId);
-            Assert.Equal("NautilusData.TickProvider", unpacked.ServerId);
+            Assert.Equal("NautilusData.TickProvider", unpacked.ServerId.Value);
             Assert.Equal("Trader-001-1970-01-01-0", unpacked.SessionId.Value);
             this.Output.WriteLine(Convert.ToBase64String(packed));
             this.Output.WriteLine(Encoding.UTF8.GetString(packed));

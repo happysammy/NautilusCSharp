@@ -15,7 +15,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
     using Nautilus.Core.Extensions;
     using Nautilus.Data.Messages.Requests;
     using Nautilus.DomainModel.Identifiers;
-    using Nautilus.Network;
+    using Nautilus.Network.Identifiers;
     using Nautilus.Network.Messages;
     using Nautilus.Serialization.MessageSerializers;
     using Nautilus.TestSuite.TestKit.Fixtures;
@@ -38,7 +38,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var serializer = new MsgPackRequestSerializer(new MsgPackQuerySerializer());
 
             var request = new Connect(
-                "Trader-001",
+                new ClientId("Trader-001"),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -48,7 +48,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             // Assert
             Assert.Equal(request, unpacked);
-            Assert.Equal("Trader-001", unpacked.ClientId);
+            Assert.Equal("Trader-001", unpacked.ClientId.Value);
         }
 
         [Fact]
@@ -58,8 +58,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var serializer = new MsgPackRequestSerializer(new MsgPackQuerySerializer());
 
             var request = new Disconnect(
-                "Trader-001",
-                new SessionId("Trader-001", StubZonedDateTime.UnixEpoch()),
+                new ClientId("Trader-001"),
+                new SessionId(new ClientId("Trader-001"), StubZonedDateTime.UnixEpoch()),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -69,7 +69,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             // Assert
             Assert.Equal(request, unpacked);
-            Assert.Equal("Trader-001", unpacked.ClientId);
+            Assert.Equal(new ClientId("Trader-001"), unpacked.ClientId);
             Assert.Equal("Trader-001-1970-01-01-0", unpacked.SessionId.Value);
         }
 

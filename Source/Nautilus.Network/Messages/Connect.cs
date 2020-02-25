@@ -12,6 +12,7 @@ namespace Nautilus.Network.Messages
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Message;
+    using Nautilus.Network.Identifiers;
     using NodaTime;
 
     /// <summary>
@@ -27,7 +28,7 @@ namespace Nautilus.Network.Messages
         /// <param name="id">The response identifier.</param>
         /// <param name="timestamp">The response timestamp.</param>
         public Connect(
-            string clientId,
+            ClientId clientId,
             Guid id,
             ZonedDateTime timestamp)
             : base(
@@ -44,6 +45,6 @@ namespace Nautilus.Network.Messages
         /// <summary>
         /// Gets the requests client identifier.
         /// </summary>
-        public string ClientId { get; }
+        public ClientId ClientId { get; }
     }
 }

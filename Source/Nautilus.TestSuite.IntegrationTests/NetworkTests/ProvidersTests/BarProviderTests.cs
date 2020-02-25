@@ -33,7 +33,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
-    public sealed class BarProviderTests : TestBase
+    public sealed class BarProviderTests : NetMQTestBase
     {
         private readonly IComponentryContainer container;
         private readonly IBarRepository repository;

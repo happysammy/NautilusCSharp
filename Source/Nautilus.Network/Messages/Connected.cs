@@ -12,6 +12,7 @@ namespace Nautilus.Network.Messages
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Message;
+    using Nautilus.Network.Identifiers;
     using NodaTime;
 
     /// <summary>
@@ -31,7 +32,7 @@ namespace Nautilus.Network.Messages
         /// <param name="timestamp">The response timestamp.</param>
         public Connected(
             string message,
-            string serverId,
+            ServerId serverId,
             SessionId sessionId,
             Guid correlationId,
             Guid id,
@@ -43,7 +44,6 @@ namespace Nautilus.Network.Messages
                 timestamp)
         {
             Debug.NotEmptyOrWhiteSpace(message, nameof(message));
-            Debug.NotEmptyOrWhiteSpace(serverId, nameof(serverId));
             Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
@@ -60,7 +60,7 @@ namespace Nautilus.Network.Messages
         /// <summary>
         /// Gets the responses server identifier.
         /// </summary>
-        public string ServerId { get; }
+        public ServerId ServerId { get; }
 
         /// <summary>
         /// Gets the responses session identifier.

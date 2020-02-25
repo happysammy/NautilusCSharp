@@ -75,12 +75,12 @@ namespace Nautilus.Serialization.MessageSerializers
             {
                 case nameof(Connect):
                     return new Connect(
-                        ObjectDeserializer.AsString(unpacked[nameof(Connect.ClientId)]),
+                        ObjectDeserializer.AsClientId(unpacked),
                         id,
                         timestamp);
                 case nameof(Disconnect):
                     return new Disconnect(
-                        ObjectDeserializer.AsString(unpacked[nameof(Disconnect.ClientId)]),
+                        ObjectDeserializer.AsClientId(unpacked),
                         ObjectDeserializer.AsSessionId(unpacked),
                         id,
                         timestamp);

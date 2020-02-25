@@ -26,6 +26,7 @@ namespace Nautilus.Network
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Network.Encryption;
+    using Nautilus.Network.Identifiers;
     using Nautilus.Network.Messages;
     using NetMQ;
     using NetMQ.Sockets;
@@ -37,11 +38,12 @@ namespace Nautilus.Network
     {
         private const int ExpectedFrameCount = 4; // Version 1.0
 
+        private readonly ServerId serverId;
         private readonly IMessageSerializer<Request> requestSerializer;
         private readonly IMessageSerializer<Response> responseSerializer;
         private readonly ICompressor compressor;
         private readonly RouterSocket socket;
-        private readonly ConcurrentDictionary<string, SessionId> peers;
+        private readonly ConcurrentDictionary<ClientId, SessionId> peers;
         private readonly ConcurrentDictionary<Guid, Address> correlationIndex;
         private readonly CancellationTokenSource cts;
 
@@ -66,6 +68,7 @@ namespace Nautilus.Network
             ZmqNetworkAddress networkAddress)
             : base(container)
         {
+            this.serverId = new ServerId(this.Name.Value);
             this.requestSerializer = requestSerializer;
             this.responseSerializer = responseSerializer;
             this.compressor = compressor;
@@ -81,7 +84,7 @@ namespace Nautilus.Network
                 },
             };
 
-            this.peers = new ConcurrentDictionary<string, SessionId>();
+            this.peers = new ConcurrentDictionary<ClientId, SessionId>();
             this.correlationIndex = new ConcurrentDictionary<Guid, Address>();
 
             this.NetworkAddress = networkAddress;
@@ -470,7 +473,7 @@ namespace Nautilus.Network
 
             var connected = new Connected(
                 message,
-                this.Name.Value,
+                this.serverId,
                 sessionId,
                 connect.Id,
                 this.NewGuid(),
@@ -500,7 +503,7 @@ namespace Nautilus.Network
 
             var disconnected = new Disconnected(
                 message,
-                this.Name.Value,
+                this.serverId,
                 sessionId,
                 disconnect.Id,
                 this.NewGuid(),

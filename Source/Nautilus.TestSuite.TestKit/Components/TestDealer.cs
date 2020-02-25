@@ -19,6 +19,7 @@ namespace Nautilus.TestSuite.TestKit.Components
     using Nautilus.Core.Message;
     using Nautilus.Network;
     using Nautilus.Network.Encryption;
+    using Nautilus.Network.Identifiers;
     using NetMQ;
     using NetMQ.Sockets;
 
@@ -65,6 +66,7 @@ namespace Nautilus.TestSuite.TestKit.Components
                 },
             };
 
+            this.ClientId = new ClientId(this.Name.Value);
             this.ServiceAddress = serviceAddress;
 
             if (encryption.UseEncryption)
@@ -84,6 +86,11 @@ namespace Nautilus.TestSuite.TestKit.Components
             this.CountReceived = 0;
             this.CountSent = 0;
         }
+
+        /// <summary>
+        /// Gets the client identifier.
+        /// </summary>
+        public ClientId ClientId { get; }
 
         /// <summary>
         /// Gets the network address for the router.
