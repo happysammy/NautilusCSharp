@@ -117,15 +117,29 @@ namespace Nautilus.Network
         /// <inheritdoc />
         protected override void OnStart(Start start)
         {
-            this.socket.Bind(this.NetworkAddress.Value);
-            this.Logger.LogInformation(LogId.Networking, $"Bound {this.socket.GetType().Name} to {this.NetworkAddress}");
+            try
+            {
+                this.socket.Bind(this.NetworkAddress.Value);
+                this.Logger.LogInformation(LogId.Networking, $"Bound {this.socket.GetType().Name} to {this.NetworkAddress}");
+            }
+            catch (Exception ex)
+            {
+                this.Logger.LogError(LogId.Networking, ex.Message, ex);
+            }
         }
 
         /// <inheritdoc />
         protected override void OnStop(Stop stop)
         {
-            this.socket.Unbind(this.NetworkAddress.Value);
-            this.Logger.LogInformation(LogId.Networking, $"Unbound {this.socket.GetType().Name} from {this.NetworkAddress}");
+            try
+            {
+                this.socket.Unbind(this.NetworkAddress.Value);
+                this.Logger.LogInformation(LogId.Networking, $"Unbound {this.socket.GetType().Name} from {this.NetworkAddress}");
+            }
+            catch (Exception ex)
+            {
+                this.Logger.LogError(LogId.Networking, ex.Message, ex);
+            }
         }
 
         /// <summary>

@@ -167,7 +167,14 @@ namespace Nautilus.Network
         /// <inheritdoc />
         protected override void OnStart(Start start)
         {
-            this.socket.Bind(this.NetworkAddress.Value);
+            try
+            {
+                this.socket.Bind(this.NetworkAddress.Value);
+            }
+            catch (Exception ex)
+            {
+                this.Logger.LogError(LogId.Networking, ex.Message, ex);
+            }
 
             var logMsg = $"Bound {this.socket.GetType().Name} to {this.NetworkAddress}";
             this.Logger.LogInformation(LogId.Networking, logMsg);
@@ -185,10 +192,15 @@ namespace Nautilus.Network
                 this.Logger.LogError(LogId.Networking, $"Server was still connected to session {session.Value}.");
             }
 
-            this.socket.Unbind(this.NetworkAddress.Value);
-
-            var logMsg = $"Unbound {this.socket.GetType().Name} from {this.NetworkAddress}";
-            this.Logger.LogInformation(LogId.Networking, logMsg);
+            try
+            {
+                this.socket.Unbind(this.NetworkAddress.Value);
+                this.Logger.LogInformation(LogId.Networking, $"Unbound {this.socket.GetType().Name} from {this.NetworkAddress}");
+            }
+            catch (Exception ex)
+            {
+                this.Logger.LogError(LogId.Networking, ex.Message, ex);
+            }
         }
 
         /// <summary>
