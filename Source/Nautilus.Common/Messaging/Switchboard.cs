@@ -68,7 +68,7 @@ namespace Nautilus.Common.Messaging
                 return false;
             }
 
-            if (this.addresses.TryGetValue((Address)envelope.Receiver, out var receiver))
+            if (this.addresses.TryGetValue(envelope.Receiver, out var receiver))
             {
                 receiver.Send(envelope);
                 return true;

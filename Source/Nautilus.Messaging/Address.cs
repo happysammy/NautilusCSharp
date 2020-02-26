@@ -8,110 +8,55 @@
 
 namespace Nautilus.Messaging
 {
-    using System;
-    using Nautilus.Core;
+    using System.Text;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
+    using Nautilus.Core.Types;
 
     /// <summary>
     /// Represents a components messaging address within the service.
     /// </summary>
     [Immutable]
-    public struct Address : IEquatable<object>, IEquatable<Address>
+    public sealed class Address : Identifier<Address>
     {
-        private static readonly byte[] Empty = { };
+        private static readonly Address NoneAddress = new Address("None");
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Address"/> structure.
-        /// </summary>
-        /// <param name="value">The value of the address.</param>
-        /// <param name="decoder">The decoder for the address string.</param>
-        public Address(byte[] value, Func<byte[], string> decoder)
-        {
-            Debug.NotEmpty(value, nameof(value));
-
-            this.BytesValue = value;
-            this.StringValue = decoder(value).Replace(Environment.NewLine, string.Empty);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Address"/> structure.
+        /// Initializes a new instance of the <see cref="Address"/> class.
         /// </summary>
         /// <param name="value">The value of the address.</param>
         public Address(string value)
+            : base(value)
         {
-            Debug.NotEmptyOrWhiteSpace(value, nameof(value));
-
-            this.StringValue = value;
-            this.BytesValue = Empty;
+            this.Utf8Bytes = Encoding.UTF8.GetBytes(value);
         }
 
         /// <summary>
-        /// Gets addresses byte[] value (can be an empty byte[]).
+        /// Initializes a new instance of the <see cref="Address"/> class.
         /// </summary>
-        public byte[] BytesValue { get; }
-
-        /// <summary>
-        /// Gets addresses string value.
-        /// </summary>
-        public string StringValue { get; }
-
-        /// <summary>
-        /// Gets a value indicating whether the address has a bytes represented value.
-        /// </summary>
-        public bool HasBytesValue => this.BytesValue != Empty;
-
-        /// <summary>
-        /// Returns a value indicating whether the <see cref="Address"/>s are equal.
-        /// </summary>
-        /// <param name="left">The left object.</param>
-        /// <param name="right">The right object.</param>
-        /// <returns>A <see cref="bool"/>.</returns>
-        public static bool operator ==(Address left, Address right)
+        /// <param name="value">The value of the address.</param>
+        public Address(byte[] value)
+            : base(Encoding.UTF8.GetString(value))
         {
-            return left.Equals(right);
+            this.Utf8Bytes = value;
         }
 
         /// <summary>
-        /// Returns a value indicating whether the <see cref="Address"/>s are not equal.
+        /// Gets the address represented as UTF-8 bytes.
         /// </summary>
-        /// <param name="left">The left object.</param>
-        /// <param name="right">The right object.</param>
-        /// <returns>A <see cref="bool"/>.</returns>
-        public static bool operator !=(Address left,  Address right) => !(left == right);
+        public byte[] Utf8Bytes { get; }
 
         /// <summary>
-        /// Returns a value indicating whether this <see cref="Address"/> is equal
-        /// to the given <see cref="object"/>.
+        /// Gets a value indicating whether the address is none.
         /// </summary>
-        /// <param name="other">The other.</param>
-        /// <returns>A <see cref="bool"/>.</returns>
-        public override bool Equals(object? other) => other is Address label && this.Equals(label);
+        public bool IsNone => this.Equals(NoneAddress);
 
         /// <summary>
-        /// Returns a value indicating whether this <see cref="Address"/> is equal
-        /// to the given <see cref="Address"/>.
+        /// Returns a null address.
         /// </summary>
-        /// <param name="other">The other object.</param>
-        /// <returns>A <see cref="bool"/>.</returns>
-        public bool Equals(Address other)
+        /// <returns>The null address.</returns>
+        public static Address None()
         {
-            return this.StringValue == other.StringValue;
+            return NoneAddress;
         }
-
-        /// <summary>
-        /// Returns the hash code of the <see cref="Address"/>.
-        /// </summary>
-        /// <returns>An <see cref="int"/>.</returns>
-        public override int GetHashCode()
-        {
-            return Hash.GetCode(this.StringValue);
-        }
-
-        /// <summary>
-        /// Returns a string representation of the <see cref="Address"/>.
-        /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => this.StringValue;
     }
 }

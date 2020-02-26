@@ -247,15 +247,43 @@ namespace Nautilus.Network.Nodes
                 return;
             }
 
-            if (!receiver.HasBytesValue)
-            {
-                this.Logger.LogError(
-                    LogId.Networking,
-                    $"Cannot send message {outbound} (no receiver address found for {correlationId}).");
-                return;
-            }
-
             this.SendMessage(outbound, receiver);
+        }
+
+        private static Address DecodeHeaderSender(byte[] headerSender)
+        {
+            try
+            {
+                return new Address(headerSender);
+            }
+            catch (ArgumentException)
+            {
+                return Address.None();
+            }
+        }
+
+        private static string DecodeHeaderType(byte[] headerType)
+        {
+            try
+            {
+                return Encoding.UTF8.GetString(headerType);
+            }
+            catch (ArgumentException)
+            {
+                return string.Empty;
+            }
+        }
+
+        private static long DecodeHeaderSize(byte[] headerSize)
+        {
+            try
+            {
+                return BitConverter.ToInt64(headerSize);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                return -1;
+            }
         }
 
         private Task StartWork()
@@ -298,22 +326,20 @@ namespace Nautilus.Network.Nodes
             }
 
             // Deconstruct message
+            // -------------------
             // msg[0] reply address
             // msg[1] header: payload message type
             // msg[2] header: payload uncompressed size
             // msg[3] payload
+            // -------------------
             var headerSender = frames[0];
             var headerType = frames[1];
             var headerSize = frames[2];
             var payload = frames[3];
 
             // Get sender address
-            Address sender;
-            try
-            {
-                sender = new Address(headerSender, Encoding.UTF8.GetString);
-            }
-            catch (ArgumentException)
+            var sender = DecodeHeaderSender(headerSender);
+            if (sender.IsNone)
             {
                 var errorMsg = "Message sender address was malformed.";
                 this.Reject(frames, errorMsg);
@@ -321,12 +347,8 @@ namespace Nautilus.Network.Nodes
             }
 
             // Get message type
-            string type;
-            try
-            {
-                type = Encoding.UTF8.GetString(headerType);
-            }
-            catch (ArgumentException)
+            var type = DecodeHeaderType(headerType);
+            if (type == string.Empty)
             {
                 var errorMsg = "Message type header was malformed.";
                 this.SendRejected(errorMsg, sender);
@@ -334,19 +356,13 @@ namespace Nautilus.Network.Nodes
             }
 
             // Get expected uncompressed size
-            long size;
-            try
-            {
-                size = BitConverter.ToInt64(headerSize);
-            }
-            catch (ArgumentOutOfRangeException)
+            var size = DecodeHeaderSize(headerSize);
+            if (size == -1)
             {
                 var errorMsg = "Message size header was malformed.";
                 this.SendRejected(errorMsg, sender);
                 return;
             }
-
-            this.LogSizes(size, payload.Length);
 
             // Check there is a message payload
             if (payload.Length == 0)
@@ -364,6 +380,8 @@ namespace Nautilus.Network.Nodes
                 this.SendRejected(errorMsg, sender);
             }
 
+            this.LogSizes(size, payload.Length);
+
             this.HandleMessage(type, decompressed, sender);
         }
 
@@ -377,7 +395,7 @@ namespace Nautilus.Network.Nodes
                 return;
             }
 
-            var receiver = new Address(frames[0], Encoding.UTF8.GetString);
+            var receiver = new Address(frames[0]);
             this.SendRejected(errorMsg, receiver);
         }
 
@@ -453,13 +471,13 @@ namespace Nautilus.Network.Nodes
                 // Peer not previously connected to a session
                 sessionId = new SessionId(connect.ClientId, this.TimeNow());
                 this.peers.TryAdd(connect.ClientId, sessionId);
-                message = $"{sender.StringValue} connected to session {sessionId.Value} at {this.networkAddress}";
+                message = $"{sender.Value} connected to session {sessionId.Value} at {this.networkAddress}";
                 this.Logger.LogInformation(LogId.Networking, message);
             }
             else
             {
                 // Peer already connected to a session
-                message = $"{sender.StringValue} already connected to session {sessionId.Value} at {this.networkAddress}";
+                message = $"{sender.Value} already connected to session {sessionId.Value} at {this.networkAddress}";
                 this.Logger.LogWarning(LogId.Networking, message);
             }
 
@@ -481,7 +499,7 @@ namespace Nautilus.Network.Nodes
             if (sessionId is null)
             {
                 // Peer not previously connected to a session
-                message = $"{sender.StringValue} has no session to disconnect at {this.networkAddress}.";
+                message = $"{sender.Value} has no session to disconnect at {this.networkAddress}.";
                 sessionId = SessionId.None();
                 this.Logger.LogWarning(LogId.Networking, message);
             }
@@ -489,7 +507,7 @@ namespace Nautilus.Network.Nodes
             {
                 // Peer connected to a session
                 this.peers.Remove(disconnect.ClientId, out var _); // Pop from dictionary
-                message = $"{sender.StringValue} disconnected from session {sessionId.Value} at {this.networkAddress}";
+                message = $"{sender.Value} disconnected from session {sessionId.Value} at {this.networkAddress}";
                 this.Logger.LogInformation(LogId.Networking, message);
             }
 
@@ -526,13 +544,13 @@ namespace Nautilus.Network.Nodes
                 var payload = this.compressor.Compress(serialized);
 
                 this.socket.SendMultipartBytes(
-                    receiver.BytesValue,
+                    receiver.Utf8Bytes,
                     type,
                     size,
                     payload);
 
                 this.CountSent++;
-                this.LogSent(outbound.ToString(), receiver.StringValue);
+                this.LogSent(outbound.ToString(), receiver.Value);
             }
             catch (Exception ex)
             {
