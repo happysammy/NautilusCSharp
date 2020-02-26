@@ -71,23 +71,16 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
             var message = subscriber.ReceiveFrameBytes();
 
             // Assert
+            Assert.Equal(1, this.publisher.CountPublished);
             Assert.Equal(tick.Symbol.Value, Encoding.UTF8.GetString(topic));
             Assert.Equal(44U, BitConverter.ToUInt32(length));
             Assert.Equal(tick.ToString(), Encoding.UTF8.GetString(message));
 
             // Tear Down
-            try
-            {
-                subscriber.Disconnect(TestAddress);
-                subscriber.Dispose();
-                this.publisher.Stop().Wait();
-                this.publisher.Dispose();
-            }
-            catch (Exception ex)
-            {
-                // Temporary to mitigate NetMQ.Core.Utils.Proactor.Loop() problem on disconnect
-                this.Output.WriteLine(ex.Message);
-            }
+            subscriber.Disconnect(TestAddress);
+            subscriber.Dispose();
+            this.publisher.Stop().Wait();
+            this.publisher.Dispose();
         }
     }
 }

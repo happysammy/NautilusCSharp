@@ -13,6 +13,7 @@ namespace Nautilus.Execution.Network
     using Nautilus.DomainModel.Events;
     using Nautilus.Network;
     using Nautilus.Network.Encryption;
+    using Nautilus.Network.Nodes;
 
     /// <summary>
     /// Provides an event publisher for the messaging server.

@@ -63,12 +63,12 @@ namespace Nautilus.Common.Componentry
         /// <summary>
         /// Gets the message input count for the agent.
         /// </summary>
-        public int InputCount => this.processor.InputCount;
+        public int InputCount => this.processor.CountInput;
 
         /// <summary>
         /// Gets the message processed count for the agent.
         /// </summary>
-        public int ProcessedCount => this.processor.ProcessedCount;
+        public int ProcessedCount => this.processor.CountProcessed;
 
         /// <summary>
         /// Gets the message handler types.

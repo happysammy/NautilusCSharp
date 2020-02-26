@@ -12,6 +12,7 @@ namespace Nautilus.Data.Publishers
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network;
     using Nautilus.Network.Encryption;
+    using Nautilus.Network.Nodes;
 
     /// <summary>
     /// Provides a publisher for <see cref="Bar"/> data.

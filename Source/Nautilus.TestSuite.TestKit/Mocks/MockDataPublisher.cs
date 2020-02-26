@@ -17,6 +17,7 @@ namespace Nautilus.TestSuite.TestKit.Mocks
     using Nautilus.Network;
     using Nautilus.Network.Compression;
     using Nautilus.Network.Encryption;
+    using Nautilus.Network.Nodes;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class MockDataPublisher : DataPublisher<string>

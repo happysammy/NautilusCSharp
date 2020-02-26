@@ -12,7 +12,7 @@ namespace Nautilus.Network.Identifiers
     using Nautilus.Core.Types;
 
     /// <summary>
-    /// Represents a unique network session identifier.
+    /// Represents a unique server identifier.
     /// </summary>
     [Immutable]
     public sealed class ServerId : Identifier<ClientId>

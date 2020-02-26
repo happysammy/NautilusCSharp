@@ -74,7 +74,7 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
             // Assert
             Assert.Contains(1, receiver);
             Assert.DoesNotContain(1, processor.UnhandledMessages);
-            Assert.Equal(1, processor.ProcessedCount);
+            Assert.Equal(1, processor.CountProcessed);
         }
 
         [Fact]
@@ -92,7 +92,7 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
             // Assert
             Assert.Contains(1, receiver);
             Assert.DoesNotContain(1, processor.UnhandledMessages);
-            Assert.Equal(1, processor.ProcessedCount);
+            Assert.Equal(1, processor.CountProcessed);
         }
 
         [Fact]
@@ -109,8 +109,8 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
             // Assert
             Assert.Single(processor.Exceptions);
             Assert.Contains("BOOM!", processor.UnhandledMessages);
-            Assert.Equal(0, processor.InputCount);
-            Assert.Equal(1, processor.ProcessedCount);
+            Assert.Equal(0, processor.CountInput);
+            Assert.Equal(1, processor.CountProcessed);
         }
 
         [Fact]
@@ -125,8 +125,8 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
 
             // Assert
             Assert.Contains("test", processor.UnhandledMessages);
-            Assert.Equal(0, processor.InputCount);
-            Assert.Equal(1, processor.ProcessedCount);
+            Assert.Equal(0, processor.CountInput);
+            Assert.Equal(1, processor.CountProcessed);
         }
 
         [Fact]
@@ -146,8 +146,8 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
             Assert.Contains(typeof(string), processor.HandlerTypes);
             Assert.Contains("test", receiver);
             Assert.DoesNotContain("test", processor.UnhandledMessages);
-            Assert.Equal(0, processor.InputCount);
-            Assert.Equal(1, processor.ProcessedCount);
+            Assert.Equal(0, processor.CountInput);
+            Assert.Equal(1, processor.CountProcessed);
         }
 
         [Fact]

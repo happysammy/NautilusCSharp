@@ -100,17 +100,10 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
             Assert.Equal(typeof(QueryFailure), response.Type);
 
             // Tear Down
-            try
-            {
-                requester.Stop().Wait();
-                requester.Dispose();
-                provider.Stop().Wait();
-                provider.Dispose();
-            }
-            catch (Exception ex)
-            {
-                this.Output.WriteLine(ex.Message);
-            }
+            requester.Stop().Wait();
+            requester.Dispose();
+            provider.Stop().Wait();
+            provider.Dispose();
         }
 
         [Fact]
@@ -158,17 +151,10 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
             Assert.Equal(typeof(QueryFailure), response.Type);
 
             // Tear Down
-            try
-            {
-                requester.Stop().Wait();
-                requester.Dispose();
-                provider.Stop().Wait();
-                provider.Dispose();
-            }
-            catch (Exception ex)
-            {
-                this.Output.WriteLine(ex.Message);
-            }
+            requester.Stop().Wait();
+            requester.Dispose();
+            provider.Stop().Wait();
+            provider.Dispose();
         }
 
         [Fact]
@@ -220,17 +206,10 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
             Assert.Equal(instrument, data[0]);
 
             // Tear Down
-            try
-            {
-                requester.Stop().Wait();
-                requester.Dispose();
-                provider.Stop().Wait();
-                provider.Dispose();
-            }
-            catch (Exception ex)
-            {
-                this.Output.WriteLine(ex.Message);
-            }
+            requester.Stop().Wait();
+            requester.Dispose();
+            provider.Stop().Wait();
+            provider.Dispose();
         }
 
         [Fact]
@@ -289,17 +268,10 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
             }
 
             // Tear Down
-            try
-            {
-                requester.Stop().Wait();
-                requester.Dispose();
-                provider.Stop().Wait();
-                provider.Dispose();
-            }
-            catch (Exception ex)
-            {
-                this.Output.WriteLine(ex.Message);
-            }
+            requester.Stop().Wait();
+            requester.Dispose();
+            provider.Stop().Wait();
+            provider.Dispose();
         }
     }
 }

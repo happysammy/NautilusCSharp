@@ -6,10 +6,9 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Network
+namespace Nautilus.Network.Nodes
 {
     using System;
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Text;
@@ -43,8 +42,9 @@ namespace Nautilus.Network
         private readonly IMessageSerializer<Response> responseSerializer;
         private readonly ICompressor compressor;
         private readonly RouterSocket socket;
-        private readonly ConcurrentDictionary<ClientId, SessionId> peers;
-        private readonly ConcurrentDictionary<Guid, Address> correlationIndex;
+        private readonly ZmqNetworkAddress networkAddress;
+        private readonly Dictionary<ClientId, SessionId> peers;
+        private readonly Dictionary<Guid, Address> correlationIndex;
         private readonly CancellationTokenSource cts;
 
         // TODO: Temporary hack
@@ -84,23 +84,22 @@ namespace Nautilus.Network
                 },
             };
 
-            this.peers = new ConcurrentDictionary<ClientId, SessionId>();
-            this.correlationIndex = new ConcurrentDictionary<Guid, Address>();
-
-            this.NetworkAddress = networkAddress;
+            this.networkAddress = networkAddress;
+            this.peers = new Dictionary<ClientId, SessionId>();
+            this.correlationIndex = new Dictionary<Guid, Address>();
 
             if (encryption.UseEncryption)
             {
                 EncryptionProvider.SetupSocket(encryption, this.socket);
                 this.Logger.LogInformation(
                     LogId.Networking,
-                    $"{encryption.Algorithm} encryption setup for {this.NetworkAddress}");
+                    $"{encryption.Algorithm} encryption setup for {this.networkAddress}");
             }
             else
             {
                 this.Logger.LogWarning(
                     LogId.Networking,
-                    $"No encryption setup for {this.NetworkAddress}");
+                    $"No encryption setup for {this.networkAddress}");
             }
 
             this.CountReceived = 0;
@@ -110,23 +109,16 @@ namespace Nautilus.Network
         }
 
         /// <summary>
-        /// Gets the network address for the router.
-        /// </summary>
-        public ZmqNetworkAddress NetworkAddress { get; }
-
-        /// <summary>
-        /// Gets the server received message count.
+        /// Gets the count of received messages by the server.
         /// </summary>
         public int CountReceived { get; private set; }
 
         /// <summary>
-        /// Gets the server processed message count.
+        /// Gets the count of sent messages by the server.
         /// </summary>
         public int CountSent { get; private set; }
 
-        /// <summary>
-        /// Dispose of the socket.
-        /// </summary>
+        /// <inheritdoc />
         public void Dispose()
         {
             if (this.ComponentState == ComponentState.Running)
@@ -172,14 +164,14 @@ namespace Nautilus.Network
         {
             try
             {
-                this.socket.Bind(this.NetworkAddress.Value);
+                this.socket.Bind(this.networkAddress.Value);
             }
             catch (Exception ex)
             {
                 this.Logger.LogError(LogId.Networking, ex.Message, ex);
             }
 
-            var logMsg = $"Bound {this.socket.GetType().Name} to {this.NetworkAddress}";
+            var logMsg = $"Bound {this.socket.GetType().Name} to {this.networkAddress}";
             this.Logger.LogInformation(LogId.Networking, logMsg);
 
             Task.Run(this.StartWork, this.cts.Token);
@@ -197,8 +189,8 @@ namespace Nautilus.Network
 
             try
             {
-                this.socket.Unbind(this.NetworkAddress.Value);
-                this.Logger.LogInformation(LogId.Networking, $"Unbound {this.socket.GetType().Name} from {this.NetworkAddress}");
+                this.socket.Unbind(this.networkAddress.Value);
+                this.Logger.LogInformation(LogId.Networking, $"Unbound {this.socket.GetType().Name} from {this.networkAddress}");
             }
             catch (Exception ex)
             {
@@ -282,7 +274,7 @@ namespace Nautilus.Network
             List<byte[]> frames;
             try
             {
-                frames = this.socket.ReceiveMultipartBytes();
+                frames = this.socket.ReceiveMultipartBytes(); // Blocking
             }
             catch (Exception ex)
             {
@@ -401,7 +393,7 @@ namespace Nautilus.Network
                     break;
                 default:
                 {
-                    var errorMessage = $"Message type '{type}' is not valid at this address {this.NetworkAddress}.";
+                    var errorMessage = $"Message type '{type}' is not valid at this address {this.networkAddress}.";
                     this.SendRejected(errorMessage, sender);
                     break;
                 }
@@ -461,13 +453,13 @@ namespace Nautilus.Network
                 // Peer not previously connected to a session
                 sessionId = new SessionId(connect.ClientId, this.TimeNow());
                 this.peers.TryAdd(connect.ClientId, sessionId);
-                message = $"{sender.StringValue} connected to session {sessionId.Value} at {this.NetworkAddress}";
+                message = $"{sender.StringValue} connected to session {sessionId.Value} at {this.networkAddress}";
                 this.Logger.LogInformation(LogId.Networking, message);
             }
             else
             {
                 // Peer already connected to a session
-                message = $"{sender.StringValue} already connected to session {sessionId.Value} at {this.NetworkAddress}";
+                message = $"{sender.StringValue} already connected to session {sessionId.Value} at {this.networkAddress}";
                 this.Logger.LogWarning(LogId.Networking, message);
             }
 
@@ -489,15 +481,15 @@ namespace Nautilus.Network
             if (sessionId is null)
             {
                 // Peer not previously connected to a session
-                message = $"{sender.StringValue} has no session to disconnect at {this.NetworkAddress}.";
+                message = $"{sender.StringValue} has no session to disconnect at {this.networkAddress}.";
                 sessionId = SessionId.None();
                 this.Logger.LogWarning(LogId.Networking, message);
             }
             else
             {
                 // Peer connected to a session
-                this.peers.TryRemove(disconnect.ClientId, out var _); // Pop from dictionary
-                message = $"{sender.StringValue} disconnected from session {sessionId.Value} at {this.NetworkAddress}";
+                this.peers.Remove(disconnect.ClientId, out var _); // Pop from dictionary
+                message = $"{sender.StringValue} disconnected from session {sessionId.Value} at {this.networkAddress}";
                 this.Logger.LogInformation(LogId.Networking, message);
             }
 

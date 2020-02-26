@@ -104,17 +104,10 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
             Assert.Equal(typeof(QueryFailure), response.Type);
 
             // Tear Down
-            try
-            {
-                requester.Stop().Wait();
-                requester.Dispose();
-                provider.Stop().Wait();
-                provider.Dispose();
-            }
-            catch (Exception ex)
-            {
-                this.Output.WriteLine(ex.Message);
-            }
+            requester.Stop().Wait();
+            requester.Dispose();
+            provider.Stop().Wait();
+            provider.Dispose();
         }
 
         [Fact]

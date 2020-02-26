@@ -65,14 +65,14 @@ namespace Nautilus.Messaging
         public Endpoint Endpoint { get; }
 
         /// <summary>
-        /// Gets the message input count for the processor.
+        /// Gets the count of input messages for the processor.
         /// </summary>
-        public int InputCount => this.processor.InputCount;
+        public int CountInput => this.processor.InputCount;
 
         /// <summary>
-        /// Gets the message processed count for the processor.
+        /// Gets the count of messages processed for the processor.
         /// </summary>
-        public int ProcessedCount { get; private set; }
+        public int CountProcessed { get; private set; }
 
         /// <summary>
         /// Gets the types which can be handled.
@@ -178,7 +178,7 @@ namespace Nautilus.Messaging
         private void Unhandled(object message)
         {
             this.unhandled(message);
-            this.ProcessedCount++;
+            this.CountProcessed++;
         }
 
         private void BuildHandlers()
@@ -195,7 +195,7 @@ namespace Nautilus.Messaging
                 {
                     if (this.handlers[i].Handle(message).Result)
                     {
-                        this.ProcessedCount++;
+                        this.CountProcessed++;
                         return Task.CompletedTask;
                     }
                 }

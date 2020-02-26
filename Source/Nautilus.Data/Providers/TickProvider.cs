@@ -20,6 +20,7 @@ namespace Nautilus.Data.Providers
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network;
     using Nautilus.Network.Encryption;
+    using Nautilus.Network.Nodes;
 
     /// <summary>
     /// Provides <see cref="Tick"/> data to requests.
