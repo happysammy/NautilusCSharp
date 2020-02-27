@@ -341,7 +341,7 @@ namespace Nautilus.Network.Nodes
             var sender = DecodeHeaderSender(headerSender);
             if (sender.IsNone)
             {
-                var errorMsg = "Message sender address was malformed.";
+                var errorMsg = "Message sender header address was malformed.";
                 this.Reject(frames, errorMsg);
                 return;
             }
@@ -481,7 +481,7 @@ namespace Nautilus.Network.Nodes
                 this.Logger.LogWarning(LogId.Networking, message);
             }
 
-            var connected = new Connected(
+            var response = new Connected(
                 message,
                 this.serverId,
                 sessionId,
@@ -489,7 +489,7 @@ namespace Nautilus.Network.Nodes
                 this.NewGuid(),
                 this.TimeNow());
 
-            this.SendMessage(connected, sender);
+            this.SendMessage(response, sender);
         }
 
         private void HandleDisconnection(Disconnect disconnect, Address sender)
@@ -499,8 +499,8 @@ namespace Nautilus.Network.Nodes
             if (sessionId is null)
             {
                 // Peer not previously connected to a session
-                message = $"{sender.Value} has no session to disconnect at {this.networkAddress}.";
                 sessionId = SessionId.None();
+                message = $"{sender.Value} had no session to disconnect at {this.networkAddress}";
                 this.Logger.LogWarning(LogId.Networking, message);
             }
             else
@@ -511,7 +511,7 @@ namespace Nautilus.Network.Nodes
                 this.Logger.LogInformation(LogId.Networking, message);
             }
 
-            var disconnected = new Disconnected(
+            var response = new Disconnected(
                 message,
                 this.serverId,
                 sessionId,
@@ -519,18 +519,18 @@ namespace Nautilus.Network.Nodes
                 this.NewGuid(),
                 this.TimeNow());
 
-            this.SendMessage(disconnected, sender);
+            this.SendMessage(response, sender);
         }
 
         private void SendRejected(string rejectedMessage, Address receiver)
         {
-            var rejected = new MessageRejected(
+            var response = new MessageRejected(
                 rejectedMessage,
                 Guid.Empty,
                 Guid.NewGuid(),
                 this.TimeNow());
 
-            this.SendMessage(rejected, receiver);
+            this.SendMessage(response, receiver);
             this.Logger.LogWarning(LogId.Networking, rejectedMessage);
         }
 
@@ -539,6 +539,7 @@ namespace Nautilus.Network.Nodes
             try
             {
                 var serialized = this.responseSerializer.Serialize(outbound);
+
                 var type = Encoding.UTF8.GetBytes(outbound.Type.Name);
                 var size = BitConverter.GetBytes((long)serialized.Length);
                 var payload = this.compressor.Compress(serialized);
