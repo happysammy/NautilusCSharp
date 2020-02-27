@@ -209,7 +209,7 @@ namespace Nautilus.Scheduling.Internal
         {
             if (this.isDisposed)
             {
-                throw new ObjectDisposedException(null, "The cancelable has already been disposed");
+                throw new ObjectDisposedException(nameof(HashedWheelTimerScheduler), "The cancelable has already been disposed");
             }
         }
     }
