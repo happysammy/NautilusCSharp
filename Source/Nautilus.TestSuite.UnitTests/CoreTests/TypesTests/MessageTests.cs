@@ -10,7 +10,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.TypesTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
-    using Nautilus.Core.Types;
+    using Nautilus.Core.Message;
     using Nautilus.TestSuite.TestKit.Stubs;
     using NodaTime;
     using Xunit;
@@ -65,10 +65,10 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.TypesTests
             Assert.Equal($"TestMessage(Id={guid})", result);
         }
 
-        private sealed class TestMessage : Message
+        private sealed class TestMessage : Document
         {
             public TestMessage(Guid id, ZonedDateTime timestamp)
-                : base(nameof(Message), typeof(TestMessage), id, timestamp)
+                : base(typeof(TestMessage), id, timestamp)
             {
             }
         }

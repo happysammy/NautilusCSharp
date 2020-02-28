@@ -21,6 +21,8 @@ namespace Nautilus.DomainModel.Commands
     [Immutable]
     public sealed class SubmitOrder : Command
     {
+        private static readonly Type CommandType = typeof(SubmitOrder);
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SubmitOrder"/> class.
         /// </summary>
@@ -40,7 +42,7 @@ namespace Nautilus.DomainModel.Commands
             Guid commandId,
             ZonedDateTime commandTimestamp)
             : base(
-                typeof(SubmitOrder),
+                CommandType,
                 commandId,
                 commandTimestamp)
         {

@@ -176,7 +176,7 @@ namespace Nautilus.TestSuite.TestKit.Components
         public Response Send(Request request)
         {
             var serialized = this.requestSerializer.Serialize(request);
-            var type = Encoding.UTF8.GetBytes(request.MessageType);
+            var type = Encoding.UTF8.GetBytes(request.MessageType.ToString());
             var size = BitConverter.GetBytes((long)serialized.Length);
             var payload = this.compressor.Compress(serialized);
 

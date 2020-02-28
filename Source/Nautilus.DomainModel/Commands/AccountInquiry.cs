@@ -21,6 +21,8 @@ namespace Nautilus.DomainModel.Commands
     [Immutable]
     public sealed class AccountInquiry : Command
     {
+        private static readonly Type CommandType = typeof(AccountInquiry);
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AccountInquiry"/> class.
         /// </summary>
@@ -34,7 +36,7 @@ namespace Nautilus.DomainModel.Commands
             Guid commandId,
             ZonedDateTime commandTimestamp)
             : base(
-                typeof(AccountInquiry),
+                CommandType,
                 commandId,
                 commandTimestamp)
         {

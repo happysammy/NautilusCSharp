@@ -11,6 +11,7 @@ namespace Nautilus.Core.Types
     using System;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
+    using Nautilus.Core.Enums;
     using Nautilus.Core.Extensions;
     using NodaTime;
 
@@ -28,12 +29,11 @@ namespace Nautilus.Core.Types
         /// <param name="id">The message identifier.</param>
         /// <param name="timestamp">The message timestamp.</param>
         protected Message(
-            string messageType,
+            MessageType messageType,
             Type type,
             Guid id,
             ZonedDateTime timestamp)
         {
-            Debug.NotEmptyOrWhiteSpace(messageType, nameof(messageType));
             Debug.EqualTo(type, this.GetType(), nameof(type));
             Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));
@@ -45,9 +45,9 @@ namespace Nautilus.Core.Types
         }
 
         /// <summary>
-        /// Gets the message type.
+        /// Gets the message type group.
         /// </summary>
-        public string MessageType { get; }
+        public MessageType MessageType { get; }
 
         /// <summary>
         /// Gets the message class type.

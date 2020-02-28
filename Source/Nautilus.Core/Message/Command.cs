@@ -11,6 +11,7 @@ namespace Nautilus.Core.Message
     using System;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
+    using Nautilus.Core.Enums;
     using Nautilus.Core.Types;
     using NodaTime;
 
@@ -31,7 +32,7 @@ namespace Nautilus.Core.Message
             Guid id,
             ZonedDateTime timestamp)
             : base(
-                nameof(Command),
+                MessageType.Command,
                 type,
                 id,
                 timestamp)

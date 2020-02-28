@@ -321,6 +321,7 @@ namespace Nautilus.Network.Nodes
             if (frames.Count != ExpectedFrameCount)
             {
                 var errorMsg = $"Message was malformed (expected {ExpectedFrameCount} frames, received {frames.Count}).";
+                this.Logger.LogError(LogId.Networking, errorMsg);
                 this.Reject(frames, errorMsg);
                 return;
             }
@@ -342,6 +343,7 @@ namespace Nautilus.Network.Nodes
             if (sender.IsNone)
             {
                 var errorMsg = "Message sender header address was malformed.";
+                this.Logger.LogError(LogId.Networking, errorMsg);
                 this.Reject(frames, errorMsg);
                 return;
             }
@@ -351,6 +353,7 @@ namespace Nautilus.Network.Nodes
             if (type == string.Empty)
             {
                 var errorMsg = "Message type header was malformed.";
+                this.Logger.LogError(LogId.Networking, errorMsg);
                 this.SendRejected(errorMsg, sender);
                 return;
             }
@@ -360,6 +363,7 @@ namespace Nautilus.Network.Nodes
             if (size == -1)
             {
                 var errorMsg = "Message size header was malformed.";
+                this.Logger.LogError(LogId.Networking, errorMsg);
                 this.SendRejected(errorMsg, sender);
                 return;
             }
@@ -368,6 +372,7 @@ namespace Nautilus.Network.Nodes
             if (payload.Length == 0)
             {
                 var errorMsg = "Message payload was empty.";
+                this.Logger.LogError(LogId.Networking, errorMsg);
                 this.SendRejected(errorMsg, sender);
                 return;
             }
@@ -377,6 +382,7 @@ namespace Nautilus.Network.Nodes
             if (decompressed.Length != size)
             {
                 var errorMsg = $"Message decompressed size {decompressed.Length} != header size {size}.";
+                this.Logger.LogError(LogId.Networking, errorMsg);
                 this.SendRejected(errorMsg, sender);
             }
 
@@ -403,6 +409,9 @@ namespace Nautilus.Network.Nodes
         {
             switch (type)
             {
+                case nameof(String):
+                    this.HandleString(payload, sender);
+                    break;
                 case nameof(Request):
                     this.HandleRequest(payload, sender);
                     break;
@@ -412,9 +421,24 @@ namespace Nautilus.Network.Nodes
                 default:
                 {
                     var errorMessage = $"Message type '{type}' is not valid at this address {this.networkAddress}.";
+                    this.Logger.LogWarning(LogId.Networking, errorMessage);
                     this.SendRejected(errorMessage, sender);
                     break;
                 }
+            }
+        }
+
+        private void HandleString(byte[] payload, Address sender)
+        {
+            try
+            {
+                this.SendToSelf(Encoding.UTF8.GetString(payload));
+            }
+            catch (Exception ex)
+            {
+                var errorMessage = $"Unable to deserialize message due {ex.GetType().Name}, {ex.Message}";
+                this.Logger.LogError(LogId.Networking, errorMessage, ex);
+                this.SendRejected(errorMessage, sender);
             }
         }
 
@@ -440,6 +464,7 @@ namespace Nautilus.Network.Nodes
             catch (Exception ex)
             {
                 var errorMessage = $"Unable to deserialize message due {ex.GetType().Name}, {ex.Message}";
+                this.Logger.LogError(LogId.Networking, errorMessage, ex);
                 this.SendRejected(errorMessage, sender);
             }
         }
@@ -458,6 +483,7 @@ namespace Nautilus.Network.Nodes
             catch (Exception ex)
             {
                 var errorMessage = $"Unable to deserialize message due {ex.GetType().Name}, {ex.Message}";
+                this.Logger.LogError(LogId.Networking, errorMessage, ex);
                 this.SendRejected(errorMessage, sender);
             }
         }
@@ -531,7 +557,6 @@ namespace Nautilus.Network.Nodes
                 this.TimeNow());
 
             this.SendMessage(response, receiver);
-            this.Logger.LogWarning(LogId.Networking, rejectedMessage);
         }
 
         private void SendMessage(Response outbound, Address receiver)
