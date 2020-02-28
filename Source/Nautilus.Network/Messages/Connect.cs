@@ -25,10 +25,12 @@ namespace Nautilus.Network.Messages
         /// Initializes a new instance of the <see cref="Connect"/> class.
         /// </summary>
         /// <param name="clientId">The client identifier.</param>
+        /// <param name="authentication">The client authentication.</param>
         /// <param name="id">The response identifier.</param>
         /// <param name="timestamp">The response timestamp.</param>
         public Connect(
             ClientId clientId,
+            string authentication,
             Guid id,
             ZonedDateTime timestamp)
             : base(
@@ -40,11 +42,17 @@ namespace Nautilus.Network.Messages
             Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.ClientId = clientId;
+            this.Authentication = authentication;
         }
 
         /// <summary>
         /// Gets the requests client identifier.
         /// </summary>
         public ClientId ClientId { get; }
+
+        /// <summary>
+        /// Gets the requests client authentication.
+        /// </summary>
+        public string Authentication { get; }
     }
 }

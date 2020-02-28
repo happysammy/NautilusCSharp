@@ -68,7 +68,7 @@ namespace NautilusData
             var tickDataSerializer = new TickDataSerializer();
             var barDataSerializer = new BarDataSerializer();
             var instrumentDataSerializer = new InstrumentDataSerializer();
-            var requestSerializer = new MsgPackRequestSerializer(new MsgPackQuerySerializer());
+            var requestSerializer = new MsgPackRequestSerializer();
             var responseSerializer = new MsgPackResponseSerializer();
             var compressor = CompressorFactory.Create(config.WireConfig.CompressionCodec);
 

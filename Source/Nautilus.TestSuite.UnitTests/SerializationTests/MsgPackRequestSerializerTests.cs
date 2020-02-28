@@ -35,10 +35,11 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         internal void CanSerializeAndDeserialize_ConnectRequests()
         {
             // Arrange
-            var serializer = new MsgPackRequestSerializer(new MsgPackQuerySerializer());
+            var serializer = new MsgPackRequestSerializer();
 
             var request = new Connect(
                 new ClientId("Trader-001"),
+                "None",
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -55,11 +56,11 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         internal void CanSerializeAndDeserialize_DisconnectRequests()
         {
             // Arrange
-            var serializer = new MsgPackRequestSerializer(new MsgPackQuerySerializer());
+            var serializer = new MsgPackRequestSerializer();
 
             var request = new Disconnect(
                 new ClientId("Trader-001"),
-                new SessionId(new ClientId("Trader-001"), StubZonedDateTime.UnixEpoch()),
+                SessionId.Create(new ClientId("Trader-001"), StubZonedDateTime.UnixEpoch(), "None"),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -70,14 +71,14 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             // Assert
             Assert.Equal(request, unpacked);
             Assert.Equal(new ClientId("Trader-001"), unpacked.ClientId);
-            Assert.Equal("Trader-001-1970-01-01-0", unpacked.SessionId.Value);
+            Assert.Equal("Trader-001-e5db3dad8222a27e5d2991d11ad65f0f74668a4cfb629e97aa6920a73a012f87", unpacked.SessionId.Value);
         }
 
         [Fact]
         internal void CanSerializeAndDeserialize_DataRequests()
         {
             // Arrange
-            var serializer = new MsgPackRequestSerializer(new MsgPackQuerySerializer());
+            var serializer = new MsgPackRequestSerializer();
 
             var symbol = new Symbol("AUDUSD", new Venue("FXCM"));
             var dateTime = StubZonedDateTime.UnixEpoch();

@@ -22,15 +22,14 @@ namespace Nautilus.Serialization.MessageSerializers
     /// </summary>
     public sealed class MsgPackRequestSerializer : IMessageSerializer<Request>
     {
-        private readonly ISerializer<Dictionary<string, string>> querySerializer;
+        private readonly MsgPackDictionarySerializer querySerializer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MsgPackRequestSerializer"/> class.
         /// </summary>
-        /// <param name="querySerializer">The query serializer.</param>
-        public MsgPackRequestSerializer(ISerializer<Dictionary<string, string>> querySerializer)
+        public MsgPackRequestSerializer()
         {
-            this.querySerializer = querySerializer;
+            this.querySerializer = new MsgPackDictionarySerializer();
         }
 
         /// <inheritdoc />
@@ -47,6 +46,7 @@ namespace Nautilus.Serialization.MessageSerializers
             {
                 case Connect req:
                     package.Add(nameof(req.ClientId), ObjectSerializer.Serialize(req.ClientId));
+                    package.Add(nameof(req.Authentication), ObjectSerializer.Serialize(req.Authentication));
                     break;
                 case Disconnect req:
                     package.Add(nameof(req.ClientId), ObjectSerializer.Serialize(req.ClientId));
@@ -76,6 +76,7 @@ namespace Nautilus.Serialization.MessageSerializers
                 case nameof(Connect):
                     return new Connect(
                         ObjectDeserializer.AsClientId(unpacked),
+                        ObjectDeserializer.AsString(unpacked[nameof(Connect.Authentication)]),
                         id,
                         timestamp);
                 case nameof(Disconnect):

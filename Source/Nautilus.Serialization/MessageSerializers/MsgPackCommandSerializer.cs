@@ -23,7 +23,7 @@ namespace Nautilus.Serialization.MessageSerializers
     public sealed class MsgPackCommandSerializer : IMessageSerializer<Command>
     {
         private readonly IdentifierCache identifierCache;
-        private readonly OrderSerializer orderSerializer;
+        private readonly MsgPackOrderSerializer orderSerializer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MsgPackCommandSerializer"/> class.
@@ -31,7 +31,7 @@ namespace Nautilus.Serialization.MessageSerializers
         public MsgPackCommandSerializer()
         {
             this.identifierCache = new IdentifierCache();
-            this.orderSerializer = new OrderSerializer();
+            this.orderSerializer = new MsgPackOrderSerializer();
         }
 
         /// <inheritdoc />

@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="OrderSerializer.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="MsgPackOrderSerializer.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2020 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   https://nautechsystems.io
@@ -24,7 +24,7 @@ namespace Nautilus.Serialization.MessageSerializers.Internal
     /// <summary>
     /// Provides serialization of <see cref="Order"/> objects to MessagePack specification bytes.
     /// </summary>
-    internal sealed class OrderSerializer
+    internal sealed class MsgPackOrderSerializer
     {
         private static readonly Func<string, byte[]> Encode = Encoding.UTF8.GetBytes;
         private static readonly Func<byte[], string> Decode = Encoding.UTF8.GetString;
@@ -33,9 +33,9 @@ namespace Nautilus.Serialization.MessageSerializers.Internal
         private readonly ObjectCache<string, Symbol> symbolCache;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="OrderSerializer"/> class.
+        /// Initializes a new instance of the <see cref="MsgPackOrderSerializer"/> class.
         /// </summary>
-        public OrderSerializer()
+        public MsgPackOrderSerializer()
         {
             this.symbolCache = new ObjectCache<string, Symbol>(Symbol.FromString);
         }

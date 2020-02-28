@@ -102,8 +102,8 @@ namespace Nautilus.Network.Nodes
                     $"No encryption setup for {this.networkAddress}");
             }
 
-            this.CountReceived = 0;
-            this.CountSent = 0;
+            this.ReceivedCount = 0;
+            this.SentCount = 0;
 
             this.RegisterHandler<IEnvelope>(this.OnEnvelope);
         }
@@ -111,12 +111,12 @@ namespace Nautilus.Network.Nodes
         /// <summary>
         /// Gets the count of received messages by the server.
         /// </summary>
-        public int CountReceived { get; private set; }
+        public int ReceivedCount { get; private set; }
 
         /// <summary>
         /// Gets the count of sent messages by the server.
         /// </summary>
-        public int CountSent { get; private set; }
+        public int SentCount { get; private set; }
 
         /// <inheritdoc />
         public void Dispose()
@@ -312,7 +312,7 @@ namespace Nautilus.Network.Nodes
             }
             finally
             {
-                this.CountReceived++;
+                this.ReceivedCount++;
             }
 
             this.LogFrames(frames.Count);
@@ -469,7 +469,7 @@ namespace Nautilus.Network.Nodes
             if (sessionId is null)
             {
                 // Peer not previously connected to a session
-                sessionId = new SessionId(connect.ClientId, this.TimeNow());
+                sessionId = new SessionId(connect.Authentication);
                 this.peers.TryAdd(connect.ClientId, sessionId);
                 message = $"{sender.Value} connected to session {sessionId.Value} at {this.networkAddress}";
                 this.Logger.LogInformation(LogId.Networking, message);
@@ -550,7 +550,7 @@ namespace Nautilus.Network.Nodes
                     size,
                     payload);
 
-                this.CountSent++;
+                this.SentCount++;
                 this.LogSent(outbound.ToString(), receiver.Value);
             }
             catch (Exception ex)
@@ -563,13 +563,13 @@ namespace Nautilus.Network.Nodes
         [Conditional("DEBUG")]
         private void LogFrames(int framesCount)
         {
-            this.Logger.LogTrace(LogId.Networking, $"<--[{this.CountReceived}] Received {framesCount} byte[] frames.");
+            this.Logger.LogTrace(LogId.Networking, $"<--[{this.ReceivedCount}] Received {framesCount} byte[] frames.");
         }
 
         [Conditional("DEBUG")]
         private void LogReceived(string message)
         {
-            this.Logger.LogTrace(LogId.Networking, $"<--[{this.CountReceived}] Received {message}");
+            this.Logger.LogTrace(LogId.Networking, $"<--[{this.ReceivedCount}] Received {message}");
         }
 
         [Conditional("DEBUG")]
@@ -581,7 +581,7 @@ namespace Nautilus.Network.Nodes
         [Conditional("DEBUG")]
         private void LogSent(string outbound, string receiver)
         {
-            this.Logger.LogTrace(LogId.Networking, $"[{this.CountSent}]--> {outbound} to {receiver}.");
+            this.Logger.LogTrace(LogId.Networking, $"[{this.SentCount}]--> {outbound} to {receiver}.");
         }
     }
 }

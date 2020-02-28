@@ -26,13 +26,13 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class MsgPackOrderSerializerTests : TestBase
     {
-        private readonly OrderSerializer serializer;
+        private readonly MsgPackOrderSerializer serializer;
 
         public MsgPackOrderSerializerTests(ITestOutputHelper output)
             : base(output)
         {
             // Fixture Setup
-            this.serializer = new OrderSerializer();
+            this.serializer = new MsgPackOrderSerializer();
         }
 
         [Fact]

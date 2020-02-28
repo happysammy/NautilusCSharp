@@ -52,7 +52,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
             this.container = TestComponentryContainer.Create(output);
             this.dataSerializer = new TickDataSerializer();
             this.repository = new MockTickRepository(this.container, this.dataSerializer, DataBusFactory.Create(this.container));
-            this.requestSerializer = new MsgPackRequestSerializer(new MsgPackQuerySerializer());
+            this.requestSerializer = new MsgPackRequestSerializer();
             this.responseSerializer = new MsgPackResponseSerializer();
             this.compressor = new CompressorBypass();
         }

@@ -49,7 +49,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             var commandConsumer = new CommandServer(
                 this.container,
-                new MsgPackRequestSerializer(new MsgPackQuerySerializer()),
+                new MsgPackRequestSerializer(),
                 new MsgPackResponseSerializer(),
                 new MsgPackCommandSerializer(),
                 new CompressorBypass(),

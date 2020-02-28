@@ -39,7 +39,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
         {
             // Fixture Setup
             this.container = TestComponentryContainer.Create(output);
-            this.requestSerializer = new MsgPackRequestSerializer(new MsgPackQuerySerializer());
+            this.requestSerializer = new MsgPackRequestSerializer();
             this.responseSerializer = new MsgPackResponseSerializer();
             this.compressor = new CompressorBypass();
         }
@@ -57,8 +57,8 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             // Assert
             Assert.Equal(ComponentState.Initialized, server.ComponentState);
-            Assert.Equal(0, server.CountReceived);
-            Assert.Equal(0, server.CountSent);
+            Assert.Equal(0, server.ReceivedCount);
+            Assert.Equal(0, server.SentCount);
         }
 
         [Fact]
@@ -95,7 +95,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             var dealer = new TestDealer(
                 this.container,
-                new MsgPackRequestSerializer(new MsgPackQuerySerializer()),
+                new MsgPackRequestSerializer(),
                 new MsgPackResponseSerializer(),
                 this.compressor,
                 EncryptionSettings.None(),
@@ -107,8 +107,8 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             // Assert
             Assert.Equal(typeof(MessageRejected), response.Type);
-            Assert.Equal(1, server.CountReceived);
-            Assert.Equal(1, server.CountSent);
+            Assert.Equal(1, server.ReceivedCount);
+            Assert.Equal(1, server.SentCount);
 
             // Tear Down
             dealer.Stop().Wait();
@@ -132,7 +132,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             var dealer = new TestDealer(
                 this.container,
-                new MsgPackRequestSerializer(new MsgPackQuerySerializer()),
+                new MsgPackRequestSerializer(),
                 new MsgPackResponseSerializer(),
                 this.compressor,
                 EncryptionSettings.None(),
@@ -144,8 +144,8 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             // Assert
             Assert.Equal(typeof(MessageRejected), response.Type);
-            Assert.Equal(1, server.CountReceived);
-            Assert.Equal(1, server.CountSent);
+            Assert.Equal(1, server.ReceivedCount);
+            Assert.Equal(1, server.SentCount);
 
             // Tear Down
             dealer.Stop().Wait();
@@ -169,7 +169,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             var dealer = new TestDealer(
                 this.container,
-                new MsgPackRequestSerializer(new MsgPackQuerySerializer()),
+                new MsgPackRequestSerializer(),
                 new MsgPackResponseSerializer(),
                 this.compressor,
                 EncryptionSettings.None(),
@@ -186,8 +186,8 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             // Assert
             Assert.Equal(typeof(MessageRejected), response.Type);
-            Assert.Equal(1, server.CountReceived);
-            Assert.Equal(1, server.CountSent);
+            Assert.Equal(1, server.ReceivedCount);
+            Assert.Equal(1, server.SentCount);
 
             // Tear Down
             dealer.Stop().Wait();
@@ -211,7 +211,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             var dealer = new TestDealer(
                 this.container,
-                new MsgPackRequestSerializer(new MsgPackQuerySerializer()),
+                new MsgPackRequestSerializer(),
                 new MsgPackResponseSerializer(),
                 this.compressor,
                 EncryptionSettings.None(),
@@ -221,6 +221,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             var connect = new Connect(
                 dealer.ClientId,
+                "None",
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -229,9 +230,9 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             // Assert
             Assert.Equal(typeof(Connected), response.Type);
-            Assert.Equal(1, server.CountReceived);
-            Assert.Equal(1, server.CountSent);
-            Assert.Equal("TestDealer-001 connected to session TestDealer-001-1970-01-01-0 at tcp://127.0.0.1:55560", response.Message);
+            Assert.Equal(1, server.ReceivedCount);
+            Assert.Equal(1, server.SentCount);
+            Assert.Equal("TestDealer-001 connected to session None at tcp://127.0.0.1:55560", response.Message);
 
             // Tear Down
             dealer.Stop().Wait();
@@ -255,7 +256,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             var dealer = new TestDealer(
                 this.container,
-                new MsgPackRequestSerializer(new MsgPackQuerySerializer()),
+                new MsgPackRequestSerializer(),
                 new MsgPackResponseSerializer(),
                 this.compressor,
                 EncryptionSettings.None(),
@@ -265,6 +266,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             var connect = new Connect(
                 dealer.ClientId,
+                "None",
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -281,10 +283,10 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             // Assert
             Assert.Equal(typeof(Connected), response1.Type);
             Assert.Equal(typeof(Disconnected), response2.Type);
-            Assert.Equal(2, server.CountReceived);
-            Assert.Equal(2, server.CountSent);
-            Assert.Equal("TestDealer-001 connected to session TestDealer-001-1970-01-01-0 at tcp://127.0.0.1:55561", response1.Message);
-            Assert.Equal("TestDealer-001 disconnected from session TestDealer-001-1970-01-01-0 at tcp://127.0.0.1:55561", response2.Message);
+            Assert.Equal(2, server.ReceivedCount);
+            Assert.Equal(2, server.SentCount);
+            Assert.Equal("TestDealer-001 connected to session None at tcp://127.0.0.1:55561", response1.Message);
+            Assert.Equal("TestDealer-001 disconnected from session None at tcp://127.0.0.1:55561", response2.Message);
 
             // Tear Down
             dealer.Stop().Wait();
@@ -308,7 +310,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             var dealer1 = new TestDealer(
                 this.container,
-                new MsgPackRequestSerializer(new MsgPackQuerySerializer()),
+                new MsgPackRequestSerializer(),
                 new MsgPackResponseSerializer(),
                 this.compressor,
                 EncryptionSettings.None(),
@@ -318,7 +320,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             var dealer2 = new TestDealer(
                 this.container,
-                new MsgPackRequestSerializer(new MsgPackQuerySerializer()),
+                new MsgPackRequestSerializer(),
                 new MsgPackResponseSerializer(),
                 this.compressor,
                 EncryptionSettings.None(),
@@ -329,11 +331,13 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             // Act
             var connect1 = new Connect(
                 dealer1.ClientId,
+                "None",
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             var connect2 = new Connect(
                 dealer2.ClientId,
+                "None",
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -341,10 +345,10 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             var response2 = (Connected)dealer2.Send(connect2);
 
             // Assert
-            Assert.Equal("TestDealer-001 connected to session TestDealer-001-1970-01-01-0 at tcp://127.0.0.1:55562", response1.Message);
-            Assert.Equal("TestDealer-002 connected to session TestDealer-002-1970-01-01-0 at tcp://127.0.0.1:55562", response2.Message);
-            Assert.Equal(2, server.CountReceived);
-            Assert.Equal(2, server.CountSent);
+            Assert.Equal("TestDealer-001 connected to session None at tcp://127.0.0.1:55562", response1.Message);
+            Assert.Equal("TestDealer-002 connected to session None at tcp://127.0.0.1:55562", response2.Message);
+            Assert.Equal(2, server.ReceivedCount);
+            Assert.Equal(2, server.SentCount);
 
             // Tear Down
             dealer1.Stop().Wait();

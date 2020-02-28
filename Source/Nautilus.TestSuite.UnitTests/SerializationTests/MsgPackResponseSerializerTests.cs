@@ -48,7 +48,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var response = new Connected(
                 "Ok",
                 new ServerId("NautilusData.TickProvider"),
-                new SessionId(new ClientId("Trader-001"), StubZonedDateTime.UnixEpoch()),
+                SessionId.Create(new ClientId("Trader-001"), StubZonedDateTime.UnixEpoch(), "None"),
                 correlationId,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -61,7 +61,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             Assert.Equal(response, unpacked);
             Assert.Equal(correlationId, unpacked.CorrelationId);
             Assert.Equal("NautilusData.TickProvider", unpacked.ServerId.Value);
-            Assert.Equal("Trader-001-1970-01-01-0", unpacked.SessionId.Value);
+            Assert.Equal("Trader-001-e5db3dad8222a27e5d2991d11ad65f0f74668a4cfb629e97aa6920a73a012f87", unpacked.SessionId.Value);
             this.Output.WriteLine(Convert.ToBase64String(packed));
             this.Output.WriteLine(Encoding.UTF8.GetString(packed));
         }
@@ -75,7 +75,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var response = new Disconnected(
                 "Ok",
                 new ServerId("NautilusData.TickProvider"),
-                new SessionId(new ClientId("Trader-001"), StubZonedDateTime.UnixEpoch()),
+                SessionId.Create(new ClientId("Trader-001"), StubZonedDateTime.UnixEpoch(), "None"),
                 correlationId,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -88,7 +88,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             Assert.Equal(response, unpacked);
             Assert.Equal(correlationId, unpacked.CorrelationId);
             Assert.Equal("NautilusData.TickProvider", unpacked.ServerId.Value);
-            Assert.Equal("Trader-001-1970-01-01-0", unpacked.SessionId.Value);
+            Assert.Equal("Trader-001-e5db3dad8222a27e5d2991d11ad65f0f74668a4cfb629e97aa6920a73a012f87", unpacked.SessionId.Value);
             this.Output.WriteLine(Convert.ToBase64String(packed));
             this.Output.WriteLine(Encoding.UTF8.GetString(packed));
         }

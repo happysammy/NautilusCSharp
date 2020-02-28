@@ -70,7 +70,7 @@ namespace NautilusExecutor
                 messagingAdapter,
                 fixClient);
 
-            var requestSerializer = new MsgPackRequestSerializer(new MsgPackQuerySerializer());
+            var requestSerializer = new MsgPackRequestSerializer();
             var responseSerializer = new MsgPackResponseSerializer();
             var commandSerializer = new MsgPackCommandSerializer();
             var eventSerializer = new MsgPackEventSerializer();
