@@ -58,7 +58,7 @@ namespace NautilusExecutor
             var secretKeyEncoded = Z85Encoder.FromZ85String(secretKey);
 
             var encryptionConfig = new EncryptionSettings(
-                configuration["Messaging:Encryption"].ToEnum<CryptographicAlgorithm>(),
+                configuration["Messaging:Encryption"].ToEnum<EncryptionAlgorithm>(),
                 publicKeyEncoded,
                 secretKeyEncoded);
 

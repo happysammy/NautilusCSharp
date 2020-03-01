@@ -23,13 +23,13 @@ namespace Nautilus.Network.Encryption
         /// <param name="publicKey">The the public encryption key.</param>
         /// <param name="secretKey">The secret encryption key.</param>
         public EncryptionSettings(
-            CryptographicAlgorithm algorithm,
+            EncryptionAlgorithm algorithm,
             byte[] publicKey,
             byte[] secretKey)
         {
-            Condition.NotEqualTo(algorithm, CryptographicAlgorithm.Undefined, nameof(algorithm));
+            Condition.NotEqualTo(algorithm, EncryptionAlgorithm.Undefined, nameof(algorithm));
 
-            this.UseEncryption = algorithm != CryptographicAlgorithm.None;
+            this.UseEncryption = algorithm != EncryptionAlgorithm.None;
             this.Algorithm = algorithm;
             this.PublicKey = publicKey;
             this.SecretKey = secretKey;
@@ -43,7 +43,7 @@ namespace Nautilus.Network.Encryption
         /// <summary>
         /// Gets the configurations cryptographic algorithm.
         /// </summary>
-        public CryptographicAlgorithm Algorithm { get; }
+        public EncryptionAlgorithm Algorithm { get; }
 
         /// <summary>
         /// Gets the public encryption key.
@@ -62,7 +62,7 @@ namespace Nautilus.Network.Encryption
         public static EncryptionSettings None()
         {
             return new EncryptionSettings(
-                CryptographicAlgorithm.None,
+                EncryptionAlgorithm.None,
                 new byte[0],
                 new byte[0]);
         }
