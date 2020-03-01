@@ -41,7 +41,7 @@ namespace Nautilus.Network.Encryption
         public bool UseEncryption { get; }
 
         /// <summary>
-        /// Gets the configurations cryptographic algorithm.
+        /// Gets the configurations encryption algorithm.
         /// </summary>
         public EncryptionAlgorithm Algorithm { get; }
 
@@ -56,7 +56,7 @@ namespace Nautilus.Network.Encryption
         public byte[] SecretKey { get; }
 
         /// <summary>
-        /// Create an encryption configuration with no encryption.
+        /// Create encryption settings with no encryption specified.
         /// </summary>
         /// <returns>The configuration.</returns>
         public static EncryptionSettings None()
