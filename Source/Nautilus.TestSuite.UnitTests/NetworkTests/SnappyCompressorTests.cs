@@ -1,12 +1,12 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="CompressorTests.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="SnappyCompressorTests.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2020 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   https://nautechsystems.io
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.UnitTests.SerializationTests
+namespace Nautilus.TestSuite.UnitTests.NetworkTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
@@ -17,9 +17,9 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
-    public sealed class CompressorTests : TestBase
+    public sealed class SnappyCompressorTests : TestBase
     {
-        public CompressorTests(ITestOutputHelper output)
+        public SnappyCompressorTests(ITestOutputHelper output)
             : base(output)
         {
         }
