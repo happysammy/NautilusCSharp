@@ -19,8 +19,8 @@ namespace Nautilus.Network.Encryption
         /// <summary>
         /// Initializes a new instance of the <see cref="EncryptionSettings"/> class.
         /// </summary>
-        /// <param name="algorithm">The specified cryptographic algorithm.</param>
-        /// <param name="publicKey">The the public encryption key.</param>
+        /// <param name="algorithm">The specified encryption algorithm.</param>
+        /// <param name="publicKey">The public encryption key.</param>
         /// <param name="secretKey">The secret encryption key.</param>
         public EncryptionSettings(
             EncryptionAlgorithm algorithm,
