@@ -20,6 +20,7 @@ namespace Nautilus.Network.Nodes
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Logging;
     using Nautilus.Common.Messages.Commands;
+    using Nautilus.Core.Enums;
     using Nautilus.Core.Message;
     using Nautilus.Core.Types;
     using Nautilus.Messaging;
@@ -319,8 +320,6 @@ namespace Nautilus.Network.Nodes
                 this.ReceivedCount++;
             }
 
-            this.LogFrames(frames.Count);
-
             // Check for expected frames
             if (frames.Count != ExpectedFrameCount)
             {
@@ -378,9 +377,9 @@ namespace Nautilus.Network.Nodes
             this.SendRejected(errorMsg, receiver);
         }
 
-        private void HandleMessage(Dictionary<string, string> header, byte[] payload, Address sender)
+        private void HandleMessage(Dictionary<string, string> header, byte[] body, Address sender)
         {
-            if (!header.TryGetValue("TypeName", out var type))
+            if (!header.TryGetValue(nameof(MessageType), out var type))
             {
                 var errorMessage = $"Message header did not contain 'TypeName'.";
                 this.Logger.LogWarning(LogId.Networking, errorMessage);
@@ -391,13 +390,13 @@ namespace Nautilus.Network.Nodes
             switch (type)
             {
                 case nameof(String):
-                    this.HandleString(payload, sender);
+                    this.HandleString(body, sender);
                     break;
                 case nameof(Request):
-                    this.HandleRequest(payload, sender);
+                    this.HandleRequest(body, sender);
                     break;
                 case nameof(Command) when this.commandSerializer != null:
-                    this.HandleCommand(payload, sender, this.commandSerializer);
+                    this.HandleCommand(body, sender, this.commandSerializer);
                     break;
                 default:
                 {
@@ -566,12 +565,6 @@ namespace Nautilus.Network.Nodes
                 // Interaction with NetMQ
                 this.Logger.LogError(LogId.Networking, ex.Message, ex);
             }
-        }
-
-        [Conditional("DEBUG")]
-        private void LogFrames(int framesCount)
-        {
-            this.Logger.LogTrace(LogId.Networking, $"<--[{this.ReceivedCount}] Received {framesCount} byte[] frames.");
         }
 
         [Conditional("DEBUG")]

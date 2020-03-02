@@ -145,7 +145,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             dealer.Start().Wait();
 
             // Act
-            var response = dealer.Send("BogusMessage", new byte[] { });
+            var response = dealer.SendString(string.Empty);
 
             // Assert
             Assert.Equal(typeof(MessageRejected), response.Type);

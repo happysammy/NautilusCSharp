@@ -17,6 +17,7 @@ namespace Nautilus.TestSuite.TestKit.Components
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Logging;
     using Nautilus.Common.Messages.Commands;
+    using Nautilus.Core.Enums;
     using Nautilus.Core.Message;
     using Nautilus.Network;
     using Nautilus.Network.Encryption;
@@ -150,9 +151,7 @@ namespace Nautilus.TestSuite.TestKit.Components
             var received = this.socket.ReceiveMultipartBytes();
             this.ReceivedCount++;
 
-            var receivedType = Encoding.UTF8.GetString(received[0]);
-            var receivedSize = BitConverter.ToInt64(received[1]);
-            var decompressed = this.compressor.Decompress(received[2]);
+            var decompressed = this.compressor.Decompress(received[1]);
             var deserialized = this.responseSerializer.Deserialize(decompressed);
 
             return deserialized;
@@ -161,16 +160,20 @@ namespace Nautilus.TestSuite.TestKit.Components
         /// <summary>
         /// Send the request to the service address.
         /// </summary>
-        /// <param name="messageType">The type to send.</param>
-        /// <param name="message">The message to send.</param>
+        /// <param name="message">The message string to send.</param>
         /// <returns>The response.</returns>
-        public Response Send(string messageType, byte[] message)
+        public Response SendString(string message)
         {
-            var type = Encoding.UTF8.GetBytes(messageType);
-            var size = BitConverter.GetBytes((long)message.Length);
-            var payload = this.compressor.Compress(message);
+            var header = new Dictionary<string, string>
+            {
+                { nameof(MessageType), MessageType.String.ToString() },
+                { "TypeName", "utf-8" },
+            };
 
-            return this.Send(type, size, payload);
+            var frameHeader = this.compressor.Compress(this.headerSerializer.Serialize(header));
+            var frameBody = this.compressor.Compress(Encoding.UTF8.GetBytes(message));
+
+            return this.Send(frameHeader, frameBody);
         }
 
         /// <summary>
@@ -180,12 +183,16 @@ namespace Nautilus.TestSuite.TestKit.Components
         /// <returns>The response.</returns>
         public Response Send(Request request)
         {
-            var serialized = this.requestSerializer.Serialize(request);
-            var type = Encoding.UTF8.GetBytes(request.MessageType.ToString());
-            var size = BitConverter.GetBytes((long)serialized.Length);
-            var payload = this.compressor.Compress(serialized);
+            var header = new Dictionary<string, string>
+            {
+                { nameof(MessageType), request.MessageType.ToString() },
+                { "TypeName", request.Type.Name },
+            };
 
-            return this.Send(type, size, payload);
+            var frameHeader = this.compressor.Compress(this.headerSerializer.Serialize(header));
+            var frameBody = this.compressor.Compress(this.requestSerializer.Serialize(request));
+
+            return this.Send(frameHeader, frameBody);
         }
 
         /// <inheritdoc/>
@@ -206,19 +213,15 @@ namespace Nautilus.TestSuite.TestKit.Components
                 $"Disconnected {this.socket.GetType().Name} from {this.ServiceAddress}");
         }
 
-        private Response Send(
-            byte[] type,
-            byte[] size,
-            byte[] payload)
+        private Response Send(byte[] header, byte[] body)
         {
-            this.socket.SendMultipartBytes(type, size, payload);
+            this.socket.SendMultipartBytes(header, body);
             this.SendCount++;
 
             var received = this.socket.ReceiveMultipartBytes();
             this.ReceivedCount++;
 
-            var receivedType = Encoding.UTF8.GetString(received[0]);
-            var decompressed = this.compressor.Decompress(received[2]);
+            var decompressed = this.compressor.Decompress(received[1]);
             var deserialized = this.responseSerializer.Deserialize(decompressed);
 
             return deserialized;
