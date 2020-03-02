@@ -8,6 +8,7 @@
 
 namespace Nautilus.Execution.Network
 {
+    using System.Collections.Generic;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Message;
     using Nautilus.DomainModel.Commands;
@@ -28,6 +29,7 @@ namespace Nautilus.Execution.Network
         /// Initializes a new instance of the <see cref="CommandServer"/> class.
         /// </summary>
         /// <param name="container">The component setup container.</param>
+        /// <param name="headerSerializer">The header serializer.</param>
         /// <param name="requestSerializer">The request serializer.</param>
         /// <param name="responseSerializer">The response serializer.</param>
         /// <param name="commandSerializer">The command serializer.</param>
@@ -37,6 +39,7 @@ namespace Nautilus.Execution.Network
         /// <param name="port">The consumers port.</param>
         public CommandServer(
             IComponentryContainer container,
+            ISerializer<Dictionary<string, string>> headerSerializer,
             IMessageSerializer<Request> requestSerializer,
             IMessageSerializer<Response> responseSerializer,
             IMessageSerializer<Command> commandSerializer,
@@ -46,6 +49,7 @@ namespace Nautilus.Execution.Network
             Port port)
             : base(
                 container,
+                headerSerializer,
                 requestSerializer,
                 responseSerializer,
                 compressor,

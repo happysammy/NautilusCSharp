@@ -76,13 +76,13 @@ namespace Nautilus.Network.Nodes
                 this.Logger.LogWarning(LogId.Networking, $"No encryption setup for {this.networkAddress}");
             }
 
-            this.CountPublished = 0;
+            this.SentCount = 0;
         }
 
         /// <summary>
         /// Gets the count of published messages.
         /// </summary>
-        public int CountPublished { get; private set; }
+        public int SentCount { get; private set; }
 
         /// <inheritdoc />
         public void Dispose()
@@ -140,7 +140,7 @@ namespace Nautilus.Network.Nodes
             var payload = this.compressor.Compress(serialized);
             this.socket.SendMultipartBytes(Encoding.UTF8.GetBytes(topic), size, payload);
 
-            this.CountPublished++;
+            this.SentCount++;
             this.LogPublished(topic, message, serialized.Length, payload.Length);
         }
 
@@ -151,7 +151,7 @@ namespace Nautilus.Network.Nodes
             int serializedLength,
             int compressedLength)
         {
-            var logMessage = $"[{this.CountPublished}]--> " +
+            var logMessage = $"[{this.SentCount}]--> " +
                              $"Topic={topic}, " +
                              $"Serialized={serializedLength:N0} bytes, " +
                              $"Compressed={compressedLength:N0} bytes, " +

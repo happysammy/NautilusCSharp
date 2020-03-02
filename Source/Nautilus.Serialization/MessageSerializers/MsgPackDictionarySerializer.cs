@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Serialization.MessageSerializers.Internal
+namespace Nautilus.Serialization.MessageSerializers
 {
     using System.Collections.Generic;
     using MessagePack;
@@ -15,7 +15,7 @@ namespace Nautilus.Serialization.MessageSerializers.Internal
 
 #pragma warning disable CS8604
     /// <summary>
-    /// Provides a serializer for query objects.
+    /// Provides a serializer for dictionaries with string keys and values.
     /// </summary>
     public sealed class MsgPackDictionarySerializer : ISerializer<Dictionary<string, string>>
     {

@@ -35,9 +35,10 @@ namespace Nautilus.Network.Nodes
     /// </summary>
     public abstract class MessageServer : MessagingComponent, IDisposable
     {
-        private const int ExpectedFrameCount = 4; // Version 1.0
+        private const int ExpectedFrameCount = 3; // Version 1.0
 
         private readonly ServerId serverId;
+        private readonly ISerializer<Dictionary<string, string>> headerSerializer;
         private readonly IMessageSerializer<Request> requestSerializer;
         private readonly IMessageSerializer<Response> responseSerializer;
         private readonly ICompressor compressor;
@@ -54,6 +55,7 @@ namespace Nautilus.Network.Nodes
         /// Initializes a new instance of the <see cref="MessageServer"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
+        /// <param name="headerSerializer">The header serializer.</param>
         /// <param name="requestSerializer">The request serializer.</param>
         /// <param name="responseSerializer">The response serializer.</param>
         /// <param name="compressor">The message compressor.</param>
@@ -61,6 +63,7 @@ namespace Nautilus.Network.Nodes
         /// <param name="networkAddress">The zmq network address.</param>
         protected MessageServer(
             IComponentryContainer container,
+            ISerializer<Dictionary<string, string>> headerSerializer,
             IMessageSerializer<Request> requestSerializer,
             IMessageSerializer<Response> responseSerializer,
             ICompressor compressor,
@@ -69,6 +72,7 @@ namespace Nautilus.Network.Nodes
             : base(container)
         {
             this.serverId = new ServerId(this.Name.Value);
+            this.headerSerializer = headerSerializer;
             this.requestSerializer = requestSerializer;
             this.responseSerializer = responseSerializer;
             this.compressor = compressor;
@@ -328,18 +332,16 @@ namespace Nautilus.Network.Nodes
 
             // Deconstruct message
             // -------------------
-            // msg[0] reply address
-            // msg[1] header: payload message type
-            // msg[2] header: payload uncompressed size
-            // msg[3] payload
+            // frames[0] sender
+            // frames[1] header
+            // frames[2] body
             // -------------------
-            var headerSender = frames[0];
-            var headerType = frames[1];
-            var headerSize = frames[2];
-            var payload = frames[3];
+            var frameSender = frames[0];
+            var frameHeader = this.compressor.Decompress(frames[1]);
+            var frameBody = this.compressor.Decompress(frames[2]);
 
             // Get sender address
-            var sender = DecodeHeaderSender(headerSender);
+            var sender = DecodeHeaderSender(frameSender);
             if (sender.IsNone)
             {
                 var errorMsg = "Message sender header address was malformed.";
@@ -348,47 +350,18 @@ namespace Nautilus.Network.Nodes
                 return;
             }
 
-            // Get message type
-            var type = DecodeHeaderType(headerType);
-            if (type == string.Empty)
+            var header = this.headerSerializer.Deserialize(frameHeader);
+
+            // Check there is a message body
+            if (frameBody.Length == 0)
             {
-                var errorMsg = "Message type header was malformed.";
+                var errorMsg = "Message body was empty.";
                 this.Logger.LogError(LogId.Networking, errorMsg);
                 this.SendRejected(errorMsg, sender);
                 return;
             }
 
-            // Get expected uncompressed size
-            var size = DecodeHeaderSize(headerSize);
-            if (size == -1)
-            {
-                var errorMsg = "Message size header was malformed.";
-                this.Logger.LogError(LogId.Networking, errorMsg);
-                this.SendRejected(errorMsg, sender);
-                return;
-            }
-
-            // Check there is a message payload
-            if (payload.Length == 0)
-            {
-                var errorMsg = "Message payload was empty.";
-                this.Logger.LogError(LogId.Networking, errorMsg);
-                this.SendRejected(errorMsg, sender);
-                return;
-            }
-
-            // Decompress message
-            var decompressed = this.compressor.Decompress(payload);
-            if (decompressed.Length != size)
-            {
-                var errorMsg = $"Message decompressed size {decompressed.Length} != header size {size}.";
-                this.Logger.LogError(LogId.Networking, errorMsg);
-                this.SendRejected(errorMsg, sender);
-            }
-
-            this.LogSizes(size, payload.Length);
-
-            this.HandleMessage(type, decompressed, sender);
+            this.HandleMessage(header, frameBody, sender);
         }
 
         private void Reject(List<byte[]> frames, string errorMsg)
@@ -405,8 +378,16 @@ namespace Nautilus.Network.Nodes
             this.SendRejected(errorMsg, receiver);
         }
 
-        private void HandleMessage(string type, byte[] payload, Address sender)
+        private void HandleMessage(Dictionary<string, string> header, byte[] payload, Address sender)
         {
+            if (!header.TryGetValue("TypeName", out var type))
+            {
+                var errorMessage = $"Message header did not contain 'TypeName'.";
+                this.Logger.LogWarning(LogId.Networking, errorMessage);
+                this.SendRejected(errorMessage, sender);
+                return;
+            }
+
             switch (type)
             {
                 case nameof(String):
@@ -563,17 +544,19 @@ namespace Nautilus.Network.Nodes
         {
             try
             {
-                var serialized = this.responseSerializer.Serialize(outbound);
+                var header = new Dictionary<string, string>
+                {
+                    { "MessageType", outbound.MessageType.ToString() },
+                    { "TypeName", outbound.Type.Name },
+                };
 
-                var type = Encoding.UTF8.GetBytes(outbound.Type.Name);
-                var size = BitConverter.GetBytes((long)serialized.Length);
-                var payload = this.compressor.Compress(serialized);
+                var frameHeader = this.compressor.Compress(this.headerSerializer.Serialize(header));
+                var frameBody = this.compressor.Compress(this.responseSerializer.Serialize(outbound));
 
                 this.socket.SendMultipartBytes(
                     receiver.Utf8Bytes,
-                    type,
-                    size,
-                    payload);
+                    frameHeader,
+                    frameBody);
 
                 this.SentCount++;
                 this.LogSent(outbound.ToString(), receiver.Value);
@@ -595,12 +578,6 @@ namespace Nautilus.Network.Nodes
         private void LogReceived(string message)
         {
             this.Logger.LogTrace(LogId.Networking, $"<--[{this.ReceivedCount}] Received {message}");
-        }
-
-        [Conditional("DEBUG")]
-        private void LogSizes(long headerLength, long compressedLength)
-        {
-            this.Logger.LogTrace(LogId.Networking, $"HeaderLength={headerLength:N0} bytes, Compressed={compressedLength:N0} bytes");
         }
 
         [Conditional("DEBUG")]

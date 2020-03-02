@@ -9,6 +9,7 @@
 namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
     using Nautilus.Common.Enums;
@@ -30,8 +31,9 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
     public sealed class MessageServerTests : NetMQTestBase
     {
         private readonly IComponentryContainer container;
-        private readonly ISerializer<Request> requestSerializer;
-        private readonly ISerializer<Response> responseSerializer;
+        private readonly ISerializer<Dictionary<string, string>> headerSerializer;
+        private readonly IMessageSerializer<Request> requestSerializer;
+        private readonly IMessageSerializer<Response> responseSerializer;
         private readonly ICompressor compressor;
 
         public MessageServerTests(ITestOutputHelper output)
@@ -39,6 +41,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
         {
             // Fixture Setup
             this.container = TestComponentryContainer.Create(output);
+            this.headerSerializer = new MsgPackDictionarySerializer();
             this.requestSerializer = new MsgPackRequestSerializer();
             this.responseSerializer = new MsgPackResponseSerializer();
             this.compressor = new CompressorBypass();
@@ -95,8 +98,9 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             var dealer = new TestDealer(
                 this.container,
-                new MsgPackRequestSerializer(),
-                new MsgPackResponseSerializer(),
+                this.headerSerializer,
+                this.requestSerializer,
+                this.responseSerializer,
                 this.compressor,
                 EncryptionSettings.None(),
                 testAddress);
@@ -132,8 +136,9 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             var dealer = new TestDealer(
                 this.container,
-                new MsgPackRequestSerializer(),
-                new MsgPackResponseSerializer(),
+                this.headerSerializer,
+                this.requestSerializer,
+                this.responseSerializer,
                 this.compressor,
                 EncryptionSettings.None(),
                 testAddress);
@@ -169,8 +174,9 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             var dealer = new TestDealer(
                 this.container,
-                new MsgPackRequestSerializer(),
-                new MsgPackResponseSerializer(),
+                this.headerSerializer,
+                this.requestSerializer,
+                this.responseSerializer,
                 this.compressor,
                 EncryptionSettings.None(),
                 testAddress);
@@ -211,8 +217,9 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             var dealer = new TestDealer(
                 this.container,
-                new MsgPackRequestSerializer(),
-                new MsgPackResponseSerializer(),
+                this.headerSerializer,
+                this.requestSerializer,
+                this.responseSerializer,
                 this.compressor,
                 EncryptionSettings.None(),
                 testAddress,
@@ -256,8 +263,9 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             var dealer = new TestDealer(
                 this.container,
-                new MsgPackRequestSerializer(),
-                new MsgPackResponseSerializer(),
+                this.headerSerializer,
+                this.requestSerializer,
+                this.responseSerializer,
                 this.compressor,
                 EncryptionSettings.None(),
                 testAddress,
@@ -310,8 +318,9 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             var dealer1 = new TestDealer(
                 this.container,
-                new MsgPackRequestSerializer(),
-                new MsgPackResponseSerializer(),
+                this.headerSerializer,
+                this.requestSerializer,
+                this.responseSerializer,
                 this.compressor,
                 EncryptionSettings.None(),
                 testAddress,
@@ -320,8 +329,9 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             var dealer2 = new TestDealer(
                 this.container,
-                new MsgPackRequestSerializer(),
-                new MsgPackResponseSerializer(),
+                this.headerSerializer,
+                this.requestSerializer,
+                this.responseSerializer,
                 this.compressor,
                 EncryptionSettings.None(),
                 testAddress,

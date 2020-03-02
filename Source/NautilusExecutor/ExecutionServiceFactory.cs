@@ -70,6 +70,7 @@ namespace NautilusExecutor
                 messagingAdapter,
                 fixClient);
 
+            var headerSerializer = new MsgPackDictionarySerializer();
             var requestSerializer = new MsgPackRequestSerializer();
             var responseSerializer = new MsgPackResponseSerializer();
             var commandSerializer = new MsgPackCommandSerializer();
@@ -107,6 +108,7 @@ namespace NautilusExecutor
 
             var commandServer = new CommandServer(
                 container,
+                headerSerializer,
                 requestSerializer,
                 responseSerializer,
                 commandSerializer,

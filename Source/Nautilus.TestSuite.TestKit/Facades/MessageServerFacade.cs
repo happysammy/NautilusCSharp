@@ -27,6 +27,7 @@ namespace Nautilus.TestSuite.TestKit.Facades
             ZmqNetworkAddress address)
             : base(
                 container,
+                new MsgPackDictionarySerializer(),
                 new MsgPackRequestSerializer(),
                 new MsgPackResponseSerializer(),
                 compressor,

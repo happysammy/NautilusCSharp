@@ -38,6 +38,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
         private readonly IComponentryContainer container;
         private readonly IInstrumentRepository repository;
         private readonly IDataSerializer<Instrument> dataSerializer;
+        private readonly ISerializer<Dictionary<string, string>> headerSerializer;
         private readonly IMessageSerializer<Request> requestSerializer;
         private readonly IMessageSerializer<Response> responseSerializer;
         private readonly ICompressor compressor;
@@ -49,6 +50,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
             this.container = TestComponentryContainer.Create(output);
             this.dataSerializer = new InstrumentDataSerializer();
             this.repository = new MockInstrumentRepository(this.dataSerializer);
+            this.headerSerializer = new MsgPackDictionarySerializer();
             this.requestSerializer = new MsgPackRequestSerializer();
             this.responseSerializer = new MsgPackResponseSerializer();
             this.compressor = new CompressorBypass();
@@ -64,6 +66,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
                 this.container,
                 this.repository,
                 this.dataSerializer,
+                this.headerSerializer,
                 this.requestSerializer,
                 this.responseSerializer,
                 this.compressor,
@@ -73,6 +76,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
 
             var requester = new TestDealer(
                 this.container,
+                this.headerSerializer,
                 this.requestSerializer,
                 this.responseSerializer,
                 this.compressor,
@@ -116,6 +120,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
                 this.container,
                 this.repository,
                 this.dataSerializer,
+                this.headerSerializer,
                 this.requestSerializer,
                 this.responseSerializer,
                 new CompressorBypass(),
@@ -126,6 +131,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
 
             var requester = new TestDealer(
                 this.container,
+                this.headerSerializer,
                 this.requestSerializer,
                 this.responseSerializer,
                 this.compressor,
@@ -167,6 +173,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
                 this.container,
                 this.repository,
                 this.dataSerializer,
+                this.headerSerializer,
                 this.requestSerializer,
                 this.responseSerializer,
                 this.compressor,
@@ -176,6 +183,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
 
             var requester = new TestDealer(
                 this.container,
+                this.headerSerializer,
                 this.requestSerializer,
                 this.responseSerializer,
                 this.compressor,
@@ -222,6 +230,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
                 this.container,
                 this.repository,
                 this.dataSerializer,
+                this.headerSerializer,
                 this.requestSerializer,
                 this.responseSerializer,
                 this.compressor,
@@ -231,6 +240,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
 
             var requester = new TestDealer(
                 this.container,
+                this.headerSerializer,
                 this.requestSerializer,
                 this.responseSerializer,
                 this.compressor,

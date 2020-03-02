@@ -68,6 +68,7 @@ namespace NautilusData
             var tickDataSerializer = new TickDataSerializer();
             var barDataSerializer = new BarDataSerializer();
             var instrumentDataSerializer = new InstrumentDataSerializer();
+            var headerSerializer = new MsgPackDictionarySerializer();
             var requestSerializer = new MsgPackRequestSerializer();
             var responseSerializer = new MsgPackResponseSerializer();
             var compressor = CompressorFactory.Create(config.WireConfig.CompressionCodec);
@@ -137,6 +138,7 @@ namespace NautilusData
                 container,
                 tickRepository,
                 tickDataSerializer,
+                headerSerializer,
                 requestSerializer,
                 responseSerializer,
                 compressor,
@@ -147,6 +149,7 @@ namespace NautilusData
                 container,
                 barRepository,
                 barDataSerializer,
+                headerSerializer,
                 requestSerializer,
                 responseSerializer,
                 compressor,
@@ -157,6 +160,7 @@ namespace NautilusData
                 container,
                 instrumentRepository,
                 instrumentDataSerializer,
+                headerSerializer,
                 requestSerializer,
                 responseSerializer,
                 compressor,

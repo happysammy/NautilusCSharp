@@ -76,7 +76,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
             var message = subscriber.ReceiveFrameBytes();
 
             // Assert
-            Assert.Equal(1, this.publisher.CountPublished);
+            Assert.Equal(1, this.publisher.SentCount);
             Assert.Equal(barType.ToString(), Encoding.UTF8.GetString(topic));
             Assert.Equal(64U, BitConverter.ToUInt32(length));
             Assert.Equal(bar.ToString(), Encoding.UTF8.GetString(message));

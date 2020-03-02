@@ -9,6 +9,7 @@
 namespace Nautilus.Data.Providers
 {
     using System;
+    using System.Collections.Generic;
     using Microsoft.Extensions.Logging;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Message;
@@ -36,6 +37,7 @@ namespace Nautilus.Data.Providers
         /// <param name="container">The componentry container.</param>
         /// <param name="repository">The tick repository.</param>
         /// <param name="dataSerializer">The data serializer.</param>
+        /// <param name="headerSerializer">The header serializer.</param>
         /// <param name="requestSerializer">The inbound message serializer.</param>
         /// <param name="responseSerializer">The outbound message serializer.</param>
         /// <param name="compressor">The data compressor.</param>
@@ -45,6 +47,7 @@ namespace Nautilus.Data.Providers
             IComponentryContainer container,
             ITickRepositoryReadOnly repository,
             IDataSerializer<Tick> dataSerializer,
+            ISerializer<Dictionary<string, string>> headerSerializer,
             IMessageSerializer<Request> requestSerializer,
             IMessageSerializer<Response> responseSerializer,
             ICompressor compressor,
@@ -52,6 +55,7 @@ namespace Nautilus.Data.Providers
             Port port)
             : base(
                 container,
+                headerSerializer,
                 requestSerializer,
                 responseSerializer,
                 compressor,

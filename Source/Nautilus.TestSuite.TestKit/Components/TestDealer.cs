@@ -9,6 +9,7 @@
 namespace Nautilus.TestSuite.TestKit.Components
 {
     using System;
+    using System.Collections.Generic;
     using System.Text;
     using Microsoft.Extensions.Logging;
     using Nautilus.Common.Componentry;
@@ -28,6 +29,7 @@ namespace Nautilus.TestSuite.TestKit.Components
     /// </summary>
     public sealed class TestDealer : MessagingComponent
     {
+        private readonly ISerializer<Dictionary<string, string>> headerSerializer;
         private readonly IMessageSerializer<Request> requestSerializer;
         private readonly IMessageSerializer<Response> responseSerializer;
         private readonly ICompressor compressor;
@@ -37,6 +39,7 @@ namespace Nautilus.TestSuite.TestKit.Components
         /// Initializes a new instance of the <see cref="TestDealer"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
+        /// <param name="headerSerializer">The header serializer.</param>
         /// <param name="requestSerializer">The outbound serializer.</param>
         /// <param name="responseSerializer">The inbound serializer.</param>
         /// <param name="compressor">The compressor.</param>
@@ -45,6 +48,7 @@ namespace Nautilus.TestSuite.TestKit.Components
         /// <param name="subName">The requesters sub-name.</param>
         public TestDealer(
             IComponentryContainer container,
+            ISerializer<Dictionary<string, string>> headerSerializer,
             IMessageSerializer<Request> requestSerializer,
             IMessageSerializer<Response> responseSerializer,
             ICompressor compressor,
@@ -53,6 +57,7 @@ namespace Nautilus.TestSuite.TestKit.Components
             string subName = "")
             : base(container, subName)
         {
+            this.headerSerializer = headerSerializer;
             this.requestSerializer = requestSerializer;
             this.responseSerializer = responseSerializer;
             this.compressor = compressor;
@@ -83,8 +88,8 @@ namespace Nautilus.TestSuite.TestKit.Components
                     $"No encryption setup for connections to {this.ServiceAddress}");
             }
 
-            this.CountReceived = 0;
-            this.CountSent = 0;
+            this.ReceivedCount = 0;
+            this.SendCount = 0;
         }
 
         /// <summary>
@@ -100,12 +105,12 @@ namespace Nautilus.TestSuite.TestKit.Components
         /// <summary>
         /// Gets the server received message count.
         /// </summary>
-        public int CountReceived { get; private set; }
+        public int ReceivedCount { get; private set; }
 
         /// <summary>
-        /// Gets the server processed message count.
+        /// Gets the server sent message count.
         /// </summary>
-        public int CountSent { get; private set; }
+        public int SendCount { get; private set; }
 
         /// <summary>
         /// Dispose of the socket.
@@ -140,10 +145,10 @@ namespace Nautilus.TestSuite.TestKit.Components
         public Response SendRaw(byte[][] frames)
         {
             this.socket.SendMultipartBytes(frames);
-            this.CountSent++;
+            this.SendCount++;
 
             var received = this.socket.ReceiveMultipartBytes();
-            this.CountReceived++;
+            this.ReceivedCount++;
 
             var receivedType = Encoding.UTF8.GetString(received[0]);
             var receivedSize = BitConverter.ToInt64(received[1]);
@@ -207,13 +212,12 @@ namespace Nautilus.TestSuite.TestKit.Components
             byte[] payload)
         {
             this.socket.SendMultipartBytes(type, size, payload);
-            this.CountSent++;
+            this.SendCount++;
 
             var received = this.socket.ReceiveMultipartBytes();
-            this.CountReceived++;
+            this.ReceivedCount++;
 
             var receivedType = Encoding.UTF8.GetString(received[0]);
-            var receivedSize = BitConverter.ToInt64(received[1]);
             var decompressed = this.compressor.Decompress(received[2]);
             var deserialized = this.responseSerializer.Deserialize(decompressed);
 

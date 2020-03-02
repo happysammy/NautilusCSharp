@@ -51,7 +51,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             // Assert
             Assert.Equal(ComponentState.Initialized, publisher.ComponentState);
-            Assert.Equal(0, publisher.CountPublished);
+            Assert.Equal(0, publisher.SentCount);
         }
 
         [Fact]
@@ -85,7 +85,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             Assert.Equal(TestTopic, Encoding.UTF8.GetString(topic));
             Assert.Equal(toSend, Encoding.UTF8.GetString(message));
             Assert.Equal(ComponentState.Running, publisher.ComponentState);
-            Assert.Equal(1, publisher.CountPublished);
+            Assert.Equal(1, publisher.SentCount);
 
             // Tear Down
             subscriber.Disconnect(testAddress);
