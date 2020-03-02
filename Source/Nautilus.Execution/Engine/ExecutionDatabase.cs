@@ -79,16 +79,50 @@ namespace Nautilus.Execution.Engine
         /// <inheritdoc />
         public void CheckResiduals()
         {
+            this.Logger.LogInformation(LogId.Operation, "Checking residuals...");
+
             foreach (var orderId in this.GetOrderWorkingIds())
             {
-                this.GetOrder(orderId);  // Check working
-                this.Logger.LogWarning(LogId.Trading, $"Residual working order {orderId}.");
+                // Check working
+                var potentiallyWorkingOrder = this.GetOrder(orderId);
+                if (potentiallyWorkingOrder is null)
+                {
+                    this.Logger.LogError(LogId.Operation, $"Cannot find {orderId} in the cache.");
+                    continue; // Do not add null order to dictionary
+                }
+
+                if (potentiallyWorkingOrder.IsWorking)
+                {
+                    this.Logger.LogWarning(LogId.Trading, $"Residual working order {orderId}.");
+                }
+                else
+                {
+                    this.Logger.LogError(LogId.Database, $"Residual working order {orderId} was found not working.");
+
+                    // TODO: Remove from working index
+                }
             }
 
             foreach (var positionId in this.GetPositionOpenIds())
             {
-                this.GetPosition(positionId);  // Check open
-                this.Logger.LogWarning(LogId.Trading, $"Residual open position {positionId}.");
+                // Check open
+                var potentiallyOpenPosition = this.GetPosition(positionId);
+                if (potentiallyOpenPosition is null)
+                {
+                    this.Logger.LogError(LogId.Operation, $"Cannot find {positionId} in the cache.");
+                    continue; // Do not add null order to dictionary
+                }
+
+                if (potentiallyOpenPosition.IsOpen)
+                {
+                    this.Logger.LogWarning(LogId.Trading, $"Residual open position {positionId}.");
+                }
+                else
+                {
+                    this.Logger.LogError(LogId.Database, $"Residual open position {positionId} was found not open.");
+
+                    // TODO: Remove from open index
+                }
             }
         }
 
