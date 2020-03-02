@@ -166,7 +166,7 @@ namespace Nautilus.Execution.Engine
         private void OnMessage(SubmitAtomicOrder command)
         {
             this.CommandCount++;
-            this.Logger.LogInformation(LogId.Operation, $"{Received}{Command} {command}.");
+            this.Logger.LogInformation(LogId.Trading, $"{Received}{Command} {command}.");
 
             var result = this.database.AddAtomicOrder(
                 command.AtomicOrder,
@@ -225,7 +225,7 @@ namespace Nautilus.Execution.Engine
         private void OnMessage(CancelOrder command)
         {
             this.CommandCount++;
-            this.Logger.LogInformation($"{Received}{Command} {command}.");
+            this.Logger.LogInformation(LogId.Trading, $"{Received}{Command} {command}.");
 
             var order = this.database.GetOrder(command.OrderId);
             if (order is null)
@@ -236,7 +236,7 @@ namespace Nautilus.Execution.Engine
 
             if (order.IsCompleted)
             {
-                this.Logger.LogWarning(LogId.Database, $"{Received}{Command} {command} and (order is already completed).");
+                this.Logger.LogWarning(LogId.Trading, $"{Received}{Command} {command} and (order is already completed).");
             }
 
             this.gateway.CancelOrder(order);
@@ -245,7 +245,7 @@ namespace Nautilus.Execution.Engine
         private void OnMessage(ModifyOrder command)
         {
             this.CommandCount++;
-            this.Logger.LogInformation($"{Received}{Command} {command}.");
+            this.Logger.LogInformation(LogId.Trading, $"{Received}{Command} {command}.");
 
             var order = this.database.GetOrder(command.OrderId);
             if (order is null)
@@ -257,14 +257,14 @@ namespace Nautilus.Execution.Engine
             if (!order.IsWorking)
             {
                 this.bufferModify[command.OrderId] = command;
-                this.Logger.LogWarning(LogId.Operation, $"Buffering command {command} (order not yet working).");
+                this.Logger.LogWarning(LogId.Trading, $"Buffering command {command} (order not yet working).");
                 return;
             }
 
             if (this.bufferModify.ContainsKey(command.OrderId))
             {
                 this.bufferModify[command.OrderId] = command;
-                this.Logger.LogDebug(LogId.Operation, $"Buffering command {command} (order already being modified).");
+                this.Logger.LogDebug(LogId.Trading, $"Buffering command {command} (order already being modified).");
                 return;
             }
 
@@ -279,7 +279,7 @@ namespace Nautilus.Execution.Engine
         private void OnMessage(AccountInquiry command)
         {
             this.CommandCount++;
-            this.Logger.LogInformation($"{Received}{Command} {command}.");
+            this.Logger.LogInformation(LogId.Trading, $"{Received}{Command} {command}.");
 
             this.gateway.AccountInquiry();
         }
@@ -288,7 +288,7 @@ namespace Nautilus.Execution.Engine
         private void OnMessage(OrderSubmitted @event)
         {
             this.EventCount++;
-            this.Logger.LogInformation(LogId.Operation, $"{Received}{Event} {@event}.");
+            this.Logger.LogInformation(LogId.Trading, $"{Received}{Event} {@event}.");
 
             this.ProcessOrderEvent(@event);
             this.SendToEventPublisher(@event);
@@ -297,7 +297,7 @@ namespace Nautilus.Execution.Engine
         private void OnMessage(OrderAccepted @event)
         {
             this.EventCount++;
-            this.Logger.LogInformation(LogId.Operation, $"{Received}{Event} {@event}.");
+            this.Logger.LogInformation(LogId.Trading, $"{Received}{Event} {@event}.");
 
             this.ProcessOrderEvent(@event);
             this.SendToEventPublisher(@event);
@@ -306,7 +306,7 @@ namespace Nautilus.Execution.Engine
         private void OnMessage(OrderRejected @event)
         {
             this.EventCount++;
-            this.Logger.LogWarning(LogId.Operation, $"{Received}{Event} {@event}.");
+            this.Logger.LogWarning(LogId.Trading, $"{Received}{Event} {@event}.");
 
             this.ProcessOrderEvent(@event);
             this.ClearModifyBuffer(@event.OrderId);
@@ -317,7 +317,7 @@ namespace Nautilus.Execution.Engine
         private void OnMessage(OrderWorking @event)
         {
             this.EventCount++;
-            this.Logger.LogInformation(LogId.Operation, $"{Received}{Event} {@event}.");
+            this.Logger.LogInformation(LogId.Trading, $"{Received}{Event} {@event}.");
 
             var order = this.ProcessOrderEvent(@event);
             if (order != null)
@@ -337,7 +337,7 @@ namespace Nautilus.Execution.Engine
         private void OnMessage(OrderModified @event)
         {
             this.EventCount++;
-            this.Logger.LogInformation(LogId.Operation, $"{Received}{Event} {@event}.");
+            this.Logger.LogInformation(LogId.Trading, $"{Received}{Event} {@event}.");
 
             var order = this.ProcessOrderEvent(@event);
             if (order != null)
@@ -351,7 +351,7 @@ namespace Nautilus.Execution.Engine
         private void OnMessage(OrderCancelReject @event)
         {
             this.EventCount++;
-            this.Logger.LogWarning(LogId.Operation, $"{Received}{Event} {@event}.");
+            this.Logger.LogWarning(LogId.Trading, $"{Received}{Event} {@event}.");
 
             this.SendToEventPublisher(@event);
         }
@@ -359,7 +359,7 @@ namespace Nautilus.Execution.Engine
         private void OnMessage(OrderExpired @event)
         {
             this.EventCount++;
-            this.Logger.LogInformation(LogId.Operation, $"{Received}{Event} {@event}.");
+            this.Logger.LogInformation(LogId.Trading, $"{Received}{Event} {@event}.");
 
             this.ProcessOrderEvent(@event);
             this.ClearModifyBuffer(@event.OrderId);
@@ -370,7 +370,7 @@ namespace Nautilus.Execution.Engine
         private void OnMessage(OrderCancelled @event)
         {
             this.EventCount++;
-            this.Logger.LogInformation(LogId.Operation, $"{Received}{Event} {@event}.");
+            this.Logger.LogInformation(LogId.Trading, $"{Received}{Event} {@event}.");
 
             this.ProcessOrderEvent(@event);
             this.ClearModifyBuffer(@event.OrderId);
@@ -381,7 +381,7 @@ namespace Nautilus.Execution.Engine
         private void OnMessage(OrderPartiallyFilled @event)
         {
             this.EventCount++;
-            this.Logger.LogWarning(LogId.Operation, $"{Received}{Event} {@event}.");
+            this.Logger.LogWarning(LogId.Trading, $"{Received}{Event} {@event}.");
 
             this.ProcessOrderEvent(@event);
             this.HandleOrderFillEvent(@event);
@@ -391,7 +391,7 @@ namespace Nautilus.Execution.Engine
         private void OnMessage(OrderFilled @event)
         {
             this.EventCount++;
-            this.Logger.LogInformation(LogId.Operation, $"{Received}{Event} {@event}.");
+            this.Logger.LogInformation(LogId.Trading, $"{Received}{Event} {@event}.");
 
             this.ProcessOrderEvent(@event);
             this.HandleOrderFillEvent(@event);
@@ -403,7 +403,7 @@ namespace Nautilus.Execution.Engine
         private void OnMessage(AccountStateEvent @event)
         {
             this.EventCount++;
-            this.Logger.LogInformation(LogId.Operation, $"{Received}{Event} {@event}.");
+            this.Logger.LogInformation(LogId.Trading, $"{Received}{Event} {@event}.");
 
             var account = this.database.GetAccount(@event.AccountId);
             if (account is null)
@@ -484,11 +484,11 @@ namespace Nautilus.Execution.Engine
                         order,
                         modifyOrder.ModifiedQuantity,
                         modifyOrder.ModifiedPrice);
-                    this.Logger.LogDebug(LogId.Operation, $"{Command}{Sent} {modifyOrder} to TradingGateway.");
+                    this.Logger.LogDebug(LogId.Trading, $"{Command}{Sent} {modifyOrder} to TradingGateway.");
                 }
 
                 this.bufferModify.Remove(order.Id);
-                this.Logger.LogDebug(LogId.Operation, $"Cleared command {modifyOrder} from buffer.");
+                this.Logger.LogDebug(LogId.Trading, $"Cleared command {modifyOrder} from buffer.");
             }
         }
 
@@ -497,7 +497,7 @@ namespace Nautilus.Execution.Engine
             if (this.bufferModify.ContainsKey(orderId))
             {
                 this.bufferModify.Remove(orderId);
-                this.Logger.LogDebug(LogId.Operation, $"Cleared ModifyOrder buffer for {orderId}.");
+                this.Logger.LogDebug(LogId.Trading, $"Cleared ModifyOrder buffer for {orderId}.");
             }
         }
 
@@ -545,14 +545,14 @@ namespace Nautilus.Execution.Engine
                 this.gtdExpiryBackupTokens[order.Id] = token;
 
                 this.Logger.LogDebug(
-                    LogId.Operation,
+                    LogId.Trading,
                     $"Scheduled GTD CancelOrder backup for {order.ExpireTime.Value.ToIso8601String()}.");
             }
             else
             {
                 // This should never happen
                 this.Logger.LogError(
-                    LogId.Operation,
+                    LogId.Trading,
                     $"Cannot schedule backup CancelOrder (no expire time set for GTD order {order.Id}).");
             }
         }
@@ -563,7 +563,7 @@ namespace Nautilus.Execution.Engine
             {
                 token.Cancel();
                 this.gtdExpiryBackupTokens.Remove(orderId);
-                this.Logger.LogDebug(LogId.Operation, $"Cleared GtdExpiryBackup for {orderId}.");
+                this.Logger.LogDebug(LogId.Trading, $"Cleared GtdExpiryBackup for {orderId}.");
             }
         }
 
