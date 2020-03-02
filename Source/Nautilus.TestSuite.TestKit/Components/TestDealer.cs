@@ -167,7 +167,7 @@ namespace Nautilus.TestSuite.TestKit.Components
             var header = new Dictionary<string, string>
             {
                 { nameof(MessageType), MessageType.String.ToString() },
-                { "TypeName", "utf-8" },
+                { nameof(Type), nameof(Encoding.UTF8) },
             };
 
             var frameHeader = this.compressor.Compress(this.headerSerializer.Serialize(header));
@@ -186,7 +186,7 @@ namespace Nautilus.TestSuite.TestKit.Components
             var header = new Dictionary<string, string>
             {
                 { nameof(MessageType), request.MessageType.ToString() },
-                { "TypeName", request.Type.Name },
+                { nameof(Type), request.Type.Name },
             };
 
             var frameHeader = this.compressor.Compress(this.headerSerializer.Serialize(header));

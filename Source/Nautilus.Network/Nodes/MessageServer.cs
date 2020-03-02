@@ -267,30 +267,6 @@ namespace Nautilus.Network.Nodes
             }
         }
 
-        private static string DecodeHeaderType(byte[] headerType)
-        {
-            try
-            {
-                return Encoding.UTF8.GetString(headerType);
-            }
-            catch (ArgumentException)
-            {
-                return string.Empty;
-            }
-        }
-
-        private static long DecodeHeaderSize(byte[] headerSize)
-        {
-            try
-            {
-                return BitConverter.ToInt64(headerSize);
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-                return -1;
-            }
-        }
-
         private Task StartWork()
         {
             while (!this.cts.IsCancellationRequested)
@@ -379,15 +355,15 @@ namespace Nautilus.Network.Nodes
 
         private void HandleMessage(Dictionary<string, string> header, byte[] body, Address sender)
         {
-            if (!header.TryGetValue(nameof(MessageType), out var type))
+            if (!header.TryGetValue(nameof(MessageType), out var messageType))
             {
-                var errorMessage = $"Message header did not contain 'TypeName'.";
+                var errorMessage = $"Message header did not contain the 'MessageType' key.";
                 this.Logger.LogWarning(LogId.Networking, errorMessage);
                 this.SendRejected(errorMessage, sender);
                 return;
             }
 
-            switch (type)
+            switch (messageType)
             {
                 case nameof(String):
                     this.HandleString(body, sender);
@@ -400,7 +376,7 @@ namespace Nautilus.Network.Nodes
                     break;
                 default:
                 {
-                    var errorMessage = $"Message type '{type}' is not valid at this address {this.networkAddress}.";
+                    var errorMessage = $"Message type '{messageType}' is not valid at this address {this.networkAddress}.";
                     this.Logger.LogWarning(LogId.Networking, errorMessage);
                     this.SendRejected(errorMessage, sender);
                     break;
@@ -545,8 +521,8 @@ namespace Nautilus.Network.Nodes
             {
                 var header = new Dictionary<string, string>
                 {
-                    { "MessageType", outbound.MessageType.ToString() },
-                    { "TypeName", outbound.Type.Name },
+                    { nameof(MessageType), outbound.MessageType.ToString() },
+                    { nameof(Type), outbound.Type.Name },
                 };
 
                 var frameHeader = this.compressor.Compress(this.headerSerializer.Serialize(header));
