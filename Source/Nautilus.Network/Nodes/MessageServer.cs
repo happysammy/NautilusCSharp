@@ -248,7 +248,7 @@ namespace Nautilus.Network.Nodes
             {
                 this.Logger.LogError(
                     LogId.Networking,
-                    $"Cannot send message {outbound} no receiver address found for {correlationId}).");
+                    $"Cannot send message {outbound}, no receiver address found for correlation id {correlationId}).");
                 return;
             }
 
@@ -269,9 +269,16 @@ namespace Nautilus.Network.Nodes
 
         private Task StartWork()
         {
-            while (!this.cts.IsCancellationRequested)
+            try
             {
-                this.ReceiveMessage();
+                while (!this.cts.IsCancellationRequested)
+                {
+                    this.ReceiveMessage();
+                }
+            }
+            catch (OperationCanceledException ex)
+            {
+                this.Logger.LogError(LogId.Operation, "Message processing loop was hard cancelled.", ex);
             }
 
             this.Logger.LogDebug(LogId.Networking, "Stopped receiving messages.");
@@ -539,6 +546,7 @@ namespace Nautilus.Network.Nodes
             catch (Exception ex)
             {
                 // Interaction with NetMQ
+                // Socket will throw HostUnreadableException if a message cannot be routed.
                 this.Logger.LogError(LogId.Networking, ex.Message, ex);
             }
         }
