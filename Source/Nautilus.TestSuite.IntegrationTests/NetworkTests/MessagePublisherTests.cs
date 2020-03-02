@@ -78,7 +78,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             publisher.Endpoint.Send((TestTopic, toSend));
 
             var topic = subscriber.ReceiveFrameBytes();
-            var length = subscriber.ReceiveFrameBytes();
             var message = subscriber.ReceiveFrameBytes();
 
             // Assert

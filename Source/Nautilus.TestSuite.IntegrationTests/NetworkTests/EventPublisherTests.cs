@@ -77,7 +77,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             this.Output.WriteLine("Waiting for published events...");
 
             var topic = subscriber.ReceiveFrameBytes();
-            var length = subscriber.ReceiveFrameBytes();
             var message = subscriber.ReceiveFrameBytes();
             var @event = serializer.Deserialize(message);
 

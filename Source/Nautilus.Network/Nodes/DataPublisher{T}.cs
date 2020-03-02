@@ -135,27 +135,18 @@ namespace Nautilus.Network.Nodes
         /// <param name="message">The message to publish.</param>
         protected void Publish(string topic, T message)
         {
-            var serialized = this.serializer.Serialize(message);
-            var size = BitConverter.GetBytes(serialized.Length);
-            var payload = this.compressor.Compress(serialized);
-            this.socket.SendMultipartBytes(Encoding.UTF8.GetBytes(topic), size, payload);
+            var body = this.compressor.Compress(this.serializer.Serialize(message));
+
+            this.socket.SendMultipartBytes(Encoding.UTF8.GetBytes(topic), body);
 
             this.SentCount++;
-            this.LogPublished(topic, message, serialized.Length, payload.Length);
+            this.LogPublished(topic, body.Length);
         }
 
         [Conditional("DEBUG")]
-        private void LogPublished(
-            string topic,
-            T message,
-            int serializedLength,
-            int compressedLength)
+        private void LogPublished(string topic, int compressedLength)
         {
-            var logMessage = $"[{this.SentCount}]--> " +
-                             $"Topic={topic}, " +
-                             $"Serialized={serializedLength:N0} bytes, " +
-                             $"Compressed={compressedLength:N0} bytes, " +
-                             $"Message={message}";
+            var logMessage = $"[{this.SentCount}]--> Topic={topic}, Body={compressedLength} bytes";
 
             this.Logger.LogTrace(LogId.Networking, logMessage);
         }

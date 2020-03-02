@@ -67,13 +67,11 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
             this.publisher.Endpoint.Send(tick);
 
             var topic = subscriber.ReceiveFrameBytes();
-            var length = subscriber.ReceiveFrameBytes();
             var message = subscriber.ReceiveFrameBytes();
 
             // Assert
             Assert.Equal(1, this.publisher.SentCount);
             Assert.Equal(tick.Symbol.Value, Encoding.UTF8.GetString(topic));
-            Assert.Equal(44U, BitConverter.ToUInt32(length));
             Assert.Equal(tick.ToString(), Encoding.UTF8.GetString(message));
 
             // Tear Down
