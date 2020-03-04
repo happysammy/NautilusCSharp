@@ -104,6 +104,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.controller.Endpoint.Send(subscribe2).Wait();
             this.controller.Stop().Wait();
 
+            Task.Delay(100).Wait(); // Extra delay needed to prevent intermittently failing test?
+
             // Assert
             Assert.Equal(1, this.controller.BarAggregators.Count);
             Assert.Equal(2, this.controller.Subscriptions.Count);

@@ -14,9 +14,9 @@ namespace NautilusExecutor
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
-    using NautilusExecutor.Logging;
     using Serilog;
     using Serilog.Debugging;
+    using Serilog.Events;
 
     /// <summary>
     /// The main entry point for the application.
@@ -49,7 +49,11 @@ namespace NautilusExecutor
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(configuration)
                 .Enrich.FromLogContext()
-                .Enrich.With(new ThreadIdEnricher())
+                .Enrich.WithThreadId()
+                .WriteTo.RollingFile(
+                    "Logs/Nautilus-Log-{Date}.txt",
+                    restrictedToMinimumLevel: LogEventLevel.Debug,
+                    outputTemplate: logTemplate)
                 .WriteTo.Console(outputTemplate: logTemplate)
                 .CreateLogger();
 
