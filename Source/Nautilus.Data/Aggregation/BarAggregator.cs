@@ -27,7 +27,7 @@ namespace Nautilus.Data.Aggregation
     /// </summary>
     public sealed class BarAggregator : MessagingComponent
     {
-        private readonly IEndpoint parent;
+        private readonly IEndpoint controller;
         private readonly Symbol symbol;
         private readonly List<BarSpecification> specifications;
         private readonly Dictionary<BarSpecification, BarBuilder?> barBuilders;
@@ -37,15 +37,15 @@ namespace Nautilus.Data.Aggregation
         /// Initializes a new instance of the <see cref="BarAggregator"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
-        /// <param name="parent">The parent endpoint.</param>
+        /// <param name="controller">The aggregation controller endpoint.</param>
         /// <param name="symbol">The symbol.</param>
         public BarAggregator(
             IComponentryContainer container,
-            IEndpoint parent,
+            IEndpoint controller,
             Symbol symbol)
             : base(container)
         {
-            this.parent = parent;
+            this.controller = controller;
             this.symbol = symbol;
             this.specifications = new List<BarSpecification>();
             this.barBuilders = new Dictionary<BarSpecification, BarBuilder?>();
@@ -59,7 +59,7 @@ namespace Nautilus.Data.Aggregation
         }
 
         /// <summary>
-        /// Gets the bar aggregators current subscriptions.
+        /// Gets the bar aggregators current specifications.
         /// </summary>
         public IReadOnlyCollection<BarSpecification> Specifications => this.specifications.AsReadOnly();
 
@@ -74,7 +74,7 @@ namespace Nautilus.Data.Aggregation
                 case PriceType.Mid:
                     var decimalsPlusOne = tick.Bid.Precision + 1;
                     var midPrice = Math.Round((tick.Bid + tick.Ask) / 2, decimalsPlusOne);
-                    return Price.Create(midPrice, (byte)decimalsPlusOne);
+                    return Price.Create(midPrice, decimalsPlusOne);
                 case PriceType.Last:
                 case PriceType.Undefined:
                     goto default;
@@ -136,7 +136,7 @@ namespace Nautilus.Data.Aggregation
                 var barData = new BarData(barType, bar);
 
                 // Send to bar aggregation controller (parent)
-                this.parent.Send(barData);
+                this.controller.Send(barData);
 
                 // Refresh bar builder
                 this.barBuilders[barSpec] = new BarBuilder(bar.Close);

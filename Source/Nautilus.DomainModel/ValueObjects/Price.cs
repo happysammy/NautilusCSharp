@@ -59,7 +59,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <param name="value">The price value.</param>
         /// <param name="precision">The price precision.</param>
         /// <returns>A <see cref="Price"/>.</returns>
-        public static Price Create(decimal value, byte precision)
+        public static Price Create(decimal value, int precision)
         {
             return new Price(value, precision);
         }
