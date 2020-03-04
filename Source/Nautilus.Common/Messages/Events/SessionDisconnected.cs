@@ -21,6 +21,8 @@ namespace Nautilus.Common.Messages.Events
     [Immutable]
     public sealed class SessionDisconnected : Event
     {
+        private static readonly Type EventType = typeof(SessionDisconnected);
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SessionDisconnected"/> class.
         /// </summary>
@@ -33,7 +35,7 @@ namespace Nautilus.Common.Messages.Events
             string sessionId,
             Guid id,
             ZonedDateTime timestamp)
-            : base(typeof(SessionDisconnected), id, timestamp)
+            : base(EventType, id, timestamp)
         {
             Debug.NotEmptyOrWhiteSpace(sessionId, nameof(sessionId));
 

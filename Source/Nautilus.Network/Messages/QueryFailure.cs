@@ -20,6 +20,8 @@ namespace Nautilus.Network.Messages
     [Immutable]
     public sealed class QueryFailure : Response
     {
+        private static readonly Type EventType = typeof(QueryFailure);
+
         /// <summary>
         /// Initializes a new instance of the <see cref="QueryFailure"/> class.
         /// </summary>
@@ -33,7 +35,7 @@ namespace Nautilus.Network.Messages
             Guid id,
             ZonedDateTime timestamp)
             : base(
-                typeof(QueryFailure),
+                EventType,
                 correlationId,
                 id,
                 timestamp)

@@ -22,6 +22,8 @@ namespace Nautilus.Common.Messages.Commands
     [Immutable]
     public sealed class Subscribe<T> : Command
     {
+        private static readonly Type EventType = typeof(Subscribe<T>);
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Subscribe{T}"/> class.
         /// </summary>
@@ -35,7 +37,7 @@ namespace Nautilus.Common.Messages.Commands
             Guid id,
             ZonedDateTime timestamp)
             : base(
-                typeof(Subscribe<T>),
+                EventType,
                 id,
                 timestamp)
         {

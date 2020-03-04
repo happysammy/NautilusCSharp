@@ -22,6 +22,8 @@ namespace Nautilus.Common.Messages.Commands
     [Immutable]
     public sealed class Unsubscribe<T> : Command
     {
+        private static readonly Type EventType = typeof(Unsubscribe<T>);
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Unsubscribe{T}"/> class.
         /// </summary>
@@ -35,7 +37,7 @@ namespace Nautilus.Common.Messages.Commands
             Guid id,
             ZonedDateTime timestamp)
             : base(
-                typeof(Unsubscribe<T>),
+                EventType,
                 id,
                 timestamp)
         {

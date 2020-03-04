@@ -22,6 +22,8 @@ namespace Nautilus.DomainModel.Events
     [Immutable]
     public sealed class OrderFilled : OrderFillEvent
     {
+        private static readonly Type EventType = typeof(OrderFilled);
+
         /// <summary>
         /// Initializes a new instance of the <see cref="OrderFilled"/> class.
         /// </summary>
@@ -61,7 +63,7 @@ namespace Nautilus.DomainModel.Events
                 averagePrice,
                 currency,
                 executionTime,
-                typeof(OrderFilled),
+                EventType,
                 eventId,
                 eventTimestamp)
         {

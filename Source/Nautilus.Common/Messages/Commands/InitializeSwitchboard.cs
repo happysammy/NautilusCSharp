@@ -21,6 +21,8 @@ namespace Nautilus.Common.Messages.Commands
     [Immutable]
     public sealed class InitializeSwitchboard : Command
     {
+        private static readonly Type EventType = typeof(InitializeSwitchboard);
+
         /// <summary>
         /// Initializes a new instance of the <see cref="InitializeSwitchboard"/> class.
         /// </summary>
@@ -31,7 +33,7 @@ namespace Nautilus.Common.Messages.Commands
             Switchboard switchboard,
             Guid id,
             ZonedDateTime timestamp)
-            : base(typeof(InitializeSwitchboard), id, timestamp)
+            : base(EventType, id, timestamp)
         {
             Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));

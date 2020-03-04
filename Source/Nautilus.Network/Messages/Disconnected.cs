@@ -21,6 +21,8 @@ namespace Nautilus.Network.Messages
     [Immutable]
     public sealed class Disconnected : Response
     {
+        private static readonly Type EventType = typeof(Disconnected);
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Disconnected"/> class.
         /// </summary>
@@ -38,7 +40,7 @@ namespace Nautilus.Network.Messages
             Guid id,
             ZonedDateTime timestamp)
             : base(
-                typeof(Disconnected),
+                EventType,
                 correlationId,
                 id,
                 timestamp)

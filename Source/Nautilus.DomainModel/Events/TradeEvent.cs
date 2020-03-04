@@ -8,6 +8,7 @@
 
 namespace Nautilus.DomainModel.Events
 {
+    using System;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Message;
     using Nautilus.DomainModel.Events.Base;
@@ -19,6 +20,8 @@ namespace Nautilus.DomainModel.Events
     [Immutable]
     public sealed class TradeEvent : Event
     {
+        private static readonly Type EventType = typeof(TradeEvent);
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TradeEvent"/> class.
         /// </summary>
@@ -26,7 +29,7 @@ namespace Nautilus.DomainModel.Events
         /// <param name="orderEvent">The event order event.</param>
         public TradeEvent(TraderId traderId, OrderEvent orderEvent)
             : base(
-                typeof(TradeEvent),
+                EventType,
                 orderEvent.Id,
                 orderEvent.Timestamp)
         {

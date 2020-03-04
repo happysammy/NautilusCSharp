@@ -23,6 +23,8 @@ namespace Nautilus.DomainModel.Events
     [Immutable]
     public sealed class AccountStateEvent : AccountEvent
     {
+        private static readonly Type EventType = typeof(AccountStateEvent);
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AccountStateEvent" /> class.
         /// </summary>
@@ -51,7 +53,7 @@ namespace Nautilus.DomainModel.Events
             ZonedDateTime eventTimestamp)
             : base(
                 accountId,
-                typeof(AccountStateEvent),
+                EventType,
                 eventId,
                 eventTimestamp)
         {

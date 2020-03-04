@@ -21,6 +21,8 @@ namespace Nautilus.Common.Messages.Events
     [Immutable]
     public sealed class MarketClosed : Event
     {
+        private static readonly Type EventType = typeof(MarketClosed);
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MarketClosed"/> class.
         /// </summary>
@@ -33,7 +35,7 @@ namespace Nautilus.Common.Messages.Events
             ZonedDateTime closedTime,
             Guid id,
             ZonedDateTime timestamp)
-            : base(typeof(MarketClosed), id, timestamp)
+            : base(EventType, id, timestamp)
         {
             Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));

@@ -21,6 +21,8 @@ namespace Nautilus.Common.Messages.Commands
     [Immutable]
     public sealed class ConnectSession : Command, IScheduledJob
     {
+        private static readonly Type EventType = typeof(ConnectSession);
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ConnectSession"/> class.
         /// </summary>
@@ -31,7 +33,7 @@ namespace Nautilus.Common.Messages.Commands
             ZonedDateTime scheduledTime,
             Guid id,
             ZonedDateTime timestamp)
-            : base(typeof(ConnectSession), id, timestamp)
+            : base(EventType, id, timestamp)
         {
             Debug.NotDefault(scheduledTime, nameof(scheduledTime));
 

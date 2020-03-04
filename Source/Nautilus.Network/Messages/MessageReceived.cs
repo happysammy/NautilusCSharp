@@ -20,6 +20,8 @@ namespace Nautilus.Network.Messages
     [Immutable]
     public sealed class MessageReceived : Response
     {
+        private static readonly Type EventType = typeof(MessageReceived);
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageReceived"/> class.
         /// </summary>
@@ -33,7 +35,7 @@ namespace Nautilus.Network.Messages
             Guid id,
             ZonedDateTime timestamp)
             : base(
-                typeof(MessageReceived),
+                EventType,
                 correlationId,
                 id,
                 timestamp)

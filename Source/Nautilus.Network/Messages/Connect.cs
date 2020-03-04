@@ -21,6 +21,8 @@ namespace Nautilus.Network.Messages
     [Immutable]
     public sealed class Connect : Request
     {
+        private static readonly Type EventType = typeof(Connect);
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Connect"/> class.
         /// </summary>
@@ -34,7 +36,7 @@ namespace Nautilus.Network.Messages
             Guid id,
             ZonedDateTime timestamp)
             : base(
-                typeof(Connect),
+                EventType,
                 id,
                 timestamp)
         {

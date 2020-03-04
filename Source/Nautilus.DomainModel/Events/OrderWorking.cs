@@ -25,6 +25,8 @@ namespace Nautilus.DomainModel.Events
     [Immutable]
     public sealed class OrderWorking : OrderEvent
     {
+        private static readonly Type EventType = typeof(OrderWorking);
+
         /// <summary>
         /// Initializes a new instance of the <see cref="OrderWorking"/> class.
         /// </summary>
@@ -59,7 +61,7 @@ namespace Nautilus.DomainModel.Events
             ZonedDateTime eventTimestamp)
             : base(
                 orderId,
-                typeof(OrderWorking),
+                EventType,
                 eventId,
                 eventTimestamp)
         {

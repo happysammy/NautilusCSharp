@@ -19,13 +19,15 @@ namespace Nautilus.Common.Messages.Commands
     [Immutable]
     public sealed class Stop : Command
     {
+        private static readonly Type EventType = typeof(Stop);
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Stop"/> class.
         /// </summary>
         /// <param name="id">The commands identifier.</param>
         /// <param name="timestamp">The commands timestamp.</param>
         public Stop(Guid id, ZonedDateTime timestamp)
-            : base(typeof(Stop), id, timestamp)
+            : base(EventType, id, timestamp)
         {
         }
     }

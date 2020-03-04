@@ -21,6 +21,8 @@ namespace Nautilus.DomainModel.Events
     [Immutable]
     public sealed class MarketOpened : Event
     {
+        private static readonly Type EventType = typeof(MarketOpened);
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MarketOpened" /> class.
         /// </summary>
@@ -31,7 +33,10 @@ namespace Nautilus.DomainModel.Events
             Symbol symbol,
             Guid eventId,
             ZonedDateTime eventTimestamp)
-            : base(typeof(MarketOpened), eventId, eventTimestamp)
+            : base(
+                EventType,
+                eventId,
+                eventTimestamp)
         {
             Debug.NotDefault(eventId, nameof(eventId));
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
