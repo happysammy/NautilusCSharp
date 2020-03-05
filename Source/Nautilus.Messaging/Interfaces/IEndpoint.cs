@@ -21,8 +21,14 @@ namespace Nautilus.Messaging.Interfaces
         /// Sends the given message to the endpoint.
         /// </summary>
         /// <param name="message">The message to send.</param>
+        void Send(object message);
+
+        /// <summary>
+        /// Sends the given message to the endpoint.
+        /// </summary>
+        /// <param name="message">The message to send.</param>
         /// <returns>The result of the sending operation.</returns>
-        Task<bool> Send(object message);
+        Task<bool> SendAsync(object message);
 
         /// <summary>
         /// Gets the endpoints target block.

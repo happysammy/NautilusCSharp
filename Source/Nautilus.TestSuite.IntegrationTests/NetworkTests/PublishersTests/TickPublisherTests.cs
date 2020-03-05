@@ -63,7 +63,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
             var tick = StubTickProvider.Create(symbol);
 
             // Act
-            this.publisher.Endpoint.Send(tick);
+            this.publisher.Endpoint.SendAsync(tick);
 
             var topic = subscriber.ReceiveFrameBytes();
             var message = subscriber.ReceiveFrameBytes();

@@ -66,8 +66,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.controller.Endpoint.Send(subscribe1);
-            this.controller.Endpoint.Send(subscribe2).Wait();
+            this.controller.Endpoint.SendAsync(subscribe1);
+            this.controller.Endpoint.SendAsync(subscribe2).Wait();
             this.controller.Stop().Wait();
             Task.Delay(100).Wait();  // TODO: Intermittent test sometimes Specifications.Count == 1
 
@@ -99,9 +99,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.controller.Endpoint.Send(subscribe1);
-            this.controller.Endpoint.Send(subscribe2);
-            this.controller.Endpoint.Send(subscribe2).Wait();
+            this.controller.Endpoint.SendAsync(subscribe1);
+            this.controller.Endpoint.SendAsync(subscribe2);
+            this.controller.Endpoint.SendAsync(subscribe2).Wait();
             this.controller.Stop().Wait();
 
             Task.Delay(100).Wait(); // Extra delay needed to prevent intermittently failing test?
@@ -150,10 +150,10 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.controller.Endpoint.Send(subscribe1);
-            this.controller.Endpoint.Send(subscribe2);
-            this.controller.Endpoint.Send(subscribe3);
-            this.controller.Endpoint.Send(subscribe4).Wait();
+            this.controller.Endpoint.SendAsync(subscribe1);
+            this.controller.Endpoint.SendAsync(subscribe2);
+            this.controller.Endpoint.SendAsync(subscribe3);
+            this.controller.Endpoint.SendAsync(subscribe4).Wait();
             this.controller.Stop().Wait();
 
             // Assert
@@ -190,11 +190,11 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            this.controller.Endpoint.Send(subscribe1);
-            this.controller.Endpoint.Send(subscribe2);
+            this.controller.Endpoint.SendAsync(subscribe1);
+            this.controller.Endpoint.SendAsync(subscribe2);
 
             // Act
-            this.controller.Endpoint.Send(unsubscribe).Wait();
+            this.controller.Endpoint.SendAsync(unsubscribe).Wait();
             this.controller.Stop().Wait();
 
             // Assert
@@ -229,12 +229,12 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            this.controller.Endpoint.Send(subscribe1);
-            this.controller.Endpoint.Send(subscribe2);
+            this.controller.Endpoint.SendAsync(subscribe1);
+            this.controller.Endpoint.SendAsync(subscribe2);
 
             // Act
-            this.controller.Endpoint.Send(unsubscribe);
-            this.controller.Endpoint.Send(unsubscribe).Wait();
+            this.controller.Endpoint.SendAsync(unsubscribe);
+            this.controller.Endpoint.SendAsync(unsubscribe).Wait();
             this.controller.Stop().Wait();
 
             // Assert
@@ -303,16 +303,16 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            this.controller.Endpoint.Send(subscribe1);
-            this.controller.Endpoint.Send(subscribe2);
-            this.controller.Endpoint.Send(subscribe3);
-            this.controller.Endpoint.Send(subscribe4);
+            this.controller.Endpoint.SendAsync(subscribe1);
+            this.controller.Endpoint.SendAsync(subscribe2);
+            this.controller.Endpoint.SendAsync(subscribe3);
+            this.controller.Endpoint.SendAsync(subscribe4);
 
             // Act
-            this.controller.Endpoint.Send(unsubscribe1);
-            this.controller.Endpoint.Send(unsubscribe2);
-            this.controller.Endpoint.Send(unsubscribe3);
-            this.controller.Endpoint.Send(unsubscribe4).Wait();
+            this.controller.Endpoint.SendAsync(unsubscribe1);
+            this.controller.Endpoint.SendAsync(unsubscribe2);
+            this.controller.Endpoint.SendAsync(unsubscribe3);
+            this.controller.Endpoint.SendAsync(unsubscribe4).Wait();
             this.controller.Stop().Wait();
 
             // Assert

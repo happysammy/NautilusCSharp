@@ -72,7 +72,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
             var data = new BarData(barType, bar);
 
             // Act
-            this.publisher.Endpoint.Send(data);
+            this.publisher.Endpoint.SendAsync(data);
 
             var topic = subscriber.ReceiveFrameBytes();
             var message = subscriber.ReceiveFrameBytes();
@@ -105,7 +105,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
             Task.Delay(100).Wait();
 
             // Act
-            this.publisher.Endpoint.Send(instrument);
+            this.publisher.Endpoint.SendAsync(instrument);
 
             var topic = subscriber.ReceiveFrameBytes();
             var message = subscriber.ReceiveFrameBytes();

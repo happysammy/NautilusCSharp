@@ -75,7 +75,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             // Act
             const string toSend = "1234,1234";
-            publisher.Endpoint.Send((TestTopic, toSend));
+            publisher.Endpoint.SendAsync((TestTopic, toSend));
 
             var topic = subscriber.ReceiveFrameBytes();
             var message = subscriber.ReceiveFrameBytes();

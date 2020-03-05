@@ -9,14 +9,9 @@
 namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 {
     using System.Diagnostics.CodeAnalysis;
-    using System.Threading.Tasks;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Execution.Network;
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Network;
-    using Nautilus.Network.Compression;
-    using Nautilus.Network.Encryption;
-    using Nautilus.Serialization.MessageSerializers;
     using Nautilus.TestSuite.TestKit.Components;
     using Nautilus.TestSuite.TestKit.Fixtures;
     using Nautilus.TestSuite.TestKit.Mocks;
@@ -49,17 +44,17 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             var requester = new RequestSocket(testAddress);
             requester.Connect(testAddress);
 
-            var commandServer = new CommandServer(
-                this.container,
-                this.messagingAdapter,
-                new MsgPackDictionarySerializer(),
-                new MsgPackRequestSerializer(),
-                new MsgPackResponseSerializer(),
-                new MsgPackCommandSerializer(),
-                new CompressorBypass(),
-                EncryptionSettings.None(),
-                new Port(54553),
-                new Port(54554));
+            // var commandServer = new CommandServer(
+            //     this.container,
+            //     this.messagingAdapter,
+            //     new MsgPackDictionarySerializer(),
+            //     new MsgPackRequestSerializer(),
+            //     new MsgPackResponseSerializer(),
+            //     new MsgPackCommandSerializer(),
+            //     new CompressorBypass(),
+            //     EncryptionSettings.None(),
+            //     new Port(54553),
+            //     new Port(54554));
 
 // var hexString = "85ac636f6d6d616e645f74797065ad6f726465725f636f6d6d616e64a56f72646572" +
 //                            "da016e38616136373337393664363236663663616234313535343435353533343432" +
@@ -82,7 +77,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             // Act
             // requester.SendFrame(commandBytes);
-            Task.Delay(300).Wait();
 
             // Assert
 //            LogDumper.Dump(this.loggingAdapter, this.output);

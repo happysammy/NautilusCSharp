@@ -36,9 +36,9 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
         internal void CanThrottleMessagesPer100Milliseconds_Test1()
         {
             // Arrange
-            var throttler = new Throttler(
+            var throttler = new Throttler<string>(
                 this.container,
-                this.receiver.Endpoint,
+                this.receiver.Endpoint.Send,
                 Duration.FromMilliseconds(100),
                 10,
                 "1");
@@ -46,7 +46,7 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
             // Act
             for (var i = 0; i < 21; i++)
             {
-                throttler.Endpoint.Send($"Message-{i + 1}");
+                throttler.Endpoint.SendAsync($"Message-{i + 1}");
             }
 
             Task.Delay(50).Wait();
@@ -70,9 +70,9 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
         internal void CanThrottleMessagesPer100Milliseconds_Test2()
         {
             // Arrange
-            var throttler = new Throttler(
+            var throttler = new Throttler<string>(
                 this.container,
-                this.receiver.Endpoint,
+                this.receiver.Endpoint.Send,
                 Duration.FromMilliseconds(100),
                 10,
                 "1");
@@ -80,7 +80,7 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
             // Act
             for (var i = 0; i < 11; i++)
             {
-                throttler.Endpoint.Send($"Message-{i + 1}");
+                throttler.Endpoint.SendAsync($"Message-{i + 1}");
             }
 
             Task.Delay(50).Wait();
@@ -90,7 +90,7 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
 
             for (var i = 0; i < 20; i++)
             {
-                throttler.Endpoint.Send($"Message2-{i + 1}");
+                throttler.Endpoint.SendAsync($"Message2-{i + 1}");
             }
 
             // Wait for all messages to send

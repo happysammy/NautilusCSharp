@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="Throttler.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="Throttler{T}.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2020 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   https://nautechsystems.io
@@ -9,41 +9,41 @@
 namespace Nautilus.Common.Messaging
 {
     using System;
-    using System.Collections;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core.Correctness;
-    using Nautilus.Messaging.Interfaces;
     using NodaTime;
 
     /// <summary>
-    /// Provides a message throttler.
+    /// Provides a generic object throttler.
     /// </summary>
-    public sealed class Throttler : MessagingComponent
+    /// <typeparam name="T">The throttled object type.</typeparam>
+    public sealed class Throttler<T> : MessagingComponent
     {
-        private readonly IEndpoint receiver;
+        private readonly Action<T> receiver;
         private readonly TimeSpan interval;
         private readonly RefreshVouchers refresh;
         private readonly int limit;
-        private readonly Queue queue;
+        private readonly Queue<T> queue;
 
         private int vouchers;
         private int totalCount;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Throttler"/> class.
+        /// Initializes a new instance of the <see cref="Throttler{T}"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
-        /// <param name="receiver">The receiver service.</param>
+        /// <param name="receiver">The throttled object receiver.</param>
         /// <param name="intervalDuration">The throttle timer interval.</param>
         /// <param name="limit">The message limit per interval.</param>
         /// <param name="subName">The sub-name for the throttler.</param>
         public Throttler(
             IComponentryContainer container,
-            IEndpoint receiver,
+            Action<T> receiver,
             Duration intervalDuration,
             int limit,
             string subName)
@@ -56,14 +56,14 @@ namespace Nautilus.Common.Messaging
             this.interval = intervalDuration.ToTimeSpan();
             this.refresh = new RefreshVouchers();
             this.limit = limit;
-            this.queue = new Queue();
+            this.queue = new Queue<T>();
 
             this.IsIdle = true;
             this.vouchers = limit;
             this.totalCount = 0;
 
             this.RegisterHandler<RefreshVouchers>(this.OnMessage);
-            this.RegisterHandler<object>(this.OnMessage);
+            this.RegisterHandler<T>(this.OnMessage);
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace Nautilus.Common.Messaging
             this.ProcessQueue();
         }
 
-        private void OnMessage(object message)
+        private void OnMessage(T message)
         {
             this.queue.Enqueue(message);
 
@@ -140,7 +140,7 @@ namespace Nautilus.Common.Messaging
                     continue;  // Cannot send a null message.
                 }
 
-                this.receiver.Send(message);
+                this.receiver(message);
                 this.vouchers--;
 
                 this.Logger.LogTrace($"Sent message {message} (total_count={this.totalCount}).");

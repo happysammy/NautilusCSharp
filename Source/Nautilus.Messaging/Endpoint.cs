@@ -54,7 +54,10 @@ namespace Nautilus.Messaging
         public static bool operator !=(Endpoint left,  Endpoint right) => !(left == right);
 
         /// <inheritdoc />
-        public Task<bool> Send(object message) => this.target.SendAsync(message);
+        public void Send(object message) => this.target.Post(message);
+
+        /// <inheritdoc />
+        public Task<bool> SendAsync(object message) => this.target.SendAsync(message);
 
         /// <inheritdoc />
         public ITargetBlock<object> GetLink()

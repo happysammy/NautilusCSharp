@@ -55,7 +55,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.barAggregator.Endpoint.Send(closeBar).Wait();
+            this.barAggregator.Endpoint.SendAsync(closeBar).Wait();
             this.barAggregator.Stop().Wait();
             this.receiver.Stop().Wait();
 
@@ -77,7 +77,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.barAggregator.Endpoint.Send(subscribe).Wait();
+            this.barAggregator.Endpoint.SendAsync(subscribe).Wait();
             this.barAggregator.Stop().Wait();
             this.receiver.Stop().Wait();
 
@@ -99,8 +99,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.barAggregator.Endpoint.Send(subscribe);
-            this.barAggregator.Endpoint.Send(subscribe).Wait();
+            this.barAggregator.Endpoint.SendAsync(subscribe);
+            this.barAggregator.Endpoint.SendAsync(subscribe).Wait();
             this.barAggregator.Stop().Wait();
             this.receiver.Stop().Wait();
 
@@ -128,10 +128,10 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            this.barAggregator.Endpoint.Send(subscribe);
+            this.barAggregator.Endpoint.SendAsync(subscribe);
 
             // Act
-            this.barAggregator.Endpoint.Send(closeBar).Wait();
+            this.barAggregator.Endpoint.SendAsync(closeBar).Wait();
             this.barAggregator.Stop().Wait();
             this.receiver.Stop().Wait();
 
@@ -166,11 +166,11 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            this.barAggregator.Endpoint.Send(subscribe);
-            this.barAggregator.Endpoint.Send(tick);
+            this.barAggregator.Endpoint.SendAsync(subscribe);
+            this.barAggregator.Endpoint.SendAsync(tick);
 
             // Act
-            this.barAggregator.Endpoint.Send(closeBar).Wait();
+            this.barAggregator.Endpoint.SendAsync(closeBar).Wait();
             this.barAggregator.Stop().Wait();
             this.receiver.Stop().Wait();
 
@@ -205,11 +205,11 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            this.barAggregator.Endpoint.Send(subscribe);
-            this.barAggregator.Endpoint.Send(tick);
+            this.barAggregator.Endpoint.SendAsync(subscribe);
+            this.barAggregator.Endpoint.SendAsync(tick);
 
             // Act
-            this.barAggregator.Endpoint.Send(closeBar).Wait();
+            this.barAggregator.Endpoint.SendAsync(closeBar).Wait();
             this.barAggregator.Stop().Wait();
             this.receiver.Stop().Wait();
 
@@ -260,13 +260,13 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            this.barAggregator.Endpoint.Send(subscribe);
-            this.barAggregator.Endpoint.Send(tick1);
-            this.barAggregator.Endpoint.Send(closeBar1);
-            this.barAggregator.Endpoint.Send(tick2);
+            this.barAggregator.Endpoint.SendAsync(subscribe);
+            this.barAggregator.Endpoint.SendAsync(tick1);
+            this.barAggregator.Endpoint.SendAsync(closeBar1);
+            this.barAggregator.Endpoint.SendAsync(tick2);
 
             // Act
-            this.barAggregator.Endpoint.Send(closeBar2).Wait();
+            this.barAggregator.Endpoint.SendAsync(closeBar2).Wait();
             this.barAggregator.Stop().Wait();
             this.receiver.Stop().Wait();
 
@@ -333,15 +333,15 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            this.barAggregator.Endpoint.Send(subscribe1);
-            this.barAggregator.Endpoint.Send(subscribe2);
-            this.barAggregator.Endpoint.Send(tick1);
-            this.barAggregator.Endpoint.Send(tick2);
-            this.barAggregator.Endpoint.Send(closeBar1);
-            this.barAggregator.Endpoint.Send(tick3);
+            this.barAggregator.Endpoint.SendAsync(subscribe1);
+            this.barAggregator.Endpoint.SendAsync(subscribe2);
+            this.barAggregator.Endpoint.SendAsync(tick1);
+            this.barAggregator.Endpoint.SendAsync(tick2);
+            this.barAggregator.Endpoint.SendAsync(closeBar1);
+            this.barAggregator.Endpoint.SendAsync(tick3);
 
             // Act
-            this.barAggregator.Endpoint.Send(closeBar2).Wait();
+            this.barAggregator.Endpoint.SendAsync(closeBar2).Wait();
             this.barAggregator.Stop().Wait();
             this.receiver.Stop().Wait();
 
@@ -387,12 +387,12 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            this.barAggregator.Endpoint.Send(subscribe);
-            this.barAggregator.Endpoint.Send(tick1);
-            this.barAggregator.Endpoint.Send(tick2);
+            this.barAggregator.Endpoint.SendAsync(subscribe);
+            this.barAggregator.Endpoint.SendAsync(tick1);
+            this.barAggregator.Endpoint.SendAsync(tick2);
 
             // Act
-            this.barAggregator.Endpoint.Send(closeBar).Wait();
+            this.barAggregator.Endpoint.SendAsync(closeBar).Wait();
             this.barAggregator.Stop().Wait();
             this.receiver.Stop().Wait();
 

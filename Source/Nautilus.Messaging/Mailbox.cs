@@ -41,12 +41,6 @@ namespace Nautilus.Messaging
         public IEndpoint Endpoint { get; }
 
         /// <summary>
-        /// Sends the given message to the mailboxes endpoint.
-        /// </summary>
-        /// <param name="message">The message to send.</param>
-        public void Send(object message) => this.Endpoint.Send(message);
-
-        /// <summary>
         /// Returns a value indicating whether this <see cref="Mailbox"/> is equal to the given
         /// <see cref="Mailbox"/>.
         /// </summary>

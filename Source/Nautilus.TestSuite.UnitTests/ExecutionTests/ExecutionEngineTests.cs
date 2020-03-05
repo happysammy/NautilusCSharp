@@ -69,7 +69,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.engine.Endpoint.Send(command).Wait();
+            this.engine.Endpoint.SendAsync(command).Wait();
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
 
@@ -101,7 +101,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.engine.Endpoint.Send(command).Wait();
+            this.engine.Endpoint.SendAsync(command).Wait();
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
 
@@ -135,8 +135,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.engine.Endpoint.Send(command);
-            this.engine.Endpoint.Send(command).Wait();
+            this.engine.Endpoint.SendAsync(command);
+            this.engine.Endpoint.SendAsync(command).Wait();
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
 
@@ -170,7 +170,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.engine.Endpoint.Send(command).Wait();
+            this.engine.Endpoint.SendAsync(command).Wait();
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
 
@@ -204,8 +204,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.engine.Endpoint.Send(command);
-            this.engine.Endpoint.Send(command).Wait();
+            this.engine.Endpoint.SendAsync(command);
+            this.engine.Endpoint.SendAsync(command).Wait();
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
 
@@ -247,10 +247,10 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.engine.Endpoint.Send(submit);
-            this.engine.Endpoint.Send(StubEventMessageProvider.OrderAcceptedEvent(order));
-            this.engine.Endpoint.Send(StubEventMessageProvider.OrderWorkingEvent(order));
-            this.engine.Endpoint.Send(cancel).Wait();
+            this.engine.Endpoint.SendAsync(submit);
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderAcceptedEvent(order));
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderWorkingEvent(order));
+            this.engine.Endpoint.SendAsync(cancel).Wait();
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
 
@@ -283,7 +283,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.engine.Endpoint.Send(command).Wait();
+            this.engine.Endpoint.SendAsync(command).Wait();
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
 
@@ -324,10 +324,10 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.engine.Endpoint.Send(submit);
-            this.engine.Endpoint.Send(StubEventMessageProvider.OrderAcceptedEvent(order));
-            this.engine.Endpoint.Send(StubEventMessageProvider.OrderWorkingEvent(order));
-            this.engine.Endpoint.Send(modify).Wait();
+            this.engine.Endpoint.SendAsync(submit);
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderAcceptedEvent(order));
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderWorkingEvent(order));
+            this.engine.Endpoint.SendAsync(modify).Wait();
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
 
@@ -372,7 +372,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.engine.Endpoint.Send(modify).Wait();
+            this.engine.Endpoint.SendAsync(modify).Wait();
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
 
@@ -415,8 +415,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.engine.Endpoint.Send(submit);
-            this.engine.Endpoint.Send(modify).Wait();
+            this.engine.Endpoint.SendAsync(submit);
+            this.engine.Endpoint.SendAsync(modify).Wait();
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
 
@@ -467,11 +467,11 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.engine.Endpoint.Send(submit);
-            this.engine.Endpoint.Send(StubEventMessageProvider.OrderAcceptedEvent(order));
-            this.engine.Endpoint.Send(StubEventMessageProvider.OrderWorkingEvent(order));
-            this.engine.Endpoint.Send(modify1);
-            this.engine.Endpoint.Send(modify2).Wait();
+            this.engine.Endpoint.SendAsync(submit);
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderAcceptedEvent(order));
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderWorkingEvent(order));
+            this.engine.Endpoint.SendAsync(modify1);
+            this.engine.Endpoint.SendAsync(modify2).Wait();
 
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
@@ -495,8 +495,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             var @event = StubEventMessageProvider.AccountStateEvent();
 
             // Act
-            this.engine.Endpoint.Send(@event);
-            this.engine.Endpoint.Send(@event);
+            this.engine.Endpoint.SendAsync(@event);
+            this.engine.Endpoint.SendAsync(@event);
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
 
@@ -528,7 +528,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.engine.Endpoint.Send(submitOrder).Wait();
+            this.engine.Endpoint.SendAsync(submitOrder).Wait();
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
 
@@ -561,8 +561,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.engine.Endpoint.Send(submitOrder);
-            this.engine.Endpoint.Send(StubEventMessageProvider.OrderAcceptedEvent(order)).Wait();
+            this.engine.Endpoint.SendAsync(submitOrder);
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderAcceptedEvent(order)).Wait();
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
 
@@ -595,8 +595,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.engine.Endpoint.Send(submitOrder);
-            this.engine.Endpoint.Send(StubEventMessageProvider.OrderRejectedEvent(order)).Wait();
+            this.engine.Endpoint.SendAsync(submitOrder);
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderRejectedEvent(order)).Wait();
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
 
@@ -638,10 +638,10 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.engine.Endpoint.Send(submit);
-            this.engine.Endpoint.Send(modify);
-            this.engine.Endpoint.Send(StubEventMessageProvider.OrderAcceptedEvent(order));
-            this.engine.Endpoint.Send(StubEventMessageProvider.OrderWorkingEvent(order)).Wait();
+            this.engine.Endpoint.SendAsync(submit);
+            this.engine.Endpoint.SendAsync(modify);
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderAcceptedEvent(order));
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderWorkingEvent(order)).Wait();
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
 
@@ -677,9 +677,9 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.engine.Endpoint.Send(submitOrder);
-            this.engine.Endpoint.Send(StubEventMessageProvider.OrderAcceptedEvent(order));
-            this.engine.Endpoint.Send(StubEventMessageProvider.OrderWorkingEvent(order)).Wait();
+            this.engine.Endpoint.SendAsync(submitOrder);
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderAcceptedEvent(order));
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderWorkingEvent(order)).Wait();
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
 
@@ -721,11 +721,11 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.engine.Endpoint.Send(submit);
-            this.engine.Endpoint.Send(StubEventMessageProvider.OrderAcceptedEvent(order));
-            this.engine.Endpoint.Send(StubEventMessageProvider.OrderWorkingEvent(order));
-            this.engine.Endpoint.Send(modify);
-            this.engine.Endpoint.Send(StubEventMessageProvider.OrderModifiedEvent(order, Price.Create(1.00010m, 5))).Wait();
+            this.engine.Endpoint.SendAsync(submit);
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderAcceptedEvent(order));
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderWorkingEvent(order));
+            this.engine.Endpoint.SendAsync(modify);
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderModifiedEvent(order, Price.Create(1.00010m, 5))).Wait();
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
 
@@ -762,10 +762,10 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.engine.Endpoint.Send(submitOrder);
-            this.engine.Endpoint.Send(StubEventMessageProvider.OrderAcceptedEvent(order));
-            this.engine.Endpoint.Send(StubEventMessageProvider.OrderWorkingEvent(order));
-            this.engine.Endpoint.Send(StubEventMessageProvider.OrderExpiredEvent(order)).Wait();
+            this.engine.Endpoint.SendAsync(submitOrder);
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderAcceptedEvent(order));
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderWorkingEvent(order));
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderExpiredEvent(order)).Wait();
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
 
@@ -798,10 +798,10 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.engine.Endpoint.Send(submitOrder);
-            this.engine.Endpoint.Send(StubEventMessageProvider.OrderAcceptedEvent(order));
-            this.engine.Endpoint.Send(StubEventMessageProvider.OrderWorkingEvent(order));
-            this.engine.Endpoint.Send(StubEventMessageProvider.OrderCancelledEvent(order)).Wait();
+            this.engine.Endpoint.SendAsync(submitOrder);
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderAcceptedEvent(order));
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderWorkingEvent(order));
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderCancelledEvent(order)).Wait();
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
 
@@ -834,10 +834,10 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.engine.Endpoint.Send(submitOrder);
-            this.engine.Endpoint.Send(StubEventMessageProvider.OrderAcceptedEvent(order));
-            this.engine.Endpoint.Send(StubEventMessageProvider.OrderWorkingEvent(order));
-            this.engine.Endpoint.Send(StubEventMessageProvider.OrderCancelRejectEvent(order)).Wait();
+            this.engine.Endpoint.SendAsync(submitOrder);
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderAcceptedEvent(order));
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderWorkingEvent(order));
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderCancelRejectEvent(order)).Wait();
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
 
@@ -870,9 +870,9 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.engine.Endpoint.Send(submitOrder);
-            this.engine.Endpoint.Send(StubEventMessageProvider.OrderAcceptedEvent(order));
-            this.engine.Endpoint.Send(StubEventMessageProvider.OrderFilledEvent(order)).Wait();
+            this.engine.Endpoint.SendAsync(submitOrder);
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderAcceptedEvent(order));
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderFilledEvent(order)).Wait();
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
 
@@ -905,9 +905,9 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.engine.Endpoint.Send(submitOrder);
-            this.engine.Endpoint.Send(StubEventMessageProvider.OrderAcceptedEvent(order));
-            this.engine.Endpoint.Send(StubEventMessageProvider.OrderPartiallyFilledEvent(
+            this.engine.Endpoint.SendAsync(submitOrder);
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderAcceptedEvent(order));
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderPartiallyFilledEvent(
                 order,
                 Quantity.Create(50000),
                 Quantity.Create(50000))).Wait();
@@ -943,10 +943,10 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.engine.Endpoint.Send(submitOrder);
-            this.engine.Endpoint.Send(StubEventMessageProvider.OrderSubmittedEvent(order));
-            this.engine.Endpoint.Send(StubEventMessageProvider.OrderAcceptedEvent(order));
-            this.engine.Endpoint.Send(StubEventMessageProvider.OrderFilledEvent(order)).Wait();
+            this.engine.Endpoint.SendAsync(submitOrder);
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderSubmittedEvent(order));
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderAcceptedEvent(order));
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderFilledEvent(order)).Wait();
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
 
@@ -983,16 +983,16 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            this.engine.Endpoint.Send(submitOrder1);
-            this.engine.Endpoint.Send(submitOrder2);
-            this.engine.Endpoint.Send(StubEventMessageProvider.OrderSubmittedEvent(order1));
-            this.engine.Endpoint.Send(StubEventMessageProvider.OrderSubmittedEvent(order2));
-            this.engine.Endpoint.Send(StubEventMessageProvider.OrderAcceptedEvent(order1));
-            this.engine.Endpoint.Send(StubEventMessageProvider.OrderAcceptedEvent(order2));
-            this.engine.Endpoint.Send(StubEventMessageProvider.OrderFilledEvent(order1)).Wait();
+            this.engine.Endpoint.SendAsync(submitOrder1);
+            this.engine.Endpoint.SendAsync(submitOrder2);
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderSubmittedEvent(order1));
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderSubmittedEvent(order2));
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderAcceptedEvent(order1));
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderAcceptedEvent(order2));
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderFilledEvent(order1)).Wait();
 
             // Act
-            this.engine.Endpoint.Send(StubEventMessageProvider.OrderFilledEvent(order2));
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderFilledEvent(order2));
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
 

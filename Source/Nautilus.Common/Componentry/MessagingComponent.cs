@@ -147,7 +147,7 @@ namespace Nautilus.Common.Componentry
         /// <returns>The result of the task.</returns>
         protected Task SendToSelf(object message)
         {
-            return this.Endpoint.Send(message);
+            return this.Endpoint.SendAsync(message);
         }
 
         /// <summary>

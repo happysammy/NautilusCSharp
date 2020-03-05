@@ -10,18 +10,27 @@ namespace Nautilus.Execution.Network
 {
     using System.Collections.Generic;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messages.Commands;
+    using Nautilus.Common.Messaging;
     using Nautilus.Core.Message;
+    using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Commands;
+    using Nautilus.Execution.Configuration;
+    using Nautilus.Execution.Engine;
     using Nautilus.Network;
     using Nautilus.Network.Encryption;
     using Nautilus.Network.Nodes;
+    using NodaTime;
 
     /// <summary>
-    /// Provides a command server which deserializes command messages and forwards them to the
-    /// specified receiver endpoint.
+    /// Provides a command server which receives command messages from the wire, throttles them and
+    /// then forwards them to the <see cref="ExecutionEngine"/> as appropriate.
     /// </summary>
     public sealed class CommandServer : MessageServer
     {
+        private readonly Throttler<Command> commandThrottler;
+        private readonly Throttler<Command> orderThrottler;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandServer"/> class.
         /// </summary>
@@ -33,8 +42,7 @@ namespace Nautilus.Execution.Network
         /// <param name="commandSerializer">The command serializer.</param>
         /// <param name="compressor">The message compressor.</param>
         /// <param name="encryption">The encryption configuration.</param>
-        /// <param name="inboundPort">The inbound port.</param>
-        /// <param name="outboundPort">The outbound port.</param>
+        /// <param name="config">The network configuration.</param>
         public CommandServer(
             IComponentryContainer container,
             IMessageBusAdapter messagingAdapter,
@@ -44,8 +52,7 @@ namespace Nautilus.Execution.Network
             IMessageSerializer<Command> commandSerializer,
             ICompressor compressor,
             EncryptionSettings encryption,
-            Port inboundPort,
-            Port outboundPort)
+            NetworkConfiguration config)
             : base(
                 container,
                 messagingAdapter,
@@ -54,9 +61,23 @@ namespace Nautilus.Execution.Network
                 responseSerializer,
                 compressor,
                 encryption,
-                ZmqNetworkAddress.LocalHost(inboundPort),
-                ZmqNetworkAddress.LocalHost(outboundPort))
+                ZmqNetworkAddress.LocalHost(config.CommandReqPort),
+                ZmqNetworkAddress.LocalHost(config.CommandResPort))
         {
+            this.commandThrottler = new Throttler<Command>(
+                container,
+                this.SendToExecutionEngine,
+                Duration.FromSeconds(1),
+                config.CommandsPerSecond,
+                nameof(Command));
+
+            this.orderThrottler = new Throttler<Command>(
+                container,
+                this.commandThrottler.Endpoint.Send,
+                Duration.FromSeconds(1),
+                config.NewOrdersPerSecond,
+                nameof(Order));
+
             this.RegisterSerializer(commandSerializer);
             this.RegisterHandler<SubmitOrder>(this.OnMessage);
             this.RegisterHandler<SubmitAtomicOrder>(this.OnMessage);
@@ -65,34 +86,55 @@ namespace Nautilus.Execution.Network
             this.RegisterHandler<AccountInquiry>(this.OnMessage);
         }
 
+        /// <inheritdoc />
+        protected override void OnStart(Start message)
+        {
+            // Forward start message to throttlers
+            this.commandThrottler.Start();
+            this.orderThrottler.Start();
+        }
+
+        /// <inheritdoc />
+        protected override void OnStop(Stop message)
+        {
+            // Forward stop message to throttlers
+            this.commandThrottler.Stop();
+            this.orderThrottler.Stop();
+        }
+
         private void OnMessage(SubmitOrder command)
         {
-            this.Send(command, ServiceAddress.CommandRouter);
+            this.orderThrottler.Endpoint.Send(command);
             this.SendReceived(command);
         }
 
         private void OnMessage(SubmitAtomicOrder command)
         {
-            this.Send(command, ServiceAddress.CommandRouter);
+            this.orderThrottler.Endpoint.Send(command);
             this.SendReceived(command);
         }
 
         private void OnMessage(CancelOrder command)
         {
-            this.Send(command, ServiceAddress.CommandRouter);
+            this.commandThrottler.Endpoint.Send(command);
             this.SendReceived(command);
         }
 
         private void OnMessage(ModifyOrder command)
         {
-            this.Send(command, ServiceAddress.CommandRouter);
+            this.commandThrottler.Endpoint.Send(command);
             this.SendReceived(command);
         }
 
         private void OnMessage(AccountInquiry command)
         {
-            this.Send(command, ServiceAddress.CommandRouter);
+            this.commandThrottler.Endpoint.Send(command);
             this.SendReceived(command);
+        }
+
+        private void SendToExecutionEngine(Command command)
+        {
+            this.Send(command, ServiceAddress.ExecutionEngine);
         }
     }
 }

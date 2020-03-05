@@ -44,7 +44,7 @@ namespace NautilusExecutor
         {
             VersionChecker.Run(
                 config.LoggerFactory.CreateLogger(nameof(ExecutionService)),
-                "NAUTILUS DATA - Algorithmic Trading Data Service");
+                "NAUTILUS EXECUTOR - Algorithmic Trading Execution Service");
 
             var clock = new Clock(DateTimeZone.Utc);
             var guidFactory = new GuidFactory();
@@ -100,12 +100,6 @@ namespace NautilusExecutor
                 tradingGateway,
                 eventPublisher.Endpoint);
 
-            var commandRouter = new CommandRouter(
-                container,
-                messagingAdapter,
-                executionEngine.Endpoint,
-                config.NetworkConfig);
-
             var commandServer = new CommandServer(
                 container,
                 messagingAdapter,
@@ -115,15 +109,13 @@ namespace NautilusExecutor
                 commandSerializer,
                 compressor,
                 config.WireConfig.EncryptionConfig,
-                config.NetworkConfig.CommandReqPort,
-                config.NetworkConfig.CommandResPort);
+                config.NetworkConfig);
 
             // TODO: Refactor to auto generate
             var addresses = new Dictionary<Address, IEndpoint>
             {
                 { ServiceAddress.Scheduler, scheduler.Endpoint },
                 { ServiceAddress.ExecutionEngine, executionEngine.Endpoint },
-                { ServiceAddress.CommandRouter, commandRouter.Endpoint },
                 { ServiceAddress.CommandServer, commandServer.Endpoint },
                 { ServiceAddress.EventPublisher, eventPublisher.Endpoint },
                 { ServiceAddress.TradingGateway, tradingGateway.Endpoint },

@@ -68,7 +68,7 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
             processor.RegisterUnhandled(receiver.Add);
 
             // Act
-            processor.Endpoint.Send(1).Wait();
+            processor.Endpoint.SendAsync(1).Wait();
             processor.GracefulStop().Wait();
 
             // Assert
@@ -86,7 +86,7 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
             processor.RegisterHandler<object>(receiver.Add);
 
             // Act
-            processor.Endpoint.Send(1).Wait();
+            processor.Endpoint.SendAsync(1).Wait();
             processor.GracefulStop().Wait();
 
             // Assert
@@ -103,7 +103,7 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
             processor.RegisterHandler<string>(ThisWillBlowUp);
 
             // Act
-            processor.Endpoint.Send("BOOM!").Wait();
+            processor.Endpoint.SendAsync("BOOM!").Wait();
             processor.GracefulStop().Wait();
 
             // Assert
@@ -120,7 +120,7 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
             var processor = new MessageProcessor();
 
             // Act
-            processor.Endpoint.Send("test").Wait();
+            processor.Endpoint.SendAsync("test").Wait();
             processor.GracefulStop().Wait();
 
             // Assert
@@ -138,7 +138,7 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
             processor.RegisterHandler<string>(receiver.Add);
 
             // Act
-            processor.Endpoint.Send("test").Wait();
+            processor.Endpoint.SendAsync("test").Wait();
             processor.GracefulStop().Wait();
 
             // Assert
@@ -159,8 +159,8 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
             receiver.RegisterHandler<int>(receiver.OnMessage);
 
             // Act
-            receiver.Endpoint.Send("test");
-            receiver.Endpoint.Send(2).Wait();
+            receiver.Endpoint.SendAsync("test");
+            receiver.Endpoint.SendAsync(2).Wait();
             receiver.Stop().Wait();
 
             // Assert
@@ -182,14 +182,14 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
             receiver.RegisterHandler<int>(receiver.OnMessage);
 
             // Act
-            receiver.Endpoint.Send("1");
-            receiver.Endpoint.Send(1);
-            receiver.Endpoint.Send("2");
-            receiver.Endpoint.Send(2);
-            receiver.Endpoint.Send("3");
-            receiver.Endpoint.Send(3);
-            receiver.Endpoint.Send("4");
-            receiver.Endpoint.Send(4).Wait();
+            receiver.Endpoint.SendAsync("1");
+            receiver.Endpoint.SendAsync(1);
+            receiver.Endpoint.SendAsync("2");
+            receiver.Endpoint.SendAsync(2);
+            receiver.Endpoint.SendAsync("3");
+            receiver.Endpoint.SendAsync(3);
+            receiver.Endpoint.SendAsync("4");
+            receiver.Endpoint.SendAsync(4).Wait();
             receiver.Stop().Wait();
 
             Assert.True(receiver.Messages[0].Equals("1"));
@@ -217,8 +217,8 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
             {
                 for (var i = 0; i < 1000000; i++)
                 {
-                    receiver.Endpoint.Send(i);
-                    receiver.Endpoint.Send(i);
+                    receiver.Endpoint.SendAsync(i);
+                    receiver.Endpoint.SendAsync(i);
                 }
 
                 while (receiver.ProcessedCount < 2000000)
