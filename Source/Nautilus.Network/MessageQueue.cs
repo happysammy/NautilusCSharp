@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Network.Nodes
+namespace Nautilus.Network
 {
     using System;
     using System.Threading;
