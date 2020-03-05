@@ -23,6 +23,7 @@ namespace Nautilus.Redis.Execution
     using Nautilus.Execution.Engine;
     using Nautilus.Execution.Interfaces;
     using Nautilus.Redis.Execution.Internal;
+    using NodaTime;
     using StackExchange.Redis;
     using Order = Nautilus.DomainModel.Aggregates.Order;
 
@@ -44,12 +45,14 @@ namespace Nautilus.Redis.Execution
         /// <param name="commandSerializer">The command serializer.</param>
         /// <param name="eventSerializer">The event serializer.</param>
         /// <param name="loadCaches">The option flag to load caches from Redis on instantiation.</param>
+        /// <param name="orderStatusCheckInterval">The minutes interval between order status checks.</param>
         public RedisExecutionDatabase(
             IComponentryContainer container,
             ConnectionMultiplexer connection,
             ISerializer<Command> commandSerializer,
             ISerializer<Event> eventSerializer,
-            bool loadCaches = true)
+            bool loadCaches = true,
+            int orderStatusCheckInterval = 1)
             : base(container)
         {
             this.redisServer = connection.GetServer(RedisConstants.Localhost, RedisConstants.DefaultPort);
@@ -57,25 +60,31 @@ namespace Nautilus.Redis.Execution
             this.commandSerializer = commandSerializer;
             this.eventSerializer = eventSerializer;
 
-            this.OptionLoadCaches = loadCaches;
+            this.IsCacheLoadedOnStart = loadCaches;
+            this.OrderStatusCheckInterval = Duration.FromMinutes(orderStatusCheckInterval);
 
-            if (this.OptionLoadCaches)
+            if (this.IsCacheLoadedOnStart)
             {
-                this.Logger.LogInformation($"{nameof(this.OptionLoadCaches)} is {this.OptionLoadCaches}");
+                this.Logger.LogInformation($"{nameof(this.IsCacheLoadedOnStart)} is {this.IsCacheLoadedOnStart}");
                 this.LoadCaches();
             }
             else
             {
                 this.Logger.LogWarning(
                     LogId.Database,
-                    $"{nameof(this.OptionLoadCaches)} is {this.OptionLoadCaches} (this should only be done in a testing environment).");
+                    $"{nameof(this.IsCacheLoadedOnStart)} is {this.IsCacheLoadedOnStart} (this should only be done in a testing environment).");
             }
         }
 
         /// <summary>
         /// Gets a value indicating whether the execution database will load the caches on instantiation.
         /// </summary>
-        public bool OptionLoadCaches { get; }
+        public bool IsCacheLoadedOnStart { get; }
+
+        /// <summary>
+        /// Gets the duration between order status checks. Zero duration indicates no status checking.
+        /// </summary>
+        public Duration OrderStatusCheckInterval { get; }
 
         /// <inheritdoc />
         public override void LoadAccountsCache()
@@ -96,14 +105,17 @@ namespace Nautilus.Redis.Execution
                 var events = new Queue<RedisValue>(this.redisDatabase.ListRange(key));
                 if (events.Count == 0)
                 {
-                    this.Logger.LogError(LogId.Database, $"Cannot load account {key} from the database (no events persisted).");
+                    var errorMsg = $"Cannot load account {key} from the database (no events persisted).";
+                    this.Logger.LogError(LogId.Database, errorMsg);
                     continue;
                 }
 
                 var initial = this.eventSerializer.Deserialize(events.Dequeue());
                 if (initial.Type != typeof(AccountStateEvent))
                 {
-                    this.Logger.LogError(LogId.Database, $"Cannot load account {key} from the database (event not AccountStateEvent, was {initial.Type}).");
+                    var errorMsg = $"Cannot load account {key} from the database " +
+                                         $"(event not AccountStateEvent, was {initial.Type}).";
+                    this.Logger.LogError(LogId.Database, errorMsg);
                     continue;
                 }
 
