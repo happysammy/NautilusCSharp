@@ -12,7 +12,6 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Message;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Keys;
     using Nautilus.Data.Messages.Requests;
@@ -20,10 +19,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
     using Nautilus.Data.Providers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network;
-    using Nautilus.Network.Compression;
     using Nautilus.Network.Messages;
     using Nautilus.Serialization.DataSerializers;
-    using Nautilus.Serialization.MessageSerializers;
     using Nautilus.TestSuite.TestKit.Components;
     using Nautilus.TestSuite.TestKit.Fixtures;
     using Nautilus.TestSuite.TestKit.Mocks;
@@ -38,10 +35,6 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
         private readonly IMessageBusAdapter messagingAdapter;
         private readonly IBarRepository repository;
         private readonly IDataSerializer<Bar> dataSerializer;
-        private readonly ISerializer<Dictionary<string, string>> headerSerializer;
-        private readonly IMessageSerializer<Request> requestSerializer;
-        private readonly IMessageSerializer<Response> responseSerializer;
-        private readonly ICompressor compressor;
 
         public BarProviderTests(ITestOutputHelper output)
             : base(output)
@@ -51,10 +44,6 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             this.messagingAdapter = new MockMessageBusProvider(this.container).Adapter;
             this.dataSerializer = new BarDataSerializer();
             this.repository = new MockBarRepository(this.dataSerializer);
-            this.headerSerializer = new MsgPackDictionarySerializer();
-            this.requestSerializer = new MsgPackRequestSerializer();
-            this.responseSerializer = new MsgPackResponseSerializer();
-            this.compressor = new CompressorBypass();
         }
 
         [Fact]

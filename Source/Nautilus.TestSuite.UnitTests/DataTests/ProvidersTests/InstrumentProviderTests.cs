@@ -12,16 +12,13 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Message;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Messages.Requests;
     using Nautilus.Data.Messages.Responses;
     using Nautilus.Data.Providers;
     using Nautilus.DomainModel.Entities;
-    using Nautilus.Network.Compression;
     using Nautilus.Network.Messages;
     using Nautilus.Serialization.DataSerializers;
-    using Nautilus.Serialization.MessageSerializers;
     using Nautilus.TestSuite.TestKit.Components;
     using Nautilus.TestSuite.TestKit.Fixtures;
     using Nautilus.TestSuite.TestKit.Mocks;
@@ -36,10 +33,6 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
         private readonly IMessageBusAdapter messagingAdapter;
         private readonly IInstrumentRepository repository;
         private readonly IDataSerializer<Instrument> dataSerializer;
-        private readonly ISerializer<Dictionary<string, string>> headerSerializer;
-        private readonly IMessageSerializer<Request> requestSerializer;
-        private readonly IMessageSerializer<Response> responseSerializer;
-        private readonly ICompressor compressor;
 
         public InstrumentProviderTests(ITestOutputHelper output)
             : base(output)
@@ -49,10 +42,6 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             this.messagingAdapter = new MockMessageBusProvider(this.container).Adapter;
             this.dataSerializer = new InstrumentDataSerializer();
             this.repository = new MockInstrumentRepository(this.dataSerializer);
-            this.headerSerializer = new MsgPackDictionarySerializer();
-            this.requestSerializer = new MsgPackRequestSerializer();
-            this.responseSerializer = new MsgPackResponseSerializer();
-            this.compressor = new CompressorBypass();
         }
 
         [Fact]
