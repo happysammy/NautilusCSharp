@@ -20,8 +20,10 @@ namespace Nautilus.TestSuite.TestKit.Mocks
     using Nautilus.Network.Nodes;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
-    public sealed class MockDataPublisher : DataPublisher<string>
+    public sealed class MockDataPublisher : PublisherDataBus
     {
+        private readonly IDataSerializer<string> serializer;
+
         public MockDataPublisher(
             IComponentryContainer container,
             IDataBusAdapter dataBusAdapter,
@@ -31,18 +33,19 @@ namespace Nautilus.TestSuite.TestKit.Mocks
             : base(
                 container,
                 dataBusAdapter,
-                new MockSerializer(),
                 new CompressorBypass(),
                 encryption,
                 host,
                 port)
         {
+            this.serializer = new MockSerializer();
+
             this.RegisterHandler<(string, string)>(this.OnMessage);
         }
 
         private void OnMessage((string Topic, string Message) toPublish)
         {
-            this.Publish(toPublish.Topic, toPublish.Message);
+            this.Publish(toPublish.Topic, this.serializer.Serialize(toPublish.Message));
         }
 
         private sealed class MockSerializer : IDataSerializer<string>

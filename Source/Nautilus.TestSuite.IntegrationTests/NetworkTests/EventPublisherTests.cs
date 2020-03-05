@@ -63,7 +63,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 
             var subscriber = new SubscriberSocket(testAddress);
             subscriber.Connect(testAddress);
-            subscriber.Subscribe("Events:Trade:TESTER-001");
+            subscriber.Subscribe("Event:Trade:TESTER-001");
 
             Task.Delay(100).Wait(); // Allow socket to subscribe
 
@@ -81,7 +81,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             var @event = serializer.Deserialize(message);
 
             // Assert
-            Assert.Equal("Events:Trade:TESTER-001", Encoding.UTF8.GetString(topic));
+            Assert.Equal("Event:Trade:TESTER-001", Encoding.UTF8.GetString(topic));
             Assert.Equal(typeof(OrderRejected), @event.GetType());
 
             // Tear Down

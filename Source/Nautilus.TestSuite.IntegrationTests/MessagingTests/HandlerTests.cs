@@ -28,11 +28,9 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
         internal async System.Threading.Tasks.Task Handle_WithExplodingFuncDelegate_PropagatesThrownException()
         {
             // Arrange
-            var handler = Handler.Create<string>(ThisWillBlowUp);
-
             // Act
             // Assert
-            await Assert.ThrowsAsync<InvalidOperationException>(() => handler.Handle("BOOM!"));
+            await Assert.ThrowsAsync<InvalidOperationException>(() => Handler.Create<string>(ThisWillBlowUp).Handle("BOOM!"));
         }
 
         [Fact]

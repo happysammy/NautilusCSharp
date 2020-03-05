@@ -21,8 +21,8 @@ namespace Nautilus.Messaging
     /// </summary>
     public sealed class MessageProcessor
     {
-        private readonly ActionBlock<object> processor;
         private readonly CancellationTokenSource cancellationSource = new CancellationTokenSource();
+        private readonly ActionBlock<object> processor;
         private readonly List<KeyValuePair<Type, Handler>> registeredHandlers = new List<KeyValuePair<Type, Handler>>();
 
         private Action<Exception> exceptionHandler;

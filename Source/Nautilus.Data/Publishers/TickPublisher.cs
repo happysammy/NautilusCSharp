@@ -17,8 +17,10 @@ namespace Nautilus.Data.Publishers
     /// <summary>
     /// Provides a publisher for <see cref="Tick"/> data.
     /// </summary>
-    public sealed class TickPublisher : DataPublisher<Tick>
+    public sealed class TickPublisher : PublisherDataBus
     {
+        private readonly IDataSerializer<Tick> serializer;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TickPublisher"/> class.
         /// </summary>
@@ -38,12 +40,13 @@ namespace Nautilus.Data.Publishers
             : base(
                 container,
                 dataBusAdapter,
-                serializer,
                 compressor,
                 encryption,
                 Network.NetworkAddress.LocalHost,
                 port)
         {
+            this.serializer = serializer;
+
             this.RegisterHandler<Tick>(this.OnMessage);
 
             this.Subscribe<Tick>();
@@ -51,7 +54,7 @@ namespace Nautilus.Data.Publishers
 
         private void OnMessage(Tick tick)
         {
-            this.Publish(tick.Symbol.Value, tick);
+            this.Publish(tick.Symbol.Value, this.serializer.Serialize(tick));
         }
     }
 }

@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="BarPublisherTests.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="DataPublisherTests.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2020 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   https://nautechsystems.io
@@ -13,6 +13,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
     using System.Threading.Tasks;
     using Nautilus.Common.Data;
     using Nautilus.Data.Publishers;
+    using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network;
     using Nautilus.Network.Compression;
@@ -27,23 +28,26 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
-    public sealed class BarPublisherTests : NetMQTestBase
+    public sealed class DataPublisherTests : NetMQTestBase
     {
         private const string TestAddress = "tcp://localhost:55511";
-        private readonly BarDataSerializer serializer;
-        private readonly BarPublisher publisher;
+        private readonly BarDataSerializer barDataSerializer;
+        private readonly InstrumentDataSerializer instrumentDataSerializer;
+        private readonly DataPublisher publisher;
 
-        public BarPublisherTests(ITestOutputHelper output)
+        public DataPublisherTests(ITestOutputHelper output)
             : base(output)
         {
             // Fixture Setup
             var container = TestComponentryContainer.Create(output);
-            this.serializer = new BarDataSerializer();
+            this.barDataSerializer = new BarDataSerializer();
+            this.instrumentDataSerializer = new InstrumentDataSerializer();
 
-            this.publisher = new BarPublisher(
+            this.publisher = new DataPublisher(
                 container,
                 DataBusFactory.Create(container),
-                this.serializer,
+                this.barDataSerializer,
+                this.instrumentDataSerializer,
                 new CompressorBypass(),
                 EncryptionSettings.None(),
                 new Port(55511));
@@ -60,7 +64,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
 
             var subscriber = new SubscriberSocket(TestAddress);
             subscriber.Connect(TestAddress);
-            subscriber.Subscribe(barType.ToString());
+            subscriber.Subscribe(nameof(Bar) + ":" + barType);
 
             Task.Delay(100).Wait(); // Allow socket to subscribe
 
@@ -75,9 +79,40 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
 
             // Assert
             Assert.Equal(1, this.publisher.SentCount);
-            Assert.Equal(barType.ToString(), Encoding.UTF8.GetString(topic));
+            Assert.Equal("Bar:AUDUSD.FXCM-1-MINUTE[ASK]", Encoding.UTF8.GetString(topic));
             Assert.Equal(bar.ToString(), Encoding.UTF8.GetString(message));
-            Assert.Equal(bar, this.serializer.Deserialize(message));
+            Assert.Equal(bar, this.barDataSerializer.Deserialize(message));
+
+            // Tear Down
+            subscriber.Disconnect(TestAddress);
+            subscriber.Dispose();
+            this.publisher.Stop().Wait();
+            this.publisher.Dispose();
+        }
+
+        [Fact]
+        internal void GivenInstrument_WithSubscriber_PublishesMessage()
+        {
+            // Arrange
+            this.publisher.Start();
+            Task.Delay(100).Wait(); // Allow publisher to start
+
+            var instrument = StubInstrumentProvider.AUDUSD();
+
+            var subscriber = new SubscriberSocket(TestAddress);
+            subscriber.Connect(TestAddress);
+            subscriber.Subscribe(nameof(Instrument) + ":" + instrument.Symbol.Value);
+            Task.Delay(100).Wait();
+
+            // Act
+            this.publisher.Endpoint.Send(instrument);
+
+            var topic = subscriber.ReceiveFrameBytes();
+            var message = subscriber.ReceiveFrameBytes();
+
+            // Assert
+            Assert.Equal("Instrument:AUDUSD.FXCM", Encoding.UTF8.GetString(topic));
+            Assert.Equal(instrument, this.instrumentDataSerializer.Deserialize(message));
 
             // Tear Down
             subscriber.Disconnect(TestAddress);

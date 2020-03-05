@@ -22,30 +22,42 @@ namespace Nautilus.TestSuite.TestKit.Facades
     {
         public MessageServerFacade(
             IComponentryContainer container,
+            IMessageBusAdapter messagingAdapter,
             ICompressor compressor,
             EncryptionSettings encryption,
-            ZmqNetworkAddress address)
+            ZmqNetworkAddress requestAddress,
+            ZmqNetworkAddress responseAddress)
             : base(
                 container,
+                messagingAdapter,
                 new MsgPackDictionarySerializer(),
                 new MsgPackRequestSerializer(),
                 new MsgPackResponseSerializer(),
                 compressor,
                 encryption,
-                address)
+                requestAddress,
+                responseAddress)
         {
             this.ReceivedMessages = new List<DataRequest>();
+            this.ReceivedStrings = new List<string>();
 
             this.RegisterHandler<DataRequest>(this.OnMessage);
         }
 
         public List<DataRequest> ReceivedMessages { get; }
 
+        public List<string> ReceivedStrings { get; }
+
         private void OnMessage(DataRequest message)
         {
             this.ReceivedMessages.Add(message);
 
             this.SendReceived(message);
+        }
+
+        private void OnMessage(string message)
+        {
+            this.ReceivedStrings.Add(message);
         }
     }
 }

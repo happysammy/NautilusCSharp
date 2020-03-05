@@ -8,62 +8,50 @@
 
 namespace Nautilus.Data.Configuration
 {
-    using System.Diagnostics.CodeAnalysis;
     using Nautilus.Network;
 
     /// <summary>
     /// Represents a data service network configuration.
     /// </summary>
-    [SuppressMessage("ReSharper", "SA1611", Justification = "TODO")]
     public sealed class NetworkConfiguration
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="NetworkConfiguration"/> class.
         /// </summary>
+        /// <param name="dataReqPort">The data request port.</param>
+        /// <param name="dataResPort">The data response port.</param>
+        /// <param name="dataPubPort">The data publisher port.</param>
+        /// <param name="tickPubPort">The tick publisher port.</param>
         public NetworkConfiguration(
-            Port tickRouterPort,
-            Port tickPublisherPort,
-            Port barRouterPort,
-            Port barPublisherPort,
-            Port instrumentRouterPort,
-            Port instrumentPublisherPort)
+            Port dataReqPort,
+            Port dataResPort,
+            Port dataPubPort,
+            Port tickPubPort)
         {
-            this.TickRouterPort = tickRouterPort;
-            this.TickPublisherPort = tickPublisherPort;
-            this.BarRouterPort = barRouterPort;
-            this.BarPublisherPort = barPublisherPort;
-            this.InstrumentRouterPort = instrumentRouterPort;
-            this.InstrumentPublisherPort = instrumentPublisherPort;
+            this.DataReqPort = dataReqPort;
+            this.DataResPort = dataResPort;
+            this.DataPubPort = dataPubPort;
+            this.TickPubPort = tickPubPort;
         }
 
         /// <summary>
-        /// Gets the network configuration tick request port.
+        /// Gets the network configuration data request port.
         /// </summary>
-        public Port TickRouterPort { get; }
+        public Port DataReqPort { get; }
 
         /// <summary>
-        /// Gets the network configuration tick subscribe port.
+        /// Gets the network configuration data response port.
         /// </summary>
-        public Port TickPublisherPort { get; }
+        public Port DataResPort { get; }
 
         /// <summary>
-        /// Gets the network configuration bar request port.
+        /// Gets the network configuration data publisher port.
         /// </summary>
-        public Port BarRouterPort { get; }
+        public Port DataPubPort { get; }
 
         /// <summary>
-        /// Gets the network configuration bar subscribe port.
+        /// Gets the network configuration tick publisher port.
         /// </summary>
-        public Port BarPublisherPort { get; }
-
-        /// <summary>
-        /// Gets the network configuration instrument request port.
-        /// </summary>
-        public Port InstrumentRouterPort { get; }
-
-        /// <summary>
-        /// Gets the network configuration instrument subscribe port.
-        /// </summary>
-        public Port InstrumentPublisherPort { get; }
+        public Port TickPubPort { get; }
     }
 }

@@ -10,6 +10,7 @@ namespace Nautilus.Common.Messaging
 {
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Message;
+    using Nautilus.Core.Types;
 
     /// <summary>
     /// Provides a factory to create the systems message bus.
@@ -26,7 +27,7 @@ namespace Nautilus.Common.Messaging
             return new MessageBusAdapter(
                 new MessageBus<Command>(container),
                 new MessageBus<Event>(container),
-                new MessageBus<Document>(container));
+                new MessageBus<Message>(container));
         }
     }
 }

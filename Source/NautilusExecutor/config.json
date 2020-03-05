@@ -17,8 +17,9 @@
     "KeysPath": ""
   },
   "Network": {
-    "CommandsPort": 55555,
-    "EventsPort": 55556,
+    "CommandReqPort": 55555,
+    "CommandResPort": 55556,
+    "EventPubPort": 55557,
     "CommandsPerSecond": 100,
     "NewOrdersPerSecond": 15
   },

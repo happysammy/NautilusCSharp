@@ -17,12 +17,10 @@
     "KeysPath": ""
   },
   "Network": {
-    "TickRouterPort": 55501,
-    "TickPubPort": 55502,
-    "BarRouterPort": 55503,
-    "BarPubPort": 55504,
-    "InstrumentRouterPort": 55505,
-    "InstrumentPubPort": 55506
+    "DataReqPort": 55501,
+    "DataResPort": 55502,
+    "DataPubPort": 55503,
+    "TickPubPort": 55504
   },
   "FIX44": {
     "ConfigPath": "",

@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="DataPublisher{T}.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="PublisherDataBus.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2020 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   https://nautechsystems.io
@@ -24,35 +24,30 @@ namespace Nautilus.Network.Nodes
     /// <summary>
     /// The base class for all data publishers.
     /// </summary>
-    /// <typeparam name="T">The publishing data type.</typeparam>
-    public abstract class DataPublisher<T> : DataBusConnected, IDisposable
+    public abstract class PublisherDataBus : DataBusConnected, IDisposable
     {
-        private readonly IDataSerializer<T> serializer;
         private readonly ICompressor compressor;
         private readonly PublisherSocket socket;
         private readonly ZmqNetworkAddress networkAddress;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DataPublisher{T}"/> class.
+        /// Initializes a new instance of the <see cref="PublisherDataBus"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
         /// <param name="dataBusAdapter">The data bus adapter.</param>
-        /// <param name="serializer">The data serializer.</param>
         /// <param name="compressor">The data compressor.</param>
         /// <param name="encryption">The encryption configuration.</param>
         /// <param name="host">The publishers host address.</param>
         /// <param name="port">The publishers port.</param>
-        protected DataPublisher(
+        protected PublisherDataBus(
             IComponentryContainer container,
             IDataBusAdapter dataBusAdapter,
-            IDataSerializer<T> serializer,
             ICompressor compressor,
             EncryptionSettings encryption,
             NetworkAddress host,
             Port port)
             : base(container, dataBusAdapter)
         {
-            this.serializer = serializer;
             this.compressor = compressor;
 
             this.socket = new PublisherSocket()
@@ -132,10 +127,10 @@ namespace Nautilus.Network.Nodes
         /// Sends the given message onto the socket.
         /// </summary>
         /// <param name="topic">The messages topic.</param>
-        /// <param name="message">The message to publish.</param>
-        protected void Publish(string topic, T message)
+        /// <param name="data">The data to publish.</param>
+        protected void Publish(string topic, byte[] data)
         {
-            var body = this.compressor.Compress(this.serializer.Serialize(message));
+            var body = this.compressor.Compress(data);
 
             this.socket.SendMultipartBytes(Encoding.UTF8.GetBytes(topic), body);
 

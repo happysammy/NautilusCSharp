@@ -26,6 +26,8 @@ namespace Nautilus.Data.Messages.Commands
     [Immutable]
     public sealed class TrimBarData : Command, IScheduledJob
     {
+        private static readonly Type EventType = typeof(TrimBarData);
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TrimBarData"/> class.
         /// </summary>
@@ -41,7 +43,7 @@ namespace Nautilus.Data.Messages.Commands
             Guid commandId,
             ZonedDateTime commandTimestamp)
             : base(
-                typeof(TrimBarData),
+                EventType,
                 commandId,
                 commandTimestamp)
         {

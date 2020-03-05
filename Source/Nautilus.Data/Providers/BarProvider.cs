@@ -9,24 +9,21 @@
 namespace Nautilus.Data.Providers
 {
     using System;
-    using System.Collections.Generic;
     using Microsoft.Extensions.Logging;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Message;
+    using Nautilus.Common.Messaging;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Keys;
     using Nautilus.Data.Messages.Requests;
     using Nautilus.Data.Messages.Responses;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Network;
-    using Nautilus.Network.Encryption;
-    using Nautilus.Network.Nodes;
+    using Nautilus.Network.Messages;
 
     /// <summary>
     /// Provides <see cref="Bar"/> data to requests.
     /// </summary>
-    public sealed class BarProvider : MessageServer
+    public sealed class BarProvider : MessageBusConnected
     {
         private readonly IBarRepositoryReadOnly repository;
         private readonly IDataSerializer<Bar> dataSerializer;
@@ -35,32 +32,15 @@ namespace Nautilus.Data.Providers
         /// Initializes a new instance of the <see cref="BarProvider"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
+        /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="repository">The instrument repository.</param>
         /// <param name="dataSerializer">The data serializer for the provider.</param>
-        /// <param name="headerSerializer">The header serializer.</param>
-        /// <param name="requestSerializer">The inbound message serializer.</param>
-        /// <param name="responseSerializer">The outbound message serializer.</param>
-        /// <param name="compressor">The data compressor.</param>
-        /// <param name="encryption">The encryption configuration.</param>
-        /// <param name="port">The port.</param>
         public BarProvider(
             IComponentryContainer container,
+            IMessageBusAdapter messagingAdapter,
             IBarRepositoryReadOnly repository,
-            IDataSerializer<Bar> dataSerializer,
-            ISerializer<Dictionary<string, string>> headerSerializer,
-            IMessageSerializer<Request> requestSerializer,
-            IMessageSerializer<Response> responseSerializer,
-            ICompressor compressor,
-            EncryptionSettings encryption,
-            Port port)
-            : base(
-                container,
-                headerSerializer,
-                requestSerializer,
-                responseSerializer,
-                compressor,
-                encryption,
-                ZmqNetworkAddress.LocalHost(port))
+            IDataSerializer<Bar> dataSerializer)
+            : base(container, messagingAdapter)
         {
             this.repository = repository;
             this.dataSerializer = dataSerializer;
@@ -77,7 +57,7 @@ namespace Nautilus.Data.Providers
                 var dataType = request.Query["DataType"];
                 if (dataType != typeof(Bar[]).Name)
                 {
-                    this.SendQueryFailure($"incorrect DataType requested, was {dataType}", request.Id);
+                    this.SendQueryFailure($"Incorrect DataType requested, was {dataType}", request.Id);
                     return;
                 }
 
@@ -111,13 +91,25 @@ namespace Nautilus.Data.Providers
                     this.TimeNow());
 
                 this.Logger.LogInformation($"[RES]--> {response}.");
-                this.SendMessage(response, request.Id);
+                this.Send(response, ServiceAddress.DataServer);
             }
             catch (Exception ex)
             {
                 this.Logger.LogError($"{ex}");
                 this.SendQueryFailure(ex.Message, request.Id);
             }
+        }
+
+        private void SendQueryFailure(string message, Guid correlationId)
+        {
+            var response = new QueryFailure(
+                message,
+                correlationId,
+                this.NewGuid(),
+                this.TimeNow());
+
+            this.Send(response, ServiceAddress.DataServer);
+            this.Logger.LogWarning(response.ToString());
         }
     }
 }

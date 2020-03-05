@@ -34,7 +34,8 @@ namespace Nautilus.TestSuite.TestKit.Components
         private readonly IMessageSerializer<Request> requestSerializer;
         private readonly IMessageSerializer<Response> responseSerializer;
         private readonly ICompressor compressor;
-        private readonly DealerSocket socket;
+        private readonly DealerSocket socketOutbound;
+        private readonly DealerSocket socketInbound;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestDealer"/> class.
@@ -45,7 +46,8 @@ namespace Nautilus.TestSuite.TestKit.Components
         /// <param name="responseSerializer">The inbound serializer.</param>
         /// <param name="compressor">The compressor.</param>
         /// <param name="encryption">The encryption settings.</param>
-        /// <param name="serviceAddress">The service address to connect to.</param>
+        /// <param name="serverReqAddress">The server request address to connect to.</param>
+        /// <param name="serverResAddress">The server response address to connect to.</param>
         /// <param name="subName">The requesters sub-name.</param>
         public TestDealer(
             IComponentryContainer container,
@@ -54,7 +56,8 @@ namespace Nautilus.TestSuite.TestKit.Components
             IMessageSerializer<Response> responseSerializer,
             ICompressor compressor,
             EncryptionSettings encryption,
-            ZmqNetworkAddress serviceAddress,
+            ZmqNetworkAddress serverReqAddress,
+            ZmqNetworkAddress serverResAddress,
             string subName = "")
             : base(container, subName)
         {
@@ -63,7 +66,16 @@ namespace Nautilus.TestSuite.TestKit.Components
             this.responseSerializer = responseSerializer;
             this.compressor = compressor;
 
-            this.socket = new DealerSocket()
+            this.socketOutbound = new DealerSocket()
+            {
+                Options =
+                {
+                    Identity = Encoding.UTF8.GetBytes(this.Name.Value),
+                    Linger = TimeSpan.FromSeconds(1),
+                },
+            };
+
+            this.socketInbound = new DealerSocket()
             {
                 Options =
                 {
@@ -73,20 +85,30 @@ namespace Nautilus.TestSuite.TestKit.Components
             };
 
             this.ClientId = new ClientId(this.Name.Value);
-            this.ServiceAddress = serviceAddress;
+            this.ServerReqAddress = serverReqAddress;
+            this.ServerResAddress = serverResAddress;
 
             if (encryption.UseEncryption)
             {
-                EncryptionProvider.SetupSocket(encryption, this.socket);
+                EncryptionProvider.SetupSocket(encryption, this.socketOutbound);
                 this.Logger.LogInformation(
                     LogId.Networking,
-                    $"{encryption.Algorithm} encryption setup for connections to {this.ServiceAddress}");
+                    $"{encryption.Algorithm} encryption setup for connections to {this.ServerReqAddress}");
+
+                EncryptionProvider.SetupSocket(encryption, this.socketInbound);
+                this.Logger.LogInformation(
+                    LogId.Networking,
+                    $"{encryption.Algorithm} encryption setup for connections to {this.ServerResAddress}");
             }
             else
             {
                 this.Logger.LogWarning(
                     LogId.Networking,
-                    $"No encryption setup for connections to {this.ServiceAddress}");
+                    $"No encryption setup for connections to {this.ServerReqAddress}");
+
+                this.Logger.LogWarning(
+                    LogId.Networking,
+                    $"No encryption setup for connections to {this.ServerResAddress}");
             }
 
             this.ReceivedCount = 0;
@@ -99,9 +121,14 @@ namespace Nautilus.TestSuite.TestKit.Components
         public ClientId ClientId { get; }
 
         /// <summary>
-        /// Gets the network address for the router.
+        /// Gets the network address for server requests.
         /// </summary>
-        public ZmqNetworkAddress ServiceAddress { get; }
+        public ZmqNetworkAddress ServerReqAddress { get; }
+
+        /// <summary>
+        /// Gets the network address for server responses.
+        /// </summary>
+        public ZmqNetworkAddress ServerResAddress { get; }
 
         /// <summary>
         /// Gets the server received message count.
@@ -125,9 +152,14 @@ namespace Nautilus.TestSuite.TestKit.Components
 
             try
             {
-                if (!this.socket.IsDisposed)
+                if (!this.socketOutbound.IsDisposed)
                 {
-                    this.socket.Dispose();
+                    this.socketOutbound.Dispose();
+                }
+
+                if (!this.socketInbound.IsDisposed)
+                {
+                    this.socketInbound.Dispose();
                 }
             }
             catch (Exception ex)
@@ -142,27 +174,16 @@ namespace Nautilus.TestSuite.TestKit.Components
         /// Send the request to the service address.
         /// </summary>
         /// <param name="frames">The raw frames to send.</param>
-        /// <returns>The response.</returns>
-        public Response SendRaw(byte[][] frames)
+        public void SendRaw(params byte[][] frames)
         {
-            this.socket.SendMultipartBytes(frames);
-            this.SendCount++;
-
-            var received = this.socket.ReceiveMultipartBytes();
-            this.ReceivedCount++;
-
-            var decompressed = this.compressor.Decompress(received[1]);
-            var deserialized = this.responseSerializer.Deserialize(decompressed);
-
-            return deserialized;
+            this.Send(frames);
         }
 
         /// <summary>
         /// Send the request to the service address.
         /// </summary>
         /// <param name="message">The message string to send.</param>
-        /// <returns>The response.</returns>
-        public Response SendString(string message)
+        public void SendString(string message)
         {
             var header = new Dictionary<string, string>
             {
@@ -173,15 +194,14 @@ namespace Nautilus.TestSuite.TestKit.Components
             var frameHeader = this.compressor.Compress(this.headerSerializer.Serialize(header));
             var frameBody = this.compressor.Compress(Encoding.UTF8.GetBytes(message));
 
-            return this.Send(frameHeader, frameBody);
+            this.Send(frameHeader, frameBody);
         }
 
         /// <summary>
         /// Send the request to the service address.
         /// </summary>
         /// <param name="request">The request to send.</param>
-        /// <returns>The response.</returns>
-        public Response Send(Request request)
+        public void Send(Request request)
         {
             var header = new Dictionary<string, string>
             {
@@ -192,39 +212,54 @@ namespace Nautilus.TestSuite.TestKit.Components
             var frameHeader = this.compressor.Compress(this.headerSerializer.Serialize(header));
             var frameBody = this.compressor.Compress(this.requestSerializer.Serialize(request));
 
-            return this.Send(frameHeader, frameBody);
+            this.Send(frameHeader, frameBody);
         }
 
-        /// <inheritdoc/>
-        protected override void OnStart(Start start)
+        /// <summary>
+        /// Receive the next response.
+        /// </summary>
+        /// <returns>The response.</returns>
+        public Response Receive()
         {
-            this.socket.Connect(this.ServiceAddress.Value);
-            this.Logger.LogInformation(
-                LogId.Networking,
-                $"Connecting {this.socket.GetType().Name} to {this.ServiceAddress}...");
-        }
-
-        /// <inheritdoc/>
-        protected override void OnStop(Stop stop)
-        {
-            this.socket.Disconnect(this.ServiceAddress.Value);
-            this.Logger.LogInformation(
-                LogId.Networking,
-                $"Disconnected {this.socket.GetType().Name} from {this.ServiceAddress}");
-        }
-
-        private Response Send(byte[] header, byte[] body)
-        {
-            this.socket.SendMultipartBytes(header, body);
-            this.SendCount++;
-
-            var received = this.socket.ReceiveMultipartBytes();
+            var received = this.socketInbound.ReceiveMultipartBytes();
             this.ReceivedCount++;
 
             var decompressed = this.compressor.Decompress(received[1]);
             var deserialized = this.responseSerializer.Deserialize(decompressed);
 
             return deserialized;
+        }
+
+        /// <inheritdoc/>
+        protected override void OnStart(Start start)
+        {
+            this.socketOutbound.Connect(this.ServerReqAddress.Value);
+            this.socketInbound.Connect(this.ServerResAddress.Value);
+            this.Logger.LogInformation(
+                LogId.Networking,
+                $"Connecting {this.socketInbound.GetType().Name} to {this.ServerReqAddress}...");
+            this.Logger.LogInformation(
+                LogId.Networking,
+                $"Connecting {this.socketInbound.GetType().Name} to {this.ServerResAddress}...");
+        }
+
+        /// <inheritdoc/>
+        protected override void OnStop(Stop stop)
+        {
+            this.socketOutbound.Disconnect(this.ServerReqAddress.Value);
+            this.socketInbound.Disconnect(this.ServerResAddress.Value);
+            this.Logger.LogInformation(
+                LogId.Networking,
+                $"Disconnected {this.socketInbound.GetType().Name} from {this.ServerReqAddress}");
+            this.Logger.LogInformation(
+                LogId.Networking,
+                $"Disconnected {this.socketInbound.GetType().Name} from {this.ServerResAddress}");
+        }
+
+        private void Send(params byte[][] frames)
+        {
+            this.socketOutbound.SendMultipartBytes(frames);
+            this.SendCount++;
         }
     }
 }

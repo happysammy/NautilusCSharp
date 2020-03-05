@@ -90,7 +90,7 @@ namespace NautilusExecutor
                 eventSerializer,
                 compressor,
                 config.WireConfig.EncryptionConfig,
-                config.NetworkConfig.EventsPort);
+                config.NetworkConfig.EventPubPort);
 
             var executionEngine = new ExecutionEngine(
                 container,
@@ -108,14 +108,15 @@ namespace NautilusExecutor
 
             var commandServer = new CommandServer(
                 container,
+                messagingAdapter,
                 headerSerializer,
                 requestSerializer,
                 responseSerializer,
                 commandSerializer,
                 compressor,
-                commandRouter.Endpoint,
                 config.WireConfig.EncryptionConfig,
-                config.NetworkConfig.CommandsPort);
+                config.NetworkConfig.CommandReqPort,
+                config.NetworkConfig.CommandResPort);
 
             // TODO: Refactor to auto generate
             var addresses = new Dictionary<Address, IEndpoint>

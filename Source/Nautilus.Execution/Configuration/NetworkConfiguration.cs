@@ -8,39 +8,49 @@
 
 namespace Nautilus.Execution.Configuration
 {
-    using System.Diagnostics.CodeAnalysis;
     using Nautilus.Network;
 
     /// <summary>
-    /// Represents a data service network configuration.
+    /// Represents an execution service network configuration.
     /// </summary>
-    [SuppressMessage("ReSharper", "SA1611", Justification = "TODO")]
     public sealed class NetworkConfiguration
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="NetworkConfiguration"/> class.
         /// </summary>
+        /// <param name="commandReqPort">The command request port.</param>
+        /// <param name="commandResPort">The command response port.</param>
+        /// <param name="eventPubPort">The event publisher port.</param>
+        /// <param name="commandsPerSecond">The throttling level for commands.</param>
+        /// <param name="newOrdersPerSecond">The throttling level for new orders.</param>
         public NetworkConfiguration(
-            Port commandsPort,
-            Port eventsPort,
+            Port commandReqPort,
+            Port commandResPort,
+            Port eventPubPort,
             int commandsPerSecond,
             int newOrdersPerSecond)
         {
-            this.CommandsPort = commandsPort;
-            this.EventsPort = eventsPort;
+            this.CommandReqPort = commandReqPort;
+            this.CommandResPort = commandResPort;
+            this.EventPubPort = eventPubPort;
             this.CommandsPerSecond = commandsPerSecond;
             this.NewOrdersPerSecond = newOrdersPerSecond;
         }
 
         /// <summary>
-        /// Gets the configuration commands port.
+        /// Gets the configuration command request port.
         /// </summary>
-        public Port CommandsPort { get; }
+        public Port CommandReqPort { get; }
 
         /// <summary>
-        /// Gets the configuration events port.
+        /// Gets the configuration command response port.
         /// </summary>
-        public Port EventsPort { get; }
+        public Port CommandResPort { get; }
+
+        /// <summary>
+        /// Gets the configuration event publisher port.
+        /// </summary>
+        public Port EventPubPort { get; }
 
         /// <summary>
         /// Gets the configuration maximum commands per second.

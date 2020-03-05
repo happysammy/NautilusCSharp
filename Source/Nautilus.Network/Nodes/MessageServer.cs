@@ -12,29 +12,25 @@ namespace Nautilus.Network.Nodes
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Text;
-    using System.Threading;
-    using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
-    using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Logging;
     using Nautilus.Common.Messages.Commands;
+    using Nautilus.Common.Messaging;
     using Nautilus.Core.Enums;
     using Nautilus.Core.Message;
     using Nautilus.Core.Types;
     using Nautilus.Messaging;
-    using Nautilus.Messaging.Interfaces;
     using Nautilus.Network.Encryption;
     using Nautilus.Network.Identifiers;
     using Nautilus.Network.Messages;
-    using NetMQ;
     using NetMQ.Sockets;
 
     /// <summary>
     /// The base class for all messaging servers.
     /// </summary>
-    public abstract class MessageServer : MessagingComponent, IDisposable
+    public abstract class MessageServer : MessageBusConnected, IDisposable
     {
         private const int ExpectedFrameCount = 3; // Version 1.0
 
@@ -43,11 +39,13 @@ namespace Nautilus.Network.Nodes
         private readonly IMessageSerializer<Request> requestSerializer;
         private readonly IMessageSerializer<Response> responseSerializer;
         private readonly ICompressor compressor;
-        private readonly RouterSocket socket;
-        private readonly ZmqNetworkAddress networkAddress;
+        private readonly RouterSocket socketInbound;
+        private readonly RouterSocket socketOutbound;
+        private readonly ZmqNetworkAddress requestAddress;
+        private readonly ZmqNetworkAddress responseAddress;
         private readonly Dictionary<ClientId, SessionId> peers;
         private readonly Dictionary<Guid, Address> correlationIndex;
-        private readonly CancellationTokenSource cts;
+        private readonly MessageQueue queue;
 
         // TODO: Temporary hack
         private IMessageSerializer<Command>? commandSerializer;
@@ -56,21 +54,25 @@ namespace Nautilus.Network.Nodes
         /// Initializes a new instance of the <see cref="MessageServer"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
+        /// <param name="messagingAdapter">The message bus adapter.</param>
         /// <param name="headerSerializer">The header serializer.</param>
         /// <param name="requestSerializer">The request serializer.</param>
         /// <param name="responseSerializer">The response serializer.</param>
         /// <param name="compressor">The message compressor.</param>
         /// <param name="encryption">The encryption configuration.</param>
-        /// <param name="networkAddress">The zmq network address.</param>
+        /// <param name="requestAddress">The inbound zmq network address.</param>
+        /// <param name="responseAddress">The outbound zmq network address.</param>
         protected MessageServer(
             IComponentryContainer container,
+            IMessageBusAdapter messagingAdapter,
             ISerializer<Dictionary<string, string>> headerSerializer,
             IMessageSerializer<Request> requestSerializer,
             IMessageSerializer<Response> responseSerializer,
             ICompressor compressor,
             EncryptionSettings encryption,
-            ZmqNetworkAddress networkAddress)
-            : base(container)
+            ZmqNetworkAddress requestAddress,
+            ZmqNetworkAddress responseAddress)
+            : base(container, messagingAdapter)
         {
             this.serverId = new ServerId(this.Name.Value);
             this.headerSerializer = headerSerializer;
@@ -78,8 +80,16 @@ namespace Nautilus.Network.Nodes
             this.responseSerializer = responseSerializer;
             this.compressor = compressor;
 
-            this.cts = new CancellationTokenSource();
-            this.socket = new RouterSocket()
+            this.socketInbound = new RouterSocket()
+            {
+                Options =
+                {
+                    Identity = Encoding.UTF8.GetBytes($"{nameof(Nautilus)}-{this.Name.Value}"),
+                    Linger = TimeSpan.FromSeconds(1),
+                },
+            };
+
+            this.socketOutbound = new RouterSocket()
             {
                 Options =
                 {
@@ -89,28 +99,42 @@ namespace Nautilus.Network.Nodes
                 },
             };
 
-            this.networkAddress = networkAddress;
+            this.requestAddress = requestAddress;
+            this.responseAddress = responseAddress;
             this.peers = new Dictionary<ClientId, SessionId>();
             this.correlationIndex = new Dictionary<Guid, Address>();
 
+            this.queue = new MessageQueue(
+                container,
+                this.socketInbound,
+                this.socketOutbound,
+                this.ReceivePayload);
+
             if (encryption.UseEncryption)
             {
-                EncryptionProvider.SetupSocket(encryption, this.socket);
+                EncryptionProvider.SetupSocket(encryption, this.socketInbound);
                 this.Logger.LogInformation(
                     LogId.Networking,
-                    $"{encryption.Algorithm} encryption setup for {this.networkAddress}");
+                    $"{encryption.Algorithm} encryption setup for {this.requestAddress}");
+
+                EncryptionProvider.SetupSocket(encryption, this.socketOutbound);
+                this.Logger.LogInformation(
+                    LogId.Networking,
+                    $"{encryption.Algorithm} encryption setup for {this.responseAddress}");
             }
             else
             {
                 this.Logger.LogWarning(
                     LogId.Networking,
-                    $"No encryption setup for {this.networkAddress}");
+                    $"No encryption setup for {this.requestAddress}");
+
+                this.Logger.LogWarning(
+                    LogId.Networking,
+                    $"No encryption setup for {this.responseAddress}");
             }
 
             this.ReceivedCount = 0;
             this.SentCount = 0;
-
-            this.RegisterHandler<IEnvelope>(this.OnEnvelope);
         }
 
         /// <summary>
@@ -133,9 +157,14 @@ namespace Nautilus.Network.Nodes
 
             try
             {
-                if (!this.socket.IsDisposed)
+                if (!this.socketInbound.IsDisposed)
                 {
-                    this.socket.Dispose();
+                    this.socketInbound.Dispose();
+                }
+
+                if (!this.socketOutbound.IsDisposed)
+                {
+                    this.socketOutbound.Dispose();
                 }
             }
             catch (Exception ex)
@@ -169,24 +198,23 @@ namespace Nautilus.Network.Nodes
         {
             try
             {
-                this.socket.Bind(this.networkAddress.Value);
+                this.socketInbound.Bind(this.requestAddress.Value);
+                this.socketOutbound.Bind(this.responseAddress.Value);
             }
             catch (Exception ex)
             {
                 this.Logger.LogError(LogId.Networking, ex.Message, ex);
             }
 
-            var logMsg = $"Bound {this.socket.GetType().Name} to {this.networkAddress}";
-            this.Logger.LogInformation(LogId.Networking, logMsg);
-
-            Task.Run(this.StartWork, this.cts.Token);
+            var logMsg1 = $"Bound {this.socketInbound.GetType().Name} to {this.requestAddress}";
+            var logMsg2 = $"Bound {this.socketOutbound.GetType().Name} to {this.responseAddress}";
+            this.Logger.LogInformation(LogId.Networking, logMsg1);
+            this.Logger.LogInformation(LogId.Networking, logMsg2);
         }
 
         /// <inheritdoc />
         protected override void OnStop(Stop stop)
         {
-            this.cts.Cancel();
-
             foreach (var session in this.peers.Values)
             {
                 this.Logger.LogError(LogId.Networking, $"Server was still connected to session {session.Value}.");
@@ -194,13 +222,32 @@ namespace Nautilus.Network.Nodes
 
             try
             {
-                this.socket.Unbind(this.networkAddress.Value);
-                this.Logger.LogInformation(LogId.Networking, $"Unbound {this.socket.GetType().Name} from {this.networkAddress}");
+                this.queue.GracefulStop().Wait();
+                this.socketInbound.Unbind(this.requestAddress.Value);
+                this.socketOutbound.Unbind(this.responseAddress.Value);
+                this.Logger.LogInformation(LogId.Networking, $"Unbound {this.socketInbound.GetType().Name} from {this.requestAddress}");
+                this.Logger.LogInformation(LogId.Networking, $"Unbound {this.socketOutbound.GetType().Name} from {this.responseAddress}");
             }
             catch (Exception ex)
             {
                 this.Logger.LogError(LogId.Networking, ex.Message, ex);
             }
+        }
+
+        /// <summary>
+        /// Sends a MessageRejected message to the given receiver address.
+        /// </summary>
+        /// <param name="rejectedMessage">The rejected message.</param>
+        /// <param name="correlationId">The correlation identifier.</param>
+        protected void SendRejected(string rejectedMessage, Guid correlationId)
+        {
+            var response = new MessageRejected(
+                rejectedMessage,
+                correlationId,
+                Guid.NewGuid(),
+                this.TimeNow());
+
+            this.SendMessage(response);
         }
 
         /// <summary>
@@ -215,7 +262,7 @@ namespace Nautilus.Network.Nodes
                 Guid.NewGuid(),
                 this.TimeNow());
 
-            this.SendMessage(received, receivedMessage.Id);
+            this.SendMessage(received);
         }
 
         /// <summary>
@@ -231,28 +278,25 @@ namespace Nautilus.Network.Nodes
                 Guid.NewGuid(),
                 this.TimeNow());
 
-            this.SendMessage(failure, correlationId);
+            this.SendMessage(failure);
         }
 
         /// <summary>
         /// Sends a message with the given payload to the given receiver address.
         /// </summary>
-        /// <param name="outbound">The outbound message to send.</param>
-        /// <param name="correlationId">The correlation identifier for the receiver address.</param>
-        protected void SendMessage(Response outbound, Guid correlationId)
+        /// <param name="response">The outbound message to send.</param>
+        protected void SendMessage(Response response)
         {
-            if (this.correlationIndex.Remove(correlationId, out var receiver))
+            if (this.correlationIndex.Remove(response.CorrelationId, out var receiver))
             {
+                this.SendMessage(response, receiver);
             }
             else
             {
                 this.Logger.LogError(
                     LogId.Networking,
-                    $"Cannot send message {outbound}, no receiver address found for correlation id {correlationId}).");
-                return;
+                    $"Cannot send message {response}, no receiver address found for correlation id {response.CorrelationId}).");
             }
-
-            this.SendMessage(outbound, receiver);
         }
 
         private static Address DecodeHeaderSender(byte[] headerSender)
@@ -267,46 +311,14 @@ namespace Nautilus.Network.Nodes
             }
         }
 
-        private Task StartWork()
+        private void ReceivePayload(byte[][] frames)
         {
-            try
-            {
-                while (!this.cts.IsCancellationRequested)
-                {
-                    this.ReceiveMessage();
-                }
-            }
-            catch (OperationCanceledException ex)
-            {
-                this.Logger.LogError(LogId.Operation, "Message processing loop was hard cancelled.", ex);
-            }
-
-            this.Logger.LogDebug(LogId.Networking, "Stopped receiving messages.");
-            return Task.CompletedTask;
-        }
-
-        private void ReceiveMessage()
-        {
-            List<byte[]> frames;
-            try
-            {
-                frames = this.socket.ReceiveMultipartBytes(); // Blocking
-            }
-            catch (Exception ex)
-            {
-                // Interaction with NetMQ
-                this.Logger.LogError(LogId.Networking, ex.Message, ex);
-                return;
-            }
-            finally
-            {
-                this.ReceivedCount++;
-            }
+            this.ReceivedCount++;
 
             // Check for expected frames
-            if (frames.Count != ExpectedFrameCount)
+            if (frames.Length != ExpectedFrameCount)
             {
-                var errorMsg = $"Message was malformed (expected {ExpectedFrameCount} frames, received {frames.Count}).";
+                var errorMsg = $"Message was malformed (expected {ExpectedFrameCount} frames, received {frames.Length}).";
                 this.Logger.LogError(LogId.Networking, errorMsg);
                 this.Reject(frames, errorMsg);
                 return;
@@ -346,9 +358,9 @@ namespace Nautilus.Network.Nodes
             this.HandleMessage(header, frameBody, sender);
         }
 
-        private void Reject(List<byte[]> frames, string errorMsg)
+        private void Reject(byte[][] frames, string errorMsg)
         {
-            if (frames.Count == 0)
+            if (frames.Length == 0)
             {
                 this.Logger.LogError(
                     LogId.Networking,
@@ -383,7 +395,7 @@ namespace Nautilus.Network.Nodes
                     break;
                 default:
                 {
-                    var errorMessage = $"Message type '{messageType}' is not valid at this address {this.networkAddress}.";
+                    var errorMessage = $"Message type '{messageType}' is not valid at this address {this.requestAddress}.";
                     this.Logger.LogWarning(LogId.Networking, errorMessage);
                     this.SendRejected(errorMessage, sender);
                     break;
@@ -460,13 +472,13 @@ namespace Nautilus.Network.Nodes
                 // Peer not previously connected to a session
                 sessionId = new SessionId(connect.Authentication);
                 this.peers.TryAdd(connect.ClientId, sessionId);
-                message = $"{sender.Value} connected to session {sessionId.Value} at {this.networkAddress}";
+                message = $"{sender.Value} connected to session {sessionId.Value} at {this.requestAddress}";
                 this.Logger.LogInformation(LogId.Networking, message);
             }
             else
             {
                 // Peer already connected to a session
-                message = $"{sender.Value} already connected to session {sessionId.Value} at {this.networkAddress}";
+                message = $"{sender.Value} already connected to session {sessionId.Value} at {this.requestAddress}";
                 this.Logger.LogWarning(LogId.Networking, message);
             }
 
@@ -489,14 +501,14 @@ namespace Nautilus.Network.Nodes
             {
                 // Peer not previously connected to a session
                 sessionId = SessionId.None();
-                message = $"{sender.Value} had no session to disconnect at {this.networkAddress}";
+                message = $"{sender.Value} had no session to disconnect at {this.requestAddress}";
                 this.Logger.LogWarning(LogId.Networking, message);
             }
             else
             {
                 // Peer connected to a session
-                this.peers.Remove(disconnect.ClientId, out var _); // Pop from dictionary
-                message = $"{sender.Value} disconnected from session {sessionId.Value} at {this.networkAddress}";
+                this.peers.Remove(disconnect.ClientId); // Pop from dictionary
+                message = $"{sender.Value} disconnected from session {sessionId.Value} at {this.requestAddress}";
                 this.Logger.LogInformation(LogId.Networking, message);
             }
 
@@ -522,33 +534,21 @@ namespace Nautilus.Network.Nodes
             this.SendMessage(response, receiver);
         }
 
-        private void SendMessage(Response outbound, Address receiver)
+        private void SendMessage(Response response, Address receiver)
         {
-            try
+            var header = new Dictionary<string, string>
             {
-                var header = new Dictionary<string, string>
-                {
-                    { nameof(MessageType), outbound.MessageType.ToString() },
-                    { nameof(Type), outbound.Type.Name },
-                };
+                { nameof(MessageType), response.MessageType.ToString() },
+                { nameof(Type), response.Type.Name },
+            };
 
-                var frameHeader = this.compressor.Compress(this.headerSerializer.Serialize(header));
-                var frameBody = this.compressor.Compress(this.responseSerializer.Serialize(outbound));
+            var frameHeader = this.compressor.Compress(this.headerSerializer.Serialize(header));
+            var frameBody = this.compressor.Compress(this.responseSerializer.Serialize(response));
 
-                this.socket.SendMultipartBytes(
-                    receiver.Utf8Bytes,
-                    frameHeader,
-                    frameBody);
+            this.queue.Send(receiver.Utf8Bytes, frameHeader, frameBody);
 
-                this.SentCount++;
-                this.LogSent(outbound.ToString(), receiver.Value);
-            }
-            catch (Exception ex)
-            {
-                // Interaction with NetMQ
-                // Socket will throw HostUnreadableException if a message cannot be routed.
-                this.Logger.LogError(LogId.Networking, ex.Message, ex);
-            }
+            this.SentCount++;
+            this.LogSent(response.ToString(), receiver.Value);
         }
 
         [Conditional("DEBUG")]

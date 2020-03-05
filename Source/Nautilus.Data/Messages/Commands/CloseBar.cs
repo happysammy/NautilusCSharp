@@ -21,6 +21,8 @@ namespace Nautilus.Data.Messages.Commands
     [Immutable]
     public sealed class CloseBar : Command, IScheduledJob
     {
+        private static readonly Type EventType = typeof(CloseBar);
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CloseBar"/> class.
         /// </summary>
@@ -34,7 +36,7 @@ namespace Nautilus.Data.Messages.Commands
             Guid commandId,
             ZonedDateTime commandTimestamp)
             : base(
-                typeof(CloseBar),
+                EventType,
                 commandId,
                 commandTimestamp)
         {

@@ -11,10 +11,12 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using System.Text;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Message;
+    using Nautilus.Data.Messages.Requests;
     using Nautilus.Network;
     using Nautilus.Network.Compression;
     using Nautilus.Network.Encryption;
@@ -23,6 +25,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
     using Nautilus.TestSuite.TestKit.Components;
     using Nautilus.TestSuite.TestKit.Facades;
     using Nautilus.TestSuite.TestKit.Fixtures;
+    using Nautilus.TestSuite.TestKit.Mocks;
     using Nautilus.TestSuite.TestKit.Stubs;
     using Xunit;
     using Xunit.Abstractions;
@@ -31,20 +34,28 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
     public sealed class MessageServerTests : NetMQTestBase
     {
         private readonly IComponentryContainer container;
+        private readonly IMessageBusAdapter messagingAdapter;
         private readonly ISerializer<Dictionary<string, string>> headerSerializer;
         private readonly IMessageSerializer<Request> requestSerializer;
         private readonly IMessageSerializer<Response> responseSerializer;
         private readonly ICompressor compressor;
+
+        private readonly ZmqNetworkAddress testRequestAddress;
+        private readonly ZmqNetworkAddress testResponseAddress;
 
         public MessageServerTests(ITestOutputHelper output)
             : base(output)
         {
             // Fixture Setup
             this.container = TestComponentryContainer.Create(output);
+            this.messagingAdapter = new MockMessageBusProvider(this.container).Adapter;
             this.headerSerializer = new MsgPackDictionarySerializer();
             this.requestSerializer = new MsgPackRequestSerializer();
             this.responseSerializer = new MsgPackResponseSerializer();
             this.compressor = new CompressorBypass();
+
+            this.testRequestAddress = ZmqNetworkAddress.LocalHost(55655);
+            this.testResponseAddress = ZmqNetworkAddress.LocalHost(55656);
         }
 
         [Fact]
@@ -54,9 +65,11 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             // Act
             var server = new MessageServerFacade(
                 this.container,
+                this.messagingAdapter,
                 this.compressor,
                 EncryptionSettings.None(),
-                ZmqNetworkAddress.LocalHost(55555));
+                this.testRequestAddress,
+                this.testResponseAddress);
 
             // Assert
             Assert.Equal(ComponentState.Initialized, server.ComponentState);
@@ -71,9 +84,11 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             // Act
             var server = new MessageServerFacade(
                 this.container,
+                this.messagingAdapter,
                 this.compressor,
                 EncryptionSettings.None(),
-                ZmqNetworkAddress.LocalHost(55556));
+                this.testRequestAddress,
+                this.testResponseAddress);
             server.Start().Wait();
 
             // Assert
@@ -87,13 +102,13 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
         internal void GivenMessage_WhichHasIncorrectFrameCount_RespondsWithMessageRejected()
         {
             // Arrange
-            var testAddress = ZmqNetworkAddress.LocalHost(55557);
-
             var server = new MessageServerFacade(
                 this.container,
+                this.messagingAdapter,
                 this.compressor,
                 EncryptionSettings.None(),
-                testAddress);
+                this.testRequestAddress,
+                this.testResponseAddress);
             server.Start().Wait();
 
             var dealer = new TestDealer(
@@ -103,11 +118,13 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 this.responseSerializer,
                 this.compressor,
                 EncryptionSettings.None(),
-                testAddress);
+                this.testRequestAddress,
+                this.testResponseAddress);
             dealer.Start().Wait();
 
             // Act
-            var response = dealer.SendRaw(new[] { new byte[] { } });
+            dealer.SendRaw(new byte[] { });
+            var response = dealer.Receive();
 
             // Assert
             Assert.Equal(typeof(MessageRejected), response.Type);
@@ -125,13 +142,13 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
         internal void GivenMessage_WhichIsEmptyBytes_RespondsWithMessageRejected()
         {
             // Arrange
-            var testAddress = ZmqNetworkAddress.LocalHost(55558);
-
             var server = new MessageServerFacade(
                 this.container,
+                this.messagingAdapter,
                 this.compressor,
                 EncryptionSettings.None(),
-                testAddress);
+                this.testRequestAddress,
+                this.testResponseAddress);
             server.Start().Wait();
 
             var dealer = new TestDealer(
@@ -141,11 +158,13 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 this.responseSerializer,
                 this.compressor,
                 EncryptionSettings.None(),
-                testAddress);
+                this.testRequestAddress,
+                this.testResponseAddress);
             dealer.Start().Wait();
 
             // Act
-            var response = dealer.SendString(string.Empty);
+            dealer.SendString(string.Empty);
+            var response = dealer.Receive();
 
             // Assert
             Assert.Equal(typeof(MessageRejected), response.Type);
@@ -163,13 +182,13 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
         internal void GivenMessage_WhichIsInvalidForThisPort_RespondsWithMessageRejected()
         {
             // Arrange
-            var testAddress = ZmqNetworkAddress.LocalHost(55559);
-
             var server = new MessageServerFacade(
                 this.container,
+                this.messagingAdapter,
                 this.compressor,
                 EncryptionSettings.None(),
-                testAddress);
+                this.testRequestAddress,
+                this.testResponseAddress);
             server.Start().Wait();
 
             var dealer = new TestDealer(
@@ -179,16 +198,17 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 this.responseSerializer,
                 this.compressor,
                 EncryptionSettings.None(),
-                testAddress);
+                this.testRequestAddress,
+                this.testResponseAddress);
             dealer.Start().Wait();
 
             // Act
-            var response = dealer.SendRaw(new[]
-            {
+            dealer.SendRaw(
                 Encoding.UTF8.GetBytes("WOW"),
                 BitConverter.GetBytes(3),
-                Encoding.UTF8.GetBytes("Payload"),
-            });
+                Encoding.UTF8.GetBytes("Payload"));
+
+            var response = dealer.Receive();
 
             // Assert
             Assert.Equal(typeof(MessageRejected), response.Type);
@@ -206,13 +226,13 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
         internal void GivenConnectMessage_WhenNotAlreadyConnected_SendsConnectedResponseToSender()
         {
             // Arrange
-            var testAddress = ZmqNetworkAddress.LocalHost(55560);
-
             var server = new MessageServerFacade(
                 this.container,
+                this.messagingAdapter,
                 this.compressor,
                 EncryptionSettings.None(),
-                testAddress);
+                this.testRequestAddress,
+                this.testResponseAddress);
             server.Start().Wait();
 
             var dealer = new TestDealer(
@@ -222,7 +242,8 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 this.responseSerializer,
                 this.compressor,
                 EncryptionSettings.None(),
-                testAddress,
+                this.testRequestAddress,
+                this.testResponseAddress,
                 "001");
             dealer.Start().Wait();
 
@@ -233,13 +254,14 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            var response = (Connected)dealer.Send(connect);
+            dealer.Send(connect);
+            var response = (Connected)dealer.Receive();
 
             // Assert
             Assert.Equal(typeof(Connected), response.Type);
             Assert.Equal(1, server.ReceivedCount);
             Assert.Equal(1, server.SentCount);
-            Assert.Equal("TestDealer-001 connected to session None at tcp://127.0.0.1:55560", response.Message);
+            Assert.Equal("TestDealer-001 connected to session None at tcp://127.0.0.1:55655", response.Message);
 
             // Tear Down
             dealer.Stop().Wait();
@@ -252,13 +274,13 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
         internal void GivenDisconnectMessage_WhenConnected_SendsDisconnectedToSender()
         {
             // Arrange
-            var testAddress = ZmqNetworkAddress.LocalHost(55561);
-
             var server = new MessageServerFacade(
                 this.container,
+                this.messagingAdapter,
                 this.compressor,
                 EncryptionSettings.None(),
-                testAddress);
+                this.testRequestAddress,
+                this.testResponseAddress);
             server.Start().Wait();
 
             var dealer = new TestDealer(
@@ -268,7 +290,8 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 this.responseSerializer,
                 this.compressor,
                 EncryptionSettings.None(),
-                testAddress,
+                this.testRequestAddress,
+                this.testResponseAddress,
                 "001");
             dealer.Start().Wait();
 
@@ -278,7 +301,8 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            var response1 = (Connected)dealer.Send(connect);
+            dealer.Send(connect);
+            var response1 = (Connected)dealer.Receive();
 
             var disconnect = new Disconnect(
                 dealer.ClientId,
@@ -286,15 +310,16 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            var response2 = (Disconnected)dealer.Send(disconnect);
+            dealer.Send(disconnect);
+            var response2 = (Disconnected)dealer.Receive();
 
             // Assert
             Assert.Equal(typeof(Connected), response1.Type);
             Assert.Equal(typeof(Disconnected), response2.Type);
             Assert.Equal(2, server.ReceivedCount);
             Assert.Equal(2, server.SentCount);
-            Assert.Equal("TestDealer-001 connected to session None at tcp://127.0.0.1:55561", response1.Message);
-            Assert.Equal("TestDealer-001 disconnected from session None at tcp://127.0.0.1:55561", response2.Message);
+            Assert.Equal("TestDealer-001 connected to session None at tcp://127.0.0.1:55655", response1.Message);
+            Assert.Equal("TestDealer-001 disconnected from session None at tcp://127.0.0.1:55655", response2.Message);
 
             // Tear Down
             dealer.Stop().Wait();
@@ -307,13 +332,13 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
         internal void GivenMultipleMessages_StoresAndSendsResponsesToCorrectSender()
         {
             // Arrange
-            var testAddress = ZmqNetworkAddress.LocalHost(55562);
-
             var server = new MessageServerFacade(
                 this.container,
+                this.messagingAdapter,
                 this.compressor,
                 EncryptionSettings.None(),
-                testAddress);
+                this.testRequestAddress,
+                this.testResponseAddress);
             server.Start().Wait();
 
             var dealer1 = new TestDealer(
@@ -323,7 +348,8 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 this.responseSerializer,
                 this.compressor,
                 EncryptionSettings.None(),
-                testAddress,
+                this.testRequestAddress,
+                this.testResponseAddress,
                 "001");
             dealer1.Start().Wait();
 
@@ -334,7 +360,8 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 this.responseSerializer,
                 this.compressor,
                 EncryptionSettings.None(),
-                testAddress,
+                this.testRequestAddress,
+                this.testResponseAddress,
                 "002");
             dealer2.Start().Wait();
 
@@ -351,12 +378,14 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            var response1 = (Connected)dealer1.Send(connect1);
-            var response2 = (Connected)dealer2.Send(connect2);
+            dealer1.Send(connect1);
+            dealer2.Send(connect2);
+            var response1 = (Connected)dealer1.Receive();
+            var response2 = (Connected)dealer2.Receive();
 
             // Assert
-            Assert.Equal("TestDealer-001 connected to session None at tcp://127.0.0.1:55562", response1.Message);
-            Assert.Equal("TestDealer-002 connected to session None at tcp://127.0.0.1:55562", response2.Message);
+            Assert.Equal("TestDealer-001 connected to session None at tcp://127.0.0.1:55655", response1.Message);
+            Assert.Equal("TestDealer-002 connected to session None at tcp://127.0.0.1:55655", response2.Message);
             Assert.Equal(2, server.ReceivedCount);
             Assert.Equal(2, server.SentCount);
 
@@ -369,119 +398,129 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             server.Dispose();
         }
 
-        // [Fact]
-        // internal void Given1000Messages_StoresAndSendsResponsesToSenderInOrder()
-        // {
-        //     // Arrange
-        //     var testAddress = ZmqNetworkAddress.LocalHost(55564);
-        //
-        //     var server = new MessageServerFacade(
-        //         this.container,
-        //         this.compressor,
-        //         EncryptionSettings.None(),
-        //         testAddress);
-        //     server.Start().Wait();
-        //
-        //     var dealer = new TestDealer(
-        //         this.container,
-        //         new MsgPackRequestSerializer(new MsgPackQuerySerializer()),
-        //         new MsgPackResponseSerializer(),
-        //         this.compressor,
-        //         EncryptionSettings.None(),
-        //         testAddress,
-        //         "001");
-        //     dealer.Start().Wait();
-        //
-        //     // Act
-        //     for (var i = 0; i < 1000; i++)
-        //     {
-        //         var request = new DataRequest(
-        //             new Dictionary<string, string> { { "Payload", $"TEST-{i}" } },
-        //             Guid.NewGuid(),
-        //             StubZonedDateTime.UnixEpoch());
-        //
-        //         var response = dealer.Send(request);
-        //     }
-        //
-        //     // Assert
-        //     Assert.Equal(1000, server.ReceivedMessages.Count);
-        //     Assert.Equal(1000, server.CountReceived);
-        //     Assert.Equal(1000, server.CountSent);
-        //     Assert.Equal("TEST-999", server.ReceivedMessages[^1].Query.FirstOrDefault().Value);
-        //     Assert.Equal("TEST-998", server.ReceivedMessages[^2].Query.FirstOrDefault().Value);
-        //
-        //     // Tear Down
-        //     dealer.Stop().Wait();
-        //     server.Stop().Wait();
-        //     dealer.Dispose();
-        //     server.Dispose();
-        // }
+        [Fact]
+        internal void Given1000Messages_StoresAndSendsResponsesToSenderInOrder()
+        {
+            // Arrange
+            var server = new MessageServerFacade(
+                this.container,
+                this.messagingAdapter,
+                this.compressor,
+                EncryptionSettings.None(),
+                this.testRequestAddress,
+                this.testResponseAddress);
+            server.Start().Wait();
 
-        // [Fact]
-        // internal void Given1000Messages_FromDifferentSenders_StoresAndSendsResponsesToSendersInOrder()
-        // {
-        //     // Arrange
-        //     var testAddress = ZmqNetworkAddress.LocalHost(55565);
-        //
-        //     var server = new MessageServerFacade(
-        //         this.container,
-        //         this.compressor,
-        //         EncryptionSettings.None(),
-        //         testAddress);
-        //     server.Start().Wait();
-        //
-        //     var requester1 = new RequestSocket(testAddress);
-        //     var requester2 = new RequestSocket(testAddress);
-        //     requester1.Connect(testAddress);
-        //     requester2.Connect(testAddress);
-        //
-        //     Task.Delay(100).Wait(); // Allow requesters to connect
-        //
-        //     // Act
-        //     for (var i = 0; i < 1000; i++)
-        //     {
-        //         var message1 = new DataRequest(
-        //             new Dictionary<string, string> { { "Payload", $"TEST-{i} from 1" } },
-        //             Guid.NewGuid(),
-        //             StubZonedDateTime.UnixEpoch());
-        //
-        //         var message2 = new DataRequest(
-        //             new Dictionary<string, string> { { "Payload", $"TEST-{i} from 2" } },
-        //             Guid.NewGuid(),
-        //             StubZonedDateTime.UnixEpoch());
-        //
-        //         var serialized1 = this.requestSerializer.Serialize(message1);
-        //         requester1.SendMultipartBytes(BitConverter.GetBytes(serialized1.Length), serialized1);
-        //         requester1.ReceiveMultipartBytes();
-        //
-        //         var serialized2 = this.requestSerializer.Serialize(message2);
-        //         requester2.SendMultipartBytes(BitConverter.GetBytes(serialized2.Length), serialized2);
-        //         requester2.ReceiveMultipartBytes();
-        //     }
-        //
-        //     // Assert
-        //     Assert.Equal(2000, server.ReceivedMessages.Count);
-        //     Assert.Equal(2000, server.CountReceived);
-        //     Assert.Equal(2000, server.CountSent);
-        //     Assert.Equal("TEST-999 from 2", server.ReceivedMessages[^1].Query.FirstOrDefault().Value);
-        //     Assert.Equal("TEST-999 from 1", server.ReceivedMessages[^2].Query.FirstOrDefault().Value);
-        //     Assert.Equal("TEST-998 from 2", server.ReceivedMessages[^3].Query.FirstOrDefault().Value);
-        //     Assert.Equal("TEST-998 from 1", server.ReceivedMessages[^4].Query.FirstOrDefault().Value);
-        //
-        //     // Tear Down
-        //     try
-        //     {
-        //         requester1.Disconnect(testAddress);
-        //         requester2.Disconnect(testAddress);
-        //         requester1.Dispose();
-        //         requester2.Dispose();
-        //         server.Stop().Wait();
-        //         server.Dispose();
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         this.Output.WriteLine(ex.Message);
-        //     }
-        // }
+            var dealer = new TestDealer(
+                this.container,
+                this.headerSerializer,
+                this.requestSerializer,
+                this.responseSerializer,
+                this.compressor,
+                EncryptionSettings.None(),
+                this.testRequestAddress,
+                this.testResponseAddress,
+                "001");
+            dealer.Start().Wait();
+
+            // Act
+            for (var i = 0; i < 1000; i++)
+            {
+                var request = new DataRequest(
+                    new Dictionary<string, string> { { "Payload", $"TEST-{i}" } },
+                    Guid.NewGuid(),
+                    StubZonedDateTime.UnixEpoch());
+                dealer.Send(request);
+                dealer.Receive();
+            }
+
+            // Assert
+            Assert.Equal(1000, server.ReceivedMessages.Count);
+            Assert.Equal(1000, server.ReceivedCount);
+            Assert.Equal(1000, server.SentCount);
+            Assert.Equal("TEST-999", server.ReceivedMessages[^1].Query.FirstOrDefault().Value);
+            Assert.Equal("TEST-998", server.ReceivedMessages[^2].Query.FirstOrDefault().Value);
+
+            // Tear Down
+            dealer.Stop().Wait();
+            server.Stop().Wait();
+            dealer.Dispose();
+            server.Dispose();
+        }
+
+        [Fact]
+        internal void Given1000Messages_FromDifferentSenders_StoresAndSendsResponsesToSendersInOrder()
+        {
+            // Arrange
+            var server = new MessageServerFacade(
+                this.container,
+                this.messagingAdapter,
+                this.compressor,
+                EncryptionSettings.None(),
+                this.testRequestAddress,
+                this.testResponseAddress);
+            server.Start().Wait();
+
+            var dealer1 = new TestDealer(
+                this.container,
+                this.headerSerializer,
+                this.requestSerializer,
+                this.responseSerializer,
+                this.compressor,
+                EncryptionSettings.None(),
+                this.testRequestAddress,
+                this.testResponseAddress,
+                "001");
+            dealer1.Start().Wait();
+
+            var dealer2 = new TestDealer(
+                this.container,
+                this.headerSerializer,
+                this.requestSerializer,
+                this.responseSerializer,
+                this.compressor,
+                EncryptionSettings.None(),
+                this.testRequestAddress,
+                this.testResponseAddress,
+                "002");
+            dealer2.Start().Wait();
+
+            // Act
+            for (var i = 0; i < 1000; i++)
+            {
+                var request1 = new DataRequest(
+                    new Dictionary<string, string> { { "Payload", $"TEST-{i} from 1" } },
+                    Guid.NewGuid(),
+                    StubZonedDateTime.UnixEpoch());
+
+                var request2 = new DataRequest(
+                    new Dictionary<string, string> { { "Payload", $"TEST-{i} from 2" } },
+                    Guid.NewGuid(),
+                    StubZonedDateTime.UnixEpoch());
+
+                dealer1.Send(request1);
+                dealer1.Receive();
+
+                dealer2.Send(request2);
+                dealer2.Receive();
+            }
+
+            // Assert
+            Assert.Equal(2000, server.ReceivedMessages.Count);
+            Assert.Equal(2000, server.ReceivedCount);
+            Assert.Equal(2000, server.SentCount);
+            Assert.Equal("TEST-999 from 2", server.ReceivedMessages[^1].Query.FirstOrDefault().Value);
+            Assert.Equal("TEST-999 from 1", server.ReceivedMessages[^2].Query.FirstOrDefault().Value);
+            Assert.Equal("TEST-998 from 2", server.ReceivedMessages[^3].Query.FirstOrDefault().Value);
+            Assert.Equal("TEST-998 from 1", server.ReceivedMessages[^4].Query.FirstOrDefault().Value);
+
+            // Tear Down
+            dealer1.Stop().Wait();
+            dealer2.Stop().Wait();
+            server.Stop().Wait();
+            dealer1.Dispose();
+            dealer2.Dispose();
+            server.Dispose();
+        }
     }
 }

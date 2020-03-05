@@ -31,6 +31,16 @@ namespace Nautilus.Data
         public static Address DataGateway { get; } = new Address(nameof(DataGateway));
 
         /// <summary>
+        /// Gets the <see cref="DataServer"/> component messaging address.
+        /// </summary>
+        public static Address DataServer { get; } = new Address(nameof(DataServer));
+
+        /// <summary>
+        /// Gets the <see cref="DataPublisher"/> component messaging address.
+        /// </summary>
+        public static Address DataPublisher { get; } = new Address(nameof(DataPublisher));
+
+        /// <summary>
         /// Gets the <see cref="TickPublisher"/> component messaging address.
         /// </summary>
         public static Address TickPublisher { get; } = new Address(nameof(TickPublisher));
@@ -51,11 +61,6 @@ namespace Nautilus.Data
         public static Address BarAggregationController { get; } = new Address(nameof(BarAggregationController));
 
         /// <summary>
-        /// Gets the <see cref="BarPublisher"/> component messaging address.
-        /// </summary>
-        public static Address BarPublisher { get; } = new Address(nameof(BarPublisher));
-
-        /// <summary>
         /// Gets the <see cref="BarProvider"/> component messaging address.
         /// </summary>
         public static Address BarProvider { get; } = new Address(nameof(BarProvider));
@@ -69,11 +74,6 @@ namespace Nautilus.Data
         /// Gets the <see cref="InstrumentProvider"/> component messaging address.
         /// </summary>
         public static Address InstrumentProvider { get; } = new Address(nameof(InstrumentProvider));
-
-        /// <summary>
-        /// Gets the <see cref="InstrumentPublisher"/> component messaging address.
-        /// </summary>
-        public static Address InstrumentPublisher { get; } = new Address(nameof(InstrumentPublisher));
 
         /// <summary>
         /// Gets the <see cref="InstrumentRepository"/> component messaging address.

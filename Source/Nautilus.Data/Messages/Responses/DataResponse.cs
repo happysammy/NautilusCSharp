@@ -21,6 +21,8 @@ namespace Nautilus.Data.Messages.Responses
     [Immutable]
     public sealed class DataResponse : Response
     {
+        private static readonly Type EventType = typeof(DataResponse);
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DataResponse"/> class.
         /// </summary>
@@ -38,7 +40,7 @@ namespace Nautilus.Data.Messages.Responses
             Guid responseId,
             ZonedDateTime responseTimestamp)
             : base(
-                typeof(DataResponse),
+                EventType,
                 correlationId,
                 responseId,
                 responseTimestamp)

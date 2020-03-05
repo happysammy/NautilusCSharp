@@ -25,22 +25,22 @@ namespace Nautilus.Common.Messaging
     {
         private readonly MessageBus<Command> cmdBus;
         private readonly MessageBus<Event> evtBus;
-        private readonly MessageBus<Document> docBus;
+        private readonly MessageBus<Message> msgBus;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageBusAdapter"/> class.
         /// </summary>
         /// <param name="cmdBus">The command bus endpoint.</param>
         /// <param name="evtBus">The event bus endpoint.</param>
-        /// <param name="docBus">The document bus endpoint.</param>
+        /// <param name="msgBus">The general message bus endpoint.</param>
         public MessageBusAdapter(
             MessageBus<Command> cmdBus,
             MessageBus<Event> evtBus,
-            MessageBus<Document> docBus)
+            MessageBus<Message> msgBus)
         {
             this.cmdBus = cmdBus;
             this.evtBus = evtBus;
-            this.docBus = docBus;
+            this.msgBus = msgBus;
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace Nautilus.Common.Messaging
         {
             this.cmdBus.Endpoint.Send(message);
             this.evtBus.Endpoint.Send(message);
-            this.docBus.Endpoint.Send(message);
+            this.msgBus.Endpoint.Send(message);
         }
 
         /// <inheritdoc />
@@ -115,6 +115,7 @@ namespace Nautilus.Common.Messaging
             Task.WaitAll(this.cmdBus.Stop(), this.cmdBus.Stop(), this.cmdBus.Stop());
         }
 
+        // TODO: Below methods can be combined somehow
         private void SendToBus(Type type, Message message)
         {
             if (type == typeof(Command) || type.IsSubclassOf(typeof(Command)))
@@ -129,9 +130,9 @@ namespace Nautilus.Common.Messaging
                 return;
             }
 
-            if (type == typeof(Document) || type.IsSubclassOf(typeof(Document)))
+            if (type == typeof(Message) || type.IsSubclassOf(typeof(Message)))
             {
-                this.docBus.Endpoint.Send(message);
+                this.msgBus.Endpoint.Send(message);
                 return;
             }
 
@@ -156,11 +157,9 @@ namespace Nautilus.Common.Messaging
                 case Event _:
                     this.evtBus.Endpoint.Send(envelope);
                     break;
-                case Document _:
-                    this.docBus.Endpoint.Send(envelope);
-                    break;
                 default:
-                    throw ExceptionFactory.InvalidSwitchArgument(message, nameof(message));  // Design time error
+                    this.msgBus.Endpoint.Send(envelope);
+                    break;
             }
         }
     }

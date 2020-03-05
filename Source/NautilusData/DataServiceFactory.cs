@@ -73,30 +73,6 @@ namespace NautilusData
             var responseSerializer = new MsgPackResponseSerializer();
             var compressor = CompressorFactory.Create(config.WireConfig.CompressionCodec);
 
-            var tickPublisher = new TickPublisher(
-                container,
-                dataBusAdapter,
-                tickDataSerializer,
-                compressor,
-                config.WireConfig.EncryptionConfig,
-                config.NetworkConfig.TickPublisherPort);
-
-            var barPublisher = new BarPublisher(
-                container,
-                dataBusAdapter,
-                barDataSerializer,
-                compressor,
-                config.WireConfig.EncryptionConfig,
-                config.NetworkConfig.BarPublisherPort);
-
-            var instrumentPublisher = new InstrumentPublisher(
-                container,
-                dataBusAdapter,
-                instrumentDataSerializer,
-                compressor,
-                config.WireConfig.EncryptionConfig,
-                config.NetworkConfig.InstrumentPublisherPort);
-
             var fixClient = CreateFixClient(
                 container,
                 messagingAdapter,
@@ -136,52 +112,65 @@ namespace NautilusData
 
             var tickProvider = new TickProvider(
                 container,
+                messagingAdapter,
                 tickRepository,
-                tickDataSerializer,
-                headerSerializer,
-                requestSerializer,
-                responseSerializer,
-                compressor,
-                config.WireConfig.EncryptionConfig,
-                config.NetworkConfig.TickRouterPort);
+                tickDataSerializer);
 
             var barProvider = new BarProvider(
                 container,
+                messagingAdapter,
                 barRepository,
-                barDataSerializer,
-                headerSerializer,
-                requestSerializer,
-                responseSerializer,
-                compressor,
-                config.WireConfig.EncryptionConfig,
-                config.NetworkConfig.BarRouterPort);
+                barDataSerializer);
 
             var instrumentProvider = new InstrumentProvider(
                 container,
+                messagingAdapter,
                 instrumentRepository,
-                instrumentDataSerializer,
+                instrumentDataSerializer);
+
+            var dataServer = new DataServer(
+                container,
+                messagingAdapter,
                 headerSerializer,
                 requestSerializer,
                 responseSerializer,
                 compressor,
                 config.WireConfig.EncryptionConfig,
-                config.NetworkConfig.InstrumentRouterPort);
+                config.NetworkConfig.DataReqPort,
+                config.NetworkConfig.DataResPort);
+
+            var dataPublisher = new DataPublisher(
+                container,
+                dataBusAdapter,
+                barDataSerializer,
+                instrumentDataSerializer,
+                compressor,
+                config.WireConfig.EncryptionConfig,
+                config.NetworkConfig.DataPubPort);
+
+            var tickPublisher = new TickPublisher(
+                container,
+                dataBusAdapter,
+                tickDataSerializer,
+                compressor,
+                config.WireConfig.EncryptionConfig,
+                config.NetworkConfig.TickPubPort);
 
             // TODO: Refactor to auto generate
             var addresses = new Dictionary<Address, IEndpoint>
             {
                 { ServiceAddress.Scheduler, scheduler.Endpoint },
-                { ServiceAddress.BarAggregationController, barAggregationController.Endpoint },
+                { ServiceAddress.DataGateway, dataGateway.Endpoint },
+                { ServiceAddress.DataServer, dataServer.Endpoint },
+                { ServiceAddress.DataPublisher, dataPublisher.Endpoint },
                 { ServiceAddress.TickRepository, tickRepository.Endpoint },
                 { ServiceAddress.TickProvider, tickProvider.Endpoint },
                 { ServiceAddress.TickPublisher, tickPublisher.Endpoint },
                 { ServiceAddress.BarRepository, barRepository.Endpoint },
                 { ServiceAddress.BarProvider, barProvider.Endpoint },
-                { ServiceAddress.BarPublisher, barPublisher.Endpoint },
                 { ServiceAddress.InstrumentRepository, instrumentRepository.Endpoint },
                 { ServiceAddress.InstrumentProvider, instrumentProvider.Endpoint },
-                { ServiceAddress.InstrumentPublisher, instrumentPublisher.Endpoint },
-                { ServiceAddress.DataGateway, dataGateway.Endpoint },
+                { ServiceAddress.BarAggregationController, barAggregationController.Endpoint },
             };
 
             var dataService = new DataService(

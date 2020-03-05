@@ -51,5 +51,11 @@ namespace Nautilus.Network.Messages
         /// Gets the responses query failure message.
         /// </summary>
         public string Message { get; }
+
+        /// <summary>
+        /// Returns the string representation of this object.
+        /// </summary>
+        /// <returns>A <see cref="string"/>.</returns>
+        public override string ToString() => $"{this.Type.Name}({this.Message}, CorrelationId={this.CorrelationId})";
     }
 }

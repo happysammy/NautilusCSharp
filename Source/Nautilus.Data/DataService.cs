@@ -71,14 +71,14 @@ namespace Nautilus.Data
             this.dataGateway = dataGateway;
             this.managedComponents = new List<Address>
             {
+                ServiceAddress.DataServer,
+                ServiceAddress.DataPublisher,
                 ServiceAddress.TickRepository,
                 ServiceAddress.TickPublisher,
                 ServiceAddress.TickProvider,
                 ServiceAddress.BarRepository,
-                ServiceAddress.BarPublisher,
                 ServiceAddress.BarProvider,
                 ServiceAddress.InstrumentRepository,
-                ServiceAddress.InstrumentPublisher,
                 ServiceAddress.InstrumentProvider,
             };
 

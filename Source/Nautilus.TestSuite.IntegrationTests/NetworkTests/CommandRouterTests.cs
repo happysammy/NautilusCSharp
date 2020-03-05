@@ -29,6 +29,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
     {
         private readonly NetworkAddress localHost = new NetworkAddress("127.0.0.1");
         private readonly IComponentryContainer container;
+        private readonly IMessageBusAdapter messagingAdapter;
         private readonly IEndpoint receiver;
 
         public CommandRouterTests(ITestOutputHelper output)
@@ -36,6 +37,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
         {
             // Fixture Setup
             this.container = TestComponentryContainer.Create(output);
+            this.messagingAdapter = new MockMessageBusProvider(this.container).Adapter;
             this.receiver = new MockComponent(this.container).Endpoint;
         }
 
@@ -47,16 +49,17 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             var requester = new RequestSocket(testAddress);
             requester.Connect(testAddress);
 
-            var commandConsumer = new CommandServer(
+            var commandServer = new CommandServer(
                 this.container,
+                this.messagingAdapter,
                 new MsgPackDictionarySerializer(),
                 new MsgPackRequestSerializer(),
                 new MsgPackResponseSerializer(),
                 new MsgPackCommandSerializer(),
                 new CompressorBypass(),
-                this.receiver,
                 EncryptionSettings.None(),
-                new Port(54553));
+                new Port(54553),
+                new Port(54554));
 
 // var hexString = "85ac636f6d6d616e645f74797065ad6f726465725f636f6d6d616e64a56f72646572" +
 //                            "da016e38616136373337393664363236663663616234313535343435353533343432" +

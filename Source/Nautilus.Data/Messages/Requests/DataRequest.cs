@@ -22,6 +22,8 @@ namespace Nautilus.Data.Messages.Requests
     [Immutable]
     public sealed class DataRequest : Request
     {
+        private static readonly Type EventType = typeof(DataRequest);
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DataRequest"/> class.
         /// </summary>
@@ -33,7 +35,7 @@ namespace Nautilus.Data.Messages.Requests
             Guid requestId,
             ZonedDateTime requestTimestamp)
             : base(
-                typeof(DataRequest),
+                EventType,
                 requestId,
                 requestTimestamp)
         {
