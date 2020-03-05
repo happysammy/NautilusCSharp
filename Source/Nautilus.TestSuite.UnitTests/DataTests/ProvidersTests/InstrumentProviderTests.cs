@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
+namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
 {
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;

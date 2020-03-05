@@ -1,16 +1,15 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="TickProviderTests.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="BarProviderTests.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2020 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   https://nautechsystems.io
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
+namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
 {
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
-    using Nautilus.Common.Data;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Message;
     using Nautilus.Data.Interfaces;
@@ -24,25 +23,25 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
-    public sealed class TickProviderTests : NetMQTestBase
+    public sealed class BarProviderTests : NetMQTestBase
     {
         private readonly IComponentryContainer container;
         private readonly IMessageBusAdapter messagingAdapter;
-        private readonly ITickRepository repository;
-        private readonly IDataSerializer<Tick> dataSerializer;
+        private readonly IBarRepository repository;
+        private readonly IDataSerializer<Bar> dataSerializer;
         private readonly ISerializer<Dictionary<string, string>> headerSerializer;
         private readonly IMessageSerializer<Request> requestSerializer;
         private readonly IMessageSerializer<Response> responseSerializer;
         private readonly ICompressor compressor;
 
-        public TickProviderTests(ITestOutputHelper output)
+        public BarProviderTests(ITestOutputHelper output)
             : base(output)
         {
             // Fixture Setup
             this.container = TestComponentryContainer.Create(output);
             this.messagingAdapter = new MockMessageBusProvider(this.container).Adapter;
-            this.dataSerializer = new TickDataSerializer();
-            this.repository = new MockTickRepository(this.container, this.dataSerializer, DataBusFactory.Create(this.container));
+            this.dataSerializer = new BarDataSerializer();
+            this.repository = new MockBarRepository(this.dataSerializer);
             this.headerSerializer = new MsgPackDictionarySerializer();
             this.requestSerializer = new MsgPackRequestSerializer();
             this.responseSerializer = new MsgPackResponseSerializer();
@@ -50,24 +49,23 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
         }
 
         // [Fact]
-        // internal void GivenTickDataRequest_WithNoTicks_ReturnsQueryFailedMessage()
+        // internal void GivenBarDataRequest_WithNoBars_ReturnsQueryFailedMessage()
         // {
         //     // Arrange
-        //     var testAddress = new ZmqNetworkAddress(NetworkAddress.LocalHost, new Port(55722));
-        //
-        //     var provider = new TickProvider(
+        //     var provider = new BarProvider(
         //         this.container,
         //         this.messagingAdapter,
         //         this.repository,
         //         this.dataSerializer);
         //     provider.Start().Wait();
         //
-        //     var symbol = new Symbol("AUDUSD", new Venue("FXCM"));
+        //     var barType = StubBarType.AUDUSD_OneMinuteAsk();
         //
         //     var query = new Dictionary<string, string>
         //     {
-        //         { "DataType", "Tick[]" },
-        //         { "Symbol", symbol.Value },
+        //         { "DataType", "Bar[]" },
+        //         { "Symbol", barType.Symbol.Value },
+        //         { "Specification", barType.Specification.ToString() },
         //         { "FromDate", new DateKey(StubZonedDateTime.UnixEpoch()).ToString() },
         //         { "ToDate", new DateKey(StubZonedDateTime.UnixEpoch()).ToString() },
         //         { "Limit", "0" },
@@ -77,6 +75,8 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
         //         query,
         //         Guid.NewGuid(),
         //         StubZonedDateTime.UnixEpoch());
+        //
+        //     provider.Endpoint.Send(request);
         //
         //     // Act
         //     var response = (QueryFailure)requester.Send(request);
@@ -91,32 +91,30 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
         // }
 
         // [Fact]
-        // internal void GivenTickDataRequest_WithTicks_ReturnsValidTickDataResponse()
+        // internal void GivenBarDataRequest_WithBars_ReturnsValidBarDataResponse()
         // {
         //     // Arrange
-        //     var testAddress = new ZmqNetworkAddress(NetworkAddress.LocalHost, new Port(55723));
+        //     var testAddress = new ZmqNetworkAddress(NetworkAddress.LocalHost, new Port(55524));
         //
-        //     var provider = new TickProvider(
+        //     var provider = new BarProvider(
         //         this.container,
         //         this.messagingAdapter,
         //         this.repository,
         //         this.dataSerializer);
         //     provider.Start().Wait();
         //
-        //     var datetimeFrom = StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1);
-        //     var datetimeTo = datetimeFrom + Duration.FromMinutes(1);
+        //     var barType = StubBarType.AUDUSD_OneMinuteAsk();
+        //     var bar1 = StubBarProvider.Build();
+        //     var bar2 = StubBarProvider.Build();
         //
-        //     var symbol = new Symbol("AUDUSD", new Venue("FXCM"));
-        //     var tick1 = new Tick(symbol, Price.Create(1.00000m), Price.Create(1.00000m), Volume.One(), Volume.One(), datetimeFrom);
-        //     var tick2 = new Tick(symbol, Price.Create(1.00010m), Price.Create(1.00020m), Volume.One(), Volume.One(), datetimeTo);
-        //
-        //     this.repository.Add(tick1);
-        //     this.repository.Add(tick2);
+        //     this.repository.Add(barType, bar1);
+        //     this.repository.Add(barType, bar2);
         //
         //     var query = new Dictionary<string, string>
         //     {
-        //         { "DataType", "Tick[]" },
-        //         { "Symbol", symbol.Value },
+        //         { "DataType", "Bar[]" },
+        //         { "Symbol", barType.Symbol.Value },
+        //         { "Specification", barType.Specification.ToString() },
         //         { "FromDate", new DateKey(StubZonedDateTime.UnixEpoch()).ToString() },
         //         { "ToDate", new DateKey(StubZonedDateTime.UnixEpoch()).ToString() },
         //         { "Limit", "0" },
@@ -129,14 +127,13 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.ProvidersTests
         //
         //     // Act
         //     var response = (DataResponse)requester.Send(request);
-        //
-        //     var ticks = this.dataSerializer.DeserializeBlob(response.Data);
+        //     var bars = this.dataSerializer.DeserializeBlob(response.Data);
         //
         //     // Assert
         //     Assert.Equal(typeof(DataResponse), response.Type);
-        //     Assert.Equal(2, ticks.Length);
-        //     Assert.Equal(tick1, ticks[0]);
-        //     Assert.Equal(tick2, ticks[1]);
+        //     Assert.Equal(2, bars.Length);
+        //     Assert.Equal(bar1, bars[0]);
+        //     Assert.Equal(bar2, bars[1]);
         //
         //     // Tear Down
         //     requester.Stop().Wait();
