@@ -11,7 +11,10 @@ namespace Nautilus.Data.Providers
     using System;
     using Microsoft.Extensions.Logging;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Logging;
+    using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messaging;
+    using Nautilus.Core.Message;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Messages.Requests;
     using Nautilus.Data.Messages.Responses;
@@ -20,10 +23,12 @@ namespace Nautilus.Data.Providers
     using Nautilus.Network.Messages;
 
     /// <summary>
-    /// Provides <see cref="Instrument"/> data to requests.
+    /// Provides <see cref="Instrument"/> data for requests.
     /// </summary>
     public sealed class InstrumentProvider : MessageBusConnected
     {
+        private const string DataType = nameof(DataType);
+
         private readonly IInstrumentRepositoryReadOnly repository;
         private readonly IDataSerializer<Instrument> dataSerializer;
 
@@ -47,17 +52,19 @@ namespace Nautilus.Data.Providers
             this.RegisterHandler<DataRequest>(this.OnMessage);
         }
 
-        private void OnMessage(DataRequest request)
+        /// <summary>
+        /// Perform a query operation for the give data request.
+        /// </summary>
+        /// <param name="request">The data request.</param>
+        /// <returns>The response.</returns>
+        internal Response FindData(DataRequest request)
         {
             try
             {
-                this.Logger.LogInformation($"<--[REQ] {request}.");
-
-                var dataType = request.Query["DataType"];
+                var dataType = request.Query[DataType];
                 if (dataType != typeof(Instrument[]).Name)
                 {
-                    this.SendQueryFailure($"Incorrect DataType requested, was {dataType}", request.Id);
-                    return;
+                    return this.QueryFailure($"Incorrect DataType requested, was {dataType}", request.Id);
                 }
 
                 // Query for symbol instrument
@@ -67,83 +74,92 @@ namespace Nautilus.Data.Providers
                     var dataQuery = this.repository.GetInstrumentData(symbol);
                     if (dataQuery.IsFailure)
                     {
-                        this.SendQueryFailure(dataQuery.Message, request.Id);
-                        this.Logger.LogWarning($"{request} QueryFailure({dataQuery.Message}).");
-                        return;
+                        return this.QueryFailure(dataQuery.Message, request.Id);
                     }
 
                     if (dataQuery.Value.Length == 0)
                     {
                         var message = $"Cannot find instruments for the '{symbol}' symbol";
-                        this.SendQueryFailure(dataQuery.Message, request.Id);
-                        this.Logger.LogWarning($"{request} QueryFailure({message}).");
-                        return;
+                        return this.QueryFailure(dataQuery.Message, request.Id);
                     }
 
-                    var response = new DataResponse(
+                    return new DataResponse(
                         this.dataSerializer.SerializeBlob(dataQuery.Value, request.Query),
                         dataType,
                         this.dataSerializer.BlobEncoding,
                         request.Id,
                         Guid.NewGuid(),
                         this.TimeNow());
-
-                    this.Send(response, ServiceAddress.DataServer);
                 }
 
                 // Query for all venue instruments
-                else if (request.Query.ContainsKey("Venue"))
+                if (request.Query.ContainsKey("Venue"))
                 {
                     var venue = new Venue(request.Query["Venue"]);
                     var dataQuery = this.repository.GetInstrumentData(venue);
                     if (dataQuery.IsFailure)
                     {
-                        this.SendQueryFailure(dataQuery.Message, request.Id);
-                        this.Logger.LogWarning($"{request} QueryFailure({dataQuery.Message}).");
-                        return;
+                        return this.QueryFailure(dataQuery.Message, request.Id);
                     }
 
                     if (dataQuery.Value.Length == 0)
                     {
                         var message = $"Cannot find instruments for the '{venue}' venue";
-                        this.SendQueryFailure(message, request.Id);
-                        this.Logger.LogWarning($"{request} QueryFailure({message}).");
-                        return;
+                        return this.QueryFailure(message, request.Id);
                     }
 
-                    var response = new DataResponse(
+                    return new DataResponse(
                         this.dataSerializer.SerializeBlob(dataQuery.Value, request.Query),
                         dataType,
                         this.dataSerializer.BlobEncoding,
                         request.Id,
                         Guid.NewGuid(),
                         this.TimeNow());
+                }
 
-                    this.Logger.LogInformation($"[RES]--> {response}.");
-                    this.Send(response, ServiceAddress.DataServer);
-                }
-                else
-                {
-                    this.SendQueryFailure("Invalid Instrument query, must contain 'Symbol' or 'Venue'", request.Id);
-                }
+                return this.QueryFailure("Invalid Instrument query, must contain 'Symbol' or 'Venue'", request.Id);
             }
             catch (Exception ex)
             {
-                this.Logger.LogError($"{ex}");
-                this.SendQueryFailure(ex.Message, request.Id);
+                this.Logger.LogError(LogId.Component, $"{ex}");
+                return this.QueryFailure(ex.Message, request.Id);
             }
         }
 
-        private void SendQueryFailure(string message, Guid correlationId)
+        /// <inheritdoc />
+        protected override void OnStart(Start start)
         {
-            var response = new QueryFailure(
+        }
+
+        /// <inheritdoc />
+        protected override void OnStop(Stop stop)
+        {
+        }
+
+        private Response QueryFailure(string message, Guid correlationId)
+        {
+            return new QueryFailure(
                 message,
                 correlationId,
                 this.NewGuid(),
                 this.TimeNow());
+        }
+
+        private void OnMessage(DataRequest request)
+        {
+            this.Logger.LogInformation(LogId.Component, $"<--[REQ] {request}.");
+
+            var response = this.FindData(request);
+            if (response is DataResponse)
+            {
+                this.Logger.LogInformation(LogId.Component, $"[RES]--> {response}.");
+            }
+            else
+            {
+                this.Logger.LogWarning(LogId.Component, $"[RES]--> {response}.");
+            }
 
             this.Send(response, ServiceAddress.DataServer);
-            this.Logger.LogWarning(response.ToString());
         }
     }
 }

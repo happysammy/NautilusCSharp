@@ -116,7 +116,7 @@ namespace Nautilus.Common.Componentry
         public Task Kill()
         {
             this.ComponentState = ComponentState.Failed;
-            this.Logger.LogError(LogId.Operation, $"{this.ComponentState} from kill command.");
+            this.Logger.LogError(LogId.Component, $"{this.ComponentState} from kill command.");
 
             return this.processor.Kill();
         }
@@ -159,7 +159,7 @@ namespace Nautilus.Common.Componentry
         protected virtual void OnStart(Start start)
         {
             this.Logger.LogWarning(
-                LogId.Operation,
+                LogId.Component,
                 $"Received {start} with OnStart() not overridden in implementation.",
                 start.Id);
         }
@@ -173,7 +173,7 @@ namespace Nautilus.Common.Componentry
         protected virtual void OnStop(Stop stop)
         {
             this.Logger.LogWarning(
-                LogId.Operation,
+                LogId.Component,
                 $"Received {stop} with OnStop() not overridden in implementation.",
                 stop.Id);
         }
@@ -186,7 +186,7 @@ namespace Nautilus.Common.Componentry
         {
             this.SendToSelf(envelope.Message);
 
-            this.Logger.LogTrace(LogId.Operation, $"Received {envelope}.", envelope.Id, envelope.Message.Id);
+            this.Logger.LogTrace(LogId.Component, $"Received {envelope}.", envelope.Id, envelope.Message.Id);
         }
 
         private static string SetSubName(string subName)
@@ -201,22 +201,22 @@ namespace Nautilus.Common.Componentry
 
         private void OnMessage(Start message)
         {
-            this.Logger.LogDebug(LogId.Operation, $"Starting from message {message}...", message.Id);
+            this.Logger.LogDebug(LogId.Component, $"Starting from message {message}...", message.Id);
 
             this.OnStart(message);
             this.ComponentState = ComponentState.Running;
 
-            this.Logger.LogInformation(LogId.Operation, $"{this.ComponentState}...", this.ComponentState);
+            this.Logger.LogInformation(LogId.Component, $"{this.ComponentState}...", this.ComponentState);
         }
 
         private void OnMessage(Stop message)
         {
-            this.Logger.LogDebug(LogId.Operation, $"Stopping from message {message}...", message.Id);
+            this.Logger.LogDebug(LogId.Component, $"Stopping from message {message}...", message.Id);
 
             if (this.ComponentState != ComponentState.Running)
             {
                 this.Logger.LogWarning(
-                    LogId.Operation,
+                    LogId.Component,
                     $"Stop message when component not already running, was {this.ComponentState}.",
                     message.Id);
             }
@@ -224,7 +224,7 @@ namespace Nautilus.Common.Componentry
             this.OnStop(message);
             this.ComponentState = ComponentState.Stopped;
 
-            this.Logger.LogInformation(LogId.Operation, $"{this.ComponentState}.", message.Id);
+            this.Logger.LogInformation(LogId.Component, $"{this.ComponentState}.", message.Id);
         }
 
         private void HandleException(Exception ex)
@@ -243,7 +243,7 @@ namespace Nautilus.Common.Componentry
 
         private void Unhandled(object message)
         {
-            this.Logger.LogError(LogId.Operation, $"Unhandled message: {message}.");
+            this.Logger.LogError(LogId.Component, $"Unhandled message: {message}.");
             this.processor.AddToUnhandledMessages(message);
         }
     }

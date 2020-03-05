@@ -12,7 +12,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
     using System.Text;
     using System.Threading.Tasks;
     using Nautilus.Common.Data;
-    using Nautilus.Data.Publishers;
+    using Nautilus.Data.Network;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network;

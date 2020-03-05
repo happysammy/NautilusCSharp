@@ -38,7 +38,7 @@ namespace Nautilus.Common.Componentry
             this.Logger = container.LoggerFactory.CreateLogger(this.Name.Value);
 
             this.InitializedTime = this.clock.TimeNow();
-            this.Logger.LogDebug(LogId.Operation, "Initialized.");
+            this.Logger.LogDebug(LogId.Component, "Initialized.");
         }
 
         /// <summary>

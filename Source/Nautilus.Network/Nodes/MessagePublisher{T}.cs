@@ -105,7 +105,7 @@ namespace Nautilus.Network.Nodes
                 this.Logger.LogCritical(LogId.Networking, ex.Message, ex);
             }
 
-            this.Logger.LogInformation(LogId.Operation, "Disposed.");
+            this.Logger.LogInformation(LogId.Component, "Disposed.");
         }
 
         /// <inheritdoc />

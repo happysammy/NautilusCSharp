@@ -25,6 +25,8 @@ namespace Nautilus.Messaging
     public sealed class Envelope<T> : IEnvelope, IEquatable<Envelope<T>>, IEquatable<IEnvelope>
         where T : Message
     {
+        private readonly T message;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Envelope{T}"/> class.
         /// </summary>
@@ -40,7 +42,7 @@ namespace Nautilus.Messaging
         {
             Debug.NotDefault(timestamp, nameof(timestamp));
 
-            this.Message = message;
+            this.message = message;
             this.Receiver = receiver;
             this.Sender = sender;
             this.Id = message.Id;
@@ -50,12 +52,12 @@ namespace Nautilus.Messaging
         /// <summary>
         /// Gets the envelopes message.
         /// </summary>
-        public Message Message { get; }
+        public Message Message => this.message;
 
         /// <summary>
         /// Gets the envelopes message type.
         /// </summary>
-        public Type MessageType => this.Message.Type;
+        public Type MessageType => this.message.Type;
 
         /// <summary>
         /// Gets the envelopes receiver (optional).
@@ -76,6 +78,12 @@ namespace Nautilus.Messaging
         /// Gets the envelope creation timestamp.
         /// </summary>
         public ZonedDateTime Timestamp { get; }
+
+        /// <summary>
+        /// Returns the internal message from the envelope.
+        /// </summary>
+        /// <returns>The message of type T.</returns>
+        public T Open() => this.message;
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="Envelope{T}"/> is equal to the given

@@ -18,26 +18,21 @@ namespace Nautilus.Common.Logging
         /// <summary>
         /// Gets the event identifier for component operation events.
         /// </summary>
-        public static EventId Operation { get; } = new EventId(0, nameof(Operation));
-
-        /// <summary>
-        /// Gets the event identifier for disk input-output events.
-        /// </summary>
-        public static EventId Disk { get; } = new EventId(1, nameof(Disk));
+        public static EventId Component { get; } = new EventId(0, nameof(Component));
 
         /// <summary>
         /// Gets the event identifier for networking events.
         /// </summary>
-        public static EventId Networking { get; } = new EventId(2, nameof(Networking));
+        public static EventId Networking { get; } = new EventId(1, nameof(Networking));
 
         /// <summary>
         /// Gets the event identifier for database events.
         /// </summary>
-        public static EventId Database { get; } = new EventId(3, nameof(Database));
+        public static EventId Database { get; } = new EventId(2, nameof(Database));
 
         /// <summary>
         /// Gets the event identifier for trading events.
         /// </summary>
-        public static EventId Trading { get; } = new EventId(4, nameof(Trading));
+        public static EventId Trading { get; } = new EventId(3, nameof(Trading));
     }
 }

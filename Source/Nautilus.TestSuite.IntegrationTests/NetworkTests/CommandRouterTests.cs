@@ -23,7 +23,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
     public sealed class CommandRouterTests : NetMQTestBase
     {
         private readonly NetworkAddress localHost = new NetworkAddress("127.0.0.1");
-        private readonly IComponentryContainer container;
         private readonly IMessageBusAdapter messagingAdapter;
         private readonly IEndpoint receiver;
 
@@ -31,9 +30,9 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             : base(output)
         {
             // Fixture Setup
-            this.container = TestComponentryContainer.Create(output);
-            this.messagingAdapter = new MockMessageBusProvider(this.container).Adapter;
-            this.receiver = new MockComponent(this.container).Endpoint;
+            var container = TestComponentryContainer.Create(output);
+            this.messagingAdapter = new MockMessageBusProvider(container).Adapter;
+            this.receiver = new MockComponent(container).Endpoint;
         }
 
         [Fact]

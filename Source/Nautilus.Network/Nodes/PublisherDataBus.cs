@@ -92,7 +92,7 @@ namespace Nautilus.Network.Nodes
                 this.socket.Dispose();
             }
 
-            this.Logger.LogInformation(LogId.Operation, "Disposed.");
+            this.Logger.LogInformation(LogId.Component, "Disposed.");
         }
 
         /// <inheritdoc />

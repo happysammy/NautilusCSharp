@@ -109,7 +109,7 @@ namespace Nautilus.Execution.Engine
             this.Subscribe<OrderFilled>();
             this.Subscribe<AccountStateEvent>();
 
-            this.Logger.LogInformation(LogId.Operation, $"{nameof(this.GtdExpiryBackups)} is {this.GtdExpiryBackups}");
+            this.Logger.LogInformation(LogId.Component, $"{nameof(this.GtdExpiryBackups)} is {this.GtdExpiryBackups}");
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace Nautilus.Execution.Engine
         private void OnMessage(SubmitOrder command)
         {
             this.CommandCount++;
-            this.Logger.LogInformation(LogId.Operation, $"{Received}{Command} {command}.");
+            this.Logger.LogInformation(LogId.Component, $"{Received}{Command} {command}.");
 
             var result = this.database.AddOrder(
                 command.Order,
@@ -573,7 +573,7 @@ namespace Nautilus.Execution.Engine
             if (traderId is null)
             {
                 this.Logger.LogError(
-                    LogId.Operation,
+                    LogId.Component,
                     $"Cannot send event {@event} to publisher (no TraderId found for order).");
                 return;
             }
@@ -584,7 +584,7 @@ namespace Nautilus.Execution.Engine
         private void SendToEventPublisher(Event @event)
         {
             this.eventPublisher.Send(@event);
-            this.Logger.LogDebug(LogId.Operation, $"{Event}{Sent} {@event} to EventPublisher.");
+            this.Logger.LogDebug(LogId.Component, $"{Event}{Sent} {@event} to EventPublisher.");
         }
     }
 }

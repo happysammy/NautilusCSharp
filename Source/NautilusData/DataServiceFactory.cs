@@ -19,8 +19,8 @@ namespace NautilusData
     using Nautilus.Core.Correctness;
     using Nautilus.Data;
     using Nautilus.Data.Aggregation;
+    using Nautilus.Data.Network;
     using Nautilus.Data.Providers;
-    using Nautilus.Data.Publishers;
     using Nautilus.Fix;
     using Nautilus.Fxcm;
     using Nautilus.Messaging;

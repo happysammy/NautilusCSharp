@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Data.Publishers
+namespace Nautilus.Data.Network
 {
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
@@ -42,7 +42,7 @@ namespace Nautilus.Data.Publishers
                 dataBusAdapter,
                 compressor,
                 encryption,
-                Network.NetworkAddress.LocalHost,
+                NetworkAddress.LocalHost,
                 port)
         {
             this.serializer = serializer;
