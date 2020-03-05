@@ -191,7 +191,7 @@ namespace Nautilus.Common.Messaging
             }
             else
             {
-                this.Logger.LogError($"{envelope.Receiver} address unknown to switchboard.");
+                this.Logger.LogError($"{envelope.Receiver.Value} address unknown to switchboard.");
                 this.Logger.LogError($"Sent[{this.ProcessedCount}] {envelope.Sender} -> {envelope} -> DeadLetters");
             }
         }

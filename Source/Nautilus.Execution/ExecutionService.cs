@@ -50,7 +50,6 @@ namespace Nautilus.Execution
 
             this.managedComponents = new List<Address>
             {
-                ServiceAddress.CommandRouter,
                 ServiceAddress.CommandServer,
                 ServiceAddress.EventPublisher,
             };
