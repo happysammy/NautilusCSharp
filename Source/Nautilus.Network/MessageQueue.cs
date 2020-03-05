@@ -141,7 +141,7 @@ namespace Nautilus.Network
             catch (Exception ex)
             {
                 // Interaction with NetMQ
-                this.Logger.LogError(LogId.Networking, ex.Message, ex);
+                this.Logger.LogError(LogId.Networking, ex.ToString(), ex);
             }
 
             this.Logger.LogDebug(LogId.Networking, "Stopped receiving inbound frames.");
@@ -165,7 +165,7 @@ namespace Nautilus.Network
             {
                 // Interaction with NetMQ
                 // A RouterSocket will throw HostUnreadableException if a message cannot be routed
-                this.Logger.LogError(LogId.Networking, ex.Message, ex);
+                this.Logger.LogError(LogId.Networking, ex.ToString(), ex);
             }
 
             return Task.CompletedTask;

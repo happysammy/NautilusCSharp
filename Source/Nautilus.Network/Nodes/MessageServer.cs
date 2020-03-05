@@ -215,9 +215,9 @@ namespace Nautilus.Network.Nodes
         /// <inheritdoc />
         protected override void OnStop(Stop stop)
         {
-            foreach (var session in this.peers.Values)
+            foreach (var (peer, session) in this.peers)
             {
-                this.Logger.LogError(LogId.Networking, $"Server was still connected to session {session.Value}.");
+                this.Logger.LogError(LogId.Networking, $"Server was still connected to peer {peer.Value} with session {session.Value}.");
             }
 
             try
