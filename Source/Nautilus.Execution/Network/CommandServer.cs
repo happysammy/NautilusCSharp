@@ -10,7 +10,6 @@ namespace Nautilus.Execution.Network
 {
     using System.Collections.Generic;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Message;
     using Nautilus.DomainModel.Aggregates;
@@ -84,22 +83,9 @@ namespace Nautilus.Execution.Network
             this.RegisterHandler<CancelOrder>(this.OnMessage);
             this.RegisterHandler<ModifyOrder>(this.OnMessage);
             this.RegisterHandler<AccountInquiry>(this.OnMessage);
-        }
 
-        /// <inheritdoc />
-        protected override void OnStart(Start message)
-        {
-            // Forward start message to throttlers
             this.commandThrottler.Start();
             this.orderThrottler.Start();
-        }
-
-        /// <inheritdoc />
-        protected override void OnStop(Stop message)
-        {
-            // Forward stop message to throttlers
-            this.commandThrottler.Stop();
-            this.orderThrottler.Stop();
         }
 
         private void OnMessage(SubmitOrder command)

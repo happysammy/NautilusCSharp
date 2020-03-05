@@ -104,7 +104,7 @@ namespace Nautilus.Common.Messaging
         /// </summary>
         public void Start()
         {
-            Task.WaitAll(this.cmdBus.Start(), this.cmdBus.Start(), this.cmdBus.Start());
+            Task.WaitAll(this.cmdBus.Start(), this.evtBus.Start(), this.msgBus.Start());
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace Nautilus.Common.Messaging
         /// </summary>
         public void Stop()
         {
-            Task.WaitAll(this.cmdBus.Stop(), this.cmdBus.Stop(), this.cmdBus.Stop());
+            Task.WaitAll(this.cmdBus.Stop(), this.evtBus.Stop(), this.msgBus.Stop());
         }
 
         // TODO: Below methods can be combined somehow
