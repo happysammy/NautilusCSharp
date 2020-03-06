@@ -86,6 +86,9 @@ namespace Nautilus.Network.Nodes
                 {
                     Identity = Encoding.UTF8.GetBytes($"{nameof(Nautilus)}-{this.Name.Value}"),
                     Linger = TimeSpan.FromSeconds(1),
+                    TcpKeepalive = true,
+                    TcpKeepaliveInterval = TimeSpan.FromSeconds(2),
+                    RouterHandover = true,
                 },
             };
 
@@ -95,7 +98,10 @@ namespace Nautilus.Network.Nodes
                 {
                     Identity = Encoding.UTF8.GetBytes($"{nameof(Nautilus)}-{this.Name.Value}"),
                     Linger = TimeSpan.FromSeconds(1),
+                    TcpKeepalive = true,
+                    TcpKeepaliveInterval = TimeSpan.FromSeconds(2),
                     RouterMandatory = true,
+                    RouterHandover = true,
                 },
             };
 
