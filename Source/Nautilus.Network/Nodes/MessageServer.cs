@@ -9,6 +9,7 @@
 namespace Nautilus.Network.Nodes
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Text;
@@ -44,7 +45,7 @@ namespace Nautilus.Network.Nodes
         private readonly ZmqNetworkAddress requestAddress;
         private readonly ZmqNetworkAddress responseAddress;
         private readonly Dictionary<ClientId, SessionId> peers;
-        private readonly Dictionary<Guid, Address> correlationIndex;
+        private readonly ConcurrentDictionary<Guid, Address> correlationIndex;
         private readonly MessageQueue queue;
 
         // TODO: Temporary hack
@@ -108,13 +109,13 @@ namespace Nautilus.Network.Nodes
             this.requestAddress = requestAddress;
             this.responseAddress = responseAddress;
             this.peers = new Dictionary<ClientId, SessionId>();
-            this.correlationIndex = new Dictionary<Guid, Address>();
+            this.correlationIndex = new ConcurrentDictionary<Guid, Address>();
 
             this.queue = new MessageQueue(
                 container,
                 this.socketInbound,
                 this.socketOutbound,
-                this.ReceivePayload);
+                this.HandlePayload);
 
             if (encryption.UseEncryption)
             {
@@ -262,13 +263,13 @@ namespace Nautilus.Network.Nodes
         /// <param name="receivedMessage">The received message.</param>
         protected void SendReceived(Message receivedMessage)
         {
-            var received = new MessageReceived(
+            var response = new MessageReceived(
                 receivedMessage.Type.Name,
                 receivedMessage.Id,
                 Guid.NewGuid(),
                 this.TimeNow());
 
-            this.SendMessage(received);
+            this.SendMessage(response);
         }
 
         /// <summary>
@@ -278,13 +279,13 @@ namespace Nautilus.Network.Nodes
         /// <param name="correlationId">The message correlation identifier.</param>
         protected void SendQueryFailure(string failureMessage, Guid correlationId)
         {
-            var failure = new QueryFailure(
+            var response = new QueryFailure(
                 failureMessage,
                 correlationId,
                 Guid.NewGuid(),
                 this.TimeNow());
 
-            this.SendMessage(failure);
+            this.SendMessage(response);
         }
 
         /// <summary>
@@ -317,7 +318,7 @@ namespace Nautilus.Network.Nodes
             }
         }
 
-        private void ReceivePayload(byte[][] frames)
+        private void HandlePayload(byte[][] frames)
         {
             this.ReceivedCount++;
 
