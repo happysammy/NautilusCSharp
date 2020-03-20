@@ -10,12 +10,14 @@ namespace Nautilus.DomainModel.ValueObjects
 {
     using System;
     using Nautilus.Core;
+    using Nautilus.Core.Annotations;
     using Nautilus.DomainModel.Identifiers;
 
     /// <summary>
     /// Represents a bar type including a <see cref="Symbol"/> and <see cref="BarSpecification"/>.
     /// </summary>
-    public struct BarType : IEquatable<object>, IEquatable<BarType>
+    [Immutable]
+    public readonly struct BarType : IEquatable<object>, IEquatable<BarType>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="BarType"/> structure.

@@ -20,7 +20,7 @@ namespace Nautilus.DomainModel.ValueObjects
     /// Represents a bar specification being a quote type, resolution and period.
     /// </summary>
     [Immutable]
-    public struct BarSpecification : IEquatable<object>, IEquatable<BarSpecification>
+    public readonly struct BarSpecification : IEquatable<object>, IEquatable<BarSpecification>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="BarSpecification"/> structure.

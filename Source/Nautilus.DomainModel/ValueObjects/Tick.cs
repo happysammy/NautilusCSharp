@@ -20,7 +20,7 @@ namespace Nautilus.DomainModel.ValueObjects
     /// Represents a financial market tick.
     /// </summary>
     [Immutable]
-    public struct Tick : IEquatable<object>, IEquatable<Tick>, IComparable<Tick>
+    public readonly struct Tick : IEquatable<object>, IEquatable<Tick>, IComparable<Tick>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Tick"/> structure.

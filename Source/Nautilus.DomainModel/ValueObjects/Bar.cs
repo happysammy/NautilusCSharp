@@ -19,7 +19,7 @@ namespace Nautilus.DomainModel.ValueObjects
     /// Represents a financial market trade bar.
     /// </summary>
     [Immutable]
-    public struct Bar : IEquatable<object>, IEquatable<Bar>, IComparable<Bar>
+    public readonly struct Bar : IEquatable<object>, IEquatable<Bar>, IComparable<Bar>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Bar"/> structure.
