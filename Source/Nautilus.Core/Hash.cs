@@ -6,10 +6,10 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Nautilus.Core.Annotations;
+
 namespace Nautilus.Core
 {
-    using Nautilus.Core.Annotations;
-
     /// <summary>
     /// Provides standardized hash code generation.
     /// </summary>

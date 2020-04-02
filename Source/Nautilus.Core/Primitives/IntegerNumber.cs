@@ -6,13 +6,13 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using System.Globalization;
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Correctness;
+
 namespace Nautilus.Core.Primitives
 {
-    using System;
-    using System.Globalization;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
-
     /// <summary>
     /// The base class for all primitive numbers based on an integer.
     /// </summary>
