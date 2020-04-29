@@ -13,7 +13,7 @@ namespace Nautilus.Messaging
     using Nautilus.Core.Types;
 
     /// <summary>
-    /// Represents a components messaging address within the service.
+    /// Represents a components messaging address within a service.
     /// </summary>
     [Immutable]
     public sealed class Address : Identifier<Address>
