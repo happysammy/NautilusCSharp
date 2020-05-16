@@ -25,7 +25,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="IronSnappy" Version="1.1.0" />
+        <PackageReference Include="IronSnappy" Version="1.2.1" />
         <PackageReference Include="NetMQ" Version="4.0.0.352-pre" />
     </ItemGroup>
 
