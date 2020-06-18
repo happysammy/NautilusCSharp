@@ -375,13 +375,14 @@ namespace Nautilus.Core.Primitives
         /// <returns>The result of the equality check.</returns>
         public override bool Equals(object? other) => other is FloatingPointNumber number && this.Equals(number);
 
+#pragma warning disable CS8767
         /// <summary>
         /// Returns a value indicating whether this <see cref="FloatingPointNumber"/> is equal to the
         /// given <see cref="FloatingPointNumber"/>.
         /// </summary>
         /// <param name="other">The other object.</param>
         /// <returns>The result of the equality check.</returns>
-        public bool Equals(FloatingPointNumber other) => !(other is null) && this.Value.Equals(other.Value);
+        public bool Equals(FloatingPointNumber other) => this.Value.Equals(other.Value);
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="FloatingPointNumber"/> is equal
@@ -391,6 +392,7 @@ namespace Nautilus.Core.Primitives
         /// <returns>The result of the equality check.</returns>
         public bool Equals(double other) => this.Value.Equals(other);
 
+#pragma warning disable CS8767
         /// <summary>
         /// Returns a value which indicates the relative order of the <see cref="FloatingPointNumber"/>s
         /// being compared.

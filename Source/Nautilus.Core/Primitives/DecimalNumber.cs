@@ -382,13 +382,14 @@ namespace Nautilus.Core.Primitives
         /// <returns>The result of the equality check.</returns>
         public override bool Equals(object? other) => other is DecimalNumber number && this.Equals(number);
 
+#pragma warning disable CS8767
         /// <summary>
         /// Returns a value indicating whether this <see cref="DecimalNumber"/> is equal to the
         /// given <see cref="DecimalNumber"/>.
         /// </summary>
         /// <param name="other">The other object.</param>
         /// <returns>The result of the equality check.</returns>
-        public bool Equals(DecimalNumber other) => !(other is null) && this.Value.Equals(other.Value);
+        public bool Equals(DecimalNumber other) => this.Value.Equals(other.Value);
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="DecimalNumber"/> is equal to the
@@ -398,6 +399,7 @@ namespace Nautilus.Core.Primitives
         /// <returns>The result of the equality check.</returns>
         public bool Equals(decimal other) => this.Value.Equals(other);
 
+#pragma warning disable CS8767
         /// <summary>
         /// Returns a value which indicates the relative order of the <see cref="DecimalNumber"/>s
         /// being compared.

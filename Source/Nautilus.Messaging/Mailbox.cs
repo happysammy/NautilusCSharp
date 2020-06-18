@@ -40,13 +40,14 @@ namespace Nautilus.Messaging
         /// </summary>
         public IEndpoint Endpoint { get; }
 
+#pragma warning disable CS8767
         /// <summary>
         /// Returns a value indicating whether this <see cref="Mailbox"/> is equal to the given
         /// <see cref="Mailbox"/>.
         /// </summary>
         /// <param name="other">The other object.</param>
         /// <returns>True if the message identifier equals the other identifier, otherwise false.</returns>
-        public bool Equals(Mailbox other) => other != null && other.Address == this.Address;
+        public bool Equals(Mailbox other) => other.Address == this.Address;
 
         /// <summary>
         /// Returns the hash code for this <see cref="Mailbox"/>.

@@ -13,7 +13,6 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FramesTests
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit.Fixtures;
     using Nautilus.TestSuite.TestKit.Stubs;
-    using Newtonsoft.Json;
     using NodaTime;
     using Xunit;
     using Xunit.Abstractions;
@@ -87,44 +86,44 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FramesTests
             Assert.Equal(StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1), result);
         }
 
-        [Fact]
-        internal void Serialize_WithStubBar_ReturnsExpectedString()
-        {
-            // Arrange
-            var bar = StubBarData.Create();
-            var bars = new[] { bar };
-
-            var barDataFrame = new BarDataFrame(
-                this.stubBarType,
-                bars);
-
-            // Act
-            var result = JsonConvert.SerializeObject(barDataFrame);
-
-            // Assert
-            this.Output.WriteLine(result);
-        }
-
-        [Fact]
-        internal void Serialize_WithMultipleStubBars_ReturnsExpectedString()
-        {
-            // Arrange
-            var bar1 = StubBarData.Create();
-            var bar2 = StubBarData.Create(1);
-            var bar3 = StubBarData.Create(2);
-            var bar4 = StubBarData.Create(3);
-
-            var bars = new[] { bar1, bar2, bar3, bar4 };
-
-            var barDataFrame = new BarDataFrame(
-                this.stubBarType,
-                bars);
-
-            // Act
-            var result = JsonConvert.SerializeObject(barDataFrame);
-
-            // Assert
-            this.Output.WriteLine(result);
-        }
+        // [Fact]
+        // internal void Serialize_WithStubBar_ReturnsExpectedString()
+        // {
+        //     // Arrange
+        //     var bar = StubBarData.Create();
+        //     var bars = new[] { bar };
+        //
+        //     var barDataFrame = new BarDataFrame(
+        //         this.stubBarType,
+        //         bars);
+        //
+        //     // Act
+        //     var result = JsonConvert.SerializeObject(barDataFrame);
+        //
+        //     // Assert
+        //     this.Output.WriteLine(result);
+        // }
+        //
+        // [Fact]
+        // internal void Serialize_WithMultipleStubBars_ReturnsExpectedString()
+        // {
+        //     // Arrange
+        //     var bar1 = StubBarData.Create();
+        //     var bar2 = StubBarData.Create(1);
+        //     var bar3 = StubBarData.Create(2);
+        //     var bar4 = StubBarData.Create(3);
+        //
+        //     var bars = new[] { bar1, bar2, bar3, bar4 };
+        //
+        //     var barDataFrame = new BarDataFrame(
+        //         this.stubBarType,
+        //         bars);
+        //
+        //     // Act
+        //     var result = JsonConvert.SerializeObject(barDataFrame);
+        //
+        //     // Assert
+        //     this.Output.WriteLine(result);
+        // }
     }
 }

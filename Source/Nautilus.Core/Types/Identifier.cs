@@ -68,13 +68,14 @@ namespace Nautilus.Core.Types
         /// <returns>A <see cref="bool"/>.</returns>
         public override bool Equals(object? other) => other is Identifier<T> identifier && this.Equals(identifier);
 
+#pragma warning disable CS8767
         /// <summary>
         /// Returns a value indicating whether this <see cref="Identifier{T}"/> is equal
         /// to the given <see cref="Identifier{T}"/>.
         /// </summary>
         /// <param name="other">The other object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public bool Equals(Identifier<T> other) => !(other is null) && this.Value == other.Value;
+        public bool Equals(Identifier<T> other) => this.Value == other.Value;
 
         /// <inheritdoc />
         public int CompareTo(Identifier<T> other)

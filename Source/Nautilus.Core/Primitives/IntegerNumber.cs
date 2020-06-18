@@ -375,13 +375,14 @@ namespace Nautilus.Core.Primitives
         /// <returns>The result of the equality check.</returns>
         public override bool Equals(object? other) => other is IntegerNumber number && this.Equals(number);
 
+#pragma warning disable CS8767
         /// <summary>
         /// Returns a value indicating whether this <see cref="IntegerNumber"/> is equal to the
         /// given <see cref="int"/>.
         /// </summary>
         /// <param name="other">The other number.</param>
         /// <returns>The result of the equality check.</returns>
-        public bool Equals(IntegerNumber other) => !(other is null) && this.Value.Equals(other.Value);
+        public bool Equals(IntegerNumber other) => this.Value.Equals(other.Value);
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="IntegerNumber"/> is equal to the
@@ -391,6 +392,7 @@ namespace Nautilus.Core.Primitives
         /// <returns>The result of the equality check.</returns>
         public bool Equals(int other) => this.Value.Equals(other);
 
+#pragma warning disable CS8767
         /// <summary>
         /// Returns a value which indicates the relative order of the <see cref="IntegerNumber"/>s
         /// being compared.

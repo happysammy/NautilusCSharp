@@ -85,21 +85,23 @@ namespace Nautilus.Messaging
         /// <returns>The message of type T.</returns>
         public T Open() => this.message;
 
+#pragma warning disable CS8767
         /// <summary>
         /// Returns a value indicating whether this <see cref="Envelope{T}"/> is equal to the given
         /// <see cref="Envelope{T}"/>.
         /// </summary>
         /// <param name="other">The other object.</param>
         /// <returns>True if the message identifier equals the other identifier, otherwise false.</returns>
-        public bool Equals(Envelope<T> other) => other != null && other.Id == this.Id;
+        public bool Equals(Envelope<T> other) => other.Id == this.Id;
 
+#pragma warning disable CS8767
         /// <summary>
         /// Returns a value indicating whether this <see cref="IEnvelope"/> is equal to the given
         /// <see cref="IEnvelope"/>.
         /// </summary>
         /// <param name="other">The other object.</param>
         /// <returns>True if the message identifier equals the other identifier, otherwise false.</returns>
-        public bool Equals(IEnvelope other) => other != null && other.Id == this.Id;
+        public bool Equals(IEnvelope other) => other.Id == this.Id;
 
         /// <summary>
         /// Returns the hash code for this <see cref="Envelope{T}"/>.

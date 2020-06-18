@@ -96,13 +96,14 @@ namespace Nautilus.Core.Types
         /// <returns>A <see cref="bool"/>.</returns>
         public override bool Equals(object? other) => other is Message message && this.Equals(message);
 
+#pragma warning disable CS8767
         /// <summary>
         /// Returns a value indicating whether this <see cref="Message"/> is equal
         /// to the given <see cref="Message"/>.
         /// </summary>
         /// <param name="other">The other object.</param>
         /// <returns>True if the message identifier equals the other identifier, otherwise false.</returns>
-        public bool Equals(Message other) => !(other is null) && other.Id == this.Id;
+        public bool Equals(Message other) => other.Id == this.Id;
 
         /// <summary>
         /// Returns the hash code for this <see cref="Message"/>.

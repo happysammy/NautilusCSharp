@@ -73,13 +73,14 @@ namespace Nautilus.Messaging
         /// <returns>A <see cref="bool"/>.</returns>
         public override bool Equals(object? other) => other is Endpoint endpoint && this.Equals(endpoint);
 
+#pragma warning disable CS8767
         /// <summary>
         /// Returns a value indicating whether this <see cref="Endpoint"/> is equal
         /// to the given <see cref="Endpoint"/>.
         /// </summary>
         /// <param name="other">The other object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public bool Equals(Endpoint other) => !(other is null) && this.target == other.target;
+        public bool Equals(Endpoint other) => this.target == other.target;
 
         /// <summary>
         /// Returns the hash code of the <see cref="Endpoint"/>.

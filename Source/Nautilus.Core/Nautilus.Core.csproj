@@ -20,7 +20,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="NodaTime" Version="3.0.0-beta01" />
+        <PackageReference Include="NodaTime" Version="3.0.0" />
         <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.164" />
     </ItemGroup>
 
