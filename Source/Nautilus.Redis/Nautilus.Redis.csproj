@@ -26,11 +26,11 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="StackExchange.Redis" Version="2.1.55" />
+        <AdditionalFiles Include="..\stylecop.json" />
     </ItemGroup>
 
     <ItemGroup>
-        <AdditionalFiles Include="..\stylecop.json" />
+      <PackageReference Include="StackExchange.Redis" Version="2.1.58" />
     </ItemGroup>
 
 </Project>
