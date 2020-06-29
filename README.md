@@ -19,14 +19,17 @@ Nautilus forms part of larger infrastructure designed and built to support the t
 professional quantitative traders and/or small hedge funds.
 
 The platform exists to support the NautilusTrader algorithmic trading framework with distributed services 
-to facilitate live trading. This means the Python ecosystem can be fully leveraged to research, backtest and trade 
-strategies developed through machine learning techniques, with data ingest and order management being handled 
-by the Nautilus platform services. NautilusTrader heavily utilizes Cython to provide
-type safety and performance through C extension modules.
+to facilitate live trading. NautilusTrader heavily utilizes Cython to provide type safety and performance 
+through C extension modules.
 https://github.com/nautechsystems/nautilus_trader
 
-Each Nautilus service uses a common intra-service messaging library built on top of the Task Parallel Library (TPL) Dataflow, 
-which allows the service sub-components to connect to central message buses to fully utilize every available thread.
+This means the Python ecosystem can be fully leveraged to research, backtest and trade strategies developed 
+through machine learning techniques, with data ingest, order management and risk management
+being handled by the Nautilus platform services. 
+
+Each Nautilus service uses a common intra-service messaging library built on top of the Task Parallel Library 
+(TPL) Dataflow, which allows the service sub-components to connect to central message buses to fully utilize 
+every available thread.
 https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/dataflow-task-parallel-library
 
 An efficient inter-service messaging system implemented using ZeroMQ for transport, MessagePack serialization
