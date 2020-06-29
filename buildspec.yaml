@@ -1,0 +1,21 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      dotnet: 3.1
+    commands:
+      - lsb_release -a
+      - apt-get update -y
+      - apt-get upgrade -y
+  pre_build:
+    commands:
+      - apt-get install redis-server -y
+      - redis-server --daemonize yes
+  build:
+    commands:
+      - echo Build started on `date`
+      - dotnet test
+  post_build:
+    commands:
+      - echo Build completed on `date`
