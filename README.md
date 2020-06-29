@@ -8,7 +8,30 @@
 
 ## Introduction
 
-The services for the Nautilus distributed algorithmic trading platform.
+Nautilus is an algorithmic trading platform allowing flexible deployment 
+topologies including embedded/local on a single machine - or distributed across a VPC.
+Architecutral methodologies include domain driven design, event-sourcing, immutable value types 
+and message passing.
+
+Nautilus has been open-sourced from working production code and exists to support 
+the NautilusTrader Python algorithmic trading framework by providing `Data` and `Execution`
+services. 
+
+A messaging system API implemented using a ZeroMQ transport, MessagePack serialization
+and Curve25519 encryption allows efficient communication between the services and trader
+machines through PUB/SUB and fully async REQ/REP patterns.
+
+An `ExecutionEngine` with underlying `ExecutionDatabase` including a Redis implementation
+supports the ability to manage global risk across many trader machines.
+
+The repository is grouped into the following sections;
+- `Framework` provides the core and common components which allow the services to be implemented.
+- `Services` provides the main data and execution services.
+- `Infrastructure` provides specific implementations. At present utilizing Redis.
+- `Adapters` provides broker specific implementations. At present supporting FIX4.4 with FXCM.
+- `TestSuite` provides unit and integration tests for the codebase.
+
+There is currently a large effort to provide improved documentation.
 
 ## Values
 * Reliability
