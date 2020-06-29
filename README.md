@@ -10,33 +10,44 @@
 
 ## Introduction
 
-Nautilus is an algorithmic trading platform allowing flexible deployment 
-topologies including embedded/local on a single machine - or distributed across a VPC.
-Architecutral methodologies include domain driven design, event-sourcing, immutable value types 
-and message passing.
+Nautilus is an enterpise grade distributed algorithmic trading platform allowing flexible deployment 
+topologies including embedded/local on a single machine - or distributed across a Cloud/VPC.
+Architectural methodologies include domain driven design, event-sourcing and messaging.
 
-Nautilus has been open-sourced from working production code and exists to support 
-the NautilusTrader Python algorithmic trading framework https://github.com/nautechsystems/nautilus_trader 
-by providing `Data` and `Execution` services. 
+Nautilus is written entirely in C# for .NET Core and has been open-sourced from working production code.
+Nautilus forms part of larger infrastructure designed and built to support the trading operations of 
+professional quantitative traders and/or small hedge funds.
 
-A messaging system API implemented using ZeroMQ transport, MessagePack serialization
-and Curve25519 encryption allows efficient communication between the services and trader
-machines through PUB/SUB and fully async REQ/REP patterns.
+The platform exists to support the NautilusTrader algorithmic trading framework 
+https://github.com/nautechsystems/nautilus_trader by providing `Data` and `Execution` services 
+for live trading. This means the Python ecosystem can be fully leveraged to research, backtest and trade 
+strategies developed through machine learning techniques, with data ingest and order management being handled 
+by the Nautilus platform services. NautilusTrader heavily utilizes Cython to provide
+type safety and performance through C extension modules.
 
-An `ExecutionEngine` with underlying `ExecutionDatabase` including a Redis implementation
-supports the ability to manage global risk across many trader machines.
+Each service uses a common inter-service messaging library built on top of the Task Parallel Library (TPL) Dataflow, 
+which allows the service sub-components to connect to central message buses to fully utilize every available thread.
+https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/dataflow-task-parallel-library
 
-The repository is grouped into the following sections;
-- `Framework` provides the core and common components which allow the services to be implemented.
-- `Services` provides the main data and execution services.
-- `Infrastructure` provides specific implementations. At present utilizing Redis.
-- `Adapters` provides broker specific implementations. At present supporting FIX4.4 with FXCM.
+An efficient intra-service messaging system implemented using ZeroMQ for transport, MessagePack serialization
+and Curve25519 encryption allows extremely fast communication, with the API allowing PUB/SUB and 
+fully async REQ/REP patterns.
+
+The Order Management System (OMS) includes an `ExecutionEngine` with underlying `ExecutionDatabase`
+built on top of Redis, which supports the ability to manage global risk across many trader machines.
+
+The repository is grouped into the following solution folders;
+- `Framework` provides the domain model and common components for implementing the services.
+- `Services` provides generic data and execution services.
+- `Infrastructure` provides technology specific implementations. At present utilizing Redis.
+- `Adapters` provides broker specific implementations. At present supporting `FIX4.4` with FXCM.
 - `TestSuite` provides unit and integration tests for the codebase.
 
-There is currently a large effort to provide improved documentation.
+There is currently a large effort to develop improved documentation.
 
 ## Values
 * Reliability
+* Availability
 * Testability
 * Performance
 * Modularity
