@@ -1,4 +1,4 @@
-![Nautech Systems](https://github.com/nautechsystems/Nautilus/blob/master/Documentation/Assets/nautechsystems_logo_small.png?raw=true "logo")
+![Nautech Systems](https://github.com/nautechsystems/nautilus_trader/blob/master/docs/artwork/nautechsystems_logo_small.png?raw=true "logo")
 
 ----------
 
@@ -8,7 +8,7 @@
 
 ## Introduction
 
-The algorithmic trading services for the Nautilus technology stack.
+The services for the Nautilus distributed algorithmic trading platform.
 
 ## Values
 * Reliability
@@ -21,8 +21,8 @@ The algorithmic trading services for the Nautilus technology stack.
 ## Support
 Please direct all questions, comments or bug reports to info@nautechsystems.io
 
-![DotNet](https://d585tldpucybw.cloudfront.net/sfimages/default-source/default-album/net-core-3_480.png?sfvrsn=42bb708c_0?raw=true "dotnet")
-
 Copyright (C) 2015-2020 Nautech Systems Pty Ltd. All rights reserved.
 
 > https://nautechsystems.io
+
+![DotNet](https://d585tldpucybw.cloudfront.net/sfimages/default-source/default-album/net-core-3_480.png?sfvrsn=42bb708c_0?raw=true "dotnet")
