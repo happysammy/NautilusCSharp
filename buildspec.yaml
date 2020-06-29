@@ -15,7 +15,8 @@ phases:
   build:
     commands:
       - echo Build started on `date`
-      - dotnet test
+      - dotnet test Source/Nautilus.TestSuite.UnitTests
+	  - dotnet test Source/Nautilus.TestSuite.IntegrationTests
   post_build:
     commands:
       - echo Build completed on `date`
