@@ -18,20 +18,20 @@ Nautilus is written entirely in C# for .NET Core and has been open-sourced from 
 Nautilus forms part of larger infrastructure designed and built to support the trading operations of 
 professional quantitative traders and/or small hedge funds.
 
-The platform exists to support the NautilusTrader algorithmic trading framework 
-https://github.com/nautechsystems/nautilus_trader by providing `Data` and `Execution` services 
-for live trading. This means the Python ecosystem can be fully leveraged to research, backtest and trade 
+The platform exists to support the NautilusTrader algorithmic trading framework with distributed services 
+to facilitate live trading. This means the Python ecosystem can be fully leveraged to research, backtest and trade 
 strategies developed through machine learning techniques, with data ingest and order management being handled 
 by the Nautilus platform services. NautilusTrader heavily utilizes Cython to provide
 type safety and performance through C extension modules.
+https://github.com/nautechsystems/nautilus_trader
 
-Each service uses a common inter-service messaging library built on top of the Task Parallel Library (TPL) Dataflow, 
+Each Nautilus service uses a common intra-service messaging library built on top of the Task Parallel Library (TPL) Dataflow, 
 which allows the service sub-components to connect to central message buses to fully utilize every available thread.
 https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/dataflow-task-parallel-library
 
-An efficient intra-service messaging system implemented using ZeroMQ for transport, MessagePack serialization
+An efficient inter-service messaging system implemented using ZeroMQ for transport, MessagePack serialization
 and Curve25519 encryption allows extremely fast communication, with the API allowing PUB/SUB and 
-fully async REQ/REP patterns.
+fully async REQ/REP patterns. There are plans to develop an optional Google Protobuf adapter.
 
 The Order Management System (OMS) includes an `ExecutionEngine` with underlying `ExecutionDatabase`
 built on top of Redis, which supports the ability to manage global risk across many trader machines.
