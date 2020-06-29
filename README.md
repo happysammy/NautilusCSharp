@@ -10,7 +10,7 @@
 
 ## Introduction
 
-Nautilus is an enterpise grade distributed algorithmic trading platform allowing flexible deployment 
+Nautilus is an enterprise grade distributed algorithmic trading platform allowing flexible deployment 
 topologies including embedded/local on a single machine - or distributed across a Cloud/VPC.
 Architectural methodologies include domain driven design, event-sourcing and messaging.
 
