@@ -4,6 +4,8 @@
 
 # Nautilus
 
+### Build Status
+
 ![Build Status](https://codebuild.ap-southeast-2.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiQ0RNcmVkNnl6M2p2RURYb1RmUzlLWFlLTForVVJDb2hnTXluWVRxdENMSGlDVXZYTmtHZDlnOHhENG9tZEdibXRXeFZwRzRVNUdoMWF6U2xQN05EbDhBPSIsIml2UGFyYW1ldGVyU3BlYyI6InQ1Tkhxa0RFYldKNDAwcVIiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=master)
 
 ## Introduction
@@ -14,10 +16,10 @@ Architecutral methodologies include domain driven design, event-sourcing, immuta
 and message passing.
 
 Nautilus has been open-sourced from working production code and exists to support 
-the NautilusTrader Python algorithmic trading framework by providing `Data` and `Execution`
-services. 
+the NautilusTrader Python algorithmic trading framework https://github.com/nautechsystems/nautilus_trader 
+by providing `Data` and `Execution` services. 
 
-A messaging system API implemented using a ZeroMQ transport, MessagePack serialization
+A messaging system API implemented using ZeroMQ transport, MessagePack serialization
 and Curve25519 encryption allows efficient communication between the services and trader
 machines through PUB/SUB and fully async REQ/REP patterns.
 
