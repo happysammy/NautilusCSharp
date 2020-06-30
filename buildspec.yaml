@@ -8,7 +8,7 @@ phases:
       - yum update -y
   pre_build:
     commands:
-      - yum install -y redis-server
+      - yum install -y redis
       - redis-server --daemonize yes
   build:
     commands:
