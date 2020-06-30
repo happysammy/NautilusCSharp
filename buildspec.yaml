@@ -5,17 +5,17 @@ phases:
     runtime-versions:
       dotnet: 3.1
     commands:
-      - lsb_release -a
-      - apt-get update -y
-      - apt-get upgrade -y
+      - hostnamectl
+      - yum update -y
   pre_build:
     commands:
-      - apt-get install redis-server -y
+      - yum install redis-server -y
       - redis-server --daemonize yes
   build:
     commands:
       - echo Build started on `date`
       - dotnet test Source/Nautilus.TestSuite.UnitTests
+      - dotnet test Source/Nautilus.TestSuite.IntegrationTests
   post_build:
     commands:
       - echo Build completed on `date`
