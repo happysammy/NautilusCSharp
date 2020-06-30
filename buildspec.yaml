@@ -5,7 +5,6 @@ phases:
     runtime-versions:
       dotnet: 3.1
     commands:
-      - hostnamectl
       - yum update -y
   pre_build:
     commands:
