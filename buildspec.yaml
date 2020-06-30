@@ -5,6 +5,7 @@ phases:
     runtime-versions:
       dotnet: 3.1
     commands:
+      - cat /etc/os-release
       - yum update -y
   pre_build:
     commands:
