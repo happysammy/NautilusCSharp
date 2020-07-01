@@ -37,8 +37,6 @@ namespace Nautilus.Fxcm
             IMessageBusAdapter messageBusAdapter,
             FixConfiguration config)
         {
-            var symbolMapper = new SymbolMapper();
-
             return new FixClient(
                 container,
                 messageBusAdapter,
@@ -46,12 +44,10 @@ namespace Nautilus.Fxcm
                 new FxcmFixMessageHandler(
                     container,
                     config.AccountId,
-                    config.AccountCurrency,
-                    symbolMapper),
+                    config.AccountCurrency),
                 new FxcmFixMessageRouter(
                     container,
-                    config.AccountId,
-                    symbolMapper));
+                    config.AccountId));
         }
     }
 }

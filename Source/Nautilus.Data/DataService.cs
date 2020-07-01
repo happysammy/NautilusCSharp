@@ -140,9 +140,6 @@ namespace Nautilus.Data
         {
             this.dataGateway.UpdateInstrumentsSubscribeAll();
 
-            // TODO: Allow population of symbol mapper
-            Thread.Sleep(1000);
-
             foreach (var symbol in this.subscribingSymbols)
             {
                 this.dataGateway.MarketDataSubscribe(symbol);

@@ -15,8 +15,6 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-using Nautilus.Fix;
-
 namespace Nautilus.Fxcm
 {
     using System;
@@ -60,7 +58,6 @@ namespace Nautilus.Fxcm
         private readonly AccountId accountId;
         private readonly Currency accountCurrency;
         private readonly Venue venue = new Venue(FXCM);
-        private readonly SymbolMapper symbolMapper;
         private readonly ObjectCache<string, Symbol> symbolCache;
         private readonly Dictionary<string, OrderId> orderIdIndex;
         private readonly MarketDataIncrementalRefresh.NoMDEntriesGroup mdBidGroup;
@@ -76,19 +73,16 @@ namespace Nautilus.Fxcm
         /// <param name="container">The componentry container.</param>
         /// <param name="accountId">The account identifier for the handler.</param>
         /// <param name="accountCurrency">The account currency.</param>
-        /// <param name="symbolMapper">The symbol mapper.</param>
         /// <param name="useBrokerTimestampForTicks">The flag to use the brokers timestamp for ticks.</param>
         public FxcmFixMessageHandler(
             IComponentryContainer container,
             AccountId accountId,
             Currency accountCurrency,
-            SymbolMapper symbolMapper,
             bool useBrokerTimestampForTicks = false)
             : base(container)
         {
             this.accountId = accountId;
             this.accountCurrency = accountCurrency;
-            this.symbolMapper = symbolMapper;
             this.symbolCache = new ObjectCache<string, Symbol>(Symbol.FromString);
             this.orderIdIndex = new Dictionary<string, OrderId>();
             this.mdBidGroup = new MarketDataIncrementalRefresh.NoMDEntriesGroup();
@@ -155,10 +149,9 @@ namespace Nautilus.Fxcm
             {
                 message.GetGroup(i, group);
 
-                var brokerSymbolCode = group.GetField(Tags.Symbol);
-                this.symbolMapper.MapBrokerCode(brokerSymbolCode);
-                var symbol = this.GetSymbol(brokerSymbolCode);
-                var brokerSymbol = new BrokerSymbol(brokerSymbolCode);
+                var symbolCode = group.GetField(Tags.Symbol);
+                var symbol = this.GetSymbol(group.GetField(Tags.Symbol));
+                var brokerSymbol = new BrokerSymbol(symbolCode);
                 var securityType = FxcmMessageHelper.GetSecurityType(group.GetString(FxcmTags.ProductID));
                 var tickPrecision = group.GetInt(FxcmTags.SymPrecision);
                 var tickSize = group.GetDecimal(FxcmTags.SymPointSize) * 0.1m;  // Field 9002 gives 'point' size (* 0.1m to get tick size)
@@ -729,11 +722,9 @@ namespace Nautilus.Fxcm
             return newOrderId;
         }
 
-        private Symbol GetSymbol(string brokerSymbolCode)
+        private Symbol GetSymbol(string symbolCode)
         {
-            var nautilusCode = this.symbolMapper.GetNautilusCode(brokerSymbolCode) ?? "NULL";
-
-            return this.symbolCache.Get($"{nautilusCode}.{this.venue.Value}");
+            return this.symbolCache.Get($"{symbolCode}.{this.venue.Value}");
         }
     }
 }

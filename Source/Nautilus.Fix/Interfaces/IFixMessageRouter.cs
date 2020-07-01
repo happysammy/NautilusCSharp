@@ -78,12 +78,6 @@ namespace Nautilus.Fix.Interfaces
         void MarketDataRequestSubscribe(Symbol symbol);
 
         /// <summary>
-        /// Sends a MarketDataRequest FIX message for all broker instruments with subscription for
-        /// updates.
-        /// </summary>
-        void MarketDataRequestSubscribeAll();
-
-        /// <summary>
         /// Sends a NewOrderSingle FIX message.
         /// </summary>
         /// <param name="order">The order.</param>

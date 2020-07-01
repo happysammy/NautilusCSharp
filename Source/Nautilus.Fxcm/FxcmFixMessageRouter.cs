@@ -15,8 +15,6 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-using Nautilus.Fix;
-
 namespace Nautilus.Fxcm
 {
     using System;
@@ -41,7 +39,6 @@ namespace Nautilus.Fxcm
         private const string Protocol = "[FIX]";
 
         private readonly AccountId accountId;
-        private readonly SymbolMapper symbolMapper;
 
         private Session? session;
 
@@ -50,15 +47,12 @@ namespace Nautilus.Fxcm
         /// </summary>
         /// <param name="container">The componentry container.</param>
         /// <param name="accountId">The account identifier for the router.</param>
-        /// <param name="symbolMapper">The symbol mapper.</param>
         public FxcmFixMessageRouter(
             IComponentryContainer container,
-            AccountId accountId,
-            SymbolMapper symbolMapper)
+            AccountId accountId)
         : base(container)
         {
             this.accountId = accountId;
-            this.symbolMapper = symbolMapper;
         }
 
         /// <inheritdoc />
@@ -94,14 +88,7 @@ namespace Nautilus.Fxcm
         /// <inheritdoc />
         public void SecurityListRequestSubscribe(Symbol symbol)
         {
-            var brokerSymbolCode = this.symbolMapper.GetBrokerCode(symbol.Code);
-            if (brokerSymbolCode is null)
-            {
-                this.Logger.LogError($"Cannot find broker symbol for {symbol.Code}.");
-                return;
-            }
-
-            var message = SecurityListRequestFactory.Create(brokerSymbolCode, this.TimeNow());
+            var message = SecurityListRequestFactory.Create(symbol.Code, this.TimeNow());
 
             this.SendFixMessage(message);
         }
@@ -117,15 +104,8 @@ namespace Nautilus.Fxcm
         /// <inheritdoc />
         public void MarketDataRequestSubscribe(Symbol symbol)
         {
-            var brokerSymbolCode = this.symbolMapper.GetBrokerCode(symbol.Code);
-            if (brokerSymbolCode is null)
-            {
-                this.Logger.LogError($"Cannot find broker symbol for {symbol.Code}.");
-                return;
-            }
-
             var message = MarketDataRequestFactory.Create(
-                brokerSymbolCode,
+                symbol.Code,
                 0,
                 this.TimeNow());
 
@@ -133,31 +113,9 @@ namespace Nautilus.Fxcm
         }
 
         /// <inheritdoc />
-        public void MarketDataRequestSubscribeAll()
-        {
-            foreach (var brokerSymbol in this.symbolMapper.BrokerSymbolCodes)
-            {
-                var message = MarketDataRequestFactory.Create(
-                    brokerSymbol,
-                    0,
-                    this.TimeNow());
-
-                this.SendFixMessage(message);
-            }
-        }
-
-        /// <inheritdoc />
         public void NewOrderSingle(Order order, PositionIdBroker? positionIdBroker)
         {
-            var brokerSymbolCode = this.symbolMapper.GetBrokerCode(order.Symbol.Code);
-            if (brokerSymbolCode is null)
-            {
-                this.Logger.LogError($"Cannot find broker symbol for {order.Symbol.Code}.");
-                return;
-            }
-
             var message = NewOrderSingleFactory.Create(
-                brokerSymbolCode,
                 this.accountId.AccountNumber,
                 order,
                 positionIdBroker,
@@ -169,17 +127,10 @@ namespace Nautilus.Fxcm
         /// <inheritdoc />
         public void NewOrderList(AtomicOrder atomicOrder)
         {
-            var brokerSymbolCode = this.symbolMapper.GetBrokerCode(atomicOrder.Symbol.Code);
-            if (brokerSymbolCode is null)
-            {
-                this.Logger.LogError($"Cannot find broker symbol for {atomicOrder.Symbol.Code}.");
-                return;
-            }
-
             if (atomicOrder.TakeProfit != null)
             {
                 var message = NewOrderListEntryFactory.CreateWithStopLossAndTakeProfit(
-                    brokerSymbolCode,
+                    atomicOrder.Symbol.Code,
                     this.accountId.AccountNumber,
                     atomicOrder,
                     this.TimeNow());
@@ -189,7 +140,7 @@ namespace Nautilus.Fxcm
             else
             {
                 var message = NewOrderListEntryFactory.CreateWithStopLoss(
-                    brokerSymbolCode,
+                    atomicOrder.Symbol.Code,
                     this.accountId.AccountNumber,
                     atomicOrder,
                     this.TimeNow());
@@ -201,15 +152,7 @@ namespace Nautilus.Fxcm
         /// <inheritdoc />
         public void OrderCancelReplaceRequest(Order order, Quantity modifiedQuantity, Price modifiedPrice)
         {
-            var brokerSymbolCode = this.symbolMapper.GetBrokerCode(order.Symbol.Code);
-            if (brokerSymbolCode is null)
-            {
-                this.Logger.LogError($"Cannot find broker symbol for {order.Symbol.Code}.");
-                return;
-            }
-
             var message = OrderCancelReplaceRequestFactory.Create(
-                brokerSymbolCode,
                 order,
                 modifiedQuantity.Value,
                 modifiedPrice.Value,
@@ -221,15 +164,7 @@ namespace Nautilus.Fxcm
         /// <inheritdoc />
         public void OrderCancelRequest(Order order)
         {
-            var brokerSymbolCode = this.symbolMapper.GetBrokerCode(order.Symbol.Code);
-            if (brokerSymbolCode is null)
-            {
-                this.Logger.LogError($"Cannot find broker symbol for {order.Symbol.Code}.");
-                return;
-            }
-
             var message = OrderCancelRequestFactory.Create(
-                brokerSymbolCode,
                 order,
                 this.TimeNow());
 

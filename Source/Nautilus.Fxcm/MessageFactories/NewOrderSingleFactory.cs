@@ -35,27 +35,24 @@ namespace Nautilus.Fxcm.MessageFactories
         /// <summary>
         /// Creates and returns a new <see cref="NewOrderSingle"/> FIX message.
         /// </summary>
-        /// <param name="brokerSymbol">The brokers symbol.</param>
         /// <param name="accountNumber">The account number.</param>
         /// <param name="order">The order to submit.</param>
         /// <param name="positionIdBroker">The optional broker position identifier.</param>
         /// <param name="timeNow">The time now.</param>
         /// <returns>The FIX message.</returns>
         public static NewOrderSingle Create(
-            string brokerSymbol,
             AccountNumber accountNumber,
             Order order,
             PositionIdBroker? positionIdBroker,
             ZonedDateTime timeNow)
         {
-            Debug.NotEmptyOrWhiteSpace(brokerSymbol, nameof(brokerSymbol));
             Debug.NotDefault(timeNow, nameof(timeNow));
 
             var message = new NewOrderSingle();
 
             message.SetField(new ClOrdID(order.Id.Value));
             message.SetField(new Account(accountNumber.Value));
-            message.SetField(new Symbol(brokerSymbol));
+            message.SetField(new Symbol(order.Symbol.Code));
             message.SetField(FxcmMessageHelper.GetFixOrderSide(order.OrderSide));
             message.SetField(FxcmMessageHelper.GetFixOrderType(order.OrderType));
             message.SetField(FxcmMessageHelper.GetFixTimeInForce(order.TimeInForce));

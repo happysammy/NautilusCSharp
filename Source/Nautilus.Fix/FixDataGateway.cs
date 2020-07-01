@@ -63,12 +63,6 @@ namespace Nautilus.Fix
         }
 
         /// <inheritdoc />
-        public void MarketDataSubscribeAll()
-        {
-            this.fixClient.MarketDataRequestSubscribeAll();
-        }
-
-        /// <inheritdoc />
         public void UpdateInstrumentSubscribe(Symbol symbol)
         {
             this.fixClient.SecurityListRequestSubscribe(symbol);

@@ -31,16 +31,13 @@ namespace Nautilus.Fxcm.MessageFactories
         /// <summary>
         /// Creates and returns a new <see cref="OrderCancelRequest"/> FIX message.
         /// </summary>
-        /// <param name="brokerSymbol">The brokers symbol.</param>
         /// <param name="order">The order.</param>
         /// <param name="transactionTime">The transaction time.</param>
         /// <returns>The FIX message.</returns>
         public static OrderCancelRequest Create(
-            string brokerSymbol,
             Order order,
             ZonedDateTime transactionTime)
         {
-            Debug.NotEmptyOrWhiteSpace(brokerSymbol, nameof(brokerSymbol));
             Debug.NotDefault(transactionTime, nameof(transactionTime));
 
             var message = new OrderCancelRequest();
@@ -48,7 +45,7 @@ namespace Nautilus.Fxcm.MessageFactories
             message.SetField(new OrigClOrdID(order.Id.Value));
             message.SetField(new OrderID(order.IdBroker?.Value));
             message.SetField(new ClOrdID(order.Id.Value));
-            message.SetField(new Symbol(brokerSymbol));
+            message.SetField(new Symbol(order.Symbol.Code));
             message.SetField(new Quantity(order.Quantity.Value));
             message.SetField(FxcmMessageHelper.GetFixOrderSide(order.OrderSide));
             message.SetField(new TransactTime(transactionTime.ToDateTimeUtc()));

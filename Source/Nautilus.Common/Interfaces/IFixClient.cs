@@ -94,11 +94,6 @@ namespace Nautilus.Common.Interfaces
         void MarketDataRequestSubscribe(Symbol symbol);
 
         /// <summary>
-        /// Sends a market data subscribe request message for all symbols.
-        /// </summary>
-        void MarketDataRequestSubscribeAll();
-
-        /// <summary>
         /// Requests a collateral inquiry.
         /// </summary>
         void CollateralInquiry();

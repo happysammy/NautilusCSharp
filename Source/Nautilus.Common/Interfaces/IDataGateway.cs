@@ -61,11 +61,6 @@ namespace Nautilus.Common.Interfaces
         void MarketDataSubscribe(Symbol symbol);
 
         /// <summary>
-        /// Sends a request to subscribe to market data for all symbols.
-        /// </summary>
-        void MarketDataSubscribeAll();
-
-        /// <summary>
         /// Handles received ticks.
         /// </summary>
         /// <param name="tick">The tick.</param>
