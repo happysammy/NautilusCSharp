@@ -179,7 +179,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         internal void Deserialize_GivenMarketOrder_FromPythonMsgPack_ReturnsExpectedOrder()
         {
             // Arrange
-            var base64 = "jKJJZLtPLTE5NzAwMTAxLTAwMDAwMC0wMDEtMDAxLTGmU3ltYm9sq0FVRFVTRC5GWENNqU9yZGVyU2lkZaNCdXmpT3JkZXJUeXBlpk1hcmtldKhRdWFudGl0eaYxMDAwMDClUHJpY2WkTk9ORaVMYWJlbKRVMV9FrE9yZGVyUHVycG9zZaROb25lq1RpbWVJbkZvcmNlo0RBWapFeHBpcmVUaW1lpE5PTkWmSW5pdElk2gAkMWUzNzMzMDUtMWJhNy00NzUwLWFmNDYtNWQ2M2M2OWI2MzQ4qVRpbWVzdGFtcLgxOTcwLTAxLTAxIDAwOjAwOjAwLjAwMFo=";
+            var base64 = "jKJJZLtPLTE5NzAwMTAxLTAwMDAwMC0wMDEtMDAxLTGmU3ltYm9sq0FVRFVTRC5GWENNqU9yZGVyU2lkZaNCdXmpT3JkZXJUeXBlpk1hcmtldKhRdWFudGl0eaYxMDAwMDClUHJpY2WkTm9uZaVMYWJlbKRVMV9FrE9yZGVyUHVycG9zZaROb25lq1RpbWVJbkZvcmNlo0RBWapFeHBpcmVUaW1lpE5vbmWmSW5pdElk2gAkZjhlMzIxNzItM2JjNi00ZGJjLTlkYjEtN2JhMDI2M2ZlMjc1qVRpbWVzdGFtcLgxOTcwLTAxLTAxVDAwOjAwOjAwLjAwMFo=";
             var orderBytes = Convert.FromBase64String(base64);
 
             // Act

@@ -1,14 +1,14 @@
 ﻿{
   "Logging": {
     "LogLevel": {
-      "Default": "Debug",
+      "Default": "Information",
       "Security": "Debug",
       "System": "Information",
       "Microsoft": "Information"
     }
   },
   "Serilog": {
-    "MinimumLevel": "Debug"
+    "MinimumLevel": "Information"
   },
   "Messaging": {
     "Version": "1.0",

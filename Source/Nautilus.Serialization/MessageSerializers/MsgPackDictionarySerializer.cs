@@ -15,12 +15,10 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using MessagePack;
 using Nautilus.Common.Interfaces;
 using Nautilus.Core.Correctness;
-using Nautilus.Core.Extensions;
 
 namespace Nautilus.Serialization.MessageSerializers
 {
@@ -33,9 +31,6 @@ namespace Nautilus.Serialization.MessageSerializers
         public byte[] Serialize(Dictionary<string, string> dict)
         {
             Debug.NotEmpty(dict, nameof(dict));
-
-            // TODO: TEMP
-            Console.WriteLine($"Serializing {dict.Print()}");
 
             var package = new Dictionary<string, string>();
             foreach (var (key, value) in dict)
