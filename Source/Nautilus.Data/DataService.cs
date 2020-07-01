@@ -15,8 +15,6 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-using System.Threading;
-
 namespace Nautilus.Data
 {
     using System;

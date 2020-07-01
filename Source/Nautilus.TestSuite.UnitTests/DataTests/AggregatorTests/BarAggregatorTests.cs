@@ -224,7 +224,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
 
             // Assert
             Assert.Single(this.receiver.Messages);
-            Assert.Equal("BarData(AUDUSD.FXCM-1-SECOND[BID], 0.80000,0.80000,0.80000,0.80000,1,1970-01-01T00:00:00.000Z)", this.receiver.Messages[0].ToString());
+            Assert.Equal("BarData(AUDUSD.FXCM-1-SECOND-BID, 0.80000,0.80000,0.80000,0.80000,1,1970-01-01T00:00:00.000Z)", this.receiver.Messages[0].ToString());
             Assert.Empty(this.receiver.UnhandledMessages);
             Assert.Empty(this.barAggregator.UnhandledMessages);
         }
@@ -281,7 +281,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
 
             // Assert
             Assert.Equal(2, this.receiver.Messages.Count);
-            Assert.Equal("BarData(AUDUSD.FXCM-1-SECOND[BID], 0.80000,0.80000,0.80000,0.80000,1,1970-01-01T00:00:00.000Z)", this.receiver.Messages[0].ToString());
+            Assert.Equal("BarData(AUDUSD.FXCM-1-SECOND-BID, 0.80000,0.80000,0.80000,0.80000,1,1970-01-01T00:00:00.000Z)", this.receiver.Messages[0].ToString());
             Assert.Empty(this.receiver.UnhandledMessages);
             Assert.Empty(this.barAggregator.UnhandledMessages);
         }
@@ -356,8 +356,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
 
             // Assert
             Assert.Equal(2, this.receiver.Messages.Count);
-            Assert.Equal("BarData(AUDUSD.FXCM-1-SECOND[BID], 0.80000,0.80100,0.80000,0.80100,2,1970-01-01T00:00:00.000Z)", this.receiver.Messages[0].ToString());
-            Assert.Equal("BarData(AUDUSD.FXCM-10-SECOND[BID], 0.80000,0.80200,0.80000,0.80200,3,1970-01-01T00:00:00.000Z)", this.receiver.Messages[1].ToString());
+            Assert.Equal("BarData(AUDUSD.FXCM-1-SECOND-BID, 0.80000,0.80100,0.80000,0.80100,2,1970-01-01T00:00:00.000Z)", this.receiver.Messages[0].ToString());
+            Assert.Equal("BarData(AUDUSD.FXCM-10-SECOND-BID, 0.80000,0.80200,0.80000,0.80200,3,1970-01-01T00:00:00.000Z)", this.receiver.Messages[1].ToString());
             Assert.Empty(this.receiver.UnhandledMessages);
             Assert.Empty(this.barAggregator.UnhandledMessages);
         }
@@ -407,7 +407,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
 
             // Assert
             Assert.Single(this.receiver.Messages);
-            Assert.Equal("BarData(AUDUSD.FXCM-1-SECOND[MID], 0.800050,0.800350,0.800050,0.800350,2,1970-01-01T00:00:00.000Z)", this.receiver.Messages[0].ToString());
+            Assert.Equal("BarData(AUDUSD.FXCM-1-SECOND-MID, 0.800050,0.800350,0.800050,0.800350,2,1970-01-01T00:00:00.000Z)", this.receiver.Messages[0].ToString());
             Assert.Empty(this.receiver.UnhandledMessages);
             Assert.Empty(this.barAggregator.UnhandledMessages);
         }

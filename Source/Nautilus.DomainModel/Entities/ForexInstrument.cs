@@ -18,7 +18,6 @@
 namespace Nautilus.DomainModel.Entities
 {
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
@@ -68,7 +67,7 @@ namespace Nautilus.DomainModel.Entities
             : base(
                 symbol,
                 brokerSymbol,
-                symbol.Code.Substring(3, 3).ToEnum<Currency>(),
+                symbol.Code.Substring(symbol.Code.Length - 3, 3).ToEnum<Currency>(),
                 SecurityType.Forex,
                 pricePrecision,
                 sizePrecision,
@@ -84,8 +83,6 @@ namespace Nautilus.DomainModel.Entities
                 rolloverInterestSell,
                 timestamp)
         {
-            Condition.EqualTo(symbol.Code.Length, 6, nameof(symbol.Code.Length));
-
             this.BaseCurrency = symbol.Code.Substring(0, 3).ToEnum<Currency>();
         }
 

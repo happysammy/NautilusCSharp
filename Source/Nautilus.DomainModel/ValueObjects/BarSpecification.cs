@@ -99,11 +99,11 @@ namespace Nautilus.DomainModel.ValueObjects
         {
             Debug.NotEmptyOrWhiteSpace(barSpecString, nameof(barSpecString));
 
-            var split1 = barSpecString.Split('-');
-            var split2 = split1[1].Split('[');
-            var period = Convert.ToInt32(split1[0]);
-            var resolution = split2[0].ToUpper();
-            var quoteType = split2[1].Trim(']').ToUpper();
+            var split = barSpecString.Split('-');
+
+            var period = Convert.ToInt32(split[0]);
+            var resolution = split[1].ToUpper();
+            var quoteType = split[2].ToUpper();
 
             return new BarSpecification(
                 period,
@@ -146,9 +146,9 @@ namespace Nautilus.DomainModel.ValueObjects
         /// Returns a string representation of the <see cref="BarSpecification"/>.
         /// </summary>
         /// <returns>A string.</returns>
-        public override string ToString() => $"{this.Period}-" +
-                                             $"{this.BarStructure.ToString().ToUpper()}" +
-                                             $"[{this.PriceType.ToString().ToUpper()}]";
+        public override string ToString() => $"{this.Period.ToString()}-" +
+                                             $"{this.BarStructure.ToString().ToUpper()}-" +
+                                             $"{this.PriceType.ToString().ToUpper()}";
 
         private static Duration CalculateDuration(int barPeriod, BarStructure barStructure)
         {
