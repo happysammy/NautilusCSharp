@@ -18,8 +18,6 @@
 namespace NautilusExecutor
 {
     using System;
-    using System.Collections.Generic;
-    using System.Collections.Immutable;
     using System.IO;
     using System.Reflection;
     using Microsoft.Extensions.Configuration;
@@ -129,27 +127,11 @@ namespace NautilusExecutor
                 int.Parse(networkSection["CommandsPerSecond"]),
                 int.Parse(networkSection["NewOrdersPerSecond"]));
 
-            // TODO: Refactor below
-            var tempSymbolMap = configuration
-                .GetSection("SymbolMap")
-                .AsEnumerable()
-                .ToImmutableDictionary();
-
-            var symbolMap2 = new Dictionary<string, string>();
-            foreach (var (key, value) in tempSymbolMap)
-            {
-                var strippedKey = key.Replace("SymbolMap:", string.Empty);
-                symbolMap2.Add(strippedKey, value);
-            }
-
-            var symbolMap = symbolMap2.ToImmutableDictionary();
-
             return new ServiceConfiguration(
                 loggerFactory,
                 fixConfig,
                 wireConfig,
-                networkConfig,
-                symbolMap);
+                networkConfig);
         }
     }
 }

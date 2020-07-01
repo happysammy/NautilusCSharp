@@ -15,6 +15,8 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System.Threading;
+
 namespace Nautilus.Data
 {
     using System;
@@ -137,6 +139,10 @@ namespace Nautilus.Data
         protected override void OnConnected()
         {
             this.dataGateway.UpdateInstrumentsSubscribeAll();
+
+            // TODO: Allow population of symbol mapper
+            Thread.Sleep(1000);
+
             foreach (var symbol in this.subscribingSymbols)
             {
                 this.dataGateway.MarketDataSubscribe(symbol);
@@ -224,7 +230,7 @@ namespace Nautilus.Data
                     marketOpened,
                     this.Endpoint);
 
-                this.Logger.LogInformation($"Created scheduled event {marketOpened}-{symbol} for {nextTime.ToIso8601String()}");
+                this.Logger.LogInformation($"Created scheduled event {marketOpened}-{symbol.Value} for {nextTime.ToIso8601String()}");
             }
         }
 
@@ -250,7 +256,7 @@ namespace Nautilus.Data
                     marketClosed,
                     this.Endpoint);
 
-                this.Logger.LogInformation($"Created scheduled event {marketClosed}-{symbol} for {nextTime.ToIso8601String()}");
+                this.Logger.LogInformation($"Created scheduled event {marketClosed}-{symbol.Value} for {nextTime.ToIso8601String()}");
             }
         }
 

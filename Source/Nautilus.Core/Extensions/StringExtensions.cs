@@ -74,5 +74,18 @@ namespace Nautilus.Core.Extensions
 
             return true;
         }
+
+        /// <summary>
+        /// Returns a new string trimmed of all none alpha numeric chars.
+        /// </summary>
+        /// <param name="input">The input string.</param>
+        /// <returns>The trimmed string.</returns>
+        public static string ToAlphaNumeric(this string input)
+        {
+            var arr = input.ToCharArray();
+            arr = Array.FindAll<char>(arr, char.IsLetterOrDigit);
+
+            return new string(arr);
+        }
     }
 }

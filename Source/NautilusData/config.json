@@ -1,14 +1,14 @@
 ﻿{
   "Logging": {
     "LogLevel": {
-      "Default": "Information",
+      "Default": "Debug",
       "Security": "Debug",
       "System": "Information",
       "Microsoft": "Information"
     }
   },
   "Serilog": {
-    "MinimumLevel": "Information"
+    "MinimumLevel": "Debug"
   },
   "Messaging": {
     "Version": "1.0",
@@ -68,13 +68,9 @@
       "USDCHF.FXCM",
       "USDCNH.FXCM",
       "USDJPY.FXCM",
-      "WTIUSD.FXCM",
+      "USOIL.FXCM",
       "XAUUSD.FXCM",
-      "XAGUSD.FXCM",
-      "SPX500.FXCM",
-      "AUS200.FXCM",
-      "EUSTX50.FXCM",
-      "DE30EUR.FXCM"
+      "XAGUSD.FXCM"
     ],
     "BarSpecifications": [
       "1-MINUTE[ASK]",

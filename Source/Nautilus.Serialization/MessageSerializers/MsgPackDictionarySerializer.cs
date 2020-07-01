@@ -15,6 +15,9 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
+using Nautilus.Core.Extensions;
+
 namespace Nautilus.Serialization.MessageSerializers
 {
     using System.Collections.Generic;
@@ -22,19 +25,21 @@ namespace Nautilus.Serialization.MessageSerializers
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Correctness;
 
-#pragma warning disable CS8604
     /// <summary>
     /// Provides a serializer for dictionaries with string keys and values.
     /// </summary>
     public sealed class MsgPackDictionarySerializer : ISerializer<Dictionary<string, string>>
     {
         /// <inheritdoc />
-        public byte[] Serialize(Dictionary<string, string> query)
+        public byte[] Serialize(Dictionary<string, string> dict)
         {
-            Debug.NotEmpty(query, nameof(query));
+            Debug.NotEmpty(dict, nameof(dict));
 
-            var package = new Dictionary<string, object>();
-            foreach (var (key, value) in query)
+            // TODO: TEMP
+            Console.WriteLine($"Serializing {dict.Print()}");
+
+            var package = new Dictionary<string, string>();
+            foreach (var (key, value) in dict)
             {
                 package.Add(key, value);
             }
@@ -45,15 +50,15 @@ namespace Nautilus.Serialization.MessageSerializers
         /// <inheritdoc />
         public Dictionary<string, string> Deserialize(byte[] dataBytes)
         {
-            var unpacked = MessagePackSerializer.Deserialize<Dictionary<string, object>>(dataBytes);
+            var unpacked = MessagePackSerializer.Deserialize<Dictionary<string, string>>(dataBytes);
 
-            var query = new Dictionary<string, string>();
+            var dict = new Dictionary<string, string>();
             foreach (var (key, value) in unpacked)
             {
-                query.Add(key, value.ToString());
+                dict.Add(key, value);
             }
 
-            return query;
+            return dict;
         }
     }
 }

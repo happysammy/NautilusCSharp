@@ -44,7 +44,6 @@ namespace NautilusExecutor
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("hosting.json", optional: false, reloadOnChange: true)
                 .AddJsonFile("config.json", optional: false, reloadOnChange: true)
-                .AddJsonFile("symbols.json", optional: false, reloadOnChange: true)
                 .AddUserSecrets<Startup>()
                 .AddEnvironmentVariables()
                 .Build();

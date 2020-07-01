@@ -150,7 +150,7 @@ namespace Nautilus.Network.Nodes
         [Conditional("DEBUG")]
         private void LogPublished(string topic, int compressedLength)
         {
-            var logMessage = $"[{this.SentCount}]--> Topic={topic}, Body={compressedLength} bytes";
+            var logMessage = $"[{this.SentCount.ToString()}]--> Topic={topic}, Body={compressedLength.ToString()} bytes";
 
             this.Logger.LogTrace(LogId.Networking, logMessage);
         }

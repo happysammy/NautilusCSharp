@@ -50,7 +50,7 @@ namespace Nautilus.Fxcm.MessageFactories
             symbolGroup.SetField(new Symbol(symbol));
 
             var message = new MarketDataRequest(
-                new MDReqID($"MD_{timeNow.TickOfDay}"),
+                new MDReqID($"MD_{timeNow.TickOfDay.ToString()}"),
                 new SubscriptionRequestType(SubscriptionRequestType.SNAPSHOT_PLUS_UPDATES),
                 new MarketDepth(marketDepth));
             message.Set(new MDUpdateType(0));  // val:1 to receive shortened message

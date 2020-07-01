@@ -17,7 +17,6 @@
 
 namespace Nautilus.Data
 {
-    using System.Collections.Immutable;
     using Microsoft.Extensions.Logging;
     using Nautilus.Data.Configuration;
     using Nautilus.Fix;
@@ -36,21 +35,18 @@ namespace Nautilus.Data
         /// <param name="wireConfig">The wire configuration.</param>
         /// <param name="networkConfig">The network configuration.</param>
         /// <param name="dataConfig">The data configuration.</param>
-        /// <param name="symbolMap">The symbol map.</param>
         public ServiceConfiguration(
             ILoggerFactory loggerFactory,
             FixConfiguration fixConfig,
             WireConfiguration wireConfig,
             NetworkConfiguration networkConfig,
-            DataConfiguration dataConfig,
-            ImmutableDictionary<string, string> symbolMap)
+            DataConfiguration dataConfig)
         {
             this.LoggerFactory = loggerFactory;
             this.FixConfig = fixConfig;
             this.WireConfig = wireConfig;
             this.NetworkConfig = networkConfig;
             this.DataConfig = dataConfig;
-            this.SymbolMap = symbolMap;
         }
 
         /// <summary>
@@ -77,10 +73,5 @@ namespace Nautilus.Data
         /// Gets the data configuration.
         /// </summary>
         public DataConfiguration DataConfig { get; }
-
-        /// <summary>
-        /// Gets the symbol map.
-        /// </summary>
-        public ImmutableDictionary<string, string> SymbolMap { get; }
     }
 }

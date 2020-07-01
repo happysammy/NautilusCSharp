@@ -17,7 +17,6 @@
 
 namespace Nautilus.Execution
 {
-    using System.Collections.Immutable;
     using Microsoft.Extensions.Logging;
     using Nautilus.Execution.Configuration;
     using Nautilus.Fix;
@@ -35,19 +34,16 @@ namespace Nautilus.Execution
         /// <param name="fixConfig">The FIX configuration.</param>
         /// <param name="wireConfig">The messaging configuration.</param>
         /// <param name="networkConfig">The network configuration.</param>
-        /// <param name="symbolMap">The service symbol map.</param>
         public ServiceConfiguration(
             ILoggerFactory loggerFactory,
             FixConfiguration fixConfig,
             WireConfiguration wireConfig,
-            NetworkConfiguration networkConfig,
-            ImmutableDictionary<string, string> symbolMap)
+            NetworkConfiguration networkConfig)
         {
             this.LoggerFactory = loggerFactory;
             this.FixConfig = fixConfig;
             this.WireConfig = wireConfig;
             this.NetworkConfig = networkConfig;
-            this.SymbolMap = symbolMap;
         }
 
         /// <summary>
@@ -69,10 +65,5 @@ namespace Nautilus.Execution
         /// Gets the network configuration.
         /// </summary>
         public NetworkConfiguration NetworkConfig { get; }
-
-        /// <summary>
-        /// Gets the symbol conversion index.
-        /// </summary>
-        public ImmutableDictionary<string, string> SymbolMap { get; }
     }
 }

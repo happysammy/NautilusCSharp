@@ -15,11 +15,12 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Nautilus.Fix;
+
 namespace Nautilus.Fxcm
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.Immutable;
     using System.Diagnostics.CodeAnalysis;
     using Microsoft.Extensions.Logging;
     using Nautilus.Common.Componentry;
@@ -33,7 +34,6 @@ namespace Nautilus.Fxcm
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Fix;
     using Nautilus.Fix.Interfaces;
     using Nautilus.Messaging.Interfaces;
     using NodaTime;
@@ -48,7 +48,7 @@ namespace Nautilus.Fxcm
     using Symbol = Nautilus.DomainModel.Identifiers.Symbol;
 
     /// <summary>
-    /// Provides an implementation for handling FXCM FIX messages.
+    /// Provides a handler for FXCM FIX messages.
     /// </summary>
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Correct names")]
     public sealed class FxcmFixMessageHandler : Component, IFixMessageHandler
@@ -60,7 +60,7 @@ namespace Nautilus.Fxcm
         private readonly AccountId accountId;
         private readonly Currency accountCurrency;
         private readonly Venue venue = new Venue(FXCM);
-        private readonly SymbolConverter symbolConverter;
+        private readonly SymbolMapper symbolMapper;
         private readonly ObjectCache<string, Symbol> symbolCache;
         private readonly Dictionary<string, OrderId> orderIdIndex;
         private readonly MarketDataIncrementalRefresh.NoMDEntriesGroup mdBidGroup;
@@ -76,19 +76,19 @@ namespace Nautilus.Fxcm
         /// <param name="container">The componentry container.</param>
         /// <param name="accountId">The account identifier for the handler.</param>
         /// <param name="accountCurrency">The account currency.</param>
-        /// <param name="symbolMap">The symbol map.</param>
+        /// <param name="symbolMapper">The symbol mapper.</param>
         /// <param name="useBrokerTimestampForTicks">The flag to use the brokers timestamp for ticks.</param>
         public FxcmFixMessageHandler(
             IComponentryContainer container,
             AccountId accountId,
             Currency accountCurrency,
-            ImmutableDictionary<string, string> symbolMap,
+            SymbolMapper symbolMapper,
             bool useBrokerTimestampForTicks = false)
             : base(container)
         {
             this.accountId = accountId;
             this.accountCurrency = accountCurrency;
-            this.symbolConverter = new SymbolConverter(symbolMap);
+            this.symbolMapper = symbolMapper;
             this.symbolCache = new ObjectCache<string, Symbol>(Symbol.FromString);
             this.orderIdIndex = new Dictionary<string, OrderId>();
             this.mdBidGroup = new MarketDataIncrementalRefresh.NoMDEntriesGroup();
@@ -156,6 +156,7 @@ namespace Nautilus.Fxcm
                 message.GetGroup(i, group);
 
                 var brokerSymbolCode = group.GetField(Tags.Symbol);
+                this.symbolMapper.MapBrokerCode(brokerSymbolCode);
                 var symbol = this.GetSymbol(brokerSymbolCode);
                 var brokerSymbol = new BrokerSymbol(brokerSymbolCode);
                 var securityType = FxcmMessageHelper.GetSecurityType(group.GetString(FxcmTags.ProductID));
@@ -730,13 +731,9 @@ namespace Nautilus.Fxcm
 
         private Symbol GetSymbol(string brokerSymbolCode)
         {
-            var symbolCodeQuery = this.symbolConverter.GetNautilusSymbolCode(brokerSymbolCode);
-            if (symbolCodeQuery is null)
-            {
-                throw new ArgumentException($"Could not find Nautilus symbol for {brokerSymbolCode}.");
-            }
+            var nautilusCode = this.symbolMapper.GetNautilusCode(brokerSymbolCode) ?? "NULL";
 
-            return this.symbolCache.Get($"{symbolCodeQuery}.{this.venue.Value}");
+            return this.symbolCache.Get($"{nautilusCode}.{this.venue.Value}");
         }
     }
 }

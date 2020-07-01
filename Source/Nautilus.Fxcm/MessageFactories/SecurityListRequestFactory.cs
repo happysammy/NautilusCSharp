@@ -38,7 +38,7 @@ namespace Nautilus.Fxcm.MessageFactories
             Debug.NotDefault(timeNow, nameof(timeNow));
 
             var message = new SecurityListRequest();
-            message.SetField(new SecurityReqID($"SLR_{timeNow.TickOfDay}"));
+            message.SetField(new SecurityReqID($"SLR_{timeNow.TickOfDay.ToString()}"));
             message.SetField(new SecurityListRequestType(SecurityListRequestType.ALL_SECURITIES));
             message.SetField(subscribe is true
                 ? new SubscriptionRequestType(SubscriptionRequestType.SNAPSHOT_PLUS_UPDATES)
@@ -59,7 +59,7 @@ namespace Nautilus.Fxcm.MessageFactories
             Debug.NotDefault(timeNow, nameof(timeNow));
 
             var message = new SecurityListRequest();
-            message.SetField(new SecurityReqID($"SLR_{timeNow.TickOfDay}"));
+            message.SetField(new SecurityReqID($"SLR_{timeNow.TickOfDay.ToString()}"));
             message.SetField(new SecurityListRequestType(SecurityListRequestType.SYMBOL));
             message.SetField(new Symbol(symbol));
             message.SetField(subscribe is true

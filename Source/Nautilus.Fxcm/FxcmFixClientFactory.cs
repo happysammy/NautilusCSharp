@@ -17,7 +17,6 @@
 
 namespace Nautilus.Fxcm
 {
-    using System.Collections.Immutable;
     using Nautilus.Common.Interfaces;
     using Nautilus.Fix;
 
@@ -32,14 +31,14 @@ namespace Nautilus.Fxcm
         /// <param name="container">The componentry container.</param>
         /// <param name="messageBusAdapter">The messaging adapter.</param>
         /// <param name="config">The FIX configuration.</param>
-        /// <param name="symbolMap">The symbol provider.</param>
         /// <returns>The FXCM FIX client.</returns>
         public static IFixClient Create(
             IComponentryContainer container,
             IMessageBusAdapter messageBusAdapter,
-            FixConfiguration config,
-            ImmutableDictionary<string, string> symbolMap)
+            FixConfiguration config)
         {
+            var symbolMapper = new SymbolMapper();
+
             return new FixClient(
                 container,
                 messageBusAdapter,
@@ -48,11 +47,11 @@ namespace Nautilus.Fxcm
                     container,
                     config.AccountId,
                     config.AccountCurrency,
-                    symbolMap),
+                    symbolMapper),
                 new FxcmFixMessageRouter(
                     container,
                     config.AccountId,
-                    symbolMap));
+                    symbolMapper));
         }
     }
 }

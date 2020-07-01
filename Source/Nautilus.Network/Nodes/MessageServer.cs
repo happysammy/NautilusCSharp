@@ -570,13 +570,13 @@ namespace Nautilus.Network.Nodes
         [Conditional("DEBUG")]
         private void LogReceived(string message)
         {
-            this.Logger.LogTrace(LogId.Networking, $"<--[{this.ReceivedCount}] Received {message}");
+            this.Logger.LogTrace(LogId.Networking, $"<--[{this.ReceivedCount.ToString()}] Received {message}");
         }
 
         [Conditional("DEBUG")]
         private void LogSent(string outbound, string receiver)
         {
-            this.Logger.LogTrace(LogId.Networking, $"[{this.SentCount}]--> {outbound} to {receiver}.");
+            this.Logger.LogTrace(LogId.Networking, $"[{this.SentCount.ToString()}]--> {outbound} to {receiver}.");
         }
     }
 }

@@ -18,7 +18,6 @@
 namespace NautilusExecutor
 {
     using System.Collections.Generic;
-    using System.Collections.Immutable;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Configuration;
     using Nautilus.Common.Interfaces;
@@ -71,8 +70,7 @@ namespace NautilusExecutor
             var fixClient = CreateFixClient(
                 container,
                 messagingAdapter,
-                config.FixConfig,
-                config.SymbolMap);
+                config.FixConfig);
 
             var tradingGateway = FixTradingGatewayFactory.Create(
                 container,
@@ -149,8 +147,7 @@ namespace NautilusExecutor
         private static IFixClient CreateFixClient(
             IComponentryContainer container,
             IMessageBusAdapter messageBusAdapter,
-            FixConfiguration configuration,
-            ImmutableDictionary<string, string> symbolMap)
+            FixConfiguration configuration)
         {
             switch (configuration.Broker.Value)
             {
@@ -158,8 +155,7 @@ namespace NautilusExecutor
                     return FxcmFixClientFactory.Create(
                         container,
                         messageBusAdapter,
-                        configuration,
-                        symbolMap);
+                        configuration);
                 case "SIMULATION":
                     goto default;
                 case "IB":

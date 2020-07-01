@@ -18,7 +18,6 @@
 namespace NautilusData
 {
     using System.Collections.Generic;
-    using System.Collections.Immutable;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Configuration;
     using Nautilus.Common.Data;
@@ -85,8 +84,7 @@ namespace NautilusData
             var fixClient = CreateFixClient(
                 container,
                 messagingAdapter,
-                config.FixConfig,
-                config.SymbolMap);
+                config.FixConfig);
 
             var dataGateway = FixDataGatewayFactory.Create(
                 container,
@@ -202,8 +200,7 @@ namespace NautilusData
         private static IFixClient CreateFixClient(
             IComponentryContainer container,
             IMessageBusAdapter messageBusAdapter,
-            FixConfiguration configuration,
-            ImmutableDictionary<string, string> symbolMap)
+            FixConfiguration configuration)
         {
             switch (configuration.Broker.Value)
             {
@@ -211,8 +208,7 @@ namespace NautilusData
                     return FxcmFixClientFactory.Create(
                         container,
                         messageBusAdapter,
-                        configuration,
-                        symbolMap);
+                        configuration);
                 case "SIMULATION":
                     goto default;
                 case "IB":

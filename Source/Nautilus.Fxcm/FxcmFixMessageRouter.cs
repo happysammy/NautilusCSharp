@@ -15,10 +15,11 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Nautilus.Fix;
+
 namespace Nautilus.Fxcm
 {
     using System;
-    using System.Collections.Immutable;
     using Microsoft.Extensions.Logging;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
@@ -27,21 +28,20 @@ namespace Nautilus.Fxcm
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Fix;
     using Nautilus.Fix.Interfaces;
     using Nautilus.Fxcm.MessageFactories;
     using QuickFix;
 
     /// <summary>
-    /// Provides an implementation for routing FXCM FIX messages.
+    /// Provides a router for FXCM FIX messages.
     /// </summary>
     public sealed class FxcmFixMessageRouter : Component, IFixMessageRouter
     {
         private const string Sent = "-->";
         private const string Protocol = "[FIX]";
 
-        private readonly SymbolConverter symbolConverter;
         private readonly AccountId accountId;
+        private readonly SymbolMapper symbolMapper;
 
         private Session? session;
 
@@ -50,15 +50,15 @@ namespace Nautilus.Fxcm
         /// </summary>
         /// <param name="container">The componentry container.</param>
         /// <param name="accountId">The account identifier for the router.</param>
-        /// <param name="symbolMap">The symbol provider.</param>
+        /// <param name="symbolMapper">The symbol mapper.</param>
         public FxcmFixMessageRouter(
             IComponentryContainer container,
             AccountId accountId,
-            ImmutableDictionary<string, string> symbolMap)
+            SymbolMapper symbolMapper)
         : base(container)
         {
             this.accountId = accountId;
-            this.symbolConverter = new SymbolConverter(symbolMap);
+            this.symbolMapper = symbolMapper;
         }
 
         /// <inheritdoc />
@@ -94,7 +94,7 @@ namespace Nautilus.Fxcm
         /// <inheritdoc />
         public void SecurityListRequestSubscribe(Symbol symbol)
         {
-            var brokerSymbolCode = this.symbolConverter.GetBrokerSymbolCode(symbol.Code);
+            var brokerSymbolCode = this.symbolMapper.GetBrokerCode(symbol.Code);
             if (brokerSymbolCode is null)
             {
                 this.Logger.LogError($"Cannot find broker symbol for {symbol.Code}.");
@@ -117,7 +117,7 @@ namespace Nautilus.Fxcm
         /// <inheritdoc />
         public void MarketDataRequestSubscribe(Symbol symbol)
         {
-            var brokerSymbolCode = this.symbolConverter.GetBrokerSymbolCode(symbol.Code);
+            var brokerSymbolCode = this.symbolMapper.GetBrokerCode(symbol.Code);
             if (brokerSymbolCode is null)
             {
                 this.Logger.LogError($"Cannot find broker symbol for {symbol.Code}.");
@@ -135,7 +135,7 @@ namespace Nautilus.Fxcm
         /// <inheritdoc />
         public void MarketDataRequestSubscribeAll()
         {
-            foreach (var brokerSymbol in this.symbolConverter.BrokerSymbolCodes)
+            foreach (var brokerSymbol in this.symbolMapper.BrokerSymbolCodes)
             {
                 var message = MarketDataRequestFactory.Create(
                     brokerSymbol,
@@ -149,7 +149,7 @@ namespace Nautilus.Fxcm
         /// <inheritdoc />
         public void NewOrderSingle(Order order, PositionIdBroker? positionIdBroker)
         {
-            var brokerSymbolCode = this.symbolConverter.GetBrokerSymbolCode(order.Symbol.Code);
+            var brokerSymbolCode = this.symbolMapper.GetBrokerCode(order.Symbol.Code);
             if (brokerSymbolCode is null)
             {
                 this.Logger.LogError($"Cannot find broker symbol for {order.Symbol.Code}.");
@@ -169,7 +169,7 @@ namespace Nautilus.Fxcm
         /// <inheritdoc />
         public void NewOrderList(AtomicOrder atomicOrder)
         {
-            var brokerSymbolCode = this.symbolConverter.GetBrokerSymbolCode(atomicOrder.Symbol.Code);
+            var brokerSymbolCode = this.symbolMapper.GetBrokerCode(atomicOrder.Symbol.Code);
             if (brokerSymbolCode is null)
             {
                 this.Logger.LogError($"Cannot find broker symbol for {atomicOrder.Symbol.Code}.");
@@ -201,7 +201,7 @@ namespace Nautilus.Fxcm
         /// <inheritdoc />
         public void OrderCancelReplaceRequest(Order order, Quantity modifiedQuantity, Price modifiedPrice)
         {
-            var brokerSymbolCode = this.symbolConverter.GetBrokerSymbolCode(order.Symbol.Code);
+            var brokerSymbolCode = this.symbolMapper.GetBrokerCode(order.Symbol.Code);
             if (brokerSymbolCode is null)
             {
                 this.Logger.LogError($"Cannot find broker symbol for {order.Symbol.Code}.");
@@ -221,7 +221,7 @@ namespace Nautilus.Fxcm
         /// <inheritdoc />
         public void OrderCancelRequest(Order order)
         {
-            var brokerSymbolCode = this.symbolConverter.GetBrokerSymbolCode(order.Symbol.Code);
+            var brokerSymbolCode = this.symbolMapper.GetBrokerCode(order.Symbol.Code);
             if (brokerSymbolCode is null)
             {
                 this.Logger.LogError($"Cannot find broker symbol for {order.Symbol.Code}.");
