@@ -17,8 +17,6 @@
 
 namespace Nautilus.Scheduling.Internal
 {
-    using Nautilus.Scheduling;
-
     /// <summary>
     /// Represents a scheduler registration.
     /// </summary>

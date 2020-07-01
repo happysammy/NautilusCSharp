@@ -15,16 +15,16 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using System.Diagnostics.CodeAnalysis;
+using Nautilus.Common.Interfaces;
+using Nautilus.Common.Messages.Commands;
+using Nautilus.Common.Messaging;
+using Nautilus.Core.Message;
+using Nautilus.Core.Types;
+
 namespace Nautilus.TestSuite.TestKit.Mocks
 {
-    using System;
-    using System.Diagnostics.CodeAnalysis;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messages.Commands;
-    using Nautilus.Common.Messaging;
-    using Nautilus.Core.Message;
-    using Nautilus.Core.Types;
-
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class MockMessageBusProvider
     {

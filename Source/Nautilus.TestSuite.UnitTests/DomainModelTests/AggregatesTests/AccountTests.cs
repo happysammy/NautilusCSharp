@@ -15,19 +15,19 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using System.Diagnostics.CodeAnalysis;
+using Nautilus.Common.Interfaces;
+using Nautilus.DomainModel.Enums;
+using Nautilus.DomainModel.Events;
+using Nautilus.DomainModel.Identifiers;
+using Nautilus.DomainModel.ValueObjects;
+using Nautilus.TestSuite.TestKit.Components;
+using Nautilus.TestSuite.TestKit.Stubs;
+using Xunit;
+
 namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 {
-    using System;
-    using System.Diagnostics.CodeAnalysis;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Events;
-    using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.TestSuite.TestKit.Components;
-    using Nautilus.TestSuite.TestKit.Stubs;
-    using Xunit;
-
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Suppression is OK within the Test Suite.")]
     public sealed class AccountTests
     {

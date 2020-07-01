@@ -15,12 +15,12 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
+
 namespace Nautilus.Scheduling.Internal
 {
-    using System;
-    using System.Collections.Generic;
-    using Microsoft.Extensions.Logging;
-
     /// <summary>
     /// Represents a bucket.
     /// </summary>

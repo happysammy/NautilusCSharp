@@ -15,11 +15,11 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
+using System.Threading;
+
 namespace Nautilus.Scheduling
 {
-    using System;
-    using System.Threading;
-
     /// <summary>
     /// Signifies something that can be canceled.
     /// </summary>

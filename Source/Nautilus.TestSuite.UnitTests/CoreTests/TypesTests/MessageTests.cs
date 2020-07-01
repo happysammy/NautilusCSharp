@@ -15,15 +15,15 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using System.Diagnostics.CodeAnalysis;
+using Nautilus.Core.Message;
+using Nautilus.TestSuite.TestKit.Stubs;
+using NodaTime;
+using Xunit;
+
 namespace Nautilus.TestSuite.UnitTests.CoreTests.TypesTests
 {
-    using System;
-    using System.Diagnostics.CodeAnalysis;
-    using Nautilus.Core.Message;
-    using Nautilus.TestSuite.TestKit.Stubs;
-    using NodaTime;
-    using Xunit;
-
     // Required warning suppression for tests
     // (do not remove even if compiler doesn't initially complain).
 #pragma warning disable 8602

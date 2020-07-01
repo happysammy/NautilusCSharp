@@ -15,10 +15,10 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Nautilus.Core.Annotations;
+
 namespace Nautilus.DomainModel.Enums
 {
-    using Nautilus.Core.Annotations;
-
     /// <summary>
     /// Represents a specified order purpose.
     /// </summary>

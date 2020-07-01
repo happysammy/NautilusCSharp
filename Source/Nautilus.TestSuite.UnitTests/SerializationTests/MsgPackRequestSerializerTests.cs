@@ -15,23 +15,23 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Text;
+using Nautilus.Core.Extensions;
+using Nautilus.Data.Messages.Requests;
+using Nautilus.DomainModel.Identifiers;
+using Nautilus.Network.Identifiers;
+using Nautilus.Network.Messages;
+using Nautilus.Serialization.MessageSerializers;
+using Nautilus.TestSuite.TestKit.Fixtures;
+using Nautilus.TestSuite.TestKit.Stubs;
+using Xunit;
+using Xunit.Abstractions;
+
 namespace Nautilus.TestSuite.UnitTests.SerializationTests
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Text;
-    using Nautilus.Core.Extensions;
-    using Nautilus.Data.Messages.Requests;
-    using Nautilus.DomainModel.Identifiers;
-    using Nautilus.Network.Identifiers;
-    using Nautilus.Network.Messages;
-    using Nautilus.Serialization.MessageSerializers;
-    using Nautilus.TestSuite.TestKit.Fixtures;
-    using Nautilus.TestSuite.TestKit.Stubs;
-    using Xunit;
-    using Xunit.Abstractions;
-
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class MsgPackRequestSerializerTests : TestBase
     {

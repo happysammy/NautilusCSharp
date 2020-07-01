@@ -15,10 +15,10 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
+
 namespace Nautilus.Scheduling.Internal
 {
-    using System;
-
     /// <summary>
     /// <see cref="IRunnable"/> which executes an <see cref="Action"/>.
     /// </summary>

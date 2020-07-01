@@ -15,16 +15,16 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using Nautilus.Common.Data;
+using Nautilus.Common.Interfaces;
+using Nautilus.Common.Messages.Commands;
+using Nautilus.DomainModel.Entities;
+using Nautilus.DomainModel.Identifiers;
+using Nautilus.DomainModel.ValueObjects;
+
 namespace Nautilus.Fix
 {
-    using System.Collections.Generic;
-    using Nautilus.Common.Data;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messages.Commands;
-    using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
-
     /// <summary>
     /// Provides a gateway to the data providers FIX network.
     /// </summary>

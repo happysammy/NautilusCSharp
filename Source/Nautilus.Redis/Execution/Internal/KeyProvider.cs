@@ -15,11 +15,11 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
+using Nautilus.DomainModel.Identifiers;
+
 namespace Nautilus.Redis.Execution.Internal
 {
-    using System.Diagnostics.CodeAnalysis;
-    using Nautilus.DomainModel.Identifiers;
-
     /// <summary>
     /// Provides key strings for a Redis execution database.
     /// </summary>

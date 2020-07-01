@@ -15,10 +15,10 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using NetMQ;
+
 namespace Nautilus.Network.Encryption
 {
-    using NetMQ;
-
     /// <summary>
     /// Provides encryption setup for ZeroMQ sockets.
     /// </summary>

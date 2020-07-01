@@ -15,16 +15,16 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Text;
+using Nautilus.Network.Compression;
+using Nautilus.TestSuite.TestKit.Fixtures;
+using Xunit;
+using Xunit.Abstractions;
+
 namespace Nautilus.TestSuite.UnitTests.NetworkTests
 {
-    using System;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Text;
-    using Nautilus.Network.Compression;
-    using Nautilus.TestSuite.TestKit.Fixtures;
-    using Xunit;
-    using Xunit.Abstractions;
-
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class SnappyCompressorTests : TestBase
     {

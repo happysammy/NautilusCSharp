@@ -15,19 +15,19 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Text;
+using Nautilus.Core.Extensions;
+using Nautilus.Core.Types;
+using Nautilus.DomainModel.Enums;
+using Nautilus.DomainModel.Identifiers;
+using Nautilus.DomainModel.ValueObjects;
+using Nautilus.Network.Identifiers;
+using NodaTime;
+
 namespace Nautilus.Serialization.MessageSerializers.Internal
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
-    using Nautilus.Core.Extensions;
-    using Nautilus.Core.Types;
-    using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Network.Identifiers;
-    using NodaTime;
-
     /// <summary>
     /// Provides methods for extracting objects from unpacked dictionaries.
     /// </summary>

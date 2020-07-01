@@ -15,22 +15,22 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
+using Nautilus.Common.Interfaces;
+using Nautilus.Core.Message;
+using Nautilus.Data.Messages.Requests;
+using Nautilus.Data.Messages.Responses;
+using Nautilus.DomainModel.Entities;
+using Nautilus.DomainModel.ValueObjects;
+using Nautilus.Network;
+using Nautilus.Network.Encryption;
+using Nautilus.Network.Messages;
+using Nautilus.Network.Nodes;
+
 namespace Nautilus.Data.Network
 {
-    using System;
-    using System.Collections.Generic;
-    using Microsoft.Extensions.Logging;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Message;
-    using Nautilus.Data.Messages.Requests;
-    using Nautilus.Data.Messages.Responses;
-    using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Network;
-    using Nautilus.Network.Encryption;
-    using Nautilus.Network.Messages;
-    using Nautilus.Network.Nodes;
-
     /// <summary>
     /// Provides a data server to receive requests and send responses.
     /// </summary>

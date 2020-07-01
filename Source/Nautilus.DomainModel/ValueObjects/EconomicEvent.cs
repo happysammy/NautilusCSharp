@@ -15,13 +15,13 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Correctness;
+using Nautilus.DomainModel.Enums;
+using NodaTime;
+
 namespace Nautilus.DomainModel.ValueObjects
 {
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
-    using Nautilus.DomainModel.Enums;
-    using NodaTime;
-
     /// <summary>
     /// Represents an economic news event which affects financial markets.
     /// </summary>

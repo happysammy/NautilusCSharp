@@ -15,10 +15,10 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using Nautilus.Messaging.Interfaces;
+
 namespace Nautilus.Scheduling.Internal
 {
-    using Nautilus.Messaging.Interfaces;
-
     /// <summary>
     /// INTERNAL API.
     /// </summary>

@@ -15,13 +15,13 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using System.Threading.Tasks;
+using NetMQ;
+using Xunit.Abstractions;
+
 namespace Nautilus.TestSuite.TestKit.Fixtures
 {
-    using System;
-    using System.Threading.Tasks;
-    using NetMQ;
-    using Xunit.Abstractions;
-
     /// <summary>
     /// The base class for all tests involving NetMQ.
     /// </summary>

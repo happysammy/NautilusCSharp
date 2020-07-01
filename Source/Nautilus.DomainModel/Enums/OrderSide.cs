@@ -15,11 +15,11 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Nautilus.Core.Annotations;
+using Nautilus.DomainModel.Aggregates;
+
 namespace Nautilus.DomainModel.Enums
 {
-    using Nautilus.Core.Annotations;
-    using Nautilus.DomainModel.Aggregates;
-
     /// <summary>
     /// Represents the execution direction of an <see cref="Order"/>.
     /// </summary>

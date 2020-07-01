@@ -15,12 +15,12 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Correctness;
+using Nautilus.Core.Types;
+
 namespace Nautilus.DomainModel.Identifiers
 {
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
-    using Nautilus.Core.Types;
-
     /// <summary>
     /// Represents a valid symbol identifier. A symbol is the unique identity of a tradeable instrument.
     /// The code and venue combination identifier value must be unique at the fund level.

@@ -15,21 +15,21 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using Microsoft.Extensions.Logging;
+using Nautilus.Common.Componentry;
+using Nautilus.Common.Interfaces;
+using Nautilus.Common.Logging;
+using Nautilus.DomainModel.Aggregates;
+using Nautilus.DomainModel.Entities;
+using Nautilus.DomainModel.Identifiers;
+using Nautilus.DomainModel.ValueObjects;
+using Nautilus.Fix.Interfaces;
+using Nautilus.Fxcm.MessageFactories;
+using QuickFix;
+
 namespace Nautilus.Fxcm
 {
-    using System;
-    using Microsoft.Extensions.Logging;
-    using Nautilus.Common.Componentry;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Logging;
-    using Nautilus.DomainModel.Aggregates;
-    using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Fix.Interfaces;
-    using Nautilus.Fxcm.MessageFactories;
-    using QuickFix;
-
     /// <summary>
     /// Provides a router for FXCM FIX messages.
     /// </summary>

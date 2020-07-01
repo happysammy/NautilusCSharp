@@ -15,10 +15,10 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Nautilus.Common.Interfaces;
+
 namespace Nautilus.Fix
 {
-    using Nautilus.Common.Interfaces;
-
     /// <summary>
     /// Provides a factory for FIX gateways.
     /// </summary>

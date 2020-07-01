@@ -15,19 +15,19 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
+using Nautilus.Common.Interfaces;
+using Nautilus.Messaging.Interfaces;
+using Nautilus.Network;
+using Nautilus.TestSuite.TestKit.Components;
+using Nautilus.TestSuite.TestKit.Fixtures;
+using Nautilus.TestSuite.TestKit.Mocks;
+using NetMQ.Sockets;
+using Xunit;
+using Xunit.Abstractions;
+
 namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 {
-    using System.Diagnostics.CodeAnalysis;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Messaging.Interfaces;
-    using Nautilus.Network;
-    using Nautilus.TestSuite.TestKit.Components;
-    using Nautilus.TestSuite.TestKit.Fixtures;
-    using Nautilus.TestSuite.TestKit.Mocks;
-    using NetMQ.Sockets;
-    using Xunit;
-    using Xunit.Abstractions;
-
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class CommandRouterTests : NetMQTestBase
     {

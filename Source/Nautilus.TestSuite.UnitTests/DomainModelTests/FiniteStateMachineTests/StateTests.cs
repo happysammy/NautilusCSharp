@@ -15,13 +15,13 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
+using Nautilus.DomainModel.Enums;
+using Nautilus.DomainModel.FiniteStateMachine;
+using Xunit;
+
 namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FiniteStateMachineTests
 {
-    using System.Diagnostics.CodeAnalysis;
-    using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.FiniteStateMachine;
-    using Xunit;
-
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class StateTests
     {

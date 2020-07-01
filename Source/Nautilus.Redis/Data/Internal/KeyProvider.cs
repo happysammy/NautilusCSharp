@@ -15,19 +15,19 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using Nautilus.Core.Correctness;
+using Nautilus.Core.Extensions;
+using Nautilus.Data.Keys;
+using Nautilus.DomainModel.Identifiers;
+using Nautilus.DomainModel.ValueObjects;
+using NodaTime;
+using StackExchange.Redis;
+
 namespace Nautilus.Redis.Data.Internal
 {
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
-    using Nautilus.Core.Correctness;
-    using Nautilus.Core.Extensions;
-    using Nautilus.Data.Keys;
-    using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
-    using NodaTime;
-    using StackExchange.Redis;
-
     /// <summary>
     /// Provides database keys for market data.
     /// </summary>

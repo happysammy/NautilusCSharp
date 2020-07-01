@@ -15,19 +15,19 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using System.Text;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using Nautilus.Common.Componentry;
+using Nautilus.Common.Enums;
+using Nautilus.Common.Interfaces;
+using Nautilus.Core.Correctness;
+using Nautilus.DomainModel.Identifiers;
+using Nautilus.DomainModel.ValueObjects;
+
 namespace Nautilus.Serialization.DataSerializers
 {
-    using System.Collections.Generic;
-    using System.Text;
-    using MongoDB.Bson;
-    using MongoDB.Bson.Serialization;
-    using Nautilus.Common.Componentry;
-    using Nautilus.Common.Enums;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Correctness;
-    using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
-
     /// <inheritdoc />
     public sealed class TickDataSerializer : IDataSerializer<Tick>
     {

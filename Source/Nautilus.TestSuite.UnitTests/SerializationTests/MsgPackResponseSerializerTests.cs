@@ -15,27 +15,27 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Text;
+using Nautilus.Data.Messages.Responses;
+using Nautilus.DomainModel.Entities;
+using Nautilus.DomainModel.Enums;
+using Nautilus.DomainModel.Identifiers;
+using Nautilus.DomainModel.ValueObjects;
+using Nautilus.Network.Identifiers;
+using Nautilus.Network.Messages;
+using Nautilus.Serialization.DataSerializers;
+using Nautilus.Serialization.MessageSerializers;
+using Nautilus.TestSuite.TestKit.Fixtures;
+using Nautilus.TestSuite.TestKit.Stubs;
+using NodaTime;
+using Xunit;
+using Xunit.Abstractions;
+
 namespace Nautilus.TestSuite.UnitTests.SerializationTests
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Text;
-    using Nautilus.Data.Messages.Responses;
-    using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Network.Identifiers;
-    using Nautilus.Network.Messages;
-    using Nautilus.Serialization.DataSerializers;
-    using Nautilus.Serialization.MessageSerializers;
-    using Nautilus.TestSuite.TestKit.Fixtures;
-    using Nautilus.TestSuite.TestKit.Stubs;
-    using NodaTime;
-    using Xunit;
-    using Xunit.Abstractions;
-
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class MsgPackResponseSerializerTests : TestBase
     {

@@ -15,13 +15,13 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using Nautilus.Core.CQS;
+using Nautilus.DomainModel.Entities;
+using Nautilus.DomainModel.Identifiers;
+
 namespace Nautilus.Data.Interfaces
 {
-    using System.Collections.Generic;
-    using Nautilus.Core.CQS;
-    using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.Identifiers;
-
     /// <summary>
     /// Provides a repository for accessing <see cref="Instrument"/> data.
     /// </summary>

@@ -15,26 +15,26 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
+using System.Text;
+using System.Threading.Tasks;
+using Nautilus.Common.Data;
+using Nautilus.Data.Network;
+using Nautilus.DomainModel.Identifiers;
+using Nautilus.Network;
+using Nautilus.Network.Compression;
+using Nautilus.Network.Encryption;
+using Nautilus.Serialization.DataSerializers;
+using Nautilus.TestSuite.TestKit.Components;
+using Nautilus.TestSuite.TestKit.Fixtures;
+using Nautilus.TestSuite.TestKit.Stubs;
+using NetMQ;
+using NetMQ.Sockets;
+using Xunit;
+using Xunit.Abstractions;
+
 namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
 {
-    using System.Diagnostics.CodeAnalysis;
-    using System.Text;
-    using System.Threading.Tasks;
-    using Nautilus.Common.Data;
-    using Nautilus.Data.Network;
-    using Nautilus.DomainModel.Identifiers;
-    using Nautilus.Network;
-    using Nautilus.Network.Compression;
-    using Nautilus.Network.Encryption;
-    using Nautilus.Serialization.DataSerializers;
-    using Nautilus.TestSuite.TestKit.Components;
-    using Nautilus.TestSuite.TestKit.Fixtures;
-    using Nautilus.TestSuite.TestKit.Stubs;
-    using NetMQ;
-    using NetMQ.Sockets;
-    using Xunit;
-    using Xunit.Abstractions;
-
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class TickPublisherTests : NetMQTestBase
     {

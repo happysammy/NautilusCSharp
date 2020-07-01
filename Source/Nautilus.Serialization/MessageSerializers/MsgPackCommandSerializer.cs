@@ -15,17 +15,17 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using MessagePack;
+using Nautilus.Common.Interfaces;
+using Nautilus.Core.Correctness;
+using Nautilus.Core.Message;
+using Nautilus.DomainModel.Commands;
+using Nautilus.DomainModel.Entities;
+using Nautilus.Serialization.MessageSerializers.Internal;
+
 namespace Nautilus.Serialization.MessageSerializers
 {
-    using System.Collections.Generic;
-    using MessagePack;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Correctness;
-    using Nautilus.Core.Message;
-    using Nautilus.DomainModel.Commands;
-    using Nautilus.DomainModel.Entities;
-    using Nautilus.Serialization.MessageSerializers.Internal;
-
     /// <summary>
     /// Provides a <see cref="Command"/> message binary serializer for the MessagePack specification.
     /// </summary>

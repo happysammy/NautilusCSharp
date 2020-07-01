@@ -15,11 +15,11 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using Nautilus.DomainModel.Identifiers;
+
 namespace Nautilus.Execution.Engine
 {
-    using System.Collections.Generic;
-    using Nautilus.DomainModel.Identifiers;
-
     /// <summary>
     /// Provides an identifier index for a trader.
     /// </summary>

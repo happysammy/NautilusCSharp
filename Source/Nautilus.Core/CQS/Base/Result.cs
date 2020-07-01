@@ -15,11 +15,11 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Correctness;
+
 namespace Nautilus.Core.CQS.Base
 {
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
-
     /// <summary>
     /// The base class for all <see cref="Result"/> types.
     /// </summary>

@@ -15,10 +15,10 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Microsoft.Extensions.Logging;
+
 namespace Nautilus.Common.Logging
 {
-    using Microsoft.Extensions.Logging;
-
     /// <summary>
     /// Represents a <see cref="Nautilus"/> specific log event identifier.
     /// </summary>

@@ -15,13 +15,13 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using Nautilus.Core;
+using Nautilus.Core.Annotations;
+using Nautilus.Messaging.Interfaces;
+
 namespace Nautilus.Messaging
 {
-    using System;
-    using Nautilus.Core;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Messaging.Interfaces;
-
     /// <summary>
     /// Represents a messaging mailbox including an <see cref="Address"/> and <see cref="Endpoint"/>.
     /// </summary>

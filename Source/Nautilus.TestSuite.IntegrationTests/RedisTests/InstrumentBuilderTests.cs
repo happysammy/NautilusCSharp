@@ -15,19 +15,19 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
+using Nautilus.DomainModel.Entities;
+using Nautilus.DomainModel.Enums;
+using Nautilus.DomainModel.Identifiers;
+using Nautilus.DomainModel.ValueObjects;
+using Nautilus.Redis.Data.Internal;
+using Nautilus.TestSuite.TestKit.Fixtures;
+using Nautilus.TestSuite.TestKit.Stubs;
+using Xunit;
+using Xunit.Abstractions;
+
 namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 {
-    using System.Diagnostics.CodeAnalysis;
-    using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Redis.Data.Internal;
-    using Nautilus.TestSuite.TestKit.Fixtures;
-    using Nautilus.TestSuite.TestKit.Stubs;
-    using Xunit;
-    using Xunit.Abstractions;
-
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class InstrumentBuilderTests : TestBase
     {

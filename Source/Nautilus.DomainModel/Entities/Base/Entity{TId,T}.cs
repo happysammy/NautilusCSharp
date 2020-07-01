@@ -15,14 +15,14 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Nautilus.Core;
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Correctness;
+using Nautilus.Core.Types;
+using NodaTime;
+
 namespace Nautilus.DomainModel.Entities.Base
 {
-    using Nautilus.Core;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
-    using Nautilus.Core.Types;
-    using NodaTime;
-
     /// <summary>
     /// The base class for all uniquely identifiable domain objects.
     /// </summary>

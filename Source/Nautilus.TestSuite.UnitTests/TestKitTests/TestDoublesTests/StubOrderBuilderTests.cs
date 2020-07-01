@@ -15,16 +15,16 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
+using Nautilus.DomainModel.Enums;
+using Nautilus.DomainModel.Identifiers;
+using Nautilus.DomainModel.ValueObjects;
+using Nautilus.TestSuite.TestKit.Stubs;
+using NodaTime;
+using Xunit;
+
 namespace Nautilus.TestSuite.UnitTests.TestKitTests.TestDoublesTests
 {
-    using System.Diagnostics.CodeAnalysis;
-    using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.TestSuite.TestKit.Stubs;
-    using NodaTime;
-    using Xunit;
-
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class StubOrderBuilderTests
     {

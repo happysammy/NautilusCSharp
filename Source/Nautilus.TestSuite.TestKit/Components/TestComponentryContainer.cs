@@ -15,13 +15,13 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Microsoft.Extensions.Logging;
+using Nautilus.Common.Interfaces;
+using Nautilus.TestSuite.TestKit.Stubs;
+using Xunit.Abstractions;
+
 namespace Nautilus.TestSuite.TestKit.Components
 {
-    using Microsoft.Extensions.Logging;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.TestSuite.TestKit.Stubs;
-    using Xunit.Abstractions;
-
     /// <inheritdoc/>
     public sealed class TestComponentryContainer : IComponentryContainer
     {

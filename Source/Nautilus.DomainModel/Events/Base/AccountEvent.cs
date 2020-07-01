@@ -15,15 +15,15 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Correctness;
+using Nautilus.Core.Message;
+using Nautilus.DomainModel.Identifiers;
+using NodaTime;
+
 namespace Nautilus.DomainModel.Events.Base
 {
-    using System;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
-    using Nautilus.Core.Message;
-    using Nautilus.DomainModel.Identifiers;
-    using NodaTime;
-
     /// <summary>
     /// The base class for all account events.
     /// </summary>

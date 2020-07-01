@@ -15,11 +15,11 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Nautilus.Common.Interfaces;
+using Nautilus.Fix;
+
 namespace Nautilus.Fxcm
 {
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Fix;
-
     /// <summary>
     /// Provides a factory for creating FXCM FIX clients.
     /// </summary>

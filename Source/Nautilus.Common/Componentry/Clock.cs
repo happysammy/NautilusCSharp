@@ -15,11 +15,11 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Nautilus.Common.Interfaces;
+using NodaTime;
+
 namespace Nautilus.Common.Componentry
 {
-    using Nautilus.Common.Interfaces;
-    using NodaTime;
-
     /// <summary>
     /// Provides a clock with an embedded timezone.
     /// </summary>

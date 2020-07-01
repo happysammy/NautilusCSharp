@@ -15,13 +15,13 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using Nautilus.Core.CQS;
+using Nautilus.DomainModel.Aggregates;
+using Nautilus.DomainModel.Entities;
+using Nautilus.DomainModel.Identifiers;
+
 namespace Nautilus.Execution.Interfaces
 {
-    using Nautilus.Core.CQS;
-    using Nautilus.DomainModel.Aggregates;
-    using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.Identifiers;
-
     /// <summary>
     /// Provides an adapter to an execution databases write operations.
     /// </summary>

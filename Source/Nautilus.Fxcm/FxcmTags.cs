@@ -15,10 +15,10 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace Nautilus.Fxcm
 {
-    using System.Diagnostics.CodeAnalysis;
-
     /// <summary>
     /// Provides custom FXCM FIX message tags.
     /// </summary>

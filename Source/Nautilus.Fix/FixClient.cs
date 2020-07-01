@@ -15,16 +15,16 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Microsoft.Extensions.Logging;
+using Nautilus.Common.Interfaces;
+using Nautilus.DomainModel.Aggregates;
+using Nautilus.DomainModel.Entities;
+using Nautilus.DomainModel.Identifiers;
+using Nautilus.DomainModel.ValueObjects;
+using Nautilus.Fix.Interfaces;
+
 namespace Nautilus.Fix
 {
-    using Microsoft.Extensions.Logging;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.DomainModel.Aggregates;
-    using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Fix.Interfaces;
-
     /// <summary>
     /// Provides a FIX client.
     /// </summary>

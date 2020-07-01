@@ -15,17 +15,17 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using Nautilus.Common.Interfaces;
+using Nautilus.Common.Messages.Commands;
+using Nautilus.Common.Messaging;
+using Nautilus.Messaging;
+using Nautilus.Scheduling;
+using Nautilus.Service;
+
 namespace Nautilus.Execution
 {
-    using System;
-    using System.Collections.Generic;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messages.Commands;
-    using Nautilus.Common.Messaging;
-    using Nautilus.Messaging;
-    using Nautilus.Scheduling;
-    using Nautilus.Service;
-
     /// <summary>
     /// Provides an execution service.
     /// </summary>

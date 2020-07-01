@@ -15,14 +15,14 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using Nautilus.Core.CQS;
+using Nautilus.DomainModel.Frames;
+using Nautilus.DomainModel.ValueObjects;
+using NodaTime;
+
 namespace Nautilus.Data.Interfaces
 {
-    using System.Collections.Generic;
-    using Nautilus.Core.CQS;
-    using Nautilus.DomainModel.Frames;
-    using Nautilus.DomainModel.ValueObjects;
-    using NodaTime;
-
     /// <summary>
     /// The economic event collector interface.
     /// </summary>

@@ -15,10 +15,10 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Nautilus.Core.Annotations;
+
 namespace Nautilus.DomainModel.Enums
 {
-    using Nautilus.Core.Annotations;
-
     /// <summary>
     /// The uniqueness context of an identifier. An identifier is unique if there are no duplicates
     /// of its value within the context.

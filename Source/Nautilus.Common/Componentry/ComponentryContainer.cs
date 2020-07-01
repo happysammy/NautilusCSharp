@@ -15,12 +15,12 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Microsoft.Extensions.Logging;
+using Nautilus.Common.Interfaces;
+using Nautilus.Core.Annotations;
+
 namespace Nautilus.Common.Componentry
 {
-    using Microsoft.Extensions.Logging;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Annotations;
-
     /// <summary>
     /// The setup componentry container for <see cref="Nautilus"/> systems.
     /// </summary>

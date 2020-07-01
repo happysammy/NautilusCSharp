@@ -15,18 +15,18 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Nautilus.Core.Correctness;
+using Nautilus.DomainModel.Aggregates;
+using Nautilus.DomainModel.Enums;
+using Nautilus.DomainModel.Identifiers;
+using NodaTime;
+using QuickFix.Fields;
+using QuickFix.FIX44;
+using Account = QuickFix.Fields.Account;
+using Symbol = QuickFix.Fields.Symbol;
+
 namespace Nautilus.Fxcm.MessageFactories
 {
-    using Nautilus.Core.Correctness;
-    using Nautilus.DomainModel.Aggregates;
-    using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Identifiers;
-    using NodaTime;
-    using QuickFix.Fields;
-    using QuickFix.FIX44;
-    using Account = QuickFix.Fields.Account;
-    using Symbol = QuickFix.Fields.Symbol;
-
     /// <summary>
     /// Provides <see cref="NewOrderSingle"/> FIX messages.
     /// </summary>

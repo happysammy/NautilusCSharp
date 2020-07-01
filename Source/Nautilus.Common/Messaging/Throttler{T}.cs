@@ -15,18 +15,18 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Nautilus.Common.Componentry;
+using Nautilus.Common.Interfaces;
+using Nautilus.Common.Messages.Commands;
+using Nautilus.Core.Correctness;
+using NodaTime;
+
 namespace Nautilus.Common.Messaging
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using Microsoft.Extensions.Logging;
-    using Nautilus.Common.Componentry;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messages.Commands;
-    using Nautilus.Core.Correctness;
-    using NodaTime;
-
     /// <summary>
     /// Provides a generic object throttler.
     /// </summary>

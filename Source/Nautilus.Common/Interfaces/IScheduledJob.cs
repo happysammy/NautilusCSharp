@@ -15,10 +15,10 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using NodaTime;
+
 namespace Nautilus.Common.Interfaces
 {
-    using NodaTime;
-
     /// <summary>
     /// Represents a job command to execute at a scheduled time.
     /// </summary>

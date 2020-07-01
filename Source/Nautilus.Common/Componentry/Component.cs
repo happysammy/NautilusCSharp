@@ -15,16 +15,16 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using Microsoft.Extensions.Logging;
+using Nautilus.Common.Interfaces;
+using Nautilus.Common.Logging;
+using Nautilus.Core.Extensions;
+using Nautilus.Core.Types;
+using NodaTime;
+
 namespace Nautilus.Common.Componentry
 {
-    using System;
-    using Microsoft.Extensions.Logging;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Logging;
-    using Nautilus.Core.Extensions;
-    using Nautilus.Core.Types;
-    using NodaTime;
-
     /// <summary>
     /// The base class for all service components.
     /// </summary>

@@ -15,21 +15,21 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Extensions.Logging;
+using Nautilus.Common.Componentry;
+using Nautilus.Common.Interfaces;
+using Nautilus.Common.Messages.Commands;
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Correctness;
+using Nautilus.Core.Types;
+using Nautilus.Messaging;
+using Nautilus.Messaging.Interfaces;
+
 namespace Nautilus.Common.Messaging
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Microsoft.Extensions.Logging;
-    using Nautilus.Common.Componentry;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messages.Commands;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
-    using Nautilus.Core.Types;
-    using Nautilus.Messaging;
-    using Nautilus.Messaging.Interfaces;
-
     /// <summary>
     /// Provides a generic message bus.
     /// </summary>

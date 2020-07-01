@@ -15,19 +15,19 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Text;
+using Nautilus.DomainModel.Enums;
+using Nautilus.Serialization.MessageSerializers.Internal;
+using Nautilus.TestSuite.TestKit.Fixtures;
+using Nautilus.TestSuite.TestKit.Stubs;
+using NodaTime;
+using Xunit;
+using Xunit.Abstractions;
+
 namespace Nautilus.TestSuite.UnitTests.SerializationTests
 {
-    using System;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Text;
-    using Nautilus.DomainModel.Enums;
-    using Nautilus.Serialization.MessageSerializers.Internal;
-    using Nautilus.TestSuite.TestKit.Fixtures;
-    using Nautilus.TestSuite.TestKit.Stubs;
-    using NodaTime;
-    using Xunit;
-    using Xunit.Abstractions;
-
     // Required warning suppression for tests
     // (do not remove even if compiler doesn't initially complain).
 #pragma warning disable 8602

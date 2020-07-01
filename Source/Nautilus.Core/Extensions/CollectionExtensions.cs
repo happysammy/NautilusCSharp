@@ -15,12 +15,12 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using Nautilus.Core.Correctness;
+
 namespace Nautilus.Core.Extensions
 {
-    using System;
-    using System.Collections.Generic;
-    using Nautilus.Core.Correctness;
-
     /// <summary>
     /// Provides useful generic collection extension methods.
     /// </summary>

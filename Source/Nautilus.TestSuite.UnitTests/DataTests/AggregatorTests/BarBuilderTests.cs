@@ -15,15 +15,15 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
+using Nautilus.Data.Aggregation;
+using Nautilus.DomainModel.ValueObjects;
+using Nautilus.TestSuite.TestKit.Stubs;
+using NodaTime;
+using Xunit;
+
 namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
 {
-    using System.Diagnostics.CodeAnalysis;
-    using Nautilus.Data.Aggregation;
-    using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.TestSuite.TestKit.Stubs;
-    using NodaTime;
-    using Xunit;
-
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class BarBuilderTests
     {

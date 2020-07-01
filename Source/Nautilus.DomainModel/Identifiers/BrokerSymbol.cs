@@ -15,12 +15,12 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Correctness;
+using Nautilus.Core.Types;
+
 namespace Nautilus.DomainModel.Identifiers
 {
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
-    using Nautilus.Core.Types;
-
     /// <summary>
     /// Represents a valid broker symbol identifier. This is the symbol the broker assigns to an
     /// instrument.

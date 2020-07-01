@@ -15,14 +15,14 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Correctness;
+using Nautilus.Core.Message;
+using NodaTime;
+
 namespace Nautilus.Network.Messages
 {
-    using System;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
-    using Nautilus.Core.Message;
-    using NodaTime;
-
     /// <summary>
     /// Represents a response acknowledging receipt of a message.
     /// </summary>

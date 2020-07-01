@@ -15,15 +15,15 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Correctness;
+using Nautilus.Core.Enums;
+using Nautilus.Core.Extensions;
+using NodaTime;
+
 namespace Nautilus.Core.Types
 {
-    using System;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
-    using Nautilus.Core.Enums;
-    using Nautilus.Core.Extensions;
-    using NodaTime;
-
     /// <summary>
     /// The base class for all <see cref="Message"/>s.
     /// </summary>

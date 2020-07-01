@@ -15,10 +15,10 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Nautilus.Messaging;
+
 namespace Nautilus.Data
 {
-    using Nautilus.Messaging;
-
     /// <summary>
     /// Provides data service component messaging addresses.
     /// </summary>

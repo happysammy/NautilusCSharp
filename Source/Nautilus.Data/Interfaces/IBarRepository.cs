@@ -15,12 +15,12 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Nautilus.DomainModel.Enums;
+using Nautilus.DomainModel.Frames;
+using Nautilus.DomainModel.ValueObjects;
+
 namespace Nautilus.Data.Interfaces
 {
-    using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Frames;
-    using Nautilus.DomainModel.ValueObjects;
-
     /// <summary>
     /// Provides a repository for accessing <see cref="Bar"/> data.
     /// </summary>

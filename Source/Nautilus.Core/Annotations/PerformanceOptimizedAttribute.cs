@@ -15,10 +15,10 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+
 namespace Nautilus.Core.Annotations
 {
-    using System;
-
     /// <summary>
     /// This decorative attribute indicates that the annotated method has been performance
     /// optimized, therefore there is a tendency towards low level implementations over

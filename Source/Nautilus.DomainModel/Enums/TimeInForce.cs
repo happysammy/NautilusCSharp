@@ -15,11 +15,11 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
+using Nautilus.Core.Annotations;
+
 namespace Nautilus.DomainModel.Enums
 {
-    using System.Diagnostics.CodeAnalysis;
-    using Nautilus.Core.Annotations;
-
     /// <summary>
     /// The time in force for an order.
     /// </summary>

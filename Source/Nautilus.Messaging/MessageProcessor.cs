@@ -15,16 +15,16 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Threading.Tasks.Dataflow;
+using Nautilus.Messaging.Internal;
+
 namespace Nautilus.Messaging
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using System.Threading.Tasks.Dataflow;
-    using Nautilus.Messaging.Internal;
-
     /// <summary>
     /// Provides an asynchronous message processor.
     /// </summary>

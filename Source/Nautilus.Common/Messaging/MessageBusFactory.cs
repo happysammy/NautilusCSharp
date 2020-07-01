@@ -15,12 +15,12 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using Nautilus.Common.Interfaces;
+using Nautilus.Core.Message;
+using Nautilus.Core.Types;
+
 namespace Nautilus.Common.Messaging
 {
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Message;
-    using Nautilus.Core.Types;
-
     /// <summary>
     /// Provides a factory to create the systems message bus.
     /// </summary>

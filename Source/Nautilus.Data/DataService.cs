@@ -15,27 +15,27 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
+using Nautilus.Common.Componentry;
+using Nautilus.Common.Data;
+using Nautilus.Common.Interfaces;
+using Nautilus.Common.Messages.Commands;
+using Nautilus.Common.Messages.Events;
+using Nautilus.Common.Messaging;
+using Nautilus.Core.Extensions;
+using Nautilus.Core.Types;
+using Nautilus.Data.Messages.Commands;
+using Nautilus.DomainModel.Identifiers;
+using Nautilus.DomainModel.ValueObjects;
+using Nautilus.Messaging;
+using Nautilus.Scheduling;
+using Nautilus.Service;
+using NodaTime;
+
 namespace Nautilus.Data
 {
-    using System;
-    using System.Collections.Generic;
-    using Microsoft.Extensions.Logging;
-    using Nautilus.Common.Componentry;
-    using Nautilus.Common.Data;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messages.Commands;
-    using Nautilus.Common.Messages.Events;
-    using Nautilus.Common.Messaging;
-    using Nautilus.Core.Extensions;
-    using Nautilus.Core.Types;
-    using Nautilus.Data.Messages.Commands;
-    using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Messaging;
-    using Nautilus.Scheduling;
-    using Nautilus.Service;
-    using NodaTime;
-
     /// <summary>
     /// Provides a data service.
     /// </summary>

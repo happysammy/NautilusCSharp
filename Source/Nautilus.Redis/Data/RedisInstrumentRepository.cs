@@ -15,30 +15,30 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Text;
+using Microsoft.Extensions.Logging;
+using Nautilus.Common.Data;
+using Nautilus.Common.Interfaces;
+using Nautilus.Common.Logging;
+using Nautilus.Common.Messages.Commands;
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Correctness;
+using Nautilus.Core.CQS;
+using Nautilus.Core.Extensions;
+using Nautilus.Data.Interfaces;
+using Nautilus.DomainModel.Entities;
+using Nautilus.DomainModel.Enums;
+using Nautilus.DomainModel.Identifiers;
+using Nautilus.DomainModel.ValueObjects;
+using Nautilus.Redis.Data.Internal;
+using StackExchange.Redis;
+
 namespace Nautilus.Redis.Data
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-    using System.Text;
-    using Microsoft.Extensions.Logging;
-    using Nautilus.Common.Data;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Logging;
-    using Nautilus.Common.Messages.Commands;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
-    using Nautilus.Core.CQS;
-    using Nautilus.Core.Extensions;
-    using Nautilus.Data.Interfaces;
-    using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Redis.Data.Internal;
-    using StackExchange.Redis;
-
     /// <summary>
     /// Provides a repository for handling <see cref="Instrument"/>s with Redis.
     /// </summary>

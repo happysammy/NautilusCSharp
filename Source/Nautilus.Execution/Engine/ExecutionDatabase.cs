@@ -15,17 +15,17 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
+using Nautilus.Common.Componentry;
+using Nautilus.Common.Interfaces;
+using Nautilus.Common.Logging;
+using Nautilus.DomainModel.Aggregates;
+using Nautilus.DomainModel.Identifiers;
+using Nautilus.Execution.Interfaces;
+
 namespace Nautilus.Execution.Engine
 {
-    using System.Collections.Generic;
-    using Microsoft.Extensions.Logging;
-    using Nautilus.Common.Componentry;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Logging;
-    using Nautilus.DomainModel.Aggregates;
-    using Nautilus.DomainModel.Identifiers;
-    using Nautilus.Execution.Interfaces;
-
     /// <summary>
     /// Provides the abstract base class for all execution databases.
     /// </summary>

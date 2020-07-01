@@ -15,12 +15,12 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
+using Nautilus.Core;
+using Nautilus.Core.Annotations;
+
 namespace Nautilus.DomainModel.FiniteStateMachine
 {
-    using System;
-    using Nautilus.Core;
-    using Nautilus.Core.Annotations;
-
     /// <summary>
     /// Represents the concept of a starting <see cref="State"/>, which is then affected by an event
     /// <see cref="Trigger"/> resulting in a valid resultant <see cref="State"/>.

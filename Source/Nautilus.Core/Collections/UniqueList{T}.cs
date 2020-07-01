@@ -15,11 +15,11 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+
 namespace Nautilus.Core.Collections
 {
-    using System;
-    using System.Collections.Generic;
-
     /// <summary>
     /// Represents a strongly typed list of unique objects which preserves insertion order.
     /// </summary>

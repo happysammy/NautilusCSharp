@@ -15,16 +15,16 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Correctness;
+using Nautilus.DomainModel.Enums;
+using Nautilus.DomainModel.Identifiers;
+using Nautilus.DomainModel.ValueObjects;
+using NodaTime;
+
 namespace Nautilus.DomainModel.Events.Base
 {
-    using System;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
-    using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
-    using NodaTime;
-
     /// <summary>
     /// The base class for all order fill events.
     /// </summary>

@@ -15,10 +15,10 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+
 namespace Nautilus.Core.Annotations
 {
-    using System;
-
     /// <summary>
     /// This decorative attribute indicates that the annotated field value is not valid or expected.
     /// </summary>

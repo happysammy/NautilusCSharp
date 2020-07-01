@@ -15,14 +15,14 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Nautilus.DomainModel.Aggregates;
+using Nautilus.DomainModel.Entities;
+using Nautilus.DomainModel.Identifiers;
+using Nautilus.DomainModel.ValueObjects;
+using QuickFix;
+
 namespace Nautilus.Fix.Interfaces
 {
-    using Nautilus.DomainModel.Aggregates;
-    using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
-    using QuickFix;
-
     /// <summary>
     /// The adapter for FIX message routers.
     /// </summary>

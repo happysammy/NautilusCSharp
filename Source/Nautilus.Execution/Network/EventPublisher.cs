@@ -15,15 +15,15 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using Nautilus.Common.Interfaces;
+using Nautilus.Core.Message;
+using Nautilus.DomainModel.Events;
+using Nautilus.Network;
+using Nautilus.Network.Encryption;
+using Nautilus.Network.Nodes;
+
 namespace Nautilus.Execution.Network
 {
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Message;
-    using Nautilus.DomainModel.Events;
-    using Nautilus.Network;
-    using Nautilus.Network.Encryption;
-    using Nautilus.Network.Nodes;
-
     /// <summary>
     /// Provides an event publisher for the messaging server.
     /// </summary>

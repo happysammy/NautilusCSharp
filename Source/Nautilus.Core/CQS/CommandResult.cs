@@ -15,13 +15,13 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System.Linq;
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Correctness;
+using Nautilus.Core.CQS.Base;
+
 namespace Nautilus.Core.CQS
 {
-    using System.Linq;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
-    using Nautilus.Core.CQS.Base;
-
     /// <summary>
     /// Represents the result of a command operation. May contain a result message.
     /// </summary>

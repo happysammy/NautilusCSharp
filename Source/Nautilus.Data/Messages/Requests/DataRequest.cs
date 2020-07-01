@@ -15,16 +15,16 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Correctness;
+using Nautilus.Core.Extensions;
+using Nautilus.Core.Message;
+using NodaTime;
+
 namespace Nautilus.Data.Messages.Requests
 {
-    using System;
-    using System.Collections.Generic;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
-    using Nautilus.Core.Extensions;
-    using Nautilus.Core.Message;
-    using NodaTime;
-
     /// <summary>
     /// Represents a request for data.
     /// </summary>

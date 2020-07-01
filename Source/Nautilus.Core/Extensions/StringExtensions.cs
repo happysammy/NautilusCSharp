@@ -15,11 +15,11 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using System.Linq;
+
 namespace Nautilus.Core.Extensions
 {
-    using System;
-    using System.Linq;
-
     /// <summary>
     /// Provides useful generic <see cref="string"/> extension methods.
     /// </summary>

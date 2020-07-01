@@ -15,12 +15,12 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using Nautilus.Common.Enums;
+using Nautilus.Common.Interfaces;
+using Nautilus.Core.Correctness;
+
 namespace Nautilus.Network.Compression
 {
-    using Nautilus.Common.Enums;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Correctness;
-
     /// <summary>
     /// Provides a factory to create <see cref="ICompressor"/>s.
     /// </summary>

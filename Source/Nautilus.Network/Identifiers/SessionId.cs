@@ -15,15 +15,15 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System.Security.Cryptography;
+using System.Text;
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Extensions;
+using Nautilus.Core.Types;
+using NodaTime;
+
 namespace Nautilus.Network.Identifiers
 {
-    using System.Security.Cryptography;
-    using System.Text;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Extensions;
-    using Nautilus.Core.Types;
-    using NodaTime;
-
     /// <summary>
     /// Represents a unique network session identifier.
     /// </summary>

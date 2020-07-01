@@ -15,10 +15,10 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using Nautilus.Core.Annotations;
+
 namespace Nautilus.Network
 {
-    using Nautilus.Core.Annotations;
-
     /// <summary>
     /// Represents a valid ZeroMQ network address.
     /// </summary>

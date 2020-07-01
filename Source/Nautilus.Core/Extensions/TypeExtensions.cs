@@ -15,10 +15,10 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+
 namespace Nautilus.Core.Extensions
 {
-    using System;
-
     /// <summary>
     /// Provides useful generic <see cref="Type"/> extension methods.
     /// </summary>

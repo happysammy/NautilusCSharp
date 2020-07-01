@@ -15,14 +15,14 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Nautilus.Common.Componentry;
+using Nautilus.Common.Interfaces;
+using Nautilus.DomainModel.Entities;
+using Nautilus.DomainModel.ValueObjects;
+using Nautilus.Messaging.Interfaces;
+
 namespace Nautilus.Common.Data
 {
-    using Nautilus.Common.Componentry;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Messaging.Interfaces;
-
     /// <summary>
     /// The base class for all components which are connected to the message bus.
     /// </summary>

@@ -15,12 +15,12 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using Nautilus.Core.Annotations;
+
 namespace Nautilus.Execution.Engine
 {
-    using System;
-    using System.Collections.Generic;
-    using Nautilus.Core.Annotations;
-
     /// <summary>
     /// Provides efficient mathematical set operations. Concrete classes avoid the overhead of LINQ
     /// and interface dispatching.

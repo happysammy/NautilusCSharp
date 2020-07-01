@@ -15,21 +15,21 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
+using System.Diagnostics;
+using System.Text;
+using Microsoft.Extensions.Logging;
+using Nautilus.Common.Data;
+using Nautilus.Common.Enums;
+using Nautilus.Common.Interfaces;
+using Nautilus.Common.Logging;
+using Nautilus.Common.Messages.Commands;
+using Nautilus.Network.Encryption;
+using NetMQ;
+using NetMQ.Sockets;
+
 namespace Nautilus.Network.Nodes
 {
-    using System;
-    using System.Diagnostics;
-    using System.Text;
-    using Microsoft.Extensions.Logging;
-    using Nautilus.Common.Data;
-    using Nautilus.Common.Enums;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Logging;
-    using Nautilus.Common.Messages.Commands;
-    using Nautilus.Network.Encryption;
-    using NetMQ;
-    using NetMQ.Sockets;
-
     /// <summary>
     /// The base class for all data publishers.
     /// </summary>

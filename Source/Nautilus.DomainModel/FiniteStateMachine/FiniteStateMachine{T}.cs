@@ -15,12 +15,12 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Immutable;
+using Nautilus.Core.Correctness;
+
 namespace Nautilus.DomainModel.FiniteStateMachine
 {
-    using System;
-    using System.Collections.Immutable;
-    using Nautilus.Core.Correctness;
-
     /// <summary>
     /// Provides a simple generic finite state machine of state T, comprising of a state transition look-up
     /// table to determine trigger processing validity.

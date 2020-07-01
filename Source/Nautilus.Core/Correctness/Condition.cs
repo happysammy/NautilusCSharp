@@ -15,11 +15,11 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+
 namespace Nautilus.Core.Correctness
 {
-    using System;
-    using System.Collections.Generic;
-
     /// <summary>
     /// Provides checking of function or method conditions which are executed in debug and release
     /// configurations. A condition is a predicate which must be true just prior to the execution of

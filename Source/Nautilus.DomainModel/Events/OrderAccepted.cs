@@ -15,16 +15,16 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Correctness;
+using Nautilus.Core.Types;
+using Nautilus.DomainModel.Events.Base;
+using Nautilus.DomainModel.Identifiers;
+using NodaTime;
+
 namespace Nautilus.DomainModel.Events
 {
-    using System;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
-    using Nautilus.Core.Types;
-    using Nautilus.DomainModel.Events.Base;
-    using Nautilus.DomainModel.Identifiers;
-    using NodaTime;
-
     /// <summary>
     /// Represents an event where an order has been accepted by the broker.
     /// </summary>

@@ -15,12 +15,12 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using Nautilus.Common.Enums;
+using Nautilus.Core.Correctness;
+using Nautilus.Network.Encryption;
+
 namespace Nautilus.Network.Configuration
 {
-    using Nautilus.Common.Enums;
-    using Nautilus.Core.Correctness;
-    using Nautilus.Network.Encryption;
-
     /// <summary>
     /// Represents a messaging protocol configuration.
     /// </summary>

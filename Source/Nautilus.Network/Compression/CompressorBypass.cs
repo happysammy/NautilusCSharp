@@ -15,10 +15,10 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using Nautilus.Common.Interfaces;
+
 namespace Nautilus.Network.Compression
 {
-    using Nautilus.Common.Interfaces;
-
     /// <inheritdoc />
     public sealed class CompressorBypass : ICompressor
     {

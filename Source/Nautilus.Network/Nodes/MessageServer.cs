@@ -15,28 +15,28 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Text;
+using Microsoft.Extensions.Logging;
+using Nautilus.Common.Enums;
+using Nautilus.Common.Interfaces;
+using Nautilus.Common.Logging;
+using Nautilus.Common.Messages.Commands;
+using Nautilus.Common.Messaging;
+using Nautilus.Core.Enums;
+using Nautilus.Core.Message;
+using Nautilus.Core.Types;
+using Nautilus.Messaging;
+using Nautilus.Network.Encryption;
+using Nautilus.Network.Identifiers;
+using Nautilus.Network.Messages;
+using NetMQ.Sockets;
+
 namespace Nautilus.Network.Nodes
 {
-    using System;
-    using System.Collections.Concurrent;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Text;
-    using Microsoft.Extensions.Logging;
-    using Nautilus.Common.Enums;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Logging;
-    using Nautilus.Common.Messages.Commands;
-    using Nautilus.Common.Messaging;
-    using Nautilus.Core.Enums;
-    using Nautilus.Core.Message;
-    using Nautilus.Core.Types;
-    using Nautilus.Messaging;
-    using Nautilus.Network.Encryption;
-    using Nautilus.Network.Identifiers;
-    using Nautilus.Network.Messages;
-    using NetMQ.Sockets;
-
     /// <summary>
     /// The base class for all messaging servers.
     /// </summary>

@@ -15,23 +15,23 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using Nautilus.Common.Enums;
+using Nautilus.Common.Interfaces;
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Correctness;
+using Nautilus.Core.Extensions;
+using Nautilus.DomainModel.Entities;
+using Nautilus.DomainModel.Enums;
+using Nautilus.DomainModel.Identifiers;
+using Nautilus.DomainModel.ValueObjects;
+
 namespace Nautilus.Serialization.DataSerializers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using MongoDB.Bson;
-    using MongoDB.Bson.Serialization;
-    using Nautilus.Common.Enums;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
-    using Nautilus.Core.Extensions;
-    using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
-
     /// <inheritdoc />
     public sealed class InstrumentDataSerializer : IDataSerializer<Instrument>
     {

@@ -15,12 +15,12 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
+using System.Threading.Tasks;
+using Nautilus.Core.Annotations;
+
 namespace Nautilus.Messaging.Internal
 {
-    using System;
-    using System.Threading.Tasks;
-    using Nautilus.Core.Annotations;
-
     /// <summary>
     /// Provides a handler for a specified type of message.
     /// </summary>

@@ -15,14 +15,14 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Nautilus.DomainModel.Aggregates;
+using Nautilus.DomainModel.Entities;
+using Nautilus.DomainModel.Identifiers;
+using Nautilus.DomainModel.ValueObjects;
+using Nautilus.Messaging;
+
 namespace Nautilus.Common.Interfaces
 {
-    using Nautilus.DomainModel.Aggregates;
-    using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Messaging;
-
     /// <summary>
     /// Provides a gateway to the brokers trading network.
     /// </summary>

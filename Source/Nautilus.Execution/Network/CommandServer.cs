@@ -15,21 +15,21 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using Nautilus.Common.Interfaces;
+using Nautilus.Common.Messaging;
+using Nautilus.Core.Message;
+using Nautilus.DomainModel.Aggregates;
+using Nautilus.DomainModel.Commands;
+using Nautilus.Execution.Configuration;
+using Nautilus.Execution.Engine;
+using Nautilus.Network;
+using Nautilus.Network.Encryption;
+using Nautilus.Network.Nodes;
+using NodaTime;
+
 namespace Nautilus.Execution.Network
 {
-    using System.Collections.Generic;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messaging;
-    using Nautilus.Core.Message;
-    using Nautilus.DomainModel.Aggregates;
-    using Nautilus.DomainModel.Commands;
-    using Nautilus.Execution.Configuration;
-    using Nautilus.Execution.Engine;
-    using Nautilus.Network;
-    using Nautilus.Network.Encryption;
-    using Nautilus.Network.Nodes;
-    using NodaTime;
-
     /// <summary>
     /// Provides a command server which receives command messages from the wire, throttles them and
     /// then forwards them to the <see cref="ExecutionEngine"/> as appropriate.

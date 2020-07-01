@@ -15,13 +15,13 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Nautilus.Core.CQS;
+using Nautilus.Data.Keys;
+using Nautilus.DomainModel.Identifiers;
+using Nautilus.DomainModel.ValueObjects;
+
 namespace Nautilus.Data.Interfaces
 {
-    using Nautilus.Core.CQS;
-    using Nautilus.Data.Keys;
-    using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
-
     /// <summary>
     /// Provides a repository for accessing <see cref="Tick"/> data.
     /// </summary>

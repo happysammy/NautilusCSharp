@@ -15,15 +15,15 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Extensions;
+using Nautilus.DomainModel.Enums;
+using Nautilus.DomainModel.Identifiers;
+using Nautilus.DomainModel.ValueObjects;
+using NodaTime;
+
 namespace Nautilus.DomainModel.Entities
 {
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Extensions;
-    using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
-    using NodaTime;
-
     /// <summary>
     /// Represents a tradeable FOREX currency pair.
     /// </summary>

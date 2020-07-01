@@ -15,15 +15,15 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using System.Diagnostics.CodeAnalysis;
+using Nautilus.Core.Extensions;
+using Nautilus.Core.Types;
+using Nautilus.Messaging;
+using Xunit;
+
 namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
 {
-    using System;
-    using System.Diagnostics.CodeAnalysis;
-    using Nautilus.Core.Extensions;
-    using Nautilus.Core.Types;
-    using Nautilus.Messaging;
-    using Xunit;
-
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class TypeExtensionsTests
     {

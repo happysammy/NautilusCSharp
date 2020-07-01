@@ -15,22 +15,22 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
+using System.Diagnostics.CodeAnalysis;
+using Nautilus.Core.Types;
+using Nautilus.DomainModel.Enums;
+using Nautilus.DomainModel.Events;
+using Nautilus.DomainModel.Identifiers;
+using Nautilus.DomainModel.ValueObjects;
+using Nautilus.Serialization.MessageSerializers;
+using Nautilus.TestSuite.TestKit.Fixtures;
+using Nautilus.TestSuite.TestKit.Stubs;
+using NodaTime;
+using Xunit;
+using Xunit.Abstractions;
+
 namespace Nautilus.TestSuite.UnitTests.SerializationTests
 {
-    using System;
-    using System.Diagnostics.CodeAnalysis;
-    using Nautilus.Core.Types;
-    using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Events;
-    using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Serialization.MessageSerializers;
-    using Nautilus.TestSuite.TestKit.Fixtures;
-    using Nautilus.TestSuite.TestKit.Stubs;
-    using NodaTime;
-    using Xunit;
-    using Xunit.Abstractions;
-
     // Required warning suppression for tests
     // (do not remove even if compiler doesn't initially complain).
 #pragma warning disable 8604

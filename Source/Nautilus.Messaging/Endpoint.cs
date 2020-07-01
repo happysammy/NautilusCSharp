@@ -15,14 +15,14 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System.Threading.Tasks;
+using System.Threading.Tasks.Dataflow;
+using Nautilus.Core;
+using Nautilus.Core.Annotations;
+using Nautilus.Messaging.Interfaces;
+
 namespace Nautilus.Messaging
 {
-    using System.Threading.Tasks;
-    using System.Threading.Tasks.Dataflow;
-    using Nautilus.Core;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Messaging.Interfaces;
-
     /// <inheritdoc />
     [Immutable]
     public sealed class Endpoint : IEndpoint

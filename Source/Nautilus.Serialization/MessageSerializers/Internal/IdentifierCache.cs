@@ -15,14 +15,14 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Text;
+using Nautilus.Common.Componentry;
+using Nautilus.DomainModel.Identifiers;
+
 namespace Nautilus.Serialization.MessageSerializers.Internal
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
-    using Nautilus.Common.Componentry;
-    using Nautilus.DomainModel.Identifiers;
-
     /// <summary>
     /// Provides an identifier cache.
     /// </summary>

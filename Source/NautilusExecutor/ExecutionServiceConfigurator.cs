@@ -15,27 +15,27 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using System.IO;
+using System.Reflection;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Nautilus.Common.Configuration;
+using Nautilus.Common.Enums;
+using Nautilus.Core.Extensions;
+using Nautilus.Core.Types;
+using Nautilus.DomainModel.Enums;
+using Nautilus.DomainModel.Identifiers;
+using Nautilus.Execution;
+using Nautilus.Execution.Configuration;
+using Nautilus.Fix;
+using Nautilus.Network;
+using Nautilus.Network.Configuration;
+using Nautilus.Network.Encryption;
+using NodaTime;
+
 namespace NautilusExecutor
 {
-    using System;
-    using System.IO;
-    using System.Reflection;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.Logging;
-    using Nautilus.Common.Configuration;
-    using Nautilus.Common.Enums;
-    using Nautilus.Core.Extensions;
-    using Nautilus.Core.Types;
-    using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Identifiers;
-    using Nautilus.Execution;
-    using Nautilus.Execution.Configuration;
-    using Nautilus.Fix;
-    using Nautilus.Network;
-    using Nautilus.Network.Configuration;
-    using Nautilus.Network.Encryption;
-    using NodaTime;
-
     /// <summary>
     /// Provides the <see cref="NautilusExecutor"/> service configuration.
     /// </summary>

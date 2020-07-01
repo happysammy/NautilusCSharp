@@ -15,26 +15,26 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
+using Microsoft.Extensions.Logging;
+using Nautilus.Common.Componentry;
+using Nautilus.Common.Data;
+using Nautilus.Common.Interfaces;
+using Nautilus.Common.Messages.Commands;
+using Nautilus.Common.Messages.Events;
+using Nautilus.Core.Extensions;
+using Nautilus.Core.Types;
+using Nautilus.Data.Messages.Commands;
+using Nautilus.DomainModel.Identifiers;
+using Nautilus.DomainModel.ValueObjects;
+using Nautilus.Messaging.Interfaces;
+using Nautilus.Scheduling;
+using NodaTime;
+
 namespace Nautilus.Data.Aggregation
 {
-    using System.Collections.Generic;
-    using System.Collections.Immutable;
-    using System.Linq;
-    using Microsoft.Extensions.Logging;
-    using Nautilus.Common.Componentry;
-    using Nautilus.Common.Data;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messages.Commands;
-    using Nautilus.Common.Messages.Events;
-    using Nautilus.Core.Extensions;
-    using Nautilus.Core.Types;
-    using Nautilus.Data.Messages.Commands;
-    using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Messaging.Interfaces;
-    using Nautilus.Scheduling;
-    using NodaTime;
-
     /// <summary>
     /// Provides a bar aggregation controller to manage bar aggregators for many symbols.
     /// </summary>

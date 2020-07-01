@@ -15,25 +15,25 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Text;
+using Microsoft.Extensions.Logging;
+using Nautilus.Common.Componentry;
+using Nautilus.Common.Enums;
+using Nautilus.Common.Interfaces;
+using Nautilus.Common.Logging;
+using Nautilus.Common.Messages.Commands;
+using Nautilus.Core.Enums;
+using Nautilus.Core.Message;
+using Nautilus.Network;
+using Nautilus.Network.Encryption;
+using Nautilus.Network.Identifiers;
+using NetMQ;
+using NetMQ.Sockets;
+
 namespace Nautilus.TestSuite.TestKit.Components
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
-    using Microsoft.Extensions.Logging;
-    using Nautilus.Common.Componentry;
-    using Nautilus.Common.Enums;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Logging;
-    using Nautilus.Common.Messages.Commands;
-    using Nautilus.Core.Enums;
-    using Nautilus.Core.Message;
-    using Nautilus.Network;
-    using Nautilus.Network.Encryption;
-    using Nautilus.Network.Identifiers;
-    using NetMQ;
-    using NetMQ.Sockets;
-
     /// <summary>
     /// Provides a mock requester for testing.
     /// </summary>

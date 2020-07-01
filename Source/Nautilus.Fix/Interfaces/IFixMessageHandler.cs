@@ -15,12 +15,12 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Nautilus.Common.Interfaces;
+using Nautilus.Messaging.Interfaces;
+using QuickFix.FIX44;
+
 namespace Nautilus.Fix.Interfaces
 {
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Messaging.Interfaces;
-    using QuickFix.FIX44;
-
     /// <summary>
     /// The adapter for FIX message handlers.
     /// </summary>

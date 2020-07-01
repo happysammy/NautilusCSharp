@@ -15,22 +15,22 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
+using Nautilus.Common.Componentry;
+using Nautilus.Common.Interfaces;
+using Nautilus.Common.Messages.Commands;
+using Nautilus.Common.Messages.Events;
+using Nautilus.Core.Correctness;
+using Nautilus.Data.Messages.Commands;
+using Nautilus.DomainModel.Enums;
+using Nautilus.DomainModel.Identifiers;
+using Nautilus.DomainModel.ValueObjects;
+using Nautilus.Messaging.Interfaces;
+
 namespace Nautilus.Data.Aggregation
 {
-    using System;
-    using System.Collections.Generic;
-    using Microsoft.Extensions.Logging;
-    using Nautilus.Common.Componentry;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messages.Commands;
-    using Nautilus.Common.Messages.Events;
-    using Nautilus.Core.Correctness;
-    using Nautilus.Data.Messages.Commands;
-    using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Messaging.Interfaces;
-
     /// <summary>
     /// Provides a bar aggregator for a certain symbol.
     /// </summary>

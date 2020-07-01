@@ -15,10 +15,10 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Nautilus.Network;
+
 namespace Nautilus.Execution.Configuration
 {
-    using Nautilus.Network;
-
     /// <summary>
     /// Represents an execution service network configuration.
     /// </summary>

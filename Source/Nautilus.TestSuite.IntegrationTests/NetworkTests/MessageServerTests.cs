@@ -15,30 +15,30 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Text;
+using Nautilus.Common.Enums;
+using Nautilus.Common.Interfaces;
+using Nautilus.Core.Message;
+using Nautilus.Data.Messages.Requests;
+using Nautilus.Network;
+using Nautilus.Network.Compression;
+using Nautilus.Network.Encryption;
+using Nautilus.Network.Messages;
+using Nautilus.Serialization.MessageSerializers;
+using Nautilus.TestSuite.TestKit.Components;
+using Nautilus.TestSuite.TestKit.Facades;
+using Nautilus.TestSuite.TestKit.Fixtures;
+using Nautilus.TestSuite.TestKit.Mocks;
+using Nautilus.TestSuite.TestKit.Stubs;
+using Xunit;
+using Xunit.Abstractions;
+
 namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
-    using System.Text;
-    using Nautilus.Common.Enums;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Message;
-    using Nautilus.Data.Messages.Requests;
-    using Nautilus.Network;
-    using Nautilus.Network.Compression;
-    using Nautilus.Network.Encryption;
-    using Nautilus.Network.Messages;
-    using Nautilus.Serialization.MessageSerializers;
-    using Nautilus.TestSuite.TestKit.Components;
-    using Nautilus.TestSuite.TestKit.Facades;
-    using Nautilus.TestSuite.TestKit.Fixtures;
-    using Nautilus.TestSuite.TestKit.Mocks;
-    using Nautilus.TestSuite.TestKit.Stubs;
-    using Xunit;
-    using Xunit.Abstractions;
-
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class MessageServerTests : NetMQTestBase
     {

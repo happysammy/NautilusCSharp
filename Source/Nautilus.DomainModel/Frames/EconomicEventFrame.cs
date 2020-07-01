@@ -15,15 +15,15 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using System.Linq;
+using Nautilus.Core.Annotations;
+using Nautilus.DomainModel.Enums;
+using Nautilus.DomainModel.ValueObjects;
+using NodaTime;
+
 namespace Nautilus.DomainModel.Frames
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using Nautilus.Core.Annotations;
-    using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.ValueObjects;
-    using NodaTime;
-
     /// <summary>
     /// A container for <see cref="EconomicEvent"/>s.
     /// </summary>

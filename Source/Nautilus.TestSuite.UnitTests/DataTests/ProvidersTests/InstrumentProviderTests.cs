@@ -15,26 +15,26 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using Nautilus.Common.Interfaces;
+using Nautilus.Data.Interfaces;
+using Nautilus.Data.Messages.Requests;
+using Nautilus.Data.Messages.Responses;
+using Nautilus.Data.Providers;
+using Nautilus.DomainModel.Entities;
+using Nautilus.Network.Messages;
+using Nautilus.Serialization.DataSerializers;
+using Nautilus.TestSuite.TestKit.Components;
+using Nautilus.TestSuite.TestKit.Fixtures;
+using Nautilus.TestSuite.TestKit.Mocks;
+using Nautilus.TestSuite.TestKit.Stubs;
+using Xunit;
+using Xunit.Abstractions;
+
 namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Data.Interfaces;
-    using Nautilus.Data.Messages.Requests;
-    using Nautilus.Data.Messages.Responses;
-    using Nautilus.Data.Providers;
-    using Nautilus.DomainModel.Entities;
-    using Nautilus.Network.Messages;
-    using Nautilus.Serialization.DataSerializers;
-    using Nautilus.TestSuite.TestKit.Components;
-    using Nautilus.TestSuite.TestKit.Fixtures;
-    using Nautilus.TestSuite.TestKit.Mocks;
-    using Nautilus.TestSuite.TestKit.Stubs;
-    using Xunit;
-    using Xunit.Abstractions;
-
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class InstrumentProviderTests : NetMQTestBase
     {

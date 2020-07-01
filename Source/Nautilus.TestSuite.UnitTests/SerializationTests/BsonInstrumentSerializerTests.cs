@@ -15,17 +15,17 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Text;
+using Nautilus.Serialization.DataSerializers;
+using Nautilus.TestSuite.TestKit.Fixtures;
+using Nautilus.TestSuite.TestKit.Stubs;
+using Xunit;
+using Xunit.Abstractions;
+
 namespace Nautilus.TestSuite.UnitTests.SerializationTests
 {
-    using System;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Text;
-    using Nautilus.Serialization.DataSerializers;
-    using Nautilus.TestSuite.TestKit.Fixtures;
-    using Nautilus.TestSuite.TestKit.Stubs;
-    using Xunit;
-    using Xunit.Abstractions;
-
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class BsonInstrumentSerializerTests : TestBase
     {

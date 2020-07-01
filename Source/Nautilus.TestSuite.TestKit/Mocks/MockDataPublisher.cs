@@ -15,19 +15,19 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Text;
+using Nautilus.Common.Enums;
+using Nautilus.Common.Interfaces;
+using Nautilus.Network;
+using Nautilus.Network.Compression;
+using Nautilus.Network.Encryption;
+using Nautilus.Network.Nodes;
+
 namespace Nautilus.TestSuite.TestKit.Mocks
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Text;
-    using Nautilus.Common.Enums;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Network;
-    using Nautilus.Network.Compression;
-    using Nautilus.Network.Encryption;
-    using Nautilus.Network.Nodes;
-
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class MockDataPublisher : PublisherDataBus
     {

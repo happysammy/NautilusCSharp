@@ -15,27 +15,27 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
+using System.Diagnostics.CodeAnalysis;
+using Nautilus.Common.Data;
+using Nautilus.Data.Keys;
+using Nautilus.DomainModel.Enums;
+using Nautilus.DomainModel.Frames;
+using Nautilus.DomainModel.ValueObjects;
+using Nautilus.Redis;
+using Nautilus.Redis.Data;
+using Nautilus.Redis.Data.Internal;
+using Nautilus.Serialization.DataSerializers;
+using Nautilus.TestSuite.TestKit.Components;
+using Nautilus.TestSuite.TestKit.Fixtures;
+using Nautilus.TestSuite.TestKit.Stubs;
+using NodaTime;
+using StackExchange.Redis;
+using Xunit;
+using Xunit.Abstractions;
+
 namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 {
-    using System;
-    using System.Diagnostics.CodeAnalysis;
-    using Nautilus.Common.Data;
-    using Nautilus.Data.Keys;
-    using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Frames;
-    using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Redis;
-    using Nautilus.Redis.Data;
-    using Nautilus.Redis.Data.Internal;
-    using Nautilus.Serialization.DataSerializers;
-    using Nautilus.TestSuite.TestKit.Components;
-    using Nautilus.TestSuite.TestKit.Fixtures;
-    using Nautilus.TestSuite.TestKit.Stubs;
-    using NodaTime;
-    using StackExchange.Redis;
-    using Xunit;
-    using Xunit.Abstractions;
-
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsShouldBeDocumented", Justification = "Test Suite")]
     public sealed class RedisBarRepositoryTests : TestBase, IDisposable
     {

@@ -15,12 +15,12 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Correctness;
+
 namespace Nautilus.Network
 {
-    using System;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
-
     /// <summary>
     /// Represents a valid network port number. Should be between 49152 to 65535 to avoid registered
     /// IANA port collision.

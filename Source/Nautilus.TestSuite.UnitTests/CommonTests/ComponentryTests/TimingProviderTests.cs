@@ -15,15 +15,15 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
+using Nautilus.Common.Componentry;
+using Nautilus.Core.Types;
+using Nautilus.TestSuite.TestKit.Stubs;
+using NodaTime;
+using Xunit;
+
 namespace Nautilus.TestSuite.UnitTests.CommonTests.ComponentryTests
 {
-    using System.Diagnostics.CodeAnalysis;
-    using Nautilus.Common.Componentry;
-    using Nautilus.Core.Types;
-    using Nautilus.TestSuite.TestKit.Stubs;
-    using NodaTime;
-    using Xunit;
-
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global", Justification = "Test Suite")]
     public sealed class TimingProviderTests

@@ -15,10 +15,10 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Nautilus.Core.Annotations;
+
 namespace Nautilus.Common.Enums
 {
-    using Nautilus.Core.Annotations;
-
     /// <summary>
     /// Represents a binary to text data encoding specification.
     /// </summary>

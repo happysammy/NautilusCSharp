@@ -15,15 +15,15 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using Nautilus.Common.Enums;
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Correctness;
+using Nautilus.Core.Message;
+using NodaTime;
+
 namespace Nautilus.Data.Messages.Responses
 {
-    using System;
-    using Nautilus.Common.Enums;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
-    using Nautilus.Core.Message;
-    using NodaTime;
-
     /// <summary>
     /// Represents a data response.
     /// </summary>

@@ -15,12 +15,12 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Correctness;
+
 namespace Nautilus.DomainModel.FiniteStateMachine
 {
-    using System;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
-
     /// <summary>
     /// Represents a possible state within the <see cref="FiniteStateMachine"/>.
     /// </summary>

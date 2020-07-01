@@ -15,15 +15,15 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Correctness;
+using Nautilus.Core.Message;
+using Nautilus.Messaging;
+using NodaTime;
+
 namespace Nautilus.Common.Messages.Commands
 {
-    using System;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
-    using Nautilus.Core.Message;
-    using Nautilus.Messaging;
-    using NodaTime;
-
     /// <summary>
     /// Represents a command to subscribe a component to type T.
     /// </summary>

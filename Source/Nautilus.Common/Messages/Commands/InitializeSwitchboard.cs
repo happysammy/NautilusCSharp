@@ -15,15 +15,15 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using Nautilus.Common.Messaging;
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Correctness;
+using Nautilus.Core.Message;
+using NodaTime;
+
 namespace Nautilus.Common.Messages.Commands
 {
-    using System;
-    using Nautilus.Common.Messaging;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
-    using Nautilus.Core.Message;
-    using NodaTime;
-
     /// <summary>
     /// Represents a command to initialize a messaging switchboard.
     /// </summary>

@@ -15,12 +15,12 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System.Text;
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Types;
+
 namespace Nautilus.Messaging
 {
-    using System.Text;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Types;
-
     /// <summary>
     /// Represents a components messaging address within a service.
     /// </summary>

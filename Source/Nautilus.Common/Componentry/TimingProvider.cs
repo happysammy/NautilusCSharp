@@ -15,14 +15,14 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Correctness;
+using Nautilus.Core.Extensions;
+using Nautilus.Core.Types;
+using NodaTime;
+
 namespace Nautilus.Common.Componentry
 {
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
-    using Nautilus.Core.Extensions;
-    using Nautilus.Core.Types;
-    using NodaTime;
-
     /// <summary>
     /// Provides useful methods relating to time.
     /// </summary>

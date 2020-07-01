@@ -15,10 +15,10 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Nautilus.Network;
+
 namespace Nautilus.Data.Configuration
 {
-    using Nautilus.Network;
-
     /// <summary>
     /// Represents a data service network configuration.
     /// </summary>

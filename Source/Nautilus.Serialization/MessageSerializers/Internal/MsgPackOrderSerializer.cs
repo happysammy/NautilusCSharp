@@ -15,21 +15,21 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Text;
+using MessagePack;
+using Nautilus.Common.Componentry;
+using Nautilus.Core.Correctness;
+using Nautilus.Core.Extensions;
+using Nautilus.DomainModel.Aggregates;
+using Nautilus.DomainModel.Enums;
+using Nautilus.DomainModel.Factories;
+using Nautilus.DomainModel.Identifiers;
+
 namespace Nautilus.Serialization.MessageSerializers.Internal
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Text;
-    using MessagePack;
-    using Nautilus.Common.Componentry;
-    using Nautilus.Core.Correctness;
-    using Nautilus.Core.Extensions;
-    using Nautilus.DomainModel.Aggregates;
-    using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Factories;
-    using Nautilus.DomainModel.Identifiers;
-
     /// <summary>
     /// Provides serialization of <see cref="Order"/> objects to MessagePack specification bytes.
     /// </summary>

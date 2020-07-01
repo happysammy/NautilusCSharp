@@ -15,14 +15,14 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Correctness;
+using Nautilus.Core.Extensions;
+using Nautilus.Core.Types;
+using Nautilus.DomainModel.Enums;
+
 namespace Nautilus.DomainModel.Identifiers
 {
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
-    using Nautilus.Core.Extensions;
-    using Nautilus.Core.Types;
-    using Nautilus.DomainModel.Enums;
-
     /// <summary>
     /// Represents a valid account identifier. The identifier values combination must be unique at
     /// the fund level.

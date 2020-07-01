@@ -15,20 +15,19 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Correctness;
+using Nautilus.Core.Enums;
+using NodaTime;
+
 namespace Nautilus.Core.Message
 {
-    using System;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
-    using Nautilus.Core.Enums;
-    using Nautilus.Core.Types;
-    using NodaTime;
-
     /// <summary>
     /// The base class for all <see cref="Response"/> messages.
     /// </summary>
     [Immutable]
-    public abstract class Response : Message
+    public abstract class Response : Types.Message
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Response"/> class.

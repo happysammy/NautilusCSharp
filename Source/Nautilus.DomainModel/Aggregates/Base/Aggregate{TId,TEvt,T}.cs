@@ -15,14 +15,14 @@
 // </copyright>
 //---------------------------------------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using Nautilus.Core.Message;
+using Nautilus.Core.Types;
+using Nautilus.DomainModel.Entities.Base;
+using NodaTime;
+
 namespace Nautilus.DomainModel.Aggregates.Base
 {
-    using System.Collections.Generic;
-    using Nautilus.Core.Message;
-    using Nautilus.Core.Types;
-    using Nautilus.DomainModel.Entities.Base;
-    using NodaTime;
-
     /// <summary>
     /// The base class for all aggregates. Aggregates are uniquely identifiable domain objects which
     /// are made up of an aggregation of entities.

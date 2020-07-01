@@ -15,13 +15,13 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using Nautilus.Core;
+using Nautilus.Core.Annotations;
+using Nautilus.DomainModel.Identifiers;
+
 namespace Nautilus.DomainModel.ValueObjects
 {
-    using System;
-    using Nautilus.Core;
-    using Nautilus.Core.Annotations;
-    using Nautilus.DomainModel.Identifiers;
-
     /// <summary>
     /// Represents a bar type including a <see cref="Symbol"/> and <see cref="BarSpecification"/>.
     /// </summary>

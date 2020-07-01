@@ -15,21 +15,21 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using Microsoft.Extensions.Logging;
+using Nautilus.Common.Interfaces;
+using Nautilus.Common.Logging;
+using Nautilus.Common.Messages.Events;
+using Nautilus.DomainModel.Identifiers;
+using Nautilus.Fix.Interfaces;
+using QuickFix;
+using QuickFix.Fields;
+using QuickFix.FIX44;
+using QuickFix.Transport;
+using Message = QuickFix.Message;
+
 namespace Nautilus.Fix
 {
-    using System;
-    using Microsoft.Extensions.Logging;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Logging;
-    using Nautilus.Common.Messages.Events;
-    using Nautilus.DomainModel.Identifiers;
-    using Nautilus.Fix.Interfaces;
-    using QuickFix;
-    using QuickFix.Fields;
-    using QuickFix.FIX44;
-    using QuickFix.Transport;
-    using Message = QuickFix.Message;
-
     /// <summary>
     /// The base class for all FIX components.
     /// </summary>

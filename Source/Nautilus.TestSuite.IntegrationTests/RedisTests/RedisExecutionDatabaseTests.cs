@@ -15,26 +15,26 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using Nautilus.Common.Interfaces;
+using Nautilus.DomainModel.Aggregates;
+using Nautilus.DomainModel.Enums;
+using Nautilus.DomainModel.Events;
+using Nautilus.DomainModel.Identifiers;
+using Nautilus.DomainModel.ValueObjects;
+using Nautilus.Redis;
+using Nautilus.Redis.Execution;
+using Nautilus.Serialization.MessageSerializers;
+using Nautilus.TestSuite.TestKit.Components;
+using Nautilus.TestSuite.TestKit.Stubs;
+using StackExchange.Redis;
+using Xunit;
+using Xunit.Abstractions;
+
 namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 {
-    using System;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.DomainModel.Aggregates;
-    using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Events;
-    using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Redis;
-    using Nautilus.Redis.Execution;
-    using Nautilus.Serialization.MessageSerializers;
-    using Nautilus.TestSuite.TestKit.Components;
-    using Nautilus.TestSuite.TestKit.Stubs;
-    using StackExchange.Redis;
-    using Xunit;
-    using Xunit.Abstractions;
-
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class RedisExecutionDatabaseTests : IDisposable
     {

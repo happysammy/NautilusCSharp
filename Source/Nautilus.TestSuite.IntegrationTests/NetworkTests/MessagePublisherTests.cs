@@ -15,24 +15,24 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
+using Nautilus.Common.Data;
+using Nautilus.Common.Enums;
+using Nautilus.Common.Interfaces;
+using Nautilus.Network;
+using Nautilus.Network.Encryption;
+using Nautilus.TestSuite.TestKit.Components;
+using Nautilus.TestSuite.TestKit.Fixtures;
+using Nautilus.TestSuite.TestKit.Mocks;
+using NetMQ;
+using NetMQ.Sockets;
+using Xunit;
+using Xunit.Abstractions;
+using Encoding = System.Text.Encoding;
+
 namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 {
-    using System.Diagnostics.CodeAnalysis;
-    using System.Threading.Tasks;
-    using Nautilus.Common.Data;
-    using Nautilus.Common.Enums;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Network;
-    using Nautilus.Network.Encryption;
-    using Nautilus.TestSuite.TestKit.Components;
-    using Nautilus.TestSuite.TestKit.Fixtures;
-    using Nautilus.TestSuite.TestKit.Mocks;
-    using NetMQ;
-    using NetMQ.Sockets;
-    using Xunit;
-    using Xunit.Abstractions;
-    using Encoding = System.Text.Encoding;
-
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class MessagePublisherTests : NetMQTestBase
     {

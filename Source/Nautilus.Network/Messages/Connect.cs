@@ -15,15 +15,15 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Correctness;
+using Nautilus.Core.Message;
+using Nautilus.Network.Identifiers;
+using NodaTime;
+
 namespace Nautilus.Network.Messages
 {
-    using System;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
-    using Nautilus.Core.Message;
-    using Nautilus.Network.Identifiers;
-    using NodaTime;
-
     /// <summary>
     /// Represents a request to connect to a session.
     /// </summary>

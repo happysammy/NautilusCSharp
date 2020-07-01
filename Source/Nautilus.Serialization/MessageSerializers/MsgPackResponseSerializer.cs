@@ -15,19 +15,19 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using MessagePack;
+using Nautilus.Common.Enums;
+using Nautilus.Common.Interfaces;
+using Nautilus.Core.Correctness;
+using Nautilus.Core.Extensions;
+using Nautilus.Core.Message;
+using Nautilus.Data.Messages.Responses;
+using Nautilus.Network.Messages;
+using Nautilus.Serialization.MessageSerializers.Internal;
+
 namespace Nautilus.Serialization.MessageSerializers
 {
-    using System.Collections.Generic;
-    using MessagePack;
-    using Nautilus.Common.Enums;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Correctness;
-    using Nautilus.Core.Extensions;
-    using Nautilus.Core.Message;
-    using Nautilus.Data.Messages.Responses;
-    using Nautilus.Network.Messages;
-    using Nautilus.Serialization.MessageSerializers.Internal;
-
     /// <summary>
     /// Provides a <see cref="Response"/> message binary serializer for the MessagePack specification.
     /// </summary>

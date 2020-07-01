@@ -15,15 +15,15 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using Nautilus.Common.Interfaces;
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Message;
+using Nautilus.DomainModel.ValueObjects;
+using NodaTime;
+
 namespace Nautilus.Data.Messages.Commands
 {
-    using System;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Message;
-    using Nautilus.DomainModel.ValueObjects;
-    using NodaTime;
-
     /// <summary>
     /// Represents a command to close a <see cref="Bar"/> of the given <see cref="Specification"/>.
     /// </summary>

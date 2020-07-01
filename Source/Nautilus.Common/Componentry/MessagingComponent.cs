@@ -15,19 +15,19 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Nautilus.Common.Enums;
+using Nautilus.Common.Interfaces;
+using Nautilus.Common.Logging;
+using Nautilus.Common.Messages.Commands;
+using Nautilus.Messaging;
+using Nautilus.Messaging.Interfaces;
+
 namespace Nautilus.Common.Componentry
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using Microsoft.Extensions.Logging;
-    using Nautilus.Common.Enums;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Logging;
-    using Nautilus.Common.Messages.Commands;
-    using Nautilus.Messaging;
-    using Nautilus.Messaging.Interfaces;
-
     /// <summary>
     /// The base class for all service components.
     /// </summary>

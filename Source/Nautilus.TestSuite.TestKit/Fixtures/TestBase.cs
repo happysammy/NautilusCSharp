@@ -15,10 +15,10 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Xunit.Abstractions;
+
 namespace Nautilus.TestSuite.TestKit.Fixtures
 {
-    using Xunit.Abstractions;
-
     /// <summary>
     /// The base class for all tests.
     /// </summary>

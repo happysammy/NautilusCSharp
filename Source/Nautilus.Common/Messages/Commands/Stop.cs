@@ -15,13 +15,13 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Message;
+using NodaTime;
+
 namespace Nautilus.Common.Messages.Commands
 {
-    using System;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Message;
-    using NodaTime;
-
     /// <summary>
     /// Represents a command to stop a component.
     /// </summary>

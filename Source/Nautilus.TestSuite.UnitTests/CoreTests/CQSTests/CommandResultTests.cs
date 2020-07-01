@@ -15,12 +15,12 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
+using Nautilus.Core.CQS;
+using Xunit;
+
 namespace Nautilus.TestSuite.UnitTests.CoreTests.CQSTests
 {
-    using System.Diagnostics.CodeAnalysis;
-    using Nautilus.Core.CQS;
-    using Xunit;
-
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class CommandResultTests
     {

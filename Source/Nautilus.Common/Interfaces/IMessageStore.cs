@@ -15,12 +15,12 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using Nautilus.Core.Message;
+using Nautilus.Messaging;
+
 namespace Nautilus.Common.Interfaces
 {
-    using System.Collections.Generic;
-    using Nautilus.Core.Message;
-    using Nautilus.Messaging;
-
     /// <summary>
     /// Provides an interface for message stores.
     /// </summary>

@@ -15,12 +15,12 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using Nautilus.DomainModel.Aggregates;
+using Nautilus.DomainModel.Identifiers;
+
 namespace Nautilus.Execution.Interfaces
 {
-    using System.Collections.Generic;
-    using Nautilus.DomainModel.Aggregates;
-    using Nautilus.DomainModel.Identifiers;
-
     /// <summary>
     /// Provides an adapter to an execution databases read operations.
     /// </summary>

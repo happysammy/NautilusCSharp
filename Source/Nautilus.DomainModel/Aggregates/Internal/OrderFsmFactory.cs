@@ -15,14 +15,14 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using Nautilus.DomainModel.Enums;
+using Nautilus.DomainModel.Events;
+using Nautilus.DomainModel.FiniteStateMachine;
+
 namespace Nautilus.DomainModel.Aggregates.Internal
 {
-    using System.Collections.Generic;
-    using System.Collections.Immutable;
-    using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Events;
-    using Nautilus.DomainModel.FiniteStateMachine;
-
     /// <summary>
     /// Provides a <see cref="FiniteStateMachine"/> for <see cref="Order"/>s.
     /// </summary>

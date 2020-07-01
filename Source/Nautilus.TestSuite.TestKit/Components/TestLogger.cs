@@ -15,14 +15,14 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.Logging;
+using Xunit.Abstractions;
+
 namespace Nautilus.TestSuite.TestKit.Components
 {
-    using System;
-    using System.Collections.Concurrent;
-    using System.Diagnostics.CodeAnalysis;
-    using Microsoft.Extensions.Logging;
-    using Xunit.Abstractions;
-
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class TestLogger : ILogger
     {

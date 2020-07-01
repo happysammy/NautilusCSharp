@@ -15,11 +15,11 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Nautilus.Common.Interfaces;
+using NodaTime;
+
 namespace Nautilus.TestSuite.TestKit.Components
 {
-    using Nautilus.Common.Interfaces;
-    using NodaTime;
-
     /// <inheritdoc/>
     public sealed class TestClock : IZonedClock
     {

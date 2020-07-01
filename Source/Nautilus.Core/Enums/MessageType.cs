@@ -15,10 +15,10 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Nautilus.Core.Annotations;
+
 namespace Nautilus.Core.Enums
 {
-    using Nautilus.Core.Annotations;
-
     /// <summary>
     /// Represents a message type group.
     /// </summary>

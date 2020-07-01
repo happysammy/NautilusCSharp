@@ -15,32 +15,32 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using Nautilus.Common.Componentry;
+using Nautilus.Common.Configuration;
+using Nautilus.Common.Data;
+using Nautilus.Common.Interfaces;
+using Nautilus.Common.Messages.Commands;
+using Nautilus.Common.Messaging;
+using Nautilus.Core.Correctness;
+using Nautilus.Data;
+using Nautilus.Data.Aggregation;
+using Nautilus.Data.Network;
+using Nautilus.Data.Providers;
+using Nautilus.Fix;
+using Nautilus.Fxcm;
+using Nautilus.Messaging;
+using Nautilus.Messaging.Interfaces;
+using Nautilus.Network.Compression;
+using Nautilus.Redis.Data;
+using Nautilus.Scheduling;
+using Nautilus.Serialization.DataSerializers;
+using Nautilus.Serialization.MessageSerializers;
+using NodaTime;
+using StackExchange.Redis;
+
 namespace NautilusData
 {
-    using System.Collections.Generic;
-    using Nautilus.Common.Componentry;
-    using Nautilus.Common.Configuration;
-    using Nautilus.Common.Data;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messages.Commands;
-    using Nautilus.Common.Messaging;
-    using Nautilus.Core.Correctness;
-    using Nautilus.Data;
-    using Nautilus.Data.Aggregation;
-    using Nautilus.Data.Network;
-    using Nautilus.Data.Providers;
-    using Nautilus.Fix;
-    using Nautilus.Fxcm;
-    using Nautilus.Messaging;
-    using Nautilus.Messaging.Interfaces;
-    using Nautilus.Network.Compression;
-    using Nautilus.Redis.Data;
-    using Nautilus.Scheduling;
-    using Nautilus.Serialization.DataSerializers;
-    using Nautilus.Serialization.MessageSerializers;
-    using NodaTime;
-    using StackExchange.Redis;
-
     /// <summary>
     /// Provides a factory for creating the <see cref="DataService"/>.
     /// </summary>

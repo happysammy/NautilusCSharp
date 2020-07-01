@@ -15,16 +15,16 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using System.Diagnostics;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
+using Microsoft.Extensions.Logging;
+using Nautilus.Core.Correctness;
+
 namespace Nautilus.Common.Configuration
 {
-    using System;
-    using System.Diagnostics;
-    using System.Reflection;
-    using System.Runtime.InteropServices;
-    using System.Runtime.Versioning;
-    using Microsoft.Extensions.Logging;
-    using Nautilus.Core.Correctness;
-
     /// <summary>
     /// Provides a means of checking dependency versions and outputting to the log at service initialization.
     /// </summary>

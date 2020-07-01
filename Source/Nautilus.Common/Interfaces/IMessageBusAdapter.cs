@@ -15,13 +15,13 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using Nautilus.Core.Types;
+using Nautilus.Messaging;
+using NodaTime;
+
 namespace Nautilus.Common.Interfaces
 {
-    using System;
-    using Nautilus.Core.Types;
-    using Nautilus.Messaging;
-    using NodaTime;
-
     /// <summary>
     /// Provides a means for components to send messages to other components via the message bus.
     /// </summary>

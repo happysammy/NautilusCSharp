@@ -15,10 +15,10 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System.Threading;
+
 namespace Nautilus.Scheduling.Internal
 {
-    using System.Threading;
-
     /// <summary>
     /// Implementation of the java.concurrent.util AtomicReference type.
     ///

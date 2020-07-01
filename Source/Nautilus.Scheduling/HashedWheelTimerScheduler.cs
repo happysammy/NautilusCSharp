@@ -15,24 +15,24 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Nautilus.Common.Componentry;
+using Nautilus.Common.Interfaces;
+using Nautilus.Common.Messages.Commands;
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Correctness;
+using Nautilus.Core.Extensions;
+using Nautilus.Messaging.Interfaces;
+using Nautilus.Scheduling.Internal;
+using NodaTime;
+
 namespace Nautilus.Scheduling
 {
-    using System;
-    using System.Collections.Concurrent;
-    using System.Collections.Generic;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Microsoft.Extensions.Logging;
-    using Nautilus.Common.Componentry;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messages.Commands;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
-    using Nautilus.Core.Extensions;
-    using Nautilus.Messaging.Interfaces;
-    using Nautilus.Scheduling.Internal;
-    using NodaTime;
-
     /// <summary>
     /// This <see cref="IScheduler"/> implementation is built using a revolving wheel of buckets
     /// with each bucket belonging to a specific time resolution. As the "clock" of the scheduler

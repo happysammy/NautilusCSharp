@@ -15,15 +15,15 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
+using Nautilus.Common.Interfaces;
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Correctness;
+using Nautilus.Core.Message;
+using NodaTime;
+
 namespace Nautilus.Data.Messages.Commands
 {
-    using System;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
-    using Nautilus.Core.Message;
-    using NodaTime;
-
     /// <summary>
     /// Represents a scheduled command to trim the tick data with timestamps prior to the trim from date time.
     /// </summary>

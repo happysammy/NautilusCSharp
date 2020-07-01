@@ -15,10 +15,10 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System.IO;
+
 namespace Nautilus.Common.Configuration
 {
-    using System.IO;
-
     /// <summary>
     /// Provides a builder for required system directories and files.
     /// </summary>

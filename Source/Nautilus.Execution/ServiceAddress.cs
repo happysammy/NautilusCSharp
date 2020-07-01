@@ -15,10 +15,10 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Nautilus.Messaging;
+
 namespace Nautilus.Execution
 {
-    using Nautilus.Messaging;
-
     /// <summary>
     /// Provides execution service component messaging addresses.
     /// </summary>

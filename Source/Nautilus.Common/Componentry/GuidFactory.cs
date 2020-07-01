@@ -15,11 +15,11 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using Nautilus.Common.Interfaces;
+
 namespace Nautilus.Common.Componentry
 {
-    using System;
-    using Nautilus.Common.Interfaces;
-
     /// <summary>
     /// Provides <see cref="Guid"/>(s) for the service.
     /// </summary>

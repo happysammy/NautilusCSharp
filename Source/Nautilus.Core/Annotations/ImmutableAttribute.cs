@@ -15,10 +15,10 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+
 namespace Nautilus.Core.Annotations
 {
-    using System;
-
     /// <summary>
     /// This decorative attribute indicates that the annotated class or structure should be completely
     /// immutable to fulfill its design specification. The internal state of the object is set at

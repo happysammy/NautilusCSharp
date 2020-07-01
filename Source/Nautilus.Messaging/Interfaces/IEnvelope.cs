@@ -15,12 +15,12 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using Nautilus.Core.Types;
+using NodaTime;
+
 namespace Nautilus.Messaging.Interfaces
 {
-    using System;
-    using Nautilus.Core.Types;
-    using NodaTime;
-
     /// <summary>
     /// Represents a generic messaging envelope.
     /// </summary>

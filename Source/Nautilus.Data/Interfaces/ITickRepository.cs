@@ -15,11 +15,11 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using Nautilus.DomainModel.ValueObjects;
+
 namespace Nautilus.Data.Interfaces
 {
-    using System.Collections.Generic;
-    using Nautilus.DomainModel.ValueObjects;
-
     /// <summary>
     /// Provides a repository for accessing <see cref="Tick"/> data.
     /// </summary>

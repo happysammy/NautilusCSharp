@@ -15,11 +15,11 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
+using NodaTime;
+
 namespace Nautilus.Scheduling
 {
-    using System;
-    using NodaTime;
-
     /// <summary>
     /// Provides an interface which defines a scheduler that is able to execute actions on a set schedule.
     /// </summary>

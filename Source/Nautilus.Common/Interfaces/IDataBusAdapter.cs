@@ -15,14 +15,14 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using Nautilus.DomainModel.Entities;
+using Nautilus.DomainModel.ValueObjects;
+using Nautilus.Messaging;
+using NodaTime;
+
 namespace Nautilus.Common.Interfaces
 {
-    using System;
-    using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Messaging;
-    using NodaTime;
-
     /// <summary>
     /// Provides a means for components to subscribe to and unsubscribe from various data types.
     /// </summary>

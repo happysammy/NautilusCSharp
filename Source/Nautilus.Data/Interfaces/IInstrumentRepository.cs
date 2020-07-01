@@ -15,11 +15,11 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Nautilus.DomainModel.Entities;
+using Nautilus.DomainModel.Identifiers;
+
 namespace Nautilus.Data.Interfaces
 {
-    using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.Identifiers;
-
     /// <summary>
     /// Provides a repository for accessing <see cref="Instrument"/> data.
     /// </summary>

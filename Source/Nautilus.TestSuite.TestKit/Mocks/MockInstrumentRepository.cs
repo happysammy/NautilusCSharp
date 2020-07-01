@@ -15,17 +15,17 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using Nautilus.Common.Interfaces;
+using Nautilus.Core.CQS;
+using Nautilus.Data.Interfaces;
+using Nautilus.DomainModel.Entities;
+using Nautilus.DomainModel.Identifiers;
+
 namespace Nautilus.TestSuite.TestKit.Mocks
 {
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Core.CQS;
-    using Nautilus.Data.Interfaces;
-    using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.Identifiers;
-
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class MockInstrumentRepository : IInstrumentRepository
     {

@@ -15,16 +15,16 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using Nautilus.Core;
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Correctness;
+using Nautilus.Core.Extensions;
+using Nautilus.DomainModel.Identifiers;
+using NodaTime;
+
 namespace Nautilus.DomainModel.ValueObjects
 {
-    using System;
-    using Nautilus.Core;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
-    using Nautilus.Core.Extensions;
-    using Nautilus.DomainModel.Identifiers;
-    using NodaTime;
-
     /// <summary>
     /// Represents a financial market tick.
     /// </summary>

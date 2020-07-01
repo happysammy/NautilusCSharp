@@ -15,17 +15,17 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
+using Nautilus.DomainModel.Frames;
+using Nautilus.DomainModel.ValueObjects;
+using Nautilus.TestSuite.TestKit.Fixtures;
+using Nautilus.TestSuite.TestKit.Stubs;
+using NodaTime;
+using Xunit;
+using Xunit.Abstractions;
+
 namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FramesTests
 {
-    using System.Diagnostics.CodeAnalysis;
-    using Nautilus.DomainModel.Frames;
-    using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.TestSuite.TestKit.Fixtures;
-    using Nautilus.TestSuite.TestKit.Stubs;
-    using NodaTime;
-    using Xunit;
-    using Xunit.Abstractions;
-
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class BarDataFrameTests : TestBase
     {

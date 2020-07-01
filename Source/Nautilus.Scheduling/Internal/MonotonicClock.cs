@@ -15,12 +15,12 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System.Diagnostics;
+using NodaTime;
+using NodaTime.Extensions;
+
 namespace Nautilus.Scheduling.Internal
 {
-    using System.Diagnostics;
-    using NodaTime;
-    using NodaTime.Extensions;
-
     /// <summary>
     /// Provides a monotonic clock implementation based on total uptime.
     /// Used for keeping accurate time internally.

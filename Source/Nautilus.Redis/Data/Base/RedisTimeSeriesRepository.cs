@@ -15,22 +15,22 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Extensions.Logging;
+using Nautilus.Common.Data;
+using Nautilus.Common.Interfaces;
+using Nautilus.Common.Messages.Commands;
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Correctness;
+using Nautilus.Core.CQS;
+using Nautilus.Core.Extensions;
+using Nautilus.Data.Interfaces;
+using StackExchange.Redis;
+
 namespace Nautilus.Redis.Data.Base
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Microsoft.Extensions.Logging;
-    using Nautilus.Common.Data;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messages.Commands;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
-    using Nautilus.Core.CQS;
-    using Nautilus.Core.Extensions;
-    using Nautilus.Data.Interfaces;
-    using StackExchange.Redis;
-
     /// <summary>
     /// The base class for all redis time series repositories.
     /// </summary>

@@ -15,13 +15,13 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Correctness;
+using Nautilus.Core.Extensions;
+using Nautilus.Core.Types;
+
 namespace Nautilus.DomainModel.Identifiers
 {
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
-    using Nautilus.Core.Extensions;
-    using Nautilus.Core.Types;
-
     /// <summary>
     /// Represents valid venue identifier. A venue is the tradeable location for financial market
     /// instruments. The identifier value must be unique at the fund level.

@@ -15,13 +15,13 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Nautilus.Core.Annotations;
+using Nautilus.DomainModel.Aggregates;
+using Nautilus.DomainModel.Entities.Base;
+using Nautilus.DomainModel.Identifiers;
+
 namespace Nautilus.DomainModel.Entities
 {
-    using Nautilus.Core.Annotations;
-    using Nautilus.DomainModel.Aggregates;
-    using Nautilus.DomainModel.Entities.Base;
-    using Nautilus.DomainModel.Identifiers;
-
     /// <summary>
     /// Represents a collection of orders being an entry, stop-loss and optional take-profit to
     /// be managed together.

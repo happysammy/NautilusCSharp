@@ -15,11 +15,11 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using Nautilus.Messaging.Interfaces;
+using NodaTime;
+
 namespace Nautilus.Scheduling
 {
-    using Nautilus.Messaging.Interfaces;
-    using NodaTime;
-
     /// <summary>
     /// Provides an interface which defines a scheduler that is able to send messages on a set schedule.
     /// </summary>

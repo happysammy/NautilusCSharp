@@ -15,18 +15,18 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Threading.Tasks.Dataflow;
+using Microsoft.Extensions.Logging;
+using Nautilus.Common.Componentry;
+using Nautilus.Common.Interfaces;
+using Nautilus.Common.Logging;
+using NetMQ;
+
 namespace Nautilus.Network
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using System.Threading.Tasks.Dataflow;
-    using Microsoft.Extensions.Logging;
-    using Nautilus.Common.Componentry;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Logging;
-    using NetMQ;
-
     /// <summary>
     /// Provides an asynchronous duplex message queue.
     /// </summary>

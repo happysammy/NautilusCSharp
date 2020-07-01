@@ -15,12 +15,12 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Correctness;
+using Nautilus.DomainModel.Identifiers;
+
 namespace Nautilus.Fix
 {
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
-    using Nautilus.DomainModel.Identifiers;
-
     /// <summary>
     /// Represents the credentials for a FIX session.
     /// </summary>

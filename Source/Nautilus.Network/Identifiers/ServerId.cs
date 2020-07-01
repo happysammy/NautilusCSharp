@@ -15,11 +15,11 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Types;
+
 namespace Nautilus.Network.Identifiers
 {
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Types;
-
     /// <summary>
     /// Represents a unique server identifier.
     /// </summary>

@@ -15,19 +15,19 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using Nautilus.Core.Collections;
+using Nautilus.Core.Correctness;
+using Nautilus.DomainModel.Aggregates.Base;
+using Nautilus.DomainModel.Enums;
+using Nautilus.DomainModel.Events.Base;
+using Nautilus.DomainModel.Identifiers;
+using Nautilus.DomainModel.ValueObjects;
+using NodaTime;
+
 namespace Nautilus.DomainModel.Aggregates
 {
-    using System;
-    using System.Collections.Generic;
-    using Nautilus.Core.Collections;
-    using Nautilus.Core.Correctness;
-    using Nautilus.DomainModel.Aggregates.Base;
-    using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Events.Base;
-    using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
-    using NodaTime;
-
     /// <summary>
     /// Represents a financial market position.
     /// </summary>

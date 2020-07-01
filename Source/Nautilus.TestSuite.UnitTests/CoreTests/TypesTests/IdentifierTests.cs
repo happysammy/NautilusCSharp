@@ -15,12 +15,12 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
+using Nautilus.Core.Types;
+using Xunit;
+
 namespace Nautilus.TestSuite.UnitTests.CoreTests.TypesTests
 {
-    using System.Diagnostics.CodeAnalysis;
-    using Nautilus.Core.Types;
-    using Xunit;
-
     // Required warning suppression for tests
     // (do not remove even if compiler doesn't initially complain).
 #pragma warning disable 8602

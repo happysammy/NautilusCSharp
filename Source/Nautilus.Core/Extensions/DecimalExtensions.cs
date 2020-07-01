@@ -15,11 +15,11 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using Nautilus.Core.Correctness;
+
 namespace Nautilus.Core.Extensions
 {
-    using System;
-    using Nautilus.Core.Correctness;
-
     /// <summary>
     /// Provides useful generic <see cref="decimal"/> extension methods.
     /// </summary>

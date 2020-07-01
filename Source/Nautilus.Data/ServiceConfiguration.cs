@@ -15,13 +15,13 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Microsoft.Extensions.Logging;
+using Nautilus.Data.Configuration;
+using Nautilus.Fix;
+using Nautilus.Network.Configuration;
+
 namespace Nautilus.Data
 {
-    using Microsoft.Extensions.Logging;
-    using Nautilus.Data.Configuration;
-    using Nautilus.Fix;
-    using Nautilus.Network.Configuration;
-
     /// <summary>
     /// Represents a <see cref="DataService"/> configuration.
     /// </summary>

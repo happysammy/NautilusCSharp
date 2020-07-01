@@ -15,20 +15,20 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using System.Linq;
+using Nautilus.Common.Data;
+using Nautilus.Common.Interfaces;
+using Nautilus.Core.Correctness;
+using Nautilus.Core.CQS;
+using Nautilus.Data.Interfaces;
+using Nautilus.Data.Keys;
+using Nautilus.Data.Messages.Commands;
+using Nautilus.DomainModel.Identifiers;
+using Nautilus.DomainModel.ValueObjects;
+
 namespace Nautilus.TestSuite.TestKit.Mocks
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using Nautilus.Common.Data;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Correctness;
-    using Nautilus.Core.CQS;
-    using Nautilus.Data.Interfaces;
-    using Nautilus.Data.Keys;
-    using Nautilus.Data.Messages.Commands;
-    using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
-
     /// <summary>
     /// Provides an in memory <see cref="Tick"/> store.
     /// </summary>

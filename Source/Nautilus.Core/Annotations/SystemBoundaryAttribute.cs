@@ -15,10 +15,10 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+
 namespace Nautilus.Core.Annotations
 {
-    using System;
-
     /// <summary>
     /// This decorative attribute indicates that the annotated method is at the service boundary,
     /// all input argument data passed into the method should be fully validated to preserve the

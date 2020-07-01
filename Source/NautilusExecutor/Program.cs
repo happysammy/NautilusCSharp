@@ -15,18 +15,18 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using System.IO;
+using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Debugging;
+using Serilog.Events;
+
 namespace NautilusExecutor
 {
-    using System;
-    using System.IO;
-    using Microsoft.AspNetCore;
-    using Microsoft.AspNetCore.Hosting;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.Logging;
-    using Serilog;
-    using Serilog.Debugging;
-    using Serilog.Events;
-
     /// <summary>
     /// The main entry point for the application.
     /// </summary>

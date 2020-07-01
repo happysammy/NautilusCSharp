@@ -15,16 +15,16 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using Nautilus.Core;
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Correctness;
+using Nautilus.Core.Extensions;
+using Nautilus.DomainModel.Enums;
+using NodaTime;
+
 namespace Nautilus.DomainModel.ValueObjects
 {
-    using System;
-    using Nautilus.Core;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
-    using Nautilus.Core.Extensions;
-    using Nautilus.DomainModel.Enums;
-    using NodaTime;
-
     /// <summary>
     /// Represents a bar specification being a quote type, resolution and period.
     /// </summary>

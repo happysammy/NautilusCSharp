@@ -15,14 +15,14 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Nautilus.Common.Interfaces;
+using Nautilus.DomainModel.ValueObjects;
+using Nautilus.Network;
+using Nautilus.Network.Encryption;
+using Nautilus.Network.Nodes;
+
 namespace Nautilus.Data.Network
 {
-    using Nautilus.Common.Interfaces;
-    using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Network;
-    using Nautilus.Network.Encryption;
-    using Nautilus.Network.Nodes;
-
     /// <summary>
     /// Provides a publisher for <see cref="Tick"/> data.
     /// </summary>

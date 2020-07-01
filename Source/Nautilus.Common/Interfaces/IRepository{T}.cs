@@ -15,13 +15,13 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using Nautilus.Core.CQS;
+
 namespace Nautilus.Common.Interfaces
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq.Expressions;
-    using Nautilus.Core.CQS;
-
     /// <summary>
     /// Provides a generic repository of type T.
     /// </summary>

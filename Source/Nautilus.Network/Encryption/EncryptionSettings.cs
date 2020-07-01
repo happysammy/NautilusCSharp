@@ -15,11 +15,11 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using Nautilus.Common.Enums;
+using Nautilus.Core.Correctness;
+
 namespace Nautilus.Network.Encryption
 {
-    using Nautilus.Common.Enums;
-    using Nautilus.Core.Correctness;
-
     /// <summary>
     /// Provides encryption settings.
     /// </summary>

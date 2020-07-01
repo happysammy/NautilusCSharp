@@ -15,14 +15,14 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using System.Globalization;
+using Nautilus.Core.Correctness;
+using NodaTime;
+using NodaTime.Text;
+
 namespace Nautilus.Core.Extensions
 {
-    using System;
-    using System.Globalization;
-    using Nautilus.Core.Correctness;
-    using NodaTime;
-    using NodaTime.Text;
-
     /// <summary>
     /// Provides useful comparison operations for the <see cref="ZonedDateTime"/> type.
     /// </summary>

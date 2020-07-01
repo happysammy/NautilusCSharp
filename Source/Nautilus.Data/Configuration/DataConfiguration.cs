@@ -15,14 +15,14 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
+using Nautilus.DomainModel.Identifiers;
+using Nautilus.DomainModel.ValueObjects;
+using NodaTime;
+
 namespace Nautilus.Data.Configuration
 {
-    using System.Collections.Immutable;
-    using System.Diagnostics.CodeAnalysis;
-    using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
-    using NodaTime;
-
     /// <summary>
     /// Provides the data configuration for a <see cref="DataService"/>.
     /// </summary>

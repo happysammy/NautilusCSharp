@@ -15,15 +15,15 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using Nautilus.Core.Annotations;
+using Nautilus.Core.CQS;
+using Nautilus.Core.Extensions;
+using Nautilus.DomainModel.ValueObjects;
+using NodaTime;
+
 namespace Nautilus.Data.Integrity
 {
-    using System.Collections.Generic;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.CQS;
-    using Nautilus.Core.Extensions;
-    using Nautilus.DomainModel.ValueObjects;
-    using NodaTime;
-
     /// <summary>
     /// Checks various data forms for known anomalies. Performance optimized.
     /// </summary>

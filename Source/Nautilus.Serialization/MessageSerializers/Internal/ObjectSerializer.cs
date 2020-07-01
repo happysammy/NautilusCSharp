@@ -15,16 +15,16 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
+using System.Globalization;
+using System.Text;
+using Nautilus.Core.Extensions;
+using Nautilus.Core.Types;
+using Nautilus.DomainModel.ValueObjects;
+using NodaTime;
+
 namespace Nautilus.Serialization.MessageSerializers.Internal
 {
-    using System;
-    using System.Globalization;
-    using System.Text;
-    using Nautilus.Core.Extensions;
-    using Nautilus.Core.Types;
-    using Nautilus.DomainModel.ValueObjects;
-    using NodaTime;
-
     /// <summary>
     /// Provides methods for converting objects to serialized bytes.
     /// </summary>

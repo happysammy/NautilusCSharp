@@ -15,15 +15,15 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
+using Nautilus.DomainModel.Enums;
+using Nautilus.DomainModel.ValueObjects;
+using Nautilus.TestSuite.TestKit.Fixtures;
+using Xunit;
+using Xunit.Abstractions;
+
 namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
 {
-    using System.Diagnostics.CodeAnalysis;
-    using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.TestSuite.TestKit.Fixtures;
-    using Xunit;
-    using Xunit.Abstractions;
-
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class BarSpecificationTests : TestBase
     {

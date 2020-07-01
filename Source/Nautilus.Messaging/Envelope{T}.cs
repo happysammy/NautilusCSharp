@@ -15,17 +15,17 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using Nautilus.Core;
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Correctness;
+using Nautilus.Core.Extensions;
+using Nautilus.Core.Types;
+using Nautilus.Messaging.Interfaces;
+using NodaTime;
+
 namespace Nautilus.Messaging
 {
-    using System;
-    using Nautilus.Core;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
-    using Nautilus.Core.Extensions;
-    using Nautilus.Core.Types;
-    using Nautilus.Messaging.Interfaces;
-    using NodaTime;
-
     /// <summary>
     /// Represents an envelope with a wrapped message and optional sender and receiver addresses.
     /// </summary>

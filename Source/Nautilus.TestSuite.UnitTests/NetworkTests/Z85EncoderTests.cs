@@ -15,14 +15,14 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Text;
+using Nautilus.Network.Encryption;
+using Xunit;
+
 namespace Nautilus.TestSuite.UnitTests.NetworkTests
 {
-    using System;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Text;
-    using Nautilus.Network.Encryption;
-    using Xunit;
-
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class Z85EncoderTests
     {

@@ -15,12 +15,12 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using System.Threading.Tasks;
+using System.Threading.Tasks.Dataflow;
+
 namespace Nautilus.Messaging.Interfaces
 {
-    using System;
-    using System.Threading.Tasks;
-    using System.Threading.Tasks.Dataflow;
-
     /// <summary>
     /// Provides a messaging endpoint.
     /// </summary>

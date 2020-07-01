@@ -15,27 +15,27 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
+using Nautilus.Common.Interfaces;
+using Nautilus.Common.Messages.Commands;
+using Nautilus.Common.Messages.Events;
+using Nautilus.Common.Messaging;
+using Nautilus.Core.Message;
+using Nautilus.Data;
+using Nautilus.DomainModel.Identifiers;
+using Nautilus.Messaging;
+using Nautilus.Messaging.Interfaces;
+using Nautilus.TestSuite.TestKit.Components;
+using Nautilus.TestSuite.TestKit.Mocks;
+using Nautilus.TestSuite.TestKit.Stubs;
+using Xunit;
+using Xunit.Abstractions;
+
 namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Threading.Tasks;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messages.Commands;
-    using Nautilus.Common.Messages.Events;
-    using Nautilus.Common.Messaging;
-    using Nautilus.Core.Message;
-    using Nautilus.Data;
-    using Nautilus.DomainModel.Identifiers;
-    using Nautilus.Messaging;
-    using Nautilus.Messaging.Interfaces;
-    using Nautilus.TestSuite.TestKit.Components;
-    using Nautilus.TestSuite.TestKit.Mocks;
-    using Nautilus.TestSuite.TestKit.Stubs;
-    using Xunit;
-    using Xunit.Abstractions;
-
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class MessageBusTests
     {

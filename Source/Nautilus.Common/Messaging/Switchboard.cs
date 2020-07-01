@@ -15,15 +15,15 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using Nautilus.Core.Correctness;
+using Nautilus.Messaging;
+using Nautilus.Messaging.Interfaces;
+
 namespace Nautilus.Common.Messaging
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.Immutable;
-    using Nautilus.Core.Correctness;
-    using Nautilus.Messaging;
-    using Nautilus.Messaging.Interfaces;
-
     /// <summary>
     /// Provides a messaging switchboard for all addresses within the service.
     /// </summary>

@@ -15,14 +15,14 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using Nautilus.Core;
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Correctness;
+using NodaTime;
+
 namespace Nautilus.Data.Keys
 {
-    using System;
-    using Nautilus.Core;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
-    using NodaTime;
-
     /// <summary>
     /// Represents a trading session date (UTC).
     /// </summary>

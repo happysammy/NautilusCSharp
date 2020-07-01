@@ -15,14 +15,14 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using Xunit.Abstractions;
+
 namespace Nautilus.TestSuite.TestKit.Performance
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Linq;
-    using Xunit.Abstractions;
-
     /// <summary>
     /// Provides a simple harness for performance benchmarking utilizing an internal stopwatch.
     /// </summary>

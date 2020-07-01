@@ -15,16 +15,16 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using Nautilus.Core.Annotations;
+using Nautilus.DomainModel.Enums;
+using Nautilus.DomainModel.Events.Base;
+using Nautilus.DomainModel.Identifiers;
+using Nautilus.DomainModel.ValueObjects;
+using NodaTime;
+
 namespace Nautilus.DomainModel.Events
 {
-    using System;
-    using Nautilus.Core.Annotations;
-    using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Events.Base;
-    using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
-    using NodaTime;
-
     /// <summary>
     /// Represents an event where an order has been partially filled.
     /// </summary>

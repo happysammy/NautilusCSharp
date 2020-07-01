@@ -15,36 +15,36 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.Logging;
+using Nautilus.Common.Componentry;
+using Nautilus.Common.Interfaces;
+using Nautilus.Common.Logging;
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Correctness;
+using Nautilus.Core.Extensions;
+using Nautilus.Core.Types;
+using Nautilus.DomainModel.Entities;
+using Nautilus.DomainModel.Events;
+using Nautilus.DomainModel.Identifiers;
+using Nautilus.DomainModel.ValueObjects;
+using Nautilus.Fix.Interfaces;
+using Nautilus.Messaging.Interfaces;
+using NodaTime;
+using QuickFix;
+using QuickFix.Fields;
+using QuickFix.FIX44;
+using Currency = Nautilus.DomainModel.Enums.Currency;
+using OrderCancelReject = Nautilus.DomainModel.Events.OrderCancelReject;
+using Price = Nautilus.DomainModel.ValueObjects.Price;
+using Quantity = Nautilus.DomainModel.ValueObjects.Quantity;
+using SecurityType = Nautilus.DomainModel.Enums.SecurityType;
+using Symbol = Nautilus.DomainModel.Identifiers.Symbol;
+
 namespace Nautilus.Fxcm
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    using Microsoft.Extensions.Logging;
-    using Nautilus.Common.Componentry;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Logging;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
-    using Nautilus.Core.Extensions;
-    using Nautilus.Core.Types;
-    using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.Events;
-    using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Fix.Interfaces;
-    using Nautilus.Messaging.Interfaces;
-    using NodaTime;
-    using QuickFix;
-    using QuickFix.Fields;
-    using QuickFix.FIX44;
-    using Currency = Nautilus.DomainModel.Enums.Currency;
-    using OrderCancelReject = Nautilus.DomainModel.Events.OrderCancelReject;
-    using Price = Nautilus.DomainModel.ValueObjects.Price;
-    using Quantity = Nautilus.DomainModel.ValueObjects.Quantity;
-    using SecurityType = Nautilus.DomainModel.Enums.SecurityType;
-    using Symbol = Nautilus.DomainModel.Identifiers.Symbol;
-
     /// <summary>
     /// Provides a handler for FXCM FIX messages.
     /// </summary>

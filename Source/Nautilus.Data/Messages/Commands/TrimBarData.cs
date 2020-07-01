@@ -15,19 +15,19 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Nautilus.Common.Interfaces;
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Correctness;
+using Nautilus.Core.Message;
+using Nautilus.DomainModel.Enums;
+using Nautilus.DomainModel.ValueObjects;
+using NodaTime;
+
 namespace Nautilus.Data.Messages.Commands
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
-    using Nautilus.Core.Message;
-    using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.ValueObjects;
-    using NodaTime;
-
     /// <summary>
     /// Represents a scheduled command to trim the bar data keys held in the database
     /// to be equal to the size of the rolling window.

@@ -16,15 +16,14 @@
 // -------------------------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
+using MessagePack;
+using Nautilus.Common.Interfaces;
+using Nautilus.Core.Correctness;
 using Nautilus.Core.Extensions;
 
 namespace Nautilus.Serialization.MessageSerializers
 {
-    using System.Collections.Generic;
-    using MessagePack;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Correctness;
-
     /// <summary>
     /// Provides a serializer for dictionaries with string keys and values.
     /// </summary>

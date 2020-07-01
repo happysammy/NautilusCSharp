@@ -15,13 +15,13 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Nautilus.Core.Correctness;
+using NodaTime;
+using QuickFix.Fields;
+using QuickFix.FIX44;
+
 namespace Nautilus.Fxcm.MessageFactories
 {
-    using Nautilus.Core.Correctness;
-    using NodaTime;
-    using QuickFix.Fields;
-    using QuickFix.FIX44;
-
     /// <summary>
     /// Provides <see cref="TradingSessionStatusRequest"/> FIX messages.
     /// </summary>

@@ -15,29 +15,29 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using Nautilus.Common.Componentry;
+using Nautilus.Common.Configuration;
+using Nautilus.Common.Interfaces;
+using Nautilus.Common.Messages.Commands;
+using Nautilus.Common.Messaging;
+using Nautilus.Core.Correctness;
+using Nautilus.Execution;
+using Nautilus.Execution.Engine;
+using Nautilus.Execution.Network;
+using Nautilus.Fix;
+using Nautilus.Fxcm;
+using Nautilus.Messaging;
+using Nautilus.Messaging.Interfaces;
+using Nautilus.Network.Compression;
+using Nautilus.Redis.Execution;
+using Nautilus.Scheduling;
+using Nautilus.Serialization.MessageSerializers;
+using NodaTime;
+using StackExchange.Redis;
+
 namespace NautilusExecutor
 {
-    using System.Collections.Generic;
-    using Nautilus.Common.Componentry;
-    using Nautilus.Common.Configuration;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messages.Commands;
-    using Nautilus.Common.Messaging;
-    using Nautilus.Core.Correctness;
-    using Nautilus.Execution;
-    using Nautilus.Execution.Engine;
-    using Nautilus.Execution.Network;
-    using Nautilus.Fix;
-    using Nautilus.Fxcm;
-    using Nautilus.Messaging;
-    using Nautilus.Messaging.Interfaces;
-    using Nautilus.Network.Compression;
-    using Nautilus.Redis.Execution;
-    using Nautilus.Scheduling;
-    using Nautilus.Serialization.MessageSerializers;
-    using NodaTime;
-    using StackExchange.Redis;
-
     /// <summary>
     /// Provides a factory for creating the <see cref="ExecutionService"/>.
     /// </summary>

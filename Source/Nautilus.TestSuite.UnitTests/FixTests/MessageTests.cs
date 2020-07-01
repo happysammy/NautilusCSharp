@@ -15,13 +15,13 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
+using Nautilus.Fxcm.MessageFactories;
+using Nautilus.TestSuite.TestKit.Stubs;
+using Xunit;
+
 namespace Nautilus.TestSuite.UnitTests.FixTests
 {
-    using System.Diagnostics.CodeAnalysis;
-    using Nautilus.Fxcm.MessageFactories;
-    using Nautilus.TestSuite.TestKit.Stubs;
-    using Xunit;
-
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class MessageTests
     {

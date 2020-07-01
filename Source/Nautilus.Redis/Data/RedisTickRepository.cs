@@ -15,25 +15,25 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Extensions.Logging;
+using Nautilus.Common.Interfaces;
+using Nautilus.Common.Logging;
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Correctness;
+using Nautilus.Core.CQS;
+using Nautilus.Data.Interfaces;
+using Nautilus.Data.Keys;
+using Nautilus.Data.Messages.Commands;
+using Nautilus.DomainModel.Identifiers;
+using Nautilus.DomainModel.ValueObjects;
+using Nautilus.Redis.Data.Base;
+using Nautilus.Redis.Data.Internal;
+using StackExchange.Redis;
+
 namespace Nautilus.Redis.Data
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using Microsoft.Extensions.Logging;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Logging;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
-    using Nautilus.Core.CQS;
-    using Nautilus.Data.Interfaces;
-    using Nautilus.Data.Keys;
-    using Nautilus.Data.Messages.Commands;
-    using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Redis.Data.Base;
-    using Nautilus.Redis.Data.Internal;
-    using StackExchange.Redis;
-
     /// <summary>
     /// Provides a repository for handling <see cref="Tick"/>s with Redis.
     /// </summary>

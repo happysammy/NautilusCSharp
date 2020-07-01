@@ -15,13 +15,13 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using Nautilus.DomainModel.ValueObjects;
+using NodaTime;
+
 namespace Nautilus.TestSuite.TestKit.Stubs
 {
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    using Nautilus.DomainModel.ValueObjects;
-    using NodaTime;
-
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public static class StubBarProvider
     {

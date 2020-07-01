@@ -15,17 +15,17 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using System.Globalization;
+using Nautilus.Core.Correctness;
+using Nautilus.DomainModel.Entities;
+using Nautilus.DomainModel.Enums;
+using Nautilus.DomainModel.Identifiers;
+using Nautilus.DomainModel.ValueObjects;
+using NodaTime;
+
 namespace Nautilus.Redis.Data.Internal
 {
-    using System.Collections.Generic;
-    using System.Globalization;
-    using Nautilus.Core.Correctness;
-    using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
-    using NodaTime;
-
     /// <summary>
     /// Provides a builder for creating <see cref="Instrument"/> objects.
     /// </summary>

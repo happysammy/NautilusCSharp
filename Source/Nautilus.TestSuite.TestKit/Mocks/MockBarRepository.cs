@@ -15,21 +15,21 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using Nautilus.Common.Interfaces;
+using Nautilus.Core.CQS;
+using Nautilus.Core.Extensions;
+using Nautilus.Data.Interfaces;
+using Nautilus.Data.Keys;
+using Nautilus.DomainModel.Enums;
+using Nautilus.DomainModel.Frames;
+using Nautilus.DomainModel.ValueObjects;
+using NodaTime;
+
 namespace Nautilus.TestSuite.TestKit.Mocks
 {
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Core.CQS;
-    using Nautilus.Core.Extensions;
-    using Nautilus.Data.Interfaces;
-    using Nautilus.Data.Keys;
-    using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Frames;
-    using Nautilus.DomainModel.ValueObjects;
-    using NodaTime;
-
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class MockBarRepository : IBarRepository
     {

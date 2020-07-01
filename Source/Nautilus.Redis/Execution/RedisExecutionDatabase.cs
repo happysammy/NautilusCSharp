@@ -15,27 +15,27 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Extensions.Logging;
+using Nautilus.Common.Interfaces;
+using Nautilus.Common.Logging;
+using Nautilus.Core.CQS;
+using Nautilus.Core.Message;
+using Nautilus.DomainModel.Aggregates;
+using Nautilus.DomainModel.Entities;
+using Nautilus.DomainModel.Events;
+using Nautilus.DomainModel.Events.Base;
+using Nautilus.DomainModel.Identifiers;
+using Nautilus.Execution.Engine;
+using Nautilus.Execution.Interfaces;
+using Nautilus.Redis.Execution.Internal;
+using NodaTime;
+using StackExchange.Redis;
+using Order = Nautilus.DomainModel.Aggregates.Order;
+
 namespace Nautilus.Redis.Execution
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using Microsoft.Extensions.Logging;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Logging;
-    using Nautilus.Core.CQS;
-    using Nautilus.Core.Message;
-    using Nautilus.DomainModel.Aggregates;
-    using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.Events;
-    using Nautilus.DomainModel.Events.Base;
-    using Nautilus.DomainModel.Identifiers;
-    using Nautilus.Execution.Engine;
-    using Nautilus.Execution.Interfaces;
-    using Nautilus.Redis.Execution.Internal;
-    using NodaTime;
-    using StackExchange.Redis;
-    using Order = Nautilus.DomainModel.Aggregates.Order;
-
     /// <summary>
     /// Provides an execution database implemented with Redis.
     /// </summary>

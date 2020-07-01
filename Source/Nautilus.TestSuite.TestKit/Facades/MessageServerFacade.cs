@@ -15,17 +15,17 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using Nautilus.Common.Interfaces;
+using Nautilus.Data.Messages.Requests;
+using Nautilus.Network;
+using Nautilus.Network.Encryption;
+using Nautilus.Network.Nodes;
+using Nautilus.Serialization.MessageSerializers;
+
 namespace Nautilus.TestSuite.TestKit.Facades
 {
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Data.Messages.Requests;
-    using Nautilus.Network;
-    using Nautilus.Network.Encryption;
-    using Nautilus.Network.Nodes;
-    using Nautilus.Serialization.MessageSerializers;
-
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class MessageServerFacade : MessageServer
     {

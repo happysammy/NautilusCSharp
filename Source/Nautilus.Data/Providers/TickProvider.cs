@@ -15,23 +15,23 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using Microsoft.Extensions.Logging;
+using Nautilus.Common.Interfaces;
+using Nautilus.Common.Logging;
+using Nautilus.Common.Messages.Commands;
+using Nautilus.Common.Messaging;
+using Nautilus.Core.Message;
+using Nautilus.Data.Interfaces;
+using Nautilus.Data.Keys;
+using Nautilus.Data.Messages.Requests;
+using Nautilus.Data.Messages.Responses;
+using Nautilus.DomainModel.Identifiers;
+using Nautilus.DomainModel.ValueObjects;
+using Nautilus.Network.Messages;
+
 namespace Nautilus.Data.Providers
 {
-    using System;
-    using Microsoft.Extensions.Logging;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Logging;
-    using Nautilus.Common.Messages.Commands;
-    using Nautilus.Common.Messaging;
-    using Nautilus.Core.Message;
-    using Nautilus.Data.Interfaces;
-    using Nautilus.Data.Keys;
-    using Nautilus.Data.Messages.Requests;
-    using Nautilus.Data.Messages.Responses;
-    using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Network.Messages;
-
     /// <summary>
     /// Provides <see cref="Tick"/> data for requests.
     /// </summary>

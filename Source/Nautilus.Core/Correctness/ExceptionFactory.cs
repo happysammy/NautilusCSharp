@@ -15,11 +15,11 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using System.ComponentModel;
+
 namespace Nautilus.Core.Correctness
 {
-    using System;
-    using System.ComponentModel;
-
     /// <summary>
     /// Provides common exception objects.
     /// </summary>

@@ -15,20 +15,20 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using System.Globalization;
+using Nautilus.Core.Correctness;
+using Nautilus.DomainModel.Enums;
+using NodaTime;
+using NodaTime.Text;
+using QuickFix.Fields;
+using QuickFix.FIX44;
+using Price = Nautilus.DomainModel.ValueObjects.Price;
+using SecurityType = Nautilus.DomainModel.Enums.SecurityType;
+using TimeInForce = Nautilus.DomainModel.Enums.TimeInForce;
+
 namespace Nautilus.Fxcm
 {
-    using System.Collections.Generic;
-    using System.Globalization;
-    using Nautilus.Core.Correctness;
-    using Nautilus.DomainModel.Enums;
-    using NodaTime;
-    using NodaTime.Text;
-    using QuickFix.Fields;
-    using QuickFix.FIX44;
-    using Price = Nautilus.DomainModel.ValueObjects.Price;
-    using SecurityType = Nautilus.DomainModel.Enums.SecurityType;
-    using TimeInForce = Nautilus.DomainModel.Enums.TimeInForce;
-
     /// <summary>
     /// Provides useful methods for assisting with parsing FIX messages.
     /// </summary>

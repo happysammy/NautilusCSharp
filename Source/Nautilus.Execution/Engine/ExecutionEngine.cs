@@ -15,28 +15,28 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
+using Nautilus.Common.Componentry;
+using Nautilus.Common.Interfaces;
+using Nautilus.Common.Logging;
+using Nautilus.Common.Messaging;
+using Nautilus.Core.Extensions;
+using Nautilus.Core.Message;
+using Nautilus.DomainModel.Aggregates;
+using Nautilus.DomainModel.Commands;
+using Nautilus.DomainModel.Enums;
+using Nautilus.DomainModel.Events;
+using Nautilus.DomainModel.Events.Base;
+using Nautilus.DomainModel.Identifiers;
+using Nautilus.Execution.Interfaces;
+using Nautilus.Messaging.Interfaces;
+using Nautilus.Scheduling;
+using NodaTime;
+
 namespace Nautilus.Execution.Engine
 {
-    using System;
-    using System.Collections.Generic;
-    using Microsoft.Extensions.Logging;
-    using Nautilus.Common.Componentry;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Logging;
-    using Nautilus.Common.Messaging;
-    using Nautilus.Core.Extensions;
-    using Nautilus.Core.Message;
-    using Nautilus.DomainModel.Aggregates;
-    using Nautilus.DomainModel.Commands;
-    using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Events;
-    using Nautilus.DomainModel.Events.Base;
-    using Nautilus.DomainModel.Identifiers;
-    using Nautilus.Execution.Interfaces;
-    using Nautilus.Messaging.Interfaces;
-    using Nautilus.Scheduling;
-    using NodaTime;
-
     /// <summary>
     /// Provides a generic execution engine utilizing an abstract execution database.
     /// </summary>

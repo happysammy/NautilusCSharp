@@ -15,11 +15,11 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Microsoft.Extensions.Logging;
+using Xunit.Abstractions;
+
 namespace Nautilus.TestSuite.TestKit.Components
 {
-    using Microsoft.Extensions.Logging;
-    using Xunit.Abstractions;
-
     /// <summary>
     /// Provides a logger for testing purposes.
     /// </summary>

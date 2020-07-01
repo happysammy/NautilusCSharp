@@ -15,11 +15,11 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using Nautilus.Common.Interfaces;
+
 namespace Nautilus.TestSuite.TestKit.Components
 {
-    using System;
-    using Nautilus.Common.Interfaces;
-
     /// <inheritdoc/>
     public sealed class TestGuidFactory : IGuidFactory
     {

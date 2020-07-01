@@ -15,19 +15,19 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
+using System.Threading.Tasks;
+using Nautilus.Common.Interfaces;
+using Nautilus.Common.Messages.Commands;
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Correctness;
+using Nautilus.Core.Message;
+using Nautilus.Core.Types;
+using Nautilus.Messaging;
+using NodaTime;
+
 namespace Nautilus.Common.Messaging
 {
-    using System;
-    using System.Threading.Tasks;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messages.Commands;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
-    using Nautilus.Core.Message;
-    using Nautilus.Core.Types;
-    using Nautilus.Messaging;
-    using NodaTime;
-
     /// <inheritdoc />
     [Immutable]
     public sealed class MessageBusAdapter : IMessageBusAdapter

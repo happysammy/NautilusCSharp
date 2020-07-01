@@ -15,13 +15,13 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Text;
+
 namespace Nautilus.Network.Encryption
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Text;
-
     /// <summary>
     /// Providers a Z85 encoder.
     /// </summary>

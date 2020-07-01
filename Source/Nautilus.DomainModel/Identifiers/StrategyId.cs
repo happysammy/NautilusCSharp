@@ -15,12 +15,12 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Correctness;
+using Nautilus.Core.Types;
+
 namespace Nautilus.DomainModel.Identifiers
 {
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
-    using Nautilus.Core.Types;
-
     /// <summary>
     /// Represents a valid strategy identifier. The <see cref="Name"/> and <see cref="OrderIdTag"/>
     /// combination identifier value must be unique at the trader level.

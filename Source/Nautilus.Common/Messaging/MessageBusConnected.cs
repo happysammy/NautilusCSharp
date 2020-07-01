@@ -15,16 +15,16 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using Nautilus.Common.Componentry;
+using Nautilus.Common.Interfaces;
+using Nautilus.Core.Correctness;
+using Nautilus.Core.Types;
+using Nautilus.Messaging;
+using Nautilus.Messaging.Interfaces;
+
 namespace Nautilus.Common.Messaging
 {
-    using System.Collections.Generic;
-    using Nautilus.Common.Componentry;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Correctness;
-    using Nautilus.Core.Types;
-    using Nautilus.Messaging;
-    using Nautilus.Messaging.Interfaces;
-
     /// <summary>
     /// The base class for all components which are connected to the message bus.
     /// </summary>

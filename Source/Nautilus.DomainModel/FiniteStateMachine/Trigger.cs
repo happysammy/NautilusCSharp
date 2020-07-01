@@ -15,13 +15,13 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Correctness;
+using Nautilus.Core.Message;
+
 namespace Nautilus.DomainModel.FiniteStateMachine
 {
-    using System;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
-    using Nautilus.Core.Message;
-
     /// <summary>
     /// Represents a possible trigger within the <see cref="FiniteStateMachine"/>.
     /// </summary>

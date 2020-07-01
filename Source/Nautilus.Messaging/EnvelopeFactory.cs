@@ -15,13 +15,13 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using Nautilus.Core.Types;
+using Nautilus.Messaging.Interfaces;
+using NodaTime;
+
 namespace Nautilus.Messaging
 {
-    using System;
-    using Nautilus.Core.Types;
-    using Nautilus.Messaging.Interfaces;
-    using NodaTime;
-
     /// <summary>
     /// Provides a factory for creating generic envelopes of type T.
     /// </summary>

@@ -15,14 +15,14 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Nautilus.Core;
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Correctness;
+using Nautilus.Core.Primitives;
+using Nautilus.DomainModel.Enums;
+
 namespace Nautilus.DomainModel.ValueObjects
 {
-    using Nautilus.Core;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
-    using Nautilus.Core.Primitives;
-    using Nautilus.DomainModel.Enums;
-
     /// <summary>
     /// Represents the 'concept' of money.
     /// </summary>

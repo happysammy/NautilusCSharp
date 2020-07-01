@@ -15,15 +15,15 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Message;
+using Nautilus.DomainModel.Entities;
+using Nautilus.DomainModel.Identifiers;
+using NodaTime;
+
 namespace Nautilus.DomainModel.Commands
 {
-    using System;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Message;
-    using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.Identifiers;
-    using NodaTime;
-
     /// <summary>
     /// Represents a command to submit an <see cref="AtomicOrder"/>.
     /// </summary>

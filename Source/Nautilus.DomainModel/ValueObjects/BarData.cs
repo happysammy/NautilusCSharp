@@ -15,11 +15,11 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using Nautilus.Core.Annotations;
+
 namespace Nautilus.DomainModel.ValueObjects
 {
-    using System;
-    using Nautilus.Core.Annotations;
-
     /// <summary>
     /// Represents financial market trade bar data including <see cref="BarType"/>.
     /// </summary>

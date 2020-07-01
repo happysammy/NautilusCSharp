@@ -15,20 +15,19 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Correctness;
+using Nautilus.Core.Enums;
+using NodaTime;
+
 namespace Nautilus.Core.Message
 {
-    using System;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
-    using Nautilus.Core.Enums;
-    using Nautilus.Core.Types;
-    using NodaTime;
-
     /// <summary>
     /// The base class for all <see cref="Command"/> messages.
     /// </summary>
     [Immutable]
-    public abstract class Command : Message
+    public abstract class Command : Types.Message
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Command"/> class.

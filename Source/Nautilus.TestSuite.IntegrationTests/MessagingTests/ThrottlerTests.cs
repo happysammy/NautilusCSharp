@@ -15,18 +15,18 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
+using Nautilus.Common.Interfaces;
+using Nautilus.Common.Messaging;
+using Nautilus.TestSuite.TestKit.Components;
+using Nautilus.TestSuite.TestKit.Mocks;
+using NodaTime;
+using Xunit;
+using Xunit.Abstractions;
+
 namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
 {
-    using System.Diagnostics.CodeAnalysis;
-    using System.Threading.Tasks;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messaging;
-    using Nautilus.TestSuite.TestKit.Components;
-    using Nautilus.TestSuite.TestKit.Mocks;
-    using NodaTime;
-    using Xunit;
-    using Xunit.Abstractions;
-
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class ThrottlerTests
     {

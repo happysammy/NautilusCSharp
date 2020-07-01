@@ -15,12 +15,12 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Correctness;
+using NodaTime;
+
 namespace Nautilus.Core.Types
 {
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
-    using NodaTime;
-
     /// <summary>
     /// Represents a particular time every week.
     /// </summary>

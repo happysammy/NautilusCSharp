@@ -15,13 +15,13 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using Microsoft.Extensions.Logging;
+using Nautilus.Execution.Configuration;
+using Nautilus.Fix;
+using Nautilus.Network.Configuration;
+
 namespace Nautilus.Execution
 {
-    using Microsoft.Extensions.Logging;
-    using Nautilus.Execution.Configuration;
-    using Nautilus.Fix;
-    using Nautilus.Network.Configuration;
-
     /// <summary>
     /// Represents an <see cref="ExecutionService"/> configuration.
     /// </summary>

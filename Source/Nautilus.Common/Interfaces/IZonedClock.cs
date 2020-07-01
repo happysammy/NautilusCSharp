@@ -15,10 +15,10 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using NodaTime;
+
 namespace Nautilus.Common.Interfaces
 {
-    using NodaTime;
-
     /// <summary>
     /// Provides an adapter to a service clock with an embedded time zone.
     /// </summary>

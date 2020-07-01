@@ -15,11 +15,11 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using IronSnappy;
+using Nautilus.Common.Interfaces;
+
 namespace Nautilus.Network.Compression
 {
-    using IronSnappy;
-    using Nautilus.Common.Interfaces;
-
     /// <inheritdoc />
     public sealed class SnappyCompressor : ICompressor
     {

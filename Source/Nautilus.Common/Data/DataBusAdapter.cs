@@ -15,22 +15,22 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Threading.Tasks;
+using Nautilus.Common.Interfaces;
+using Nautilus.Common.Messages.Commands;
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Types;
+using Nautilus.DomainModel.Entities;
+using Nautilus.DomainModel.ValueObjects;
+using Nautilus.Messaging;
+using Nautilus.Messaging.Interfaces;
+using NodaTime;
+
 namespace Nautilus.Common.Data
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.Immutable;
-    using System.Threading.Tasks;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messages.Commands;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Types;
-    using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Messaging;
-    using Nautilus.Messaging.Interfaces;
-    using NodaTime;
-
     /// <summary>
     /// Provides a means for components to subscribe to and unsubscribe from various data types.
     /// </summary>

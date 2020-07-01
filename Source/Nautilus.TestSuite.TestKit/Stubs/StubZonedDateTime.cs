@@ -15,11 +15,11 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
+using NodaTime;
+
 namespace Nautilus.TestSuite.TestKit.Stubs
 {
-    using System.Diagnostics.CodeAnalysis;
-    using NodaTime;
-
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public static class StubZonedDateTime
     {

@@ -15,10 +15,10 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+
 namespace Nautilus.Core.Annotations
 {
-    using System;
-
     /// <summary>
     /// This decorative attribute indicates that the annotated struct parameter default value is
     /// expected and valid in all cases.

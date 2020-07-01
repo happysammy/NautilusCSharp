@@ -15,12 +15,12 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using Nautilus.Common.Interfaces;
+using Nautilus.DomainModel.Entities;
+using Nautilus.DomainModel.ValueObjects;
+
 namespace Nautilus.Common.Data
 {
-    using Nautilus.Common.Interfaces;
-    using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.ValueObjects;
-
     /// <summary>
     /// Provides a factory to create the systems data bus.
     /// </summary>

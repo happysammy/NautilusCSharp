@@ -15,12 +15,12 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+
 namespace Nautilus.Core.Correctness
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-
     /// <summary>
     /// Provides condition checking methods which are executed in debug configuration.
     /// If the check passes then the method does nothing. If the check fails a type of

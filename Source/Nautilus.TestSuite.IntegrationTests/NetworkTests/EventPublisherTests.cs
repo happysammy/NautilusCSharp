@@ -15,29 +15,29 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
+using System.Text;
+using System.Threading.Tasks;
+using Nautilus.Common.Interfaces;
+using Nautilus.DomainModel.Events;
+using Nautilus.DomainModel.Identifiers;
+using Nautilus.Execution.Network;
+using Nautilus.Messaging.Interfaces;
+using Nautilus.Network;
+using Nautilus.Network.Compression;
+using Nautilus.Network.Encryption;
+using Nautilus.Serialization.MessageSerializers;
+using Nautilus.TestSuite.TestKit.Components;
+using Nautilus.TestSuite.TestKit.Fixtures;
+using Nautilus.TestSuite.TestKit.Mocks;
+using Nautilus.TestSuite.TestKit.Stubs;
+using NetMQ;
+using NetMQ.Sockets;
+using Xunit;
+using Xunit.Abstractions;
+
 namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
 {
-    using System.Diagnostics.CodeAnalysis;
-    using System.Text;
-    using System.Threading.Tasks;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.DomainModel.Events;
-    using Nautilus.DomainModel.Identifiers;
-    using Nautilus.Execution.Network;
-    using Nautilus.Messaging.Interfaces;
-    using Nautilus.Network;
-    using Nautilus.Network.Compression;
-    using Nautilus.Network.Encryption;
-    using Nautilus.Serialization.MessageSerializers;
-    using Nautilus.TestSuite.TestKit.Components;
-    using Nautilus.TestSuite.TestKit.Fixtures;
-    using Nautilus.TestSuite.TestKit.Mocks;
-    using Nautilus.TestSuite.TestKit.Stubs;
-    using NetMQ;
-    using NetMQ.Sockets;
-    using Xunit;
-    using Xunit.Abstractions;
-
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class EventPublisherTests : NetMQTestBase
     {

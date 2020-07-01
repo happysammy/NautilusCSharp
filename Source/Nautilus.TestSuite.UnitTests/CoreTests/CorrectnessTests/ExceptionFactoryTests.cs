@@ -15,15 +15,15 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using Nautilus.Core.Correctness;
+using Nautilus.DomainModel.Enums;
+using Xunit;
+
 namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
 {
-    using System;
-    using System.ComponentModel;
-    using System.Diagnostics.CodeAnalysis;
-    using Nautilus.Core.Correctness;
-    using Nautilus.DomainModel.Enums;
-    using Xunit;
-
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class ExceptionFactoryTests
     {

@@ -15,11 +15,11 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using Nautilus.Common.Enums;
+
 namespace Nautilus.Common.Interfaces
 {
-    using System.Collections.Generic;
-    using Nautilus.Common.Enums;
-
     /// <summary>
     /// Provides a binary serializer for data objects of type T.
     /// </summary>

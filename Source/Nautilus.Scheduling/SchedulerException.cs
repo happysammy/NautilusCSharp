@@ -15,10 +15,10 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
+
 namespace Nautilus.Scheduling
 {
-    using System;
-
     /// <summary>
     /// An exception that is thrown by the <see cref="IScheduler">Schedule*</see> methods
     /// when scheduling is not possible, e.g. after shutting down the <see cref="IScheduler"/>.
