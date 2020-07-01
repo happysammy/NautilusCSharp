@@ -24,10 +24,10 @@ namespace Nautilus.DomainModel.ValueObjects
     /// Represents financial market trade bar data including <see cref="BarType"/>.
     /// </summary>
     [Immutable]
-    public readonly struct BarData : ICloneable
+    public sealed class BarData : ICloneable
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="BarData"/> struct.
+        /// Initializes a new instance of the <see cref="BarData"/> class.
         /// </summary>
         /// <param name="barType">The bar type.</param>
         /// <param name="bar">The bar.</param>

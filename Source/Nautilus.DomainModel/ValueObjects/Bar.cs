@@ -28,10 +28,10 @@ namespace Nautilus.DomainModel.ValueObjects
     /// Represents a financial market trade bar.
     /// </summary>
     [Immutable]
-    public readonly struct Bar : IEquatable<object>, IEquatable<Bar>, IComparable<Bar>
+    public sealed class Bar : IEquatable<object>, IEquatable<Bar>, IComparable<Bar>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Bar"/> structure.
+        /// Initializes a new instance of the <see cref="Bar"/> class.
         /// </summary>
         /// <param name="open">The open price.</param>
         /// <param name="high">The high price.</param>
@@ -134,6 +134,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A <see cref="bool"/>.</returns>
         public override bool Equals(object? other) => other is Bar bar && this.Equals(bar);
 
+#pragma warning disable CS8767
         /// <summary>
         /// Returns a value indicating whether this <see cref="Bar"/> is equal
         /// to the given <see cref="Bar"/>.
@@ -150,6 +151,7 @@ namespace Nautilus.DomainModel.ValueObjects
                    this.Timestamp == other.Timestamp;
         }
 
+#pragma warning disable CS8767
         /// <summary>
         /// Returns a result indicating whether the left <see cref="Bar"/> is less than, equal
         /// to or greater than the right <see cref="Bar"/>.
@@ -182,12 +184,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A <see cref="string"/>.</returns>
         public override string ToString()
         {
-            return this.Open + "," +
-                   this.High + "," +
-                   this.Low + "," +
-                   this.Close + "," +
-                   this.Volume + "," +
-                   this.Timestamp.ToIso8601String();
+            return $"{this.Open},{this.High},{this.Low},{this.Close},{this.Volume},{this.Timestamp.ToIso8601String()}";
         }
     }
 }

@@ -36,6 +36,7 @@ namespace Nautilus.Common.Data
     /// </summary>
     /// <typeparam name="T">The bus data type.</typeparam>
     public sealed class DataBus<T> : MessagingComponent
+        where T : class
     {
         // The BroadcastBlock<T> ensures that the current element is broadcast to any linked targets
         // before allowing the element to be overwritten.

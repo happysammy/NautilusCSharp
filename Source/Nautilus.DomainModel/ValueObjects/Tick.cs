@@ -29,10 +29,10 @@ namespace Nautilus.DomainModel.ValueObjects
     /// Represents a financial market tick.
     /// </summary>
     [Immutable]
-    public readonly struct Tick : IEquatable<object>, IEquatable<Tick>, IComparable<Tick>
+    public sealed class Tick : IEquatable<object>, IEquatable<Tick>, IComparable<Tick>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Tick"/> structure.
+        /// Initializes a new instance of the <see cref="Tick"/> class.
         /// </summary>
         /// <param name="symbol">The quoted symbol.</param>
         /// <param name="bid">The quoted bid price.</param>
@@ -147,6 +147,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A <see cref="bool"/>.</returns>
         public override bool Equals(object? other) => other is Tick tick && this.Equals(tick);
 
+#pragma warning disable CS8767
         /// <inheritdoc />
         public bool Equals(Tick other)
         {
@@ -158,6 +159,7 @@ namespace Nautilus.DomainModel.ValueObjects
                    this.Timestamp == other.Timestamp;
         }
 
+#pragma warning disable CS8767
         /// <inheritdoc />
         public int CompareTo(Tick other) => this.Timestamp.Compare(other.Timestamp);
 
@@ -171,10 +173,6 @@ namespace Nautilus.DomainModel.ValueObjects
         /// Returns a string representation of the <see cref="Tick"/>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{this.Bid}," +
-                                             $"{this.Ask}," +
-                                             $"{this.BidSize}," +
-                                             $"{this.AskSize}," +
-                                             $"{this.Timestamp.ToIso8601String()}";
+        public override string ToString() => $"{this.Bid},{this.Ask},{this.BidSize},{this.AskSize},{this.Timestamp.ToIso8601String()}";
     }
 }

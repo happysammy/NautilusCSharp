@@ -26,10 +26,10 @@ namespace Nautilus.DomainModel.ValueObjects
     /// Represents an economic news event which affects financial markets.
     /// </summary>
     [Immutable]
-    public readonly struct EconomicEvent
+    public sealed class EconomicEvent
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="EconomicEvent"/> struct.
+        /// Initializes a new instance of the <see cref="EconomicEvent"/> class.
         /// </summary>
         /// <param name="time">The event time.</param>
         /// <param name="title">The event title.</param>

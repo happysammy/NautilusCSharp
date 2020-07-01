@@ -70,7 +70,7 @@ namespace Nautilus.Data.Network
 
         private void OnMessage(BarData data)
         {
-            var topic = $"{nameof(Bar)}:{data.BarType.ToString()}";
+            var topic = $"{nameof(Bar)}:{data.BarType}";
             this.Publish(topic, this.barSerializer.Serialize(data.Bar));
         }
 

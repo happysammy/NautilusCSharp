@@ -29,10 +29,10 @@ namespace Nautilus.DomainModel.ValueObjects
     /// Represents a bar specification being a quote type, resolution and period.
     /// </summary>
     [Immutable]
-    public readonly struct BarSpecification : IEquatable<object>, IEquatable<BarSpecification>
+    public sealed class BarSpecification : IEquatable<object>, IEquatable<BarSpecification>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="BarSpecification"/> structure.
+        /// Initializes a new instance of the <see cref="BarSpecification"/> class.
         /// </summary>
         /// <param name="period">The specification period.</param>
         /// <param name="barStructure">The specification resolution.</param>
@@ -119,6 +119,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A <see cref="bool"/>.</returns>
         public override bool Equals(object? other) => other is BarSpecification barSpec && this.Equals(barSpec);
 
+#pragma warning disable CS8767
         /// <summary>
         /// Returns a value indicating whether this <see cref="BarSpecification"/> is equal
         /// to the given <see cref="BarSpecification"/>.

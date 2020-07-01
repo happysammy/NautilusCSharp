@@ -26,10 +26,10 @@ namespace Nautilus.DomainModel.ValueObjects
     /// Represents a bar type including a <see cref="Symbol"/> and <see cref="BarSpecification"/>.
     /// </summary>
     [Immutable]
-    public readonly struct BarType : IEquatable<object>, IEquatable<BarType>
+    public sealed class BarType : IEquatable<object>, IEquatable<BarType>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="BarType"/> structure.
+        /// Initializes a new instance of the <see cref="BarType"/> class.
         /// </summary>
         /// <param name="symbol">The bar type symbol.</param>
         /// <param name="specification">The bar type specification.</param>
@@ -78,6 +78,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A <see cref="bool"/>.</returns>
         public override bool Equals(object? other) => other is BarType barType && this.Equals(barType);
 
+#pragma warning disable CS8767
         /// <summary>
         /// Returns a value indicating whether this <see cref="BarType"/> is equal
         /// to the given <see cref="BarSpecification"/>.
