@@ -18,4 +18,19 @@ phases:
       - dotnet test Source/Nautilus.TestSuite.IntegrationTests
   post_build:
     commands:
+      - mkdir NautilusDataRelease
+      - mkdir NautilusExecutorRelease
+      - dotnet publish Source/NautilusData/NautilusData.csproj -c Release -o NautilusDataRelease
+      - dotnet publish Source/NautilusExecutor/NautilusExecutor.csproj -c Release -o NautilusExecutorRelease
       - echo Build completed on `date`
+
+artifacts:
+  secondary-artifacts:
+    artifact1:
+      files:
+        - 'NautilusDataRelease/*'
+      name: nautilus-data-release
+    artifact2:
+      files:
+        - 'NautilusExecutorRelease/*'
+      name: nautilus-executor-release
