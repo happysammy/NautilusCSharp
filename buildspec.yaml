@@ -28,5 +28,5 @@ artifacts:
   files:
     - 'NautilusDataRelease/*'
     - 'NautilusExecutorRelease/*'
-  name: nautilus-services
+  name: nautilus-services-latest
   discard-paths: no
