@@ -140,7 +140,7 @@ namespace Nautilus.Execution.Engine
         private void OnMessage(SubmitOrder command)
         {
             this.CommandCount++;
-            this.Logger.LogInformation(LogId.Component, $"{Received}{Command} {command}.");
+            this.Logger.LogInformation(LogId.Trading, $"{Received}{Command} {command}.");
 
             var result = this.database.AddOrder(
                 command.Order,

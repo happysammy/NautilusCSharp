@@ -24,7 +24,7 @@ using Nautilus.DomainModel.Identifiers;
 namespace Nautilus.DomainModel.Events
 {
     /// <summary>
-    /// Represents an event where an order had been accepted by the broker.
+    /// Represents an event related to a trade associated with a trader.
     /// </summary>
     [Immutable]
     public sealed class TradeEvent : Event
@@ -34,8 +34,8 @@ namespace Nautilus.DomainModel.Events
         /// <summary>
         /// Initializes a new instance of the <see cref="TradeEvent"/> class.
         /// </summary>
-        /// <param name="traderId">The event trader identifier.</param>
-        /// <param name="orderEvent">The event order event.</param>
+        /// <param name="traderId">The trade event trader identifier.</param>
+        /// <param name="orderEvent">The trade event order event.</param>
         public TradeEvent(TraderId traderId, OrderEvent orderEvent)
             : base(
                 EventType,
