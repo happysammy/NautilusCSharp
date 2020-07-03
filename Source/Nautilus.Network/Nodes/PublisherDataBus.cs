@@ -46,15 +46,13 @@ namespace Nautilus.Network.Nodes
         /// <param name="dataBusAdapter">The data bus adapter.</param>
         /// <param name="compressor">The data compressor.</param>
         /// <param name="encryption">The encryption configuration.</param>
-        /// <param name="host">The publishers host address.</param>
-        /// <param name="port">The publishers port.</param>
+        /// <param name="networkAddress">The publishers network address.</param>
         protected PublisherDataBus(
             IComponentryContainer container,
             IDataBusAdapter dataBusAdapter,
             ICompressor compressor,
             EncryptionSettings encryption,
-            NetworkAddress host,
-            Port port)
+            ZmqNetworkAddress networkAddress)
             : base(container, dataBusAdapter)
         {
             this.compressor = compressor;
@@ -68,7 +66,7 @@ namespace Nautilus.Network.Nodes
                 },
             };
 
-            this.networkAddress = new ZmqNetworkAddress(host, port);
+            this.networkAddress = networkAddress;
 
             if (encryption.UseEncryption)
             {

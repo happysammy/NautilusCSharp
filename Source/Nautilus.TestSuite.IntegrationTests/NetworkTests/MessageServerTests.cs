@@ -63,8 +63,8 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             this.responseSerializer = new MsgPackResponseSerializer();
             this.compressor = new CompressorBypass();
 
-            this.testRequestAddress = ZmqNetworkAddress.LocalHost(55655);
-            this.testResponseAddress = ZmqNetworkAddress.LocalHost(55656);
+            this.testRequestAddress = ZmqNetworkAddress.LocalHost(new Port(55655));
+            this.testResponseAddress = ZmqNetworkAddress.LocalHost(new Port(55656));
         }
 
         [Fact]
@@ -270,7 +270,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             Assert.Equal(typeof(Connected), response.Type);
             Assert.Equal(1, server.ReceivedCount);
             Assert.Equal(1, server.SentCount);
-            Assert.Equal("TestDealer-001 connected to session None at tcp://127.0.0.1:55655", response.Message);
+            Assert.Equal("TestDealer-001 connected to test-server session None", response.Message);
 
             // Tear Down
             dealer.Stop().Wait();
@@ -327,8 +327,8 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             Assert.Equal(typeof(Disconnected), response2.Type);
             Assert.Equal(2, server.ReceivedCount);
             Assert.Equal(2, server.SentCount);
-            Assert.Equal("TestDealer-001 connected to session None at tcp://127.0.0.1:55655", response1.Message);
-            Assert.Equal("TestDealer-001 disconnected from session None at tcp://127.0.0.1:55655", response2.Message);
+            Assert.Equal("TestDealer-001 connected to test-server session None", response1.Message);
+            Assert.Equal("TestDealer-001 disconnected from test-server session None", response2.Message);
 
             // Tear Down
             dealer.Stop().Wait();
@@ -393,8 +393,8 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             var response2 = (Connected)dealer2.Receive();
 
             // Assert
-            Assert.Equal("TestDealer-001 connected to session None at tcp://127.0.0.1:55655", response1.Message);
-            Assert.Equal("TestDealer-002 connected to session None at tcp://127.0.0.1:55655", response2.Message);
+            Assert.Equal("TestDealer-001 connected to test-server session None", response1.Message);
+            Assert.Equal("TestDealer-002 connected to test-server session None", response2.Message);
             Assert.Equal(2, server.ReceivedCount);
             Assert.Equal(2, server.SentCount);
 

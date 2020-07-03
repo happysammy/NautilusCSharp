@@ -97,6 +97,7 @@ namespace NautilusExecutor
                 eventSerializer,
                 compressor,
                 config.WireConfig.EncryptionConfig,
+                config.WireConfig.ServiceName,
                 config.NetworkConfig.EventPubPort);
 
             var executionEngine = new ExecutionEngine(
@@ -116,6 +117,7 @@ namespace NautilusExecutor
                 commandSerializer,
                 compressor,
                 config.WireConfig.EncryptionConfig,
+                config.WireConfig.ServiceName,
                 config.NetworkConfig);
 
             // TODO: Refactor to auto generate

@@ -37,15 +37,13 @@ namespace Nautilus.TestSuite.TestKit.Mocks
             IComponentryContainer container,
             IDataBusAdapter dataBusAdapter,
             EncryptionSettings encryption,
-            NetworkAddress host,
-            Port port)
+            ZmqNetworkAddress networkAddress)
             : base(
                 container,
                 dataBusAdapter,
                 new CompressorBypass(),
                 encryption,
-                host,
-                port)
+                networkAddress)
         {
             this.serializer = new MockSerializer();
 

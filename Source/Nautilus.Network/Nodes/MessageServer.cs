@@ -51,6 +51,7 @@ namespace Nautilus.Network.Nodes
         private readonly ICompressor compressor;
         private readonly RouterSocket socketInbound;
         private readonly RouterSocket socketOutbound;
+        private readonly Label serviceName;
         private readonly ZmqNetworkAddress requestAddress;
         private readonly ZmqNetworkAddress responseAddress;
         private readonly Dictionary<ClientId, SessionId> peers;
@@ -70,6 +71,7 @@ namespace Nautilus.Network.Nodes
         /// <param name="responseSerializer">The response serializer.</param>
         /// <param name="compressor">The message compressor.</param>
         /// <param name="encryption">The encryption configuration.</param>
+        /// <param name="serviceName">The service name.</param>
         /// <param name="requestAddress">The inbound zmq network address.</param>
         /// <param name="responseAddress">The outbound zmq network address.</param>
         protected MessageServer(
@@ -80,6 +82,7 @@ namespace Nautilus.Network.Nodes
             IMessageSerializer<Response> responseSerializer,
             ICompressor compressor,
             EncryptionSettings encryption,
+            Label serviceName,
             ZmqNetworkAddress requestAddress,
             ZmqNetworkAddress responseAddress)
             : base(container, messagingAdapter)
@@ -89,12 +92,13 @@ namespace Nautilus.Network.Nodes
             this.requestSerializer = requestSerializer;
             this.responseSerializer = responseSerializer;
             this.compressor = compressor;
+            this.serviceName = serviceName;
 
             this.socketInbound = new RouterSocket()
             {
                 Options =
                 {
-                    Identity = Encoding.UTF8.GetBytes($"{nameof(Nautilus)}-{this.Name.Value}"),
+                    Identity = Encoding.UTF8.GetBytes($"{this.serviceName.Value}-{this.Name.Value}"),
                     Linger = TimeSpan.FromSeconds(1),
                     TcpKeepalive = true,
                     TcpKeepaliveInterval = TimeSpan.FromSeconds(2),
@@ -106,7 +110,7 @@ namespace Nautilus.Network.Nodes
             {
                 Options =
                 {
-                    Identity = Encoding.UTF8.GetBytes($"{nameof(Nautilus)}-{this.Name.Value}"),
+                    Identity = Encoding.UTF8.GetBytes($"{this.serviceName.Value}-{this.Name.Value}"),
                     Linger = TimeSpan.FromSeconds(1),
                     TcpKeepalive = true,
                     TcpKeepaliveInterval = TimeSpan.FromSeconds(2),
@@ -488,13 +492,13 @@ namespace Nautilus.Network.Nodes
                 // Peer not previously connected to a session
                 sessionId = new SessionId(connect.Authentication);
                 this.peers.TryAdd(connect.ClientId, sessionId);
-                message = $"{sender.Value} connected to session {sessionId.Value} at {this.requestAddress}";
+                message = $"{sender.Value} connected to {this.serviceName.Value} session {sessionId.Value}";
                 this.Logger.LogInformation(LogId.Networking, message);
             }
             else
             {
                 // Peer already connected to a session
-                message = $"{sender.Value} already connected to session {sessionId.Value} at {this.requestAddress}";
+                message = $"{sender.Value} already connected to {this.serviceName.Value} session {sessionId.Value}";
                 this.Logger.LogWarning(LogId.Networking, message);
             }
 
@@ -517,14 +521,14 @@ namespace Nautilus.Network.Nodes
             {
                 // Peer not previously connected to a session
                 sessionId = SessionId.None();
-                message = $"{sender.Value} had no session to disconnect at {this.requestAddress}";
+                message = $"{sender.Value} had no session to disconnect from {this.serviceName.Value}";
                 this.Logger.LogWarning(LogId.Networking, message);
             }
             else
             {
                 // Peer connected to a session
                 this.peers.Remove(disconnect.ClientId); // Pop from dictionary
-                message = $"{sender.Value} disconnected from session {sessionId.Value} at {this.requestAddress}";
+                message = $"{sender.Value} disconnected from {this.serviceName.Value} session {sessionId.Value}";
                 this.Logger.LogInformation(LogId.Networking, message);
             }
 

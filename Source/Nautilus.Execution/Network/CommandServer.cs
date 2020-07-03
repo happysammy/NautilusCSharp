@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using Nautilus.Common.Interfaces;
 using Nautilus.Common.Messaging;
 using Nautilus.Core.Message;
+using Nautilus.Core.Types;
 using Nautilus.DomainModel.Aggregates;
 using Nautilus.DomainModel.Commands;
 using Nautilus.Execution.Configuration;
@@ -50,6 +51,7 @@ namespace Nautilus.Execution.Network
         /// <param name="commandSerializer">The command serializer.</param>
         /// <param name="compressor">The message compressor.</param>
         /// <param name="encryption">The encryption configuration.</param>
+        /// <param name="serviceName">The service name.</param>
         /// <param name="config">The network configuration.</param>
         public CommandServer(
             IComponentryContainer container,
@@ -60,6 +62,7 @@ namespace Nautilus.Execution.Network
             IMessageSerializer<Command> commandSerializer,
             ICompressor compressor,
             EncryptionSettings encryption,
+            Label serviceName,
             NetworkConfiguration config)
             : base(
                 container,
@@ -69,8 +72,9 @@ namespace Nautilus.Execution.Network
                 responseSerializer,
                 compressor,
                 encryption,
-                ZmqNetworkAddress.LocalHost(config.CommandReqPort),
-                ZmqNetworkAddress.LocalHost(config.CommandResPort))
+                serviceName,
+                ZmqNetworkAddress.AllInterfaces(config.CommandReqPort),
+                ZmqNetworkAddress.AllInterfaces(config.CommandResPort))
         {
             this.commandThrottler = new Throttler<Command>(
                 container,

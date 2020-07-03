@@ -35,7 +35,7 @@ namespace Nautilus.TestSuite.UnitTests.TestKitTests
             var result = PerformanceHarness.Test(() => numbersList.ToArray(), 3, 1000000);
 
             // Assert
-            Assert.True(result.Milliseconds < 200);
+            Assert.True(result.Milliseconds < 300);
         }
     }
 }

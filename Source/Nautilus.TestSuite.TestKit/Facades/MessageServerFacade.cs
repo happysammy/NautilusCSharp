@@ -18,6 +18,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Nautilus.Common.Interfaces;
+using Nautilus.Core.Types;
 using Nautilus.Data.Messages.Requests;
 using Nautilus.Network;
 using Nautilus.Network.Encryption;
@@ -44,6 +45,7 @@ namespace Nautilus.TestSuite.TestKit.Facades
                 new MsgPackResponseSerializer(),
                 compressor,
                 encryption,
+                new Label("test-server"),
                 requestAddress,
                 responseAddress)
         {

@@ -19,6 +19,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Threading.Tasks;
 using Nautilus.Common.Interfaces;
+using Nautilus.Core.Types;
 using Nautilus.DomainModel.Events;
 using Nautilus.DomainModel.Identifiers;
 using Nautilus.Execution.Network;
@@ -67,6 +68,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 new MsgPackEventSerializer(),
                 new CompressorBypass(),
                 EncryptionSettings.None(),
+                new Label("test-publisher"),
                 new Port(56601));
             publisher.Start().Wait();
 

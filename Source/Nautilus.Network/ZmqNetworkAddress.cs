@@ -55,19 +55,20 @@ namespace Nautilus.Network
         /// <summary>
         /// Returns a <see cref="ZmqNetworkAddress"/> for local host at the given port.
         /// </summary>
-        /// <param name="port">The port number.</param>
-        /// <returns>The network address.</returns>
-        public static ZmqNetworkAddress LocalHost(int port)
-        {
-            return new ZmqNetworkAddress(NetworkAddress.LocalHost, new Port(port));
-        }
-
-        /// <summary>
-        /// Returns a <see cref="ZmqNetworkAddress"/> for local host at the given port.
-        /// </summary>
         /// <param name="port">The port.</param>
         /// <returns>The network address.</returns>
         public static ZmqNetworkAddress LocalHost(Port port)
+        {
+            return new ZmqNetworkAddress(new NetworkAddress("127.0.0.1"), port);
+        }
+
+        /// <summary>
+        /// Returns a <see cref="ZmqNetworkAddress"/> for all interfaces (routing to the private IP)
+        /// at the given port.
+        /// </summary>
+        /// <param name="port">The port.</param>
+        /// <returns>The network address.</returns>
+        public static ZmqNetworkAddress AllInterfaces(Port port)
         {
             return new ZmqNetworkAddress(new NetworkAddress("*"), port);
         }

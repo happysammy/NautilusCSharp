@@ -55,8 +55,7 @@ namespace Nautilus.Data.Network
                 dataBusAdapter,
                 compressor,
                 encryption,
-                Nautilus.Network.NetworkAddress.LocalHost,
-                port)
+                ZmqNetworkAddress.AllInterfaces(port))
         {
             this.barSerializer = barSerializer;
             this.instrumentSerializer = instrumentSerializer;

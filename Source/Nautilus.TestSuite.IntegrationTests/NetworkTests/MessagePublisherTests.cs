@@ -55,8 +55,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 this.container,
                 DataBusFactory.Create(this.container),
                 EncryptionSettings.None(),
-                NetworkAddress.LocalHost,
-                new Port(55555));
+                ZmqNetworkAddress.LocalHost(new Port(55555)));
 
             // Assert
             Assert.Equal(ComponentState.Initialized, publisher.ComponentState);
@@ -71,8 +70,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
                 this.container,
                 DataBusFactory.Create(this.container),
                 EncryptionSettings.None(),
-                NetworkAddress.LocalHost,
-                new Port(55555));
+                ZmqNetworkAddress.LocalHost(new Port(55555)));
             publisher.Start().Wait();
 
             const string testAddress = "tcp://localhost:55555";

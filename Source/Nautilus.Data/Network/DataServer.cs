@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using Nautilus.Common.Interfaces;
 using Nautilus.Core.Message;
+using Nautilus.Core.Types;
 using Nautilus.Data.Messages.Requests;
 using Nautilus.Data.Messages.Responses;
 using Nautilus.DomainModel.Entities;
@@ -46,6 +47,7 @@ namespace Nautilus.Data.Network
         /// <param name="responseSerializer">The outbound message serializer.</param>
         /// <param name="compressor">The data compressor.</param>
         /// <param name="encryption">The encryption configuration.</param>
+        /// <param name="serviceName">The service name.</param>
         /// <param name="requestPort">The inbound port.</param>
         /// <param name="responsePort">The outbound port.</param>
         public DataServer(
@@ -56,6 +58,7 @@ namespace Nautilus.Data.Network
             IMessageSerializer<Response> responseSerializer,
             ICompressor compressor,
             EncryptionSettings encryption,
+            Label serviceName,
             Port requestPort,
             Port responsePort)
             : base(
@@ -66,8 +69,9 @@ namespace Nautilus.Data.Network
                 responseSerializer,
                 compressor,
                 encryption,
-                ZmqNetworkAddress.LocalHost(requestPort),
-                ZmqNetworkAddress.LocalHost(responsePort))
+                serviceName,
+                ZmqNetworkAddress.AllInterfaces(requestPort),
+                ZmqNetworkAddress.AllInterfaces(responsePort))
         {
             this.RegisterHandler<DataRequest>(this.OnMessage);
             this.RegisterHandler<DataResponse>(this.OnMessage);

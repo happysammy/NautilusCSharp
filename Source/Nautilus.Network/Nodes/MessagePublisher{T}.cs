@@ -24,6 +24,7 @@ using Nautilus.Common.Enums;
 using Nautilus.Common.Interfaces;
 using Nautilus.Common.Logging;
 using Nautilus.Common.Messages.Commands;
+using Nautilus.Core.Types;
 using Nautilus.Messaging.Interfaces;
 using Nautilus.Network.Encryption;
 using NetMQ;
@@ -49,15 +50,15 @@ namespace Nautilus.Network.Nodes
         /// <param name="serializer">The message serializer.</param>
         /// <param name="compressor">The message compressor.</param>
         /// <param name="encryption">The encryption configuration.</param>
-        /// <param name="host">The publishers host address.</param>
-        /// <param name="port">The publishers port.</param>
+        /// <param name="serviceName">The service name.</param>
+        /// <param name="networkAddress">The publishers network address.</param>
         protected MessagePublisher(
             IComponentryContainer container,
             ISerializer<T> serializer,
             ICompressor compressor,
             EncryptionSettings encryption,
-            NetworkAddress host,
-            Port port)
+            Label serviceName,
+            ZmqNetworkAddress networkAddress)
             : base(container)
         {
             this.serializer = serializer;
@@ -67,12 +68,12 @@ namespace Nautilus.Network.Nodes
             {
                 Options =
                 {
-                    Identity = Encoding.UTF8.GetBytes($"{nameof(Nautilus)}-{this.Name.Value}"),
+                    Identity = Encoding.UTF8.GetBytes($"{serviceName.Value}-{this.Name.Value}"),
                     Linger = TimeSpan.FromSeconds(1),
                 },
             };
 
-            this.networkAddress = new ZmqNetworkAddress(host, port);
+            this.networkAddress = networkAddress;
 
             if (encryption.UseEncryption)
             {

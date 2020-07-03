@@ -17,6 +17,7 @@
 
 using Nautilus.Common.Interfaces;
 using Nautilus.Core.Message;
+using Nautilus.Core.Types;
 using Nautilus.DomainModel.Events;
 using Nautilus.Network;
 using Nautilus.Network.Encryption;
@@ -39,20 +40,22 @@ namespace Nautilus.Execution.Network
         /// <param name="serializer">The event serializer.</param>
         /// <param name="compressor">The event compressor.</param>
         /// <param name="encryption">The encryption configuration.</param>
-        /// <param name="port">The publishers port.</param>
+        /// <param name="serviceName">The service name.</param>
+        /// <param name="port">The publisher port.</param>
         public EventPublisher(
             IComponentryContainer container,
             ISerializer<Event> serializer,
             ICompressor compressor,
             EncryptionSettings encryption,
+            Label serviceName,
             Port port)
             : base(
                 container,
                 serializer,
                 compressor,
                 encryption,
-                Nautilus.Network.NetworkAddress.LocalHost,
-                port)
+                serviceName,
+                ZmqNetworkAddress.AllInterfaces(port))
         {
             this.RegisterHandler<TradeEvent>(this.OnEvent);
             this.RegisterHandler<AccountStateEvent>(this.OnEvent);

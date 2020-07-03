@@ -149,7 +149,7 @@ namespace Nautilus.Network
             }
             catch (Exception ex)
             {
-                // Interaction with NetMQ
+                // Interaction with NetMQ (catch all Exception log and continue for now)
                 this.Logger.LogError(LogId.Networking, ex.ToString(), ex);
             }
 
@@ -172,8 +172,8 @@ namespace Nautilus.Network
             }
             catch (Exception ex)
             {
-                // Interaction with NetMQ
-                // A RouterSocket will throw HostUnreadableException if a message cannot be routed
+                // Interaction with NetMQ (catch all Exception log and continue for now)
+                // A RouterSocket will throw HostUnreadableException if a message cannot be routed.
                 this.Logger.LogError(LogId.Networking, ex.ToString(), ex);
             }
 

@@ -70,9 +70,10 @@ namespace NautilusExecutor
                 secretKeyEncoded);
 
             var wireConfig = new WireConfiguration(
-                configuration["Messaging:Version"],
+                configuration["Messaging:ApiVersion"],
                 configuration["Messaging:Compression"].ToEnum<CompressionCodec>(),
-                encryptionConfig);
+                encryptionConfig,
+                new Label(configuration["Messaging:ServiceName"]));
 
             // FIX Configuration
             var fixConfigSection = configuration.GetSection(ConfigSection.FIX44);

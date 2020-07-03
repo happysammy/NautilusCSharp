@@ -11,10 +11,11 @@
     "MinimumLevel": "Information"
   },
   "Messaging": {
-    "Version": "1.0",
+    "ApiVersion": "1.0",
     "Compression": "Snappy",
     "Encryption": "Curve25519",
-    "KeysPath": "/home/ec2-user/keys/"
+    "KeysPath": "/home/ec2-user/keys/",
+    "ServiceName": "nautilus-exec"
   },
   "Network": {
     "CommandReqPort": 55555,

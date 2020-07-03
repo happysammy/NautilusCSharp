@@ -38,7 +38,7 @@ namespace Nautilus.Data.Network
         /// <param name="serializer">The tick serializer.</param>
         /// <param name="compressor">The data compressor.</param>
         /// <param name="encryption">The encryption configuration.</param>
-        /// <param name="port">The port.</param>
+        /// <param name="port">The publisher port.</param>
         public TickPublisher(
             IComponentryContainer container,
             IDataBusAdapter dataBusAdapter,
@@ -51,8 +51,7 @@ namespace Nautilus.Data.Network
                 dataBusAdapter,
                 compressor,
                 encryption,
-                NetworkAddress.LocalHost,
-                port)
+                ZmqNetworkAddress.AllInterfaces(port))
         {
             this.serializer = serializer;
 

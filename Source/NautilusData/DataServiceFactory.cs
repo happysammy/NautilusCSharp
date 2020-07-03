@@ -143,6 +143,7 @@ namespace NautilusData
                 responseSerializer,
                 compressor,
                 config.WireConfig.EncryptionConfig,
+                config.WireConfig.ServiceName,
                 config.NetworkConfig.DataReqPort,
                 config.NetworkConfig.DataResPort);
 

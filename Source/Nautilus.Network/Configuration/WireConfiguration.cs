@@ -17,6 +17,7 @@
 
 using Nautilus.Common.Enums;
 using Nautilus.Core.Correctness;
+using Nautilus.Core.Types;
 using Nautilus.Network.Encryption;
 
 namespace Nautilus.Network.Configuration
@@ -32,10 +33,12 @@ namespace Nautilus.Network.Configuration
         /// <param name="apiVersion">The wire messaging API version.</param>
         /// <param name="compression">The wire messaging compression codec.</param>
         /// <param name="encryptionConfig">The wire messaging cryptographic algorithm.</param>
+        /// <param name="serviceName">The service name.</param>
         public WireConfiguration(
             string apiVersion,
             CompressionCodec compression,
-            EncryptionSettings encryptionConfig)
+            EncryptionSettings encryptionConfig,
+            Label serviceName)
         {
             Condition.NotEmptyOrWhiteSpace(apiVersion, nameof(apiVersion));
             Condition.NotEqualTo(compression, CompressionCodec.Undefined, nameof(compression));
@@ -43,6 +46,7 @@ namespace Nautilus.Network.Configuration
             this.Version = apiVersion;
             this.CompressionCodec = compression;
             this.EncryptionConfig = encryptionConfig;
+            this.ServiceName = serviceName;
         }
 
         /// <summary>
@@ -61,6 +65,11 @@ namespace Nautilus.Network.Configuration
         public EncryptionSettings EncryptionConfig { get; }
 
         /// <summary>
+        /// Gets the service name.
+        /// </summary>
+        public Label ServiceName { get; }
+
+        /// <summary>
         /// Return a default development environment messaging configuration with no compression or encryption.
         /// </summary>
         /// <returns>The messaging configuration.</returns>
@@ -69,7 +78,8 @@ namespace Nautilus.Network.Configuration
             return new WireConfiguration(
                 "1.0",
                 CompressionCodec.None,
-                EncryptionSettings.None());
+                EncryptionSettings.None(),
+                new Label("test-service"));
         }
     }
 }
