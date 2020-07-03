@@ -14,7 +14,7 @@
     "Version": "1.0",
     "Compression": "Snappy",
     "Encryption": "Curve25519",
-    "KeysPath": ""
+    "KeysPath": "/home/ec2-user/keys/"
   },
   "Network": {
     "DataReqPort": 55501,
@@ -23,7 +23,7 @@
     "TickPubPort": 55504
   },
   "FIX44": {
-    "ConfigPath": "",
+    "ConfigPath": "/home/ec2-user/config-data/",
     "ConfigFile": "fix_fxcm1_md.cfg",
     "ConnectJob": {
       "Day": "Sunday",
