@@ -23,17 +23,17 @@ phases:
       - mkdir nautilus-exec-debug
       - mkdir nautilus-exec-release
       - dotnet restore
-      - dotnet publish Source/NautilusData/NautilusData.csproj -c Debug -o nautilus-data-debug
-      - dotnet publish Source/NautilusData/NautilusData.csproj -c Release -o nautilus-data-release
-      - dotnet publish Source/NautilusExecutor/NautilusExecutor.csproj -c Debug -o nautilus-exec-debug
-      - dotnet publish Source/NautilusExecutor/NautilusExecutor.csproj -c Release -o nautilus-exec-release
+      - dotnet publish Source/NautilusData/NautilusData.csproj --framework netcoreapp3.1 -c Debug -o nautilus-data-debug
+      - dotnet publish Source/NautilusData/NautilusData.csproj --framework netcoreapp3.1 -c Release -o nautilus-data-release
+      - dotnet publish Source/NautilusExecutor/NautilusExecutor.csproj --framework netcoreapp3.1 -c Debug -o nautilus-exec-debug
+      - dotnet publish Source/NautilusExecutor/NautilusExecutor.csproj --framework netcoreapp3.1 -c Release -o nautilus-exec-release
       - echo Build completed on `date`
 
 artifacts:
   files:
-    - 'nautilus-data-debug/*'
-    - 'nautilus-data-release/*'
-    - 'nautilus-exec-debug/*'
-    - 'nautilus-exec-release/*'
+    - 'nautilus-data-debug/*/**'
+    - 'nautilus-data-release/*/**'
+    - 'nautilus-exec-debug/*/**'
+    - 'nautilus-exec-release/*/**'
   name: nautilus-services-latest
   discard-paths: no
