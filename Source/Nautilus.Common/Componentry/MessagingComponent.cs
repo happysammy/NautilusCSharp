@@ -97,6 +97,10 @@ namespace Nautilus.Common.Componentry
         {
             this.SendToSelf(new Start(this.NewGuid(), this.TimeNow())).Wait();
 
+            while (this.ComponentState != ComponentState.Running)
+            {
+            }
+
             return Task.CompletedTask;
         }
 
