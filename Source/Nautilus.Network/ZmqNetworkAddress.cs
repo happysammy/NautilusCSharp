@@ -69,7 +69,7 @@ namespace Nautilus.Network
         /// <returns>The network address.</returns>
         public static ZmqNetworkAddress LocalHost(Port port)
         {
-            return new ZmqNetworkAddress(NetworkAddress.LocalHost, port);
+            return new ZmqNetworkAddress(new NetworkAddress("*"), port);
         }
 
         /// <summary>
