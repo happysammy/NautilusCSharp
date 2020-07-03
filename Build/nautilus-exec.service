@@ -1,0 +1,15 @@
+[Unit]
+Description=Nautilus algorithmic trading execution service
+After=network.target
+
+[Service]
+Type=simple
+User=ec2-user
+WorkingDirectory=/home/ec2-user/nautilus-exec-release/
+ExecStart=/usr/bin/dotnet /home/ec2-user/nautilus-exec-release/NautilusExecutor.dll
+Restart=always
+RestartSec=10
+SyslogIdentifier=nautilus-data
+
+[Install]
+WantedBy=multi-user.target

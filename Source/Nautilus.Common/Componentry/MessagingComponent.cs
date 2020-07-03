@@ -97,10 +97,6 @@ namespace Nautilus.Common.Componentry
         {
             this.SendToSelf(new Start(this.NewGuid(), this.TimeNow())).Wait();
 
-            while (this.ComponentState != ComponentState.Running)
-            {
-            }
-
             return Task.CompletedTask;
         }
 
@@ -195,7 +191,9 @@ namespace Nautilus.Common.Componentry
         {
             this.SendToSelf(envelope.Message);
 
+#if DEBUG
             this.Logger.LogTrace(LogId.Component, $"Received {envelope}.", envelope.Id, envelope.Message.Id);
+#endif
         }
 
         private static string SetSubName(string subName)
