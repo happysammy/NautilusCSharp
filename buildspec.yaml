@@ -18,15 +18,22 @@ phases:
       - dotnet test Source/Nautilus.TestSuite.IntegrationTests
   post_build:
     commands:
-      - mkdir NautilusDataRelease
-      - mkdir NautilusExecutorRelease
-      - dotnet publish Source/NautilusData/NautilusData.csproj -c Release -o NautilusDataRelease
-      - dotnet publish Source/NautilusExecutor/NautilusExecutor.csproj -c Release -o NautilusExecutorRelease
+      - mkdir nautilus-data-debug
+      - mkdir nautilus-data-release
+      - mkdir nautilus-exec-debug
+      - mkdir nautilus-exec-release
+      - dotnet restore
+      - dotnet publish Source/NautilusData/NautilusData.csproj -c Debug -o nautilus-data-debug
+      - dotnet publish Source/NautilusData/NautilusData.csproj -c Release -o nautilus-data-release
+      - dotnet publish Source/NautilusExecutor/NautilusExecutor.csproj -c Debug -o nautilus-exec-debug
+      - dotnet publish Source/NautilusExecutor/NautilusExecutor.csproj -c Release -o nautilus-exec-release
       - echo Build completed on `date`
 
 artifacts:
   files:
-    - 'NautilusDataRelease/*'
-    - 'NautilusExecutorRelease/*'
+    - 'nautilus-data-debug/*'
+    - 'nautilus-data-release/*'
+    - 'nautilus-exec-debug/*'
+    - 'nautilus-exec-release/*'
   name: nautilus-services-latest
   discard-paths: no
