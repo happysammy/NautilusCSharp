@@ -99,6 +99,8 @@ namespace Nautilus.Common.Componentry
 
             while (this.ComponentState != ComponentState.Running)
             {
+                // Setting this to 0 causes a component to hang as it starts
+                Task.Delay(10);
             }
 
             return Task.CompletedTask;
