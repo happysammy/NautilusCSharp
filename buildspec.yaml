@@ -31,9 +31,9 @@ phases:
 
 artifacts:
   files:
-    - 'nautilus-data-debug/*/**'
-    - 'nautilus-data-release/*/**'
-    - 'nautilus-exec-debug/*/**'
-    - 'nautilus-exec-release/*/**'
+    - 'nautilus-data-debug/**/*'
+    - 'nautilus-data-release/**/*'
+    - 'nautilus-exec-debug/**/*'
+    - 'nautilus-exec-release/**/*'
   name: nautilus-services-latest
   discard-paths: no
