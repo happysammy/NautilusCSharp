@@ -59,7 +59,6 @@ There is currently a large effort to develop improved documentation.
 * Scalability
 
 ## Support
-
 Please direct all questions, comments or bug reports to info@nautechsystems.io
 
 Copyright (C) 2015-2020 Nautech Systems Pty Ltd. All rights reserved.
