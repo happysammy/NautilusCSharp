@@ -39,6 +39,8 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class MessageBusTests
     {
+        private const int TestAssertionsTaskDelay = 100;
+
         private readonly IComponentryContainer container;
         private readonly MockComponent receiver;
         private readonly MessageBus<Event> messageBus;
@@ -89,7 +91,9 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.messageBus.Endpoint.SendAsync(subscribe);
+            this.messageBus.Endpoint.SendAsync(subscribe).Wait();
+
+            Task.Delay(TestAssertionsTaskDelay).Wait(); // Allow sending to complete for assertions
 
             // Assert
             Assert.Equal(0, this.messageBus.SubscriptionCount);
@@ -106,8 +110,9 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.messageBus.Endpoint.SendAsync(subscribe);
-            Task.Delay(200).Wait(); // Allow threads to complete for assertions (will refactor)
+            this.messageBus.Endpoint.SendAsync(subscribe).Wait();
+
+            Task.Delay(100).Wait(); // Allow sending to complete for assertions
 
             // Assert
             Assert.Contains(typeof(Event), this.messageBus.Subscriptions);
@@ -125,9 +130,10 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.messageBus.Endpoint.SendAsync(subscribe);
-            this.messageBus.Endpoint.SendAsync(subscribe);
-            Task.Delay(200).Wait(); // Allow threads to complete for assertions (will refactor)
+            this.messageBus.Endpoint.SendAsync(subscribe).Wait();
+            this.messageBus.Endpoint.SendAsync(subscribe).Wait();
+
+            Task.Delay(TestAssertionsTaskDelay).Wait(); // Allow sending to complete for assertions
 
             // Assert
             Assert.Equal(1, this.messageBus.Subscriptions[typeof(Event)].Count);
@@ -145,8 +151,9 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.messageBus.Endpoint.SendAsync(subscribe);
-            Task.Delay(200).Wait(); // Allow threads to complete for assertions (will refactor)
+            this.messageBus.Endpoint.SendAsync(subscribe).Wait();
+
+            Task.Delay(TestAssertionsTaskDelay).Wait(); // Allow sending to complete for assertions
 
             // Assert
             Assert.Contains(typeof(MarketOpened), this.messageBus.Subscriptions);
@@ -165,9 +172,10 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.messageBus.Endpoint.SendAsync(subscribe);
-            this.messageBus.Endpoint.SendAsync(subscribe);
-            Task.Delay(200).Wait(); // Allow threads to complete for assertions (will refactor)
+            this.messageBus.Endpoint.SendAsync(subscribe).Wait();
+            this.messageBus.Endpoint.SendAsync(subscribe).Wait();
+
+            Task.Delay(TestAssertionsTaskDelay).Wait(); // Allow sending to complete for assertions
 
             // Assert
             Assert.Contains(typeof(MarketOpened), this.messageBus.Subscriptions);
@@ -212,14 +220,16 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.messageBus.Endpoint.SendAsync(subscribe1);
-            this.messageBus.Endpoint.SendAsync(subscribe2);
-            this.messageBus.Endpoint.SendAsync(subscribe3);
-            this.messageBus.Endpoint.SendAsync(subscribe4);
+            this.messageBus.Endpoint.SendAsync(subscribe1).Wait();
+            this.messageBus.Endpoint.SendAsync(subscribe2).Wait();
+            this.messageBus.Endpoint.SendAsync(subscribe3).Wait();
+            this.messageBus.Endpoint.SendAsync(subscribe4).Wait();
             this.messageBus.Endpoint.SendAsync(subscribe5).Wait();
             this.messageBus.Stop().Wait();
             this.receiver.Stop().Wait();
             receiver2.Stop().Wait();
+
+            Task.Delay(TestAssertionsTaskDelay).Wait(); // Allow sending to complete for assertions
 
             // Assert
             Assert.Contains(typeof(Event), this.messageBus.Subscriptions);
@@ -249,9 +259,10 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.messageBus.Endpoint.SendAsync(subscribe);
-            this.messageBus.Endpoint.SendAsync(unsubscribe);
-            Task.Delay(200).Wait(); // Allow threads to complete for assertions (will refactor)
+            this.messageBus.Endpoint.SendAsync(subscribe).Wait();
+            this.messageBus.Endpoint.SendAsync(unsubscribe).Wait();
+
+            Task.Delay(TestAssertionsTaskDelay).Wait(); // Allow sending to complete for assertions
 
             // Assert
             Assert.Equal(0, this.messageBus.SubscriptionCount);
@@ -274,9 +285,10 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.messageBus.Endpoint.SendAsync(subscribe);
-            this.messageBus.Endpoint.SendAsync(unsubscribe);
-            Task.Delay(200).Wait(); // Allow threads to complete for assertions (will refactor)
+            this.messageBus.Endpoint.SendAsync(subscribe).Wait();
+            this.messageBus.Endpoint.SendAsync(unsubscribe).Wait();
+
+            Task.Delay(TestAssertionsTaskDelay).Wait(); // Allow sending to complete for assertions
 
             // Assert
             Assert.Equal(0, this.messageBus.SubscriptionCount);
@@ -293,8 +305,9 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.messageBus.Endpoint.SendAsync(unsubscribe);
-            Task.Delay(200).Wait(); // Allow threads to complete for assertions (will refactor)
+            this.messageBus.Endpoint.SendAsync(unsubscribe).Wait();
+
+            Task.Delay(TestAssertionsTaskDelay).Wait(); // Allow sending to complete for assertions
 
             // Assert
             Assert.Equal(0, this.messageBus.SubscriptionCount);
@@ -311,8 +324,9 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.messageBus.Endpoint.SendAsync(unsubscribe);
-            Task.Delay(200).Wait(); // Allow threads to complete for assertions (will refactor)
+            this.messageBus.Endpoint.SendAsync(unsubscribe).Wait();
+
+            Task.Delay(TestAssertionsTaskDelay).Wait(); // Allow sending to complete for assertions
 
             // Assert
             Assert.Equal(0, this.messageBus.SubscriptionCount);
@@ -329,8 +343,9 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.messageBus.Endpoint.SendAsync(unsubscribe);
-            Task.Delay(200).Wait(); // Allow threads to complete for assertions (will refactor)
+            this.messageBus.Endpoint.SendAsync(unsubscribe).Wait();
+
+            Task.Delay(TestAssertionsTaskDelay).Wait(); // Allow sending to complete for assertions
 
             // Assert
             Assert.Equal(0, this.messageBus.SubscriptionCount);
@@ -391,18 +406,20 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.messageBus.Endpoint.SendAsync(subscribe1);
-            this.messageBus.Endpoint.SendAsync(subscribe2);
-            this.messageBus.Endpoint.SendAsync(subscribe3);
-            this.messageBus.Endpoint.SendAsync(subscribe4);
-            this.messageBus.Endpoint.SendAsync(subscribe5);
-            this.messageBus.Endpoint.SendAsync(subscribe5); // Test duplicate subscriptions do not occur
-            this.messageBus.Endpoint.SendAsync(unsubscribe1);
-            this.messageBus.Endpoint.SendAsync(unsubscribe2);
-            this.messageBus.Endpoint.SendAsync(unsubscribe3);
+            this.messageBus.Endpoint.SendAsync(subscribe1).Wait();
+            this.messageBus.Endpoint.SendAsync(subscribe2).Wait();
+            this.messageBus.Endpoint.SendAsync(subscribe3).Wait();
+            this.messageBus.Endpoint.SendAsync(subscribe4).Wait();
+            this.messageBus.Endpoint.SendAsync(subscribe5).Wait();
+            this.messageBus.Endpoint.SendAsync(subscribe5).Wait(); // Tests duplicate subscriptions do not occur
+            this.messageBus.Endpoint.SendAsync(unsubscribe1).Wait();
+            this.messageBus.Endpoint.SendAsync(unsubscribe2).Wait();
+            this.messageBus.Endpoint.SendAsync(unsubscribe3).Wait();
             this.messageBus.Stop().Wait();
             this.receiver.Stop().Wait();
             receiver2.Stop().Wait();
+
+            Task.Delay(TestAssertionsTaskDelay).Wait(); // Allow sending to complete for assertions
 
             // Assert
             Assert.Contains(typeof(Event), this.messageBus.Subscriptions);
@@ -430,8 +447,9 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.messageBus.Endpoint.SendAsync(envelope);
-            Task.Delay(200).Wait(); // Allow threads to complete for assertions (will refactor)
+            this.messageBus.Endpoint.SendAsync(envelope).Wait();
+
+            Task.Delay(TestAssertionsTaskDelay).Wait(); // Allow sending to complete for assertions
 
             // Assert
             Assert.Contains(envelope, this.receiver.Messages);
@@ -454,8 +472,9 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.messageBus.Endpoint.SendAsync(envelope);
-            Task.Delay(200).Wait(); // Allow threads to complete for assertions (will refactor)
+            this.messageBus.Endpoint.SendAsync(envelope).Wait();
+
+            Task.Delay(TestAssertionsTaskDelay).Wait(); // Allow sending to complete for assertions
 
             // Assert
             Assert.Contains(envelope, this.messageBus.DeadLetters);
@@ -478,8 +497,9 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.messageBus.Endpoint.SendAsync(envelope);
-            Task.Delay(200).Wait(); // Allow threads to complete for assertions (will refactor)
+            this.messageBus.Endpoint.SendAsync(envelope).Wait();
+
+            Task.Delay(TestAssertionsTaskDelay).Wait(); // Allow sending to complete for assertions
 
             // Assert
             Assert.Equal(0, this.messageBus.SubscriptionCount);
@@ -507,11 +527,12 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
                 ServiceAddress.DataService,
                 StubZonedDateTime.UnixEpoch());
 
-            this.messageBus.Endpoint.SendAsync(subscribe);
+            this.messageBus.Endpoint.SendAsync(subscribe).Wait();
 
             // Act
-            this.messageBus.Endpoint.SendAsync(envelope);
-            Task.Delay(200).Wait(); // Allow threads to complete for assertions (will refactor)
+            this.messageBus.Endpoint.SendAsync(envelope).Wait();
+
+            Task.Delay(TestAssertionsTaskDelay).Wait(); // Allow sending to complete for assertions
 
             // Assert
             Assert.Contains(envelope, this.receiver.Messages);
@@ -539,11 +560,12 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
                 ServiceAddress.DataService,
                 StubZonedDateTime.UnixEpoch());
 
-            this.messageBus.Endpoint.SendAsync(subscribe);
+            this.messageBus.Endpoint.SendAsync(subscribe).Wait();
 
             // Act
-            this.messageBus.Endpoint.SendAsync(envelope);
-            Task.Delay(200).Wait(); // Allow threads to complete for assertions (will refactor)
+            this.messageBus.Endpoint.SendAsync(envelope).Wait();
+
+            Task.Delay(TestAssertionsTaskDelay).Wait(); // Allow sending to complete for assertions
 
             // Assert
             Assert.Contains(envelope, this.receiver.Messages);

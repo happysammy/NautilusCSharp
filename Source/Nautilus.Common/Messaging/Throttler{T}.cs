@@ -146,7 +146,7 @@ namespace Nautilus.Common.Messaging
 
                 if (message == null)
                 {
-                    continue;  // Cannot send a null message.
+                    continue;  // Cannot send a null message
                 }
 
                 this.receiver(message);
@@ -157,7 +157,7 @@ namespace Nautilus.Common.Messaging
 
             if (this.vouchers <= 0 && this.queue.Count > 0)
             {
-                // At message limit.
+                // At message limit
                 this.Logger.LogTrace($"At message limit of {this.limit} per {this.interval} (queued_count={this.queue.Count}).");
             }
         }

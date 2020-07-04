@@ -16,7 +16,6 @@
 //--------------------------------------------------------------------------------------------------
 
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using Nautilus.DomainModel.Enums;
 using Nautilus.DomainModel.Events;
 using Nautilus.DomainModel.FiniteStateMachine;
@@ -28,7 +27,7 @@ namespace Nautilus.DomainModel.Aggregates.Internal
     /// </summary>
     internal static class OrderFsmFactory
     {
-        private static readonly ImmutableDictionary<StateTransition<OrderState>, OrderState> StateTransitionTable =
+        private static readonly Dictionary<StateTransition<OrderState>, OrderState> StateTransitionTable =
             new Dictionary<StateTransition<OrderState>, OrderState>
             {
                 { new StateTransition<OrderState>(OrderState.Initialized, Trigger.Event(typeof(OrderCancelled))), OrderState.Cancelled },
@@ -52,7 +51,7 @@ namespace Nautilus.DomainModel.Aggregates.Internal
                 { new StateTransition<OrderState>(OrderState.PartiallyFilled, Trigger.Event(typeof(OrderCancelled))), OrderState.Cancelled },
                 { new StateTransition<OrderState>(OrderState.PartiallyFilled, Trigger.Event(typeof(OrderPartiallyFilled))), OrderState.PartiallyFilled },
                 { new StateTransition<OrderState>(OrderState.PartiallyFilled, Trigger.Event(typeof(OrderFilled))), OrderState.Filled },
-            }.ToImmutableDictionary();
+            };
 
         /// <summary>
         /// Return a new <see cref="Order"/> <see cref="FiniteStateMachine"/>.

@@ -178,7 +178,6 @@ namespace Nautilus.Common.Data
                 return;
             }
 
-            // TODO: Currently can't easily 'unlink' a subscriber from the broadcast block
             this.subscriptions.Remove(subscriber);
             this.Logger.LogInformation($"Unsubscribed {subscriber} from {this.BusType.Name} data.");
         }

@@ -78,7 +78,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.controller.Endpoint.SendAsync(subscribe1);
             this.controller.Endpoint.SendAsync(subscribe2).Wait();
             this.controller.Stop().Wait();
-            Task.Delay(100).Wait();  // TODO: Intermittent test sometimes Specifications.Count == 1
+
+            Task.Delay(100).Wait();  // Occasionally intermittent without Task.Delay
 
             // Assert
             Assert.Equal(1, this.controller.BarAggregators.Count);
@@ -113,7 +114,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.controller.Endpoint.SendAsync(subscribe2).Wait();
             this.controller.Stop().Wait();
 
-            Task.Delay(100).Wait(); // Extra delay needed to prevent intermittently failing test?
+            Task.Delay(100).Wait(); // Occasionally intermittent without Task.Delay
 
             // Assert
             Assert.Equal(1, this.controller.BarAggregators.Count);
@@ -165,6 +166,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.controller.Endpoint.SendAsync(subscribe4).Wait();
             this.controller.Stop().Wait();
 
+            Task.Delay(100).Wait(); // Occasionally intermittent without Task.Delay
+
             // Assert
             Assert.Equal(2, this.controller.BarAggregators.Count);
             Assert.Equal(4, this.controller.Subscriptions.Count);
@@ -206,10 +209,11 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.controller.Endpoint.SendAsync(unsubscribe).Wait();
             this.controller.Stop().Wait();
 
-            // TODO: Intermittent test (subscriptions count sometimes still 2)
+            Task.Delay(100).Wait(); // Occasionally intermittent without Task.Delay
+
             // Assert
-            // Assert.Equal(1, this.controller.Subscriptions.Count);
-            // Assert.Equal(1, this.controller.BarAggregators[symbol].Specifications.Count);
+            Assert.Equal(1, this.controller.Subscriptions.Count);
+            Assert.Equal(1, this.controller.BarAggregators[symbol].Specifications.Count);
             Assert.Empty(this.controller.UnhandledMessages);
         }
 
@@ -246,6 +250,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.controller.Endpoint.SendAsync(unsubscribe);
             this.controller.Endpoint.SendAsync(unsubscribe).Wait();
             this.controller.Stop().Wait();
+
+            Task.Delay(100).Wait(); // Occasionally intermittent without Task.Delay
 
             // Assert
             Assert.Equal(1, this.controller.Subscriptions.Count);
@@ -324,6 +330,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.controller.Endpoint.SendAsync(unsubscribe3);
             this.controller.Endpoint.SendAsync(unsubscribe4).Wait();
             this.controller.Stop().Wait();
+
+            Task.Delay(100).Wait(); // Occasionally intermittent without Task.Delay
 
             // Assert
             Assert.Equal(0, this.controller.Subscriptions.Count);

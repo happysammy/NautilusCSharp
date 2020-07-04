@@ -107,8 +107,6 @@ namespace Nautilus.Execution.Engine
                 else
                 {
                     this.Logger.LogError(LogId.Database, $"Residual working order {orderId} was found not working.");
-
-                    // TODO: Remove from working index
                 }
             }
 
@@ -129,8 +127,6 @@ namespace Nautilus.Execution.Engine
                 else
                 {
                     this.Logger.LogError(LogId.Database, $"Residual open position {positionId} was found not open.");
-
-                    // TODO: Remove from open index
                 }
             }
         }

@@ -72,7 +72,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.DataTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.dataBus.Endpoint.SendAsync(subscribe);
+            this.dataBus.Endpoint.SendAsync(subscribe).Wait();
             this.dataBus.Stop().Wait();
 
             // Assert
@@ -90,7 +90,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.DataTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.dataBus.Endpoint.SendAsync(subscribe);
+            this.dataBus.Endpoint.SendAsync(subscribe).Wait();
             this.dataBus.Stop().Wait();
 
             // Assert
@@ -109,8 +109,8 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.DataTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.dataBus.Endpoint.SendAsync(subscribe);
-            this.dataBus.Endpoint.SendAsync(subscribe);
+            this.dataBus.Endpoint.SendAsync(subscribe).Wait();
+            this.dataBus.Endpoint.SendAsync(subscribe).Wait();
             this.dataBus.Stop().Wait();
 
             // Assert
@@ -136,8 +136,8 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.DataTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.dataBus.Endpoint.SendAsync(subscribe1);
-            this.dataBus.Endpoint.SendAsync(subscribe2);
+            this.dataBus.Endpoint.SendAsync(subscribe1).Wait();
+            this.dataBus.Endpoint.SendAsync(subscribe2).Wait();
             this.dataBus.Stop().Wait();
 
             // Assert
@@ -157,7 +157,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.DataTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.dataBus.Endpoint.SendAsync(unsubscribe);
+            this.dataBus.Endpoint.SendAsync(unsubscribe).Wait();
             this.dataBus.Stop().Wait();
 
             // Assert
@@ -181,8 +181,8 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.DataTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.dataBus.Endpoint.SendAsync(subscribe);
-            this.dataBus.Endpoint.SendAsync(unsubscribe);
+            this.dataBus.Endpoint.SendAsync(subscribe).Wait();
+            this.dataBus.Endpoint.SendAsync(unsubscribe).Wait();
             this.dataBus.Stop().Wait();
 
             // Assert
@@ -214,8 +214,8 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.DataTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.dataBus.Endpoint.SendAsync(subscribe1);
-            this.dataBus.Endpoint.SendAsync(subscribe2);
+            this.dataBus.Endpoint.SendAsync(subscribe1).Wait();
+            this.dataBus.Endpoint.SendAsync(subscribe2).Wait();
             this.dataBus.Endpoint.SendAsync(unsubscribe).Wait();
             this.dataBus.Stop().Wait();
 
@@ -264,8 +264,8 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.DataTests
             var tick3 = StubTickProvider.Create(new Symbol("AUDUSD", new Venue("FXCM")), StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(2));
 
             // Act
-            this.dataBus.Endpoint.SendAsync(subscribe1);
-            this.dataBus.Endpoint.SendAsync(subscribe2);
+            this.dataBus.Endpoint.SendAsync(subscribe1).Wait();
+            this.dataBus.Endpoint.SendAsync(subscribe2).Wait();
             Task.Delay(100).Wait(); // Allow subscriptions
 
             this.dataBus.PostData(tick1);

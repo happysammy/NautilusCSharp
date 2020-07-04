@@ -124,7 +124,6 @@ namespace Nautilus.Common.Messaging
             Task.WaitAll(this.cmdBus.Stop(), this.evtBus.Stop(), this.msgBus.Stop());
         }
 
-        // TODO: Below methods can be combined somehow
         private void SendToBus(Type type, Message message)
         {
             if (type == typeof(Command) || type.IsSubclassOf(typeof(Command)))

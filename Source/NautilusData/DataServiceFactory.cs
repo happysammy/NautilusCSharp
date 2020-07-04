@@ -15,7 +15,6 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-using System.Collections.Generic;
 using Nautilus.Common.Componentry;
 using Nautilus.Common.Configuration;
 using Nautilus.Common.Data;
@@ -29,8 +28,6 @@ using Nautilus.Data.Network;
 using Nautilus.Data.Providers;
 using Nautilus.Fix;
 using Nautilus.Fxcm;
-using Nautilus.Messaging;
-using Nautilus.Messaging.Interfaces;
 using Nautilus.Network.Compression;
 using Nautilus.Redis.Data;
 using Nautilus.Scheduling;
@@ -164,23 +161,6 @@ namespace NautilusData
                 config.WireConfig.EncryptionConfig,
                 config.NetworkConfig.TickPubPort);
 
-            // TODO: Refactor to auto generate
-            var addresses = new Dictionary<Address, IEndpoint>
-            {
-                { ServiceAddress.Scheduler, scheduler.Endpoint },
-                { ServiceAddress.DataGateway, dataGateway.Endpoint },
-                { ServiceAddress.DataServer, dataServer.Endpoint },
-                { ServiceAddress.DataPublisher, dataPublisher.Endpoint },
-                { ServiceAddress.TickRepository, tickRepository.Endpoint },
-                { ServiceAddress.TickProvider, tickProvider.Endpoint },
-                { ServiceAddress.TickPublisher, tickPublisher.Endpoint },
-                { ServiceAddress.BarRepository, barRepository.Endpoint },
-                { ServiceAddress.BarProvider, barProvider.Endpoint },
-                { ServiceAddress.InstrumentRepository, instrumentRepository.Endpoint },
-                { ServiceAddress.InstrumentProvider, instrumentProvider.Endpoint },
-                { ServiceAddress.BarAggregationController, barAggregationController.Endpoint },
-            };
-
             var dataService = new DataService(
                 container,
                 messagingAdapter,
@@ -189,9 +169,24 @@ namespace NautilusData
                 dataGateway,
                 config);
 
-            addresses.Add(ServiceAddress.DataService, dataService.Endpoint);
+            var registrar = new ComponentAddressRegistrar();
+
+            registrar.Register(scheduler);
+            registrar.Register(dataGateway);
+            registrar.Register(dataServer);
+            registrar.Register(dataPublisher);
+            registrar.Register(tickRepository);
+            registrar.Register(tickProvider);
+            registrar.Register(tickPublisher);
+            registrar.Register(barRepository);
+            registrar.Register(barProvider);
+            registrar.Register(instrumentRepository);
+            registrar.Register(instrumentProvider);
+            registrar.Register(barAggregationController);
+            registrar.Register(dataService);
+
             messagingAdapter.Send(new InitializeSwitchboard(
-                Switchboard.Create(addresses),
+                Switchboard.Create(registrar.GetAddressBook()),
                 guidFactory.Generate(),
                 clock.TimeNow()));
 

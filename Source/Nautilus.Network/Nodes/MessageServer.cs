@@ -58,7 +58,6 @@ namespace Nautilus.Network.Nodes
         private readonly ConcurrentDictionary<Guid, Address> correlationIndex;
         private readonly MessageQueue queue;
 
-        // TODO: Temporary hack
         private IMessageSerializer<Command>? commandSerializer;
 
         /// <summary>

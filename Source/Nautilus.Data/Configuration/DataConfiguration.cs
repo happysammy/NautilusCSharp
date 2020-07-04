@@ -16,7 +16,6 @@
 //--------------------------------------------------------------------------------------------------
 
 using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
 using Nautilus.DomainModel.Identifiers;
 using Nautilus.DomainModel.ValueObjects;
 using NodaTime;
@@ -26,12 +25,17 @@ namespace Nautilus.Data.Configuration
     /// <summary>
     /// Provides the data configuration for a <see cref="DataService"/>.
     /// </summary>
-    [SuppressMessage("ReSharper", "SA1611", Justification = "TODO")]
     public sealed class DataConfiguration
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DataConfiguration"/> class.
         /// </summary>
+        /// <param name="subscribingSymbols">The symbols to subscribe to.</param>
+        /// <param name="barSpecifications">The bar specifications to build.</param>
+        /// <param name="tickDataTrimTime">The tick data trim time.</param>
+        /// <param name="barDataTrimTime">The bar data trim time.</param>
+        /// <param name="tickDataTrimWindowDays">The tick data trim window in days.</param>
+        /// <param name="barDataTrimWindowDays">The bar data trim window in days.</param>
         public DataConfiguration(
             ImmutableList<Symbol> subscribingSymbols,
             ImmutableList<BarSpecification> barSpecifications,

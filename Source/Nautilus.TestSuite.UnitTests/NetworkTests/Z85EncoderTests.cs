@@ -38,7 +38,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
 
             // var expectedOutput = "HelloWorld";
             // var output = Z85Encoder.ToZ85String(bytes, false);
-            // TODO: System.OverflowException : Arithmetic operation resulted in an overflow.
+            // System.OverflowException : Arithmetic operation resulted in an overflow
             // Assert.Equal(expectedOutput, output);
         }
 

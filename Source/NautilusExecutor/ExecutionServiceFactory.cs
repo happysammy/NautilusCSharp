@@ -15,7 +15,6 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-using System.Collections.Generic;
 using Nautilus.Common.Componentry;
 using Nautilus.Common.Configuration;
 using Nautilus.Common.Interfaces;
@@ -27,8 +26,6 @@ using Nautilus.Execution.Engine;
 using Nautilus.Execution.Network;
 using Nautilus.Fix;
 using Nautilus.Fxcm;
-using Nautilus.Messaging;
-using Nautilus.Messaging.Interfaces;
 using Nautilus.Network.Compression;
 using Nautilus.Redis.Execution;
 using Nautilus.Scheduling;
@@ -120,16 +117,6 @@ namespace NautilusExecutor
                 config.WireConfig.ServiceName,
                 config.NetworkConfig);
 
-            // TODO: Refactor to auto generate
-            var addresses = new Dictionary<Address, IEndpoint>
-            {
-                { ServiceAddress.Scheduler, scheduler.Endpoint },
-                { ServiceAddress.ExecutionEngine, executionEngine.Endpoint },
-                { ServiceAddress.CommandServer, commandServer.Endpoint },
-                { ServiceAddress.EventPublisher, eventPublisher.Endpoint },
-                { ServiceAddress.TradingGateway, tradingGateway.Endpoint },
-            };
-
             var executionService = new ExecutionService(
                 container,
                 messagingAdapter,
@@ -137,9 +124,17 @@ namespace NautilusExecutor
                 tradingGateway,
                 config);
 
-            addresses.Add(ServiceAddress.ExecutionService, executionService.Endpoint);
+            var registrar = new ComponentAddressRegistrar();
+
+            registrar.Register(scheduler);
+            registrar.Register(executionEngine);
+            registrar.Register(commandServer);
+            registrar.Register(eventPublisher);
+            registrar.Register(tradingGateway);
+            registrar.Register(executionService);
+
             messagingAdapter.Send(new InitializeSwitchboard(
-                Switchboard.Create(addresses),
+                Switchboard.Create(registrar.GetAddressBook()),
                 guidFactory.Generate(),
                 clock.TimeNow()));
 

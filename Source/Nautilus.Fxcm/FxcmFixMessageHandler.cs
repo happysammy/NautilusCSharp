@@ -33,7 +33,6 @@ using Nautilus.DomainModel.ValueObjects;
 using Nautilus.Fix.Interfaces;
 using Nautilus.Messaging.Interfaces;
 using NodaTime;
-using QuickFix;
 using QuickFix.Fields;
 using QuickFix.FIX44;
 using Currency = Nautilus.DomainModel.Enums.Currency;
@@ -154,7 +153,7 @@ namespace Nautilus.Fxcm
                 var brokerSymbol = new BrokerSymbol(symbolCode);
                 var securityType = FxcmMessageHelper.GetSecurityType(group.GetString(FxcmTags.ProductID));
                 var tickPrecision = group.GetInt(FxcmTags.SymPrecision);
-                var tickSize = group.GetDecimal(FxcmTags.SymPointSize) * 0.1m;  // Field 9002 gives 'point' size (* 0.1m to get tick size)
+                var tickSize = group.GetDecimal(FxcmTags.SymPointSize) * 0.1m;  // Field 9002 returns 'point' size (* 0.1m to get tick size)
                 var roundLot = group.GetInt(Tags.RoundLot);
                 var minStopDistanceEntry = group.GetInt(FxcmTags.CondDistEntryStop);
                 var minLimitDistanceEntry = group.GetInt(FxcmTags.CondDistEntryLimit);
@@ -513,22 +512,6 @@ namespace Nautilus.Fxcm
 
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(message.OrdStatus, nameof(message.OrdStatus));
-            }
-        }
-
-        // TODO: Exception handling not being used
-        private void HandleException(Exception ex)
-        {
-            switch (ex)
-            {
-                case FieldNotFoundException _:
-                case NullReferenceException _:
-                case ArgumentException _:
-                    this.Logger.LogError(ex.Message, ex);
-                    break;
-                default:
-                    this.Logger.LogCritical(ex.Message, ex);
-                    throw ex;
             }
         }
 
