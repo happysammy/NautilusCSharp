@@ -94,6 +94,10 @@ namespace Nautilus.Messaging
         /// <returns>The message of type T.</returns>
         public T Open() => this.message;
 
+        // Due to the convention that an IEquatable<T> argument can be null the compiler now emits
+        // a warning unless Equals is marked with [AllowNull] or takes a nullable param. We don't
+        // want to allow null here for the sake of silencing the warning and so temporarily using
+        // #pragma warning disable CS8767 until a better refactoring is determined.
 #pragma warning disable CS8767
         /// <summary>
         /// Returns a value indicating whether this <see cref="Envelope{T}"/> is equal to the given
@@ -101,8 +105,12 @@ namespace Nautilus.Messaging
         /// </summary>
         /// <param name="other">The other object.</param>
         /// <returns>True if the message identifier equals the other identifier, otherwise false.</returns>
-        public bool Equals(Envelope<T> other) => other.Id == this.Id;
+        public bool Equals(Envelope<T> other) => other?.Id == this.Id;
 
+        // Due to the convention that an IEquatable<T> argument can be null the compiler now emits
+        // a warning unless Equals is marked with [AllowNull] or takes a nullable param. We don't
+        // want to allow null here for the sake of silencing the warning and so temporarily using
+        // #pragma warning disable CS8767 until a better refactoring is determined.
 #pragma warning disable CS8767
         /// <summary>
         /// Returns a value indicating whether this <see cref="IEnvelope"/> is equal to the given

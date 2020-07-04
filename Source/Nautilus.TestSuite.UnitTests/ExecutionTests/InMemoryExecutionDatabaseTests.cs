@@ -372,8 +372,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             var positionId = new PositionId("P-123456");
             var strategyId = new StrategyId("SCALPER", "001");
 
-            #pragma warning disable 8602
-            #pragma warning disable 8604
+#pragma warning disable 8602
+#pragma warning disable 8604
             this.database.AddOrder(atomicOrder.TakeProfit, traderId, accountId, strategyId, positionId);
 
             // Act

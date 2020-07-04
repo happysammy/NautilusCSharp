@@ -77,6 +77,10 @@ namespace Nautilus.Core.Types
         /// <returns>A <see cref="bool"/>.</returns>
         public override bool Equals(object? other) => other is Identifier<T> identifier && this.Equals(identifier);
 
+        // Due to the convention that an IEquatable<T> argument can be null the compiler now emits
+        // a warning unless Equals is marked with [AllowNull] or takes a nullable param. We don't
+        // want to allow null here for the sake of silencing the warning and so temporarily using
+        // #pragma warning disable CS8767 until a better refactoring is determined.
 #pragma warning disable CS8767
         /// <summary>
         /// Returns a value indicating whether this <see cref="Identifier{T}"/> is equal
@@ -86,6 +90,11 @@ namespace Nautilus.Core.Types
         /// <returns>A <see cref="bool"/>.</returns>
         public bool Equals(Identifier<T> other) => this.Value == other.Value;
 
+        // Due to the convention that an IEquatable<T> argument can be null the compiler now emits
+        // a warning unless Equals is marked with [AllowNull] or takes a nullable param. We don't
+        // want to allow null here for the sake of silencing the warning and so temporarily using
+        // #pragma warning disable CS8767 until a better refactoring is determined.
+#pragma warning disable CS8767
         /// <inheritdoc />
         public int CompareTo(Identifier<T> other)
         {
