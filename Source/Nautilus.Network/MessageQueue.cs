@@ -147,9 +147,8 @@ namespace Nautilus.Network
                     this.bufferInbound.Post(this.socketInbound.ReceiveMultipartBytes(ExpectedFrameCount).ToArray());
                 }
             }
-            catch (Exception ex)
+            catch (NetMQException ex)
             {
-                // Interaction with NetMQ (catch all Exception log and continue for now)
                 this.Logger.LogError(LogId.Networking, ex.ToString(), ex);
             }
 
@@ -168,13 +167,20 @@ namespace Nautilus.Network
         {
             try
             {
-                this.socketOutbound.SendMultipartBytes(frames); // Blocking
+                this.socketOutbound.SendMultipartBytes(frames); // Blocking until all frames are sent
             }
-            catch (Exception ex)
+            catch (NetMQException ex)
             {
-                // Interaction with NetMQ (catch all Exception log and continue for now)
-                // A RouterSocket will throw HostUnreadableException if a message cannot be routed.
-                this.Logger.LogError(LogId.Networking, ex.ToString(), ex);
+                if (ex is HostUnreachableException)
+                {
+                    // A RouterSocket will throw HostUnreachableException if a message cannot be routed
+                    var msg = "Could not send frames (the host was no longer connected).";
+                    this.Logger.LogWarning(LogId.Networking, msg);
+                }
+                else
+                {
+                    this.Logger.LogError(LogId.Networking, ex.ToString(), ex);
+                }
             }
 
             return Task.CompletedTask;
