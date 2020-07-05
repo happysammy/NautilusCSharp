@@ -44,7 +44,8 @@ The repository is grouped into the following solution folders;
 - `Services` provides generic data and execution services.
 - `Infrastructure` provides technology specific implementations. At present utilizing Redis.
 - `Adapters` provides broker specific implementations. At present supporting `FIX4.4` with FXCM.
-- `TestSuite` provides unit and integration tests for the codebase.
+- `Applications` provides `NautilusData` and `NautilusExecutor` ASP.NET Core applications.
+- `TestSuite` provides the unit and integration tests for the codebase.
 
 There is currently a large effort to develop improved documentation.
 
