@@ -5,8 +5,8 @@ After=network.target
 [Service]
 Type=simple
 User=ec2-user
-WorkingDirectory=/home/ec2-user/nautilus-data-release/
-ExecStart=/usr/bin/dotnet /home/ec2-user/nautilus-data-release/NautilusData.dll
+WorkingDirectory=/home/ec2-user/nautilus-data/
+ExecStart=/usr/bin/dotnet /home/ec2-user/nautilus-data/NautilusData.dll
 Restart=always
 RestartSec=10
 SyslogIdentifier=nautilus-data
