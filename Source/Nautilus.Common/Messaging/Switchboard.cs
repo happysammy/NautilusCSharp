@@ -17,7 +17,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
+using System.Linq;
 using Nautilus.Core.Correctness;
 using Nautilus.Messaging;
 using Nautilus.Messaging.Interfaces;
@@ -29,7 +29,7 @@ namespace Nautilus.Common.Messaging
     /// </summary>
     public sealed class Switchboard
     {
-        private readonly ImmutableDictionary<Address, IEndpoint> addresses;
+        private readonly Dictionary<Address, IEndpoint> addresses;
         private Action<object> deadLetterHandler = DoNothing;
 
         /// <summary>
@@ -38,7 +38,9 @@ namespace Nautilus.Common.Messaging
         /// <param name="addresses">The component addresses.</param>
         private Switchboard(Dictionary<Address, IEndpoint> addresses)
         {
-            this.addresses = addresses.ToImmutableDictionary();
+            this.addresses = addresses.ToDictionary(
+                kvp => kvp.Key,
+                kvp => kvp.Value);
         }
 
         /// <summary>

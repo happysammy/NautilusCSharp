@@ -17,7 +17,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Nautilus.Common.Interfaces;
 using Nautilus.Common.Messages.Commands;
@@ -37,7 +36,7 @@ namespace Nautilus.Common.Data
     [Immutable]
     public sealed class DataBusAdapter : IDataBusAdapter
     {
-        private readonly ImmutableDictionary<Type, IEndpoint> endpoints;
+        private readonly Dictionary<Type, IEndpoint> endpoints;
         private readonly DataBus<Tick> tickBus;
         private readonly DataBus<BarData> barBus;
         private readonly DataBus<Instrument> instrumentBus;
@@ -58,7 +57,7 @@ namespace Nautilus.Common.Data
                 { tickBus.BusType, tickBus.Endpoint },
                 { barBus.BusType, barBus.Endpoint },
                 { instrumentBus.BusType, instrumentBus.Endpoint },
-            }.ToImmutableDictionary();
+            };
 
             this.tickBus = tickBus;
             this.barBus = barBus;
