@@ -29,7 +29,7 @@ namespace Nautilus.Core.Correctness
         /// <returns>The exception string.</returns>
         public static string WasFalse(string description)
         {
-            return $"The condition predicate {description} was true.";
+            return $"The condition predicate {description} was false.";
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace Nautilus.Core.Correctness
         /// <returns>The exception string.</returns>
         public static string WasTrue(string description)
         {
-            return $"The condition predicate {description} was false.";
+            return $"The condition predicate {description} was true.";
         }
 
         /// <summary>

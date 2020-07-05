@@ -59,11 +59,11 @@ namespace Nautilus.Execution
 
             this.managedComponents = new List<Address>
             {
-                ServiceAddress.CommandServer,
-                ServiceAddress.EventPublisher,
+                ComponentAddress.CommandServer,
+                ComponentAddress.EventPublisher,
             };
 
-            this.RegisterConnectionAddress(ServiceAddress.TradingGateway);
+            this.RegisterConnectionAddress(ComponentAddress.TradingGateway);
         }
 
         /// <inheritdoc />

@@ -171,19 +171,19 @@ namespace NautilusData
 
             var registrar = new ComponentAddressRegistrar();
 
-            registrar.Register(scheduler);
-            registrar.Register(dataGateway);
-            registrar.Register(dataServer);
-            registrar.Register(dataPublisher);
-            registrar.Register(tickRepository);
-            registrar.Register(tickProvider);
-            registrar.Register(tickPublisher);
-            registrar.Register(barRepository);
-            registrar.Register(barProvider);
-            registrar.Register(instrumentRepository);
-            registrar.Register(instrumentProvider);
-            registrar.Register(barAggregationController);
-            registrar.Register(dataService);
+            registrar.Register(ComponentAddress.Scheduler, scheduler);
+            registrar.Register(ComponentAddress.DataGateway, dataGateway);
+            registrar.Register(ComponentAddress.DataServer, dataServer);
+            registrar.Register(ComponentAddress.DataPublisher, dataPublisher);
+            registrar.Register(ComponentAddress.TickRepository, tickRepository);
+            registrar.Register(ComponentAddress.TickProvider, tickProvider);
+            registrar.Register(ComponentAddress.TickPublisher, tickPublisher);
+            registrar.Register(ComponentAddress.BarRepository, barRepository);
+            registrar.Register(ComponentAddress.BarProvider, barProvider);
+            registrar.Register(ComponentAddress.InstrumentRepository, instrumentRepository);
+            registrar.Register(ComponentAddress.InstrumentProvider, instrumentProvider);
+            registrar.Register(ComponentAddress.BarAggregationController, barAggregationController);
+            registrar.Register(ComponentAddress.DataService, dataService);
 
             messagingAdapter.Send(new InitializeSwitchboard(
                 Switchboard.Create(registrar.GetAddressBook()),

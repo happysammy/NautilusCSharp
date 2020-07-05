@@ -22,7 +22,7 @@ namespace Nautilus.Data
     /// <summary>
     /// Provides data service component messaging addresses.
     /// </summary>
-    public static class ServiceAddress
+    public static class ComponentAddress
     {
         /// <summary>
         /// Gets the <see cref="DataService"/> component messaging address.

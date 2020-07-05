@@ -80,15 +80,15 @@ namespace Nautilus.Data
             this.dataGateway = dataGateway;
             this.managedComponents = new List<Address>
             {
-                ServiceAddress.DataServer,
-                ServiceAddress.DataPublisher,
-                ServiceAddress.TickRepository,
-                ServiceAddress.TickPublisher,
-                ServiceAddress.TickProvider,
-                ServiceAddress.BarRepository,
-                ServiceAddress.BarProvider,
-                ServiceAddress.InstrumentRepository,
-                ServiceAddress.InstrumentProvider,
+                ComponentAddress.DataServer,
+                ComponentAddress.DataPublisher,
+                ComponentAddress.TickRepository,
+                ComponentAddress.TickPublisher,
+                ComponentAddress.TickProvider,
+                ComponentAddress.BarRepository,
+                ComponentAddress.BarProvider,
+                ComponentAddress.InstrumentRepository,
+                ComponentAddress.InstrumentProvider,
             };
 
             this.subscribingSymbols = config.DataConfig.SubscribingSymbols;
@@ -99,7 +99,7 @@ namespace Nautilus.Data
             this.trimWindowDaysTicks = config.DataConfig.TickDataTrimWindowDays;
             this.trimWindowDaysBars = config.DataConfig.BarDataTrimWindowDays;
 
-            this.RegisterConnectionAddress(ServiceAddress.DataGateway);
+            this.RegisterConnectionAddress(ComponentAddress.DataGateway);
 
             // Commands
             this.RegisterHandler<TrimTickData>(this.OnMessage);
@@ -155,7 +155,7 @@ namespace Nautilus.Data
                             this.Mailbox,
                             this.NewGuid(),
                             this.TimeNow());
-                        this.Send(subscribe, ServiceAddress.BarAggregationController);
+                        this.Send(subscribe, ComponentAddress.BarAggregationController);
                     }
                 }
 
@@ -168,7 +168,7 @@ namespace Nautilus.Data
             this.Logger.LogInformation($"Received {message}.");
 
             // Forward message
-            this.Send(message, ServiceAddress.BarAggregationController);
+            this.Send(message, ComponentAddress.BarAggregationController);
 
             this.CreateMarketClosedJob();
         }
@@ -178,7 +178,7 @@ namespace Nautilus.Data
             this.Logger.LogInformation($"Received {message}.");
 
             // Forward message
-            this.Send(message, ServiceAddress.BarAggregationController);
+            this.Send(message, ComponentAddress.BarAggregationController);
 
             this.CreateMarketOpenedJob();
         }
@@ -188,7 +188,7 @@ namespace Nautilus.Data
             this.Logger.LogInformation($"Received {message}.");
 
             // Forward message
-            this.Send(message, ServiceAddress.TickRepository);
+            this.Send(message, ComponentAddress.TickRepository);
 
             this.CreateTrimTickDataJob();
         }
@@ -198,7 +198,7 @@ namespace Nautilus.Data
             this.Logger.LogInformation($"Received {message}.");
 
             // Forward message
-            this.Send(message, ServiceAddress.BarRepository);
+            this.Send(message, ComponentAddress.BarRepository);
 
             this.CreateTrimBarDataJob();
         }

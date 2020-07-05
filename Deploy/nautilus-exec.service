@@ -5,11 +5,16 @@ After=network.target
 [Service]
 Type=simple
 User=ec2-user
+SyslogIdentifier=nautilus-data
 WorkingDirectory=/home/ec2-user/nautilus-exec/
+Environment=ASPNETCORE_ENVIRONMENT=Production
+Environment=DOTNET_PRINT_TELEMETRY_MESSAGE=false
 ExecStart=/usr/bin/dotnet /home/ec2-user/nautilus-exec/NautilusExecutor.dll
 Restart=always
 RestartSec=10
-SyslogIdentifier=nautilus-data
+KillSignal=SIGINT
+KillMode=process
+TimeoutStopSec=2
 
 [Install]
 WantedBy=multi-user.target

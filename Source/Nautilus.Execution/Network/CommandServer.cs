@@ -133,7 +133,7 @@ namespace Nautilus.Execution.Network
 
         private void SendToExecutionEngine(Command command)
         {
-            this.Send(command, ServiceAddress.ExecutionEngine);
+            this.Send(command, ComponentAddress.ExecutionEngine);
         }
     }
 }

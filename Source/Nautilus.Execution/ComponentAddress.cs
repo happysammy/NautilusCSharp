@@ -22,7 +22,7 @@ namespace Nautilus.Execution
     /// <summary>
     /// Provides execution service component messaging addresses.
     /// </summary>
-    public static class ServiceAddress
+    public static class ComponentAddress
     {
         /// <summary>
         /// Gets the <see cref="ExecutionService"/> component messaging address.

@@ -54,9 +54,9 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
 
             var addresses = new Dictionary<Address, IEndpoint>
             {
-                { ServiceAddress.DataService, this.receiver.Endpoint },
-                { ServiceAddress.BarAggregationController, this.receiver.Endpoint },
-                { ServiceAddress.Scheduler, this.receiver.Endpoint },
+                { ComponentAddress.DataService, this.receiver.Endpoint },
+                { ComponentAddress.BarAggregationController, this.receiver.Endpoint },
+                { ComponentAddress.Scheduler, this.receiver.Endpoint },
             };
 
             this.messageBus.Endpoint.SendAsync(new InitializeSwitchboard(
@@ -442,8 +442,8 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
 
             var envelope = new Envelope<MarketOpened>(
                 message,
-                ServiceAddress.BarAggregationController,
-                ServiceAddress.DataService,
+                ComponentAddress.BarAggregationController,
+                ComponentAddress.DataService,
                 StubZonedDateTime.UnixEpoch());
 
             // Act
@@ -467,8 +467,8 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
 
             var envelope = new Envelope<MarketOpened>(
                 message,
-                ServiceAddress.BarProvider,
-                ServiceAddress.DataService,
+                ComponentAddress.BarProvider,
+                ComponentAddress.DataService,
                 StubZonedDateTime.UnixEpoch());
 
             // Act
@@ -493,7 +493,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
             var envelope = new Envelope<MarketOpened>(
                 message,
                 null,
-                ServiceAddress.DataService,
+                ComponentAddress.DataService,
                 StubZonedDateTime.UnixEpoch());
 
             // Act
@@ -524,7 +524,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
             var envelope = new Envelope<MarketOpened>(
                 message,
                 null,
-                ServiceAddress.DataService,
+                ComponentAddress.DataService,
                 StubZonedDateTime.UnixEpoch());
 
             this.messageBus.Endpoint.SendAsync(subscribe).Wait();
@@ -557,7 +557,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
             var envelope = new Envelope<MarketOpened>(
                 message,
                 null,
-                ServiceAddress.DataService,
+                ComponentAddress.DataService,
                 StubZonedDateTime.UnixEpoch());
 
             this.messageBus.Endpoint.SendAsync(subscribe).Wait();

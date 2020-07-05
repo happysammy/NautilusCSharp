@@ -17,6 +17,7 @@
 
 using System.Collections.Generic;
 using Nautilus.Common.Componentry;
+using Nautilus.Core.Correctness;
 using Nautilus.Messaging;
 using Nautilus.Messaging.Interfaces;
 
@@ -40,10 +41,13 @@ namespace Nautilus.Common.Messaging
         /// <summary>
         /// Register the given messaging component.
         /// </summary>
+        /// <param name="address">The components address.</param>
         /// <param name="component">The component to register.</param>
-        public void Register(MessagingComponent component)
+        public void Register(Address address, MessagingComponent component)
         {
-            this.addressBook.Add(new Address(component.GetType().Name), component.Endpoint);
+            Condition.True(component.Name.Value.Contains(address.Value), "Component address contains component name.");
+
+            this.addressBook.Add(address, component.Endpoint);
         }
 
         /// <summary>

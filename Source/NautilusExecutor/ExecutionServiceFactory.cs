@@ -126,12 +126,12 @@ namespace NautilusExecutor
 
             var registrar = new ComponentAddressRegistrar();
 
-            registrar.Register(scheduler);
-            registrar.Register(executionEngine);
-            registrar.Register(commandServer);
-            registrar.Register(eventPublisher);
-            registrar.Register(tradingGateway);
-            registrar.Register(executionService);
+            registrar.Register(ComponentAddress.Scheduler, scheduler);
+            registrar.Register(ComponentAddress.ExecutionEngine, executionEngine);
+            registrar.Register(ComponentAddress.CommandServer, commandServer);
+            registrar.Register(ComponentAddress.EventPublisher, eventPublisher);
+            registrar.Register(ComponentAddress.TradingGateway, tradingGateway);
+            registrar.Register(ComponentAddress.ExecutionService, executionService);
 
             messagingAdapter.Send(new InitializeSwitchboard(
                 Switchboard.Create(registrar.GetAddressBook()),

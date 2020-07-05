@@ -144,7 +144,7 @@ namespace Nautilus.Data.Providers
                 this.Logger.LogWarning(LogId.Component, $"[RES]--> {response}.");
             }
 
-            this.Send(response, ServiceAddress.DataServer);
+            this.Send(response, ComponentAddress.DataServer);
         }
     }
 }

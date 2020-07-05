@@ -87,15 +87,15 @@ namespace Nautilus.Data.Network
                 var dataType = request.Query["DataType"];
                 if (dataType == typeof(Tick[]).Name)
                 {
-                    this.Send(request, ServiceAddress.TickProvider);
+                    this.Send(request, ComponentAddress.TickProvider);
                 }
                 else if (dataType == typeof(Bar[]).Name)
                 {
-                    this.Send(request, ServiceAddress.BarProvider);
+                    this.Send(request, ComponentAddress.BarProvider);
                 }
                 else if (dataType == typeof(Instrument[]).Name)
                 {
-                    this.Send(request, ServiceAddress.InstrumentProvider);
+                    this.Send(request, ComponentAddress.InstrumentProvider);
                 }
                 else
                 {
