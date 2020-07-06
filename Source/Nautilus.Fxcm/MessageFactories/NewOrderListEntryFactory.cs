@@ -35,13 +35,13 @@ namespace Nautilus.Fxcm.MessageFactories
         /// </summary>
         /// <param name="brokerSymbol">The brokers symbol.</param>
         /// <param name="accountNumber">The account number.</param>
-        /// <param name="atomicOrder">The atomic order.</param>
+        /// <param name="bracketOrder">The bracket order.</param>
         /// <param name="timeNow">The time now.</param>
         /// <returns>The FIX message.</returns>
         public static NewOrderList CreateWithStopLoss(
             string brokerSymbol,
             AccountNumber accountNumber,
-            AtomicOrder atomicOrder,
+            BracketOrder bracketOrder,
             ZonedDateTime timeNow)
         {
             Debug.NotEmptyOrWhiteSpace(brokerSymbol, nameof(brokerSymbol));
@@ -56,7 +56,7 @@ namespace Nautilus.Fxcm.MessageFactories
             message.SetField(new TransactTime(timeNow.ToDateTimeUtc()));
 
             // Order 1
-            var entry = atomicOrder.Entry;
+            var entry = bracketOrder.Entry;
             var order1 = new NewOrderList.NoOrdersGroup();
             order1.SetField(new ClOrdID(entry.Id.Value));
             order1.SetField(new ListSeqNo(0));
@@ -87,7 +87,7 @@ namespace Nautilus.Fxcm.MessageFactories
             }
 
             // Order 2
-            var stopLoss = atomicOrder.StopLoss;
+            var stopLoss = bracketOrder.StopLoss;
             var order2 = new NewOrderList.NoOrdersGroup();
             order2.SetField(new ClOrdID(stopLoss.Id.Value));
             order2.SetField(new ListSeqNo(1));
@@ -122,13 +122,13 @@ namespace Nautilus.Fxcm.MessageFactories
         /// </summary>
         /// <param name="brokerSymbol">The brokers symbol.</param>
         /// <param name="accountNumber">The FIX account number.</param>
-        /// <param name="atomicOrder">The atomic order.</param>
+        /// <param name="bracketOrder">The bracket order.</param>
         /// <param name="timeNow">The time now.</param>
         /// <returns>The FIX message.</returns>
         public static NewOrderList CreateWithStopLossAndTakeProfit(
             string brokerSymbol,
             AccountNumber accountNumber,
-            AtomicOrder atomicOrder,
+            BracketOrder bracketOrder,
             ZonedDateTime timeNow)
         {
             Debug.NotEmptyOrWhiteSpace(brokerSymbol, nameof(brokerSymbol));
@@ -142,7 +142,7 @@ namespace Nautilus.Fxcm.MessageFactories
             message.SetField(new BidType(3));
 
             // Order 1
-            var entry = atomicOrder.Entry;
+            var entry = bracketOrder.Entry;
             var order1 = new NewOrderList.NoOrdersGroup();
             order1.SetField(new ClOrdID(entry.Id.Value));
             order1.SetField(new ListSeqNo(0));
@@ -172,7 +172,7 @@ namespace Nautilus.Fxcm.MessageFactories
             }
 
             // Order 2
-            var stopLoss = atomicOrder.StopLoss;
+            var stopLoss = bracketOrder.StopLoss;
             var order2 = new NewOrderList.NoOrdersGroup();
             order2.SetField(new ClOrdID(stopLoss.Id.Value));
             order2.SetField(new ListSeqNo(1));
@@ -200,7 +200,7 @@ namespace Nautilus.Fxcm.MessageFactories
             message.AddGroup(order2);
 
             // Order 3 (optional)
-            var takeProfit = atomicOrder.TakeProfit;
+            var takeProfit = bracketOrder.TakeProfit;
             if (takeProfit != null)
             {
                 var order3 = new NewOrderList.NoOrdersGroup();

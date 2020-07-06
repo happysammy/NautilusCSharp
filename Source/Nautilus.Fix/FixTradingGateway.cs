@@ -84,9 +84,9 @@ namespace Nautilus.Fix
         }
 
         /// <inheritdoc />
-        public void SubmitOrder(AtomicOrder atomicOrder)
+        public void SubmitOrder(BracketOrder bracketOrder)
         {
-            this.fixClient.NewOrderList(atomicOrder);
+            this.fixClient.NewOrderList(bracketOrder);
         }
 
         /// <inheritdoc />

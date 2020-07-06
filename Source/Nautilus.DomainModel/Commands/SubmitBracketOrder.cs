@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="SubmitAtomicOrder.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="SubmitBracketOrder.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2020 Nautech Systems Pty Ltd. All rights reserved.
 //  https://nautechsystems.io
 //
@@ -25,29 +25,29 @@ using NodaTime;
 namespace Nautilus.DomainModel.Commands
 {
     /// <summary>
-    /// Represents a command to submit an <see cref="AtomicOrder"/>.
+    /// Represents a command to submit an <see cref="BracketOrder"/>.
     /// </summary>
     [Immutable]
-    public sealed class SubmitAtomicOrder : Command
+    public sealed class SubmitBracketOrder : Command
     {
-        private static readonly Type CommandType = typeof(SubmitAtomicOrder);
+        private static readonly Type CommandType = typeof(SubmitBracketOrder);
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SubmitAtomicOrder"/> class.
+        /// Initializes a new instance of the <see cref="SubmitBracketOrder"/> class.
         /// </summary>
         /// <param name="traderId">The trader identifier.</param>
         /// <param name="accountId">The account identifier.</param>
         /// <param name="strategyId">The strategy identifier.</param>
         /// <param name="positionId">The position identifier.</param>
-        /// <param name="atomicOrder">The atomic order to submit.</param>
+        /// <param name="bracketOrder">The bracket order to submit.</param>
         /// <param name="commandId">The command identifier.</param>
         /// <param name="commandTimestamp">The command timestamp.</param>
-        public SubmitAtomicOrder(
+        public SubmitBracketOrder(
             TraderId traderId,
             AccountId accountId,
             StrategyId strategyId,
             PositionId positionId,
-            AtomicOrder atomicOrder,
+            BracketOrder bracketOrder,
             Guid commandId,
             ZonedDateTime commandTimestamp)
             : base(
@@ -59,7 +59,7 @@ namespace Nautilus.DomainModel.Commands
             this.AccountId = accountId;
             this.StrategyId = strategyId;
             this.PositionId = positionId;
-            this.AtomicOrder = atomicOrder;
+            this.BracketOrder = bracketOrder;
         }
 
         /// <summary>
@@ -83,9 +83,9 @@ namespace Nautilus.DomainModel.Commands
         public PositionId PositionId { get; }
 
         /// <summary>
-        /// Gets the commands atomic order.
+        /// Gets the commands bracket order.
         /// </summary>
-        public AtomicOrder AtomicOrder { get; }
+        public BracketOrder BracketOrder { get; }
 
         /// <summary>
         /// Returns a string representation of this object.
@@ -96,6 +96,6 @@ namespace Nautilus.DomainModel.Commands
                                              $"AccountId={this.AccountId.Value}, " +
                                              $"StrategyId={this.StrategyId.Value}, " +
                                              $"PositionId={this.PositionId.Value}, " +
-                                             $"AtomicOrderId={this.AtomicOrder.Id.Value})";
+                                             $"BracketOrderId={this.BracketOrder.Id.Value})";
     }
 }

@@ -325,48 +325,48 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
         }
 
         [Fact]
-        internal void AddAtomicOrder_WhenEntryOrderAlreadyExists_ReturnsFailureResult()
+        internal void AddBracketOrder_WhenEntryOrderAlreadyExists_ReturnsFailureResult()
         {
             // Arrange
-            var atomicOrder = StubAtomicOrderProvider.Create();
+            var bracketOrder = StubBracketOrderProvider.Create();
             var traderId = TraderId.FromString("TESTER-000");
             var accountId = AccountId.FromString("NAUTILUS-000-SIMULATED");
             var positionId = new PositionId("P-123456");
             var strategyId = new StrategyId("SCALPER", "001");
 
-            this.database.AddOrder(atomicOrder.Entry, traderId, accountId, strategyId, positionId);
+            this.database.AddOrder(bracketOrder.Entry, traderId, accountId, strategyId, positionId);
 
             // Act
-            var result = this.database.AddAtomicOrder(atomicOrder, traderId, accountId, strategyId, positionId);
+            var result = this.database.AddBracketOrder(bracketOrder, traderId, accountId, strategyId, positionId);
 
             // Assert
             Assert.True(result.IsFailure);
         }
 
         [Fact]
-        internal void AddAtomicOrder_WhenStopLossOrderAlreadyExists_ReturnsFailureResult()
+        internal void AddBracketOrder_WhenStopLossOrderAlreadyExists_ReturnsFailureResult()
         {
             // Arrange
-            var atomicOrder = StubAtomicOrderProvider.Create();
+            var bracketOrder = StubBracketOrderProvider.Create();
             var traderId = TraderId.FromString("TESTER-000");
             var accountId = AccountId.FromString("NAUTILUS-000-SIMULATED");
             var positionId = new PositionId("P-123456");
             var strategyId = new StrategyId("SCALPER", "001");
 
-            this.database.AddOrder(atomicOrder.StopLoss, traderId, accountId, strategyId, positionId);
+            this.database.AddOrder(bracketOrder.StopLoss, traderId, accountId, strategyId, positionId);
 
             // Act
-            var result = this.database.AddAtomicOrder(atomicOrder, traderId, accountId, strategyId, positionId);
+            var result = this.database.AddBracketOrder(bracketOrder, traderId, accountId, strategyId, positionId);
 
             // Assert
             Assert.True(result.IsFailure);
         }
 
         [Fact]
-        internal void AddAtomicOrder_WhenTakeProfitOrderAlreadyExists_ReturnsFailureResult()
+        internal void AddBracketOrder_WhenTakeProfitOrderAlreadyExists_ReturnsFailureResult()
         {
             // Arrange
-            var atomicOrder = StubAtomicOrderProvider.Create();
+            var bracketOrder = StubBracketOrderProvider.Create();
             var traderId = TraderId.FromString("TESTER-000");
             var accountId = AccountId.FromString("NAUTILUS-000-SIMULATED");
             var positionId = new PositionId("P-123456");
@@ -374,94 +374,94 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
 #pragma warning disable 8602
 #pragma warning disable 8604
-            this.database.AddOrder(atomicOrder.TakeProfit, traderId, accountId, strategyId, positionId);
+            this.database.AddOrder(bracketOrder.TakeProfit, traderId, accountId, strategyId, positionId);
 
             // Act
-            var result = this.database.AddAtomicOrder(atomicOrder, traderId, accountId, strategyId, positionId);
+            var result = this.database.AddBracketOrder(bracketOrder, traderId, accountId, strategyId, positionId);
 
             // Assert
             Assert.True(result.IsFailure);
         }
 
         [Fact]
-        internal void AddAtomicOrder_WithTakeProfit_CorrectlyAddsOrdersWithIndexes()
+        internal void AddBracketOrder_WithTakeProfit_CorrectlyAddsOrdersWithIndexes()
         {
             // Arrange
-            var atomicOrder = StubAtomicOrderProvider.Create();
+            var bracketOrder = StubBracketOrderProvider.Create();
             var traderId = TraderId.FromString("TESTER-000");
             var accountId = AccountId.FromString("NAUTILUS-000-SIMULATED");
             var positionId = new PositionId("P-123456");
             var strategyId = new StrategyId("SCALPER", "001");
 
             // Act
-            this.database.AddAtomicOrder(atomicOrder, traderId, accountId, strategyId, positionId);
+            this.database.AddBracketOrder(bracketOrder, traderId, accountId, strategyId, positionId);
 
             // Assert
-            Assert.Equal(atomicOrder.Entry, this.database.GetOrder(atomicOrder.Entry.Id));
-            Assert.Equal(atomicOrder.StopLoss, this.database.GetOrder(atomicOrder.StopLoss.Id));
-            Assert.Equal(atomicOrder.TakeProfit, this.database.GetOrder(atomicOrder.TakeProfit.Id));
-            Assert.Equal(positionId, this.database.GetPositionId(atomicOrder.Entry.Id));
-            Assert.Equal(positionId, this.database.GetPositionId(atomicOrder.StopLoss.Id));
-            Assert.Equal(positionId, this.database.GetPositionId(atomicOrder.TakeProfit.Id));
-            Assert.Equal(traderId, this.database.GetTraderId(atomicOrder.Entry.Id));
-            Assert.Equal(traderId, this.database.GetTraderId(atomicOrder.StopLoss.Id));
-            Assert.Equal(traderId, this.database.GetTraderId(atomicOrder.TakeProfit.Id));
+            Assert.Equal(bracketOrder.Entry, this.database.GetOrder(bracketOrder.Entry.Id));
+            Assert.Equal(bracketOrder.StopLoss, this.database.GetOrder(bracketOrder.StopLoss.Id));
+            Assert.Equal(bracketOrder.TakeProfit, this.database.GetOrder(bracketOrder.TakeProfit.Id));
+            Assert.Equal(positionId, this.database.GetPositionId(bracketOrder.Entry.Id));
+            Assert.Equal(positionId, this.database.GetPositionId(bracketOrder.StopLoss.Id));
+            Assert.Equal(positionId, this.database.GetPositionId(bracketOrder.TakeProfit.Id));
+            Assert.Equal(traderId, this.database.GetTraderId(bracketOrder.Entry.Id));
+            Assert.Equal(traderId, this.database.GetTraderId(bracketOrder.StopLoss.Id));
+            Assert.Equal(traderId, this.database.GetTraderId(bracketOrder.TakeProfit.Id));
             Assert.Equal(3, this.database.GetOrders().Count);
             Assert.Equal(3, this.database.GetOrders(traderId).Count);
             Assert.Equal(3, this.database.GetOrders(traderId, strategyId).Count);
-            Assert.Contains(atomicOrder.Entry.Id, this.database.GetOrderIds());
-            Assert.Contains(atomicOrder.Entry.Id, this.database.GetOrders());
-            Assert.Contains(atomicOrder.Entry.Id, this.database.GetOrders(traderId));
-            Assert.Contains(atomicOrder.Entry.Id, this.database.GetOrders(traderId, strategyId));
-            Assert.DoesNotContain(atomicOrder.Entry.Id, this.database.GetOrderWorkingIds());
-            Assert.DoesNotContain(atomicOrder.Entry.Id, this.database.GetOrderCompletedIds());
-            Assert.DoesNotContain(atomicOrder.Entry.Id, this.database.GetOrdersWorking());
-            Assert.DoesNotContain(atomicOrder.Entry.Id, this.database.GetOrdersCompleted());
-            Assert.Contains(atomicOrder.StopLoss.Id, this.database.GetOrderIds());
-            Assert.Contains(atomicOrder.StopLoss.Id, this.database.GetOrders());
-            Assert.Contains(atomicOrder.StopLoss.Id, this.database.GetOrders(traderId));
-            Assert.Contains(atomicOrder.StopLoss.Id, this.database.GetOrders(traderId, strategyId));
-            Assert.Contains(atomicOrder.TakeProfit.Id, this.database.GetOrderIds());
-            Assert.Contains(atomicOrder.TakeProfit.Id, this.database.GetOrders());
-            Assert.Contains(atomicOrder.TakeProfit.Id, this.database.GetOrders(traderId));
-            Assert.Contains(atomicOrder.TakeProfit.Id, this.database.GetOrders(traderId, strategyId));
+            Assert.Contains(bracketOrder.Entry.Id, this.database.GetOrderIds());
+            Assert.Contains(bracketOrder.Entry.Id, this.database.GetOrders());
+            Assert.Contains(bracketOrder.Entry.Id, this.database.GetOrders(traderId));
+            Assert.Contains(bracketOrder.Entry.Id, this.database.GetOrders(traderId, strategyId));
+            Assert.DoesNotContain(bracketOrder.Entry.Id, this.database.GetOrderWorkingIds());
+            Assert.DoesNotContain(bracketOrder.Entry.Id, this.database.GetOrderCompletedIds());
+            Assert.DoesNotContain(bracketOrder.Entry.Id, this.database.GetOrdersWorking());
+            Assert.DoesNotContain(bracketOrder.Entry.Id, this.database.GetOrdersCompleted());
+            Assert.Contains(bracketOrder.StopLoss.Id, this.database.GetOrderIds());
+            Assert.Contains(bracketOrder.StopLoss.Id, this.database.GetOrders());
+            Assert.Contains(bracketOrder.StopLoss.Id, this.database.GetOrders(traderId));
+            Assert.Contains(bracketOrder.StopLoss.Id, this.database.GetOrders(traderId, strategyId));
+            Assert.Contains(bracketOrder.TakeProfit.Id, this.database.GetOrderIds());
+            Assert.Contains(bracketOrder.TakeProfit.Id, this.database.GetOrders());
+            Assert.Contains(bracketOrder.TakeProfit.Id, this.database.GetOrders(traderId));
+            Assert.Contains(bracketOrder.TakeProfit.Id, this.database.GetOrders(traderId, strategyId));
         }
 
         [Fact]
-        internal void AddAtomicOrder_WithNoTakeProfit_CorrectlyAddsOrdersWithIndexes()
+        internal void AddBracketOrder_WithNoTakeProfit_CorrectlyAddsOrdersWithIndexes()
         {
             // Arrange
-            var atomicOrder = StubAtomicOrderProvider.Create(false);
+            var bracketOrder = StubBracketOrderProvider.Create(false);
             var traderId = TraderId.FromString("TESTER-000");
             var accountId = AccountId.FromString("NAUTILUS-000-SIMULATED");
             var positionId = new PositionId("P-123456");
             var strategyId = new StrategyId("SCALPER", "001");
 
             // Act
-            this.database.AddAtomicOrder(atomicOrder, traderId, accountId, strategyId, positionId);
+            this.database.AddBracketOrder(bracketOrder, traderId, accountId, strategyId, positionId);
 
             // Assert
-            Assert.Equal(atomicOrder.Entry, this.database.GetOrder(atomicOrder.Entry.Id));
-            Assert.Equal(atomicOrder.StopLoss, this.database.GetOrder(atomicOrder.StopLoss.Id));
-            Assert.Equal(positionId, this.database.GetPositionId(atomicOrder.Entry.Id));
-            Assert.Equal(positionId, this.database.GetPositionId(atomicOrder.StopLoss.Id));
-            Assert.Equal(traderId, this.database.GetTraderId(atomicOrder.Entry.Id));
-            Assert.Equal(traderId, this.database.GetTraderId(atomicOrder.StopLoss.Id));
+            Assert.Equal(bracketOrder.Entry, this.database.GetOrder(bracketOrder.Entry.Id));
+            Assert.Equal(bracketOrder.StopLoss, this.database.GetOrder(bracketOrder.StopLoss.Id));
+            Assert.Equal(positionId, this.database.GetPositionId(bracketOrder.Entry.Id));
+            Assert.Equal(positionId, this.database.GetPositionId(bracketOrder.StopLoss.Id));
+            Assert.Equal(traderId, this.database.GetTraderId(bracketOrder.Entry.Id));
+            Assert.Equal(traderId, this.database.GetTraderId(bracketOrder.StopLoss.Id));
             Assert.Equal(2, this.database.GetOrders().Count);
             Assert.Equal(2, this.database.GetOrders(traderId).Count);
             Assert.Equal(2, this.database.GetOrders(traderId, strategyId).Count);
-            Assert.Contains(atomicOrder.Entry.Id, this.database.GetOrderIds());
-            Assert.Contains(atomicOrder.Entry.Id, this.database.GetOrders());
-            Assert.Contains(atomicOrder.Entry.Id, this.database.GetOrders(traderId));
-            Assert.Contains(atomicOrder.Entry.Id, this.database.GetOrders(traderId, strategyId));
-            Assert.DoesNotContain(atomicOrder.Entry.Id, this.database.GetOrderWorkingIds());
-            Assert.DoesNotContain(atomicOrder.Entry.Id, this.database.GetOrderCompletedIds());
-            Assert.DoesNotContain(atomicOrder.Entry.Id, this.database.GetOrdersWorking());
-            Assert.DoesNotContain(atomicOrder.Entry.Id, this.database.GetOrdersCompleted());
-            Assert.Contains(atomicOrder.StopLoss.Id, this.database.GetOrderIds());
-            Assert.Contains(atomicOrder.StopLoss.Id, this.database.GetOrders());
-            Assert.Contains(atomicOrder.StopLoss.Id, this.database.GetOrders(traderId));
-            Assert.Contains(atomicOrder.StopLoss.Id, this.database.GetOrders(traderId, strategyId));
+            Assert.Contains(bracketOrder.Entry.Id, this.database.GetOrderIds());
+            Assert.Contains(bracketOrder.Entry.Id, this.database.GetOrders());
+            Assert.Contains(bracketOrder.Entry.Id, this.database.GetOrders(traderId));
+            Assert.Contains(bracketOrder.Entry.Id, this.database.GetOrders(traderId, strategyId));
+            Assert.DoesNotContain(bracketOrder.Entry.Id, this.database.GetOrderWorkingIds());
+            Assert.DoesNotContain(bracketOrder.Entry.Id, this.database.GetOrderCompletedIds());
+            Assert.DoesNotContain(bracketOrder.Entry.Id, this.database.GetOrdersWorking());
+            Assert.DoesNotContain(bracketOrder.Entry.Id, this.database.GetOrdersCompleted());
+            Assert.Contains(bracketOrder.StopLoss.Id, this.database.GetOrderIds());
+            Assert.Contains(bracketOrder.StopLoss.Id, this.database.GetOrders());
+            Assert.Contains(bracketOrder.StopLoss.Id, this.database.GetOrders(traderId));
+            Assert.Contains(bracketOrder.StopLoss.Id, this.database.GetOrders(traderId, strategyId));
         }
 
         [Fact]

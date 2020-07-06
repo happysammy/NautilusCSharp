@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="AtomicOrder.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="BracketOrder.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2020 Nautech Systems Pty Ltd. All rights reserved.
 //  https://nautechsystems.io
 //
@@ -23,23 +23,23 @@ using Nautilus.DomainModel.Identifiers;
 namespace Nautilus.DomainModel.Entities
 {
     /// <summary>
-    /// Represents a collection of orders being an entry, stop-loss and optional take-profit to
+    /// Represents a group of orders being an entry, stop-loss and optional take-profit to
     /// be managed together.
     /// </summary>
     [Immutable]
-    public sealed class AtomicOrder : Entity<AtomicOrderId, AtomicOrder>
+    public sealed class BracketOrder : Entity<BracketOrderId, BracketOrder>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AtomicOrder"/> class.
+        /// Initializes a new instance of the <see cref="BracketOrder"/> class.
         /// </summary>
         /// <param name="entry">The entry order.</param>
         /// <param name="stopLoss">The stop-loss order.</param>
         /// <param name="takeProfit">The take-profit order.</param>
-        public AtomicOrder(
+        public BracketOrder(
             Order entry,
             Order stopLoss,
             Order? takeProfit = null)
-            : base(new AtomicOrderId("A" + entry.Id.Value), entry.Timestamp)
+            : base(new BracketOrderId("B" + entry.Id.Value), entry.Timestamp)
         {
             this.Entry = entry;
             this.StopLoss = stopLoss;
@@ -47,22 +47,22 @@ namespace Nautilus.DomainModel.Entities
         }
 
         /// <summary>
-        /// Gets the atomic orders symbol.
+        /// Gets the bracket orders symbol.
         /// </summary>
         public Symbol Symbol => this.Entry.Symbol;
 
         /// <summary>
-        /// Gets the atomic orders entry order.
+        /// Gets the bracket orders entry order.
         /// </summary>
         public Order Entry { get; }
 
         /// <summary>
-        /// Gets the atomic orders stop-loss order.
+        /// Gets the bracket orders stop-loss order.
         /// </summary>
         public Order StopLoss { get; }
 
         /// <summary>
-        /// Gets the atomic orders take-profit order (optional can be null).
+        /// Gets the bracket orders take-profit order (optional can be null).
         /// </summary>
         public Order? TakeProfit { get; }
     }

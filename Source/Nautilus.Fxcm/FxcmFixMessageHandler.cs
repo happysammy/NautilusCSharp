@@ -496,13 +496,13 @@ namespace Nautilus.Fxcm
 
                 case OrdStatus.SUSPENDED:
                 {
-                    this.Logger.LogWarning(LogId.Networking, $"{Received}{Fix} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.SUSPENDED)}).");
+                    this.Logger.LogError(LogId.Networking, $"{Received}{Fix} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.SUSPENDED)}).");
                     break;
                 }
 
                 case OrdStatus.CALCULATED:
                 {
-                    this.Logger.LogWarning(LogId.Networking, $"{Received}{Fix} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.CALCULATED)}).");
+                    this.Logger.LogError(LogId.Networking, $"{Received}{Fix} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.CALCULATED)}).");
                     break;
                 }
 
@@ -518,13 +518,13 @@ namespace Nautilus.Fxcm
 
                 case OrdStatus.PENDING_REPLACE:
                 {
-                    this.Logger.LogWarning(LogId.Networking, $"{Received}{Fix} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.PENDING_REPLACE)}).");
+                    this.Logger.LogError(LogId.Networking, $"{Received}{Fix} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.PENDING_REPLACE)}).");
                     break;
                 }
 
                 case OrdStatus.ACCEPTED_FOR_BIDDING:
                 {
-                    this.Logger.LogWarning(LogId.Networking, $"{Received}{Fix} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.ACCEPTED_FOR_BIDDING)}).");
+                    this.Logger.LogError(LogId.Networking, $"{Received}{Fix} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.ACCEPTED_FOR_BIDDING)}).");
                     break;
                 }
 

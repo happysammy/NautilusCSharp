@@ -99,9 +99,9 @@ namespace Nautilus.Fix
         }
 
         /// <inheritdoc />
-        public void NewOrderList(AtomicOrder atomicOrder)
+        public void NewOrderList(BracketOrder bracketOrder)
         {
-            this.FixMessageRouter.NewOrderList(atomicOrder);
+            this.FixMessageRouter.NewOrderList(bracketOrder);
         }
 
         /// <inheritdoc />

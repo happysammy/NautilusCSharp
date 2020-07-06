@@ -116,10 +116,10 @@ namespace Nautilus.Common.Interfaces
         void NewOrderSingle(Order order, PositionIdBroker? positionIdBroker);
 
         /// <summary>
-        /// Submits an atomic order.
+        /// Submits an bracket order.
         /// </summary>
-        /// <param name="atomicOrder">The atomic order to submit.</param>
-        void NewOrderList(AtomicOrder atomicOrder);
+        /// <param name="bracketOrder">The bracket order to submit.</param>
+        void NewOrderList(BracketOrder bracketOrder);
 
         /// <summary>
         /// Submits a request to modify an order to a new price.

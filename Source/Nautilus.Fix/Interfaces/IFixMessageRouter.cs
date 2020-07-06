@@ -87,8 +87,8 @@ namespace Nautilus.Fix.Interfaces
         /// <summary>
         /// Sends a NewOrderList FIX message.
         /// </summary>
-        /// <param name="atomicOrder">The atomic order to submit.</param>
-        void NewOrderList(AtomicOrder atomicOrder);
+        /// <param name="bracketOrder">The bracket order to submit.</param>
+        void NewOrderList(BracketOrder bracketOrder);
 
         /// <summary>
         /// Sends an OrderCancelReplaceRequest FIX message.

@@ -92,7 +92,7 @@ namespace Nautilus.Execution.Network
 
             this.RegisterSerializer(commandSerializer);
             this.RegisterHandler<SubmitOrder>(this.OnMessage);
-            this.RegisterHandler<SubmitAtomicOrder>(this.OnMessage);
+            this.RegisterHandler<SubmitBracketOrder>(this.OnMessage);
             this.RegisterHandler<CancelOrder>(this.OnMessage);
             this.RegisterHandler<ModifyOrder>(this.OnMessage);
             this.RegisterHandler<AccountInquiry>(this.OnMessage);
@@ -107,7 +107,7 @@ namespace Nautilus.Execution.Network
             this.SendReceived(command);
         }
 
-        private void OnMessage(SubmitAtomicOrder command)
+        private void OnMessage(SubmitBracketOrder command)
         {
             this.orderThrottler.Endpoint.Send(command);
             this.SendReceived(command);

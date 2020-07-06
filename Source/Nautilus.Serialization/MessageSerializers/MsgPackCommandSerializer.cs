@@ -66,14 +66,14 @@ namespace Nautilus.Serialization.MessageSerializers
                     package.Add(nameof(cmd.PositionId), ObjectSerializer.Serialize(cmd.PositionId));
                     package.Add(nameof(cmd.Order), this.orderSerializer.Serialize(cmd.Order));
                     break;
-                case SubmitAtomicOrder cmd:
+                case SubmitBracketOrder cmd:
                     package.Add(nameof(cmd.TraderId), ObjectSerializer.Serialize(cmd.TraderId));
                     package.Add(nameof(cmd.StrategyId), ObjectSerializer.Serialize(cmd.StrategyId));
                     package.Add(nameof(cmd.AccountId), ObjectSerializer.Serialize(cmd.AccountId));
                     package.Add(nameof(cmd.PositionId), ObjectSerializer.Serialize(cmd.PositionId));
-                    package.Add(nameof(cmd.AtomicOrder.Entry), this.orderSerializer.Serialize(cmd.AtomicOrder.Entry));
-                    package.Add(nameof(cmd.AtomicOrder.StopLoss), this.orderSerializer.Serialize(cmd.AtomicOrder.StopLoss));
-                    package.Add(nameof(cmd.AtomicOrder.TakeProfit), this.orderSerializer.SerializeNullable(cmd.AtomicOrder.TakeProfit));
+                    package.Add(nameof(cmd.BracketOrder.Entry), this.orderSerializer.Serialize(cmd.BracketOrder.Entry));
+                    package.Add(nameof(cmd.BracketOrder.StopLoss), this.orderSerializer.Serialize(cmd.BracketOrder.StopLoss));
+                    package.Add(nameof(cmd.BracketOrder.TakeProfit), this.orderSerializer.SerializeNullable(cmd.BracketOrder.TakeProfit));
                     break;
                 case ModifyOrder cmd:
                     package.Add(nameof(cmd.TraderId), ObjectSerializer.Serialize(cmd.TraderId));
@@ -121,16 +121,16 @@ namespace Nautilus.Serialization.MessageSerializers
                         this.orderSerializer.Deserialize(unpacked[nameof(SubmitOrder.Order)]),
                         id,
                         timestamp);
-                case nameof(SubmitAtomicOrder):
-                    return new SubmitAtomicOrder(
+                case nameof(SubmitBracketOrder):
+                    return new SubmitBracketOrder(
                         this.identifierCache.TraderId(unpacked),
                         this.identifierCache.AccountId(unpacked),
                         this.identifierCache.StrategyId(unpacked),
                         ObjectDeserializer.AsPositionId(unpacked),
-                        new AtomicOrder(
-                            this.orderSerializer.Deserialize(unpacked[nameof(AtomicOrder.Entry)]),
-                            this.orderSerializer.Deserialize(unpacked[nameof(AtomicOrder.StopLoss)]),
-                            this.orderSerializer.DeserializeNullable(unpacked[nameof(AtomicOrder.TakeProfit)])),
+                        new BracketOrder(
+                            this.orderSerializer.Deserialize(unpacked[nameof(BracketOrder.Entry)]),
+                            this.orderSerializer.Deserialize(unpacked[nameof(BracketOrder.StopLoss)]),
+                            this.orderSerializer.DeserializeNullable(unpacked[nameof(BracketOrder.TakeProfit)])),
                         id,
                         timestamp);
                 case nameof(ModifyOrder):

@@ -125,14 +125,14 @@ namespace Nautilus.Fxcm
         }
 
         /// <inheritdoc />
-        public void NewOrderList(AtomicOrder atomicOrder)
+        public void NewOrderList(BracketOrder bracketOrder)
         {
-            if (atomicOrder.TakeProfit != null)
+            if (bracketOrder.TakeProfit != null)
             {
                 var message = NewOrderListEntryFactory.CreateWithStopLossAndTakeProfit(
-                    atomicOrder.Symbol.Code,
+                    bracketOrder.Symbol.Code,
                     this.accountId.AccountNumber,
-                    atomicOrder,
+                    bracketOrder,
                     this.TimeNow());
 
                 this.SendFixMessage(message);
@@ -140,9 +140,9 @@ namespace Nautilus.Fxcm
             else
             {
                 var message = NewOrderListEntryFactory.CreateWithStopLoss(
-                    atomicOrder.Symbol.Code,
+                    bracketOrder.Symbol.Code,
                     this.accountId.AccountNumber,
-                    atomicOrder,
+                    bracketOrder,
                     this.TimeNow());
 
                 this.SendFixMessage(message);

@@ -96,10 +96,10 @@ namespace Nautilus.TestSuite.TestKit.Mocks
         }
 
         /// <inheritdoc/>
-        public void SubmitOrder(AtomicOrder atomicOrder)
+        public void SubmitOrder(BracketOrder bracketOrder)
         {
             this.CalledMethods.Add(nameof(this.SubmitOrder));
-            this.ReceivedObjects.Add(atomicOrder);
+            this.ReceivedObjects.Add(bracketOrder);
         }
 
         /// <inheritdoc/>

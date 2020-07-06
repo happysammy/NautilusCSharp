@@ -160,21 +160,21 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
         }
 
         [Fact]
-        internal void OnSubmitAtomicOrderCommand_WhenCommandValid_OperatesDatabaseAndSendsToGateway()
+        internal void OnSubmitBracketOrderCommand_WhenCommandValid_OperatesDatabaseAndSendsToGateway()
         {
             // Arrange
-            var atomicOrder = StubAtomicOrderProvider.Create();
+            var bracketOrder = StubBracketOrderProvider.Create();
             var traderId = TraderId.FromString("TESTER-000");
             var accountId = AccountId.FromString("NAUTILUS-000-SIMULATED");
             var positionId = new PositionId("P-123456");
             var strategyId = new StrategyId("SCALPER", "001");
 
-            var command = new SubmitAtomicOrder(
+            var command = new SubmitBracketOrder(
                 traderId,
                 accountId,
                 strategyId,
                 positionId,
-                atomicOrder,
+                bracketOrder,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -190,25 +190,25 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             Assert.Single(this.tradingGateway.CalledMethods);
             Assert.Single(this.tradingGateway.ReceivedObjects);
             Assert.Equal("SubmitOrder", this.tradingGateway.CalledMethods[0]);
-            Assert.Equal(atomicOrder, this.tradingGateway.ReceivedObjects[0]);
+            Assert.Equal(bracketOrder, this.tradingGateway.ReceivedObjects[0]);
         }
 
         [Fact]
-        internal void OnSubmitAtomicOrderCommand_WhenDuplicatedCommand_OperatesDatabaseAndSendsToGateway()
+        internal void OnSubmitBracketOrderCommand_WhenDuplicatedCommand_OperatesDatabaseAndSendsToGateway()
         {
             // Arrange
-            var atomicOrder = StubAtomicOrderProvider.Create();
+            var bracketOrder = StubBracketOrderProvider.Create();
             var traderId = TraderId.FromString("TESTER-000");
             var accountId = AccountId.FromString("NAUTILUS-000-SIMULATED");
             var positionId = new PositionId("P-123456");
             var strategyId = new StrategyId("SCALPER", "001");
 
-            var command = new SubmitAtomicOrder(
+            var command = new SubmitBracketOrder(
                 traderId,
                 accountId,
                 strategyId,
                 positionId,
-                atomicOrder,
+                bracketOrder,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -225,7 +225,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             Assert.Single(this.tradingGateway.CalledMethods);
             Assert.Single(this.tradingGateway.ReceivedObjects);
             Assert.Equal("SubmitOrder", this.tradingGateway.CalledMethods[0]);
-            Assert.Equal(atomicOrder, this.tradingGateway.ReceivedObjects[0]);
+            Assert.Equal(bracketOrder, this.tradingGateway.ReceivedObjects[0]);
         }
 
         [Fact]

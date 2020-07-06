@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="StubAtomicOrderProvider.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="StubBracketOrderProvider.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2020 Nautech Systems Pty Ltd. All rights reserved.
 //  https://nautechsystems.io
 //
@@ -21,19 +21,19 @@ using Nautilus.DomainModel.Entities;
 namespace Nautilus.TestSuite.TestKit.Stubs
 {
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
-    public static class StubAtomicOrderProvider
+    public static class StubBracketOrderProvider
     {
-        public static AtomicOrder Create(bool hasTakeProfit = true)
+        public static BracketOrder Create(bool hasTakeProfit = true)
         {
             if (hasTakeProfit)
             {
-                return new AtomicOrder(
+                return new BracketOrder(
                     new StubOrderBuilder().WithOrderId("O-123456-1").BuildStopMarketOrder(),
                     new StubOrderBuilder().WithOrderId("O-123456-2").BuildStopMarketOrder(),
                     new StubOrderBuilder().WithOrderId("O-123456-3").BuildLimitOrder());
             }
 
-            return new AtomicOrder(
+            return new BracketOrder(
                 new StubOrderBuilder().WithOrderId("O-123456-1").BuildStopMarketOrder(),
                 new StubOrderBuilder().WithOrderId("O-123456-2").BuildStopMarketOrder());
         }

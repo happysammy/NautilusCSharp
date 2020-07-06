@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="AtomicOrderId.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="BracketOrderId.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2020 Nautech Systems Pty Ltd. All rights reserved.
 //  https://nautechsystems.io
 //
@@ -22,25 +22,25 @@ using Nautilus.Core.Types;
 namespace Nautilus.DomainModel.Identifiers
 {
     /// <summary>
-    /// Represents a valid atomic order identifier. The identifier value must be unique at the fund
+    /// Represents a valid bracket order identifier. The identifier value must be unique at the fund
     /// level.
     ///
     /// <para>
-    /// It is expected that the identifier value starts with 'AO-'.
+    /// It is expected that the identifier value starts with 'BO-'.
     /// </para>
     /// </summary>
     [Immutable]
-    public sealed class AtomicOrderId : Identifier<AtomicOrderId>
+    public sealed class BracketOrderId : Identifier<BracketOrderId>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AtomicOrderId"/> class.
+        /// Initializes a new instance of the <see cref="BracketOrderId"/> class.
         /// </summary>
         /// <param name="value">The identifier value.</param>
-        public AtomicOrderId(string value)
+        public BracketOrderId(string value)
             : base(value)
         {
             Debug.NotEmptyOrWhiteSpace(value, nameof(value));
-            Debug.True(value.StartsWith("AO-"), $"The value did not start with 'AO-', was {value}.");
+            Debug.True(value.StartsWith("BO-"), $"The value did not start with 'BO-', was {value}.");
         }
     }
 }

@@ -133,7 +133,7 @@ namespace Nautilus.Execution.Engine
         }
 
         /// <inheritdoc />
-        public CommandResult AddAtomicOrder(AtomicOrder order, TraderId traderId, AccountId accountId, StrategyId strategyId, PositionId positionId)
+        public CommandResult AddBracketOrder(BracketOrder order, TraderId traderId, AccountId accountId, StrategyId strategyId, PositionId positionId)
         {
             var resultEntry = this.AddOrder(
                 order.Entry,

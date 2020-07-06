@@ -51,10 +51,10 @@ namespace Nautilus.Common.Interfaces
         void SubmitOrder(Order order, PositionIdBroker? positionIdBroker);
 
         /// <summary>
-        /// Sends a message to submit the given atomic order.
+        /// Sends a message to submit the given bracket order.
         /// </summary>
-        /// <param name="atomicOrder">The new atomic order.</param>
-        void SubmitOrder(AtomicOrder atomicOrder);
+        /// <param name="bracketOrder">The new bracket order.</param>
+        void SubmitOrder(BracketOrder bracketOrder);
 
         /// <summary>
         /// Sends a message to modify the given order with the given modified quantity and price.

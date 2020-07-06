@@ -35,16 +35,16 @@ namespace Nautilus.Execution.Interfaces
         CommandResult AddAccount(Account account);
 
         /// <summary>
-        /// Add the given atomic order to the execution database indexed with the given identifiers.
+        /// Add the given bracket order to the execution database indexed with the given identifiers.
         /// </summary>
-        /// <param name="order">The atomic order to add.</param>
+        /// <param name="order">The bracket order to add.</param>
         /// <param name="traderId">The trader identifier to index.</param>
         /// <param name="accountId">The account identifier to index.</param>
         /// <param name="strategyId">The strategy identifier to index.</param>
         /// <param name="positionId">The position identifier to index.</param>
         /// <returns>The result of the operation.</returns>
-        CommandResult AddAtomicOrder(
-            AtomicOrder order,
+        CommandResult AddBracketOrder(
+            BracketOrder order,
             TraderId traderId,
             AccountId accountId,
             StrategyId strategyId,

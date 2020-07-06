@@ -87,7 +87,7 @@ namespace Nautilus.Execution.Engine
 
             // Commands
             this.RegisterHandler<SubmitOrder>(this.OnMessage);
-            this.RegisterHandler<SubmitAtomicOrder>(this.OnMessage);
+            this.RegisterHandler<SubmitBracketOrder>(this.OnMessage);
             this.RegisterHandler<CancelOrder>(this.OnMessage);
             this.RegisterHandler<ModifyOrder>(this.OnMessage);
             this.RegisterHandler<AccountInquiry>(this.OnMessage);
@@ -172,13 +172,13 @@ namespace Nautilus.Execution.Engine
             }
         }
 
-        private void OnMessage(SubmitAtomicOrder command)
+        private void OnMessage(SubmitBracketOrder command)
         {
             this.CommandCount++;
             this.Logger.LogInformation(LogId.Trading, $"{Received}{Command} {command}.");
 
-            var result = this.database.AddAtomicOrder(
-                command.AtomicOrder,
+            var result = this.database.AddBracketOrder(
+                command.BracketOrder,
                 command.TraderId,
                 command.AccountId,
                 command.StrategyId,
@@ -186,41 +186,41 @@ namespace Nautilus.Execution.Engine
 
             if (result.IsSuccess)
             {
-                this.gateway.SubmitOrder(command.AtomicOrder);
+                this.gateway.SubmitOrder(command.BracketOrder);
 
                 var submitted1 = new OrderSubmitted(
                     command.AccountId,
-                    command.AtomicOrder.Entry.Id,
+                    command.BracketOrder.Entry.Id,
                     this.TimeNow(),
                     this.NewGuid(),
                     this.TimeNow());
 
                 var submitted2 = new OrderSubmitted(
                     command.AccountId,
-                    command.AtomicOrder.StopLoss.Id,
+                    command.BracketOrder.StopLoss.Id,
                     this.TimeNow(),
                     this.NewGuid(),
                     this.TimeNow());
 
-                command.AtomicOrder.Entry.Apply(submitted1);
-                command.AtomicOrder.StopLoss.Apply(submitted2);
-                this.database.UpdateOrder(command.AtomicOrder.Entry);
-                this.database.UpdateOrder(command.AtomicOrder.StopLoss);
+                command.BracketOrder.Entry.Apply(submitted1);
+                command.BracketOrder.StopLoss.Apply(submitted2);
+                this.database.UpdateOrder(command.BracketOrder.Entry);
+                this.database.UpdateOrder(command.BracketOrder.StopLoss);
 
                 this.SendToEventPublisher(submitted1);
                 this.SendToEventPublisher(submitted2);
 
-                if (command.AtomicOrder.TakeProfit != null)
+                if (command.BracketOrder.TakeProfit != null)
                 {
                     var submitted3 = new OrderSubmitted(
                         command.AccountId,
-                        command.AtomicOrder.TakeProfit.Id,
+                        command.BracketOrder.TakeProfit.Id,
                         this.TimeNow(),
                         this.NewGuid(),
                         this.TimeNow());
 
-                    command.AtomicOrder.TakeProfit.Apply(submitted3);
-                    this.database.UpdateOrder(command.AtomicOrder.TakeProfit);
+                    command.BracketOrder.TakeProfit.Apply(submitted3);
+                    this.database.UpdateOrder(command.BracketOrder.TakeProfit);
 
                     this.SendToEventPublisher(submitted3);
                 }
