@@ -466,7 +466,7 @@ namespace Nautilus.Fxcm
 
                 case OrdStatus.FILLED:
                 {
-                    this.Logger.LogDebug(LogId.Networking, $"{Received}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.EXPIRED)})");
+                    this.Logger.LogDebug(LogId.Networking, $"{Received}{FIX} {nameof(ExecutionReport)}({nameof(OrdStatus.FILLED)})");
 
                     this.tradingGateway?.Send(this.GenerateOrderFilledEvent(message));
                     break;
