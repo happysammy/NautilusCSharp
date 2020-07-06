@@ -5,6 +5,11 @@ Solution Cleaning
 
 To cleanup after migrating to a new .NET SDK version - run the bellow commands which will recursively scan for and remove the bin and obj folders and their contents.
 
+As good practice test which files and folders will be deleted first;
+
+	sudo find -type d -name bin -exec ls {} \;
+	sudo find -type d -name obj -exec ls {} \;
+	
 WARNING: Run these commands from the /Nautilus/Source directory otherwise it will destory the OS.
 
 	sudo find -type d -name bin -exec rm -rf {} \;
