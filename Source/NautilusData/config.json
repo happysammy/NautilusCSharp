@@ -14,7 +14,7 @@
     "ApiVersion": "1.0",
     "Compression": "Snappy",
     "Encryption": "Curve25519",
-    "KeysPath": "/home/ec2-user/keys/",
+    "KeysPath": "/home/nautilus/keys/",
     "ServiceName": "nautilus-data"
   },
   "Network": {
@@ -24,7 +24,7 @@
     "TickPubPort": 55504
   },
   "FIX44": {
-    "ConfigPath": "/home/ec2-user/config-data/",
+    "ConfigPath": "/home/nautilus/config-data/",
     "ConfigFile": "fix_fxcm1_md.cfg",
     "ConnectJob": {
       "Day": "Sunday",

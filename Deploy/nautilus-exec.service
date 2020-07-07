@@ -4,12 +4,12 @@ After=network.target
 
 [Service]
 Type=simple
-User=ec2-user
+User=nautilus
 SyslogIdentifier=nautilus-data
-WorkingDirectory=/home/ec2-user/nautilus-exec/
+WorkingDirectory=/home/nautilus/nautilus-exec/
 Environment=ASPNETCORE_ENVIRONMENT=Production
 Environment=DOTNET_PRINT_TELEMETRY_MESSAGE=false
-ExecStart=/usr/bin/dotnet /home/ec2-user/nautilus-exec/NautilusExecutor.dll
+ExecStart=/usr/bin/dotnet /home/nautilus/nautilus-exec/NautilusExecutor.dll
 Restart=always
 RestartSec=10
 KillSignal=SIGINT
