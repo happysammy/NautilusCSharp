@@ -57,7 +57,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
                 DataBusFactory.Create(container),
                 this.barDataSerializer,
                 this.instrumentDataSerializer,
-                new CompressorBypass(),
+                new BypassCompressor(),
                 EncryptionSettings.None(),
                 new Port(55511));
         }

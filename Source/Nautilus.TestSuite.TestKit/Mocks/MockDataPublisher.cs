@@ -41,7 +41,7 @@ namespace Nautilus.TestSuite.TestKit.Mocks
             : base(
                 container,
                 dataBusAdapter,
-                new CompressorBypass(),
+                new BypassCompressor(),
                 encryption,
                 networkAddress)
         {

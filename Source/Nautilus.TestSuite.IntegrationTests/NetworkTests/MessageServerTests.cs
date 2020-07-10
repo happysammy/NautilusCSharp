@@ -61,7 +61,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             this.headerSerializer = new MsgPackDictionarySerializer();
             this.requestSerializer = new MsgPackRequestSerializer();
             this.responseSerializer = new MsgPackResponseSerializer();
-            this.compressor = new CompressorBypass();
+            this.compressor = new BypassCompressor();
 
             this.testRequestAddress = ZmqNetworkAddress.LocalHost(new Port(55655));
             this.testResponseAddress = ZmqNetworkAddress.LocalHost(new Port(55656));

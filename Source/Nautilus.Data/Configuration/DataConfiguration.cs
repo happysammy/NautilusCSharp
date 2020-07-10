@@ -15,7 +15,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-using System.Collections.Immutable;
+using System.Collections.Generic;
 using Nautilus.DomainModel.Identifiers;
 using Nautilus.DomainModel.ValueObjects;
 using NodaTime;
@@ -37,8 +37,8 @@ namespace Nautilus.Data.Configuration
         /// <param name="tickDataTrimWindowDays">The tick data trim window in days.</param>
         /// <param name="barDataTrimWindowDays">The bar data trim window in days.</param>
         public DataConfiguration(
-            ImmutableList<Symbol> subscribingSymbols,
-            ImmutableList<BarSpecification> barSpecifications,
+            IReadOnlyCollection<Symbol> subscribingSymbols,
+            IReadOnlyCollection<BarSpecification> barSpecifications,
             LocalTime tickDataTrimTime,
             LocalTime barDataTrimTime,
             int tickDataTrimWindowDays,
@@ -55,12 +55,12 @@ namespace Nautilus.Data.Configuration
         /// <summary>
         /// Gets the subscribing symbols.
         /// </summary>
-        public ImmutableList<Symbol> SubscribingSymbols { get; }
+        public IReadOnlyCollection<Symbol> SubscribingSymbols { get; }
 
         /// <summary>
         /// Gets the configuration bar specifications.
         /// </summary>
-        public ImmutableList<BarSpecification> BarSpecifications { get; }
+        public IReadOnlyCollection<BarSpecification> BarSpecifications { get; }
 
         /// <summary>
         /// Gets the time to trim the tick data.

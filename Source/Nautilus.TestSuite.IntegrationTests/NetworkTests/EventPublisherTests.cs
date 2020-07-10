@@ -66,7 +66,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             var publisher = new EventPublisher(
                 this.container,
                 new MsgPackEventSerializer(),
-                new CompressorBypass(),
+                new BypassCompressor(),
                 EncryptionSettings.None(),
                 new Label("test-publisher"),
                 new Port(56601));

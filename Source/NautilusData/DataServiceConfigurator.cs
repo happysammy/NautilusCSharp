@@ -72,9 +72,15 @@ namespace NautilusData
                 publicKeyEncoded,
                 secretKeyEncoded);
 
+            var compression = configuration["Messaging:Compression"];
+            if (compression is null || compression.Equals(string.Empty))
+            {
+                compression = "None";
+            }
+
             var wireConfig = new WireConfiguration(
                 configuration["Messaging:ApiVersion"],
-                configuration["Messaging:Compression"].ToEnum<CompressionCodec>(),
+                compression.ToEnum<CompressionCodec>(),
                 encryptionConfig,
                 new Label(configuration["Messaging:ServiceName"]));
 

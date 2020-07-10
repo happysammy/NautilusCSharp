@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="CompressorBypass.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="BypassCompressor.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2020 Nautech Systems Pty Ltd. All rights reserved.
 //  https://nautechsystems.io
 //
@@ -20,7 +20,7 @@ using Nautilus.Common.Interfaces;
 namespace Nautilus.Network.Compression
 {
     /// <inheritdoc />
-    public sealed class CompressorBypass : ICompressor
+    public sealed class BypassCompressor : ICompressor
     {
         /// <inheritdoc/>
         public byte[] Compress(byte[] source) => source;

@@ -36,7 +36,7 @@ namespace Nautilus.Network.Compression
             switch (codec)
             {
                 case CompressionCodec.None:
-                    return new CompressorBypass();
+                    return new BypassCompressor();
                 case CompressionCodec.Snappy:
                     return new SnappyCompressor();
                 case CompressionCodec.Undefined:
