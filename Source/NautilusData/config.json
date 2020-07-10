@@ -71,7 +71,10 @@
       "USD/JPY.FXCM",
       "USOil.FXCM",
       "XAU/USD.FXCM",
-      "XAG/USD.FXCM"
+      "XAG/USD.FXCM",
+      "SPX500.FXCM",
+      "AUS200.FXCM",
+      "GER30.FXCM"
     ],
     "BarSpecifications": [
       "1-MINUTE-ASK",

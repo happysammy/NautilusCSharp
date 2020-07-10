@@ -42,7 +42,7 @@ namespace Nautilus.DomainModel.Events.Base
         /// <param name="orderSide">The event order side.</param>
         /// <param name="filledQuantity">The event order filled quantity.</param>
         /// <param name="averagePrice">The event order average price.</param>
-        /// <param name="currency">The event transaction currency.</param>
+        /// <param name="quoteCurrency">The event quote currency.</param>
         /// <param name="executionTime">The event order execution time.</param>
         /// <param name="eventType">The event type.</param>
         /// <param name="eventId">The event identifier.</param>
@@ -56,7 +56,7 @@ namespace Nautilus.DomainModel.Events.Base
             OrderSide orderSide,
             Quantity filledQuantity,
             Price averagePrice,
-            Currency currency,
+            Currency quoteCurrency,
             ZonedDateTime executionTime,
             Type eventType,
             Guid eventId,
@@ -68,7 +68,7 @@ namespace Nautilus.DomainModel.Events.Base
                 eventTimestamp)
         {
             Condition.NotDefault(orderSide, nameof(orderSide));
-            Condition.NotDefault(currency, nameof(currency));
+            Condition.NotDefault(quoteCurrency, nameof(quoteCurrency));
             Debug.NotDefault(executionTime, nameof(executionTime));
             Debug.NotDefault(eventId, nameof(eventId));
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
@@ -80,7 +80,7 @@ namespace Nautilus.DomainModel.Events.Base
             this.OrderSide = orderSide;
             this.FilledQuantity = filledQuantity;
             this.AveragePrice = averagePrice;
-            this.Currency = currency;
+            this.Currency = quoteCurrency;
             this.ExecutionTime = executionTime;
         }
 
@@ -120,7 +120,7 @@ namespace Nautilus.DomainModel.Events.Base
         public Price AveragePrice { get; }
 
         /// <summary>
-        /// Gets the events order transaction currency.
+        /// Gets the events order quote currency.
         /// </summary>
         public Currency Currency { get; }
 
