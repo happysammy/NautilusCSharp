@@ -35,7 +35,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         }
 
         [Fact]
-        internal void LZ4Compressor_CanCompressAndDecompressBlock()
+        internal void LZ4Compressor_CanCompressAndDecompress()
         {
             // Arrange
             var message = "hello world!";
@@ -51,54 +51,21 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             this.Output.WriteLine(BitConverter.ToString(compressed));
         }
 
-        // [Fact]
-        // internal void LZ4Compressor_DecompressBlockFromPython()
-        // {
-        //     // Arrange
-        //     var message = "hello world!";
-        //     var expected = Encoding.UTF8.GetBytes(message);
-        //     var compressor = new LZ4Compressor();
-        //     var fromPython = Convert.FromBase64String("DAAAAMBoZWxsbyB3b3JsZCE=");
-        //     this.Output.WriteLine(Encoding.UTF8.GetString(fromPython));
-        //
-        //     // Act
-        //     var decompressed = compressor.Decompress(fromPython);
-        //
-        //     // Assert
-        //     Assert.Equal(expected, decompressed);
-        // }
         [Fact]
-        internal void LZ4Compressor_CanCompressAndDecompressFrame()
+        internal void LZ4Compressor_DecompressFromPython()
         {
             // Arrange
             var message = "hello world!";
+            var expected = Encoding.UTF8.GetBytes(message);
             var compressor = new LZ4Compressor();
+            var fromPython = Convert.FromBase64String("BCJNGGhADAAAAAAAAABdDAAAgGhlbGxvIHdvcmxkIQAAAAA=");
+            this.Output.WriteLine(Encoding.UTF8.GetString(fromPython));
 
             // Act
-            var messageBytes = Encoding.UTF8.GetBytes(message);
-            var compressed = compressor.CompressFrame(messageBytes);
-            var decompressed = compressor.DecompressFrame(compressed);
+            var decompressed = compressor.Decompress(fromPython);
 
             // Assert
-            Assert.Equal(message, Encoding.UTF8.GetString(decompressed));
-            this.Output.WriteLine(BitConverter.ToString(compressed));
+            Assert.Equal(expected, decompressed);
         }
-
-        // [Fact]
-        // internal void LZ4Compressor_DecompressFrameFromPython()
-        // {
-        //     // Arrange
-        //     var message = "hello world!";
-        //     var expected = Encoding.UTF8.GetBytes(message);
-        //     var compressor = new LZ4Compressor();
-        //     var fromPython = Convert.FromBase64String("BCJNGGhADAAAAAAAAABdDAAAgGhlbGxvIHdvcmxkIQAAAAA=");
-        //     this.Output.WriteLine(Encoding.UTF8.GetString(fromPython));
-        //
-        //     // Act
-        //     var decompressed = compressor.DecompressFrame(fromPython);
-        //
-        //     // Assert
-        //     Assert.Equal(expected, decompressed);
-        // }
     }
 }

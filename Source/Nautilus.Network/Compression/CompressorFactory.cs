@@ -37,8 +37,8 @@ namespace Nautilus.Network.Compression
             {
                 case CompressionCodec.None:
                     return new BypassCompressor();
-                case CompressionCodec.Snappy:
-                    return new SnappyCompressor();
+                case CompressionCodec.LZ4:
+                    return new LZ4Compressor();
                 case CompressionCodec.Undefined:
                     goto default;
                 default:

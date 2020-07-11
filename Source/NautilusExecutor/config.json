@@ -12,7 +12,7 @@
   },
   "Messaging": {
     "ApiVersion": "1.0",
-    "Compression": "Snappy",
+    "Compression": "LZ4",
     "Encryption": "Curve25519",
     "KeysPath": "/home/nautilus/keys/",
     "ServiceName": "nautilus-exec"

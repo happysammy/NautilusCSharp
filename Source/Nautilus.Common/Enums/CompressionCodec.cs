@@ -36,8 +36,9 @@ namespace Nautilus.Common.Enums
         None = 1,
 
         /// <summary>
-        /// The Snappy compression algorithm.
+        /// The LZ4 compression algorithm.
         /// </summary>
-        Snappy = 2,
+        // ReSharper disable once InconsistentNaming (correct name)
+        LZ4 = 2,
     }
 }

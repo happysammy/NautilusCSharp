@@ -16,7 +16,6 @@
 // -------------------------------------------------------------------------------------------------
 
 using System.IO;
-using K4os.Compression.LZ4;
 using K4os.Compression.LZ4.Streams;
 using Nautilus.Common.Interfaces;
 
@@ -29,58 +28,25 @@ namespace Nautilus.Network.Compression
         /// <inheritdoc />
         public byte[] Compress(byte[] source)
         {
-            // var target = new byte[LZ4Codec.MaximumOutputSize(source.Length)];
-            //
-            // LZ4Codec.Encode(source, target);
-            //
-            // var i = target.Length - 1;
-            // while (target[i] == 0)
-            // {
-            //     --i;
-            // }
-            //
-            // var temp = new byte[i + 1];
-            // Array.Copy(target, temp, i + 1);
-            //
-            // return temp;
-            return LZ4Pickler.Pickle(source);
+            var output = new MemoryStream();
+            using (LZ4EncoderStream stream = LZ4Stream.Encode(output))
+            {
+                var reader = new MemoryStream(source);
+                reader.CopyTo(stream);
+                stream.Close();
+                return output.ToArray();
+            }
         }
 
         /// <inheritdoc />
         public byte[] Decompress(byte[] source)
         {
-            // var target = new byte[12];
-            //
-            // LZ4Codec.Decode(source, target);
-            //
-            // return target;
-            return LZ4Pickler.Unpickle(source);
-        }
-
-        /// <summary>
-        /// The d.
-        /// </summary>
-        /// <param name="source">source.</param>
-        /// <returns>ret.</returns>
-        public byte[] CompressFrame(byte[] source)
-        {
-            var stream = new MemoryStream(source);
-            LZ4Stream.Encode(stream);
-
-            return stream.ToArray();
-        }
-
-        /// <summary>
-        /// The pp.
-        /// </summary>
-        /// <param name="source">source.</param>
-        /// <returns>ret.</returns>
-        public byte[] DecompressFrame(byte[] source)
-        {
-            var stream = new MemoryStream(source);
-            LZ4Stream.Decode(stream, leaveOpen: false);
-
-            return stream.ToArray();
+            using (LZ4DecoderStream stream = LZ4Stream.Decode(new MemoryStream(source)))
+            {
+                var output = new MemoryStream();
+                stream.CopyTo(output);
+                return output.ToArray();
+            }
         }
     }
 }

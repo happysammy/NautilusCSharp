@@ -27,7 +27,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="IronSnappy" Version="1.2.4" />
         <PackageReference Include="MessagePack" Version="2.1.152" />
         <PackageReference Include="MessagePackAnalyzer" Version="2.1.152" />
         <PackageReference Include="MongoDB.Bson" Version="2.10.4" />
