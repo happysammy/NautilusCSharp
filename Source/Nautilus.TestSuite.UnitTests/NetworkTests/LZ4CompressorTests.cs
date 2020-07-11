@@ -26,6 +26,7 @@ using Xunit.Abstractions;
 namespace Nautilus.TestSuite.UnitTests.NetworkTests
 {
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Correct naming")]
     public sealed class LZ4CompressorTests : TestBase
     {
         public LZ4CompressorTests(ITestOutputHelper output)
