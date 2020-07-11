@@ -107,7 +107,9 @@ namespace Nautilus.Common.Messaging
             if (this.queue.Count <= 0)
             {
                 this.IsIdle = true;
+#if DEBUG
                 this.Logger.LogTrace("Idle.");
+#endif
 
                 return;
             }
@@ -117,7 +119,9 @@ namespace Nautilus.Common.Messaging
             if (this.IsIdle)
             {
                 this.IsIdle = false;
+#if DEBUG
                 this.Logger.LogTrace("Active.");
+#endif
             }
 
             this.ProcessQueue();
@@ -137,7 +141,9 @@ namespace Nautilus.Common.Messaging
             {
                 Task.Run(this.RunTimer);
                 this.IsIdle = false;
+#if DEBUG
                 this.Logger.LogTrace("Active.");
+#endif
             }
 
             while (this.vouchers > 0 && this.queue.Count > 0)
@@ -152,13 +158,17 @@ namespace Nautilus.Common.Messaging
                 this.receiver(message);
                 this.vouchers--;
 
+#if DEBUG
                 this.Logger.LogTrace($"Sent message {message} (total_count={this.totalCount}).");
+#endif
             }
 
             if (this.vouchers <= 0 && this.queue.Count > 0)
             {
                 // At message limit
+#if DEBUG
                 this.Logger.LogTrace($"At message limit of {this.limit} per {this.interval} (queued_count={this.queue.Count}).");
+#endif
             }
         }
 

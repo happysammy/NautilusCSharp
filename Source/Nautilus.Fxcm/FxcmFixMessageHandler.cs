@@ -230,7 +230,9 @@ namespace Nautilus.Fxcm
         [SystemBoundary]
         public void OnMessage(QuoteStatusReport message)
         {
+#if DEBUG
             this.Logger.LogTrace(LogId.Networking, $"{Received}{Fix} {nameof(QuoteStatusReport)}");
+#endif
             this.Logger.LogInformation(LogId.Networking, message.Product.ToString());
         }
 

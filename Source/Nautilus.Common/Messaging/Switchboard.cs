@@ -84,12 +84,10 @@ namespace Nautilus.Common.Messaging
                 receiver.Send(envelope);
                 return true;
             }
-            else
-            {
-                // Receiver address not found
-                this.deadLetterHandler(envelope);
-                return false;
-            }
+
+            // Receiver address not found
+            this.deadLetterHandler(envelope);
+            return false;
         }
 
         /// <summary>

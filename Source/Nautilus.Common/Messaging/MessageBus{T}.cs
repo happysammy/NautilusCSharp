@@ -196,7 +196,9 @@ namespace Nautilus.Common.Messaging
             // Send point-to-point
             if (this.switchboard.SendToReceiver(envelope))
             {
+#if DEBUG
                 this.Logger.LogTrace($"Sent[{this.ProcessedCount}] {envelope.Sender} -> {envelope} -> {envelope.Receiver}");
+#endif
             }
             else
             {
@@ -213,7 +215,9 @@ namespace Nautilus.Common.Messaging
                 for (var i = 0; i < this.subscriptionsAll.Count; i++)
                 {
                     this.subscriptionsAll[i].Endpoint.Send(envelope);
+#if DEBUG
                     this.Logger.LogTrace($"Published[{this.ProcessedCount}] {envelope.Sender} -> {envelope} -> {this.subscriptionsAll[i].Address}");
+#endif
                 }
             }
 
@@ -222,7 +226,9 @@ namespace Nautilus.Common.Messaging
                 for (var i = 0; i < subscribers.Count; i++)
                 {
                     subscribers[i].Endpoint.Send(envelope);
+#if DEBUG
                     this.Logger.LogTrace($"Published[{this.ProcessedCount}] {envelope.Sender} -> {envelope} -> {subscribers[i].Address}");
+#endif
                 }
             }
         }

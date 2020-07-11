@@ -66,7 +66,6 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         //     // Assert
         //     Assert.Equal(expected, decompressed);
         // }
-
         [Fact]
         internal void LZ4Compressor_CanCompressAndDecompressFrame()
         {
