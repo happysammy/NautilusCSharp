@@ -32,7 +32,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         public TickTests()
         {
             // Fixture Setup
-            this.symbol = new Symbol("AUDUSD", new Venue("FXCM"));
+            this.symbol = new Symbol("AUD/USD", new Venue("FXCM"));
         }
 
         [Fact]
@@ -49,7 +49,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
                 StubZonedDateTime.UnixEpoch());
 
             // Assert
-            Assert.Equal("AUDUSD", tick.Symbol.Code);
+            Assert.Equal("AUD/USD", tick.Symbol.Code);
             Assert.Equal(decimal.One, tick.Bid.Value);
             Assert.Equal(decimal.One, tick.Ask.Value);
             Assert.Equal(1970, tick.Timestamp.Year);

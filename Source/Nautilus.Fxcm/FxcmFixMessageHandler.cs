@@ -56,7 +56,6 @@ namespace Nautilus.Fxcm
         private readonly Venue venue = new Venue("FXCM");
         private readonly ObjectCache<string, Symbol> symbolCache;
         private readonly Dictionary<string, OrderId> orderIdIndex;
-        private readonly Dictionary<Symbol, Currency> quoteCurrencyIndex;
         private readonly MarketDataIncrementalRefresh.NoMDEntriesGroup mdBidGroup;
         private readonly MarketDataIncrementalRefresh.NoMDEntriesGroup mdAskGroup;
         private readonly Func<ZonedDateTime> tickTimestampProvider;
@@ -82,7 +81,6 @@ namespace Nautilus.Fxcm
             this.accountCurrency = accountCurrency;
             this.symbolCache = new ObjectCache<string, Symbol>(Symbol.FromString);
             this.orderIdIndex = new Dictionary<string, OrderId>();
-            this.quoteCurrencyIndex = new Dictionary<Symbol, Currency>();
 
             // Improved performance by reusing MarketDataIncrementalRefresh classes
             this.mdBidGroup = new MarketDataIncrementalRefresh.NoMDEntriesGroup();
@@ -149,10 +147,8 @@ namespace Nautilus.Fxcm
             {
                 message.GetGroup(i, group);
 
-                var symbolCode = group.GetField(Tags.Symbol);
                 var symbol = this.GetSymbol(group.GetField(Tags.Symbol));
-                var brokerSymbol = new BrokerSymbol(symbolCode);
-                var securityType = FxcmMessageHelper.GetSecurityType(group.GetString(FxcmTags.ProductID));
+                var securityType = FxcmMessageHelper.GetSecurityType(group.GetField(FxcmTags.ProductID));
                 var tickPrecision = group.GetInt(FxcmTags.SymPrecision);
                 var tickSize = group.GetDecimal(FxcmTags.SymPointSize) * 0.1m;  // Field 9002 returns 'point' size (* 0.1m to get tick size)
                 var roundLot = group.GetInt(Tags.RoundLot);
@@ -169,7 +165,6 @@ namespace Nautilus.Fxcm
                 {
                     var forexInstrument = new ForexInstrument(
                         symbol,
-                        brokerSymbol,
                         tickPrecision,
                         0,
                         minStopDistanceEntry,
@@ -185,18 +180,11 @@ namespace Nautilus.Fxcm
                         this.TimeNow());
 
                     instruments.Add(forexInstrument);
-
-                    // Add quote currency to index
-                    if (!this.quoteCurrencyIndex.ContainsKey(symbol))
-                    {
-                        this.quoteCurrencyIndex.Add(symbol, forexInstrument.QuoteCurrency);
-                    }
                 }
                 else
                 {
                     var instrument = new Instrument(
                         symbol,
-                        brokerSymbol,
                         group.GetField(Tags.Currency).ToEnum<Nautilus.DomainModel.Enums.Currency>(),
                         securityType,
                         tickPrecision,
@@ -214,12 +202,6 @@ namespace Nautilus.Fxcm
                         this.TimeNow());
 
                     instruments.Add(instrument);
-
-                    // Add quote currency to index
-                    if (!this.quoteCurrencyIndex.ContainsKey(symbol))
-                    {
-                        this.quoteCurrencyIndex.Add(symbol, instrument.QuoteCurrency);
-                    }
                 }
             }
 
@@ -675,11 +657,11 @@ namespace Nautilus.Fxcm
             var orderId = this.GetOrderId(message);
             var executionId = new ExecutionId(message.GetField(Tags.ExecID));
             var positionIdBroker = new PositionIdBroker(message.GetField(FxcmTags.PosID));
-            var symbol = this.GetSymbol(message.GetField(Tags.Symbol));
+            var symbol = this.GetSymbol(message.GetString(Tags.Symbol));
             var orderSide = FxcmMessageHelper.GetOrderSide(message.GetField(Tags.Side));
             var filledQuantity = Quantity.Create(message.GetDecimal(Tags.CumQty));
             var averagePrice = Price.Create(message.GetDecimal(Tags.AvgPx));
-            var quoteCurrency = this.quoteCurrencyIndex[symbol];
+            var quoteCurrency = this.GetQuoteCurrency(symbol, message.GetField(Tags.Currency));
             var executionTime = FxcmMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
 
             return new OrderFilled(
@@ -706,7 +688,7 @@ namespace Nautilus.Fxcm
             var orderSide = FxcmMessageHelper.GetOrderSide(message.GetField(Tags.Side));
             var filledQuantity = Quantity.Create(message.GetDecimal(Tags.CumQty));
             var averagePrice = Price.Create(message.GetDecimal(Tags.AvgPx));
-            var quoteCurrency = this.quoteCurrencyIndex[symbol];
+            var quoteCurrency = this.GetQuoteCurrency(symbol, message.GetField(Tags.Currency));
             var leavesQuantity = Quantity.Create(message.GetInt(Tags.LeavesQty));
             var executionTime = FxcmMessageHelper.ParseTransactionTime(message.GetField(Tags.TransactTime));
 
@@ -737,6 +719,13 @@ namespace Nautilus.Fxcm
             var newOrderId = new OrderId(message.GetField(Tags.ClOrdID));
             this.orderIdIndex[brokerOrderId] = newOrderId;
             return newOrderId;
+        }
+
+        private Currency GetQuoteCurrency(Symbol symbol, string currency)
+        {
+            return symbol.Code.Substring(0, 3) == currency
+                ? symbol.Code.Substring(symbol.Code.Length - 3).ToEnum<Currency>()
+                : currency.ToEnum<Currency>();
         }
 
         private Symbol GetSymbol(string symbolCode)

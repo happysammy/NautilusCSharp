@@ -58,7 +58,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
         internal void GivenSubscribeBarDataMessages_CreatesAggregatorAndSubscriptions()
         {
             // Arrange
-            var symbol = new Symbol("AUDUSD", new Venue("FXCM"));
+            var symbol = new Symbol("AUD/USD", new Venue("FXCM"));
             var barType1 = new BarType(symbol, new BarSpecification(1, BarStructure.Second, PriceType.Bid));
             var barType2 = new BarType(symbol, new BarSpecification(1, BarStructure.Minute, PriceType.Bid));
 
@@ -92,7 +92,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
         internal void GivenDuplicateSubscribeBarDataMessages_CreatesAggregatorsSubscriptionsAndHandlesDuplicate()
         {
             // Arrange
-            var symbol = new Symbol("AUDUSD", new Venue("FXCM"));
+            var symbol = new Symbol("AUD/USD", new Venue("FXCM"));
             var barType1 = new BarType(symbol, new BarSpecification(1, BarStructure.Second, PriceType.Bid));
             var barType2 = new BarType(symbol, new BarSpecification(1, BarStructure.Minute, PriceType.Bid));
 
@@ -127,7 +127,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
         internal void GivenMultipleSubscribeBarDataMessages_CreatesAggregatorsAndSubscriptions()
         {
             // Arrange
-            var symbol1 = new Symbol("AUDUSD", new Venue("FXCM"));
+            var symbol1 = new Symbol("AUD/USD", new Venue("FXCM"));
             var barType1 = new BarType(symbol1, new BarSpecification(1, BarStructure.Second, PriceType.Bid));
             var barType2 = new BarType(symbol1, new BarSpecification(1, BarStructure.Minute, PriceType.Bid));
 
@@ -180,7 +180,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
         internal void GivenUnsubscribeBarDataMessage_RemovesSubscription()
         {
             // Arrange
-            var symbol = new Symbol("AUDUSD", new Venue("FXCM"));
+            var symbol = new Symbol("AUD/USD", new Venue("FXCM"));
             var barType1 = new BarType(symbol, new BarSpecification(1, BarStructure.Second, PriceType.Bid));
             var barType2 = new BarType(symbol, new BarSpecification(1, BarStructure.Minute, PriceType.Bid));
 
@@ -221,7 +221,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
         internal void GivenDuplicateUnsubscribeBarDataMessages_RemovesSubscriptionAndHandlesDuplicate()
         {
             // Arrange
-            var symbol = new Symbol("AUDUSD", new Venue("FXCM"));
+            var symbol = new Symbol("AUD/USD", new Venue("FXCM"));
             var barType1 = new BarType(symbol, new BarSpecification(1, BarStructure.Second, PriceType.Bid));
             var barType2 = new BarType(symbol, new BarSpecification(1, BarStructure.Minute, PriceType.Bid));
 
@@ -263,11 +263,11 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
         internal void GivenMultipleUnsubscribeBarDataMessages_RemovesAggregatorsAndSubscriptions()
         {
             // Arrange
-            var symbol1 = new Symbol("AUDUSD", new Venue("FXCM"));
+            var symbol1 = new Symbol("AUD/USD", new Venue("FXCM"));
             var barType1 = new BarType(symbol1, new BarSpecification(1, BarStructure.Second, PriceType.Bid));
             var barType2 = new BarType(symbol1, new BarSpecification(1, BarStructure.Minute, PriceType.Bid));
 
-            var symbol2 = new Symbol("GBPUSD", new Venue("FXCM"));
+            var symbol2 = new Symbol("GBP/USD", new Venue("FXCM"));
             var barType3 = new BarType(symbol2, new BarSpecification(1, BarStructure.Second, PriceType.Bid));
             var barType4 = new BarType(symbol2, new BarSpecification(1, BarStructure.Minute, PriceType.Bid));
 

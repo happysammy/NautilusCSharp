@@ -28,7 +28,7 @@ namespace Nautilus.TestSuite.TestKit.Stubs
         public static BarType AUDUSD_OneMinuteAsk()
         {
             return new BarType(
-                new Symbol("AUDUSD", new Venue("FXCM")),
+                new Symbol("AUD/USD", new Venue("FXCM")),
                 new BarSpecification(
                     1,
                     BarStructure.Minute,
@@ -38,7 +38,7 @@ namespace Nautilus.TestSuite.TestKit.Stubs
         public static BarType GBPUSD_OneMinuteBid()
         {
             return new BarType(
-                new Symbol("GBPUSD", new Venue("FXCM")),
+                new Symbol("GBP/USD", new Venue("FXCM")),
                 new BarSpecification(
                     1,
                     BarStructure.Minute,
@@ -48,7 +48,7 @@ namespace Nautilus.TestSuite.TestKit.Stubs
         public static BarType GBPUSD_OneSecondMid()
         {
             return new BarType(
-                new Symbol("GBPUSD", new Venue("FXCM")),
+                new Symbol("GBP/USD", new Venue("FXCM")),
                 new BarSpecification(
                     1,
                     BarStructure.Second,
@@ -58,7 +58,7 @@ namespace Nautilus.TestSuite.TestKit.Stubs
         public static BarType USDJPY_OneMinuteBid()
         {
             return new BarType(
-                new Symbol("USDJPY", new Venue("FXCM")),
+                new Symbol("USD/JPY", new Venue("FXCM")),
                 new BarSpecification(
                     1,
                     BarStructure.Minute,
@@ -68,7 +68,7 @@ namespace Nautilus.TestSuite.TestKit.Stubs
         public static BarType CADHKD_OneMinuteBid()
         {
             return new BarType(
-                new Symbol("CADHKD", new Venue("FXCM")),
+                new Symbol("CAD/HKD", new Venue("FXCM")),
                 new BarSpecification(
                     1,
                     BarStructure.Minute,

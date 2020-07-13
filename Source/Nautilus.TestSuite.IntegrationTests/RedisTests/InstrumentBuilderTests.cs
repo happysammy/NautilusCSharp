@@ -75,9 +75,8 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             var instrument = new Instrument(
                 new Symbol("SPX500", new Venue("FXCM")),
-                new BrokerSymbol("SPX500"),
-                Currency.CAD,
-                SecurityType.Bond,
+                Currency.USD,
+                SecurityType.CFD,
                 2,
                 0,
                 1,

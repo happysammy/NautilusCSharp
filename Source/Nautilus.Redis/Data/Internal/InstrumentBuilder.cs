@@ -40,7 +40,6 @@ namespace Nautilus.Redis.Data.Internal
         public InstrumentBuilder(Instrument startingInstrument)
         {
             this.Symbol = startingInstrument.Symbol;
-            this.BrokerSymbol = startingInstrument.BrokerSymbol;
             this.BaseCurrency = startingInstrument.QuoteCurrency;
             this.SecurityType = startingInstrument.SecurityType;
             this.PricePrecision = startingInstrument.PricePrecision;
@@ -63,8 +62,6 @@ namespace Nautilus.Redis.Data.Internal
         public IList<string> Changes { get; } = new List<string>();
 
         private Symbol Symbol { get; }
-
-        private BrokerSymbol BrokerSymbol { get; }
 
         private Currency BaseCurrency { get; }
 
@@ -195,7 +192,6 @@ namespace Nautilus.Redis.Data.Internal
         {
             return new Instrument(
                 this.Symbol,
-                this.BrokerSymbol,
                 this.BaseCurrency,
                 this.SecurityType,
                 this.PricePrecision,

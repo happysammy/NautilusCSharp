@@ -30,7 +30,7 @@ namespace Nautilus.TestSuite.TestKit.Stubs
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class StubOrderBuilder
     {
-        private Symbol Symbol { get; set; } = new Symbol("AUDUSD", new Venue("FXCM"));
+        private Symbol Symbol { get; set; } = new Symbol("AUD/USD", new Venue("FXCM"));
 
         private OrderId OrderId { get; set; } = new OrderId("O-123456");
 
@@ -115,7 +115,7 @@ namespace Nautilus.TestSuite.TestKit.Stubs
 
         public StubOrderBuilder EntryOrder(string orderId)
         {
-            this.Symbol = new Symbol("AUDUSD", new Venue("FXCM"));
+            this.Symbol = new Symbol("AUD/USD", new Venue("FXCM"));
             this.OrderId = new OrderId(orderId);
             this.OrderSide = OrderSide.Buy;
             this.OrderPurpose = OrderPurpose.Entry;
@@ -129,7 +129,7 @@ namespace Nautilus.TestSuite.TestKit.Stubs
 
         public StubOrderBuilder StopLossOrder(string orderId)
         {
-            this.Symbol = new Symbol("AUDUSD", "FXCM");
+            this.Symbol = new Symbol("AUD/USD", "FXCM");
             this.OrderId = new OrderId(orderId);
             this.OrderSide = OrderSide.Sell;
             this.OrderPurpose = OrderPurpose.StopLoss;
@@ -142,7 +142,7 @@ namespace Nautilus.TestSuite.TestKit.Stubs
 
         public StubOrderBuilder TakeProfitOrder(string orderId)
         {
-            this.Symbol = new Symbol("AUDUSD", new Venue("FXCM"));
+            this.Symbol = new Symbol("AUD/USD", new Venue("FXCM"));
             this.OrderId = new OrderId(orderId);
             this.OrderSide = OrderSide.Sell;
             this.OrderPurpose = OrderPurpose.TakeProfit;

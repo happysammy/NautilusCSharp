@@ -88,7 +88,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
 
             // Assert
             Assert.Equal(1, this.publisher.SentCount);
-            Assert.Equal("Bar:AUDUSD.FXCM-1-MINUTE-ASK", Encoding.UTF8.GetString(topic));
+            Assert.Equal("Bar:AUD/USD.FXCM-1-MINUTE-ASK", Encoding.UTF8.GetString(topic));
             Assert.Equal(bar.ToString(), Encoding.UTF8.GetString(message));
             Assert.Equal(bar, this.barDataSerializer.Deserialize(message));
 
@@ -120,7 +120,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
             var message = subscriber.ReceiveFrameBytes();
 
             // Assert
-            Assert.Equal("Instrument:AUDUSD.FXCM", Encoding.UTF8.GetString(topic));
+            Assert.Equal("Instrument:AUD/USD.FXCM", Encoding.UTF8.GetString(topic));
             Assert.Equal(instrument, this.instrumentDataSerializer.Deserialize(message));
 
             // Tear Down

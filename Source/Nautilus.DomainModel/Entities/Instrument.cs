@@ -36,7 +36,6 @@ namespace Nautilus.DomainModel.Entities
         /// Initializes a new instance of the <see cref="Instrument"/> class.
         /// </summary>
         /// <param name="symbol">The instruments symbol.</param>
-        /// <param name="brokerSymbol">The instruments broker symbol.</param>
         /// <param name="quoteCurrency">The instruments quote currency.</param>
         /// <param name="securityType">The instruments security type.</param>
         /// <param name="pricePrecision">The instruments tick decimal precision.</param>
@@ -54,7 +53,6 @@ namespace Nautilus.DomainModel.Entities
         /// <param name="timestamp"> The instruments initialization timestamp.</param>
         public Instrument(
             Symbol symbol,
-            BrokerSymbol brokerSymbol,
             Currency quoteCurrency,
             SecurityType securityType,
             int pricePrecision,
@@ -81,7 +79,6 @@ namespace Nautilus.DomainModel.Entities
             Condition.NotDefault(timestamp, nameof(timestamp));
 
             this.Symbol = symbol;
-            this.BrokerSymbol = brokerSymbol;
             this.QuoteCurrency = quoteCurrency;
             this.SecurityType = securityType;
             this.PricePrecision = pricePrecision;
@@ -102,11 +99,6 @@ namespace Nautilus.DomainModel.Entities
         /// Gets the instruments symbol.
         /// </summary>
         public Symbol Symbol { get; }
-
-        /// <summary>
-        /// Gets the instruments broker symbol.
-        /// </summary>
-        public BrokerSymbol BrokerSymbol { get; }
 
         /// <summary>
         /// Gets the instruments quote currency.

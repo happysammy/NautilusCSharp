@@ -33,18 +33,18 @@ namespace Nautilus.Fxcm.MessageFactories
         /// <summary>
         /// Creates and returns a new <see cref="NewOrderList"/> FIX message with contingency orders.
         /// </summary>
-        /// <param name="brokerSymbol">The brokers symbol.</param>
+        /// <param name="symbolCode">The brokers symbol.</param>
         /// <param name="accountNumber">The account number.</param>
         /// <param name="bracketOrder">The bracket order.</param>
         /// <param name="timeNow">The time now.</param>
         /// <returns>The FIX message.</returns>
         public static NewOrderList CreateWithStopLoss(
-            string brokerSymbol,
+            string symbolCode,
             AccountNumber accountNumber,
             BracketOrder bracketOrder,
             ZonedDateTime timeNow)
         {
-            Debug.NotEmptyOrWhiteSpace(brokerSymbol, nameof(brokerSymbol));
+            Debug.NotEmptyOrWhiteSpace(symbolCode, nameof(symbolCode));
             Debug.NotDefault(timeNow, nameof(timeNow));
 
             var message = new NewOrderList();
@@ -68,7 +68,7 @@ namespace Nautilus.Fxcm.MessageFactories
 
             order1.SetField(new ClOrdLinkID("1"));
             order1.SetField(new Account(accountNumber.Value));
-            order1.SetField(new Symbol(brokerSymbol));
+            order1.SetField(new Symbol(symbolCode));
             order1.SetField(FxcmMessageHelper.GetFixOrderSide(entry.OrderSide));
             order1.SetField(FxcmMessageHelper.GetFixOrderType(entry.OrderType));
             order1.SetField(FxcmMessageHelper.GetFixTimeInForce(entry.TimeInForce));
@@ -93,7 +93,7 @@ namespace Nautilus.Fxcm.MessageFactories
             order2.SetField(new ListSeqNo(1));
             order2.SetField(new ClOrdLinkID("2"));
             order2.SetField(new Account(accountNumber.Value));
-            order2.SetField(new Symbol(brokerSymbol));
+            order2.SetField(new Symbol(symbolCode));
             order2.SetField(FxcmMessageHelper.GetFixOrderSide(stopLoss.OrderSide));
             order2.SetField(new OrdType(OrdType.STOP));
             order2.SetField(FxcmMessageHelper.GetFixTimeInForce(stopLoss.TimeInForce));
@@ -120,18 +120,18 @@ namespace Nautilus.Fxcm.MessageFactories
         /// <summary>
         /// Creates and returns a new order list entry FIX message with entry, stop and limit orders.
         /// </summary>
-        /// <param name="brokerSymbol">The brokers symbol.</param>
+        /// <param name="symbolCode">The brokers symbol.</param>
         /// <param name="accountNumber">The FIX account number.</param>
         /// <param name="bracketOrder">The bracket order.</param>
         /// <param name="timeNow">The time now.</param>
         /// <returns>The FIX message.</returns>
         public static NewOrderList CreateWithStopLossAndTakeProfit(
-            string brokerSymbol,
+            string symbolCode,
             AccountNumber accountNumber,
             BracketOrder bracketOrder,
             ZonedDateTime timeNow)
         {
-            Debug.NotEmptyOrWhiteSpace(brokerSymbol, nameof(brokerSymbol));
+            Debug.NotEmptyOrWhiteSpace(symbolCode, nameof(symbolCode));
             Debug.NotDefault(timeNow, nameof(timeNow));
 
             var message = new NewOrderList();
@@ -148,7 +148,7 @@ namespace Nautilus.Fxcm.MessageFactories
             order1.SetField(new ListSeqNo(0));
             order1.SetField(new ClOrdLinkID("1"));
             order1.SetField(new Account(accountNumber.Value));
-            order1.SetField(new Symbol(brokerSymbol));
+            order1.SetField(new Symbol(symbolCode));
             order1.SetField(FxcmMessageHelper.GetFixOrderSide(entry.OrderSide));
             order1.SetField(FxcmMessageHelper.GetFixOrderType(entry.OrderType));
             order1.SetField(FxcmMessageHelper.GetFixTimeInForce(entry.TimeInForce));
@@ -178,7 +178,7 @@ namespace Nautilus.Fxcm.MessageFactories
             order2.SetField(new ListSeqNo(1));
             order2.SetField(new ClOrdLinkID("2"));
             order2.SetField(new Account(accountNumber.Value));
-            order2.SetField(new Symbol(brokerSymbol));
+            order2.SetField(new Symbol(symbolCode));
             order2.SetField(FxcmMessageHelper.GetFixOrderSide(stopLoss.OrderSide));
             order2.SetField(FxcmMessageHelper.GetFixOrderType(stopLoss.OrderType));
             order2.SetField(FxcmMessageHelper.GetFixTimeInForce(stopLoss.TimeInForce));
@@ -208,7 +208,7 @@ namespace Nautilus.Fxcm.MessageFactories
                 order3.SetField(new ListSeqNo(2));
                 order3.SetField(new ClOrdLinkID("2"));
                 order3.SetField(new Account(accountNumber.Value));
-                order3.SetField(new Symbol(brokerSymbol));
+                order3.SetField(new Symbol(symbolCode));
                 order3.SetField(FxcmMessageHelper.GetFixOrderSide(takeProfit.OrderSide));
                 order3.SetField(FxcmMessageHelper.GetFixOrderType(takeProfit.OrderType));
                 order3.SetField(FxcmMessageHelper.GetFixTimeInForce(takeProfit.TimeInForce));

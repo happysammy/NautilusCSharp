@@ -435,7 +435,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
         {
             // Arrange
             var message = new MarketOpened(
-                new Symbol("AUDUSD", new Venue("FXCM")),
+                new Symbol("AUD/USD", new Venue("FXCM")),
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -460,7 +460,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
         {
             // Arrange
             var message = new MarketOpened(
-                new Symbol("AUDUSD", new Venue("FXCM")),
+                new Symbol("AUD/USD", new Venue("FXCM")),
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -485,7 +485,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
         {
             // Arrange
             var message = new MarketOpened(
-                new Symbol("AUDUSD", new Venue("FXCM")),
+                new Symbol("AUD/USD", new Venue("FXCM")),
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -516,7 +516,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
                 StubZonedDateTime.UnixEpoch());
 
             var message = new MarketOpened(
-                new Symbol("AUDUSD", new Venue("FXCM")),
+                new Symbol("AUD/USD", new Venue("FXCM")),
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -549,7 +549,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
                 StubZonedDateTime.UnixEpoch());
 
             var message = new MarketOpened(
-                new Symbol("AUDUSD", new Venue("FXCM")),
+                new Symbol("AUD/USD", new Venue("FXCM")),
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());

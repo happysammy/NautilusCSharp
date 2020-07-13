@@ -227,7 +227,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.DataTests
         internal void GivenData_WhenNoSubscribers_DoesNothing()
         {
             // Arrange
-            var tick = StubTickProvider.Create(new Symbol("AUDUSD", new Venue("FXCM")));
+            var tick = StubTickProvider.Create(new Symbol("AUD/USD", new Venue("FXCM")));
 
             // Act
             this.dataBus.PostData(tick);
@@ -259,9 +259,9 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.DataTests
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            var tick1 = StubTickProvider.Create(new Symbol("AUDUSD", new Venue("FXCM")));
-            var tick2 = StubTickProvider.Create(new Symbol("AUDUSD", new Venue("FXCM")), StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(1));
-            var tick3 = StubTickProvider.Create(new Symbol("AUDUSD", new Venue("FXCM")), StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(2));
+            var tick1 = StubTickProvider.Create(new Symbol("AUD/USD", new Venue("FXCM")));
+            var tick2 = StubTickProvider.Create(new Symbol("AUD/USD", new Venue("FXCM")), StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(1));
+            var tick3 = StubTickProvider.Create(new Symbol("AUD/USD", new Venue("FXCM")), StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(2));
 
             // Act
             this.dataBus.Endpoint.SendAsync(subscribe1).Wait();

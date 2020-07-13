@@ -51,7 +51,6 @@ namespace Nautilus.Serialization.DataSerializers
             var bsonMap = new BsonDocument
             {
                 { nameof(Instrument.Symbol), dataObject.Symbol.Value },
-                { nameof(Instrument.BrokerSymbol), dataObject.BrokerSymbol.Value },
                 { nameof(Instrument.QuoteCurrency), dataObject.QuoteCurrency.ToString() },
                 { nameof(Instrument.SecurityType), dataObject.SecurityType.ToString() },
                 { nameof(Instrument.PricePrecision), dataObject.PricePrecision },
@@ -116,7 +115,6 @@ namespace Nautilus.Serialization.DataSerializers
             {
                 return new ForexInstrument(
                     Symbol.FromString(unpacked[nameof(Instrument.Symbol)].AsString),
-                    new BrokerSymbol(unpacked[nameof(Instrument.BrokerSymbol)].AsString),
                     unpacked[nameof(Instrument.PricePrecision)].AsInt32,
                     unpacked[nameof(Instrument.SizePrecision)].AsInt32,
                     unpacked[nameof(Instrument.MinStopDistanceEntry)].AsInt32,
@@ -134,7 +132,6 @@ namespace Nautilus.Serialization.DataSerializers
 
             return new Instrument(
                 Symbol.FromString(unpacked[nameof(Instrument.Symbol)].AsString),
-                new BrokerSymbol(unpacked[nameof(Instrument.BrokerSymbol)].AsString),
                 unpacked[nameof(Instrument.QuoteCurrency)].AsString.ToEnum<Currency>(),
                 securityType,
                 unpacked[nameof(Instrument.PricePrecision)].AsInt32,

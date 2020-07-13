@@ -89,7 +89,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             // Arrange
             var serializer = new MsgPackRequestSerializer();
 
-            var symbol = new Symbol("AUDUSD", new Venue("FXCM"));
+            var symbol = new Symbol("AUD/USD", new Venue("FXCM"));
             var dateTime = StubZonedDateTime.UnixEpoch();
             var query = new Dictionary<string, string>
             {

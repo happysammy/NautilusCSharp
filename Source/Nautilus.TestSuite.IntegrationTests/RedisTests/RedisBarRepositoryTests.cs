@@ -648,7 +648,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             // Assert
             Assert.Single(result.Keys);
-            Assert.Equal(6, result["FXCM:AUDUSD"].Count);
+            Assert.Equal(6, result["FXCM:AUD/USD"].Count);
         }
 
         [Theory]

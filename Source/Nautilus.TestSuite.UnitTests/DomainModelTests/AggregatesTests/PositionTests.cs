@@ -40,7 +40,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new OrderId("O-123456"),
                 new ExecutionId("E-123456"),
                 new PositionIdBroker("ET-123456"),
-                new Symbol("AUDUSD", new Venue("FXCM")),
+                new Symbol("AUD/USD", new Venue("FXCM")),
                 OrderSide.Buy,
                 Quantity.Create(1000),
                 Price.Create(2000, 2),
@@ -53,7 +53,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var position = new Position(new PositionId("P-123456"), orderFill);
 
             // Assert
-            Assert.Equal(new Symbol("AUDUSD", new Venue("FXCM")), position.Symbol);
+            Assert.Equal(new Symbol("AUD/USD", new Venue("FXCM")), position.Symbol);
             Assert.Equal(new OrderId("O-123456"), position.FromOrderId);
             Assert.Equal(new OrderId("O-123456"), position.LastOrderId);
             Assert.Equal(new ExecutionId("E-123456"), position.LastExecutionId);
@@ -92,7 +92,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new OrderId("O-123456"),
                 new ExecutionId("E-123456"),
                 new PositionIdBroker("ET-123456"),
-                new Symbol("AUDUSD", new Venue("FXCM")),
+                new Symbol("AUD/USD", new Venue("FXCM")),
                 OrderSide.Sell,
                 Quantity.Create(1000),
                 Price.Create(2000, 2),
@@ -105,7 +105,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var position = new Position(new PositionId("P-123456"), orderFill);
 
             // Assert
-            Assert.Equal(new Symbol("AUDUSD", new Venue("FXCM")), position.Symbol);
+            Assert.Equal(new Symbol("AUD/USD", new Venue("FXCM")), position.Symbol);
             Assert.Equal(new OrderId("O-123456"), position.FromOrderId);
             Assert.Equal(new OrderId("O-123456"), position.LastOrderId);
             Assert.Equal(new ExecutionId("E-123456"), position.LastExecutionId);
@@ -144,7 +144,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new OrderId("O-123456"),
                 new ExecutionId("E-123456"),
                 new PositionIdBroker("ET-123456"),
-                new Symbol("AUDUSD", new Venue("FXCM")),
+                new Symbol("AUD/USD", new Venue("FXCM")),
                 OrderSide.Sell,
                 Quantity.Create(5000),
                 Price.Create(1.00000m, 5),

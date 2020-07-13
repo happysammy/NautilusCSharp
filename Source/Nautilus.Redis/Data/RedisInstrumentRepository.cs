@@ -244,7 +244,6 @@ namespace Nautilus.Redis.Data
             {
                 var forexCcy = new ForexInstrument(
                     Symbol.FromString(instrumentDict[nameof(Instrument.Symbol)]),
-                    new BrokerSymbol(instrumentDict[nameof(Instrument.BrokerSymbol)]),
                     Convert.ToInt32(instrumentDict[nameof(Instrument.PricePrecision)]),
                     Convert.ToInt32(instrumentDict[nameof(Instrument.SizePrecision)]),
                     Convert.ToInt32(instrumentDict[nameof(Instrument.MinStopDistanceEntry)]),
@@ -264,7 +263,6 @@ namespace Nautilus.Redis.Data
 
             var instrument = new Instrument(
                 Symbol.FromString(instrumentDict[nameof(Instrument.Symbol)]),
-                new BrokerSymbol(instrumentDict[nameof(Instrument.BrokerSymbol)]),
                 instrumentDict[nameof(Instrument.QuoteCurrency)].ToEnum<Currency>(),
                 securityType,
                 Convert.ToInt32(instrumentDict[nameof(Instrument.PricePrecision)]),
@@ -312,7 +310,6 @@ namespace Nautilus.Redis.Data
                 var forexHash = new[]
                 {
                     new HashEntry(nameof(ForexInstrument.Symbol), forexCcy.Symbol.Value),
-                    new HashEntry(nameof(ForexInstrument.BrokerSymbol), forexCcy.BrokerSymbol.Value),
                     new HashEntry(nameof(ForexInstrument.BaseCurrency), forexCcy.BaseCurrency.ToString()),
                     new HashEntry(nameof(ForexInstrument.QuoteCurrency), forexCcy.QuoteCurrency.ToString()),
                     new HashEntry(nameof(ForexInstrument.SecurityType), forexCcy.SecurityType.ToString()),
@@ -337,7 +334,6 @@ namespace Nautilus.Redis.Data
             var instrumentHash = new[]
             {
                 new HashEntry(nameof(Instrument.Symbol), instrument.Symbol.Value),
-                new HashEntry(nameof(Instrument.BrokerSymbol), instrument.BrokerSymbol.Value),
                 new HashEntry(nameof(Instrument.QuoteCurrency), instrument.QuoteCurrency.ToString()),
                 new HashEntry(nameof(Instrument.SecurityType), instrument.SecurityType.ToString()),
                 new HashEntry(nameof(Instrument.PricePrecision), instrument.PricePrecision),

@@ -29,8 +29,7 @@ namespace Nautilus.TestSuite.TestKit.Stubs
         public static ForexInstrument AUDUSD()
         {
             var instrument = new ForexInstrument(
-                    new Symbol("AUDUSD", new Venue("FXCM")),
-                    new BrokerSymbol("AUD/USD"),
+                    new Symbol("AUD/USD", new Venue("FXCM")),
                     5,
                     0,
                     0,
@@ -51,8 +50,7 @@ namespace Nautilus.TestSuite.TestKit.Stubs
         public static ForexInstrument EURUSD()
         {
             var instrument = new ForexInstrument(
-                    new Symbol("EURUSD", new Venue("FXCM")),
-                    new BrokerSymbol("EUR/USD"),
+                    new Symbol("EUR/USD", new Venue("FXCM")),
                     5,
                     0,
                     0,
@@ -73,8 +71,7 @@ namespace Nautilus.TestSuite.TestKit.Stubs
         public static ForexInstrument USDJPY()
         {
             var instrument = new ForexInstrument(
-                    new Symbol("USDJPY", new Venue("FXCM")),
-                    new BrokerSymbol("USD/JPY"),
+                    new Symbol("USD/JPY", new Venue("FXCM")),
                     3,
                     0,
                     0,

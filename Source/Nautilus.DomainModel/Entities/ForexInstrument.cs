@@ -34,7 +34,6 @@ namespace Nautilus.DomainModel.Entities
         /// Initializes a new instance of the <see cref="ForexInstrument"/> class.
         /// </summary>
         /// <param name="symbol">The instruments symbol.</param>
-        /// <param name="brokerSymbol">The instruments broker symbol.</param>
         /// <param name="pricePrecision">The instruments tick decimal precision.</param>
         /// <param name="sizePrecision">The instruments quantity size precision.</param>
         /// <param name="tickSize">The instruments tick size.</param>
@@ -50,7 +49,6 @@ namespace Nautilus.DomainModel.Entities
         /// <param name="timestamp"> The instruments initialization timestamp.</param>
         public ForexInstrument(
             Symbol symbol,
-            BrokerSymbol brokerSymbol,
             int pricePrecision,
             int sizePrecision,
             int minStopDistanceEntry,
@@ -66,8 +64,7 @@ namespace Nautilus.DomainModel.Entities
             ZonedDateTime timestamp)
             : base(
                 symbol,
-                brokerSymbol,
-                symbol.Code.Substring(symbol.Code.Length - 3, 3).ToEnum<Currency>(),
+                GetQuoteCurrency(symbol),
                 SecurityType.Forex,
                 pricePrecision,
                 sizePrecision,
@@ -83,12 +80,32 @@ namespace Nautilus.DomainModel.Entities
                 rolloverInterestSell,
                 timestamp)
         {
-            this.BaseCurrency = symbol.Code.Substring(0, 3).ToEnum<Currency>();
+            this.BaseCurrency = GetBaseCurrency(symbol);
         }
 
         /// <summary>
         /// Gets the instruments base currency.
         /// </summary>
         public Currency BaseCurrency { get; }
+
+        /// <summary>
+        /// Get the quote currency for the given FX symbol.
+        /// </summary>
+        /// <param name="symbol">The FX symbol to parse.</param>
+        /// <returns>The quote currency.</returns>
+        public static Currency GetBaseCurrency(Symbol symbol)
+        {
+            return symbol.Code.Substring(0, 3).ToEnum<Currency>();
+        }
+
+        /// <summary>
+        /// Get the quote currency for the given FX symbol.
+        /// </summary>
+        /// <param name="symbol">The FX symbol to parse.</param>
+        /// <returns>The quote currency.</returns>
+        public static Currency GetQuoteCurrency(Symbol symbol)
+        {
+            return symbol.Code.Substring(symbol.Code.Length - 3).ToEnum<Currency>();
+        }
     }
 }

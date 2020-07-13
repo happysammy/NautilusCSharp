@@ -63,7 +63,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void TicksCount_WithNoTicks_ReturnsZero()
         {
             // Arrange
-            var symbol = new Symbol("AUDUSD", new Venue("FXCM"));
+            var symbol = new Symbol("AUD/USD", new Venue("FXCM"));
 
             // Act
             // Assert
@@ -75,7 +75,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void Add_WithOneTick_AddsTickToRepository()
         {
             // Arrange
-            var symbol = new Symbol("AUDUSD", new Venue("FXCM"));
+            var symbol = new Symbol("AUD/USD", new Venue("FXCM"));
             var tick = StubTickProvider.Create(symbol);
 
             // Act
@@ -90,8 +90,8 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void Add_MultipleTicksDifferentSymbols_AddsTickToRepository()
         {
             // Arrange
-            var audusd = new Symbol("AUDUSD", new Venue("FXCM"));
-            var gbpusd = new Symbol("GBPUSD", new Venue("FXCM"));
+            var audusd = new Symbol("AUD/USD", new Venue("FXCM"));
+            var gbpusd = new Symbol("GBP/USD", new Venue("FXCM"));
             var tick1 = StubTickProvider.Create(audusd);
             var tick2 = StubTickProvider.Create(audusd, StubZonedDateTime.UnixEpoch() + Duration.FromDays(1));
             var tick3 = StubTickProvider.Create(audusd, StubZonedDateTime.UnixEpoch() + Duration.FromDays(2));
@@ -115,7 +115,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void GetKeysSorted_WithSymbol_ReturnsCorrectlySortedKeys()
         {
             // Arrange
-            var audusd = new Symbol("AUDUSD", new Venue("FXCM"));
+            var audusd = new Symbol("AUD/USD", new Venue("FXCM"));
             var tick1 = StubTickProvider.Create(audusd);
             var tick2 = StubTickProvider.Create(audusd, StubZonedDateTime.UnixEpoch() + Duration.FromDays(1));
             var tick3 = StubTickProvider.Create(audusd, StubZonedDateTime.UnixEpoch() + Duration.FromDays(2));
@@ -129,17 +129,17 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             // Assert
             Assert.Equal(3, result.Value.Length);
-            Assert.Equal("NautilusData:Data:Ticks:FXCM:AUDUSD:1970-01-01", result.Value[0]);
-            Assert.Equal("NautilusData:Data:Ticks:FXCM:AUDUSD:1970-01-02", result.Value[1]);
-            Assert.Equal("NautilusData:Data:Ticks:FXCM:AUDUSD:1970-01-03", result.Value[2]);
+            Assert.Equal("NautilusData:Data:Ticks:FXCM:AUD/USD:1970-01-01", result.Value[0]);
+            Assert.Equal("NautilusData:Data:Ticks:FXCM:AUD/USD:1970-01-02", result.Value[1]);
+            Assert.Equal("NautilusData:Data:Ticks:FXCM:AUD/USD:1970-01-03", result.Value[2]);
         }
 
         [Fact]
         internal void GetKeysSorted_WithSeveralTicks_ReturnsCorrectlySortedKeys()
         {
             // Arrange
-            var audusd = new Symbol("AUDUSD", new Venue("FXCM"));
-            var gbpusd = new Symbol("GBPUSD", new Venue("FXCM"));
+            var audusd = new Symbol("AUD/USD", new Venue("FXCM"));
+            var gbpusd = new Symbol("GBP/USD", new Venue("FXCM"));
             var tick0 = StubTickProvider.Create(audusd, StubZonedDateTime.UnixEpoch() - Duration.FromDays(1));
             var tick1 = StubTickProvider.Create(audusd);
             var tick2 = StubTickProvider.Create(audusd, StubZonedDateTime.UnixEpoch() + Duration.FromDays(2));
@@ -178,29 +178,29 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             // Assert
             Assert.Equal(2, result.Count);
-            Assert.Equal(10, result["FXCM:AUDUSD"].Count);
-            Assert.Equal(3, result["FXCM:GBPUSD"].Count);
-            Assert.Equal("NautilusData:Data:Ticks:FXCM:AUDUSD:1969-12-31", result["FXCM:AUDUSD"][0]);
-            Assert.Equal("NautilusData:Data:Ticks:FXCM:AUDUSD:1970-01-01", result["FXCM:AUDUSD"][1]);
-            Assert.Equal("NautilusData:Data:Ticks:FXCM:AUDUSD:1970-01-03", result["FXCM:AUDUSD"][2]);
-            Assert.Equal("NautilusData:Data:Ticks:FXCM:AUDUSD:1970-01-13", result["FXCM:AUDUSD"][3]);
-            Assert.Equal("NautilusData:Data:Ticks:FXCM:AUDUSD:1970-01-23", result["FXCM:AUDUSD"][4]);
-            Assert.Equal("NautilusData:Data:Ticks:FXCM:AUDUSD:1970-01-24", result["FXCM:AUDUSD"][5]);
-            Assert.Equal("NautilusData:Data:Ticks:FXCM:AUDUSD:1970-01-31", result["FXCM:AUDUSD"][6]);
-            Assert.Equal("NautilusData:Data:Ticks:FXCM:AUDUSD:1970-02-01", result["FXCM:AUDUSD"][7]);
-            Assert.Equal("NautilusData:Data:Ticks:FXCM:AUDUSD:1970-02-02", result["FXCM:AUDUSD"][8]);
-            Assert.Equal("NautilusData:Data:Ticks:FXCM:AUDUSD:1970-02-10", result["FXCM:AUDUSD"][9]);
-            Assert.Equal("NautilusData:Data:Ticks:FXCM:GBPUSD:1970-01-01", result["FXCM:GBPUSD"][0]);
-            Assert.Equal("NautilusData:Data:Ticks:FXCM:GBPUSD:1970-01-02", result["FXCM:GBPUSD"][1]);
-            Assert.Equal("NautilusData:Data:Ticks:FXCM:GBPUSD:1970-01-11", result["FXCM:GBPUSD"][2]);
+            Assert.Equal(10, result["FXCM:AUD/USD"].Count);
+            Assert.Equal(3, result["FXCM:GBP/USD"].Count);
+            Assert.Equal("NautilusData:Data:Ticks:FXCM:AUD/USD:1969-12-31", result["FXCM:AUD/USD"][0]);
+            Assert.Equal("NautilusData:Data:Ticks:FXCM:AUD/USD:1970-01-01", result["FXCM:AUD/USD"][1]);
+            Assert.Equal("NautilusData:Data:Ticks:FXCM:AUD/USD:1970-01-03", result["FXCM:AUD/USD"][2]);
+            Assert.Equal("NautilusData:Data:Ticks:FXCM:AUD/USD:1970-01-13", result["FXCM:AUD/USD"][3]);
+            Assert.Equal("NautilusData:Data:Ticks:FXCM:AUD/USD:1970-01-23", result["FXCM:AUD/USD"][4]);
+            Assert.Equal("NautilusData:Data:Ticks:FXCM:AUD/USD:1970-01-24", result["FXCM:AUD/USD"][5]);
+            Assert.Equal("NautilusData:Data:Ticks:FXCM:AUD/USD:1970-01-31", result["FXCM:AUD/USD"][6]);
+            Assert.Equal("NautilusData:Data:Ticks:FXCM:AUD/USD:1970-02-01", result["FXCM:AUD/USD"][7]);
+            Assert.Equal("NautilusData:Data:Ticks:FXCM:AUD/USD:1970-02-02", result["FXCM:AUD/USD"][8]);
+            Assert.Equal("NautilusData:Data:Ticks:FXCM:AUD/USD:1970-02-10", result["FXCM:AUD/USD"][9]);
+            Assert.Equal("NautilusData:Data:Ticks:FXCM:GBP/USD:1970-01-01", result["FXCM:GBP/USD"][0]);
+            Assert.Equal("NautilusData:Data:Ticks:FXCM:GBP/USD:1970-01-02", result["FXCM:GBP/USD"][1]);
+            Assert.Equal("NautilusData:Data:Ticks:FXCM:GBP/USD:1970-01-11", result["FXCM:GBP/USD"][2]);
         }
 
         [Fact]
         internal void TrimToDays_WithMultipleDaysOfTicks_CorrectlyTrims()
         {
             // Arrange
-            var audusd = new Symbol("AUDUSD", new Venue("FXCM"));
-            var gbpusd = new Symbol("GBPUSD", new Venue("FXCM"));
+            var audusd = new Symbol("AUD/USD", new Venue("FXCM"));
+            var gbpusd = new Symbol("GBP/USD", new Venue("FXCM"));
             var tick1 = StubTickProvider.Create(audusd);
             var tick2 = StubTickProvider.Create(audusd, StubZonedDateTime.UnixEpoch() + Duration.FromDays(1));
             var tick3 = StubTickProvider.Create(audusd, StubZonedDateTime.UnixEpoch() + Duration.FromDays(2));
@@ -228,17 +228,17 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             Assert.Equal(4, this.repository.TicksCount());
             Assert.Equal(2, this.repository.TicksCount(audusd));
             Assert.Equal(2, this.repository.TicksCount(gbpusd));
-            Assert.Equal("NautilusData:Data:Ticks:FXCM:AUDUSD:1970-01-04", result["FXCM:AUDUSD"][0]);
-            Assert.Equal("NautilusData:Data:Ticks:FXCM:AUDUSD:1970-01-05", result["FXCM:AUDUSD"][1]);
-            Assert.Equal("NautilusData:Data:Ticks:FXCM:GBPUSD:1970-01-04", result["FXCM:GBPUSD"][0]);
-            Assert.Equal("NautilusData:Data:Ticks:FXCM:GBPUSD:1970-01-05", result["FXCM:GBPUSD"][1]);
+            Assert.Equal("NautilusData:Data:Ticks:FXCM:AUD/USD:1970-01-04", result["FXCM:AUD/USD"][0]);
+            Assert.Equal("NautilusData:Data:Ticks:FXCM:AUD/USD:1970-01-05", result["FXCM:AUD/USD"][1]);
+            Assert.Equal("NautilusData:Data:Ticks:FXCM:GBP/USD:1970-01-04", result["FXCM:GBP/USD"][0]);
+            Assert.Equal("NautilusData:Data:Ticks:FXCM:GBP/USD:1970-01-05", result["FXCM:GBP/USD"][1]);
         }
 
         [Fact]
         internal void GetTicks_WithNoTicks_ReturnsQueryFailure()
         {
             // Arrange
-            var audusd = new Symbol("AUDUSD", new Venue("FXCM"));
+            var audusd = new Symbol("AUD/USD", new Venue("FXCM"));
 
             // Act
             var result = this.repository.GetTicks(
@@ -256,7 +256,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void GetTicks_WithOneTicks_ReturnsCorrectTick()
         {
             // Arrange
-            var audusd = new Symbol("AUDUSD", new Venue("FXCM"));
+            var audusd = new Symbol("AUD/USD", new Venue("FXCM"));
             var tick1 = StubTickProvider.Create(audusd);
             var ticks = new[] { tick1 };
 
@@ -276,7 +276,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void GetTicks_WithTimeRangeWithOneTicks_ReturnsCorrectTick()
         {
             // Arrange
-            var audusd = new Symbol("AUDUSD", new Venue("FXCM"));
+            var audusd = new Symbol("AUD/USD", new Venue("FXCM"));
             var tick1 = StubTickProvider.Create(audusd);
             var ticks = new[] { tick1 };
 
@@ -299,7 +299,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void GetTicks_WithMultipleDaysOfTicks_ReturnsCorrectTicks()
         {
             // Arrange
-            var audusd = new Symbol("AUDUSD", new Venue("FXCM"));
+            var audusd = new Symbol("AUD/USD", new Venue("FXCM"));
             var tick1 = StubTickProvider.Create(audusd);
             var tick2 = StubTickProvider.Create(audusd, StubZonedDateTime.UnixEpoch() + Duration.FromDays(1));
             var tick3 = StubTickProvider.Create(audusd, StubZonedDateTime.UnixEpoch() + Duration.FromDays(2));

@@ -32,10 +32,10 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.ComponentryTests
             var cache = new ObjectCache<string, Symbol>(Symbol.FromString);
 
             // Act
-            var result = cache.Get("AUDUSD.FXCM");
+            var result = cache.Get("AUD/USD.FXCM");
 
             // Assert
-            Assert.Equal(new Symbol("AUDUSD", "FXCM"), result);
+            Assert.Equal(new Symbol("AUD/USD", "FXCM"), result);
             Assert.Single(cache.Keys);
         }
 
@@ -44,13 +44,13 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.ComponentryTests
         {
             // Arrange
             var cache = new ObjectCache<string, Symbol>(Symbol.FromString);
-            cache.Get("AUDUSD.FXCM");
+            cache.Get("AUD/USD.FXCM");
 
             // Act
-            var result = cache.Get("AUDUSD.FXCM");
+            var result = cache.Get("AUD/USD.FXCM");
 
             // Assert
-            Assert.Equal(new Symbol("AUDUSD", "FXCM"), result);
+            Assert.Equal(new Symbol("AUD/USD", "FXCM"), result);
             Assert.Single(cache.Keys);
         }
     }

@@ -71,7 +71,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
                 this.dataSerializer);
             provider.Start().Wait();
 
-            var symbol = new Symbol("AUDUSD", new Venue("FXCM"));
+            var symbol = new Symbol("AUD/USD", new Venue("FXCM"));
 
             var query = new Dictionary<string, string>
             {
@@ -110,7 +110,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             var datetimeFrom = StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1);
             var datetimeTo = datetimeFrom + Duration.FromMinutes(1);
 
-            var symbol = new Symbol("AUDUSD", new Venue("FXCM"));
+            var symbol = new Symbol("AUD/USD", new Venue("FXCM"));
             var tick1 = new Tick(symbol, Price.Create(1.00000m), Price.Create(1.00000m), Volume.One(), Volume.One(), datetimeFrom);
             var tick2 = new Tick(symbol, Price.Create(1.00010m), Price.Create(1.00020m), Volume.One(), Volume.One(), datetimeTo);
 

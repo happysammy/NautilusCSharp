@@ -151,9 +151,14 @@ namespace Nautilus.DomainModel.ValueObjects
         /// Returns a string representation of the <see cref="BarSpecification"/>.
         /// </summary>
         /// <returns>A string.</returns>
-        public override string ToString() => $"{this.Period.ToString()}-" +
-                                             $"{this.BarStructure.ToString().ToUpper()}-" +
-                                             $"{this.PriceType.ToString().ToUpper()}";
+        public override string ToString()
+        {
+            var period = this.Period.ToString();
+            var structure = this.BarStructure.ToString().ToUpper();
+            var priceType = this.PriceType.ToString().ToUpper();
+
+            return $"{period}-{structure}-{priceType}";
+        }
 
         private static Duration CalculateDuration(int barPeriod, BarStructure barStructure)
         {
