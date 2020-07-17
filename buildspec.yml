@@ -22,7 +22,7 @@ phases:
       - mkdir nautilus-exec
       - dotnet publish Source/NautilusData/NautilusData.csproj -c Release -o nautilus-data
       - dotnet publish Source/NautilusExecutor/NautilusExecutor.csproj -c Release -o nautilus-exec
-      - bash my_script.sh
+      - bash codecov.sh
       - echo Build completed on `date`
 
 artifacts:

@@ -5,7 +5,7 @@
 # Nautilus
 
 ![Build Status](https://codebuild.ap-southeast-2.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiQ0RNcmVkNnl6M2p2RURYb1RmUzlLWFlLTForVVJDb2hnTXluWVRxdENMSGlDVXZYTmtHZDlnOHhENG9tZEdibXRXeFZwRzRVNUdoMWF6U2xQN05EbDhBPSIsIml2UGFyYW1ldGVyU3BlYyI6InQ1Tkhxa0RFYldKNDAwcVIiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=master)
-
+![Code Coverage](https://img.shields.io/codecov/c/github/nautechsystems/Nautilus)
 ## Introduction
 
 Nautilus is an enterprise grade distributed algorithmic trading platform allowing flexible deployment 
