@@ -4,7 +4,7 @@
 
 # Nautilus
 
-![Build](https://github.com/nautechsystems/Nautilus/workflows/CI/badge.svg)
+![Build](https://github.com/nautechsystems/Nautilus/workflows/build/badge.svg)
 ![Code Coverage](https://img.shields.io/codecov/c/github/nautechsystems/Nautilus)
 ## Introduction
 
