@@ -28,7 +28,7 @@ namespace Nautilus.Messaging
     /// <summary>
     /// Provides an asynchronous message processor.
     /// </summary>
-    public sealed class MessageProcessor
+    public sealed class MessageProcessor : IDisposable
     {
         private readonly CancellationTokenSource cancellationSource = new CancellationTokenSource();
         private readonly ActionBlock<object> processor;
@@ -177,6 +177,12 @@ namespace Nautilus.Messaging
         public void AddToUnhandledMessages(object message)
         {
             this.UnhandledMessages.Add(message);
+        }
+
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            this.cancellationSource.Dispose();
         }
 
         private void Rethrow(Exception exception)

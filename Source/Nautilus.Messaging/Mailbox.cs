@@ -16,7 +16,6 @@
 //--------------------------------------------------------------------------------------------------
 
 using System;
-using Nautilus.Core;
 using Nautilus.Core.Annotations;
 using Nautilus.Messaging.Interfaces;
 
@@ -61,12 +60,6 @@ namespace Nautilus.Messaging
         /// <param name="other">The other object.</param>
         /// <returns>True if the message identifier equals the other identifier, otherwise false.</returns>
         public bool Equals(Mailbox other) => other.Address == this.Address;
-
-        /// <summary>
-        /// Returns the hash code for this <see cref="Mailbox"/>.
-        /// </summary>
-        /// <returns>The hash code <see cref="int"/>.</returns>
-        public override int GetHashCode() => Hash.GetCode(this.Address);
 
         /// <summary>
         /// Returns a string representation of this <see cref="Mailbox"/>.

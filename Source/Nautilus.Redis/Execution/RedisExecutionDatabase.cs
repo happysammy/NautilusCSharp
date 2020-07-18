@@ -43,7 +43,6 @@ namespace Nautilus.Redis.Execution
     {
         private readonly IServer redisServer;
         private readonly IDatabase redisDatabase;
-        private readonly ISerializer<Command> commandSerializer;
         private readonly ISerializer<Event> eventSerializer;
 
         /// <summary>
@@ -51,14 +50,12 @@ namespace Nautilus.Redis.Execution
         /// </summary>
         /// <param name="container">The componentry container.</param>
         /// <param name="connection">The redis connection multiplexer.</param>
-        /// <param name="commandSerializer">The command serializer.</param>
         /// <param name="eventSerializer">The event serializer.</param>
         /// <param name="loadCaches">The option flag to load caches from Redis on instantiation.</param>
         /// <param name="orderStatusCheckInterval">The minutes interval between order status checks.</param>
         public RedisExecutionDatabase(
             IComponentryContainer container,
             ConnectionMultiplexer connection,
-            ISerializer<Command> commandSerializer,
             ISerializer<Event> eventSerializer,
             bool loadCaches = true,
             int orderStatusCheckInterval = 1)
@@ -66,29 +63,22 @@ namespace Nautilus.Redis.Execution
         {
             this.redisServer = connection.GetServer(RedisConstants.Localhost, RedisConstants.DefaultPort);
             this.redisDatabase = connection.GetDatabase();
-            this.commandSerializer = commandSerializer;
             this.eventSerializer = eventSerializer;
 
-            this.IsCacheLoadedOnStart = loadCaches;
             this.OrderStatusCheckInterval = Duration.FromMinutes(orderStatusCheckInterval);
 
-            if (this.IsCacheLoadedOnStart)
+            if (loadCaches)
             {
-                this.Logger.LogInformation($"{nameof(this.IsCacheLoadedOnStart)} is {this.IsCacheLoadedOnStart}");
+                this.Logger.LogInformation($"The option {nameof(loadCaches)} is {loadCaches}");
                 this.LoadCaches();
             }
             else
             {
                 this.Logger.LogWarning(
                     LogId.Database,
-                    $"{nameof(this.IsCacheLoadedOnStart)} is {this.IsCacheLoadedOnStart} (this should only be done in a testing environment).");
+                    $"The option {nameof(loadCaches)} is {loadCaches} this should only be done in a testing environment).");
             }
         }
-
-        /// <summary>
-        /// Gets a value indicating whether the execution database will load the caches on instantiation.
-        /// </summary>
-        public bool IsCacheLoadedOnStart { get; }
 
         /// <summary>
         /// Gets the duration between order status checks. Zero duration indicates no status checking.

@@ -30,7 +30,7 @@ namespace Nautilus.Network
     /// <summary>
     /// Provides an asynchronous duplex message queue.
     /// </summary>
-    public sealed class MessageQueue : Component
+    public sealed class MessageQueue : Component, IDisposable
     {
         private const int ExpectedFrameCount = 3; // Version 1.0
 
@@ -136,6 +136,14 @@ namespace Nautilus.Network
             }
 
             return Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            this.socketInbound.Dispose();
+            this.socketOutbound.Dispose();
+            this.cancellationSource.Dispose();
         }
 
         private Task ReceiveFrames()

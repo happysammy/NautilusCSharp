@@ -35,7 +35,7 @@ namespace Nautilus.Common.Data
     /// Provides a generic data bus.
     /// </summary>
     /// <typeparam name="T">The bus data type.</typeparam>
-    public sealed class DataBus<T> : MessagingComponent
+    public sealed class DataBus<T> : MessagingComponent, IDisposable
         where T : class
     {
         // The BroadcastBlock<T> ensures that the current element is broadcast to any linked targets
@@ -122,6 +122,12 @@ namespace Nautilus.Common.Data
             }
 
             return Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            this.cancellationSource.Dispose();
         }
 
         /// <inheritdoc />

@@ -62,8 +62,7 @@ namespace Nautilus.Core.Extensions
         {
             Debug.NotNegativeInt32(limit, nameof(limit));
 
-            var startIndex = Math.Max(0, array.Length - limit);
-            return array[startIndex..];
+            return array[Math.Max(0, array.Length - limit)..];
         }
 
         /// <summary>
@@ -73,6 +72,7 @@ namespace Nautilus.Core.Extensions
         /// <typeparam name="T">The type of element.</typeparam>
         /// <returns>The contents string.</returns>
         public static string Print<T>(this IList<T> list)
+            where T : class
         {
             var output = "[ ";
             foreach (var element in list)

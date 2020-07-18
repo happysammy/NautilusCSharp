@@ -84,7 +84,6 @@ namespace NautilusExecutor
             var executionDatabase = new RedisExecutionDatabase(
                 container,
                 connection,
-                commandSerializer,
                 eventSerializer);
 
             var compressor = CompressorFactory.Create(config.WireConfig.CompressionCodec);

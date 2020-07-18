@@ -29,6 +29,7 @@ using Nautilus.Redis.Execution;
 using Nautilus.Serialization.MessageSerializers;
 using Nautilus.TestSuite.TestKit.Components;
 using Nautilus.TestSuite.TestKit.Stubs;
+using NodaTime;
 using StackExchange.Redis;
 using Xunit;
 using Xunit.Abstractions;
@@ -50,7 +51,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             this.database = new RedisExecutionDatabase(
                 this.container,
                 this.redisConnection,
-                new MsgPackCommandSerializer(),
                 new MsgPackEventSerializer());
         }
 
@@ -69,11 +69,11 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var database2 = new RedisExecutionDatabase(
                 this.container,
                 redisConnection2,
-                new MsgPackCommandSerializer(),
                 new MsgPackEventSerializer(),
                 false);
 
             // Assert
+            Assert.Equal(Duration.FromMinutes(1), database2.OrderStatusCheckInterval);
             Assert.Empty(database2.GetAccountIds());
             Assert.Empty(database2.GetOrders());
             Assert.Empty(database2.GetPositions());

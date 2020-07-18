@@ -16,7 +16,6 @@
 //--------------------------------------------------------------------------------------------------
 
 using System;
-using Nautilus.Core;
 using Nautilus.Core.Annotations;
 using Nautilus.Core.Correctness;
 using Nautilus.Core.Extensions;
@@ -88,12 +87,6 @@ namespace Nautilus.Messaging
         /// </summary>
         public ZonedDateTime Timestamp { get; }
 
-        /// <summary>
-        /// Returns the internal message from the envelope.
-        /// </summary>
-        /// <returns>The message of type T.</returns>
-        public T Open() => this.message;
-
         // Due to the convention that an IEquatable<T> argument can be null the compiler now emits
         // a warning unless Equals is marked with [AllowNull] or takes a nullable param. We don't
         // want to allow null here for the sake of silencing the warning and so temporarily using
@@ -119,12 +112,6 @@ namespace Nautilus.Messaging
         /// <param name="other">The other object.</param>
         /// <returns>True if the message identifier equals the other identifier, otherwise false.</returns>
         public bool Equals(IEnvelope other) => other.Id == this.Id;
-
-        /// <summary>
-        /// Returns the hash code for this <see cref="Envelope{T}"/>.
-        /// </summary>
-        /// <returns>The hash code <see cref="int"/>.</returns>
-        public override int GetHashCode() => Hash.GetCode(this.Id);
 
         /// <summary>
         /// Returns a string representation of this <see cref="Envelope{T}"/>.

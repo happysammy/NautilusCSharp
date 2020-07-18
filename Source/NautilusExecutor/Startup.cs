@@ -15,8 +15,6 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-using System;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -91,13 +89,6 @@ namespace NautilusExecutor
         private void OnShutdown()
         {
             this.executionService.Stop().Wait();
-
-            if (this.Environment.IsDevelopment())
-            {
-                Task.Delay(2000).Wait();
-                Console.WriteLine("Press any key to close console...");
-                Console.ReadKey();
-            }
         }
     }
 }
