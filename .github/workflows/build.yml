@@ -28,6 +28,6 @@ jobs:
           dotnet test Source/Nautilus.TestSuite.IntegrationTests
       - name: Build
         run: |
-          - dotnet publish Source/NautilusData/NautilusData.csproj -c Release
-          - dotnet publish Source/NautilusExecutor/NautilusExecutor.csproj -c Release
-          - bash codecov.sh
+          dotnet publish Source/NautilusData/NautilusData.csproj -c Release
+          dotnet publish Source/NautilusExecutor/NautilusExecutor.csproj -c Release
+          bash codecov.sh
