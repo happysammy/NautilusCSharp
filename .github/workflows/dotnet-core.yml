@@ -16,9 +16,9 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.101
+        dotnet-version: 3.1.301
     - name: Install dependencies
-      run: apt install redis-server
+      run: sudo apt-get install redis-server
     - name: Build
       run: |
         dotnet restore
