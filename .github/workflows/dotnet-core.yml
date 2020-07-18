@@ -26,8 +26,6 @@ jobs:
         dotnet test Source/Nautilus.TestSuite.IntegrationTests
     - name: Build
       run: |
-        - mkdir nautilus-data
-        - mkdir nautilus-exec
-        - dotnet publish Source/NautilusData/NautilusData.csproj -c Release -o nautilus-data
-        - dotnet publish Source/NautilusExecutor/NautilusExecutor.csproj -c Release -o nautilus-exec
+        - dotnet publish Source/NautilusData/NautilusData.csproj -c Release -o
+        - dotnet publish Source/NautilusExecutor/NautilusExecutor.csproj -c Release -o
         - bash codecov.sh
