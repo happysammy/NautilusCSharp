@@ -19,9 +19,15 @@ jobs:
         dotnet-version: 3.1.301
     - name: Install dependencies
       run: sudo apt-get install redis-server
-    - name: Build
+    - name: Test
       run: |
         dotnet restore
-        dotnet build --configuration Release --no-restore
-    - name: Test
-      run: dotnet test --no-restore --verbosity normal
+        dotnet test Source/Nautilus.TestSuite.UnitTests
+        dotnet test Source/Nautilus.TestSuite.IntegrationTests
+    - name: Build
+      run: |
+        - mkdir nautilus-data
+        - mkdir nautilus-exec
+        - dotnet publish Source/NautilusData/NautilusData.csproj -c Release -o nautilus-data
+        - dotnet publish Source/NautilusExecutor/NautilusExecutor.csproj -c Release -o nautilus-exec
+        - bash codecov.sh
