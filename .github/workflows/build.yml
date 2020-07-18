@@ -13,12 +13,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Setup .NET Core
+      - name: Setup Environment
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.301
       - name: Install dependencies
-        run: sudo apt-get install redis-server
+        run: |
+          sudo apt-get install redis-server
+          redis-server --daemonize yes
       - name: Test
         run: |
           dotnet restore
