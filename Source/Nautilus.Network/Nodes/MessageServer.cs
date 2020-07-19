@@ -93,7 +93,7 @@ namespace Nautilus.Network.Nodes
             this.compressor = compressor;
             this.serviceName = serviceName;
 
-            this.socketInbound = new RouterSocket()
+            this.socketInbound = new RouterSocket
             {
                 Options =
                 {
@@ -105,7 +105,7 @@ namespace Nautilus.Network.Nodes
                 },
             };
 
-            this.socketOutbound = new RouterSocket()
+            this.socketOutbound = new RouterSocket
             {
                 Options =
                 {

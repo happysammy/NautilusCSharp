@@ -57,7 +57,7 @@ namespace Nautilus.Network.Nodes
         {
             this.compressor = compressor;
 
-            this.socket = new PublisherSocket()
+            this.socket = new PublisherSocket
             {
                 Options =
                 {

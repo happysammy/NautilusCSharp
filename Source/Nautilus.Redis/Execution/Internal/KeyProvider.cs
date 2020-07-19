@@ -47,19 +47,19 @@ namespace Nautilus.Redis.Execution.Internal
         private const string Closed = nameof(Closed);
 
         // Define the actual keys
-        private const string KEY_TRADERS = NautilusExecutor + Traders + ":";                  // + TraderId    -> Set{TraderId}
-        private const string KEY_ACCOUNTS = NautilusExecutor + Accounts + ":";                // + AccountId   -> List[AccountStateEvent]
-        private const string KEY_ORDERS = NautilusExecutor + Orders + ":";                    // + OrderId     -> List[OrderEvent]
-        private const string KEY_POSITIONS = NautilusExecutor + Positions + ":";              // + PositionId  -> List[OrderFillEvent]
-        private const string KEY_INDEX_TRADERS = Index + Traders;                             // + TraderId -> Set{OrderId}
-        private const string KEY_INDEX_TRADER_ORDERS = Index + Trader + Orders + ":";         // + TraderId -> Set{OrderId}
-        private const string KEY_INDEX_TRADER_POSITIONS = Index + Trader + Positions + ":";   // + TraderId -> Set{PositionId}
-        private const string KEY_INDEX_TRADER_STRATEGIES = Index + Trader + Strategies + ":"; // + TraderId -> Set{StrategyId}
+        private const string KEY_TRADERS = NautilusExecutor + Traders + ":";                  // TraderId    -> Set{TraderId}
+        private const string KEY_ACCOUNTS = NautilusExecutor + Accounts + ":";                // AccountId   -> List[AccountStateEvent]
+        private const string KEY_ORDERS = NautilusExecutor + Orders + ":";                    // OrderId     -> List[OrderEvent]
+        private const string KEY_POSITIONS = NautilusExecutor + Positions + ":";              // PositionId  -> List[OrderFillEvent]
+        private const string KEY_INDEX_TRADERS = Index + Traders;                             // TraderId -> Set{OrderId}
+        private const string KEY_INDEX_TRADER_ORDERS = Index + Trader + Orders + ":";         // TraderId -> Set{OrderId}
+        private const string KEY_INDEX_TRADER_POSITIONS = Index + Trader + Positions + ":";   // TraderId -> Set{PositionId}
+        private const string KEY_INDEX_TRADER_STRATEGIES = Index + Trader + Strategies + ":"; // TraderId -> Set{StrategyId}
         private const string KEY_INDEX_TRADER_STRATEGY_ORDERS = Index + Trader + Strategy + Orders + ":";        // + TraderId : StrategyId -> Set{OrderId}
         private const string KEY_INDEX_TRADER_STRATEGY_POSITIONS = Index + Trader + Strategy + Positions + ":";  // + TraderId : StrategyId -> Set{PositionId}
-        private const string KEY_INDEX_ACCOUNT_ORDERS = Index + Account + Orders + ":";       // + AccountId -> Set{OrderId}
-        private const string KEY_INDEX_ACCOUNT_POSITIONS = Index + Account + Positions + ":"; // + AccountId -> Set{PositionId}
-        private const string KEY_INDEX_BROKER_POSITION = Index + BrokerId + Position + ":";   // + AccountId -> HashSet[PositionIdBroker, PositionId]
+        private const string KEY_INDEX_ACCOUNT_ORDERS = Index + Account + Orders + ":";       // AccountId -> Set{OrderId}
+        private const string KEY_INDEX_ACCOUNT_POSITIONS = Index + Account + Positions + ":"; // AccountId -> Set{PositionId}
+        private const string KEY_INDEX_BROKER_POSITION = Index + BrokerId + Position + ":";   // AccountId -> HashSet[PositionIdBroker, PositionId]
         private const string KEY_INDEX_ORDER_TRADER = Index + Order + Trader;                 // -> HashSet[OrderId, TraderId]
         private const string KEY_INDEX_ORDER_ACCOUNT = Index + Order + Account;               // -> HashSet[OrderId, AccountId]
         private const string KEY_INDEX_ORDER_POSITION = Index + Order + Position;             // -> HashSet[OrderId, PositionId]

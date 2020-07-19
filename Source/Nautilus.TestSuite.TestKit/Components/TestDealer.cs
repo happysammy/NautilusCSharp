@@ -75,7 +75,7 @@ namespace Nautilus.TestSuite.TestKit.Components
             this.responseSerializer = responseSerializer;
             this.compressor = compressor;
 
-            this.socketOutbound = new DealerSocket()
+            this.socketOutbound = new DealerSocket
             {
                 Options =
                 {
@@ -84,7 +84,7 @@ namespace Nautilus.TestSuite.TestKit.Components
                 },
             };
 
-            this.socketInbound = new DealerSocket()
+            this.socketInbound = new DealerSocket
             {
                 Options =
                 {

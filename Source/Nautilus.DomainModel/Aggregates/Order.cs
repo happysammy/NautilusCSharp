@@ -228,12 +228,6 @@ namespace Nautilus.DomainModel.Aggregates
             return new Order(initial);
         }
 
-        /// <summary>
-        /// Returns the execution identifiers.
-        /// </summary>
-        /// <returns>A read only collection.</returns>
-        public UniqueList<ExecutionId> GetExecutionIds() => this.executionIds.Copy();
-
         /// <inheritdoc />
         protected override void OnEvent(OrderEvent orderEvent)
         {

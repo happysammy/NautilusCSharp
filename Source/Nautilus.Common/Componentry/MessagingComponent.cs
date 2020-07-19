@@ -202,16 +202,6 @@ namespace Nautilus.Common.Componentry
 #endif
         }
 
-        private static string SetSubName(string subName)
-        {
-            if (subName != string.Empty)
-            {
-                subName = $"-{subName}";
-            }
-
-            return subName;
-        }
-
         private void OnMessage(Start message)
         {
             this.Logger.LogDebug(LogId.Component, $"Starting from message {message}...", message.Id);

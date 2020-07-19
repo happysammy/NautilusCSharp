@@ -64,7 +64,7 @@ namespace Nautilus.Network.Nodes
             this.serializer = serializer;
             this.compressor = compressor;
 
-            this.socket = new PublisherSocket()
+            this.socket = new PublisherSocket
             {
                 Options =
                 {
