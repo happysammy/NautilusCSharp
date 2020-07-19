@@ -24,15 +24,13 @@ jobs:
           dotnet restore
           dotnet test Source/Nautilus.TestSuite.UnitTests
           dotnet test Source/Nautilus.TestSuite.IntegrationTests
+          codecov -f "NetMQ_coverage.xml"
       - name: Code Coverage
         uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coverage.xml
           fail_ci_if_error: true
-        run:
-          OpenCover.Console.exe -register:user
-          codecov -f "coverage.xml"
 
       - name: Release
         run: |
