@@ -34,13 +34,13 @@ jobs:
           dotnet publish Source/NautilusData/NautilusData.csproj -c Release -o Nautilus/NautilusDataRelease
           dotnet publish Source/NautilusExecutor/NautilusExecutor.csproj -c Release -o Nautilus/NautilusExecRelease
           zip -r Nautilus-1.0.2-${{ steps.buildnumber.outputs.build_number }}.zip Nautilus/
-      - name: Create Release
+      - name: Create Release Asset
         id: create-release-asset
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
+          tag_name: v1.0.2-${{ steps.buildnumber.outputs.build_number }}
           release_name: Nautilus-1.0.2-${{ steps.buildnumber.outputs.build_number }}
           draft: false
           prerelease: false
