@@ -41,24 +41,24 @@ The Order Management System (OMS) includes an `ExecutionEngine` with underlying 
 built on top of Redis, which supports the ability to manage global risk across many trader machines.
 
 The repository is grouped into the following solution folders;
-  - `Framework` provides the domain model and common components for implementing the services.
-  - `Services` provides generic data and execution services.
-  - `Infrastructure` provides technology specific implementations. At present utilizing Redis.
-  - `Adapters` provides broker specific implementations. At present supporting `FIX4.4` with FXCM.
-  - `Applications` provides `NautilusData` and `NautilusExecutor` ASP.NET Core applications.
-  - `TestSuite` provides the unit and integration tests for the codebase.
+- `Framework` provides the domain model and common components for implementing the services.
+- `Services` provides generic data and execution services.
+- `Infrastructure` provides technology specific implementations. At present utilizing Redis.
+- `Adapters` provides broker specific implementations. At present supporting `FIX4.4` with FXCM.
+- `Applications` provides `NautilusData` and `NautilusExecutor` ASP.NET Core applications.
+- `TestSuite` provides the unit and integration tests for the codebase.
 
 There is currently a large effort to develop improved documentation.
 
 ## Values
 
-  * Reliability
-  * Availability
-  * Testability
-  * Performance
-  * Modularity
-  * Maintainability
-  * Scalability
+* Reliability
+* Availability
+* Testability
+* Performance
+* Modularity
+* Maintainability
+* Scalability
 
 ## Support
 Please direct all questions, comments or bug reports to info@nautechsystems.io
