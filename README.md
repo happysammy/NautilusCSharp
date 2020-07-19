@@ -11,7 +11,7 @@
 ![Latest Version](https://img.shields.io/github/v/release/nautechsystems/Nautilus?include_prereleases)
 
 ## Introduction
-https://img.shields.io/github/v/release/nautechsystems/Nautilus?include_prereleases
+
 Nautilus is an enterprise grade distributed algorithmic trading platform allowing flexible deployment 
 topologies including embedded/local on a single machine - or distributed across a Cloud/VPC.
 Architectural methodologies include domain driven design, event-sourcing and messaging.
