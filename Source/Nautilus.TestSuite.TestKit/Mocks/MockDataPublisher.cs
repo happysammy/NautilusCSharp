@@ -52,7 +52,8 @@ namespace Nautilus.TestSuite.TestKit.Mocks
 
         private void OnMessage((string Topic, string Message) toPublish)
         {
-            this.Publish(toPublish.Topic, this.serializer.Serialize(toPublish.Message));
+            var (topic, message) = toPublish;
+            this.Publish(topic, this.serializer.Serialize(message));
         }
 
         private sealed class MockSerializer : IDataSerializer<string>

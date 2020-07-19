@@ -38,16 +38,25 @@ namespace Nautilus.Common.Componentry
         /// </summary>
         /// <param name="container">The components componentry container.</param>
         /// <param name="subName">The sub-name for the component.</param>
-        protected Component(IComponentryContainer container, string subName = "")
+        protected Component(IComponentryContainer container, string subName)
         {
             this.clock = container.Clock;
             this.guidFactory = container.GuidFactory;
 
-            this.Name = new Label(this.GetType().NameFormatted() + SetSubName(subName));
+            this.Name = new Label($"{this.GetType().NameFormatted()}{SetSubName(subName)}");
             this.Logger = container.LoggerFactory.CreateLogger(this.Name.Value);
 
             this.InitializedTime = this.clock.TimeNow();
             this.Logger.LogDebug(LogId.Component, "Initialized.");
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Component"/> class.
+        /// </summary>
+        /// <param name="container">The components componentry container.</param>
+        protected Component(IComponentryContainer container)
+            : this(container, string.Empty)
+        {
         }
 
         /// <summary>

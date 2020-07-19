@@ -49,8 +49,6 @@ namespace Nautilus.TestSuite.TestKit.Components
             }
 
             this.output.WriteLine($"[{FormatLogLevel(logLevel)}] [{this.contextName}] [{eventId.Id}] - {message}");
-
-            // this.log.Enqueue($"[{logLevel.ToString()}] [{this.contextName}] [{eventId.Id}] - {message}");
         }
 
         public bool IsEnabled(LogLevel logLevel)

@@ -40,7 +40,7 @@ namespace Nautilus.Common.Componentry
         /// </summary>
         /// <param name="container">The components componentry container.</param>
         /// <param name="subName">The sub-name for the component.</param>
-        protected MessagingComponent(IComponentryContainer container, string subName = "")
+        protected MessagingComponent(IComponentryContainer container, string subName)
         : base(container, subName)
         {
             this.processor = new MessageProcessor();
@@ -52,6 +52,15 @@ namespace Nautilus.Common.Componentry
             this.RegisterExceptionHandler(this.HandleException);
             this.RegisterHandler<Start>(this.OnMessage);
             this.RegisterHandler<Stop>(this.OnMessage);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MessagingComponent"/> class.
+        /// </summary>
+        /// <param name="container">The components componentry container.</param>
+        protected MessagingComponent(IComponentryContainer container)
+            : this(container, string.Empty)
+        {
         }
 
         /// <summary>
