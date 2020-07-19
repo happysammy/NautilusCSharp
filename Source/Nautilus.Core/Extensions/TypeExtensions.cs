@@ -16,6 +16,7 @@
 //--------------------------------------------------------------------------------------------------
 
 using System;
+using System.Text;
 
 namespace Nautilus.Core.Extensions
 {
@@ -38,19 +39,19 @@ namespace Nautilus.Core.Extensions
 
         private static string GetGenericName(Type type)
         {
-            var typeName = type.Name.Split('`')[0];
+            var builder1 = new StringBuilder(type.Name.Split('`')[0]);
             var genericArgs = type.GenericTypeArguments;
-            var genericName = genericArgs[0].Name;
+            var builder2 = new StringBuilder(genericArgs[0].Name);
 
             if (genericArgs.Length > 1)
             {
                 for (var i = 1; i < genericArgs.Length; i++)
                 {
-                    genericName += $",{genericArgs[i].Name}";
+                    builder2.Append($",{genericArgs[i].Name}");
                 }
             }
 
-            return typeName + $"<{genericName}>";
+            return builder1.Append($"<{builder2}>").ToString();
         }
     }
 }

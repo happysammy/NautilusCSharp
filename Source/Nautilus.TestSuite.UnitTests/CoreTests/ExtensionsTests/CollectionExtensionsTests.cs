@@ -91,6 +91,25 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
         }
 
         [Fact]
+        internal void Print_WithVariousLists_ReturnsExpectedString()
+        {
+            // Arrange
+            var list0 = new List<string>();
+            var list1 = new List<string> { "element1", "element2" };
+            var list2 = new List<int> { 1, 2, 3 };
+
+            // Act
+            var result0 = list0.Print();
+            var result1 = list1.Print();
+            var result2 = list2.Print();
+
+            // Assert
+            Assert.Equal("[ ]", result0);
+            Assert.Equal("[ element1, element2 ]", result1);
+            Assert.Equal("[ 1, 2, 3 ]", result2);
+        }
+
+        [Fact]
         internal void Print_WithVariousDictionaries_ReturnsExpectedString()
         {
             // Arrange

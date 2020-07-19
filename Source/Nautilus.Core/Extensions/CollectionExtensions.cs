@@ -17,6 +17,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 using Nautilus.Core.Correctness;
 
 namespace Nautilus.Core.Extensions
@@ -72,17 +73,14 @@ namespace Nautilus.Core.Extensions
         /// <typeparam name="T">The type of element.</typeparam>
         /// <returns>The contents string.</returns>
         public static string Print<T>(this IList<T> list)
-            where T : class
         {
-            var output = "[ ";
+            var builder = new StringBuilder("[ ");
             foreach (var element in list)
             {
-                output += $"{element}, ";
+                builder.Append($"{element}, ");
             }
 
-            output = output.TrimEnd(' ', ',') + " ]";
-
-            return output;
+            return builder.ToString().TrimEnd(' ', ',') + " ]";
         }
 
         /// <summary>
@@ -95,15 +93,13 @@ namespace Nautilus.Core.Extensions
         public static string Print<TKey, TValue>(this IDictionary<TKey, TValue> dictionary)
             where TKey : class
         {
-            var output = "{ ";
+            var builder = new StringBuilder("{ ");
             foreach (var (key, value) in dictionary)
             {
-                output += $"{key}: {value}, ";
+                builder.Append($"{key}: {value}, ");
             }
 
-            output = output.TrimEnd(' ', ',') + " }";
-
-            return output;
+            return builder.ToString().TrimEnd(' ', ',') + " }";
         }
     }
 }

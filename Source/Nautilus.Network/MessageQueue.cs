@@ -62,7 +62,7 @@ namespace Nautilus.Network
             this.bufferInbound = new ActionBlock<byte[][]>(
                 async frames =>
                 {
-                    await this.ProcessInbound(frames);
+                    await this.ProcessInbound(frames).ConfigureAwait(false);
                 },
                 new ExecutionDataflowBlockOptions
                 {
@@ -75,7 +75,7 @@ namespace Nautilus.Network
             this.bufferOutbound = new ActionBlock<byte[][]>(
                 async frames =>
                 {
-                    await this.ProcessOutbound(frames);
+                    await this.ProcessOutbound(frames).ConfigureAwait(false);
                 },
                 new ExecutionDataflowBlockOptions
                 {
