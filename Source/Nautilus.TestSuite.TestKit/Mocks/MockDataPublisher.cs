@@ -15,11 +15,8 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
-using Nautilus.Common.Enums;
 using Nautilus.Common.Interfaces;
 using Nautilus.Network;
 using Nautilus.Network.Compression;
@@ -31,8 +28,6 @@ namespace Nautilus.TestSuite.TestKit.Mocks
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class MockDataPublisher : PublisherDataBus
     {
-        private readonly IDataSerializer<string> serializer;
-
         public MockDataPublisher(
             IComponentryContainer container,
             IDataBusAdapter dataBusAdapter,
@@ -45,51 +40,21 @@ namespace Nautilus.TestSuite.TestKit.Mocks
                 encryption,
                 networkAddress)
         {
-            this.serializer = new MockSerializer();
-
             this.RegisterHandler<(string, string)>(this.OnMessage);
         }
 
         private void OnMessage((string Topic, string Message) toPublish)
         {
             var (topic, message) = toPublish;
-            this.Publish(topic, this.serializer.Serialize(message));
+            this.Publish(topic, MockSerializer.Serialize(message));
         }
 
-        private sealed class MockSerializer : IDataSerializer<string>
+        // ReSharper disable once ClassNeverInstantiated.Local
+        private sealed class MockSerializer
         {
-            public DataEncoding BlobEncoding => DataEncoding.Undefined;
-
-            public DataEncoding ObjectEncoding => DataEncoding.Undefined;
-
-            byte[] ISerializer<string>.Serialize(string dataObject)
+            public static byte[] Serialize(string dataObject)
             {
                 return Encoding.UTF8.GetBytes(dataObject);
-            }
-
-            public byte[][] Serialize(string[] dataObjects)
-            {
-                throw new InvalidOperationException($"Received {dataObjects}. Not implemented.");
-            }
-
-            public byte[] SerializeBlob(byte[][] dataObjectsArray, Dictionary<string, string> metadata)
-            {
-                throw new InvalidOperationException($"Received {metadata}. Not implemented.");
-            }
-
-            public string[] Deserialize(byte[][] dataBytesArray, object? metadata = null)
-            {
-                throw new InvalidOperationException($"Received {dataBytesArray}, {metadata}. Not implemented.");
-            }
-
-            public string[] DeserializeBlob(byte[] dataBytes)
-            {
-                throw new InvalidOperationException($"Received {dataBytes}. Not implemented.");
-            }
-
-            public string Deserialize(byte[] dataBytes)
-            {
-                return Encoding.UTF8.GetString(dataBytes);
             }
         }
     }
