@@ -162,11 +162,27 @@ namespace Nautilus.Scheduling.Internal
         public void Dispose()
         {
             this.Dispose(true);
+        }
 
-            // Take this object off the finalization queue and prevent finalization code for this object
-            // from executing a second time.
-            // ReSharper disable once GCSuppressFinalizeForTypeWithoutDestructor
-            GC.SuppressFinalize(this);
+        /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
+        /// <param name="disposing">if set to <c>true</c> the method has been called directly or indirectly by a
+        /// user's code. Managed and unmanaged resources will be disposed.<br />
+        /// if set to <c>false</c> the method has been called by the runtime from inside the finalizer and only
+        /// unmanaged resources can be disposed.</param>
+        private void Dispose(bool disposing)
+        {
+            if (!this.isDisposed)
+            {
+                if (disposing)
+                {
+                    // Clean up managed resources.
+                    this.source.Dispose();
+                }
+
+                // Clean up unmanaged resources.
+            }
+
+            this.isDisposed = true;
         }
 
         private void InternalCancelAfter(TimeSpan delay)
@@ -178,39 +194,6 @@ namespace Nautilus.Scheduling.Internal
             }
 
             this.source.CancelAfter(delay);
-        }
-
-        /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
-        /// <param name="disposing">if set to <c>true</c> the method has been called directly or indirectly by a
-        /// user's code. Managed and unmanaged resources will be disposed.<br />
-        /// if set to <c>false</c> the method has been called by the runtime from inside the finalizer and only
-        /// unmanaged resources can be disposed.</param>
-        private void Dispose(bool disposing)
-        {
-            // If disposing equals false, the method has been called by the
-            // runtime from inside the finalizer and you should not reference
-            // other objects. Only unmanaged resources can be disposed.
-            try
-            {
-                // Make sure Dispose does not get called more than once, by checking the disposed field.
-                if (!this.isDisposed)
-                {
-                    if (disposing)
-                    {
-                        // Clean up managed resources.
-                        this.source.Dispose();
-                    }
-
-                    // Clean up unmanaged resources.
-                }
-
-                this.isDisposed = true;
-            }
-
-            // ReSharper disable once RedundantEmptyFinallyBlock (generates warning if removed).
-            finally
-            {
-            }
         }
 
         private void ThrowIfDisposed()

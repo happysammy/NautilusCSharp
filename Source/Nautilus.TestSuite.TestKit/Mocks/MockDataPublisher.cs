@@ -69,22 +69,22 @@ namespace Nautilus.TestSuite.TestKit.Mocks
 
             public byte[][] Serialize(string[] dataObjects)
             {
-                throw new InvalidOperationException("Not implemented.");
+                throw new InvalidOperationException($"Received {dataObjects}. Not implemented.");
             }
 
             public byte[] SerializeBlob(byte[][] dataObjectsArray, Dictionary<string, string> metadata)
             {
-                throw new InvalidOperationException("Not implemented.");
+                throw new InvalidOperationException($"Received {metadata}. Not implemented.");
             }
 
             public string[] Deserialize(byte[][] dataBytesArray, object? metadata = null)
             {
-                throw new InvalidOperationException("Not implemented.");
+                throw new InvalidOperationException($"Received {dataBytesArray}, {metadata}. Not implemented.");
             }
 
             public string[] DeserializeBlob(byte[] dataBytes)
             {
-                throw new InvalidOperationException("Not implemented.");
+                throw new InvalidOperationException($"Received {dataBytes}. Not implemented.");
             }
 
             public string Deserialize(byte[] dataBytes)
