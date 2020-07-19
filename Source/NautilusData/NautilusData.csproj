@@ -6,6 +6,14 @@
         <OutputType>Exe</OutputType>
         <Nullable>enable</Nullable>
         <UserSecretsId>28e66145-8efd-42ea-b5b3-e40af1218ae1</UserSecretsId>
+        <PackageId>NautilusData</PackageId>
+        <Version>1.0.1</Version>
+        <Authors>Nautech Systems Pty Ltd</Authors>
+        <Company>Nautech Systems Pty Ltd</Company>
+        <PackageTags>Trading Platform;Distributed;</PackageTags>
+        <Description>
+            The data service for the Nautilus trading platform.
+        </Description>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

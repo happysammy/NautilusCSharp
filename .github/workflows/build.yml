@@ -24,7 +24,39 @@ jobs:
           dotnet restore
           dotnet test Source/Nautilus.TestSuite.UnitTests
           dotnet test Source/Nautilus.TestSuite.IntegrationTests
-      - name: Release
+      - name: Build Releases
         run: |
-          dotnet publish Source/NautilusData/NautilusData.csproj -c Release
-          dotnet publish Source/NautilusExecutor/NautilusExecutor.csproj -c Release
+          dotnet publish Source/NautilusData/NautilusData.csproj -c Release -o NautilusDataRelease
+          dotnet publish Source/NautilusExecutor/NautilusExecutor.csproj -c Release -o NautilusExecRelease
+          zip -r NautilusData-1.0.0-${{ steps.buildnumber.outputs.build_number }}.zip NautilusDataRelease/
+          zip -r NautilusExec-1.0.0-${{ steps.buildnumber.outputs.build_number }}.zip NautilusExecRelease/
+      - name: Create Releases
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+      - name: Upload NautilusData Release Asset
+          id: upload-release-asset
+          uses: actions/upload-release-asset@v1
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            upload_url: ${{ steps.create_release.outputs.upload_url }}
+            asset_path: ./NautilusData-1.0.0-${{ steps.buildnumber.outputs.build_number }}.zip
+            asset_name: NautilusData-1.0.0-${{ steps.buildnumber.outputs.build_number }}.zip
+            asset_content_type: application/zip
+      - name: Upload NautilusExecutor Release Asset
+          id: upload-release-asset
+          uses: actions/upload-release-asset@v1
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            upload_url: ${{ steps.create_release.outputs.upload_url }}
+            asset_path: ./NautilusExec-1.0.0-${{ steps.buildnumber.outputs.build_number }}.zip
+            asset_name: NautilusExec-1.0.0-${{ steps.buildnumber.outputs.build_number }}.zip
+            asset_content_type: application/zip
