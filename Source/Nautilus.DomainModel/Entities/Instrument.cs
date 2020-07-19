@@ -171,12 +171,11 @@ namespace Nautilus.DomainModel.Entities
         public decimal RolloverInterestSell { get; }
 
         /// <summary>
-        /// Returns a value indicating whether this <see cref="Instrument"/> is equal to the
-        /// specified <see cref="object"/>.
+        /// Returns a value indicating whether this object is equal to the given object.
         /// </summary>
-        /// <param name="other">The other object.</param>
-        /// <returns>A <see cref="bool"/>.</returns>
-        public override bool Equals(object? other) => other is Instrument instrument && this.Equals(instrument);
+        /// <param name="obj">The other object.</param>
+        /// <returns>The result of the equality check.</returns>
+        public override bool Equals(object? obj) => obj is Instrument instrument && this.Equals(instrument);
 
         /// <summary>
         /// Returns the hash code of the <see cref="Instrument"/>.

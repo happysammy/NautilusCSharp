@@ -70,12 +70,58 @@ namespace Nautilus.Core.Types
         public static bool operator !=(Identifier<T> left, Identifier<T> right) => !(left == right);
 
         /// <summary>
-        /// Returns a value indicating whether this <see cref="Identifier{T}"/> is equal
-        /// to the given <see cref="object"/>.
+        /// Returns a value indicating whether the left <see cref="Identifier{T}"/> is less than the
+        /// right <see cref="Identifier{T}"/>.
         /// </summary>
-        /// <param name="other">The other.</param>
+        /// <param name="left">The left object.</param>
+        /// <param name="right">The right object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public override bool Equals(object? other) => other is Identifier<T> identifier && this.Equals(identifier);
+        public static bool operator <(Identifier<T> left, Identifier<T> right) => left.CompareTo(right) == -1;
+
+        /// <summary>
+        /// Returns a value indicating whether the left <see cref="Identifier{T}"/> is less than or
+        /// equal to the right <see cref="Identifier{T}"/>.
+        /// </summary>
+        /// <param name="left">The left object.</param>
+        /// <param name="right">The right object.</param>
+        /// <returns>A <see cref="bool"/>.</returns>
+        public static bool operator <=(Identifier<T> left, Identifier<T> right) => left.CompareTo(right) <= 0;
+
+        /// <summary>
+        /// Returns a value indicating whether the left <see cref="Identifier{T}"/> is greater than
+        /// the right <see cref="Identifier{T}"/>.
+        /// </summary>
+        /// <param name="left">The left object.</param>
+        /// <param name="right">The right object.</param>
+        /// <returns>A <see cref="bool"/>.</returns>
+        public static bool operator >(Identifier<T> left, Identifier<T> right) => left.CompareTo(right) == 1;
+
+        /// <summary>
+        /// Returns a value indicating whether the left <see cref="Identifier{T}"/> is greater than
+        /// or equal to the right <see cref="Identifier{T}"/>.
+        /// </summary>
+        /// <param name="left">The left object.</param>
+        /// <param name="right">The right object.</param>
+        /// <returns>A <see cref="bool"/>.</returns>
+        public static bool operator >=(Identifier<T> left, Identifier<T> right) => left.CompareTo(right) >= 0;
+
+        // Due to the convention that an IEquatable<T> argument can be null the compiler now emits
+        // a warning unless Equals is marked with [AllowNull] or takes a nullable param. We don't
+        // want to allow null here for the sake of silencing the warning and so temporarily using
+        // #pragma warning disable CS8767 until a better refactoring is determined.
+#pragma warning disable CS8767
+        /// <inheritdoc />
+        public int CompareTo(Identifier<T> other)
+        {
+            return string.Compare(this.Value, other.Value, StringComparison.Ordinal);
+        }
+
+        /// <summary>
+        /// Returns a value indicating whether this object is equal to the given object.
+        /// </summary>
+        /// <param name="obj">The other object.</param>
+        /// <returns>The result of the equality check.</returns>
+        public override bool Equals(object? obj) => obj is Identifier<T> identifier && this.Equals(identifier);
 
         // Due to the convention that an IEquatable<T> argument can be null the compiler now emits
         // a warning unless Equals is marked with [AllowNull] or takes a nullable param. We don't
@@ -89,17 +135,6 @@ namespace Nautilus.Core.Types
         /// <param name="other">The other object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
         public bool Equals(Identifier<T> other) => this.Value == other.Value;
-
-        // Due to the convention that an IEquatable<T> argument can be null the compiler now emits
-        // a warning unless Equals is marked with [AllowNull] or takes a nullable param. We don't
-        // want to allow null here for the sake of silencing the warning and so temporarily using
-        // #pragma warning disable CS8767 until a better refactoring is determined.
-#pragma warning disable CS8767
-        /// <inheritdoc />
-        public int CompareTo(Identifier<T> other)
-        {
-            return string.Compare(this.Value, other.Value, StringComparison.Ordinal);
-        }
 
         /// <summary>
         /// Returns the hash code of the wrapped object.

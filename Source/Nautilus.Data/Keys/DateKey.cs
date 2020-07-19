@@ -116,11 +116,11 @@ namespace Nautilus.Data.Keys
         }
 
         /// <summary>
-        /// Returns a value indicating whether this entity is equal to the given <see cref="object"/>.
+        /// Returns a value indicating whether this object is equal to the given object.
         /// </summary>
-        /// <param name="other">The other object.</param>
-        /// <returns>A <see cref="bool"/>.</returns>
-        public override bool Equals(object? other) => other is DateKey dateKey && this.Equals(dateKey);
+        /// <param name="obj">The other object.</param>
+        /// <returns>The result of the equality check.</returns>
+        public override bool Equals(object? obj) => obj is DateKey dateKey && this.Equals(dateKey);
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="DateKey"/> is equal to the given <see cref="DateKey"/>.

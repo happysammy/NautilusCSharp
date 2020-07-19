@@ -58,10 +58,10 @@ namespace Nautilus.DomainModel.FiniteStateMachine
         public static bool operator !=(Trigger left, Trigger right) => !(left == right);
 
         /// <summary>
-        /// Returns a value indicating whether this instance is equal to a specified object.
+        /// Returns a value indicating whether this object is equal to the given object.
         /// </summary>
-        /// <param name="obj">The object.</param>
-        /// <returns>A boolean.</returns>
+        /// <param name="obj">The other object.</param>
+        /// <returns>The result of the equality check.</returns>
         public override bool Equals(object? obj) => obj is Trigger trigger && this.Equals(trigger);
 
         /// <summary>

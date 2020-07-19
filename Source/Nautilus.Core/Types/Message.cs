@@ -98,12 +98,11 @@ namespace Nautilus.Core.Types
         public static bool operator !=(Message left, Message right) => !(left == right);
 
         /// <summary>
-        /// Returns a value indicating whether this <see cref="Message"/> is equal
-        /// to the given <see cref="object"/>.
+        /// Returns a value indicating whether this object is equal to the given object.
         /// </summary>
-        /// <param name="other">The other.</param>
-        /// <returns>A <see cref="bool"/>.</returns>
-        public override bool Equals(object? other) => other is Message message && this.Equals(message);
+        /// <param name="obj">The other object.</param>
+        /// <returns>The result of the equality check.</returns>
+        public override bool Equals(object? obj) => obj is Message message && this.Equals(message);
 
         // Due to the convention that an IEquatable<T> argument can be null the compiler now emits
         // a warning unless Equals is marked with [AllowNull] or takes a nullable param. We don't
