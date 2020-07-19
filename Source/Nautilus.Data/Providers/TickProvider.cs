@@ -112,11 +112,13 @@ namespace Nautilus.Data.Providers
         /// <inheritdoc />
         protected override void OnStart(Start start)
         {
+            // No actions to perform
         }
 
         /// <inheritdoc />
         protected override void OnStop(Stop stop)
         {
+            // No actions to perform
         }
 
         private Response QueryFailure(string message, Guid correlationId)

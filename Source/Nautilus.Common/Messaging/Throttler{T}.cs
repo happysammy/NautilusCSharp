@@ -93,11 +93,13 @@ namespace Nautilus.Common.Messaging
         /// <inheritdoc />
         protected override void OnStart(Start start)
         {
+            // No actions to perform
         }
 
         /// <inheritdoc />
         protected override void OnStop(Stop message)
         {
+            // No actions to perform
         }
 
         private void OnMessage(RefreshVouchers message)

@@ -90,6 +90,7 @@ namespace Nautilus.Data.Aggregation
         /// <param name="stop">The stop message.</param>
         protected override void OnStop(Stop stop)
         {
+            // No actions to perform
         }
 
         private static bool IsMarketOpen(Instant now)

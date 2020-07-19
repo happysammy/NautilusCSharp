@@ -86,6 +86,7 @@ namespace Nautilus.Common.Messaging
         /// <inheritdoc />
         protected override void OnStart(Start start)
         {
+            // No actions to perform
         }
 
         /// <inheritdoc />

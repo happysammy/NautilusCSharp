@@ -38,7 +38,7 @@ namespace Nautilus.TestSuite.TestKit.Performance
         /// <param name="iterations">The number of iterations per run.</param>
         /// <param name="output">The optional test output.</param>
         /// <returns>The minimum duration run.</returns>
-        public static TimeSpan Test(Action underTest, int runs, int iterations, ITestOutputHelper? output = null)
+        public static TimeSpan Test(Action underTest, int runs, int iterations, ITestOutputHelper? output)
         {
             var stopwatch = new Stopwatch();
             var results = new List<TimeSpan>();
@@ -65,6 +65,20 @@ namespace Nautilus.TestSuite.TestKit.Performance
                               $"of {runs:N0} runs @ {iterations:N0} each run.");
 
             return minimumTimesSpan;
+        }
+
+        /// <summary>
+        /// Test the given delegate for the specified number of iterations and runs.
+        /// The minimum duration is returned as it is more indicative of real performance unhampered
+        /// by potential random background processes on the system.
+        /// </summary>
+        /// <param name="underTest">The action under test.</param>
+        /// <param name="runs">The number of runs to perform.</param>
+        /// <param name="iterations">The number of iterations per run.</param>
+        /// <returns>The minimum duration run.</returns>
+        public static TimeSpan Test(Action underTest, int runs, int iterations)
+        {
+            return Test(underTest, runs, iterations, null);
         }
     }
 }

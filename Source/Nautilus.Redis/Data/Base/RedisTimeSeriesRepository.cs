@@ -131,6 +131,7 @@ namespace Nautilus.Redis.Data.Base
         /// <inheritdoc />
         protected override void OnStart(Start start)
         {
+            // No actions to perform
         }
 
         /// <inheritdoc />

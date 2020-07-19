@@ -288,6 +288,7 @@ namespace Nautilus.Redis.Data
         /// <inheritdoc />
         protected override void OnStart(Start start)
         {
+            // No actions to perform
         }
 
         /// <inheritdoc />

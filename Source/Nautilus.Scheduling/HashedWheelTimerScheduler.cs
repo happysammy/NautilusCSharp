@@ -236,11 +236,13 @@ namespace Nautilus.Scheduling
         /// <inheritdoc />
         protected override void OnStart(Start start)
         {
+            // No actions to perform
         }
 
         /// <inheritdoc />
         protected override void OnStop(Stop stop)
         {
+            // No actions to perform
         }
 
         private static long DurationToTicksWithCheck(Duration ticksDuration, long wheelLength)
