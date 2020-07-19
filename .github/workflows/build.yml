@@ -14,7 +14,7 @@ jobs:
       - name: Setup Environment
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 3.1.301
+          dotnet-version: 3.1.302
       - name: Install dependencies
         run: |
           sudo apt-get install redis-server
@@ -24,7 +24,11 @@ jobs:
           dotnet restore
           dotnet test Source/Nautilus.TestSuite.UnitTests
           dotnet test Source/Nautilus.TestSuite.IntegrationTests
-      - name: Build
+      - name: Code Coverage
+        uses: codecov/codecov-action@v1
+        with:
+            file: ./coverage.xml
+      - name: Release
         run: |
           dotnet publish Source/NautilusData/NautilusData.csproj -c Release
           dotnet publish Source/NautilusExecutor/NautilusExecutor.csproj -c Release

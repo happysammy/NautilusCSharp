@@ -243,6 +243,7 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
 
             // ~1350 ms for 1000000 messages with Task<bool> being returned by handler
             // ~1250 ms for 1000000 messages with bool being returned by handler
+            //  ~850 ms for 1000000 messages (19/7/2020)
 
             // Assert
             Assert.Equal(0, receiver.InputCount);
