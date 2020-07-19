@@ -24,7 +24,7 @@ jobs:
           dotnet restore
           dotnet test Source/Nautilus.TestSuite.UnitTests
           dotnet test Source/Nautilus.TestSuite.IntegrationTests
-      - name: Build Releases
+      - name: Build Release
         run: |
           dotnet publish Source/NautilusData/NautilusData.csproj -c Release -o Nautilus/NautilusDataRelease
           dotnet publish Source/NautilusExecutor/NautilusExecutor.csproj -c Release -o Nautilus/NautilusExecRelease
