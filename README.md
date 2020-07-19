@@ -9,6 +9,7 @@
 ![Codacy Coverage](https://img.shields.io/codacy/coverage/2578a7bc825449a0bd9379bb406fa7ce)
 ![Stable Version](https://img.shields.io/github/v/release/nautechsystems/Nautilus)
 ![Latest Version](https://img.shields.io/github/v/release/nautechsystems/Nautilus?include_prereleases)
+
 ## Introduction
 https://img.shields.io/github/v/release/nautechsystems/Nautilus?include_prereleases
 Nautilus is an enterprise grade distributed algorithmic trading platform allowing flexible deployment 
