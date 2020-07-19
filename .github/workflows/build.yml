@@ -24,7 +24,7 @@ jobs:
           dotnet restore
           dotnet test Source/Nautilus.TestSuite.UnitTests
           dotnet test Source/Nautilus.TestSuite.IntegrationTests
-          codecov -f "NetMQ_coverage.xml"
+          codecov -f "coverage.xml"
       - name: Code Coverage
         uses: codecov/codecov-action@v1
         with:
