@@ -16,7 +16,6 @@
 //--------------------------------------------------------------------------------------------------
 
 using System;
-using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Logging;
 using Xunit.Abstractions;
@@ -26,7 +25,6 @@ namespace Nautilus.TestSuite.TestKit.Components
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class TestLogger : ILogger
     {
-        private readonly ConcurrentQueue<string> log = new ConcurrentQueue<string>();
         private readonly ITestOutputHelper output;
         private readonly string contextName;
 

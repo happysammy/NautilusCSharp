@@ -55,7 +55,7 @@ namespace Nautilus.DomainModel.Events
             ZonedDateTime eventTimestamp)
             : base(
                 orderId,
-                typeof(OrderModified),
+                EventType,
                 eventId,
                 eventTimestamp)
         {

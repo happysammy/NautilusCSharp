@@ -23,7 +23,6 @@ using Nautilus.Core.Types;
 using Nautilus.DomainModel.Events;
 using Nautilus.DomainModel.Identifiers;
 using Nautilus.Execution.Network;
-using Nautilus.Messaging.Interfaces;
 using Nautilus.Network;
 using Nautilus.Network.Compression;
 using Nautilus.Network.Encryption;
@@ -42,10 +41,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class EventPublisherTests : NetMQTestBase
     {
-        private readonly NetworkAddress localHost = new NetworkAddress("127.0.0.1");
         private readonly IComponentryContainer container;
-        private readonly IMessageBusAdapter messageBusAdapter;
-        private readonly IEndpoint receiver;
 
         public EventPublisherTests(ITestOutputHelper output)
             : base(output)
@@ -53,8 +49,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
             // Fixture Setup
             this.container = TestComponentryContainer.Create(output);
             var service = new MockMessageBusProvider(this.container);
-            this.messageBusAdapter = service.Adapter;
-            this.receiver = new MockComponent(this.container).Endpoint;
         }
 
         [Fact]

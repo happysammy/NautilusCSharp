@@ -29,8 +29,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
         {
             Undefined = -1,
             Success = 0,
-            Failure = 1,
-            SomethingElse = 2,
+            SomethingElse = 1,
         }
 
         [Theory]

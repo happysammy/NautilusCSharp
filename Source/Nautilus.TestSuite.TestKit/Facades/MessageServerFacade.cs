@@ -65,10 +65,5 @@ namespace Nautilus.TestSuite.TestKit.Facades
 
             this.SendReceived(message);
         }
-
-        private void OnMessage(string message)
-        {
-            this.ReceivedStrings.Add(message);
-        }
     }
 }

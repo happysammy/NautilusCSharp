@@ -86,11 +86,6 @@ namespace Nautilus.TestSuite.TestKit.Mocks
                 throw new InvalidOperationException("Not implemented.");
             }
 
-            public byte[] Serialize(string message)
-            {
-                return Encoding.UTF8.GetBytes(message);
-            }
-
             public string Deserialize(byte[] dataBytes)
             {
                 return Encoding.UTF8.GetString(dataBytes);

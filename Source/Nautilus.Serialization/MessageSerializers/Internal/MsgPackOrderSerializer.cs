@@ -36,7 +36,6 @@ namespace Nautilus.Serialization.MessageSerializers.Internal
     internal sealed class MsgPackOrderSerializer
     {
         private static readonly Func<string, byte[]> Encode = Encoding.UTF8.GetBytes;
-        private static readonly Func<byte[], string> Decode = Encoding.UTF8.GetString;
         private static readonly byte[] EmptyDictBytes = MessagePackSerializer.Serialize(new Dictionary<string, byte[]>());
 
         private readonly ObjectCache<string, Symbol> symbolCache;
