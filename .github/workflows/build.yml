@@ -24,14 +24,6 @@ jobs:
           dotnet restore
           dotnet test Source/Nautilus.TestSuite.UnitTests
           dotnet test Source/Nautilus.TestSuite.IntegrationTests
-          codecov -f "coverage.xml"
-      - name: Code Coverage
-        uses: codecov/codecov-action@v1
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          file: ./coverage.xml
-          fail_ci_if_error: true
-
       - name: Release
         run: |
           dotnet publish Source/NautilusData/NautilusData.csproj -c Release
