@@ -27,9 +27,14 @@ jobs:
       - name: Code Coverage
         uses: codecov/codecov-action@v1
         with:
-            file: ./coverage.xml
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage.xml
+          fail_ci_if_error: true
+        run:
+          OpenCover.Console.exe -register:user
+          codecov -f "coverage.xml"
+
       - name: Release
         run: |
           dotnet publish Source/NautilusData/NautilusData.csproj -c Release
           dotnet publish Source/NautilusExecutor/NautilusExecutor.csproj -c Release
-          bash codecov.sh
