@@ -58,7 +58,7 @@ namespace Nautilus.TestSuite.IntegrationTests.MessagingTests
                 throttler.Endpoint.SendAsync($"Message-{i + 1}");
             }
 
-            Task.Delay(50).Wait();
+            Task.Delay(10).Wait();
 
             // Should receives only the first 10 messages
             var count1 = this.receiver.Messages.Count;
