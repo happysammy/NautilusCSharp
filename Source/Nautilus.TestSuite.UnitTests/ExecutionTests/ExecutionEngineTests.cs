@@ -281,7 +281,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             var order = new StubOrderBuilder().EntryOrder("O-123456").BuildMarketOrder();
             var traderId = TraderId.FromString("TESTER-000");
             var accountId = AccountId.FromString("NAUTILUS-000-SIMULATED");
-            var strategyId = new StrategyId("SCALPER", "001");
 
             var command = new CancelOrder(
                 traderId,
@@ -359,17 +358,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             var order = new StubOrderBuilder().EntryOrder("O-123456").BuildMarketOrder();
             var traderId = TraderId.FromString("TESTER-000");
             var accountId = AccountId.FromString("NAUTILUS-000-SIMULATED");
-            var positionId = new PositionId("P-123456");
-            var strategyId = new StrategyId("SCALPER", "001");
-
-            var submit = new SubmitOrder(
-                traderId,
-                accountId,
-                strategyId,
-                positionId,
-                order,
-                Guid.NewGuid(),
-                StubZonedDateTime.UnixEpoch());
 
             var modify = new ModifyOrder(
                 traderId,

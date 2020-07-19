@@ -29,7 +29,6 @@ using Nautilus.Network.Encryption;
 using Nautilus.Serialization.MessageSerializers;
 using Nautilus.TestSuite.TestKit.Components;
 using Nautilus.TestSuite.TestKit.Fixtures;
-using Nautilus.TestSuite.TestKit.Mocks;
 using Nautilus.TestSuite.TestKit.Stubs;
 using NetMQ;
 using NetMQ.Sockets;
@@ -48,7 +47,6 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests
         {
             // Fixture Setup
             this.container = TestComponentryContainer.Create(output);
-            var service = new MockMessageBusProvider(this.container);
         }
 
         [Fact]

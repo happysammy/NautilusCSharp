@@ -63,7 +63,7 @@ namespace Nautilus.TestSuite.TestKit.Mocks
         {
             if (this.database.TryGetValue(tick.Symbol, out var tickList))
             {
-                this.database[tick.Symbol].Add(tick);
+                tickList.Add(tick);
             }
             else
             {

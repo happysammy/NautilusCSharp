@@ -98,6 +98,9 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             // Assert
             Assert.Equal(8, instrumentBuilder.Changes.Count);
+            Assert.Equal(Quantity.Create(10000), result.MaxTradeSize);
+            Assert.Equal(45, result.RolloverInterestBuy);
+            Assert.Equal(45, result.RolloverInterestSell);
 
             foreach (var change in instrumentBuilder.Changes)
             {

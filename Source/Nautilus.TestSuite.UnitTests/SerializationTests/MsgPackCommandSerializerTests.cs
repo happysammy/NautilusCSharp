@@ -149,7 +149,6 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         internal void CanSerializeAndDeserialize_CancelOrderCommands()
         {
             // Arrange
-            var order = new StubOrderBuilder().BuildMarketOrder();
             var command = new CancelOrder(
                 new TraderId("TESTER", "000"),
                 new AccountId("FXCM", "028999999", "SIMULATED"),

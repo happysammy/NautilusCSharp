@@ -68,7 +68,7 @@ namespace Nautilus.Redis.Execution.Internal
         private const string KEY_INDEX_POSITION_ACCOUNT = Index + Position + Account;         // -> HashSet[PositionId, AccountId]
         private const string KEY_INDEX_POSITION_STRATEGY = Index + Position + Strategy;       // -> HashSet[PositionId, StrategyId]
         private const string KEY_INDEX_POSITION_BROKER = Index + Position + BrokerId;         // -> HashSet[PositionId, PositionIdBroker]
-        private const string KEY_INDEX_POSITION_ORDERS = Index + Position + Orders + ":";     // + PositionId -> Set{OrderId}
+        private const string KEY_INDEX_POSITION_ORDERS = Index + Position + Orders + ":";     // PositionId -> Set{OrderId}
         private const string KEY_INDEX_ORDERS = Index + Orders;                               // Set{OrderId}
         private const string KEY_INDEX_ORDERS_WORKING = Index + Orders + ":" + Working;       // Set{OrderId}
         private const string KEY_INDEX_ORDERS_COMPLETED = Index + Orders + ":" + Completed;   // Set{OrderId}

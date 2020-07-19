@@ -18,7 +18,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using Nautilus.Common.Data;
-using Nautilus.Data.Keys;
 using Nautilus.DomainModel.Enums;
 using Nautilus.DomainModel.Frames;
 using Nautilus.DomainModel.ValueObjects;
@@ -331,7 +330,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         {
             // Arrange
             var barType = StubBarType.AUDUSD_OneMinuteAsk();
-            var barKey = KeyProvider.GetBarsKey(barType, new DateKey(StubZonedDateTime.UnixEpoch()));
             var bar = new Bar(
                 Price.Create(0.80000m),
                 Price.Create(0.80010m),
@@ -353,8 +351,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void GetKeysSorted_WithNoKeysInRedis_ReturnsQueryFailure()
         {
             // Arrange
-            var barType = StubBarType.AUDUSD_OneMinuteAsk();
-
             // Act
             var result = this.repository.GetKeysSorted(KeyProvider.GetBarsPattern());
 

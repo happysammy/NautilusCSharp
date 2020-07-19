@@ -107,7 +107,6 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
         internal void Build_WithVariousQuotes3_ReturnsExpectedBar()
         {
             // Arrange
-            var timestamp = StubZonedDateTime.UnixEpoch();
             var quote1 = Price.Create(0.99999m, 5);
             var quote2 = Price.Create(1.00001m, 5);
             var quote3 = Price.Create(1.00000m, 5);

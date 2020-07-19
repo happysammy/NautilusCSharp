@@ -89,7 +89,7 @@ namespace Nautilus.Data.Providers
                     if (dataQuery.Value.Length == 0)
                     {
                         var message = $"Cannot find instruments for the '{symbol}' symbol";
-                        return this.QueryFailure(dataQuery.Message, request.Id);
+                        return this.QueryFailure(message, request.Id);
                     }
 
                     return new DataResponse(

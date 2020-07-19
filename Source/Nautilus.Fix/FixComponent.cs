@@ -425,8 +425,6 @@ namespace Nautilus.Fix
             this.MaintainConnection = true;
             var settings = new SessionSettings(this.configPath);
             var storeFactory = new FileStoreFactory(settings);
-
-            // var logFactory = new ScreenLogFactory(settings);
             this.initiator = new SocketInitiator(this, storeFactory, settings, null);
 
             this.Logger.LogDebug("Starting initiator...");

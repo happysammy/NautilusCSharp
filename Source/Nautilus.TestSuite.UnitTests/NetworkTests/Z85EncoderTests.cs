@@ -32,22 +32,6 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         /// SHALL encode as the following 10 characters: HelloWorld.
         /// </summary>
         [Fact]
-        public void ToZ85String_HelloWorld_Success()
-        {
-            var bytes = new byte[] { 0x86, 0x4F, 0xD2, 0x6F, 0xB5, 0x59, 0xF7, 0x5B };
-
-            // var expectedOutput = "HelloWorld";
-            // var output = Z85Encoder.ToZ85String(bytes, false);
-            // System.OverflowException : Arithmetic operation resulted in an overflow
-            // Assert.Equal(expectedOutput, output);
-        }
-
-        /// <summary>
-        /// From the ZeroMQ RFC - https://rfc.zeromq.org/spec:32/Z85/
-        /// As a test case, a frame containing these 8 bytes: 0x86 | 0x4F | 0xD2 | 0x6F | 0xB5 | 0x59 | 0xF7 | 0x5B
-        /// SHALL encode as the following 10 characters: HelloWorld.
-        /// </summary>
-        [Fact]
         public void FromZ85String_HelloWorld_Success()
         {
             var encodedString = "HelloWorld";

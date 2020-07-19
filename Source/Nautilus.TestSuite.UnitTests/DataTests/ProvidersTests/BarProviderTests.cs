@@ -25,7 +25,6 @@ using Nautilus.Data.Messages.Requests;
 using Nautilus.Data.Messages.Responses;
 using Nautilus.Data.Providers;
 using Nautilus.DomainModel.ValueObjects;
-using Nautilus.Network;
 using Nautilus.Network.Messages;
 using Nautilus.Serialization.DataSerializers;
 using Nautilus.TestSuite.TestKit.Components;
@@ -94,8 +93,6 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
         internal void GivenBarDataRequest_WithBars_ReturnsValidBarDataResponse()
         {
             // Arrange
-            var testAddress = new ZmqNetworkAddress(NetworkAddress.LocalHost, new Port(55524));
-
             var provider = new BarProvider(
                 this.container,
                 this.messagingAdapter,

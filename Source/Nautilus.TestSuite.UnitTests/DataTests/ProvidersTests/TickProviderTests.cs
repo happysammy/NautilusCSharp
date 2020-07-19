@@ -27,7 +27,6 @@ using Nautilus.Data.Messages.Responses;
 using Nautilus.Data.Providers;
 using Nautilus.DomainModel.Identifiers;
 using Nautilus.DomainModel.ValueObjects;
-using Nautilus.Network;
 using Nautilus.Network.Messages;
 using Nautilus.Serialization.DataSerializers;
 using Nautilus.TestSuite.TestKit.Components;
@@ -62,8 +61,6 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
         internal void GivenTickDataRequest_WithNoTicks_ReturnsQueryFailedMessage()
         {
             // Arrange
-            var testAddress = new ZmqNetworkAddress(NetworkAddress.LocalHost, new Port(55722));
-
             var provider = new TickProvider(
                 this.container,
                 this.messagingAdapter,
@@ -98,8 +95,6 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
         internal void GivenTickDataRequest_WithTicks_ReturnsValidTickDataResponse()
         {
             // Arrange
-            var testAddress = new ZmqNetworkAddress(NetworkAddress.LocalHost, new Port(55723));
-
             var provider = new TickProvider(
                 this.container,
                 this.messagingAdapter,
