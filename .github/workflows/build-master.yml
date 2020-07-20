@@ -1,0 +1,73 @@
+name: build-master
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+
+  build-test-prerelease:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Environment
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.302
+
+      - name: Set Version
+        run: |
+          echo ::set-env name=VERSION::$(cat Source/version.txt)
+          echo ::set-env name=BUILD_NUMBER::$(echo $GITHUB_RUN_NUMBER)
+      - name: Set Naming
+        run: |
+          echo ::set-env name=NAUTILUS_VERSION::$(echo $VERSION.$BUILD_NUMBER-beta)
+          echo ::set-env name=NAUTILUS_RELEASE_NAME::$(echo Nautilus-$VERSION.$BUILD_NUMBER)
+      - name: Check Naming
+        run: |
+          echo version: $VERSION
+          echo build: $BUILD_NUMBER
+          echo tag: $NAUTILUS_VERSION
+          echo release: $NAUTILUS_RELEASE_NAME
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get install redis-server
+          redis-server --daemonize yes
+
+      - name: Test
+        run: |
+          dotnet restore
+          dotnet test Source/Nautilus.TestSuite.UnitTests
+          dotnet test Source/Nautilus.TestSuite.IntegrationTests
+
+      - name: Build Release
+        run: |
+          dotnet publish Source/NautilusData/NautilusData.csproj -c Release -o NautilusData/
+          dotnet publish Source/NautilusExecutor/NautilusExecutor.csproj -c Release -o NautilusExec/
+          zip -r ${{ env.NAUTILUS_RELEASE_NAME }}.zip NautilusData/
+          zip -r ${{ env.NAUTILUS_RELEASE_NAME }}.zip NautilusExec/
+
+      - name: Create Release Asset
+        id: create-release-asset
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ env.NAUTILUS_VERSION }}
+          release_name: ${{ env.NAUTILUS_RELEASE_NAME }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create-release-asset.outputs.upload_url }}
+          asset_path: ./${{ env.NAUTILUS_RELEASE_NAME }}.zip
+          asset_name: ${{ env.NAUTILUS_RELEASE_NAME }}.zip
+          asset_content_type: application/zip
