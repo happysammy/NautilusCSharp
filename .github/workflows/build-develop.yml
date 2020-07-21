@@ -21,10 +21,12 @@ jobs:
         run: |
           echo ::set-env name=VERSION::$(cat Source/version.txt)
           echo ::set-env name=BUILD_NUMBER::$(echo $GITHUB_RUN_NUMBER)
+
       - name: Set Naming
         run: |
           echo ::set-env name=NAUTILUS_VERSION::$(echo $VERSION.$BUILD_NUMBER-beta)
           echo ::set-env name=NAUTILUS_RELEASE_NAME::$(echo Nautilus-$VERSION.$BUILD_NUMBER-beta)
+
       - name: Check Naming
         run: |
           echo version: $VERSION
