@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Nautilus.Execution;
 using Serilog;
@@ -39,7 +40,7 @@ namespace NautilusExecutor
         /// <param name="config">The configuration.</param>
         /// <param name="loggerFactory">The logger factory.</param>
         public Startup(
-            IHostingEnvironment env,
+            IWebHostEnvironment env,
             IConfiguration config,
             ILoggerFactory loggerFactory)
         {
@@ -55,7 +56,7 @@ namespace NautilusExecutor
         /// <summary>
         /// Gets the hosting environment.
         /// </summary>
-        public IHostingEnvironment Environment { get; }
+        public IWebHostEnvironment Environment { get; }
 
         /// <summary>
         /// Gets the configuration.
@@ -75,7 +76,8 @@ namespace NautilusExecutor
         /// </summary>
         /// <param name="app">The application builder.</param>
         /// <param name="appLifetime">The application lifetime.</param>
-        public void Configure(IApplicationBuilder app, IApplicationLifetime appLifetime)
+        // ReSharper disable once UnusedMember.Global
+        public void Configure(IApplicationBuilder app, IHostApplicationLifetime appLifetime)
         {
             appLifetime.ApplicationStopping.Register(this.OnShutdown);
 

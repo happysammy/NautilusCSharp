@@ -6,7 +6,7 @@ on:
 
 jobs:
 
-  build-test-prerelease:
+  build-test:
 
     runs-on: ubuntu-latest
 
@@ -44,32 +44,3 @@ jobs:
           dotnet restore
           dotnet test Source/Nautilus.TestSuite.UnitTests
           dotnet test Source/Nautilus.TestSuite.IntegrationTests
-
-      - name: Build Release
-        run: |
-          dotnet publish Source/NautilusData/NautilusData.csproj -c Release -o NautilusData/
-          dotnet publish Source/NautilusExecutor/NautilusExecutor.csproj -c Release -o NautilusExec/
-          zip -r ${{ env.NAUTILUS_RELEASE_NAME }}.zip NautilusData/
-          zip -r ${{ env.NAUTILUS_RELEASE_NAME }}.zip NautilusExec/
-
-      - name: Create Release Asset
-        id: create-release-asset
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: v${{ env.NAUTILUS_VERSION }}
-          release_name: ${{ env.NAUTILUS_RELEASE_NAME }}
-          draft: false
-          prerelease: true
-
-      - name: Upload Release Asset
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create-release-asset.outputs.upload_url }}
-          asset_path: ./${{ env.NAUTILUS_RELEASE_NAME }}.zip
-          asset_name: ${{ env.NAUTILUS_RELEASE_NAME }}.zip
-          asset_content_type: application/zip

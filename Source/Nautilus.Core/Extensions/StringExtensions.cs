@@ -83,7 +83,7 @@ namespace Nautilus.Core.Extensions
         public static string ToAlphaNumeric(this string input)
         {
             var arr = input.ToCharArray();
-            arr = Array.FindAll<char>(arr, char.IsLetterOrDigit);
+            arr = Array.FindAll(arr, char.IsLetterOrDigit);
 
             return new string(arr);
         }

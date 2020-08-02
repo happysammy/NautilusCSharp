@@ -98,7 +98,7 @@ namespace Nautilus.Messaging
         /// </summary>
         /// <param name="other">The other object.</param>
         /// <returns>True if the message identifier equals the other identifier, otherwise false.</returns>
-        public bool Equals(Envelope<T> other) => other?.Id == this.Id;
+        public bool Equals(Envelope<T> other) => other.Id == this.Id;
 
         // Due to the convention that an IEquatable<T> argument can be null the compiler now emits
         // a warning unless Equals is marked with [AllowNull] or takes a nullable param. We don't
