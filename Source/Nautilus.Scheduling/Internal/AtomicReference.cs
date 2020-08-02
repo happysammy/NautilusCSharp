@@ -59,7 +59,7 @@ namespace Nautilus.Scheduling.Internal
         /// </summary>
         /// <param name="atomicReference">The reference to convert.</param>
         /// <returns>The result of the conversion.</returns>
-        public static implicit operator T?(AtomicReference<T> atomicReference) => atomicReference?.Value;
+        public static implicit operator T?(AtomicReference<T> atomicReference) => atomicReference.Value;
 
         /// <summary>
         /// Performs an implicit conversion from <typeparamref name="T"/> to <see cref="AtomicReference{T}"/>.

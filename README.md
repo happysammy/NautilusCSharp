@@ -7,9 +7,12 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/fb2f64bf5cf8468983dbbd841d29c4e3)](https://app.codacy.com/gh/nautechsystems/Nautilus?utm_source=github.com&utm_medium=referral&utm_content=nautechsystems/Nautilus&utm_campaign=Badge_Grade_Dashboard)
 ![Build](https://github.com/nautechsystems/Nautilus/workflows/build/badge.svg)
 ![Codacy Coverage](https://img.shields.io/codacy/coverage/2578a7bc825449a0bd9379bb406fa7ce)
-![Stable Version](https://img.shields.io/github/v/release/nautechsystems/Nautilus)
-![Latest Version](https://img.shields.io/github/v/release/nautechsystems/Nautilus?include_prereleases)
 
+| Versioning |               |
+| -----------| ------------- |
+| Stable     | ![Stable Version](https://img.shields.io/github/v/release/nautechsystems/Nautilus)
+| Latest     | ![Latest Version](https://img.shields.io/github/v/release/nautechsystems/Nautilus?include_prereleases)
+   
 ## Introduction
 
 Nautilus is an enterprise grade distributed algorithmic trading platform allowing flexible deployment 
@@ -44,24 +47,24 @@ The Order Management System (OMS) includes an `ExecutionEngine` with underlying 
 built on top of Redis, which supports the ability to manage global risk across many trader machines.
 
 The repository is grouped into the following solution folders;
-- `Framework` provides the domain model and common components for implementing the services.
-- `Services` provides generic data and execution services.
-- `Infrastructure` provides technology specific implementations. At present utilizing Redis.
-- `Adapters` provides broker specific implementations. At present supporting `FIX4.4` with FXCM.
-- `Applications` provides `NautilusData` and `NautilusExecutor` ASP.NET Core applications.
-- `TestSuite` provides the unit and integration tests for the codebase.
+  - `Framework` provides the domain model and common components for implementing the services.
+  - `Services` provides generic data and execution services.
+  - `Infrastructure` provides technology specific implementations. At present utilizing Redis.
+  - `Adapters` provides broker specific implementations. At present supporting `FIX4.4` with FXCM.
+  - `Applications` provides `NautilusData` and `NautilusExecutor` ASP.NET Core applications.
+  - `TestSuite` provides the unit and integration tests for the codebase.
 
 There is currently a large effort to develop improved documentation.
 
 ## Values
 
-- Reliability
-- Availability
-- Testability
-- Performance
-- Modularity
-- Maintainability
-- Scalability
+  - Reliability
+  - Availability
+  - Testability
+  - Performance
+  - Modularity
+  - Maintainability
+  - Scalability
 
 ## Support
 Please direct all questions, comments or bug reports to info@nautechsystems.io
