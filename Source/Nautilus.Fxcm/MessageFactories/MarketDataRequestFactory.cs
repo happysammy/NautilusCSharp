@@ -53,7 +53,8 @@ namespace Nautilus.Fxcm.MessageFactories
                 new MDReqID($"MD_{timeNow.TickOfDay.ToString()}"),
                 new SubscriptionRequestType(SubscriptionRequestType.SNAPSHOT_PLUS_UPDATES),
                 new MarketDepth(marketDepth));
-            message.Set(new MDUpdateType(0));  // val:1 to receive shortened message
+            message.Set(new NoMDEntryTypes(2));
+            message.Set(new MDUpdateType(1));  // val:1 to receive shortened message
             message.AddGroup(marketDataEntryGroup1);
             message.AddGroup(marketDataEntryGroup2);
             message.Set(new NoRelatedSym(1));

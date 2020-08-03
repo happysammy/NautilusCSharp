@@ -17,6 +17,7 @@
 
 using Nautilus.Core.Correctness;
 using Nautilus.DomainModel.Entities;
+using Nautilus.DomainModel.Enums;
 using Nautilus.DomainModel.Identifiers;
 using NodaTime;
 using QuickFix.Fields;
@@ -74,6 +75,31 @@ namespace Nautilus.Fxcm.MessageFactories
             order1.SetField(FxcmMessageHelper.GetFixTimeInForce(entry.TimeInForce));
             order1.SetField(new OrderQty(entry.Quantity.Value));
 
+            // Add price
+            if (entry.Price?.Value != null)
+            {
+                switch (entry.OrderType)
+                {
+                    case OrderType.Limit:
+                        order1.SetField(new Price(entry.Price.Value));
+                        break;
+                    case OrderType.Stop:
+                        order1.SetField(new StopPx(entry.Price.Value));
+                        break;
+                    case OrderType.StopLimit:
+                        order1.SetField(new StopPx(entry.Price.Value));
+                        break;
+                    case OrderType.MIT:
+                        order1.SetField(new StopPx(entry.Price.Value));
+                        break;
+                    case OrderType.Market:
+                    case OrderType.Undefined:
+                        goto default;
+                    default:
+                        throw ExceptionFactory.InvalidSwitchArgument(entry.OrderType, nameof(entry.OrderType));
+                }
+            }
+
             // Optional tags
             if (entry.ExpireTime.HasValue)
             {
@@ -81,12 +107,7 @@ namespace Nautilus.Fxcm.MessageFactories
                 order1.SetField(new StringField(126, expireTime));
             }
 
-            if (entry.Price?.Value != null)
-            {
-                order1.SetField(new StopPx(entry.Price.Value));
-            }
-
-            // Order 2
+            // Order 2 -----------------------------------------------------------------------------
             var stopLoss = bracketOrder.StopLoss;
             var order2 = new NewOrderList.NoOrdersGroup();
             order2.SetField(new ClOrdID(stopLoss.Id.Value));
@@ -105,7 +126,7 @@ namespace Nautilus.Fxcm.MessageFactories
                 order2.SetField(new SecondaryClOrdID(stopLoss.Label.Value));
             }
 
-            // Stop-loss orders should always have a price
+            // Stop-loss orders should always have a stop price
             if (stopLoss.Price?.Value != null)
             {
                 order2.SetField(new StopPx(stopLoss.Price.Value));
@@ -141,7 +162,7 @@ namespace Nautilus.Fxcm.MessageFactories
             message.SetField(new NoOrders(3));
             message.SetField(new BidType(3));
 
-            // Order 1
+            // Order 1 -----------------------------------------------------------------------------
             var entry = bracketOrder.Entry;
             var order1 = new NewOrderList.NoOrdersGroup();
             order1.SetField(new ClOrdID(entry.Id.Value));
@@ -153,6 +174,31 @@ namespace Nautilus.Fxcm.MessageFactories
             order1.SetField(FxcmMessageHelper.GetFixOrderType(entry.OrderType));
             order1.SetField(FxcmMessageHelper.GetFixTimeInForce(entry.TimeInForce));
             order1.SetField(new OrderQty(entry.Quantity.Value));
+
+            // Add price
+            if (entry.Price?.Value != null)
+            {
+                switch (entry.OrderType)
+                {
+                    case OrderType.Limit:
+                        order1.SetField(new Price(entry.Price.Value));
+                        break;
+                    case OrderType.Stop:
+                        order1.SetField(new StopPx(entry.Price.Value));
+                        break;
+                    case OrderType.StopLimit:
+                        order1.SetField(new StopPx(entry.Price.Value));
+                        break;
+                    case OrderType.MIT:
+                        order1.SetField(new StopPx(entry.Price.Value));
+                        break;
+                    case OrderType.Market:
+                    case OrderType.Undefined:
+                        goto default;
+                    default:
+                        throw ExceptionFactory.InvalidSwitchArgument(entry.OrderType, nameof(entry.OrderType));
+                }
+            }
 
             // Optional tags
             if (entry.Label.NotNone())
@@ -166,12 +212,7 @@ namespace Nautilus.Fxcm.MessageFactories
                 order1.SetField(new ExpireTime(expireTime));
             }
 
-            if (entry.Price?.Value != null)
-            {
-                order1.SetField(new StopPx(entry.Price.Value));
-            }
-
-            // Order 2
+            // Order 2 -----------------------------------------------------------------------------
             var stopLoss = bracketOrder.StopLoss;
             var order2 = new NewOrderList.NoOrdersGroup();
             order2.SetField(new ClOrdID(stopLoss.Id.Value));
@@ -220,7 +261,7 @@ namespace Nautilus.Fxcm.MessageFactories
                     order3.SetField(new SecondaryClOrdID(entry.Label.Value));
                 }
 
-                // Take-profit orders should always have a price
+                // Take-profit orders should always have a limit price
                 if (takeProfit.Price?.Value != null)
                 {
                     order3.SetField(new Price(takeProfit.Price.Value));

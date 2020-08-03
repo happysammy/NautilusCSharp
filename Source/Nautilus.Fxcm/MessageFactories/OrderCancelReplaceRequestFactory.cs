@@ -59,13 +59,11 @@ namespace Nautilus.Fxcm.MessageFactories
             // Set the order price depending on order type.
             switch (order.OrderType)
             {
-                case OrderType.Market:
-                    break;
                 case OrderType.Limit:
                     message.SetField(new Price(modifiedPrice));
                     break;
                 case OrderType.StopLimit:
-                    message.SetField(new Price(modifiedPrice));
+                    message.SetField(new StopPx(modifiedPrice));
                     break;
                 case OrderType.Stop:
                     message.SetField(new StopPx(modifiedPrice));
@@ -73,6 +71,7 @@ namespace Nautilus.Fxcm.MessageFactories
                 case OrderType.MIT:
                     message.SetField(new StopPx(modifiedPrice));
                     break;
+                case OrderType.Market:
                 case OrderType.Undefined:
                     goto default;
                 default:

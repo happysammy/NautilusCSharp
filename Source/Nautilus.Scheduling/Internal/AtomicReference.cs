@@ -80,12 +80,5 @@ namespace Nautilus.Scheduling.Internal
             var previous = Interlocked.CompareExchange(ref this.atomicValue, newValue, expected);
             return ReferenceEquals(previous, expected);
         }
-
-        /// <summary>
-        /// Atomically sets the <see cref="Value"/> to <paramref name="newValue"/> and returns the old <see cref="Value"/>.
-        /// </summary>
-        /// <param name="newValue">The new value.</param>
-        /// <returns>The old value.</returns>
-        public T? GetAndSet(T newValue) => Interlocked.Exchange(ref this.atomicValue, newValue);
     }
 }
