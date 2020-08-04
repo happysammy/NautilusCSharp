@@ -58,7 +58,7 @@ namespace NautilusExecutor
                 guidFactory,
                 config.LoggerFactory);
 
-            var scheduler = new HashedWheelTimerScheduler(container);
+            var scheduler = new Scheduler(container);
             scheduler.Start();
 
             var messagingAdapter = MessageBusFactory.Create(container);
@@ -98,7 +98,6 @@ namespace NautilusExecutor
 
             var executionEngine = new ExecutionEngine(
                 container,
-                scheduler,
                 messagingAdapter,
                 executionDatabase,
                 tradingGateway,
@@ -152,12 +151,6 @@ namespace NautilusExecutor
                         container,
                         messageBusAdapter,
                         configuration);
-                case "SIMULATION":
-                    goto default;
-                case "IB":
-                    goto default;
-                case "LMAX":
-                    goto default;
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(
                         configuration.Broker,

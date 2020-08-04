@@ -20,7 +20,7 @@ using Nautilus.Fxcm.MessageFactories;
 using Nautilus.TestSuite.TestKit.Stubs;
 using Xunit;
 
-namespace Nautilus.TestSuite.UnitTests.FixTests
+namespace Nautilus.TestSuite.UnitTests.AdapterTests.Fxcm
 {
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class MessageTests

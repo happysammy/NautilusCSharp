@@ -28,7 +28,9 @@ using Nautilus.Core.Types;
 using Nautilus.Fix;
 using Nautilus.Messaging;
 using Nautilus.Scheduling;
-using NodaTime;
+using Nautilus.Scheduling.Messages;
+using NodaTime.Extensions;
+using Quartz;
 
 namespace Nautilus.Service
 {
@@ -42,8 +44,6 @@ namespace Nautilus.Service
         private readonly WeeklyTime connectWeeklyTime;
         private readonly WeeklyTime disconnectWeeklyTime;
 
-        private ZonedDateTime nextConnectTime;
-        private ZonedDateTime nextDisconnectTime;
         private bool maintainConnection;
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace Nautilus.Service
         protected NautilusServiceBase(
             IComponentryContainer container,
             MessageBusAdapter messageBusAdapter,
-            IScheduler scheduler,
+            Scheduler scheduler,
             FixConfiguration config)
             : base(container, messageBusAdapter)
         {
@@ -65,8 +65,6 @@ namespace Nautilus.Service
             this.Scheduler = scheduler;
             this.connectWeeklyTime = config.ConnectWeeklyTime;
             this.disconnectWeeklyTime = config.DisconnectWeeklyTime;
-            this.nextConnectTime = TimingProvider.GetNextUtc(this.connectWeeklyTime, this.InstantNow());
-            this.nextDisconnectTime = TimingProvider.GetNextUtc(this.disconnectWeeklyTime, this.InstantNow());
             this.maintainConnection = false;
 
             // Commands
@@ -85,7 +83,7 @@ namespace Nautilus.Service
         /// <summary>
         /// Gets the services scheduler.
         /// </summary>
-        protected IScheduler Scheduler { get; }
+        protected Scheduler Scheduler { get; }
 
         /// <summary>
         /// Register the given address to receiver generated connect messages.
@@ -108,21 +106,8 @@ namespace Nautilus.Service
         {
             this.Logger.LogInformation($"Starting {this.GetType().Name}...");
 
-            if (TimingProvider.IsInsideInterval(
-                this.disconnectWeeklyTime,
-                this.connectWeeklyTime,
-                this.InstantNow()))
-            {
-                // Inside disconnection schedule weekly interval
-                this.CreateConnectFixJob();
-                this.CreateDisconnectFixJob();
-            }
-            else
-            {
-                // Outside disconnection schedule weekly interval
-                this.CreateDisconnectFixJob();
-                this.CreateConnectFixJob();
-            }
+            this.CreateConnectFixJob();
+            this.CreateDisconnectFixJob();
 
             this.OnServiceStart(start);
 
@@ -206,11 +191,6 @@ namespace Nautilus.Service
         {
             this.Logger.LogInformation($"Connected to session {message.SessionId}.");
 
-            if (this.nextDisconnectTime.IsLessThanOrEqualTo(this.TimeNow()))
-            {
-                this.CreateDisconnectFixJob();
-            }
-
             this.OnConnected();
         }
 
@@ -225,56 +205,71 @@ namespace Nautilus.Service
                 this.Logger.LogInformation($"Disconnected from session {message.SessionId}.");
             }
 
-            if (this.nextConnectTime.IsLessThanOrEqualTo(this.TimeNow()))
-            {
-                this.CreateConnectFixJob();
-            }
-
             this.OnDisconnected();
         }
 
         private void CreateConnectFixJob()
         {
-            var now = this.InstantNow();
-            var nextTime = TimingProvider.GetNextUtc(this.connectWeeklyTime, now);
-            var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, now);
+            var schedule = CronScheduleBuilder
+                .WeeklyOnDayAndHourAndMinute(
+                    this.connectWeeklyTime.DayOfWeek.ToDayOfWeek(),
+                    this.connectWeeklyTime.Time.Hour,
+                    this.connectWeeklyTime.Time.Minute)
+                .InTimeZone(TimeZoneInfo.Utc)
+                .WithMisfireHandlingInstructionFireAndProceed();
 
-            var job = new ConnectSession(
-                nextTime,
+            var jobKey = new JobKey("fix-session-connect", "service");
+            var trigger = TriggerBuilder
+                .Create()
+                .WithIdentity(jobKey.Name, jobKey.Group)
+                .WithSchedule(schedule)
+                .Build();
+
+            var createJob = new CreateJob(
+                this.Endpoint,
+                new ConnectSession(this.NewGuid(), this.TimeNow()),
+                jobKey,
+                trigger,
                 this.NewGuid(),
                 this.TimeNow());
 
-            this.Scheduler.ScheduleSendOnceCancelable(
-                durationToNext,
-                this.Endpoint,
-                job,
-                this.Endpoint);
-
-            this.nextConnectTime = nextTime;
-
-            this.Logger.LogInformation($"Created scheduled job {job} for {nextTime.ToIso8601String()}");
+            this.Scheduler.Endpoint.Send(createJob);
+            this.Logger.LogInformation($"Created {nameof(ConnectSession)} for " +
+                                       $"{this.connectWeeklyTime.DayOfWeek.ToDayOfWeek()}s " +
+                                       $"{this.connectWeeklyTime.Time.Hour}:" +
+                                       $"{this.connectWeeklyTime.Time.Minute} UTC.");
         }
 
         private void CreateDisconnectFixJob()
         {
-            var now = this.InstantNow();
-            var nextTime = TimingProvider.GetNextUtc(this.disconnectWeeklyTime, now);
-            var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, now);
+            var schedule = CronScheduleBuilder
+                .WeeklyOnDayAndHourAndMinute(
+                    this.disconnectWeeklyTime.DayOfWeek.ToDayOfWeek(),
+                    this.disconnectWeeklyTime.Time.Hour,
+                    this.disconnectWeeklyTime.Time.Minute)
+                .InTimeZone(TimeZoneInfo.Utc)
+                .WithMisfireHandlingInstructionFireAndProceed();
 
-            var job = new DisconnectSession(
-                nextTime,
+            var jobKey = new JobKey("fix-session-disconnect", "service");
+            var trigger = TriggerBuilder
+                .Create()
+                .WithIdentity(jobKey.Name, jobKey.Group)
+                .WithSchedule(schedule)
+                .Build();
+
+            var createJob = new CreateJob(
+                this.Endpoint,
+                new DisconnectSession(this.NewGuid(), this.TimeNow()),
+                jobKey,
+                trigger,
                 this.NewGuid(),
                 this.TimeNow());
 
-            this.Scheduler.ScheduleSendOnceCancelable(
-                durationToNext,
-                this.Endpoint,
-                job,
-                this.Endpoint);
-
-            this.nextDisconnectTime = nextTime;
-
-            this.Logger.LogInformation($"Created scheduled job {job} for {nextTime.ToIso8601String()}");
+            this.Scheduler.Endpoint.Send(createJob);
+            this.Logger.LogInformation($"Created {nameof(DisconnectSession)} for " +
+                                       $"{this.disconnectWeeklyTime.DayOfWeek.ToDayOfWeek()}s " +
+                                       $"{this.disconnectWeeklyTime.Time.Hour}:" +
+                                       $"{this.disconnectWeeklyTime.Time.Minute} UTC.");
         }
     }
 }

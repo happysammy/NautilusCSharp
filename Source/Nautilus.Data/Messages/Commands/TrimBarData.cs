@@ -42,13 +42,11 @@ namespace Nautilus.Data.Messages.Commands
         /// </summary>
         /// <param name="barSpecifications">The bar specifications to trim.</param>
         /// <param name="rollingDays">The number of days in the rolling window.</param>
-        /// <param name="scheduledTime">The command scheduled time.</param>
         /// <param name="commandId">The command identifier.</param>
         /// <param name="commandTimestamp">The command timestamp.</param>
         public TrimBarData(
             IEnumerable<BarSpecification> barSpecifications,
             int rollingDays,
-            ZonedDateTime scheduledTime,
             Guid commandId,
             ZonedDateTime commandTimestamp)
             : base(
@@ -57,16 +55,10 @@ namespace Nautilus.Data.Messages.Commands
                 commandTimestamp)
         {
             Debug.PositiveInt32(rollingDays, nameof(rollingDays));
-            Debug.NotDefault(scheduledTime, nameof(scheduledTime));
 
-            this.ScheduledTime = scheduledTime;
             this.RollingDays = rollingDays;
             this.BarStructures = barSpecifications.Select(b => b.BarStructure).Distinct();
         }
-
-        /// <inheritdoc />
-        public ZonedDateTime ScheduledTime { get; }
-
         /// <summary>
         /// Gets the commands rolling days to trim to.
         /// </summary>

@@ -46,7 +46,7 @@ namespace Nautilus.Execution
         public ExecutionService(
             IComponentryContainer container,
             MessageBusAdapter messageBusAdapter,
-            IScheduler scheduler,
+            Scheduler scheduler,
             ITradingGateway tradingGateway,
             ServiceConfiguration config)
             : base(

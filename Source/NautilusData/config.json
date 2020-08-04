@@ -76,14 +76,6 @@
       "AUS200.FXCM",
       "GER30.FXCM"
     ],
-    "BarSpecifications": [
-      "1-MINUTE-ASK",
-      "1-MINUTE-MID",
-      "1-MINUTE-BID",
-      "1-HOUR-ASK",
-      "1-HOUR-MID",
-      "1-HOUR-BID"
-    ],
     "TrimJobTicks": {
       "Hour": 0,
       "Minute": 2,

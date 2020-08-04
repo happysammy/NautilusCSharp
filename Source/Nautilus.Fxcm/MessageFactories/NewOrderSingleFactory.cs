@@ -77,31 +77,28 @@ namespace Nautilus.Fxcm.MessageFactories
             }
 
             // Add price
-            switch (order.OrderType)
+            if (order.Price?.Value != null)
             {
-                case OrderType.Market:
-                    // Do nothing
-                    break;
-                case OrderType.Limit:
-                case OrderType.StopLimit:
-                    if (order.Price?.Value != null)
-                    {
+                switch (order.OrderType)
+                {
+                    case OrderType.Limit:
                         message.SetField(new Price(order.Price.Value));
-                    }
-
-                    break;
-                case OrderType.Stop:
-                case OrderType.MIT:
-                    if (order.Price?.Value != null)
-                    {
+                        break;
+                    case OrderType.Stop:
                         message.SetField(new StopPx(order.Price.Value));
-                    }
-
-                    break;
-                case OrderType.Undefined:
-                    goto default;
-                default:
-                    throw ExceptionFactory.InvalidSwitchArgument(order.OrderType, nameof(order.OrderType));
+                        break;
+                    case OrderType.StopLimit:
+                        message.SetField(new StopPx(order.Price.Value));
+                        break;
+                    case OrderType.MIT:
+                        message.SetField(new StopPx(order.Price.Value));
+                        break;
+                    case OrderType.Market:
+                    case OrderType.Undefined:
+                        goto default;
+                    default:
+                        throw ExceptionFactory.InvalidSwitchArgument(order.OrderType, nameof(order.OrderType));
+                }
             }
 
             return message;
