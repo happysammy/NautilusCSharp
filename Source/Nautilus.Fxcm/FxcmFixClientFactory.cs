@@ -29,17 +29,17 @@ namespace Nautilus.Fxcm
         /// Creates and returns a new FXCM FIX client.
         /// </summary>
         /// <param name="container">The componentry container.</param>
-        /// <param name="messageBusAdapter">The messaging adapter.</param>
+        /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="config">The FIX configuration.</param>
         /// <returns>The FXCM FIX client.</returns>
         public static IFixClient Create(
             IComponentryContainer container,
-            IMessageBusAdapter messageBusAdapter,
+            IMessageBusAdapter messagingAdapter,
             FixConfiguration config)
         {
             return new FixClient(
                 container,
-                messageBusAdapter,
+                messagingAdapter,
                 config,
                 new FxcmFixMessageHandler(
                     container,

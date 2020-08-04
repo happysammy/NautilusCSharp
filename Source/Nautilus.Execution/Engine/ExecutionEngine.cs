@@ -554,7 +554,7 @@ namespace Nautilus.Execution.Engine
                 this.NewGuid(),
                 order.ExpireTime.Value);
 
-            var jobKey = new JobKey($"{nameof(CancelOrder)}-{order.Id.Value}", "order-gtd-expiry");
+            var jobKey = new JobKey($"{nameof(CancelOrder)}-{order.Id.Value}", "OMS");
             var trigger = TriggerBuilder
                 .Create()
                 .WithIdentity(jobKey.Name, jobKey.Group)

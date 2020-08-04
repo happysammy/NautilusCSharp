@@ -39,7 +39,7 @@ namespace Nautilus.Service
     /// </summary>
     public abstract class NautilusServiceBase : MessageBusConnected
     {
-        private readonly MessageBusAdapter messageBus;
+        private readonly MessageBusAdapter messaging;
         private readonly List<Address> connectionAddresses = new List<Address>();
         private readonly WeeklyTime connectWeeklyTime;
         private readonly WeeklyTime disconnectWeeklyTime;
@@ -50,19 +50,16 @@ namespace Nautilus.Service
         /// Initializes a new instance of the <see cref="NautilusServiceBase"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
-        /// <param name="messageBusAdapter">The messaging adapter.</param>
-        /// <param name="scheduler">The scheduler.</param>
+        /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="config">The service configuration.</param>
         /// <exception cref="ArgumentException">If the addresses is empty.</exception>
         protected NautilusServiceBase(
             IComponentryContainer container,
-            MessageBusAdapter messageBusAdapter,
-            Scheduler scheduler,
+            MessageBusAdapter messagingAdapter,
             FixConfiguration config)
-            : base(container, messageBusAdapter)
+            : base(container, messagingAdapter)
         {
-            this.messageBus = messageBusAdapter;
-            this.Scheduler = scheduler;
+            this.messaging = messagingAdapter;
             this.connectWeeklyTime = config.ConnectWeeklyTime;
             this.disconnectWeeklyTime = config.DisconnectWeeklyTime;
             this.maintainConnection = false;
@@ -79,11 +76,6 @@ namespace Nautilus.Service
             this.Subscribe<SessionConnected>();
             this.Subscribe<SessionDisconnected>();
         }
-
-        /// <summary>
-        /// Gets the services scheduler.
-        /// </summary>
-        protected Scheduler Scheduler { get; }
 
         /// <summary>
         /// Register the given address to receiver generated connect messages.
@@ -127,7 +119,7 @@ namespace Nautilus.Service
             this.maintainConnection = false;  // Avoid immediate reconnection
             this.Send(stop, this.connectionAddresses);
             this.OnServiceStop(stop);
-            this.messageBus.Stop();
+            this.messaging.Stop();
         }
 
         /// <summary>
@@ -233,7 +225,7 @@ namespace Nautilus.Service
                 this.NewGuid(),
                 this.TimeNow());
 
-            this.Scheduler.Endpoint.Send(createJob);
+            this.Send(createJob,new Address(nameof(Scheduler)));
             this.Logger.LogInformation($"Created {nameof(ConnectSession)} for " +
                                        $"{this.connectWeeklyTime.DayOfWeek.ToDayOfWeek()}s " +
                                        $"{this.connectWeeklyTime.Time.Hour}:" +
@@ -265,7 +257,7 @@ namespace Nautilus.Service
                 this.NewGuid(),
                 this.TimeNow());
 
-            this.Scheduler.Endpoint.Send(createJob);
+            this.Send(createJob,new Address(nameof(Scheduler)));
             this.Logger.LogInformation($"Created {nameof(DisconnectSession)} for " +
                                        $"{this.disconnectWeeklyTime.DayOfWeek.ToDayOfWeek()}s " +
                                        $"{this.disconnectWeeklyTime.Time.Hour}:" +

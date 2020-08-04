@@ -45,7 +45,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
         {
             // Fixture Setup
             var container = TestComponentryContainer.Create(output);
-            var messageBusAdapter = new MockMessageBusProvider(container).Adapter;
+            var messagingAdapter = new MockMessageBusProvider(container).Adapter;
             this.tradingGateway = new MockTradingGateway(container);
             this.receiver = new MockComponent(container);
             this.receiver.RegisterHandler<Event>(this.receiver.OnMessage);
@@ -54,7 +54,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             this.engine = new ExecutionEngine(
                 container,
-                messageBusAdapter,
+                messagingAdapter,
                 this.database,
                 this.tradingGateway,
                 this.receiver.Endpoint);

@@ -30,17 +30,17 @@ namespace Nautilus.Common.Messaging
     /// </summary>
     public abstract class MessageBusConnected : MessagingComponent
     {
-        private readonly IMessageBusAdapter messageBusAdapter;
+        private readonly IMessageBusAdapter messagingAdapter;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageBusConnected"/> class.
         /// </summary>
         /// <param name="container">The container.</param>
-        /// <param name="messageBusAdapter">The messaging adapter.</param>
-        protected MessageBusConnected(IComponentryContainer container, IMessageBusAdapter messageBusAdapter)
+        /// <param name="messagingAdapter">The messaging adapter.</param>
+        protected MessageBusConnected(IComponentryContainer container, IMessageBusAdapter messagingAdapter)
             : base(container)
         {
-            this.messageBusAdapter = messageBusAdapter;
+            this.messagingAdapter = messagingAdapter;
 
             this.RegisterHandler<IEnvelope>(this.OnEnvelope);
         }
@@ -52,7 +52,7 @@ namespace Nautilus.Common.Messaging
         protected void Subscribe<T>()
             where T : Message
         {
-            this.messageBusAdapter.Subscribe<T>(
+            this.messagingAdapter.Subscribe<T>(
                 this.Mailbox,
                 this.NewGuid(),
                 this.TimeNow());
@@ -65,7 +65,7 @@ namespace Nautilus.Common.Messaging
         protected void Unsubscribe<T>()
             where T : Message
         {
-            this.messageBusAdapter.Unsubscribe<T>(
+            this.messagingAdapter.Unsubscribe<T>(
                 this.Mailbox,
                 this.NewGuid(),
                 this.TimeNow());
@@ -80,7 +80,7 @@ namespace Nautilus.Common.Messaging
         protected void Send<T>(T message, Address receiver)
             where T : Message
         {
-            this.messageBusAdapter.Send(
+            this.messagingAdapter.Send(
                 message,
                 receiver,
                 this.Mailbox.Address,
@@ -100,7 +100,7 @@ namespace Nautilus.Common.Messaging
 
             for (var i = 0; i < receivers.Count; i++)
             {
-                this.messageBusAdapter.Send(
+                this.messagingAdapter.Send(
                     message,
                     receivers[i],
                     this.Mailbox.Address,
@@ -116,7 +116,7 @@ namespace Nautilus.Common.Messaging
         protected void SendToBus<T>(T message)
             where T : Message
         {
-            this.messageBusAdapter.SendToBus(
+            this.messagingAdapter.SendToBus(
                 message,
                 this.Mailbox.Address,
                 this.TimeNow());
