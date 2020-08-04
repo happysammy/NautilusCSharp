@@ -60,14 +60,14 @@ namespace NautilusData
                 guidFactory,
                 config.LoggerFactory);
 
-            var scheduler = new Scheduler(container);
-            scheduler.Start();
-
             var messagingAdapter = MessageBusFactory.Create(container);
             messagingAdapter.Start();
 
             var dataBusAdapter = DataBusFactory.Create(container);
             dataBusAdapter.Start();
+
+            var scheduler = new Scheduler(container, messagingAdapter);
+            scheduler.Start();
 
             var tickDataSerializer = new TickDataSerializer();
             var barDataSerializer = new BarDataSerializer();
@@ -158,7 +158,6 @@ namespace NautilusData
                 container,
                 messagingAdapter,
                 dataBusAdapter,
-                scheduler,
                 dataGateway,
                 config);
 
@@ -187,7 +186,7 @@ namespace NautilusData
 
         private static IFixClient CreateFixClient(
             IComponentryContainer container,
-            IMessageBusAdapter messageBusAdapter,
+            IMessageBusAdapter messagingAdapter,
             FixConfiguration configuration)
         {
             switch (configuration.Broker.Value)
@@ -195,7 +194,7 @@ namespace NautilusData
                 case "FXCM":
                     return FxcmFixClientFactory.Create(
                         container,
-                        messageBusAdapter,
+                        messagingAdapter,
                         configuration);
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(

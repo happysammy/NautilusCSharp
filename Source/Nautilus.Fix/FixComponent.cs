@@ -37,7 +37,7 @@ namespace Nautilus.Fix
     {
         private readonly IZonedClock clock;
         private readonly IGuidFactory guidFactory;
-        private readonly IMessageBusAdapter messageBusAdapter;
+        private readonly IMessageBusAdapter messagingAdapter;
         private readonly FixCredentials credentials;
         private readonly string configPath;
         private readonly bool sendAccountTag;
@@ -50,13 +50,13 @@ namespace Nautilus.Fix
         /// Initializes a new instance of the <see cref="FixComponent"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
-        /// <param name="messageBusAdapter">The messaging adapter.</param>
+        /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="config">The FIX configuration.</param>
         /// <param name="messageHandler">The FIX message handler.</param>
         /// <param name="messageRouter">The FIX message router.</param>
         protected FixComponent(
             IComponentryContainer container,
-            IMessageBusAdapter messageBusAdapter,
+            IMessageBusAdapter messagingAdapter,
             FixConfiguration config,
             IFixMessageHandler messageHandler,
             IFixMessageRouter messageRouter)
@@ -64,7 +64,7 @@ namespace Nautilus.Fix
             this.clock = container.Clock;
             this.guidFactory = container.GuidFactory;
             this.Logger = container.LoggerFactory.CreateLogger(this.GetType().Name);
-            this.messageBusAdapter = messageBusAdapter;
+            this.messagingAdapter = messagingAdapter;
 
             this.FixMessageHandler = messageHandler;
             this.FixMessageRouter = messageRouter;
@@ -184,7 +184,7 @@ namespace Nautilus.Fix
                 this.guidFactory.Generate(),
                 this.clock.TimeNow());
 
-            this.messageBusAdapter.SendToBus(connected, null, this.clock.TimeNow());
+            this.messagingAdapter.SendToBus(connected, null, this.clock.TimeNow());
             this.Logger.LogDebug($"Connected to session {sessionId}");
         }
 
@@ -200,7 +200,7 @@ namespace Nautilus.Fix
                 this.guidFactory.Generate(),
                 this.clock.TimeNow());
 
-            this.messageBusAdapter.SendToBus(disconnected, null, this.clock.TimeNow());
+            this.messagingAdapter.SendToBus(disconnected, null, this.clock.TimeNow());
 
             this.Logger.LogDebug($"Disconnected from session {sessionId}");
         }

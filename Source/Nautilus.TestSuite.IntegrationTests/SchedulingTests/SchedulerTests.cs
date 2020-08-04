@@ -47,7 +47,7 @@ namespace Nautilus.TestSuite.IntegrationTests.SchedulingTests
             var container = TestComponentryContainer.Create(output);
             this.clock = container.Clock;
             this.receiver = new MockComponent(container).Endpoint;
-            this.scheduler = new Scheduler(container);
+            this.scheduler = new Scheduler(container, new MockMessageBusProvider(container).Adapter);
             this.scheduler.Start().Wait();
             Task.Delay(100);
         }

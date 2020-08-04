@@ -17,9 +17,9 @@
 
 using System.Collections.Specialized;
 using Microsoft.Extensions.Logging;
-using Nautilus.Common.Componentry;
 using Nautilus.Common.Interfaces;
 using Nautilus.Common.Messages.Commands;
+using Nautilus.Common.Messaging;
 using Nautilus.Scheduling.Messages;
 using Quartz;
 using Quartz.Impl;
@@ -30,16 +30,17 @@ namespace Nautilus.Scheduling
     /// Provides a system scheduling component with an internal quartz scheduler which processes Add
     /// and Remove messages.
     /// </summary>
-    public sealed class Scheduler : MessagingComponent
+    public sealed class Scheduler : MessageBusConnected
     {
         private readonly IScheduler quartzScheduler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Scheduler"/> class.
         /// </summary>
-        /// <param name="container">The setup container.</param>
-        public Scheduler(IComponentryContainer container)
-            : base(container)
+        /// <param name="container">The container.</param>
+        /// <param name="messagingAdapter">The messaging adapter.</param>
+        public Scheduler(IComponentryContainer container, IMessageBusAdapter messagingAdapter)
+            : base(container,messagingAdapter)
         {
             var properties = new NameValueCollection
             {

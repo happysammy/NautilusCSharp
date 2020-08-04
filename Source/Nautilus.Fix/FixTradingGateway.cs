@@ -37,13 +37,13 @@ namespace Nautilus.Fix
         /// Initializes a new instance of the <see cref="FixTradingGateway"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
-        /// <param name="messageBusAdapter">The messaging adapter.</param>
+        /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="fixClient">The FIX client.</param>
         public FixTradingGateway(
             IComponentryContainer container,
-            IMessageBusAdapter messageBusAdapter,
+            IMessageBusAdapter messagingAdapter,
             IFixClient fixClient)
-            : base(container, messageBusAdapter)
+            : base(container, messagingAdapter)
         {
             this.fixClient = fixClient;
 

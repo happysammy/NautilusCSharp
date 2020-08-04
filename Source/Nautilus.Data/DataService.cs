@@ -25,7 +25,6 @@ using Nautilus.Common.Messaging;
 using Nautilus.Data.Messages.Commands;
 using Nautilus.DomainModel.Identifiers;
 using Nautilus.Messaging;
-using Nautilus.Scheduling;
 using Nautilus.Scheduling.Messages;
 using Nautilus.Service;
 using NodaTime;
@@ -49,23 +48,20 @@ namespace Nautilus.Data
         /// Initializes a new instance of the <see cref="DataService"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
-        /// <param name="messageBusAdapter">The messaging adapter.</param>
+        /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="dataBusAdapter">The data bus adapter.</param>
-        /// <param name="scheduler">The scheduler.</param>
         /// <param name="dataGateway">The data gateway.</param>
         /// <param name="config">The service configuration.</param>
         /// <exception cref="ArgumentException">If the addresses is empty.</exception>
         public DataService(
             IComponentryContainer container,
-            MessageBusAdapter messageBusAdapter,
+            MessageBusAdapter messagingAdapter,
             DataBusAdapter dataBusAdapter,
-            Scheduler scheduler,
             IDataGateway dataGateway,
             ServiceConfiguration config)
             : base(
                 container,
-                messageBusAdapter,
-                scheduler,
+                messagingAdapter,
                 config.FixConfig)
         {
             this.dataBus = dataBusAdapter;
@@ -157,7 +153,7 @@ namespace Nautilus.Data
                 this.NewGuid(),
                 this.TimeNow());
 
-            this.Scheduler.Endpoint.Send(createJob);
+            this.Send(createJob, ComponentAddress.Scheduler);
             this.Logger.LogInformation($"Created {nameof(TrimTickData)} for Sundays 00:01 (UTC).");
         }
     }

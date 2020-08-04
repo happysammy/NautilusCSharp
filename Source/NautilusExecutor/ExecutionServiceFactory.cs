@@ -58,11 +58,11 @@ namespace NautilusExecutor
                 guidFactory,
                 config.LoggerFactory);
 
-            var scheduler = new Scheduler(container);
-            scheduler.Start();
-
             var messagingAdapter = MessageBusFactory.Create(container);
             messagingAdapter.Start();
+
+            var scheduler = new Scheduler(container, messagingAdapter);
+            scheduler.Start();
 
             var fixClient = CreateFixClient(
                 container,
@@ -118,7 +118,6 @@ namespace NautilusExecutor
             var executionService = new ExecutionService(
                 container,
                 messagingAdapter,
-                scheduler,
                 tradingGateway,
                 config);
 
@@ -141,7 +140,7 @@ namespace NautilusExecutor
 
         private static IFixClient CreateFixClient(
             IComponentryContainer container,
-            IMessageBusAdapter messageBusAdapter,
+            IMessageBusAdapter messagingAdapter,
             FixConfiguration configuration)
         {
             switch (configuration.Broker.Value)
@@ -149,7 +148,7 @@ namespace NautilusExecutor
                 case "FXCM":
                     return FxcmFixClientFactory.Create(
                         container,
-                        messageBusAdapter,
+                        messagingAdapter,
                         configuration);
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(

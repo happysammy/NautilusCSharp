@@ -21,7 +21,6 @@ using Nautilus.Common.Interfaces;
 using Nautilus.Common.Messages.Commands;
 using Nautilus.Common.Messaging;
 using Nautilus.Messaging;
-using Nautilus.Scheduling;
 using Nautilus.Service;
 
 namespace Nautilus.Execution
@@ -38,21 +37,18 @@ namespace Nautilus.Execution
         /// Initializes a new instance of the <see cref="ExecutionService"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
-        /// <param name="messageBusAdapter">The messaging adapter.</param>
-        /// <param name="scheduler">The scheduler.</param>
+        /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="tradingGateway">The execution gateway.</param>
         /// <param name="config">The execution service configuration.</param>
         /// <exception cref="ArgumentException">If the addresses is empty.</exception>
         public ExecutionService(
             IComponentryContainer container,
-            MessageBusAdapter messageBusAdapter,
-            Scheduler scheduler,
+            MessageBusAdapter messagingAdapter,
             ITradingGateway tradingGateway,
             ServiceConfiguration config)
             : base(
                 container,
-                messageBusAdapter,
-                scheduler,
+                messagingAdapter,
                 config.FixConfig)
         {
             this.tradingGateway = tradingGateway;
