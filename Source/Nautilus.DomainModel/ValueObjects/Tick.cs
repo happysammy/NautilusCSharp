@@ -114,7 +114,7 @@ namespace Nautilus.DomainModel.ValueObjects
         {
             Debug.NotEmptyOrWhiteSpace(tickString, nameof(tickString));
 
-            var values = tickString.Split(',');
+            var values = tickString.Split(',', 2);
             return FromString(Symbol.FromString(values[0]), values[1]);
         }
 
@@ -128,7 +128,7 @@ namespace Nautilus.DomainModel.ValueObjects
         {
             Debug.NotEmptyOrWhiteSpace(tickString, nameof(tickString));
 
-            var values = tickString.Split(',');
+            var values = tickString.Split(',', 5);
 
             return new Tick(
                 symbol,

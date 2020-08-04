@@ -39,7 +39,7 @@ namespace Nautilus.Core.Extensions
 
         private static string GetGenericName(Type type)
         {
-            var builder1 = new StringBuilder(type.Name.Split('`')[0]);
+            var builder1 = new StringBuilder(type.Name.Split('`', 2)[0]);
             var genericArgs = type.GenericTypeArguments;
             var builder2 = new StringBuilder(genericArgs[0].Name);
 

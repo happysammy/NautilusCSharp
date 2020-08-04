@@ -554,12 +554,11 @@ namespace Nautilus.Execution.Engine
                 this.NewGuid(),
                 order.ExpireTime.Value);
 
-            var jobKey = new JobKey(order.Id.Value, "order-gtd-expiry");
+            var jobKey = new JobKey($"{nameof(CancelOrder)}-{order.Id.Value}", "order-gtd-expiry");
             var trigger = TriggerBuilder
                 .Create()
                 .WithIdentity(jobKey.Name, jobKey.Group)
-                .StartAt(order.ExpireTime.Value.ToDateTimeOffset())
-                .EndAt(order.ExpireTime.Value.ToDateTimeOffset())
+                .StartAt(order.ExpireTime.Value.ToDateTimeUtc())
                 .Build();
 
             var createJob = new CreateJob(

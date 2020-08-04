@@ -58,10 +58,8 @@ namespace Nautilus.Scheduling.Messages
             this.JobReceiver = jobReceiver;
             this.JobKey = jobKey;
             this.Trigger = trigger;
-            this.JobDetail = Job.CreateBuilderWithData(
-                    jobReceiver,
-                    job)
-                .WithIdentity(trigger.JobKey)
+            this.JobDetail = Job.CreateBuilderWithData(jobReceiver, job)
+                .WithIdentity(jobKey)
                 .Build();
         }
 
@@ -71,7 +69,7 @@ namespace Nautilus.Scheduling.Messages
         public IEndpoint JobReceiver { get; }
 
         /// <summary>
-        /// Gets the jobs key.
+        /// Gets the key for the job to create.
         /// </summary>
         public JobKey JobKey { get; }
 

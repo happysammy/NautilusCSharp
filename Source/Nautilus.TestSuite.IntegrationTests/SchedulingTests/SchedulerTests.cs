@@ -17,6 +17,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 using Nautilus.Common.Interfaces;
 using Nautilus.Common.Messages.Commands;
 using Nautilus.Messaging.Interfaces;
@@ -48,10 +49,11 @@ namespace Nautilus.TestSuite.IntegrationTests.SchedulingTests
             this.receiver = new MockComponent(container).Endpoint;
             this.scheduler = new Scheduler(container);
             this.scheduler.Start().Wait();
+            Task.Delay(100);
         }
 
         [Fact]
-        internal void Test_can_receive_create_job_command_with_valid_job()
+        internal void GivenCreateJob_WithValidJob_SchedulesAndExecutes()
         {
             // Arrange
             var schedule = SimpleScheduleBuilder
@@ -63,6 +65,7 @@ namespace Nautilus.TestSuite.IntegrationTests.SchedulingTests
                 .Create()
                 .WithIdentity(jobKey.Name, jobKey.Group)
                 .WithSchedule(schedule)
+                .StartNow()
                 .Build();
 
             var createJob = new CreateJob(
@@ -77,7 +80,7 @@ namespace Nautilus.TestSuite.IntegrationTests.SchedulingTests
             this.scheduler.Endpoint.Send(createJob);
 
             // Assert
-
+            // Assert.True(this.scheduler.DoesJobExist(jobKey));
         }
 
         [Fact]
