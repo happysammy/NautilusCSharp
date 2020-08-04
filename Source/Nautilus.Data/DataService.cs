@@ -18,21 +18,18 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
-using Nautilus.Common.Componentry;
 using Nautilus.Common.Data;
 using Nautilus.Common.Interfaces;
 using Nautilus.Common.Messages.Commands;
-using Nautilus.Common.Messages.Events;
 using Nautilus.Common.Messaging;
-using Nautilus.Core.Extensions;
-using Nautilus.Core.Types;
 using Nautilus.Data.Messages.Commands;
 using Nautilus.DomainModel.Identifiers;
-using Nautilus.DomainModel.ValueObjects;
 using Nautilus.Messaging;
 using Nautilus.Scheduling;
+using Nautilus.Scheduling.Messages;
 using Nautilus.Service;
 using NodaTime;
+using Quartz;
 
 namespace Nautilus.Data
 {
@@ -45,13 +42,8 @@ namespace Nautilus.Data
         private readonly List<Address> managedComponents;
         private readonly IDataGateway dataGateway;
         private readonly IReadOnlyCollection<Symbol> subscribingSymbols;
-        private readonly IReadOnlyCollection<BarSpecification> barSpecifications;
         private readonly LocalTime trimTimeTicks;
-        private readonly LocalTime trimTimeBars;
         private readonly int trimWindowDaysTicks;
-        private readonly int trimWindowDaysBars;
-
-        private bool hasSentBarSubscriptions;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataService"/> class.
@@ -67,7 +59,7 @@ namespace Nautilus.Data
             IComponentryContainer container,
             MessageBusAdapter messageBusAdapter,
             DataBusAdapter dataBusAdapter,
-            IScheduler scheduler,
+            Scheduler scheduler,
             IDataGateway dataGateway,
             ServiceConfiguration config)
             : base(
@@ -92,32 +84,20 @@ namespace Nautilus.Data
             };
 
             this.subscribingSymbols = config.DataConfig.SubscribingSymbols;
-            this.barSpecifications = config.DataConfig.BarSpecifications;
 
             this.trimTimeTicks = config.DataConfig.TickDataTrimTime;
-            this.trimTimeBars = config.DataConfig.BarDataTrimTime;
             this.trimWindowDaysTicks = config.DataConfig.TickDataTrimWindowDays;
-            this.trimWindowDaysBars = config.DataConfig.BarDataTrimWindowDays;
 
             this.RegisterConnectionAddress(ComponentAddress.DataGateway);
 
             // Commands
             this.RegisterHandler<TrimTickData>(this.OnMessage);
-            this.RegisterHandler<TrimBarData>(this.OnMessage);
-
-            // Events
-            this.RegisterHandler<MarketOpened>(this.OnMessage);
-            this.RegisterHandler<MarketClosed>(this.OnMessage);
         }
 
         /// <inheritdoc />
         protected override void OnServiceStart(Start start)
         {
-            this.CreateMarketOpenedJob();
-            this.CreateMarketClosedJob();
-
             this.CreateTrimTickDataJob();
-            this.CreateTrimBarDataJob();
 
             // Forward start message
             this.Send(start, this.managedComponents);
@@ -142,45 +122,6 @@ namespace Nautilus.Data
             {
                 this.dataGateway.MarketDataSubscribe(symbol);
             }
-
-            if (!this.hasSentBarSubscriptions)
-            {
-                foreach (var symbol in this.subscribingSymbols)
-                {
-                    foreach (var barSpec in this.barSpecifications)
-                    {
-                        var barType = new BarType(symbol, barSpec);
-                        var subscribe = new Subscribe<BarType>(
-                            barType,
-                            this.Mailbox,
-                            this.NewGuid(),
-                            this.TimeNow());
-                        this.Send(subscribe, ComponentAddress.BarAggregationController);
-                    }
-                }
-
-                this.hasSentBarSubscriptions = true;
-            }
-        }
-
-        private void OnMessage(MarketOpened message)
-        {
-            this.Logger.LogInformation($"Received {message}.");
-
-            // Forward message
-            this.Send(message, ComponentAddress.BarAggregationController);
-
-            this.CreateMarketClosedJob();
-        }
-
-        private void OnMessage(MarketClosed message)
-        {
-            this.Logger.LogInformation($"Received {message}.");
-
-            // Forward message
-            this.Send(message, ComponentAddress.BarAggregationController);
-
-            this.CreateMarketOpenedJob();
         }
 
         private void OnMessage(TrimTickData message)
@@ -189,113 +130,35 @@ namespace Nautilus.Data
 
             // Forward message
             this.Send(message, ComponentAddress.TickRepository);
-
-            this.CreateTrimTickDataJob();
-        }
-
-        private void OnMessage(TrimBarData message)
-        {
-            this.Logger.LogInformation($"Received {message}.");
-
-            // Forward message
-            this.Send(message, ComponentAddress.BarRepository);
-
-            this.CreateTrimBarDataJob();
-        }
-
-        private void CreateMarketOpenedJob()
-        {
-            var weeklyTime = new WeeklyTime(IsoDayOfWeek.Sunday, new LocalTime(21, 00));
-            var now = this.InstantNow();
-
-            foreach (var symbol in this.subscribingSymbols)
-            {
-                var nextTime = TimingProvider.GetNextUtc(weeklyTime, now);
-                var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, this.InstantNow());
-
-                var marketOpened = new MarketOpened(
-                    symbol,
-                    nextTime,
-                    this.NewGuid(),
-                    this.TimeNow());
-
-                this.Scheduler.ScheduleSendOnceCancelable(
-                    durationToNext,
-                    this.Endpoint,
-                    marketOpened,
-                    this.Endpoint);
-
-                this.Logger.LogInformation($"Created scheduled event {marketOpened}-{symbol.Value} for {nextTime.ToIso8601String()}");
-            }
-        }
-
-        private void CreateMarketClosedJob()
-        {
-            var weeklyTime = new WeeklyTime(IsoDayOfWeek.Saturday, new LocalTime(20, 00));
-            var now = this.InstantNow();
-
-            foreach (var symbol in this.subscribingSymbols)
-            {
-                var nextTime = TimingProvider.GetNextUtc(weeklyTime, now);
-                var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, this.InstantNow());
-
-                var marketClosed = new MarketClosed(
-                    symbol,
-                    nextTime,
-                    this.NewGuid(),
-                    this.TimeNow());
-
-                this.Scheduler.ScheduleSendOnceCancelable(
-                    durationToNext,
-                    this.Endpoint,
-                    marketClosed,
-                    this.Endpoint);
-
-                this.Logger.LogInformation($"Created scheduled event {marketClosed}-{symbol.Value} for {nextTime.ToIso8601String()}");
-            }
         }
 
         private void CreateTrimTickDataJob()
         {
-            var now = this.InstantNow();
-            var nextTime = TimingProvider.GetNextUtc(this.trimTimeTicks, now);
-            var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, now);
+            var schedule = CronScheduleBuilder
+                .DailyAtHourAndMinute(this.trimTimeTicks.Hour, this.trimTimeTicks.Minute)
+                .InTimeZone(TimeZoneInfo.Utc)
+                .WithMisfireHandlingInstructionFireAndProceed();
 
-            var job = new TrimTickData(
-                this.trimWindowDaysTicks,
-                nextTime,
+            var jobKey = new JobKey("trim-tick-data", "data-management");
+            var trigger = TriggerBuilder
+                .Create()
+                .WithIdentity(jobKey.Name, jobKey.Group)
+                .WithSchedule(schedule)
+                .Build();
+
+            var createJob = new CreateJob(
+                this.Endpoint,
+                new TrimTickData(
+                    this.trimWindowDaysTicks,
+                    this.NewGuid(),
+                    this.TimeNow()),
+                jobKey,
+                trigger,
                 this.NewGuid(),
                 this.TimeNow());
 
-            this.Scheduler.ScheduleSendOnceCancelable(
-                durationToNext,
-                this.Endpoint,
-                job,
-                this.Endpoint);
-
-            this.Logger.LogInformation($"Created scheduled job {job} for {nextTime.ToIso8601String()}");
-        }
-
-        private void CreateTrimBarDataJob()
-        {
-            var now = this.InstantNow();
-            var nextTime = TimingProvider.GetNextUtc(this.trimTimeBars, now);
-            var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, now);
-
-            var job = new TrimBarData(
-                this.barSpecifications,
-                this.trimWindowDaysBars,
-                nextTime,
-                this.NewGuid(),
-                this.TimeNow());
-
-            this.Scheduler.ScheduleSendOnceCancelable(
-                durationToNext,
-                this.Endpoint,
-                job,
-                this.Endpoint);
-
-            this.Logger.LogInformation($"Created scheduled job {job} for {nextTime.ToIso8601String()}");
+            this.Scheduler.Endpoint.Send(createJob);
+            this.Logger.LogInformation($"Created {nameof(TrimTickData)} for Sundays 00:01 (UTC).");
         }
     }
 }

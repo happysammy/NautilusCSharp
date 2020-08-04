@@ -36,12 +36,10 @@ namespace Nautilus.Data.Messages.Commands
         /// Initializes a new instance of the <see cref="TrimTickData"/> class.
         /// </summary>
         /// <param name="rollingDays">The date time the tick data should be trimmed from.</param>
-        /// <param name="scheduledTime">The command scheduled time.</param>
         /// <param name="commandId">The command identifier.</param>
         /// <param name="commandTimestamp">The command timestamp.</param>
         public TrimTickData(
             int rollingDays,
-            ZonedDateTime scheduledTime,
             Guid commandId,
             ZonedDateTime commandTimestamp)
             : base(
@@ -52,11 +50,8 @@ namespace Nautilus.Data.Messages.Commands
             Condition.PositiveInt32(rollingDays, nameof(rollingDays));
 
             this.RollingDays = rollingDays;
-            this.ScheduledTime = scheduledTime;
-        }
 
-        /// <inheritdoc />
-        public ZonedDateTime ScheduledTime { get; }
+        }
 
         /// <summary>
         /// Gets the commands rolling days to trim to.

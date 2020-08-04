@@ -23,7 +23,6 @@ using Nautilus.Common.Messages.Commands;
 using Nautilus.Common.Messaging;
 using Nautilus.Core.Correctness;
 using Nautilus.Data;
-using Nautilus.Data.Aggregation;
 using Nautilus.Data.Network;
 using Nautilus.Data.Providers;
 using Nautilus.Fix;
@@ -61,7 +60,7 @@ namespace NautilusData
                 guidFactory,
                 config.LoggerFactory);
 
-            var scheduler = new HashedWheelTimerScheduler(container);
+            var scheduler = new Scheduler(container);
             scheduler.Start();
 
             var messagingAdapter = MessageBusFactory.Create(container);
@@ -109,11 +108,6 @@ namespace NautilusData
                 connection);
             instrumentRepository.CacheAll();
 
-            var barAggregationController = new BarAggregationController(
-                container,
-                dataBusAdapter,
-                scheduler);
-
             var tickProvider = new TickProvider(
                 container,
                 messagingAdapter,
@@ -147,7 +141,6 @@ namespace NautilusData
             var dataPublisher = new DataPublisher(
                 container,
                 dataBusAdapter,
-                barDataSerializer,
                 instrumentDataSerializer,
                 compressor,
                 config.WireConfig.EncryptionConfig,
@@ -182,7 +175,6 @@ namespace NautilusData
             registrar.Register(ComponentAddress.BarProvider, barProvider);
             registrar.Register(ComponentAddress.InstrumentRepository, instrumentRepository);
             registrar.Register(ComponentAddress.InstrumentProvider, instrumentProvider);
-            registrar.Register(ComponentAddress.BarAggregationController, barAggregationController);
             registrar.Register(ComponentAddress.DataService, dataService);
 
             messagingAdapter.Send(new InitializeSwitchboard(
@@ -205,12 +197,6 @@ namespace NautilusData
                         container,
                         messageBusAdapter,
                         configuration);
-                case "SIMULATION":
-                    goto default;
-                case "IB":
-                    goto default;
-                case "LMAX":
-                    goto default;
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(
                         configuration.Broker,

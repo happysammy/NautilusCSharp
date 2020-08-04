@@ -25,7 +25,6 @@ using Nautilus.DomainModel.Identifiers;
 using Nautilus.DomainModel.ValueObjects;
 using Nautilus.Execution.Engine;
 using Nautilus.Execution.Interfaces;
-using Nautilus.Scheduling;
 using Nautilus.TestSuite.TestKit.Components;
 using Nautilus.TestSuite.TestKit.Mocks;
 using Nautilus.TestSuite.TestKit.Stubs;
@@ -46,7 +45,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
         {
             // Fixture Setup
             var container = TestComponentryContainer.Create(output);
-            var scheduler = new HashedWheelTimerScheduler(container);
             var messageBusAdapter = new MockMessageBusProvider(container).Adapter;
             this.tradingGateway = new MockTradingGateway(container);
             this.receiver = new MockComponent(container);
@@ -56,7 +54,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             this.engine = new ExecutionEngine(
                 container,
-                scheduler,
                 messageBusAdapter,
                 this.database,
                 this.tradingGateway,

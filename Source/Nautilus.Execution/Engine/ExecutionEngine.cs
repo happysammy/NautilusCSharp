@@ -18,7 +18,6 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
-using Nautilus.Common.Componentry;
 using Nautilus.Common.Interfaces;
 using Nautilus.Common.Logging;
 using Nautilus.Common.Messaging;
@@ -32,8 +31,9 @@ using Nautilus.DomainModel.Events.Base;
 using Nautilus.DomainModel.Identifiers;
 using Nautilus.Execution.Interfaces;
 using Nautilus.Messaging.Interfaces;
-using Nautilus.Scheduling;
+using Nautilus.Scheduling.Messages;
 using NodaTime;
+using Quartz;
 
 namespace Nautilus.Execution.Engine
 {
@@ -47,19 +47,17 @@ namespace Nautilus.Execution.Engine
         private const string Command = "[CMD]";
         private const string Event = "[EVT]";
 
-        private readonly IScheduler scheduler;
         private readonly IExecutionDatabase database;
         private readonly ITradingGateway gateway;
         private readonly IEndpoint eventPublisher;
 
         private readonly Dictionary<OrderId, ModifyOrder> bufferModify;
-        private readonly Dictionary<OrderId, ICancelable> gtdExpiryBackupTokens;
+        private readonly Dictionary<OrderId, JobKey> cancelJobs;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExecutionEngine"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
-        /// <param name="scheduler">The scheduler.</param>
         /// <param name="messagingAdapter">The message bus adapter.</param>
         /// <param name="database">The execution database.</param>
         /// <param name="gateway">The trading gateway.</param>
@@ -67,7 +65,6 @@ namespace Nautilus.Execution.Engine
         /// <param name="gtdExpiryBackups">The option flag for GTD order expiry cancel backups.</param>
         public ExecutionEngine(
             IComponentryContainer container,
-            IScheduler scheduler,
             IMessageBusAdapter messagingAdapter,
             IExecutionDatabase database,
             ITradingGateway gateway,
@@ -76,12 +73,11 @@ namespace Nautilus.Execution.Engine
             : base(container, messagingAdapter)
         {
             this.database = database;
-            this.scheduler = scheduler;
             this.gateway = gateway;
             this.eventPublisher = eventPublisher;
 
             this.bufferModify = new Dictionary<OrderId, ModifyOrder>();
-            this.gtdExpiryBackupTokens = new Dictionary<OrderId, ICancelable>();
+            this.cancelJobs = new Dictionary<OrderId, JobKey>();
 
             this.GtdExpiryBackups = gtdExpiryBackups;
 
@@ -246,6 +242,7 @@ namespace Nautilus.Execution.Engine
             if (order.IsCompleted)
             {
                 this.Logger.LogWarning(LogId.Trading, $"{Received}{Command} {command} and (order is already completed).");
+                return;
             }
 
             this.gateway.CancelOrder(order);
@@ -319,7 +316,7 @@ namespace Nautilus.Execution.Engine
 
             this.ProcessOrderEvent(@event);
             this.ClearModifyBuffer(@event.OrderId);
-            this.ClearExpiryBackup(@event.OrderId);
+            this.CancelExpiryBackup(@event.OrderId);
             this.SendToEventPublisher(@event);
         }
 
@@ -372,7 +369,7 @@ namespace Nautilus.Execution.Engine
 
             this.ProcessOrderEvent(@event);
             this.ClearModifyBuffer(@event.OrderId);
-            this.ClearExpiryBackup(@event.OrderId);
+            this.CancelExpiryBackup(@event.OrderId);
             this.SendToEventPublisher(@event);
         }
 
@@ -383,7 +380,7 @@ namespace Nautilus.Execution.Engine
 
             this.ProcessOrderEvent(@event);
             this.ClearModifyBuffer(@event.OrderId);
-            this.ClearExpiryBackup(@event.OrderId);
+            this.CancelExpiryBackup(@event.OrderId);
             this.SendToEventPublisher(@event);
         }
 
@@ -405,7 +402,7 @@ namespace Nautilus.Execution.Engine
             this.ProcessOrderEvent(@event);
             this.HandleOrderFillEvent(@event);
             this.ClearModifyBuffer(@event.OrderId);
-            this.ClearExpiryBackup(@event.OrderId);
+            this.CancelExpiryBackup(@event.OrderId);
             this.SendToEventPublisher(@event);
         }
 
@@ -519,60 +516,76 @@ namespace Nautilus.Execution.Engine
 
         private void CreateGtdCancelBackup(Order order)
         {
-            if (order.ExpireTime.HasValue)
+            if (!order.ExpireTime.HasValue)
             {
-                var traderId = this.database.GetTraderId(order.Id);
-                if (traderId is null)
-                {
-                    // This should never happen
-                    this.Logger.LogError(
-                        LogId.Database,
-                        $"Cannot schedule backup CancelOrder command (cannot find TraderId for {order.Id}).");
-                    return;
-                }
-
-                var accountId = this.database.GetAccountId(order.Id);
-                if (accountId is null)
-                {
-                    // This should never happen
-                    this.Logger.LogError(
-                        LogId.Database,
-                        $"Cannot schedule backup CancelOrder command (cannot find AccountId for {order.Id}).");
-                    return;
-                }
-
-                var cancelOrder = new CancelOrder(
-                    traderId,
-                    accountId,
-                    order.Id,
-                    "GTD_EXPIRY_BACKUP",
-                    this.NewGuid(),
-                    order.ExpireTime.Value);
-
-                var delay = TimingProvider.GetDurationToNextUtc(order.ExpireTime.Value, this.InstantNow());
-                var token = this.scheduler.ScheduleSendOnceCancelable(delay, this.Endpoint, cancelOrder, this.Endpoint);
-                this.gtdExpiryBackupTokens[order.Id] = token;
-
-                this.Logger.LogDebug(
-                    LogId.Trading,
-                    $"Scheduled GTD CancelOrder backup for {order.ExpireTime.Value.ToIso8601String()}.");
-            }
-            else
-            {
-                // This should never happen
+                // This should "never happen"
                 this.Logger.LogError(
                     LogId.Trading,
                     $"Cannot schedule backup CancelOrder (no expire time set for GTD order {order.Id}).");
+
+                return;
             }
+
+            var traderId = this.database.GetTraderId(order.Id);
+            if (traderId is null)
+            {
+                // This should never happen
+                this.Logger.LogError(
+                    LogId.Database,
+                    $"Cannot schedule backup CancelOrder command (cannot find TraderId for {order.Id}).");
+                return;
+            }
+
+            var accountId = this.database.GetAccountId(order.Id);
+            if (accountId is null)
+            {
+                // This should "never happen"
+                this.Logger.LogError(
+                    LogId.Database,
+                    $"Cannot schedule backup CancelOrder command (cannot find AccountId for {order.Id}).");
+                return;
+            }
+
+            var cancelOrder = new CancelOrder(
+                traderId,
+                accountId,
+                order.Id,
+                "GTD_EXPIRY_BACKUP",
+                this.NewGuid(),
+                order.ExpireTime.Value);
+
+            var jobKey = new JobKey(order.Id.Value, "order-gtd-expiry");
+            var trigger = TriggerBuilder
+                .Create()
+                .WithIdentity(jobKey.Name, jobKey.Group)
+                .StartAt(order.ExpireTime.Value.ToDateTimeOffset())
+                .EndAt(order.ExpireTime.Value.ToDateTimeOffset())
+                .Build();
+
+            var createJob = new CreateJob(
+                this.Endpoint,
+                cancelOrder,
+                jobKey,
+                trigger,
+                this.NewGuid(),
+                this.TimeNow());
+
+            this.cancelJobs.Add(order.Id, jobKey);
+
+            this.Send(createJob, ComponentAddress.Scheduler);
         }
 
-        private void ClearExpiryBackup(OrderId orderId)
+        private void CancelExpiryBackup(OrderId orderId)
         {
-            if (this.gtdExpiryBackupTokens.TryGetValue(orderId, out var token))
+            if (this.cancelJobs.TryGetValue(orderId, out var jobKey))
             {
-                token.Cancel();
-                this.gtdExpiryBackupTokens.Remove(orderId);
-                this.Logger.LogDebug(LogId.Trading, $"Cleared GtdExpiryBackup for {orderId}.");
+                var removeJob = new RemoveJob(
+                    jobKey,
+                    this.NewGuid(),
+                    this.TimeNow());
+
+                this.cancelJobs.Remove(orderId);
+                this.Send(removeJob, ComponentAddress.Scheduler);
             }
         }
 

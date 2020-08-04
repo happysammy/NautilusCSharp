@@ -18,7 +18,6 @@
 using System;
 using Nautilus.Common.Interfaces;
 using Nautilus.Core.Annotations;
-using Nautilus.Core.Correctness;
 using Nautilus.Core.Message;
 using NodaTime;
 
@@ -35,21 +34,13 @@ namespace Nautilus.Common.Messages.Commands
         /// <summary>
         /// Initializes a new instance of the <see cref="ConnectSession"/> class.
         /// </summary>
-        /// <param name="scheduledTime">The commands scheduled time.</param>
         /// <param name="id">The commands identifier.</param>
         /// <param name="timestamp">The commands creation timestamp.</param>
         public ConnectSession(
-            ZonedDateTime scheduledTime,
             Guid id,
             ZonedDateTime timestamp)
             : base(EventType, id, timestamp)
         {
-            Debug.NotDefault(scheduledTime, nameof(scheduledTime));
-
-            this.ScheduledTime = scheduledTime;
         }
-
-        /// <inheritdoc />
-        public ZonedDateTime ScheduledTime { get; }
     }
 }

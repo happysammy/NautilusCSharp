@@ -15,8 +15,6 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-using NodaTime;
-
 namespace Nautilus.Common.Interfaces
 {
     /// <summary>
@@ -24,9 +22,5 @@ namespace Nautilus.Common.Interfaces
     /// </summary>
     public interface IScheduledJob
     {
-        /// <summary>
-        /// Gets the commands scheduled job time.
-        /// </summary>
-        ZonedDateTime ScheduledTime { get; }
     }
 }

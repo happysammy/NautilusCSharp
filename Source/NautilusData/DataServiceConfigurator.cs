@@ -30,7 +30,6 @@ using Nautilus.Data;
 using Nautilus.Data.Configuration;
 using Nautilus.DomainModel.Enums;
 using Nautilus.DomainModel.Identifiers;
-using Nautilus.DomainModel.ValueObjects;
 using Nautilus.Fix;
 using Nautilus.Network;
 using Nautilus.Network.Configuration;
@@ -146,14 +145,6 @@ namespace NautilusData
                 .Select(Symbol.FromString)
                 .ToImmutableList();
 
-            var barSpecifications = dataSection.GetSection("BarSpecifications")
-                .AsEnumerable()
-                .Select(x => x.Value)
-                .Where(x => x != null)
-                .Distinct()
-                .Select(BarSpecification.FromString)
-                .ToImmutableList();
-
             // Trim Job Ticks
             var trimJobTicks = dataSection.GetSection("TrimJobBars");
             var tickTrimHour = int.Parse(trimJobTicks["Hour"]);
@@ -170,7 +161,6 @@ namespace NautilusData
 
             var dataConfig = new DataConfiguration(
                 subscribingSymbols,
-                barSpecifications,
                 tickDataTrimTime,
                 barDataTrimTime,
                 tickDataTrimWindowDays,

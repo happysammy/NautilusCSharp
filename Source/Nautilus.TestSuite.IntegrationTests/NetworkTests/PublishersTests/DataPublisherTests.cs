@@ -21,7 +21,6 @@ using System.Threading.Tasks;
 using Nautilus.Common.Data;
 using Nautilus.Data.Network;
 using Nautilus.DomainModel.Entities;
-using Nautilus.DomainModel.ValueObjects;
 using Nautilus.Network;
 using Nautilus.Network.Compression;
 using Nautilus.Network.Encryption;
@@ -55,48 +54,10 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
             this.publisher = new DataPublisher(
                 container,
                 DataBusFactory.Create(container),
-                this.barDataSerializer,
                 this.instrumentDataSerializer,
                 new BypassCompressor(),
                 EncryptionSettings.None(),
                 new Port(55511));
-        }
-
-        [Fact]
-        internal void GivenBarData_WithSubscriber_PublishesMessage()
-        {
-            // Arrange
-            this.publisher.Start();
-            Task.Delay(100).Wait();  // Allow publisher to start
-
-            var barType = StubBarType.AUDUSD_OneMinuteAsk();
-
-            var subscriber = new SubscriberSocket(TestAddress);
-            subscriber.Connect(TestAddress);
-            subscriber.Subscribe(nameof(Bar) + ":" + barType);
-
-            Task.Delay(100).Wait(); // Allow socket to subscribe
-
-            var bar = StubBarData.Create();
-            var data = new BarData(barType, bar);
-
-            // Act
-            this.publisher.Endpoint.SendAsync(data);
-
-            var topic = subscriber.ReceiveFrameBytes();
-            var message = subscriber.ReceiveFrameBytes();
-
-            // Assert
-            Assert.Equal(1, this.publisher.SentCount);
-            Assert.Equal("Bar:AUD/USD.FXCM-1-MINUTE-ASK", Encoding.UTF8.GetString(topic));
-            Assert.Equal(bar.ToString(), Encoding.UTF8.GetString(message));
-            Assert.Equal(bar, this.barDataSerializer.Deserialize(message));
-
-            // Tear Down
-            subscriber.Disconnect(TestAddress);
-            subscriber.Dispose();
-            this.publisher.Stop().Wait();
-            this.publisher.Dispose();
         }
 
         [Fact]

@@ -77,15 +77,6 @@ namespace Nautilus.Common.Data
         }
 
         /// <summary>
-        /// Send the given bar data to the data bus.
-        /// </summary>
-        /// <param name="data">The data to send.</param>
-        protected void SendToBus(BarData data)
-        {
-            this.dataBusAdapter.SendToBus(data);
-        }
-
-        /// <summary>
         /// Send the given instrument to the data bus.
         /// </summary>
         /// <param name="data">The data to send.</param>
