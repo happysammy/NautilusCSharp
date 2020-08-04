@@ -51,7 +51,7 @@ namespace Nautilus.Scheduling.Messages
         }
 
         /// <summary>
-        /// Gets the jobs key.
+        /// Gets the key for the job to remove.
         /// </summary>
         public JobKey JobKey { get; }
     }

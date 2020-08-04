@@ -51,7 +51,7 @@ namespace Nautilus.Scheduling.Messages
         }
 
         /// <summary>
-        /// Gets the job to resume key.
+        /// Gets the key for the job to resume.
         /// </summary>
         public JobKey JobKey { get; }
     }

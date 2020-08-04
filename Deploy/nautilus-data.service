@@ -6,10 +6,10 @@ After=network.target
 Type=simple
 User=nautilus
 SyslogIdentifier=nautilus-data
-WorkingDirectory=/home/nautilus/nautilus-data/
+WorkingDirectory=/home/nautilus/NautilusData/
 Environment=ASPNETCORE_ENVIRONMENT=Production
 Environment=DOTNET_PRINT_TELEMETRY_MESSAGE=false
-ExecStart=/usr/bin/dotnet /home/nautilus/nautilus-data/NautilusData.dll
+ExecStart=/usr/bin/dotnet /home/nautilus/NautilusData/NautilusData.dll
 Restart=always
 RestartSec=10
 KillSignal=SIGINT

@@ -99,7 +99,7 @@ namespace Nautilus.DomainModel.ValueObjects
         {
             Debug.NotEmptyOrWhiteSpace(barSpecString, nameof(barSpecString));
 
-            var split = barSpecString.Split('-');
+            var split = barSpecString.Split('-', 3);
 
             var period = Convert.ToInt32(split[0]);
             var resolution = split[1].ToUpper();

@@ -46,7 +46,8 @@ namespace Nautilus.Scheduling
                 { "quartz.threadPool.threadCount", "2" },
             };
 
-            this.quartzScheduler = new StdSchedulerFactory(properties).GetScheduler().Result;
+            var factory = new StdSchedulerFactory(properties);
+            this.quartzScheduler = factory.GetScheduler().Result;
 
             this.RegisterHandler<CreateJob>(this.OnMessage);
             this.RegisterHandler<PauseJob>(this.OnMessage);
@@ -68,9 +69,17 @@ namespace Nautilus.Scheduling
 
         private void OnMessage(CreateJob message)
         {
-            this.quartzScheduler.ScheduleJob(message.JobDetail, message.Trigger);
+            this.Logger.LogInformation($"Received CreateJob");
 
-            this.Logger.LogInformation($"Job created (JobKey={message.JobKey}, TriggerKey={message.Trigger.Key}).");
+            var create = this.quartzScheduler.ScheduleJob(message.JobDetail, message.Trigger);
+            if (create.IsCompletedSuccessfully)
+            {
+                this.Logger.LogInformation($"Job created (JobKey={message.JobKey}, TriggerKey={message.Trigger.Key}).");
+            }
+            else
+            {
+                this.Logger.LogWarning($"Job create failed (JobKey={message.JobKey}).");
+            }
         }
 
         private void OnMessage(PauseJob message)
@@ -89,7 +98,6 @@ namespace Nautilus.Scheduling
         private void OnMessage(ResumeJob message)
         {
             var resume = this.quartzScheduler.ResumeJob(message.JobKey);
-
             if (resume.IsCompletedSuccessfully)
             {
                 this.Logger.LogInformation($"Job resumed successfully (JobKey={message.JobKey}).");
