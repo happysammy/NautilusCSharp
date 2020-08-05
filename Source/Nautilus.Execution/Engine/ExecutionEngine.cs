@@ -580,6 +580,7 @@ namespace Nautilus.Execution.Engine
             {
                 var removeJob = new RemoveJob(
                     jobKey,
+                    true,
                     this.NewGuid(),
                     this.TimeNow());
 
