@@ -140,7 +140,7 @@ namespace Nautilus.Scheduling
             }
 
             var deleted = this.quartzScheduler.DeleteJob(message.JobKey);
-            if (deleted.Result)
+            if (deleted.IsCompletedSuccessfully)
             {
                 this.Logger.LogInformation($"Job removed (JobKey={message.JobKey}).");
             }

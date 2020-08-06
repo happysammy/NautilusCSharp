@@ -322,11 +322,6 @@ namespace Nautilus.Core.Primitives
         /// <returns>The result of the equality check.</returns>
         public static bool operator ==(IntegerNumber left, IntegerNumber right)
         {
-            if (left is null || right is null)
-            {
-                return false;
-            }
-
             return left.Equals(right);
         }
 
@@ -338,7 +333,7 @@ namespace Nautilus.Core.Primitives
         /// <returns>The result of the equality check.</returns>
         public static bool operator ==(int left, IntegerNumber right)
         {
-            return !(right is null) && left.Equals(right.Value);
+            return left.Equals(right.Value);
         }
 
         /// <summary>
@@ -349,7 +344,7 @@ namespace Nautilus.Core.Primitives
         /// <returns>The result of the equality check.</returns>
         public static bool operator ==(IntegerNumber left, int right)
         {
-            return !(left is null) && left.Value.Equals(right);
+            return left.Value.Equals(right);
         }
 
         /// <summary>

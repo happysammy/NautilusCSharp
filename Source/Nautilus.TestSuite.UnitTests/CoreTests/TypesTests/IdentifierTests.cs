@@ -38,7 +38,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.TypesTests
 
             // Act
             // Assert
-            Assert.False(identifier1 == null);
             Assert.False(identifier1 == identifier2);
             Assert.True(identifier1 != identifier2);
             Assert.True(identifier1.Equals(identifier1));

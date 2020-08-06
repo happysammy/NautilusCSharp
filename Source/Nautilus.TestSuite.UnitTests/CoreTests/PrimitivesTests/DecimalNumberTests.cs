@@ -81,7 +81,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.PrimitivesTests
             // Assert
             // ReSharper disable once SuspiciousTypeConversion.Global
             Assert.False(number0.Equals("string"));
-            Assert.False(number0 == null);
             Assert.True(number1 == number2);
             Assert.True(number1 == decimal.One);
             Assert.True(decimal.One == number1);

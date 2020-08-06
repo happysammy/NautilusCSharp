@@ -44,15 +44,7 @@ namespace Nautilus.Messaging
         /// <param name="left">The left object.</param>
         /// <param name="right">The right object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public static bool operator ==(Endpoint left, Endpoint right)
-        {
-            if (left is null || right is null)
-            {
-                return false;
-            }
-
-            return left.Equals(right);
-        }
+        public static bool operator ==(Endpoint left, Endpoint right) => left.Equals(right);
 
         /// <summary>
         /// Returns a value indicating whether the <see cref="Endpoint"/>s are not equal.

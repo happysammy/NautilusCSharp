@@ -53,15 +53,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <param name="left">The left object.</param>
         /// <param name="right">The right object.</param>
         /// <returns>The result of the equality check.</returns>
-        public static bool operator ==(Money left, Money right)
-        {
-            if (left is null || right is null)
-            {
-                return false;
-            }
-
-            return left.Equals(right);
-        }
+        public static bool operator ==(Money left, Money right) => left.Equals(right);
 
         /// <summary>
         /// Returns a value indicating whether the <see cref="Money"/> objects are not equal.

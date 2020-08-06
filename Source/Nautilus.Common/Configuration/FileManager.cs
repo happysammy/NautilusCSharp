@@ -63,11 +63,6 @@ namespace Nautilus.Common.Configuration
             foreach (var file in Directory.GetFiles(filesPath))
             {
                 var fileName = Path.GetFileName(file);
-                if (fileName is null)
-                {
-                    continue;
-                }
-
                 var destFile = Path.Combine(destinationPath, fileName);
                 File.Copy(file, destFile, true);
             }
@@ -89,11 +84,6 @@ namespace Nautilus.Common.Configuration
             foreach (var file in Directory.GetFiles(directoryPath))
             {
                 var fileName = Path.GetFileName(file);
-                if (fileName is null)
-                {
-                    continue;
-                }
-
                 if (fileName.EndsWith(extension))
                 {
                     return Path.Combine(directoryPath, fileName);

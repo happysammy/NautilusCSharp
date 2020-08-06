@@ -60,7 +60,7 @@ namespace Nautilus.Core.Correctness
         /// <returns>The exception string.</returns>
         public static string WasNullEmptyOrWhitespace(string value, string paramName)
         {
-            var valueString = value != null ? $"'{value}'" : "null";
+            var valueString = $"'{value}'";
             return $"The {paramName} was null, empty or whitespace, was {valueString}.";
         }
 
