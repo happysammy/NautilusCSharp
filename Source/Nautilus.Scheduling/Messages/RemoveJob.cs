@@ -36,10 +36,13 @@ namespace Nautilus.Scheduling.Messages
         /// Initializes a new instance of the <see cref="RemoveJob"/> class.
         /// </summary>
         /// <param name="jobKey">The job key to remove.</param>
+        /// <param name="ifJobExists">The flag indicating whether the job will only attempt to
+        /// remove if it exists.</param>
         /// <param name="identifier">The command identifier.</param>
         /// <param name="timestamp">The command timestamp.</param>
         public RemoveJob(
             JobKey jobKey,
+            bool ifJobExists,
             Guid identifier,
             ZonedDateTime timestamp)
             : base(CommandType, identifier, timestamp)
@@ -48,11 +51,18 @@ namespace Nautilus.Scheduling.Messages
             Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.JobKey = jobKey;
+            this.IfJobExists = ifJobExists;
         }
 
         /// <summary>
         /// Gets the key for the job to remove.
         /// </summary>
         public JobKey JobKey { get; }
+
+        /// <summary>
+        /// Gets the flag indicating whether the scheduler will only attempt to remove the job if
+        /// it exists.
+        /// </summary>
+        public bool IfJobExists { get; }
     }
 }

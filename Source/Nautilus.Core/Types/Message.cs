@@ -79,15 +79,7 @@ namespace Nautilus.Core.Types
         /// <param name="left">The left object.</param>
         /// <param name="right">The right object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public static bool operator ==(Message left, Message right)
-        {
-            if (left is null || right is null)
-            {
-                return false;
-            }
-
-            return left.Equals(right);
-        }
+        public static bool operator ==(Message left, Message right) => left.Equals(right);
 
         /// <summary>
         /// Returns a value indicating whether the <see cref="Message"/>(s) are not equal.

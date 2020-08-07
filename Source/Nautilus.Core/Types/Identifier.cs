@@ -53,11 +53,6 @@ namespace Nautilus.Core.Types
         /// <returns>A <see cref="bool"/>.</returns>
         public static bool operator ==(Identifier<T> left, Identifier<T> right)
         {
-            if (left is null || right is null)
-            {
-                return false;
-            }
-
             return left.Equals(right);
         }
 

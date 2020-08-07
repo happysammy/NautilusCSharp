@@ -42,7 +42,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.TypesTests
             // Act
             // Assert
             Assert.NotNull(message1);
-            Assert.False(message1 == null);
             Assert.False(message1 == message2);
             Assert.True(message1 != message2);
             Assert.True(message1.Equals(message1));

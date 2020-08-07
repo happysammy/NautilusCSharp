@@ -42,11 +42,7 @@ namespace Nautilus.TestSuite.TestKit.Components
             Func<TState, Exception, string> formatter)
         {
             var message = string.Empty;
-
-            if (formatter != null)
-            {
-                message += formatter(state, exception);
-            }
+            message += formatter(state, exception);
 
             this.output.WriteLine($"[{FormatLogLevel(logLevel)}] [{this.contextName}] [{eventId.Id}] - {message}");
         }

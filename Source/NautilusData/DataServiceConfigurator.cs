@@ -146,7 +146,7 @@ namespace NautilusData
                 .ToImmutableList();
 
             // Trim Job Ticks
-            var trimJobTicks = dataSection.GetSection("TrimJobBars");
+            var trimJobTicks = dataSection.GetSection("TrimJobTicks");
             var tickTrimHour = int.Parse(trimJobTicks["Hour"]);
             var tickTrimMinute = int.Parse(trimJobTicks["Minute"]);
             var tickDataTrimTime = new LocalTime(tickTrimHour, tickTrimMinute);

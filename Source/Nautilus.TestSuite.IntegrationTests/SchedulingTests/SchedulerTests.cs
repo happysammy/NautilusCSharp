@@ -211,6 +211,7 @@ namespace Nautilus.TestSuite.IntegrationTests.SchedulingTests
             // Arrange
             var removeJob = new RemoveJob(
                 new JobKey("bogus-job-key"),
+                false,
                 Guid.NewGuid(),
                 this.clock.TimeNow());
 
