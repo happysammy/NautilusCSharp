@@ -106,7 +106,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             this.repository.Update(audusd);
 
             // Act
-            var result = this.repository.GetTicks(audusd.Symbol);
+            var result = this.repository.GetTicks(audusd.Symbol, null, null, null);
 
             // Assert
             Assert.False(this.repository.TicksExist(audusd.Symbol));
@@ -126,7 +126,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             this.repository.Ingest(tick1);
 
             // Act
-            var result = this.repository.GetTicks(audusd.Symbol);
+            var result = this.repository.GetTicks(audusd.Symbol, null, null, null);
 
             // Assert
             Assert.Equal(1, this.repository.TicksCount(audusd.Symbol));
@@ -143,7 +143,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             this.repository.Update(audusd);
 
             // Act
-            var result = this.repository.GetBars(StubBarType.AUDUSD_OneMinuteAsk());
+            var result = this.repository.GetBars(StubBarType.AUDUSD_OneMinuteAsk(), null, null, null);
 
             // Assert
             Assert.False(this.repository.BarsExist(barType));

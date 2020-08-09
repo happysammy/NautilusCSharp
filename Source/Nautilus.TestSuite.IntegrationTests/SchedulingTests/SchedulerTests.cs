@@ -17,7 +17,6 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
 using Nautilus.Common.Interfaces;
 using Nautilus.Common.Messages.Commands;
 using Nautilus.Messaging.Interfaces;
@@ -49,7 +48,6 @@ namespace Nautilus.TestSuite.IntegrationTests.SchedulingTests
             this.receiver = new MockComponent(container).Endpoint;
             this.scheduler = new Scheduler(container, new MockMessageBusProvider(container).Adapter);
             this.scheduler.Start().Wait();
-            Task.Delay(100);
         }
 
         [Fact]
@@ -80,7 +78,7 @@ namespace Nautilus.TestSuite.IntegrationTests.SchedulingTests
             this.scheduler.Endpoint.Send(createJob);
 
             // Assert
-            // Assert.True(this.scheduler.DoesJobExist(jobKey));
+            // TODO: Write assertions
         }
 
         [Fact]
@@ -110,7 +108,7 @@ namespace Nautilus.TestSuite.IntegrationTests.SchedulingTests
             this.scheduler.Endpoint.Send(createJob);
 
             // Assert
-            // Assert inside scheduler.
+            // TODO: Write assertions
         }
 
         [Fact]
@@ -147,12 +145,7 @@ namespace Nautilus.TestSuite.IntegrationTests.SchedulingTests
             this.scheduler.Endpoint.Send(pauseJob);
 
             // Assert
-
-// CustomAssert.EventuallyContains(
-//                $"Scheduler: Job paused successfully (JobKey={jobKey}).",
-//                this.logger,
-//                EventuallyContains.TimeoutMilliseconds,
-//                EventuallyContains.PollIntervalMilliseconds);
+            // TODO: Write assertions
         }
 
         [Fact]
@@ -197,12 +190,7 @@ namespace Nautilus.TestSuite.IntegrationTests.SchedulingTests
             this.scheduler.Endpoint.Send(resumeJob);
 
             // Assert
-
-// CustomAssert.EventuallyContains(
-//                $"Scheduler: Job resumed successfully (JobKey={jobKey}).",
-//                this.logger,
-//                EventuallyContains.TimeoutMilliseconds,
-//                EventuallyContains.PollIntervalMilliseconds);
+            // TODO: Write assertions
         }
 
         [Fact]
@@ -219,12 +207,7 @@ namespace Nautilus.TestSuite.IntegrationTests.SchedulingTests
             this.scheduler.Endpoint.Send(removeJob);
 
             // Assert
-
-// CustomAssert.EventuallyContains(
-//                "Scheduler: Job remove failed (JobKey=DEFAULT.bogus-job-key, TriggerKey=DEFAULT.bogus-trigger, Reason=JobNotFound).",
-//                this.logger,
-//                EventuallyContains.TimeoutMilliseconds,
-//                EventuallyContains.PollIntervalMilliseconds);
+            // TODO: Write assertions
         }
     }
 }

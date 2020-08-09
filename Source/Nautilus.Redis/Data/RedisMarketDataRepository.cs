@@ -167,9 +167,9 @@ namespace Nautilus.Redis.Data
         /// <inheritdoc />
         public Tick[] GetTicks(
             Symbol symbol,
-            ZonedDateTime? fromDateTime = null,
-            ZonedDateTime? toDateTime = null,
-            long? limit = null)
+            ZonedDateTime? fromDateTime,
+            ZonedDateTime? toDateTime,
+            long? limit)
         {
             var fromTimestamp = GetTimeStampOrMin(fromDateTime);
             var toTimestamp = GetTimeStampOrMax(toDateTime);
@@ -203,9 +203,9 @@ namespace Nautilus.Redis.Data
         /// <inheritdoc />
         public byte[][] ReadTickData(
             Symbol symbol,
-            ZonedDateTime? fromDateTime = null,
-            ZonedDateTime? toDateTime = null,
-            long? limit = null)
+            ZonedDateTime? fromDateTime,
+            ZonedDateTime? toDateTime,
+            long? limit)
         {
             var fromTimestamp = GetTimeStampOrMin(fromDateTime);
             var toTimestamp = GetTimeStampOrMax(toDateTime);
@@ -243,9 +243,9 @@ namespace Nautilus.Redis.Data
         /// <inheritdoc />
         public BarDataFrame GetBars(
             BarType barType,
-            ZonedDateTime? fromDateTime = null,
-            ZonedDateTime? toDateTime = null,
-            long? limit = null)
+            ZonedDateTime? fromDateTime,
+            ZonedDateTime? toDateTime,
+            long? limit)
         {
             var priceType = barType.Specification.PriceType;
 
@@ -270,9 +270,9 @@ namespace Nautilus.Redis.Data
         /// <inheritdoc />
         public byte[][] ReadBarData(
             BarType barType,
-            ZonedDateTime? fromDateTime = null,
-            ZonedDateTime? toDateTime = null,
-            long? limit = null)
+            ZonedDateTime? fromDateTime,
+            ZonedDateTime? toDateTime,
+            long? limit)
         {
             var priceType = barType.Specification.PriceType;
 
