@@ -45,10 +45,10 @@ jobs:
           git clone --recursive https://github.com/RedisTimeSeries/RedisTimeSeries.git
           cd RedisTimeSeries
           sudo make build
-          pwd
-          redis-server --daemonize yes
-          redis-cli MODULE LOAD /bin/linux-x64-release/redistimeseries.so
           cd -
+          ls
+          redis-server --daemonize yes
+          redis-cli MODULE LOAD /home/runner/work/Nautilus/RedisTimeSeries/bin/linux-x64-release/redistimeseries.so
 
       - name: Test
         run: |
