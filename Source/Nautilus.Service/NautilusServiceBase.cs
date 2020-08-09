@@ -210,7 +210,7 @@ namespace Nautilus.Service
                 .InTimeZone(TimeZoneInfo.Utc)
                 .WithMisfireHandlingInstructionFireAndProceed();
 
-            var jobKey = new JobKey("fix-session-connect", "service");
+            var jobKey = new JobKey("session-connect", "service");
             var trigger = TriggerBuilder
                 .Create()
                 .WithIdentity(jobKey.Name, jobKey.Group)
@@ -228,8 +228,8 @@ namespace Nautilus.Service
             this.Send(createJob,new Address(nameof(Scheduler)));
             this.Logger.LogInformation($"Created {nameof(ConnectSession)} for " +
                                        $"{this.connectWeeklyTime.DayOfWeek.ToDayOfWeek()}s " +
-                                       $"{this.connectWeeklyTime.Time.Hour}:" +
-                                       $"{this.connectWeeklyTime.Time.Minute} UTC.");
+                                       $"{this.connectWeeklyTime.Time.Hour:2D}:" +
+                                       $"{this.connectWeeklyTime.Time.Minute:2D} UTC.");
         }
 
         private void CreateDisconnectFixJob()
@@ -242,7 +242,7 @@ namespace Nautilus.Service
                 .InTimeZone(TimeZoneInfo.Utc)
                 .WithMisfireHandlingInstructionFireAndProceed();
 
-            var jobKey = new JobKey("fix-session-disconnect", "service");
+            var jobKey = new JobKey("session-disconnect", "service");
             var trigger = TriggerBuilder
                 .Create()
                 .WithIdentity(jobKey.Name, jobKey.Group)
@@ -260,8 +260,8 @@ namespace Nautilus.Service
             this.Send(createJob,new Address(nameof(Scheduler)));
             this.Logger.LogInformation($"Created {nameof(DisconnectSession)} for " +
                                        $"{this.disconnectWeeklyTime.DayOfWeek.ToDayOfWeek()}s " +
-                                       $"{this.disconnectWeeklyTime.Time.Hour}:" +
-                                       $"{this.disconnectWeeklyTime.Time.Minute} UTC.");
+                                       $"{this.disconnectWeeklyTime.Time.Hour:2D}:" +
+                                       $"{this.disconnectWeeklyTime.Time.Minute:2D} UTC.");
         }
     }
 }
