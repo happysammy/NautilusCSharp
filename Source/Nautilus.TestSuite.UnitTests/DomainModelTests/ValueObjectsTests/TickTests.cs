@@ -75,36 +75,6 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
             Assert.Equal(tick, result);
         }
 
-        [Theory]
-        [InlineData(0, 0)]
-        [InlineData(1, -1)]
-        [InlineData(-1, 1)]
-        internal void CompareTo_WithVariousTicks_ReturnsExpectedResult(int millisecondsOffset, int expected)
-        {
-            // Arrange
-            var tick1 = new Tick(
-                this.symbol,
-                Price.Create(1.00000m),
-                Price.Create(1.00000m),
-                Volume.One(),
-                Volume.One(),
-                StubZonedDateTime.UnixEpoch());
-
-            var tick2 = new Tick(
-                this.symbol,
-                Price.Create(1.00000m),
-                Price.Create(1.00000m),
-                Volume.One(),
-                Volume.One(),
-                StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(millisecondsOffset));
-
-            // Act
-            var result = tick1.CompareTo(tick2);
-
-            // Assert
-            Assert.Equal(expected, result);
-        }
-
         [Fact]
         internal void ToString_ReturnsExpectedString()
         {

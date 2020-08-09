@@ -29,7 +29,7 @@ namespace Nautilus.DomainModel.ValueObjects
     /// Represents a financial market tick.
     /// </summary>
     [Immutable]
-    public sealed class Tick : IEquatable<object>, IEquatable<Tick>, IComparable<Tick>
+    public sealed class Tick : IEquatable<object>, IEquatable<Tick>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Tick"/> class.
@@ -161,14 +161,6 @@ namespace Nautilus.DomainModel.ValueObjects
                    this.AskSize == other.AskSize &&
                    this.Timestamp == other.Timestamp;
         }
-
-        // Due to the convention that an IEquatable<T> argument can be null the compiler now emits
-        // a warning unless Equals is marked with [AllowNull] or takes a nullable param. We don't
-        // want to allow null here for the sake of silencing the warning and so temporarily using
-        // #pragma warning disable CS8767 until a better refactoring is determined.
-#pragma warning disable CS8767
-        /// <inheritdoc />
-        public int CompareTo(Tick other) => this.Timestamp.Compare(other.Timestamp);
 
         /// <inheritdoc />
         public override int GetHashCode()
