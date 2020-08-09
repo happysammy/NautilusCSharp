@@ -42,7 +42,7 @@ namespace Nautilus.TestSuite.TestKit.Stubs
 
         private Quantity Quantity { get; set; } = Quantity.Create(100000);
 
-        private Price Price { get; set; } = Price.Create(1, 0);
+        private Price Price { get; set; } = Price.Create(1m, 0);
 
         private TimeInForce TimeInForce { get; set; } = TimeInForce.DAY;
 

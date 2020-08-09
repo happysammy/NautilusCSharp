@@ -15,32 +15,65 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-using System.Collections.Generic;
+using Nautilus.DomainModel.Identifiers;
 using Nautilus.DomainModel.ValueObjects;
+using NodaTime;
 
 namespace Nautilus.Data.Interfaces
 {
     /// <summary>
     /// Provides a repository for accessing <see cref="Tick"/> data.
     /// </summary>
-    public interface ITickRepository : ITickRepositoryReadOnly, IRepository
+    public interface ITickRepository
     {
         /// <summary>
-        /// Add the given tick to the repository.
+        /// Ingest the given tick into the database.
         /// </summary>
-        /// <param name="tick">The tick to add.</param>
-        void Add(Tick tick);
+        /// <param name="tick">The tick to ingest.</param>
+        void Ingest(Tick tick);
 
         /// <summary>
-        /// Add the given ticks to the repository.
+        /// Returns a value indicating whether any ticks for the given symbol exist in the
+        /// repository.
         /// </summary>
-        /// <param name="ticks">The ticks to add.</param>
-        void Add(List<Tick> ticks);
+        /// <param name="symbol">The symbol to query.</param>
+        /// <returns>True if ticks exist, else false.</returns>
+        bool TicksExist(Symbol symbol);
 
         /// <summary>
-        /// Trims each symbols tick data in the repository to equal the given days.
+        /// Returns the count of ticks held within the repository for the given symbol.
         /// </summary>
-        /// <param name="trimToDays">The number of days (keys) to trim to.</param>
-        void TrimToDays(int trimToDays);
+        /// <param name="symbol">The tick symbol to count.</param>
+        /// <returns>An <see cref="int"/>.</returns>
+        long TicksCount(Symbol symbol);
+
+        /// <summary>
+        /// Returns the ticks held in the repository of the given <see cref="Symbol"/> within the given
+        /// range.
+        /// </summary>
+        /// <param name="symbol">The tick symbol to find.</param>
+        /// <param name="fromDateTime">The from date time.</param>
+        /// <param name="toDateTime">The to date time.</param>
+        /// <param name="limit">The optional count limit for the data.</param>
+        /// <returns>The tick data.</returns>
+        Tick[] GetTicks(
+            Symbol symbol,
+            ZonedDateTime? fromDateTime = null,
+            ZonedDateTime? toDateTime = null,
+            long? limit = null);
+
+        /// <summary>
+        /// Read tick data from the given query values.
+        /// </summary>
+        /// <param name="symbol">The symbol for the ticks.</param>
+        /// <param name="fromDateTime">The datetime to query from (optional).</param>
+        /// <param name="toDateTime">The datetime to query to (optional).</param>
+        /// <param name="limit">The limit of data rows to return (optional).</param>
+        /// <returns>The serialized tick data.</returns>
+        public byte[][] ReadTickData(
+            Symbol symbol,
+            ZonedDateTime? fromDateTime = null,
+            ZonedDateTime? toDateTime = null,
+            long? limit = null);
     }
 }

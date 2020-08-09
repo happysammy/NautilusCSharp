@@ -89,17 +89,22 @@ namespace NautilusData
 
             var connection = ConnectionMultiplexer.Connect("localhost:6379,allowAdmin=true");
 
-            var tickRepository = new RedisTickRepository(
+            var marketDataRepository = new RedisMarketDataRepository(
                 container,
                 dataBusAdapter,
-                tickDataSerializer,
                 connection);
 
-            var barRepository = new RedisBarRepository(
+            var tickProvider = new TickProvider(
                 container,
-                dataBusAdapter,
-                barDataSerializer,
-                connection);
+                messagingAdapter,
+                marketDataRepository,
+                tickDataSerializer);
+
+            var barProvider = new BarProvider(
+                container,
+                messagingAdapter,
+                marketDataRepository,
+                barDataSerializer);
 
             var instrumentRepository = new RedisInstrumentRepository(
                 container,
@@ -107,18 +112,6 @@ namespace NautilusData
                 instrumentDataSerializer,
                 connection);
             instrumentRepository.CacheAll();
-
-            var tickProvider = new TickProvider(
-                container,
-                messagingAdapter,
-                tickRepository,
-                tickDataSerializer);
-
-            var barProvider = new BarProvider(
-                container,
-                messagingAdapter,
-                barRepository,
-                barDataSerializer);
 
             var instrumentProvider = new InstrumentProvider(
                 container,
@@ -167,10 +160,9 @@ namespace NautilusData
             registrar.Register(ComponentAddress.DataGateway, dataGateway);
             registrar.Register(ComponentAddress.DataServer, dataServer);
             registrar.Register(ComponentAddress.DataPublisher, dataPublisher);
-            registrar.Register(ComponentAddress.TickRepository, tickRepository);
+            registrar.Register(ComponentAddress.MarketDataRepository, marketDataRepository);
             registrar.Register(ComponentAddress.TickProvider, tickProvider);
             registrar.Register(ComponentAddress.TickPublisher, tickPublisher);
-            registrar.Register(ComponentAddress.BarRepository, barRepository);
             registrar.Register(ComponentAddress.BarProvider, barProvider);
             registrar.Register(ComponentAddress.InstrumentRepository, instrumentRepository);
             registrar.Register(ComponentAddress.InstrumentProvider, instrumentProvider);

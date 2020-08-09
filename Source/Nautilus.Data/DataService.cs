@@ -17,18 +17,14 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
 using Nautilus.Common.Data;
 using Nautilus.Common.Interfaces;
 using Nautilus.Common.Messages.Commands;
 using Nautilus.Common.Messaging;
-using Nautilus.Data.Messages.Commands;
 using Nautilus.DomainModel.Identifiers;
 using Nautilus.Messaging;
-using Nautilus.Scheduling.Messages;
 using Nautilus.Service;
 using NodaTime;
-using Quartz;
 
 namespace Nautilus.Data
 {
@@ -70,10 +66,9 @@ namespace Nautilus.Data
             {
                 ComponentAddress.DataServer,
                 ComponentAddress.DataPublisher,
-                ComponentAddress.TickRepository,
+                ComponentAddress.MarketDataRepository,
                 ComponentAddress.TickPublisher,
                 ComponentAddress.TickProvider,
-                ComponentAddress.BarRepository,
                 ComponentAddress.BarProvider,
                 ComponentAddress.InstrumentRepository,
                 ComponentAddress.InstrumentProvider,
@@ -85,16 +80,11 @@ namespace Nautilus.Data
             this.trimWindowDaysTicks = config.DataConfig.TickDataTrimWindowDays;
 
             this.RegisterConnectionAddress(ComponentAddress.DataGateway);
-
-            // Commands
-            this.RegisterHandler<TrimTickData>(this.OnMessage);
         }
 
         /// <inheritdoc />
         protected override void OnServiceStart(Start start)
         {
-            this.CreateTrimTickDataJob();
-
             // Forward start message
             this.Send(start, this.managedComponents);
         }
@@ -118,43 +108,6 @@ namespace Nautilus.Data
             {
                 this.dataGateway.MarketDataSubscribe(symbol);
             }
-        }
-
-        private void OnMessage(TrimTickData message)
-        {
-            this.Logger.LogInformation($"Received {message}.");
-
-            // Forward message
-            this.Send(message, ComponentAddress.TickRepository);
-        }
-
-        private void CreateTrimTickDataJob()
-        {
-            var schedule = CronScheduleBuilder
-                .DailyAtHourAndMinute(this.trimTimeTicks.Hour, this.trimTimeTicks.Minute)
-                .InTimeZone(TimeZoneInfo.Utc)
-                .WithMisfireHandlingInstructionFireAndProceed();
-
-            var jobKey = new JobKey("trim-tick-data", "data-management");
-            var trigger = TriggerBuilder
-                .Create()
-                .WithIdentity(jobKey.Name, jobKey.Group)
-                .WithSchedule(schedule)
-                .Build();
-
-            var createJob = new CreateJob(
-                this.Endpoint,
-                new TrimTickData(
-                    this.trimWindowDaysTicks,
-                    this.NewGuid(),
-                    this.TimeNow()),
-                jobKey,
-                trigger,
-                this.NewGuid(),
-                this.TimeNow());
-
-            this.Send(createJob, ComponentAddress.Scheduler);
-            this.Logger.LogInformation($"Created {nameof(TrimTickData)} for Sundays 00:01 (UTC).");
         }
     }
 }

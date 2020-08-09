@@ -78,7 +78,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 OrderSide.Buy,
                 OrderPurpose.Entry,
                 Quantity.Create(10),
-                Price.Create(2000, 1),
+                Price.Create(2000m, 1),
                 TimeInForce.GTD,
                 StubZonedDateTime.UnixEpoch() + Period.FromMinutes(5).ToDuration(),
                 StubZonedDateTime.UnixEpoch(),
@@ -92,7 +92,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.Equal(OrderType.Stop, order.OrderType);
             Assert.Equal(OrderPurpose.Entry, order.OrderPurpose);
             Assert.Equal(10, order.Quantity.Value);
-            Assert.Equal(Price.Create(2000, 1), order.Price);
+            Assert.Equal(Price.Create(2000m, 1), order.Price);
             Assert.Null(order.AveragePrice);
             Assert.Null(order.Slippage);
             Assert.Equal(TimeInForce.GTD, order.TimeInForce);

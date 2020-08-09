@@ -21,9 +21,9 @@ using Nautilus.Common.Interfaces;
 using Nautilus.Common.Logging;
 using Nautilus.Common.Messages.Commands;
 using Nautilus.Common.Messaging;
+using Nautilus.Core.Extensions;
 using Nautilus.Core.Message;
 using Nautilus.Data.Interfaces;
-using Nautilus.Data.Keys;
 using Nautilus.Data.Messages.Requests;
 using Nautilus.Data.Messages.Responses;
 using Nautilus.DomainModel.Identifiers;
@@ -39,7 +39,7 @@ namespace Nautilus.Data.Providers
     {
         private const string DataType = nameof(DataType);
 
-        private readonly ITickRepositoryReadOnly repository;
+        private readonly ITickRepository repository;
         private readonly IDataSerializer<Tick> dataSerializer;
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace Nautilus.Data.Providers
         public TickProvider(
             IComponentryContainer container,
             IMessageBusAdapter messagingAdapter,
-            ITickRepositoryReadOnly repository,
+            ITickRepository repository,
             IDataSerializer<Tick> dataSerializer)
             : base(container, messagingAdapter)
         {
@@ -79,23 +79,23 @@ namespace Nautilus.Data.Providers
 
                 // Query objects
                 var symbol = Symbol.FromString(request.Query["Symbol"]);
-                var fromDate = DateKey.FromString(request.Query["FromDate"]);
-                var toDate = DateKey.FromString(request.Query["ToDate"]);
-                var limit = Convert.ToInt32(request.Query["Limit"]);
+                var fromDate = request.Query["FromDateTime"].ToNullableZonedDateTimeFromIso();
+                var toDate = request.Query["ToDateTime"].ToNullableZonedDateTimeFromIso();
+                var limit = long.Parse(request.Query["Limit"]);
 
-                var dataQuery = this.repository.GetTickData(
+                var dataQuery = this.repository.ReadTickData(
                     symbol,
                     fromDate,
                     toDate,
                     limit);
 
-                if (dataQuery.IsFailure)
+                if (dataQuery.Length == 0)
                 {
-                    return this.QueryFailure(dataQuery.Message, request.Id);
+                    return this.QueryFailure("No tick data found for symbol or time range.", request.Id);
                 }
 
                 return new DataResponse(
-                    this.dataSerializer.SerializeBlob(dataQuery.Value, request.Query),
+                    this.dataSerializer.SerializeBlob(dataQuery, request.Query),
                     dataType,
                     this.dataSerializer.BlobEncoding,
                     request.Id,

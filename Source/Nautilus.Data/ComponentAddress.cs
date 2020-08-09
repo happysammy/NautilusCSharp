@@ -60,24 +60,14 @@ namespace Nautilus.Data
         public static Address TickProvider { get; } = new Address(nameof(TickProvider));
 
         /// <summary>
-        /// Gets the <see cref="TickRepository"/> component messaging address.
+        /// Gets the <see cref="MarketDataRepository"/> component messaging address.
         /// </summary>
-        public static Address TickRepository { get; } = new Address(nameof(TickRepository));
-
-        /// <summary>
-        /// Gets the <see cref="BarAggregationController"/> component messaging address.
-        /// </summary>
-        public static Address BarAggregationController { get; } = new Address(nameof(BarAggregationController));
+        public static Address MarketDataRepository { get; } = new Address(nameof(MarketDataRepository));
 
         /// <summary>
         /// Gets the <see cref="BarProvider"/> component messaging address.
         /// </summary>
         public static Address BarProvider { get; } = new Address(nameof(BarProvider));
-
-        /// <summary>
-        /// Gets the <see cref="BarRepository"/> component messaging address.
-        /// </summary>
-        public static Address BarRepository { get; } = new Address(nameof(BarRepository));
 
         /// <summary>
         /// Gets the <see cref="InstrumentProvider"/> component messaging address.

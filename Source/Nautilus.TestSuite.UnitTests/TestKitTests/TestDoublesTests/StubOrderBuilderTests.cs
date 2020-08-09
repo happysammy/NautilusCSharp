@@ -42,7 +42,7 @@ namespace Nautilus.TestSuite.UnitTests.TestKitTests.TestDoublesTests
             Assert.Equal(OrderSide.Buy, order.OrderSide);
             Assert.Equal(OrderType.Stop, order.OrderType);
             Assert.Equal(Quantity.Create(100000), order.Quantity);
-            Assert.Equal(Price.Create(1, 1), order.Price);
+            Assert.Equal(Price.Create(1m, 1), order.Price);
             Assert.Equal(TimeInForce.DAY, order.TimeInForce);
             Assert.Null(order.ExpireTime);
             Assert.Equal(StubZonedDateTime.UnixEpoch(), order.Timestamp);
@@ -72,7 +72,7 @@ namespace Nautilus.TestSuite.UnitTests.TestKitTests.TestDoublesTests
             Assert.Equal(OrderSide.Sell, order.OrderSide);
             Assert.Equal(OrderType.Stop, order.OrderType);
             Assert.Equal(Quantity.Create(100000), order.Quantity);
-            Assert.Equal(Price.Create(1.00000m, 5), order.Price);
+            Assert.Equal(Price.Create(1m, 5), order.Price);
             Assert.Equal(TimeInForce.GTD, order.TimeInForce);
             Assert.Equal(StubZonedDateTime.UnixEpoch() + Period.FromMinutes(5).ToDuration(), order.ExpireTime);
             Assert.Equal(StubZonedDateTime.UnixEpoch() + Period.FromMinutes(1).ToDuration(), order.Timestamp);

@@ -18,13 +18,12 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using Nautilus.Common.Data;
 using Nautilus.Common.Interfaces;
-using Nautilus.Data.Interfaces;
-using Nautilus.Data.Keys;
+using Nautilus.Core.Extensions;
 using Nautilus.Data.Messages.Requests;
 using Nautilus.Data.Messages.Responses;
 using Nautilus.Data.Providers;
-using Nautilus.DomainModel.ValueObjects;
 using Nautilus.Network.Messages;
 using Nautilus.Serialization.DataSerializers;
 using Nautilus.TestSuite.TestKit.Components;
@@ -41,8 +40,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
     {
         private readonly IComponentryContainer container;
         private readonly IMessageBusAdapter messagingAdapter;
-        private readonly IBarRepository repository;
-        private readonly IDataSerializer<Bar> dataSerializer;
+        private readonly MockMarketDataRepository repository;
+        private readonly BarDataSerializer dataSerializer;
 
         public BarProviderTests(ITestOutputHelper output)
             : base(output)
@@ -51,7 +50,11 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             this.container = TestComponentryContainer.Create(output);
             this.messagingAdapter = new MockMessageBusProvider(this.container).Adapter;
             this.dataSerializer = new BarDataSerializer();
-            this.repository = new MockBarRepository(this.dataSerializer);
+            this.repository = new MockMarketDataRepository(
+                this.container,
+                new TickDataSerializer(),
+                this.dataSerializer,
+                DataBusFactory.Create(this.container));
         }
 
         [Fact]
@@ -72,8 +75,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
                 { "DataType", "Bar[]" },
                 { "Symbol", barType.Symbol.Value },
                 { "Specification", barType.Specification.ToString() },
-                { "FromDate", new DateKey(StubZonedDateTime.UnixEpoch()).ToString() },
-                { "ToDate", new DateKey(StubZonedDateTime.UnixEpoch()).ToString() },
+                { "FromDateTime", StubZonedDateTime.UnixEpoch().ToString() },
+                { "ToDateTime", StubZonedDateTime.UnixEpoch().ToString() },
                 { "Limit", "0" },
             };
 
@@ -112,8 +115,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
                 { "DataType", "Bar[]" },
                 { "Symbol", barType.Symbol.Value },
                 { "Specification", barType.Specification.ToString() },
-                { "FromDate", new DateKey(StubZonedDateTime.UnixEpoch()).ToString() },
-                { "ToDate", new DateKey(StubZonedDateTime.UnixEpoch()).ToString() },
+                { "FromDateTime", StubZonedDateTime.UnixEpoch().ToIso8601String() },
+                { "ToDateTime", StubZonedDateTime.UnixEpoch().ToIso8601String() },
                 { "Limit", "0" },
             };
 

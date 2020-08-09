@@ -20,8 +20,8 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Nautilus.Common.Data;
 using Nautilus.Common.Interfaces;
+using Nautilus.Core.Extensions;
 using Nautilus.Data.Interfaces;
-using Nautilus.Data.Keys;
 using Nautilus.Data.Messages.Requests;
 using Nautilus.Data.Messages.Responses;
 using Nautilus.Data.Providers;
@@ -45,7 +45,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
         private readonly IComponentryContainer container;
         private readonly IMessageBusAdapter messagingAdapter;
         private readonly ITickRepository repository;
-        private readonly IDataSerializer<Tick> dataSerializer;
+        private readonly TickDataSerializer dataSerializer;
 
         public TickProviderTests(ITestOutputHelper output)
             : base(output)
@@ -54,7 +54,11 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             this.container = TestComponentryContainer.Create(output);
             this.messagingAdapter = new MockMessageBusProvider(this.container).Adapter;
             this.dataSerializer = new TickDataSerializer();
-            this.repository = new MockTickRepository(this.container, this.dataSerializer, DataBusFactory.Create(this.container));
+            this.repository = new MockMarketDataRepository(
+                this.container,
+                this.dataSerializer,
+                new BarDataSerializer(),
+                DataBusFactory.Create(this.container));
         }
 
         [Fact]
@@ -74,8 +78,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             {
                 { "DataType", "Tick[]" },
                 { "Symbol", symbol.Value },
-                { "FromDate", new DateKey(StubZonedDateTime.UnixEpoch()).ToString() },
-                { "ToDate", new DateKey(StubZonedDateTime.UnixEpoch()).ToString() },
+                { "FromDateTime", StubZonedDateTime.UnixEpoch().ToIso8601String() },
+                { "ToDateTime", StubZonedDateTime.UnixEpoch().ToIso8601String() },
                 { "Limit", "0" },
             };
 
@@ -109,15 +113,15 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             var tick1 = new Tick(symbol, Price.Create(1.00000m), Price.Create(1.00000m), Volume.One(), Volume.One(), datetimeFrom);
             var tick2 = new Tick(symbol, Price.Create(1.00010m), Price.Create(1.00020m), Volume.One(), Volume.One(), datetimeTo);
 
-            this.repository.Add(tick1);
-            this.repository.Add(tick2);
+            this.repository.Ingest(tick1);
+            this.repository.Ingest(tick2);
 
             var query = new Dictionary<string, string>
             {
                 { "DataType", "Tick[]" },
                 { "Symbol", symbol.Value },
-                { "FromDate", new DateKey(StubZonedDateTime.UnixEpoch()).ToString() },
-                { "ToDate", new DateKey(StubZonedDateTime.UnixEpoch()).ToString() },
+                { "FromDateTime", StubZonedDateTime.UnixEpoch().ToIso8601String() },
+                { "ToDateTime", StubZonedDateTime.UnixEpoch().ToIso8601String() },
                 { "Limit", "0" },
             };
 

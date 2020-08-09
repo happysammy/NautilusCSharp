@@ -24,6 +24,17 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class PriceTests
     {
+        [Fact]
+        internal void Create_WhenGivenStringFormatting_ReturnsExpectedResult()
+        {
+            // Arrange
+            // Act
+            var result1 = Price.Create(1.0, 2);
+
+            // Assert
+            Assert.Equal("1.00", result1.ToString());
+        }
+
         [Theory]
         [InlineData(0.1, 1, 0.1)]
         [InlineData(0.001, 3, 0.001)]
@@ -114,8 +125,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         internal void CompareTo_VariousPrices_ReturnsExpectedResult(int value1, int value2, int expected)
         {
             // Arrange
-            var price1 = Price.Create(value1, 5);
-            var price2 = Price.Create(value2, 5);
+            var price1 = Price.Create((decimal)value1, 5);
+            var price2 = Price.Create((decimal)value2, 5);
 
             // Act
             var result = price1.CompareTo(price2);
@@ -179,7 +190,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         {
             // Arrange
             // Act
-            var price = Price.Create(1, 5);
+            var price = Price.Create(1m, 5);
 
             var result = price.GetHashCode();
 

@@ -15,15 +15,10 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using Nautilus.Core.Correctness;
-using Nautilus.Core.Extensions;
-using Nautilus.Data.Keys;
+using Nautilus.DomainModel.Enums;
 using Nautilus.DomainModel.Identifiers;
 using Nautilus.DomainModel.ValueObjects;
-using NodaTime;
 using StackExchange.Redis;
 
 namespace Nautilus.Redis.Data.Internal
@@ -35,148 +30,161 @@ namespace Nautilus.Redis.Data.Internal
     public static class KeyProvider
     {
         private const string NautilusData = nameof(NautilusData) + ":" + nameof(Nautilus.Data);
-        private const string Ticks = nameof(Ticks);
+        private const string Prices = nameof(Prices);
+        private const string Volumes = nameof(Volumes);
         private const string Bars = nameof(Bars);
         private const string Instruments = nameof(Instruments);
 
-        private static readonly string TicksNamespace = $"{NautilusData}:{Ticks}";
+        private static readonly string PricesNamespace = $"{NautilusData}:{Prices}";
+        private static readonly string VolumesNamespace = $"{NautilusData}:{Volumes}";
         private static readonly string BarsNamespace = $"{NautilusData}:{Bars}";
         private static readonly string InstrumentsNamespace = $"{NautilusData}:{Instruments}";
 
         /// <summary>
-        /// Returns an array of <see cref="DateKey"/>s based on the given from and to <see cref="ZonedDateTime"/> range.
+        /// Returns a tick prices key from the given arguments.
         /// </summary>
-        /// <param name="fromDateTime">The from date time.</param>
-        /// <param name="toDateTime">The to date time.</param>
-        /// <returns>An array of <see cref="DateKey"/>.</returns>
-        internal static List<DateKey> GetDateKeys(ZonedDateTime fromDateTime, ZonedDateTime toDateTime)
+        /// <param name="symbol">The symbol for the key.</param>
+        /// <param name="priceType">The price type for the key.</param>
+        /// <returns>A key string.</returns>
+        internal static string GetPricesKey(Symbol symbol, PriceType priceType)
         {
-            Debug.True(fromDateTime.IsLessThanOrEqualTo(toDateTime), "fromDateTime.IsLessThanOrEqualTo(toDateTime)");
-
-            return GetDateKeys(new DateKey(fromDateTime), new DateKey(toDateTime));
+            return $"{PricesNamespace}:{symbol.Venue.Value}:{symbol.Code}:{priceType.ToString()}";
         }
 
         /// <summary>
-        /// Returns an array of <see cref="DateKey"/>s based on the given from and to <see cref="ZonedDateTime"/> range.
+        /// Returns a tick volumes key from the given arguments.
         /// </summary>
-        /// <param name="fromDate">The from date.</param>
-        /// <param name="toDate">The to date.</param>
-        /// <returns>An array of <see cref="DateKey"/>.</returns>
-        internal static List<DateKey> GetDateKeys(DateKey fromDate, DateKey toDate)
+        /// <param name="symbol">The symbol for the key.</param>
+        /// <param name="priceType">The price type for the key.</param>
+        /// <returns>A key string.</returns>
+        internal static string GetVolumesKey(Symbol symbol, PriceType priceType)
         {
-            Debug.True(fromDate.CompareTo(toDate) <= 0, "fromDate.CompareTo(toDate) <= 0");
-
-            var difference = (int)((toDate.StartOfDay - fromDate.StartOfDay) / Duration.FromDays(1));
-            var dateRange = new List<DateKey> { fromDate };
-            for (var i = 0; i < difference; i++)
-            {
-                dateRange.Add(new DateKey(fromDate.DateUtc.Date + Period.FromDays(i + 1)));
-            }
-
-            return dateRange;
+            return $"{VolumesNamespace}:{symbol.Venue.Value}:{symbol.Code}:{priceType.ToString()}";
         }
 
         /// <summary>
-        /// Returns a tick data namespace wildcard string.
+        /// Returns a opens key from the given arguments.
         /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        internal static RedisValue GetTicksPattern()
+        /// <param name="barType">The bar type for the key.</param>
+        /// <returns>A key string.</returns>
+        internal static string GetBarOpensKey(BarType barType)
         {
-            return TicksNamespace + "*";
+            return GetBarOpensKey(
+                barType.Symbol,
+                barType.Specification.BarStructure,
+                barType.Specification.PriceType);
         }
 
         /// <summary>
-        /// Returns a tick data namespace wildcard string from the given symbol.
+        /// Returns a highs key from the given arguments.
         /// </summary>
-        /// <param name="symbol">The symbol.</param>
-        /// <returns>A <see cref="string"/>.</returns>
-        internal static RedisValue GetTicksPattern(Symbol symbol)
+        /// <param name="barType">The bar type for the key.</param>
+        /// <returns>A key string.</returns>
+        internal static string GetBarHighsKey(BarType barType)
         {
-            return $"{TicksNamespace}:{symbol.Venue.Value}:{symbol.Code}*";
+            return GetBarHighsKey(
+                barType.Symbol,
+                barType.Specification.BarStructure,
+                barType.Specification.PriceType);
         }
 
         /// <summary>
-        /// Returns the tick data key for the given parameters.
+        /// Returns a lows key from the given arguments.
         /// </summary>
-        /// <param name="symbol">The symbol.</param>
-        /// <param name="dateKey">The date key.</param>
-        /// <returns>The key string.</returns>
-        internal static RedisKey GetTicksKey(Symbol symbol, DateKey dateKey)
+        /// <param name="barType">The bar type for the key.</param>
+        /// <returns>A key string.</returns>
+        internal static string GetBarLowsKey(BarType barType)
         {
-            return $"{TicksNamespace}:{symbol.Venue.Value}:{symbol.Code}:{dateKey}";
+            return GetBarLowsKey(
+                barType.Symbol,
+                barType.Specification.BarStructure,
+                barType.Specification.PriceType);
         }
 
         /// <summary>
-        /// Returns an array of <see cref="DateKey"/>s based on the given from and to
-        /// <see cref="ZonedDateTime"/> range.
+        /// Returns a closes key from the given arguments.
         /// </summary>
-        /// <param name="symbol">The ticks symbol.</param>
-        /// <param name="fromDate">The ticks from date time.</param>
-        /// <param name="toDate">The ticks to date time.</param>
-        /// <returns>An array of <see cref="DateKey"/>.</returns>
-        /// <remarks>The given time range should have been previously validated.</remarks>
-        internal static RedisKey[] GetTicksKeys(Symbol symbol, DateKey fromDate, DateKey toDate)
+        /// <param name="barType">The bar type for the key.</param>
+        /// <returns>A key string.</returns>
+        internal static string GetBarClosesKey(BarType barType)
         {
-            return GetDateKeys(fromDate, toDate)
-                .Select(key => GetTicksKey(symbol, key))
-                .ToArray();
+            return GetBarClosesKey(
+                barType.Symbol,
+                barType.Specification.BarStructure,
+                barType.Specification.PriceType);
         }
 
         /// <summary>
-        /// Returns a wildcard key string for all bars.
+        /// Returns a volumes key from the given arguments.
         /// </summary>
-        /// <returns>The key <see cref="string"/>.</returns>
-        internal static RedisValue GetBarsPattern()
+        /// <param name="barType">The bar type for the key.</param>
+        /// <returns>A key string.</returns>
+        internal static string GetBarVolumesKey(BarType barType)
         {
-            return BarsNamespace + "*";
+            return GetBarVolumesKey(
+                barType.Symbol,
+                barType.Specification.BarStructure,
+                barType.Specification.PriceType);
         }
 
         /// <summary>
-        /// Returns a wildcard string from the given symbol bar spec.
+        /// Returns a opens key from the given arguments.
         /// </summary>
-        /// <param name="barType">The symbol bar spec.</param>
-        /// <returns>A <see cref="string"/>.</returns>
-        internal static RedisValue GetBarsPattern(BarType barType)
+        /// <param name="symbol">The symbol for the key.</param>
+        /// <param name="barStructure">The bar structure for the key.</param>
+        /// <param name="priceType">The price type for the key.</param>
+        /// <returns>A key string.</returns>
+        internal static string GetBarOpensKey(Symbol symbol, BarStructure barStructure, PriceType priceType)
         {
-            return BarsNamespace +
-                   $":{barType.Symbol.Venue.Value}" +
-                   $":{barType.Symbol.Code}" +
-                   $":{barType.Specification.BarStructure}" +
-                   $":{barType.Specification.PriceType}*";
+            return $"{BarsNamespace}:{symbol.Venue.Value}:{symbol.Code}:{barStructure.ToString()}:{priceType.ToString()}:Opens";
         }
 
         /// <summary>
-        /// Returns the bar data key for the given parameters.
+        /// Returns a highs key from the given arguments.
         /// </summary>
-        /// <param name="barType">The bar type.</param>
-        /// <param name="dateKey">The date key.</param>
-        /// <returns>The key <see cref="string"/>.</returns>
-        internal static RedisKey GetBarsKey(BarType barType, DateKey dateKey)
+        /// <param name="symbol">The symbol for the key.</param>
+        /// <param name="barStructure">The bar structure for the key.</param>
+        /// <param name="priceType">The price type for the key.</param>
+        /// <returns>A key string.</returns>
+        internal static string GetBarHighsKey(Symbol symbol, BarStructure barStructure, PriceType priceType)
         {
-            return BarsNamespace +
-                   $":{barType.Symbol.Venue.Value}" +
-                   $":{barType.Symbol.Code}" +
-                   $":{barType.Specification.BarStructure}" +
-                   $":{barType.Specification.PriceType}" +
-                   $":{dateKey}";
+            return $"{BarsNamespace}:{symbol.Venue.Value}:{symbol.Code}:{barStructure.ToString()}:{priceType.ToString()}:Highs";
         }
 
         /// <summary>
-        /// Returns an array of <see cref="DateKey"/>s based on the given from and to
-        /// <see cref="ZonedDateTime"/> range.
+        /// Returns a highs key from the given arguments.
         /// </summary>
-        /// <param name="barType">The bar specification.</param>
-        /// <param name="fromDate">The from date time.</param>
-        /// <param name="toDate">The to date time.</param>
-        /// <returns>An array of key <see cref="string"/>(s).</returns>
-        /// <remarks>The given time range should have been previously validated.</remarks>
-        internal static RedisKey[] GetBarsKeys(BarType barType, DateKey fromDate, DateKey toDate)
+        /// <param name="symbol">The symbol for the key.</param>
+        /// <param name="barStructure">The bar structure for the key.</param>
+        /// <param name="priceType">The price type for the key.</param>
+        /// <returns>A key string.</returns>
+        internal static string GetBarLowsKey(Symbol symbol, BarStructure barStructure, PriceType priceType)
         {
-            Debug.True(fromDate.CompareTo(toDate) <= 0, "fromDate.CompareTo(toDate) <= 0");
+            return $"{BarsNamespace}:{symbol.Venue.Value}:{symbol.Code}:{barStructure.ToString()}:{priceType.ToString()}:Lows";
+        }
 
-            return GetDateKeys(fromDate, toDate)
-                .Select(key => GetBarsKey(barType, key))
-                .ToArray();
+        /// <summary>
+        /// Returns a closes key from the given arguments.
+        /// </summary>
+        /// <param name="symbol">The symbol for the key.</param>
+        /// <param name="barStructure">The bar structure for the key.</param>
+        /// <param name="priceType">The price type for the key.</param>
+        /// <returns>A key string.</returns>
+        internal static string GetBarClosesKey(Symbol symbol, BarStructure barStructure, PriceType priceType)
+        {
+            return $"{BarsNamespace}:{symbol.Venue.Value}:{symbol.Code}:{barStructure.ToString()}:{priceType.ToString()}:Closes";
+        }
+
+        /// <summary>
+        /// Returns a bar volumes key from the given arguments.
+        /// </summary>
+        /// <param name="symbol">The symbol for the key.</param>
+        /// <param name="barStructure">The bar structure for the key.</param>
+        /// <param name="priceType">The price type for the key.</param>
+        /// <returns>A key string.</returns>
+        internal static string GetBarVolumesKey(Symbol symbol, BarStructure barStructure, PriceType priceType)
+        {
+            return $"{BarsNamespace}:{symbol.Venue.Value}:{symbol.Code}:{barStructure.ToString()}:{priceType.ToString()}:Volumes";
         }
 
         /// <summary>

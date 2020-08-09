@@ -55,7 +55,6 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
             var addresses = new Dictionary<Address, IEndpoint>
             {
                 { ComponentAddress.DataService, this.receiver.Endpoint },
-                { ComponentAddress.BarAggregationController, this.receiver.Endpoint },
                 { ComponentAddress.Scheduler, this.receiver.Endpoint },
             };
 
@@ -442,7 +441,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.MessagingTests
 
             var envelope = new Envelope<MarketOpened>(
                 message,
-                ComponentAddress.BarAggregationController,
+                ComponentAddress.Scheduler,
                 ComponentAddress.DataService,
                 StubZonedDateTime.UnixEpoch());
 

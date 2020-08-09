@@ -20,7 +20,7 @@ using Nautilus.Core.Annotations;
 namespace Nautilus.DomainModel.Enums
 {
     /// <summary>
-    /// Represents the granularity of a time resolution.
+    /// Represents the structure of a time series bar.
     /// </summary>
     public enum BarStructure
     {

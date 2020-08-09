@@ -64,7 +64,18 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.TypesTests
             // Act
             // Assert
             Assert.Equal("1", identifier.Value);
-            Assert.Equal("TestIdentifier(1)", identifier.ToString());
+            Assert.Equal("1", identifier.ToString());
+        }
+
+        [Fact]
+        internal void ToStringWithClass_ReturnsExpectedString()
+        {
+            // Arrange
+            var identifier = new TestIdentifier("1");
+
+            // Act
+            // Assert
+            Assert.Equal("TestIdentifier(1)", identifier.ToStringWithClass());
         }
 
         private sealed class TestIdentifier : Identifier<TestIdentifier>
