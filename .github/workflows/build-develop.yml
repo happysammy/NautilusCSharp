@@ -48,7 +48,7 @@ jobs:
           cd -
           ls
           redis-server --daemonize yes
-          redis-cli MODULE LOAD /home/runner/work/Nautilus/RedisTimeSeries/bin/linux-x64-release/redistimeseries.so
+          redis-cli MODULE LOAD /home/runner/work/Nautilus/Nautilus/RedisTimeSeries/bin/linux-x64-release/redistimeseries.so
 
       - name: Test
         run: |
