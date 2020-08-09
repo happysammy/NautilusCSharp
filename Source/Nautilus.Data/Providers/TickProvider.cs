@@ -74,28 +74,24 @@ namespace Nautilus.Data.Providers
                 var dataType = request.Query[DataType];
                 if (dataType != typeof(Tick[]).Name)
                 {
-                    return this.QueryFailure($"Incorrect DataType requested, was {dataType}", request.Id);
+                    return this.QueryFailure($"incorrect DataType requested, was {dataType}", request.Id);
                 }
 
                 // Query objects
                 var symbol = Symbol.FromString(request.Query["Symbol"]);
-                var fromDateTime = request.Query["FromDateTime"].ToNullableZonedDateTimeFromIso();
-                var toDateTime = request.Query["ToDateTime"].ToNullableZonedDateTimeFromIso();
+                var fromDate = request.Query["FromDateTime"].ToNullableZonedDateTimeFromIso();
+                var toDate = request.Query["ToDateTime"].ToNullableZonedDateTimeFromIso();
                 var limit = long.Parse(request.Query["Limit"]);
 
                 var dataQuery = this.repository.ReadTickData(
                     symbol,
-                    fromDateTime,
-                    toDateTime,
+                    fromDate,
+                    toDate,
                     limit);
 
                 if (dataQuery.Length == 0)
                 {
-                    var fromDateTimeString = fromDateTime is null ? "Min" : fromDateTime.ToString();
-                    var toDateTimeString = fromDateTime is null ? "Max" : fromDateTime.ToString();
-
-                    return this.QueryFailure($"No tick found for {symbol} from " +
-                                             $"{fromDateTimeString} to {toDateTimeString}", request.Id);
+                    return this.QueryFailure("No tick data found for symbol or time range.", request.Id);
                 }
 
                 return new DataResponse(

@@ -18,7 +18,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using Nautilus.Common.Data;
-using Nautilus.DomainModel.ValueObjects;
 using Nautilus.Redis;
 using Nautilus.Redis.Data;
 using Nautilus.TestSuite.TestKit.Components;
@@ -72,7 +71,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         }
 
         [Fact]
-        internal void Ingest_MultipleTicksDifferentSymbols_CorrectlyAddsTicksToRepository()
+        internal void Add_MultipleTicksDifferentSymbols_AddsTicksToRepository()
         {
             // Arrange
             var audusd = StubInstrumentProvider.AUDUSD();
@@ -107,7 +106,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             this.repository.Update(audusd);
 
             // Act
-            var result = this.repository.GetTicks(audusd.Symbol, null, null, null);
+            var result = this.repository.GetTicks(audusd.Symbol);
 
             // Assert
             Assert.False(this.repository.TicksExist(audusd.Symbol));
@@ -127,78 +126,10 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             this.repository.Ingest(tick1);
 
             // Act
-            var result = this.repository.GetTicks(audusd.Symbol, null, null, null);
+            var result = this.repository.GetTicks(audusd.Symbol);
 
             // Assert
             Assert.Equal(1, this.repository.TicksCount(audusd.Symbol));
-            Assert.Single(result);
-            Assert.Equal(tick1, result[0]);
-        }
-
-        [Fact]
-        internal void GetTicks_WithLimitOne_ReturnsLastTick()
-        {
-            // Arrange
-            var audusd = StubInstrumentProvider.AUDUSD();
-            this.repository.Update(audusd);
-
-            var tick1 = StubTickProvider.Create(audusd.Symbol);
-            var tick2 = StubTickProvider.Create(audusd.Symbol, StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(100));
-
-            this.repository.Ingest(tick1);
-            this.repository.Ingest(tick2);
-
-            // Act
-            var result = this.repository.GetTicks(audusd.Symbol, null, null, 1);
-
-            // Assert
-            Assert.Equal(2, this.repository.TicksCount(audusd.Symbol));
-            Assert.Single(result);
-            Assert.Equal(tick2, result[0]);
-        }
-
-        [Fact]
-        internal void GetTicks_WithFromDateTime_ReturnsTickInRange()
-        {
-            // Arrange
-            var audusd = StubInstrumentProvider.AUDUSD();
-            this.repository.Update(audusd);
-
-            var fromDateTime = StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(1000);
-
-            var tick1 = StubTickProvider.Create(audusd.Symbol);
-            var tick2 = StubTickProvider.Create(audusd.Symbol, fromDateTime);
-
-            this.repository.Ingest(tick1);
-            this.repository.Ingest(tick2);
-
-            // Act
-            var result = this.repository.GetTicks(audusd.Symbol, fromDateTime, null, null);
-
-            // Assert
-            Assert.Equal(2, this.repository.TicksCount(audusd.Symbol));
-            Assert.Single(result);
-            Assert.Equal(tick2, result[0]);
-        }
-
-        [Fact]
-        internal void GetTicks_WithToDateTime_ReturnsTickInRange()
-        {
-            // Arrange
-            var audusd = StubInstrumentProvider.AUDUSD();
-            this.repository.Update(audusd);
-
-            var tick1 = StubTickProvider.Create(audusd.Symbol);
-            var tick2 = StubTickProvider.Create(audusd.Symbol, StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(1000));
-
-            this.repository.Ingest(tick1);
-            this.repository.Ingest(tick2);
-
-            // Act
-            var result = this.repository.GetTicks(audusd.Symbol, null, StubZonedDateTime.UnixEpoch(), null);
-
-            // Assert
-            Assert.Equal(2, this.repository.TicksCount(audusd.Symbol));
             Assert.Single(result);
             Assert.Equal(tick1, result[0]);
         }
@@ -212,176 +143,12 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             this.repository.Update(audusd);
 
             // Act
-            var result = this.repository.GetBars(StubBarType.AUDUSD_OneMinuteAsk(), null, null, null);
+            var result = this.repository.GetBars(StubBarType.AUDUSD_OneMinuteAsk());
 
             // Assert
             Assert.False(this.repository.BarsExist(barType));
             Assert.Equal(0, this.repository.BarsCount(barType));
             Assert.Empty(result.Bars);
-        }
-
-        [Fact]
-        internal void GetBars_WithTicksCreatingBar_ReturnsExpectedBar()
-        {
-            // Arrange
-            var audusd = StubInstrumentProvider.AUDUSD();
-            var barType = StubBarType.AUDUSD_OneMinuteBid();
-            this.repository.Update(audusd);
-
-            var tick0 = new Tick(
-                audusd.Symbol,
-                Price.Create(1.00001, 5),
-                Price.Create(1.00010, 5),
-                Volume.One(),
-                Volume.One(),
-                StubZonedDateTime.UnixEpoch());
-
-            var tick1 = new Tick(
-                audusd.Symbol,
-                Price.Create(1.00000, 5),
-                Price.Create(1.00010, 5),
-                Volume.One(),
-                Volume.One(),
-                StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(60));
-
-            var tick2 = new Tick(
-                audusd.Symbol,
-                Price.Create(1.00030, 5),
-                Price.Create(1.00040, 5),
-                Volume.One(),
-                Volume.One(),
-                StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(62));
-
-            var tick3 = new Tick(
-                audusd.Symbol,
-                Price.Create(0.99980, 5),
-                Price.Create(0.99990, 5),
-                Volume.One(),
-                Volume.One(),
-                StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(63));
-
-            var tick4 = new Tick(
-                audusd.Symbol,
-                Price.Create(1.00001, 5),
-                Price.Create(1.00011, 5),
-                Volume.One(),
-                Volume.One(),
-                StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(119));
-
-            var tick5 = new Tick(
-                audusd.Symbol,
-                Price.Create(1.00001, 5),
-                Price.Create(1.00011, 5),
-                Volume.One(),
-                Volume.One(),
-                StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(121));
-
-            this.repository.Ingest(tick0);
-            this.repository.Ingest(tick1);
-            this.repository.Ingest(tick2);
-            this.repository.Ingest(tick3);
-            this.repository.Ingest(tick4);
-            this.repository.Ingest(tick5);
-
-            var expected = new Bar(
-                Price.Create(1.00000, 5),
-                Price.Create(1.00030, 5),
-                Price.Create(0.99980, 5),
-                Price.Create(1.00001, 5),
-                Volume.Create(4),
-                StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(120));
-
-            // Act
-            var result = this.repository.GetBars(barType, null, null, 1);
-
-            // Assert
-            Assert.Equal(6, this.repository.TicksCount(audusd.Symbol));
-            Assert.True(this.repository.BarsExist(barType));
-            Assert.Equal(2, this.repository.BarsCount(barType));
-            Assert.Single(result.Bars);
-            Assert.Equal(expected, result.Bars[0]);
-        }
-
-        [Fact]
-        internal void GetMidBars_WithTicksCreatingBar_ReturnsExpectedBar()
-        {
-            // Arrange
-            var audusd = StubInstrumentProvider.AUDUSD();
-            var barType = StubBarType.AUDUSD_OneMinuteMid();
-            this.repository.Update(audusd);
-
-            var tick0 = new Tick(
-                audusd.Symbol,
-                Price.Create(1.00001, 5),
-                Price.Create(1.00010, 5),
-                Volume.One(),
-                Volume.One(),
-                StubZonedDateTime.UnixEpoch());
-
-            var tick1 = new Tick(
-                audusd.Symbol,
-                Price.Create(1.00000, 5),
-                Price.Create(1.00010, 5),
-                Volume.One(),
-                Volume.One(),
-                StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(60));
-
-            var tick2 = new Tick(
-                audusd.Symbol,
-                Price.Create(1.00030, 5),
-                Price.Create(1.00040, 5),
-                Volume.One(),
-                Volume.One(),
-                StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(62));
-
-            var tick3 = new Tick(
-                audusd.Symbol,
-                Price.Create(0.99980, 5),
-                Price.Create(0.99990, 5),
-                Volume.One(),
-                Volume.One(),
-                StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(63));
-
-            var tick4 = new Tick(
-                audusd.Symbol,
-                Price.Create(1.00001, 5),
-                Price.Create(1.00004, 5),
-                Volume.One(),
-                Volume.One(),
-                StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(119));
-
-            var tick5 = new Tick(
-                audusd.Symbol,
-                Price.Create(1.00001, 5),
-                Price.Create(1.00011, 5),
-                Volume.One(),
-                Volume.One(),
-                StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(121));
-
-            this.repository.Ingest(tick0);
-            this.repository.Ingest(tick1);
-            this.repository.Ingest(tick2);
-            this.repository.Ingest(tick3);
-            this.repository.Ingest(tick4);
-            this.repository.Ingest(tick5);
-
-            var expected = new Bar(
-                Price.Create(1.000050, 6),
-                Price.Create(1.000350, 6),
-                Price.Create(0.999850, 6),
-                Price.Create(1.000025, 6),
-                Volume.Create(4),
-                StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(120));
-
-            // Act
-            var result = this.repository.GetBars(barType, null, null, 1);
-
-            // Assert
-            Assert.Equal(6, this.repository.TicksCount(audusd.Symbol));
-            Assert.True(this.repository.BarsExist(barType));
-            Assert.Equal(2, this.repository.BarsCount(barType));
-            Assert.Single(result.Bars);
-            Assert.Equal(expected, result.Bars[0]);
         }
     }
 }

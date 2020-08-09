@@ -53,9 +53,9 @@ namespace Nautilus.Data.Interfaces
         /// <returns>The bar data.</returns>
         BarDataFrame GetBars(
             BarType barType,
-            ZonedDateTime? fromDateTime,
-            ZonedDateTime? toDateTime,
-            long? limit);
+            ZonedDateTime? fromDateTime = null,
+            ZonedDateTime? toDateTime = null,
+            long? limit = null);
 
         /// <summary>
         /// Returns the bar data held in the database of the given <see cref="BarType"/> within the given
@@ -68,8 +68,8 @@ namespace Nautilus.Data.Interfaces
         /// <returns>The serialized bar data.</returns>
         byte[][] ReadBarData(
             BarType barType,
-            ZonedDateTime? fromDateTime,
-            ZonedDateTime? toDateTime,
-            long? limit);
+            ZonedDateTime? fromDateTime = null,
+            ZonedDateTime? toDateTime = null,
+            long? limit = null);
     }
 }

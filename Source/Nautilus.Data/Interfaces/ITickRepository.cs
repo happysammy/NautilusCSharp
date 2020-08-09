@@ -72,8 +72,8 @@ namespace Nautilus.Data.Interfaces
         /// <returns>The serialized tick data.</returns>
         public byte[][] ReadTickData(
             Symbol symbol,
-            ZonedDateTime? fromDateTime,
-            ZonedDateTime? toDateTime,
-            long? limit);
+            ZonedDateTime? fromDateTime = null,
+            ZonedDateTime? toDateTime = null,
+            long? limit = null);
     }
 }
