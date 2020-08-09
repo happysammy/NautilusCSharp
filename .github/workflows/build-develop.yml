@@ -36,15 +36,16 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudo apt-get install redis-server
+          wget http://download.redis.io/redis-stable.tar.gz
+          tar xvzf redis-stable.tar.gz
+          cd redis-stable
+          sudo make
+          cd -
           git clone --recursive https://github.com/RedisTimeSeries/RedisTimeSeries.git
           cd RedisTimeSeries
-          sudo make setup
           sudo make build
           redis-server --daemonize yes
-          redis-cli
-          MODULE LOAD /bin/redistimeseries.so
-          exit
+          redis-cli MODULE LOAD /bin/redistimeseries.so
           cd -
 
       - name: Test
