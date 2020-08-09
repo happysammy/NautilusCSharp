@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="IBarRepository.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="IBarRepositoryReadOnly.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2020 Nautech Systems Pty Ltd. All rights reserved.
 //  https://nautechsystems.io
 //
@@ -15,42 +15,61 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-using Nautilus.DomainModel.Enums;
 using Nautilus.DomainModel.Frames;
 using Nautilus.DomainModel.ValueObjects;
+using NodaTime;
 
 namespace Nautilus.Data.Interfaces
 {
     /// <summary>
     /// Provides a repository for accessing <see cref="Bar"/> data.
     /// </summary>
-    public interface IBarRepository : IBarRepositoryReadOnly, IRepository
+    public interface IBarRepository
     {
         /// <summary>
-        /// Adds the given bars to the repository.
+        /// Returns a value indicating whether any bars for the given <see cref="BarType"/> exist in
+        /// the repository.
         /// </summary>
-        /// <param name="barData">The market data to add.</param>
-        void Add(BarDataFrame barData);
+        /// <param name="barType">The bar type to query.</param>
+        /// <returns>True if bars exist, else false.</returns>
+        bool BarsExist(BarType barType);
 
         /// <summary>
-        /// Adds the given bar to the repository.
+        /// Returns the count of bars held within the repository for the given
+        /// <see cref="BarType"/>.
         /// </summary>
-        /// <param name="barType">The barType to add.</param>
-        /// <param name="bar">The bar to add.</param>
-        void Add(BarType barType, Bar bar);
+        /// <param name="barType">The bar type to count.</param>
+        /// <returns>A <see cref="int"/>.</returns>
+        long BarsCount(BarType barType);
 
         /// <summary>
-        /// Adds the given bars to the repository.
+        /// Returns the bars held in the database of the given <see cref="BarType"/> within the given
+        /// range.
         /// </summary>
-        /// <param name="barType">The barType to add.</param>
-        /// <param name="bars">The bars to add.</param>
-        void Add(BarType barType, Bar[] bars);
+        /// <param name="barType">The type of bars to get.</param>
+        /// <param name="toDateTime">The from date.</param>
+        /// <param name="fromDateTime">The to date.</param>
+        /// <param name="limit">The optional count limit for the bars.</param>
+        /// <returns>The bar data.</returns>
+        BarDataFrame GetBars(
+            BarType barType,
+            ZonedDateTime? fromDateTime = null,
+            ZonedDateTime? toDateTime = null,
+            long? limit = null);
 
         /// <summary>
-        /// Trims the bars of the given structure held in the repository to equal the given days.
+        /// Returns the bar data held in the database of the given <see cref="BarType"/> within the given
+        /// range.
         /// </summary>
-        /// <param name="barStructure">The bar resolution to trim.</param>
-        /// <param name="days">The number of days (keys) to trim to.</param>
-        void TrimToDays(BarStructure barStructure, int days);
+        /// <param name="barType">The type of bars data to get.</param>
+        /// <param name="fromDateTime">The from datetime.</param>
+        /// <param name="toDateTime">The to datetime.</param>
+        /// <param name="limit">The optional count limit for the data.</param>
+        /// <returns>The serialized bar data.</returns>
+        byte[][] ReadBarData(
+            BarType barType,
+            ZonedDateTime? fromDateTime = null,
+            ZonedDateTime? toDateTime = null,
+            long? limit = null);
     }
 }

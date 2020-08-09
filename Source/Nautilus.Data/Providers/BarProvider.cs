@@ -21,9 +21,9 @@ using Nautilus.Common.Interfaces;
 using Nautilus.Common.Logging;
 using Nautilus.Common.Messages.Commands;
 using Nautilus.Common.Messaging;
+using Nautilus.Core.Extensions;
 using Nautilus.Core.Message;
 using Nautilus.Data.Interfaces;
-using Nautilus.Data.Keys;
 using Nautilus.Data.Messages.Requests;
 using Nautilus.Data.Messages.Responses;
 using Nautilus.DomainModel.Identifiers;
@@ -39,7 +39,7 @@ namespace Nautilus.Data.Providers
     {
         private const string DataType = nameof(DataType);
 
-        private readonly IBarRepositoryReadOnly repository;
+        private readonly IBarRepository repository;
         private readonly IDataSerializer<Bar> dataSerializer;
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace Nautilus.Data.Providers
         public BarProvider(
             IComponentryContainer container,
             IMessageBusAdapter messagingAdapter,
-            IBarRepositoryReadOnly repository,
+            IBarRepository repository,
             IDataSerializer<Bar> dataSerializer)
             : base(container, messagingAdapter)
         {
@@ -81,23 +81,23 @@ namespace Nautilus.Data.Providers
                 var symbol = Symbol.FromString(request.Query["Symbol"]);
                 var barSpec = BarSpecification.FromString(request.Query["Specification"]);
                 var barType = new BarType(symbol, barSpec);
-                var fromDate = DateKey.FromString(request.Query["FromDate"]);
-                var toDate = DateKey.FromString(request.Query["ToDate"]);
-                var limit = Convert.ToInt32(request.Query["Limit"]);
+                var fromDateTime = request.Query["FromDateTime"].ToNullableZonedDateTimeFromIso();
+                var toDateTime = request.Query["ToDateTime"].ToNullableZonedDateTimeFromIso();
+                var limit = long.Parse(request.Query["Limit"]);
 
-                var dataQuery = this.repository.GetBarData(
+                var data = this.repository.ReadBarData(
                     barType,
-                    fromDate,
-                    toDate,
+                    fromDateTime,
+                    toDateTime,
                     limit);
 
-                if (dataQuery.IsFailure)
+                if (data.Length == 0)
                 {
-                    return this.QueryFailure(dataQuery.Message, request.Id);
+                    return this.QueryFailure("No bar data found for bar type or time range.", request.Id);
                 }
 
                 return new DataResponse(
-                    this.dataSerializer.SerializeBlob(dataQuery.Value, request.Query),
+                    this.dataSerializer.SerializeBlob(data, request.Query),
                     dataType,
                     this.dataSerializer.BlobEncoding,
                     request.Id,

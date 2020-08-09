@@ -63,7 +63,7 @@ namespace Nautilus.DomainModel.ValueObjects
         }
 
         /// <summary>
-        /// Returns a new <see cref="Price"/> with the given value and decimal places.
+        /// Returns a new <see cref="Price"/> with the given value and decimal precision.
         /// </summary>
         /// <param name="value">The price value.</param>
         /// <param name="precision">The price precision.</param>
@@ -71,6 +71,17 @@ namespace Nautilus.DomainModel.ValueObjects
         public static Price Create(decimal value, int precision)
         {
             return new Price(value, precision);
+        }
+
+        /// <summary>
+        /// Returns a new <see cref="Price"/> with the given value and decimal precision.
+        /// </summary>
+        /// <param name="value">The price value.</param>
+        /// <param name="precision">The price precision.</param>
+        /// <returns>A <see cref="Price"/>.</returns>
+        public static Price Create(double value, int precision)
+        {
+            return new Price(decimal.Parse(value.ToString($"F{precision}")), precision);
         }
 
         /// <summary>

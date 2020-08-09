@@ -65,35 +65,40 @@ namespace Nautilus.Core.Extensions
         /// <summary>
         /// Returns a <see cref="ZonedDateTime"/> parsed from the given (ISO-8601) string.
         /// </summary>
-        /// <param name="dateTime">The date time.</param>
+        /// <param name="value">The string value.</param>
         /// <returns>A <see cref="ZonedDateTime"/>.</returns>
-        public static ZonedDateTime ToZonedDateTimeFromIso(this string dateTime)
+        public static ZonedDateTime ToZonedDateTimeFromIso(this string value)
         {
-            Condition.NotEmptyOrWhiteSpace(dateTime, nameof(dateTime));
+            Condition.NotEmptyOrWhiteSpace(value, nameof(value));
 
             // Ensure format
-            dateTime = dateTime
+            value = value
                 .Replace(" ", "T")
                 .Replace("Z", string.Empty);
 
-            return NodaIsoStringParsePattern.Parse(dateTime).Value;
+            return NodaIsoStringParsePattern.Parse(value).Value;
         }
 
         /// <summary>
         /// Returns a <see cref="ZonedDateTime"/> parsed from the given (ISO-8601) string.
         /// </summary>
-        /// <param name="dateTime">The date time.</param>
+        /// <param name="value">The date time.</param>
         /// <returns>A <see cref="ZonedDateTime"/>.</returns>
-        public static ZonedDateTime? ToNullableZonedDateTimeFromIso(this string dateTime)
+        public static ZonedDateTime? ToNullableZonedDateTimeFromIso(this string value)
         {
-            Condition.NotEmptyOrWhiteSpace(dateTime, nameof(dateTime));
+            Condition.NotEmptyOrWhiteSpace(value, nameof(value));
+
+            if (value == "None")
+            {
+                return null;
+            }
 
             // Ensure format
-            dateTime = dateTime
+            value = value
                 .Replace(" ", "T")
                 .Replace("Z", string.Empty);
 
-            return NodaIsoStringParsePattern.Parse(dateTime).Value;
+            return NodaIsoStringParsePattern.Parse(value).Value;
         }
 
         /// <summary>

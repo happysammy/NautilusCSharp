@@ -141,6 +141,12 @@ namespace Nautilus.Core.Types
         /// Returns a string representation of the <see cref="Identifier{T}"></see>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{typeof(T).Name}({this.Value})";
+        public override string ToString() => this.Value;
+
+        /// <summary>
+        /// Returns a string representation of the <see cref="Identifier{T}"></see>.
+        /// </summary>
+        /// <returns>A <see cref="string"/>.</returns>
+        public string ToStringWithClass() => $"{typeof(T).Name}({this.Value})";
     }
 }

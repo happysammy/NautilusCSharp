@@ -89,6 +89,17 @@ namespace Nautilus.DomainModel.ValueObjects
         }
 
         /// <summary>
+        /// Returns a new <see cref="Volume"/> with the given amount.
+        /// </summary>
+        /// <param name="value">The volume value.</param>
+        /// <returns>A <see cref="Quantity"/>.</returns>
+        /// <param name="precision">The precision of the volume.</param>
+        public static Volume Create(double value, int precision)
+        {
+            return new Volume(decimal.Parse(value.ToString($"F{precision}")), precision);
+        }
+
+        /// <summary>
         /// Returns a new <see cref="Volume"/> as the result of the sum of this <see cref="Volume"/>
         /// and the given <see cref="Volume"/>.
         /// </summary>

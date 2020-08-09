@@ -175,7 +175,12 @@ namespace Nautilus.DomainModel.ValueObjects
                     return Duration.FromHours(barPeriod);
                 case BarStructure.Day:
                     return Duration.FromDays(barPeriod);
+                case BarStructure.TickImbalance:
                 case BarStructure.Undefined:
+                case BarStructure.Volume:
+                case BarStructure.VolumeImbalance:
+                case BarStructure.Dollar:
+                case BarStructure.DollarImbalance:
                     goto default;
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(barStructure, nameof(barStructure));

@@ -34,12 +34,7 @@ namespace Nautilus.Fxcm
     /// </summary>
     public static class FxcmMessageHelper
     {
-        private static readonly ZonedDateTimePattern MarketDataParsePattern =
-            ZonedDateTimePattern.CreateWithInvariantCulture(
-                "yyyyMMddHH:mm:ss.fff",
-                DateTimeZoneProviders.Tzdb);
-
-        private static readonly ZonedDateTimePattern ExecutionReportParsePattern =
+        private static readonly ZonedDateTimePattern TimestampParsePattern =
             ZonedDateTimePattern.CreateWithInvariantCulture(
                 "yyyyMMdd-HH:mm:ss.fff",
                 DateTimeZoneProviders.Tzdb);
@@ -336,7 +331,7 @@ namespace Nautilus.Fxcm
         public static ZonedDateTime? GetExpireTime(ExecutionReport message)
         {
             return message.IsSetField(Tags.ExpireTime)
-                ? ParseTransactionTime(message.GetField(Tags.ExpireTime))
+                ? ParseTimestamp(message.GetField(Tags.ExpireTime))
                 : (ZonedDateTime?)null;
         }
 
@@ -345,16 +340,8 @@ namespace Nautilus.Fxcm
         /// </summary>
         /// <param name="dateTime">The date time.</param>
         /// <returns>The converted <see cref="ZonedDateTime"/>.</returns>
-        public static ZonedDateTime ParseMarketDataTimestamp(string dateTime) =>
-            MarketDataParsePattern.Parse(dateTime).Value;
-
-        /// <summary>
-        /// Returns the date time parsed from the given string.
-        /// </summary>
-        /// <param name="dateTime">The date time.</param>
-        /// <returns>The converted <see cref="ZonedDateTime"/>.</returns>
-        public static ZonedDateTime ParseTransactionTime(string dateTime) =>
-            ExecutionReportParsePattern.Parse(dateTime).Value;
+        public static ZonedDateTime ParseTimestamp(string dateTime) =>
+            TimestampParsePattern.Parse(dateTime).Value;
 
         /// <summary>
         /// Returns the date time parsed from the given string.

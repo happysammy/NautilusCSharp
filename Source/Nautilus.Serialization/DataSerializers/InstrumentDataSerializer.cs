@@ -90,7 +90,6 @@ namespace Nautilus.Serialization.DataSerializers
         }
 
         /// <inheritdoc />
-        [PerformanceOptimized]
         public byte[] SerializeBlob(byte[][] dataObjectsArray, Dictionary<string, string> metadata)
         {
             var bson = new BsonDocument

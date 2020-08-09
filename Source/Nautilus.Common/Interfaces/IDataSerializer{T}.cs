@@ -27,7 +27,7 @@ namespace Nautilus.Common.Interfaces
     public interface IDataSerializer<T> : ISerializer<T>
     {
         /// <summary>
-        /// Gets the serializers data bloc encoding.
+        /// Gets the serializers data blob encoding.
         /// </summary>
         DataEncoding BlobEncoding { get; }
 
