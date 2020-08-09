@@ -140,7 +140,7 @@ namespace Nautilus.Fxcm
             this.Logger.LogDebug(LogId.Networking, $"{Received}{Fix} {nameof(SecurityList)}(ResponseId={responseId}, Result={result}).");
 
             var instruments = new List<Instrument>();
-            var groupCount = Convert.ToInt32(message.NoRelatedSym.ToString());
+            var groupCount = int.Parse(message.NoRelatedSym.ToString());
             var group = new SecurityList.NoRelatedSymGroup();
 
             for (var i = 1; i <= groupCount; i++)

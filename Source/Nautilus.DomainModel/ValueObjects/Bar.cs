@@ -118,11 +118,11 @@ namespace Nautilus.DomainModel.ValueObjects
             var values = barString.Split(',', 6);
 
             return new Bar(
-                Price.Create(Convert.ToDecimal(values[0])),
-                Price.Create(Convert.ToDecimal(values[1])),
-                Price.Create(Convert.ToDecimal(values[2])),
-                Price.Create(Convert.ToDecimal(values[3])),
-                Volume.Create(Convert.ToDecimal(values[4])),
+                Price.Create(Parser.ToDecimal(values[0])),
+                Price.Create(Parser.ToDecimal(values[1])),
+                Price.Create(Parser.ToDecimal(values[2])),
+                Price.Create(Parser.ToDecimal(values[3])),
+                Volume.Create(Parser.ToDecimal(values[4])),
                 values[5].ToZonedDateTimeFromIso());
         }
 

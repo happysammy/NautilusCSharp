@@ -101,7 +101,7 @@ namespace Nautilus.DomainModel.ValueObjects
 
             var split = barSpecString.Split('-', 3);
 
-            var period = Convert.ToInt32(split[0]);
+            var period = int.Parse(split[0]);
             var resolution = split[1].ToUpper();
             var quoteType = split[2].ToUpper();
 

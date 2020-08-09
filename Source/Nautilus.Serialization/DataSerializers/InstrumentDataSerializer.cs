@@ -15,13 +15,13 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using Nautilus.Common.Enums;
 using Nautilus.Common.Interfaces;
+using Nautilus.Core;
 using Nautilus.Core.Annotations;
 using Nautilus.Core.Correctness;
 using Nautilus.Core.Extensions;
@@ -124,8 +124,8 @@ namespace Nautilus.Serialization.DataSerializers
                     Quantity.Create(unpacked[nameof(Instrument.RoundLotSize)].AsString),
                     Quantity.Create(unpacked[nameof(Instrument.MinTradeSize)].AsString),
                     Quantity.Create(unpacked[nameof(Instrument.MaxTradeSize)].AsString),
-                    Convert.ToDecimal(unpacked[nameof(Instrument.RolloverInterestBuy)].AsString),
-                    Convert.ToDecimal(unpacked[nameof(Instrument.RolloverInterestSell)].AsString),
+                    Parser.ToDecimal(unpacked[nameof(Instrument.RolloverInterestBuy)].AsString),
+                    Parser.ToDecimal(unpacked[nameof(Instrument.RolloverInterestSell)].AsString),
                     unpacked[nameof(Instrument.Timestamp)].AsString.ToZonedDateTimeFromIso());
             }
 
@@ -143,8 +143,8 @@ namespace Nautilus.Serialization.DataSerializers
                 Quantity.Create(unpacked[nameof(Instrument.RoundLotSize)].AsString),
                 Quantity.Create(unpacked[nameof(Instrument.MinTradeSize)].AsString),
                 Quantity.Create(unpacked[nameof(Instrument.MaxTradeSize)].AsString),
-                Convert.ToDecimal(unpacked[nameof(Instrument.RolloverInterestBuy)].AsString),
-                Convert.ToDecimal(unpacked[nameof(Instrument.RolloverInterestSell)].AsString),
+                Parser.ToDecimal(unpacked[nameof(Instrument.RolloverInterestBuy)].AsString),
+                Parser.ToDecimal(unpacked[nameof(Instrument.RolloverInterestSell)].AsString),
                 unpacked[nameof(Instrument.Timestamp)].AsString.ToZonedDateTimeFromIso());
         }
 
