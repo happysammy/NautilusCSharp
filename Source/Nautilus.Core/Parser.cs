@@ -33,8 +33,10 @@ namespace Nautilus.Core
         {
             long n = 0;
             var decimalPosition = input.Length;
+            var isNegative = input[0] == '-';
+            var start = isNegative ? 1 : 0;
 
-            for (var k = 0; k < input.Length; k++)
+            for (var k = start; k < input.Length; k++)
             {
                 var c = input[k];
                 if (c == '.')
@@ -49,7 +51,7 @@ namespace Nautilus.Core
 
             var scale = (byte)(input.Length - decimalPosition);
 
-            return new decimal((int)n, (int)(n >> 32), 0, false, scale);
+            return new decimal((int)n, (int)(n >> 32), 0, isNegative, scale);
         }
     }
 }
