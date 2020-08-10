@@ -18,6 +18,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading.Tasks;
 using Nautilus.Core.Message;
 using Nautilus.DomainModel.Commands;
 using Nautilus.DomainModel.Enums;
@@ -79,6 +80,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
 
+            Task.Delay(100);
+
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
             Assert.Equal(3, this.engine.ProcessedCount);
@@ -110,6 +113,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             this.engine.Endpoint.SendAsync(command).Wait();
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
+
+            Task.Delay(100);
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
@@ -146,6 +151,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
 
+            Task.Delay(100);
+
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
             Assert.Equal(4, this.engine.ProcessedCount);
@@ -179,6 +186,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             this.engine.Endpoint.SendAsync(command).Wait();
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
+
+            Task.Delay(100);
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
@@ -214,6 +223,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             this.engine.Endpoint.SendAsync(command).Wait();
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
+
+            Task.Delay(100);
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
@@ -260,6 +271,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
 
+            Task.Delay(100);
+
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
             Assert.Equal(6, this.engine.ProcessedCount);
@@ -291,6 +304,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             this.engine.Endpoint.SendAsync(command).Wait();
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
+
+            Task.Delay(100);
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
@@ -336,6 +351,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
 
+            Task.Delay(100);
+
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
             Assert.Equal(6, this.engine.ProcessedCount);
@@ -369,6 +386,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             this.engine.Endpoint.SendAsync(modify).Wait();
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
+
+            Task.Delay(100);
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
@@ -413,6 +432,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             this.engine.Endpoint.SendAsync(modify).Wait();
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
+
+            Task.Delay(100);
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
@@ -470,6 +491,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
 
+            Task.Delay(100);
+
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
             Assert.Equal(7, this.engine.ProcessedCount);
@@ -493,6 +516,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             this.engine.Endpoint.SendAsync(@event);
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
+
+            Task.Delay(100);
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
@@ -525,6 +550,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             this.engine.Endpoint.SendAsync(submitOrder).Wait();
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
+
+            Task.Delay(100);
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
@@ -560,6 +587,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
 
+            Task.Delay(100);
+
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
             Assert.Equal(4, this.engine.ProcessedCount);
@@ -593,6 +622,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderRejectedEvent(order)).Wait();
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
+
+            Task.Delay(100);
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
@@ -639,6 +670,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
 
+            Task.Delay(100);
+
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
             Assert.Equal(6, this.engine.ProcessedCount);
@@ -676,6 +709,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderWorkingEvent(order)).Wait();
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
+
+            Task.Delay(100);
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
@@ -723,6 +758,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
 
+            Task.Delay(100);
+
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
             Assert.Equal(7, this.engine.ProcessedCount);
@@ -763,6 +800,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
 
+            Task.Delay(100);
+
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
             Assert.Equal(6, this.engine.ProcessedCount);
@@ -798,6 +837,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderCancelledEvent(order)).Wait();
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
+
+            Task.Delay(100);
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
@@ -835,6 +876,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
 
+            Task.Delay(100);
+
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
             Assert.Equal(6, this.engine.ProcessedCount);
@@ -869,6 +912,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderFilledEvent(order)).Wait();
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
+
+            Task.Delay(100);
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
@@ -908,6 +953,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
 
+            Task.Delay(100);
+
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
             Assert.Equal(5, this.engine.ProcessedCount);
@@ -935,6 +982,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 order,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
+
+            Task.Delay(100);
 
             // Act
             this.engine.Endpoint.SendAsync(submitOrder);
@@ -989,6 +1038,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderFilledEvent(order2));
             this.engine.Stop().Wait();
             this.receiver.Stop().Wait();
+
+            Task.Delay(100);
 
             // Assert
             Assert.Single(this.database.GetPositions());
