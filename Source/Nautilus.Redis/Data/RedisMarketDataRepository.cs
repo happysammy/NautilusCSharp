@@ -238,10 +238,12 @@ namespace Nautilus.Redis.Data
             var priceFormatting = $"F{this.pricePrecisions[symbol]}";
             var sizeFormatting = $"F{this.sizePrecisions[symbol]}";
 
-            var data = new byte[tickValues[0].Count][];
-            for (var i = 0; i < tickValues[0].Count; i++)
+            var rowCount = tickValues[0].Count;
+            var index = 0;
+            var data = new byte[rowCount][];
+            for (var i = rowCount - 1; i >= 0; i--)  // Reverse loop as data arrives in reverse
             {
-                data[i] = EncodeTick(
+                data[index] = EncodeTick(
                     tickValues[0][i].Val,
                     tickValues[1][i].Val,
                     tickValues[2][i].Val,
@@ -249,6 +251,8 @@ namespace Nautilus.Redis.Data
                     tickValues[0][i].Time,
                     priceFormatting,
                     sizeFormatting);
+
+                index++;
             }
 
             return data;
@@ -473,10 +477,12 @@ namespace Nautilus.Redis.Data
                 toTimestamp,
                 limit);
 
-            var bars = new Bar[barValues[0].Count];
-            for (var i = 0; i < barValues[0].Count; i++)
+            var rowCount = barValues[0].Count;
+            var index = 0;
+            var bars = new Bar[rowCount];
+            for (var i = rowCount - 1; i >= 0; i--)  // Reverse loop as data arrives in reverse
             {
-                bars[i] = BuildBar(
+                bars[index] = BuildBar(
                     barValues[0][i].Val,
                     barValues[1][i].Val,
                     barValues[2][i].Val,
@@ -485,6 +491,8 @@ namespace Nautilus.Redis.Data
                     barValues[3][i].Time + timeBucket,
                     pricePrecision,
                     sizePrecision);
+
+                index++;
             }
 
             return new BarDataFrame(barType, bars);
@@ -522,10 +530,12 @@ namespace Nautilus.Redis.Data
             pricePrecision += 1;  // To accomodate mid rounding
             sizePrecision += 1;   // To accomodate mid rounding
 
-            var bars = new Bar[bidValues[0].Count];
-            for (var i = 0; i < bidValues[0].Count; i++)
+            var rowCount = bidValues[0].Count;
+            var index = 0;
+            var bars = new Bar[rowCount];
+            for (var i = rowCount - 1; i >= 0; i--)  // Reverse loop as data arrives in reverse
             {
-                bars[i] = BuildBar(
+                bars[index] = BuildBar(
                     (bidValues[0][i].Val + askValues[0][i].Val) / 2,
                     (bidValues[1][i].Val + askValues[1][i].Val) / 2,
                     (bidValues[2][i].Val + askValues[2][i].Val) / 2,
@@ -534,6 +544,8 @@ namespace Nautilus.Redis.Data
                     bidValues[3][i].Time + timeBucket,
                     pricePrecision,
                     sizePrecision);
+
+                index++;
             }
 
             return new BarDataFrame(barType, bars);
@@ -557,10 +569,12 @@ namespace Nautilus.Redis.Data
             var priceFormatting = $"F{pricePrecision}";
             var sizeFormatting = $"F{sizePrecision}";
 
-            var data = new byte[barValues[0].Count][];
-            for (var i = 0; i < barValues[0].Count; i++)
+            var rowCount = barValues[0].Count;
+            var index = 0;
+            var data = new byte[rowCount][];
+            for (var i = rowCount - 1; i >= 0; i--)  // Reverse loop as data arrives in reverse
             {
-                data[i] = EncodeBar(
+                data[index] = EncodeBar(
                     barValues[0][i].Val,
                     barValues[1][i].Val,
                     barValues[2][i].Val,
@@ -569,6 +583,8 @@ namespace Nautilus.Redis.Data
                     barValues[3][i].Time + timeBucket,
                     priceFormatting,
                     sizeFormatting);
+
+                index++;
             }
 
             return data;
@@ -606,10 +622,12 @@ namespace Nautilus.Redis.Data
             var priceFormatting = $"F{pricePrecision + 1}";
             var sizeFormatting = $"F{sizePrecision + 1}";
 
-            var data = new byte[bidValues[0].Count][];
-            for (var i = 0; i < bidValues[0].Count; i++)
+            var rowCount = bidValues[0].Count;
+            var index = 0;
+            var data = new byte[rowCount][];
+            for (var i = rowCount - 1; i >= 0; i--)  // Reverse loop as data arrives in reverse
             {
-                data[i] = EncodeBar(
+                data[index] = EncodeBar(
                     (bidValues[0][i].Val + askValues[0][i].Val) / 2,
                     (bidValues[1][i].Val + askValues[1][i].Val) / 2,
                     (bidValues[2][i].Val + askValues[2][i].Val) / 2,
@@ -618,6 +636,8 @@ namespace Nautilus.Redis.Data
                     bidValues[3][i].Time + timeBucket,
                     priceFormatting,
                     sizeFormatting);
+
+                index++;
             }
 
             return data;
