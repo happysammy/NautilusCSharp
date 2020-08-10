@@ -15,7 +15,6 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -276,8 +275,8 @@ namespace Nautilus.Redis.Data
                 Quantity.Create(Parser.ToDecimal(instrumentDict[nameof(Instrument.RoundLotSize)])),
                 Quantity.Create(Parser.ToDecimal(instrumentDict[nameof(Instrument.MinTradeSize)])),
                 Quantity.Create(Parser.ToDecimal(instrumentDict[nameof(Instrument.MaxTradeSize)])),
-                Convert.ToDecimal(instrumentDict[nameof(Instrument.RolloverInterestBuy)]),
-                Convert.ToDecimal(instrumentDict[nameof(Instrument.RolloverInterestSell)]),
+                Parser.ToDecimal(instrumentDict[nameof(Instrument.RolloverInterestBuy)]),
+                Parser.ToDecimal(instrumentDict[nameof(Instrument.RolloverInterestSell)]),
                 instrumentDict[nameof(Instrument.Timestamp)].ToZonedDateTimeFromIso());
 
             return QueryResult<Instrument>.Ok(instrument);

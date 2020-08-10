@@ -28,22 +28,33 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
     public sealed class ParserTests
     {
         [Theory]
-        [InlineData("0", 0)]
-        [InlineData("0.00", 0)]
-        [InlineData("1", 1)]
-        [InlineData("1.0", 1)]
-        [InlineData("1.00", 1.00)]
-        [InlineData("1.001", 1.001)]
-        [InlineData("10.001", 10.001)]
-        internal void ToDecimal_WithVariousValidInputs_ReturnsExpectedDecimal(string input, decimal expected)
+        [InlineData("0", 0, "0")]
+        [InlineData("0.00", 0, "0.00")]
+        [InlineData("00.00", 0, "0.00")]
+        [InlineData("1", 1, "1")]
+        [InlineData("1.0", 1, "1.0")]
+        [InlineData("1.00", 1.00, "1.00")]
+        [InlineData("1.001", 1.001, "1.001")]
+        [InlineData("10.001", 10.001, "10.001")]
+        [InlineData("-0", 0, "0")]
+        [InlineData("-1", -1, "-1")]
+        [InlineData("-0.00", 0, "0.00")]
+        [InlineData("-00.00", 0, "0.00")]
+        [InlineData("-0.01", -0.01, "-0.01")]
+        [InlineData("-1.01", -1.01, "-1.01")]
+        [InlineData("-01.01", -1.01, "-1.01")]
+        internal void ToDecimal_WithVariousValidInputs_ReturnsExpectedDecimal(
+            string input,
+            decimal expectedDecimal,
+            string expectedString)
         {
             // Arrange
             // Act
             var result = Parser.ToDecimal(input);
 
             // Assert
-            Assert.Equal(expected, result);
-            Assert.Equal(input, result.ToString(CultureInfo.InvariantCulture));
+            Assert.Equal(expectedDecimal, result);
+            Assert.Equal(expectedString, result.ToString(CultureInfo.InvariantCulture));
         }
     }
 }
