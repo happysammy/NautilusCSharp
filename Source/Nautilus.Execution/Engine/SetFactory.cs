@@ -66,12 +66,15 @@ namespace Nautilus.Execution.Engine
         {
             var setsLength = sets.Length;
 
-            switch (setsLength)
+            // ReSharper disable once ConvertIfStatementToSwitchStatement
+            if (setsLength == 0)
             {
-                case 0:
-                    return new HashSet<T>();
-                case 1:
-                    return sets[0];
+                return new HashSet<T>();
+            }
+
+            if (setsLength == 1)
+            {
+                return sets[0];
             }
 
             var intersection = new HashSet<T>(sets[0]);
@@ -95,12 +98,15 @@ namespace Nautilus.Execution.Engine
         {
             var setsLength = sets.Length;
 
-            switch (setsLength)
+            // ReSharper disable once ConvertIfStatementToSwitchStatement
+            if (setsLength == 0)
             {
-                case 0:
-                    return new SortedSet<T>();
-                case 1:
-                    return new SortedSet<T>(sets[0]);
+                return new SortedSet<T>();
+            }
+
+            if (setsLength == 1)
+            {
+                return new SortedSet<T>(sets[0]);
             }
 
             var intersection = new SortedSet<T>(sets[0]);
