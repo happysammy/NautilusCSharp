@@ -93,7 +93,11 @@ namespace Nautilus.Data.Providers
 
                 if (data.Length == 0)
                 {
-                    return this.QueryFailure("No bar data found for bar type or time range.", request.Id);
+                    var fromDateTimeString = fromDateTime is null ? "Min" : fromDateTime.ToString();
+                    var toDateTimeString = fromDateTime is null ? "Max" : fromDateTime.ToString();
+
+                    return this.QueryFailure($"No data found for {barType} from " +
+                                             $"{fromDateTimeString} to {toDateTimeString}", request.Id);
                 }
 
                 return new DataResponse(
