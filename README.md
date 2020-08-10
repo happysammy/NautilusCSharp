@@ -36,9 +36,9 @@ every available thread.
 
 > https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/dataflow-task-parallel-library
 
-An efficient inter-service messaging system implemented using ZeroMQ for transport, MessagePack serialization
-and Curve25519 encryption allows extremely fast communication, with the API allowing PUB/SUB and 
-fully async REQ/REP patterns. There are plans to develop an optional Google Protobuf adapter.
+An efficient inter-service messaging system implemented using MessagePack serialization,
+LZ4 compression, Curve25519 encryption and ZeroMQ transport - allows extremely fast communication, with the 
+API allowing PUB/SUB and fully async REQ/REP patterns.
 
 The Order Management System (OMS) includes an `ExecutionEngine` with underlying `ExecutionDatabase`
 built on top of Redis, which supports the ability to manage global risk across many trader machines.
