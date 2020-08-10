@@ -16,6 +16,7 @@
 //--------------------------------------------------------------------------------------------------
 
 using System;
+using Nautilus.Core;
 using Nautilus.Core.Annotations;
 using Nautilus.Core.Correctness;
 using Nautilus.Core.Extensions;
@@ -63,7 +64,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A <see cref="Volume"/>.</returns>
         public static Volume Create(string value)
         {
-            return Create(Convert.ToDecimal(value));
+            return Create(Parser.ToDecimal(value));
         }
 
         /// <summary>

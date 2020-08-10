@@ -25,6 +25,16 @@ namespace Nautilus.TestSuite.TestKit.Stubs
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public static class StubBarType
     {
+        public static BarType AUDUSD_OneMinuteBid()
+        {
+            return new BarType(
+                new Symbol("AUD/USD", new Venue("FXCM")),
+                new BarSpecification(
+                    1,
+                    BarStructure.Minute,
+                    PriceType.Bid));
+        }
+
         public static BarType AUDUSD_OneMinuteAsk()
         {
             return new BarType(
@@ -33,6 +43,16 @@ namespace Nautilus.TestSuite.TestKit.Stubs
                     1,
                     BarStructure.Minute,
                     PriceType.Ask));
+        }
+
+        public static BarType AUDUSD_OneMinuteMid()
+        {
+            return new BarType(
+                new Symbol("AUD/USD", new Venue("FXCM")),
+                new BarSpecification(
+                    1,
+                    BarStructure.Minute,
+                    PriceType.Mid));
         }
 
         public static BarType GBPUSD_OneMinuteBid()

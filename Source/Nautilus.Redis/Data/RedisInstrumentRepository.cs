@@ -25,6 +25,7 @@ using Nautilus.Common.Data;
 using Nautilus.Common.Interfaces;
 using Nautilus.Common.Logging;
 using Nautilus.Common.Messages.Commands;
+using Nautilus.Core;
 using Nautilus.Core.Annotations;
 using Nautilus.Core.Correctness;
 using Nautilus.Core.CQS;
@@ -244,18 +245,18 @@ namespace Nautilus.Redis.Data
             {
                 var forexCcy = new ForexInstrument(
                     Symbol.FromString(instrumentDict[nameof(Instrument.Symbol)]),
-                    Convert.ToInt32(instrumentDict[nameof(Instrument.PricePrecision)]),
-                    Convert.ToInt32(instrumentDict[nameof(Instrument.SizePrecision)]),
-                    Convert.ToInt32(instrumentDict[nameof(Instrument.MinStopDistanceEntry)]),
-                    Convert.ToInt32(instrumentDict[nameof(Instrument.MinLimitDistanceEntry)]),
-                    Convert.ToInt32(instrumentDict[nameof(Instrument.MinStopDistance)]),
-                    Convert.ToInt32(instrumentDict[nameof(Instrument.MinLimitDistance)]),
-                    Price.Create(Convert.ToDecimal(instrumentDict[nameof(Instrument.TickSize)])),
-                    Quantity.Create(Convert.ToDecimal(instrumentDict[nameof(Instrument.RoundLotSize)])),
-                    Quantity.Create(Convert.ToDecimal(instrumentDict[nameof(Instrument.MinTradeSize)])),
-                    Quantity.Create(Convert.ToDecimal(instrumentDict[nameof(Instrument.MaxTradeSize)])),
-                    Convert.ToDecimal(instrumentDict[nameof(Instrument.RolloverInterestBuy)]),
-                    Convert.ToDecimal(instrumentDict[nameof(Instrument.RolloverInterestSell)]),
+                    int.Parse(instrumentDict[nameof(Instrument.PricePrecision)]),
+                    int.Parse(instrumentDict[nameof(Instrument.SizePrecision)]),
+                    int.Parse(instrumentDict[nameof(Instrument.MinStopDistanceEntry)]),
+                    int.Parse(instrumentDict[nameof(Instrument.MinLimitDistanceEntry)]),
+                    int.Parse(instrumentDict[nameof(Instrument.MinStopDistance)]),
+                    int.Parse(instrumentDict[nameof(Instrument.MinLimitDistance)]),
+                    Price.Create(Parser.ToDecimal(instrumentDict[nameof(Instrument.TickSize)])),
+                    Quantity.Create(Parser.ToDecimal(instrumentDict[nameof(Instrument.RoundLotSize)])),
+                    Quantity.Create(Parser.ToDecimal(instrumentDict[nameof(Instrument.MinTradeSize)])),
+                    Quantity.Create(Parser.ToDecimal(instrumentDict[nameof(Instrument.MaxTradeSize)])),
+                    Parser.ToDecimal(instrumentDict[nameof(Instrument.RolloverInterestBuy)]),
+                    Parser.ToDecimal(instrumentDict[nameof(Instrument.RolloverInterestSell)]),
                     instrumentDict[nameof(Instrument.Timestamp)].ToZonedDateTimeFromIso());
 
                 return QueryResult<Instrument>.Ok(forexCcy);
@@ -265,16 +266,16 @@ namespace Nautilus.Redis.Data
                 Symbol.FromString(instrumentDict[nameof(Instrument.Symbol)]),
                 instrumentDict[nameof(Instrument.QuoteCurrency)].ToEnum<Currency>(),
                 securityType,
-                Convert.ToInt32(instrumentDict[nameof(Instrument.PricePrecision)]),
-                Convert.ToInt32(instrumentDict[nameof(Instrument.SizePrecision)]),
-                Convert.ToInt32(instrumentDict[nameof(Instrument.MinStopDistanceEntry)]),
-                Convert.ToInt32(instrumentDict[nameof(Instrument.MinLimitDistanceEntry)]),
-                Convert.ToInt32(instrumentDict[nameof(Instrument.MinStopDistance)]),
-                Convert.ToInt32(instrumentDict[nameof(Instrument.MinLimitDistance)]),
-                Price.Create(Convert.ToDecimal(instrumentDict[nameof(Instrument.TickSize)])),
-                Quantity.Create(Convert.ToDecimal(instrumentDict[nameof(Instrument.RoundLotSize)])),
-                Quantity.Create(Convert.ToDecimal(instrumentDict[nameof(Instrument.MinTradeSize)])),
-                Quantity.Create(Convert.ToDecimal(instrumentDict[nameof(Instrument.MaxTradeSize)])),
+                int.Parse(instrumentDict[nameof(Instrument.PricePrecision)]),
+                int.Parse(instrumentDict[nameof(Instrument.SizePrecision)]),
+                int.Parse(instrumentDict[nameof(Instrument.MinStopDistanceEntry)]),
+                int.Parse(instrumentDict[nameof(Instrument.MinLimitDistanceEntry)]),
+                int.Parse(instrumentDict[nameof(Instrument.MinStopDistance)]),
+                int.Parse(instrumentDict[nameof(Instrument.MinLimitDistance)]),
+                Price.Create(Parser.ToDecimal(instrumentDict[nameof(Instrument.TickSize)])),
+                Quantity.Create(Parser.ToDecimal(instrumentDict[nameof(Instrument.RoundLotSize)])),
+                Quantity.Create(Parser.ToDecimal(instrumentDict[nameof(Instrument.MinTradeSize)])),
+                Quantity.Create(Parser.ToDecimal(instrumentDict[nameof(Instrument.MaxTradeSize)])),
                 Convert.ToDecimal(instrumentDict[nameof(Instrument.RolloverInterestBuy)]),
                 Convert.ToDecimal(instrumentDict[nameof(Instrument.RolloverInterestSell)]),
                 instrumentDict[nameof(Instrument.Timestamp)].ToZonedDateTimeFromIso());

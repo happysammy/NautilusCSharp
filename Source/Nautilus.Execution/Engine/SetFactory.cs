@@ -45,7 +45,6 @@ namespace Nautilus.Execution.Engine
             {
                 var input = values[i];
 
-                // ReSharper disable once ConditionIsAlwaysTrueOrFalse (removing this null check results in CS8604)
                 if (input != null)
                 {
                     set.Add(create(input.ToString()!));

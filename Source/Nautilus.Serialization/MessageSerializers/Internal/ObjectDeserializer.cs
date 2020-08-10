@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Nautilus.Core;
 using Nautilus.Core.Extensions;
 using Nautilus.Core.Types;
 using Nautilus.DomainModel.Enums;
@@ -54,7 +55,7 @@ namespace Nautilus.Serialization.MessageSerializers.Internal
         /// <returns>The extracted <see cref="decimal"/>.</returns>
         internal static decimal AsDecimal(byte[] unpacked)
         {
-            return Convert.ToDecimal(Decode(unpacked));
+            return Parser.ToDecimal(Decode(unpacked));
         }
 
         /// <summary>
@@ -198,7 +199,7 @@ namespace Nautilus.Serialization.MessageSerializers.Internal
         /// <returns>The extracted Money.</returns>
         internal static Money AsMoney(byte[] unpacked, Currency currency)
         {
-            return Money.Create(Convert.ToDecimal(Decode(unpacked)), currency);
+            return Money.Create(Parser.ToDecimal(Decode(unpacked)), currency);
         }
 
         /// <summary>
@@ -208,7 +209,7 @@ namespace Nautilus.Serialization.MessageSerializers.Internal
         /// <returns>The extracted Price.</returns>
         internal static Price AsPrice(byte[] unpacked)
         {
-            return Price.Create(Convert.ToDecimal(Decode(unpacked)));
+            return Price.Create(Parser.ToDecimal(Decode(unpacked)));
         }
 
         /// <summary>
@@ -221,7 +222,7 @@ namespace Nautilus.Serialization.MessageSerializers.Internal
             var unpackedString = Decode(unpacked);
             return unpackedString == None
                 ? null
-                : Price.Create(Convert.ToDecimal(unpackedString));
+                : Price.Create(Parser.ToDecimal(unpackedString));
         }
 
         /// <summary>

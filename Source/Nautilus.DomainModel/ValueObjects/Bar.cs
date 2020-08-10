@@ -28,7 +28,7 @@ namespace Nautilus.DomainModel.ValueObjects
     /// Represents a financial market trade bar.
     /// </summary>
     [Immutable]
-    public sealed class Bar : IEquatable<object>, IEquatable<Bar>, IComparable<Bar>
+    public sealed class Bar : IEquatable<object>, IEquatable<Bar>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Bar"/> class.
@@ -118,11 +118,11 @@ namespace Nautilus.DomainModel.ValueObjects
             var values = barString.Split(',', 6);
 
             return new Bar(
-                Price.Create(Convert.ToDecimal(values[0])),
-                Price.Create(Convert.ToDecimal(values[1])),
-                Price.Create(Convert.ToDecimal(values[2])),
-                Price.Create(Convert.ToDecimal(values[3])),
-                Volume.Create(Convert.ToDecimal(values[4])),
+                Price.Create(Parser.ToDecimal(values[0])),
+                Price.Create(Parser.ToDecimal(values[1])),
+                Price.Create(Parser.ToDecimal(values[2])),
+                Price.Create(Parser.ToDecimal(values[3])),
+                Volume.Create(Parser.ToDecimal(values[4])),
                 values[5].ToZonedDateTimeFromIso());
         }
 
@@ -152,22 +152,6 @@ namespace Nautilus.DomainModel.ValueObjects
                    this.Close == other.Close &&
                    this.Volume == other.Volume &&
                    this.Timestamp == other.Timestamp;
-        }
-
-        // Due to the convention that an IEquatable<T> argument can be null the compiler now emits
-        // a warning unless Equals is marked with [AllowNull] or takes a nullable param. We don't
-        // want to allow null here for the sake of silencing the warning and so temporarily using
-        // #pragma warning disable CS8767 until a better refactoring is determined.
-#pragma warning disable CS8767
-        /// <summary>
-        /// Returns a result indicating whether the left <see cref="Bar"/> is less than, equal
-        /// to or greater than the right <see cref="Bar"/>.
-        /// </summary>
-        /// <param name="other">The other bar to compare.</param>
-        /// <returns>An <see cref="int"/>.</returns>
-        public int CompareTo(Bar other)
-        {
-            return this.Timestamp.Compare(other.Timestamp);
         }
 
         /// <summary>

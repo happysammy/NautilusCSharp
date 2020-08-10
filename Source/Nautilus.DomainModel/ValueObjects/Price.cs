@@ -15,7 +15,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-using System;
+using Nautilus.Core;
 using Nautilus.Core.Annotations;
 using Nautilus.Core.Correctness;
 using Nautilus.Core.Extensions;
@@ -48,7 +48,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A <see cref="Price"/>.</returns>
         public static Price Create(string value)
         {
-            return Create(Convert.ToDecimal(value));
+            return Create(Parser.ToDecimal(value));
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A <see cref="Price"/>.</returns>
         public static Price Create(double value, int precision)
         {
-            return new Price(decimal.Parse(value.ToString($"F{precision}")), precision);
+            return new Price(Parser.ToDecimal(value.ToString($"F{precision}")), precision);
         }
 
         /// <summary>
