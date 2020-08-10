@@ -317,7 +317,7 @@ namespace Nautilus.Redis.Data
             {
                 case PriceType.Bid:
                 case PriceType.Ask:
-                    return this.AggregateBarsData(
+                    return this.AggregateBarData(
                         barType,
                         fromTimestamp,
                         toTimestamp,
@@ -326,7 +326,7 @@ namespace Nautilus.Redis.Data
                         timeBucket,
                         limit);
                 case PriceType.Mid:
-                    return this.AggregateMidBarsData(
+                    return this.AggregateMidBarData(
                         barType,
                         fromTimestamp,
                         toTimestamp,
@@ -448,7 +448,6 @@ namespace Nautilus.Redis.Data
 
             foreach (var (barStructure, retentionTime) in this.retentionTimeBars)
             {
-                // Bars
                 var keyVolumes = KeyProvider.GetBarVolumesKey(symbol, barStructure, priceType);
 
                 this.redisDatabase.TimeSeriesCreate(keyVolumes, retentionTime);
@@ -540,7 +539,7 @@ namespace Nautilus.Redis.Data
             return new BarDataFrame(barType, bars);
         }
 
-        private byte[][] AggregateBarsData(
+        private byte[][] AggregateBarData(
             BarType barType,
             TimeStamp fromTimestamp,
             TimeStamp toTimestamp,
@@ -575,7 +574,7 @@ namespace Nautilus.Redis.Data
             return data;
         }
 
-        private byte[][] AggregateMidBarsData(
+        private byte[][] AggregateMidBarData(
             BarType barType,
             TimeStamp fromTimestamp,
             TimeStamp toTimestamp,
@@ -774,6 +773,13 @@ namespace Nautilus.Redis.Data
                 count,
                 null,
                 timeBucket);
+
+            var outputFirstCount = output[0].Count;
+
+            Debug.EqualTo(output[1].Count, outputFirstCount, nameof(outputFirstCount));
+            Debug.EqualTo(output[2].Count, outputFirstCount, nameof(outputFirstCount));
+            Debug.EqualTo(output[3].Count, outputFirstCount, nameof(outputFirstCount));
+            Debug.EqualTo(output[4].Count, outputFirstCount, nameof(outputFirstCount));
 
             return output;
         }
