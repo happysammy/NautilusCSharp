@@ -76,15 +76,12 @@
       "AUS200.FXCM",
       "GER30.FXCM"
     ],
-    "TrimJobTicks": {
-      "Hour": 0,
-      "Minute": 2,
-      "WindowDays": 2
-    },
-    "TrimJobBars": {
-      "Hour": 0,
-      "Minute": 1,
-      "WindowDays": 10
+    "RetentionTimeTicksDays": 1,
+    "RetentionTimeBarsDays": {
+      "Second": 1,
+      "Minute": 5,
+      "Hour": 20,
+      "Day": 252
     }
   }
 }

@@ -42,12 +42,14 @@ namespace Nautilus.Redis.Data
     /// </summary>
     public sealed class RedisMarketDataRepository : DataBusConnected, ITickRepository, IBarRepository, IRepository
     {
+        private const long MillisecondsPerDay = 24 * 60 * 60 * 1000;  // 86,400,000ms
+
         private readonly IServer redisServer;
         private readonly IDatabase redisDatabase;
-        private readonly long retentionTimeTicks;
+        private readonly long retentionTimeTicksMs;
         private readonly Dictionary<Symbol, int> pricePrecisions;
         private readonly Dictionary<Symbol, int> sizePrecisions;
-        private readonly Dictionary<BarStructure, long> retentionTimeBars;
+        private readonly Dictionary<BarStructure, long> retentionTimeBarsMs;
         private readonly Dictionary<BarStructure, long> timeBuckets;
 
         /// <summary>
@@ -56,10 +58,14 @@ namespace Nautilus.Redis.Data
         /// <param name="container">The componentry container.</param>
         /// <param name="dataBusAdapter">The data bus adapter for the component.</param>
         /// <param name="connection">The clients manager.</param>
+        /// <param name="retentionTimeTicksDays">The rolling retention time for tick data in days.</param>
+        /// <param name="retentionTimeBarsDays">The rolling retention time for bar data in days.</param>
         public RedisMarketDataRepository(
             IComponentryContainer container,
             IDataBusAdapter dataBusAdapter,
-            ConnectionMultiplexer connection)
+            ConnectionMultiplexer connection,
+            int retentionTimeTicksDays,
+            IReadOnlyDictionary<BarStructure, int> retentionTimeBarsDays)
             : base(container, dataBusAdapter)
         {
             this.redisServer = connection.GetServer(RedisConstants.Localhost, RedisConstants.DefaultPort);
@@ -68,18 +74,22 @@ namespace Nautilus.Redis.Data
             this.pricePrecisions = new Dictionary<Symbol, int>();
             this.sizePrecisions = new Dictionary<Symbol, int>();
 
-            // TODO: Retention time config
-            this.retentionTimeTicks = 1000 * 60 * 60 * 24;         // (1 day - milliseconds)
-            this.retentionTimeBars = new Dictionary<BarStructure, long>
-            {
-                { BarStructure.Minute, 1000 * 60 * 60 * 24 * 5 },  // (1 trading week - milliseconds)
-                { BarStructure.Hour, 1000 * 60 * 60 * 24 * 20 },   // (1 trading month - milliseconds)
-            };
+            this.retentionTimeTicksMs = retentionTimeTicksDays * MillisecondsPerDay;
+            this.retentionTimeBarsMs = new Dictionary<BarStructure, long>();
 
+            // Configure retention times converting to milliseconds
+            foreach (var (barStructure, retentionDays) in retentionTimeBarsDays)
+            {
+                this.retentionTimeBarsMs.Add(barStructure, retentionDays * MillisecondsPerDay);
+            }
+
+            // Hardcode time bucket constants
             this.timeBuckets = new Dictionary<BarStructure, long>
             {
+                { BarStructure.Second, 1000 },
                 { BarStructure.Minute, 60000 },
-                { BarStructure.Hour, 3600000 }
+                { BarStructure.Hour, 3600000 },
+                { BarStructure.Day, 86400000 }
             };
 
             this.RegisterHandler<Tick>(this.OnTick);
@@ -421,9 +431,9 @@ namespace Nautilus.Redis.Data
 
         private void SetupPricesTimeSeries(string key, Symbol symbol, PriceType priceType)
         {
-            this.redisDatabase.TimeSeriesCreate(key, this.retentionTimeTicks);
+            this.redisDatabase.TimeSeriesCreate(key, this.retentionTimeTicksMs);
 
-            foreach (var (barStructure, retentionTime) in this.retentionTimeBars)
+            foreach (var (barStructure, retentionTime) in this.retentionTimeBarsMs)
             {
                 // Bars
                 var keyOpens = KeyProvider.GetBarOpensKey(symbol, barStructure, priceType);
@@ -447,9 +457,9 @@ namespace Nautilus.Redis.Data
 
         private void SetupVolumesTimeSeries(string key, Symbol symbol, PriceType priceType)
         {
-            this.redisDatabase.TimeSeriesCreate(key, this.retentionTimeTicks);
+            this.redisDatabase.TimeSeriesCreate(key, this.retentionTimeTicksMs);
 
-            foreach (var (barStructure, retentionTime) in this.retentionTimeBars)
+            foreach (var (barStructure, retentionTime) in this.retentionTimeBarsMs)
             {
                 var keyVolumes = KeyProvider.GetBarVolumesKey(symbol, barStructure, priceType);
 
@@ -792,7 +802,6 @@ namespace Nautilus.Redis.Data
                 timeBucket);
 
             var outputFirstCount = output[0].Count;
-
             Debug.EqualTo(output[1].Count, outputFirstCount, nameof(outputFirstCount));
             Debug.EqualTo(output[2].Count, outputFirstCount, nameof(outputFirstCount));
             Debug.EqualTo(output[3].Count, outputFirstCount, nameof(outputFirstCount));

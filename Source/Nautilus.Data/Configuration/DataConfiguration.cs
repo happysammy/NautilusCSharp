@@ -16,8 +16,8 @@
 //--------------------------------------------------------------------------------------------------
 
 using System.Collections.Generic;
+using Nautilus.DomainModel.Enums;
 using Nautilus.DomainModel.Identifiers;
-using NodaTime;
 
 namespace Nautilus.Data.Configuration
 {
@@ -30,22 +30,16 @@ namespace Nautilus.Data.Configuration
         /// Initializes a new instance of the <see cref="DataConfiguration"/> class.
         /// </summary>
         /// <param name="subscribingSymbols">The symbols to subscribe to.</param>
-        /// <param name="tickDataTrimTime">The tick data trim time.</param>
-        /// <param name="barDataTrimTime">The bar data trim time.</param>
-        /// <param name="tickDataTrimWindowDays">The tick data trim window in days.</param>
-        /// <param name="barDataTrimWindowDays">The bar data trim window in days.</param>
+        /// <param name="retentionTimeTicksDays">The rolling retention time for ticks in days.</param>
+        /// <param name="retentionTimeBarsDays">The rolling retention time for time bar structures in days.</param>
         public DataConfiguration(
             IReadOnlyCollection<Symbol> subscribingSymbols,
-            LocalTime tickDataTrimTime,
-            LocalTime barDataTrimTime,
-            int tickDataTrimWindowDays,
-            int barDataTrimWindowDays)
+            int retentionTimeTicksDays,
+            Dictionary<BarStructure, int> retentionTimeBarsDays)
         {
             this.SubscribingSymbols = subscribingSymbols;
-            this.TickDataTrimTime = tickDataTrimTime;
-            this.BarDataTrimTime = barDataTrimTime;
-            this.TickDataTrimWindowDays = tickDataTrimWindowDays;
-            this.BarDataTrimWindowDays = barDataTrimWindowDays;
+            this.RetentionTimeTicksDays = retentionTimeTicksDays;
+            this.RetentionTimeBarsDays = retentionTimeBarsDays;
         }
 
         /// <summary>
@@ -54,23 +48,13 @@ namespace Nautilus.Data.Configuration
         public IReadOnlyCollection<Symbol> SubscribingSymbols { get; }
 
         /// <summary>
-        /// Gets the time to trim the tick data.
+        /// Gets the rolling retention time for ticks in days.
         /// </summary>
-        public LocalTime TickDataTrimTime { get; }
+        public int RetentionTimeTicksDays { get; }
 
         /// <summary>
-        /// Gets the time to trim the bar data.
+        /// Gets the rolling retention time for time bar structures in days.
         /// </summary>
-        public LocalTime BarDataTrimTime { get; }
-
-        /// <summary>
-        /// Gets the tick data rolling trim window in days.
-        /// </summary>
-        public int TickDataTrimWindowDays { get; }
-
-        /// <summary>
-        /// Gets the bar data rolling trim window in days.
-        /// </summary>
-        public int BarDataTrimWindowDays { get; }
+        public IReadOnlyDictionary<BarStructure, int> RetentionTimeBarsDays { get; }
     }
 }

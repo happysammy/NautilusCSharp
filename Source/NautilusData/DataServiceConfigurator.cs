@@ -16,6 +16,7 @@
 //--------------------------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
@@ -145,26 +146,27 @@ namespace NautilusData
                 .Select(Symbol.FromString)
                 .ToImmutableList();
 
-            // Trim Job Ticks
-            var trimJobTicks = dataSection.GetSection("TrimJobTicks");
-            var tickTrimHour = int.Parse(trimJobTicks["Hour"]);
-            var tickTrimMinute = int.Parse(trimJobTicks["Minute"]);
-            var tickDataTrimTime = new LocalTime(tickTrimHour, tickTrimMinute);
-            var tickDataTrimWindowDays = int.Parse(trimJobTicks["WindowDays"]);
+            var retentionTimeTicksDays = int.Parse(dataSection["RetentionTimeTicksDays"]);
+            var retentionTimeBars = dataSection.GetSection("RetentionTimeBarsDays")
+                .AsEnumerable();
 
-            // Trim Job Bars
-            var trimJobBars = dataSection.GetSection("TrimJobBars");
-            var barTrimHour = int.Parse(trimJobBars["Hour"]);
-            var barTrimMinute = int.Parse(trimJobBars["Minute"]);
-            var barDataTrimTime = new LocalTime(barTrimHour, barTrimMinute);
-            var barDataTrimWindowDays = int.Parse(trimJobBars["WindowDays"]);
+            var retentionTimeBarsDays = new Dictionary<BarStructure, int>();
+            foreach (var (structure, days) in retentionTimeBars)
+            {
+                if (days is null)
+                {
+                    continue;
+                }
+
+                var splits = structure.Split(':');
+
+                retentionTimeBarsDays.Add(splits[^1].ToEnum<BarStructure>(), int.Parse(days));
+            }
 
             var dataConfig = new DataConfiguration(
                 subscribingSymbols,
-                tickDataTrimTime,
-                barDataTrimTime,
-                tickDataTrimWindowDays,
-                barDataTrimWindowDays);
+                retentionTimeTicksDays,
+                retentionTimeBarsDays);
 
             return new ServiceConfiguration(
                 loggerFactory,
