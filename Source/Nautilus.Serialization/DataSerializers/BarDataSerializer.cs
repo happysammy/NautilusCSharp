@@ -42,7 +42,7 @@ namespace Nautilus.Serialization.DataSerializers
         /// <inheritdoc />
         public byte[] Serialize(Bar dataObject)
         {
-            return Encoding.UTF8.GetBytes(dataObject.ToString());
+            return Encoding.UTF8.GetBytes(dataObject.ToSerializableString());
         }
 
         /// <inheritdoc />
@@ -73,7 +73,7 @@ namespace Nautilus.Serialization.DataSerializers
         /// <inheritdoc />
         public Bar Deserialize(byte[] dataBytes)
         {
-            return Bar.FromString(Encoding.UTF8.GetString(dataBytes));
+            return Bar.FromSerializableString(Encoding.UTF8.GetString(dataBytes));
         }
 
         /// <inheritdoc />

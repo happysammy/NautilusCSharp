@@ -22,7 +22,6 @@ using Nautilus.Common.Data;
 using Nautilus.Common.Interfaces;
 using Nautilus.Common.Messages.Commands;
 using Nautilus.Core.Correctness;
-using Nautilus.Core.Extensions;
 using Nautilus.Data.Interfaces;
 using Nautilus.DomainModel.Entities;
 using Nautilus.DomainModel.Enums;
@@ -750,16 +749,14 @@ namespace Nautilus.Redis.Data
                 return output;
             }
 
-            var timeBucket = period == 1
-                ? (long?) null
-                : this.timeBuckets[barStructure] * period;
+            var timeBucket = this.timeBuckets[barStructure] * period;
 
             output[0] = this.redisDatabase.TimeSeriesRevRange(
                 keyOpens,
                 fromTimestamp,
                 toTimestamp,
                 count,
-                null,
+                Aggregation.FIRST,
                 timeBucket);
 
             output[1] = this.redisDatabase.TimeSeriesRevRange(
@@ -767,7 +764,7 @@ namespace Nautilus.Redis.Data
                 fromTimestamp,
                 toTimestamp,
                 count,
-                null,
+                Aggregation.MAX,
                 timeBucket);
 
             output[2] = this.redisDatabase.TimeSeriesRevRange(
@@ -775,7 +772,7 @@ namespace Nautilus.Redis.Data
                 fromTimestamp,
                 toTimestamp,
                 count,
-                null,
+                Aggregation.MIN,
                 timeBucket);
 
             output[3] = this.redisDatabase.TimeSeriesRevRange(
@@ -783,7 +780,7 @@ namespace Nautilus.Redis.Data
                 fromTimestamp,
                 toTimestamp,
                 count,
-                null,
+                Aggregation.LAST,
                 timeBucket);
 
             output[4] = this.redisDatabase.TimeSeriesRevRange(
@@ -791,7 +788,7 @@ namespace Nautilus.Redis.Data
                 fromTimestamp,
                 toTimestamp,
                 count,
-                null,
+                Aggregation.SUM,
                 timeBucket);
 
             var outputFirstCount = output[0].Count;
@@ -810,7 +807,7 @@ namespace Nautilus.Redis.Data
             double ask,
             double bidSize,
             double askSize,
-            long timestamp,
+            long unixTimestamp,
             int pricePrecision,
             int sizePrecision)
         {
@@ -820,7 +817,7 @@ namespace Nautilus.Redis.Data
                 Price.Create(ask, pricePrecision),
                 Volume.Create(bidSize, sizePrecision),
                 Volume.Create(askSize, sizePrecision),
-                Instant.FromUnixTimeMilliseconds(timestamp).InUtc());
+                unixTimestamp);
         }
 
         private static Bar BuildBar(
@@ -829,7 +826,7 @@ namespace Nautilus.Redis.Data
             double low,
             double close,
             double volume,
-            long timestamp,
+            long unixTimestamp,
             int pricePrecision,
             int sizePrecision)
         {
@@ -839,7 +836,7 @@ namespace Nautilus.Redis.Data
                 Price.Create(low, pricePrecision),
                 Price.Create(close, pricePrecision),
                 Volume.Create(volume, sizePrecision),
-                Instant.FromUnixTimeMilliseconds(timestamp).InUtc());
+                unixTimestamp);
         }
 
         private static byte[] EncodeTick(
@@ -847,7 +844,7 @@ namespace Nautilus.Redis.Data
             double askVal,
             double bidSizeVal,
             double askSizeVal,
-            long timestampVal,
+            long unixTimestamp,
             string priceFormatting,
             string sizeFormatting)
         {
@@ -855,9 +852,8 @@ namespace Nautilus.Redis.Data
             var ask = askVal.ToString(priceFormatting);
             var bidSize = bidSizeVal.ToString(sizeFormatting);
             var askSize = askSizeVal.ToString(sizeFormatting);
-            var timestamp = Instant.FromUnixTimeMilliseconds(timestampVal).InUtc().ToIso8601String();
 
-            return Encoding.UTF8.GetBytes($"{bid},{ask},{bidSize},{askSize},{timestamp}");
+            return Encoding.UTF8.GetBytes($"{bid},{ask},{bidSize},{askSize},{unixTimestamp}");
         }
 
         private static byte[] EncodeBar(
@@ -866,7 +862,7 @@ namespace Nautilus.Redis.Data
             double lowVal,
             double closeVal,
             double volumeVal,
-            long timestampVal,
+            long unixTimestamp,
             string priceFormatting,
             string sizeFormatting)
         {
@@ -875,9 +871,8 @@ namespace Nautilus.Redis.Data
             var low = lowVal.ToString(priceFormatting);
             var close = closeVal.ToString(priceFormatting);
             var volume = volumeVal.ToString(sizeFormatting);
-            var timestamp = Instant.FromUnixTimeMilliseconds(timestampVal).InUtc().ToIso8601String();
 
-            return Encoding.UTF8.GetBytes($"{open},{high},{low},{close},{volume},{timestamp}");
+            return Encoding.UTF8.GetBytes($"{open},{high},{low},{close},{volume},{unixTimestamp}");
         }
     }
 }
