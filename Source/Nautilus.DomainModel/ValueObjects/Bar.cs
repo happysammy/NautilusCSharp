@@ -58,6 +58,31 @@ namespace Nautilus.DomainModel.ValueObjects
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Bar"/> class.
+        /// </summary>
+        /// <param name="open">The open price.</param>
+        /// <param name="high">The high price.</param>
+        /// <param name="low">The low price.</param>
+        /// <param name="close">The close price.</param>
+        /// <param name="volume">The volume.</param>
+        /// <param name="unixTimestamp">The unix timestamp in milliseconds.</param>
+        public Bar(
+            Price open,
+            Price high,
+            Price low,
+            Price close,
+            Volume volume,
+            long unixTimestamp)
+        {
+            this.Open = open;
+            this.High = high;
+            this.Low = low;
+            this.Close = close;
+            this.Volume = volume;
+            this.Timestamp = Instant.FromUnixTimeMilliseconds(unixTimestamp).InUtc();
+        }
+
+        /// <summary>
         /// Gets the bars open <see cref="Price"/>.
         /// </summary>
         public Price Open { get; }
@@ -111,7 +136,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// </summary>
         /// <param name="barString">The bar string.</param>
         /// <returns>The created <see cref="Bar"/>.</returns>
-        public static Bar FromString(string barString)
+        public static Bar FromSerializableString(string barString)
         {
             Debug.NotEmptyOrWhiteSpace(barString, nameof(barString));
 
@@ -123,7 +148,7 @@ namespace Nautilus.DomainModel.ValueObjects
                 Price.Create(Parser.ToDecimal(values[2])),
                 Price.Create(Parser.ToDecimal(values[3])),
                 Volume.Create(Parser.ToDecimal(values[4])),
-                values[5].ToZonedDateTimeFromIso());
+                Instant.FromUnixTimeMilliseconds(Convert.ToInt64(values[5])).InUtc());
         }
 
         /// <summary>
@@ -176,6 +201,15 @@ namespace Nautilus.DomainModel.ValueObjects
         public override string ToString()
         {
             return $"{this.Open},{this.High},{this.Low},{this.Close},{this.Volume},{this.Timestamp.ToIso8601String()}";
+        }
+
+        /// <summary>
+        /// Returns a serializable string representation of the <see cref="Bar"/>.
+        /// </summary>
+        /// <returns>A <see cref="string"/>.</returns>
+        public string ToSerializableString()
+        {
+            return $"{this.Open},{this.High},{this.Low},{this.Close},{this.Volume},{this.Timestamp.ToInstant().ToUnixTimeMilliseconds()}";
         }
     }
 }

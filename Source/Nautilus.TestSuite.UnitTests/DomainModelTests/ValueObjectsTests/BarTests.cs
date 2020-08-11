@@ -46,8 +46,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            var barString = bar.ToString();
-            var result = Bar.FromString(barString);
+            var barString = bar.ToSerializableString();
+            var result = Bar.FromSerializableString(barString);
 
             // Assert
             Assert.Equal(bar, result);

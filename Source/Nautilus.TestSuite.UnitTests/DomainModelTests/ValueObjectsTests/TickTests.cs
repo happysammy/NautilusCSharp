@@ -68,8 +68,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            var tickString = tick.ToString();
-            var result = Tick.FromString(this.symbol, tickString);
+            var tickString = tick.ToSerializableString();
+            var result = Tick.FromSerializableString(this.symbol, tickString);
 
             // Assert
             Assert.Equal(tick, result);
@@ -89,7 +89,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
                 StubZonedDateTime.UnixEpoch());
 
             // Assert
-            Assert.Equal("1.00000,1.00010,1,1,1970-01-01T00:00:00.000Z", tick.ToString());
+            Assert.Equal("AUD/USD.FXCM,1.00000,1.00010,1,1,1970-01-01T00:00:00.000Z", tick.ToString());
         }
 
         [Theory]

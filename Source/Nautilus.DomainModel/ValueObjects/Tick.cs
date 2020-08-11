@@ -34,12 +34,12 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <summary>
         /// Initializes a new instance of the <see cref="Tick"/> class.
         /// </summary>
-        /// <param name="symbol">The quoted symbol.</param>
-        /// <param name="bid">The quoted bid price.</param>
-        /// <param name="ask">The quoted ask price.</param>
-        /// <param name="bidSize">The ticks bid size.</param>
-        /// <param name="askSize">The ticks ask size.</param>
-        /// <param name="timestamp">The quote timestamp.</param>
+        /// <param name="symbol">The tick symbol.</param>
+        /// <param name="bid">The best quoted bid price.</param>
+        /// <param name="ask">The best quoted ask price.</param>
+        /// <param name="bidSize">The tick bid size.</param>
+        /// <param name="askSize">The tick ask size.</param>
+        /// <param name="timestamp">The tick timestamp.</param>
         public Tick(
             Symbol symbol,
             Price bid,
@@ -54,6 +54,31 @@ namespace Nautilus.DomainModel.ValueObjects
             this.BidSize = bidSize;
             this.AskSize = askSize;
             this.Timestamp = timestamp;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Tick"/> class.
+        /// </summary>
+        /// <param name="symbol">The quoted symbol.</param>
+        /// <param name="bid">The quoted bid price.</param>
+        /// <param name="ask">The quoted ask price.</param>
+        /// <param name="bidSize">The ticks bid size.</param>
+        /// <param name="askSize">The ticks ask size.</param>
+        /// <param name="unixTimestamp">The unix timestamp in milliseconds.</param>
+        public Tick(
+            Symbol symbol,
+            Price bid,
+            Price ask,
+            Volume bidSize,
+            Volume askSize,
+            long unixTimestamp)
+        {
+            this.Symbol = symbol;
+            this.Bid = bid;
+            this.Ask = ask;
+            this.BidSize = bidSize;
+            this.AskSize = askSize;
+            this.Timestamp = Instant.FromUnixTimeMilliseconds(unixTimestamp).InUtc();
         }
 
         /// <summary>
@@ -110,12 +135,12 @@ namespace Nautilus.DomainModel.ValueObjects
         /// </summary>
         /// <param name="tickString">The tick string which includes the symbol.</param>
         /// <returns>The created <see cref="Tick"/>.</returns>
-        public static Tick FromStringWhichIncludesSymbol(string tickString)
+        public static Tick FromSerializableStringWhichIncludesSymbol(string tickString)
         {
             Debug.NotEmptyOrWhiteSpace(tickString, nameof(tickString));
 
             var values = tickString.Split(',', 2);
-            return FromString(Symbol.FromString(values[0]), values[1]);
+            return FromSerializableString(Symbol.FromString(values[0]), values[1]);
         }
 
         /// <summary>
@@ -124,7 +149,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <param name="symbol">The symbol to create the tick with.</param>
         /// <param name="tickString">The string containing tick values.</param>
         /// <returns>The created <see cref="Tick"/>.</returns>
-        public static Tick FromString(Symbol symbol, string tickString)
+        public static Tick FromSerializableString(Symbol symbol, string tickString)
         {
             Debug.NotEmptyOrWhiteSpace(tickString, nameof(tickString));
 
@@ -136,7 +161,7 @@ namespace Nautilus.DomainModel.ValueObjects
                 Price.Create(values[1]),
                 Volume.Create(values[2]),
                 Volume.Create(values[3]),
-                values[4].ToZonedDateTimeFromIso());
+                Instant.FromUnixTimeMilliseconds(Convert.ToInt64(values[4])).InUtc());
         }
 
         /// <summary>
@@ -172,6 +197,12 @@ namespace Nautilus.DomainModel.ValueObjects
         /// Returns a string representation of the <see cref="Tick"/>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{this.Bid},{this.Ask},{this.BidSize},{this.AskSize},{this.Timestamp.ToIso8601String()}";
+        public override string ToString() => $"{this.Symbol},{this.Bid},{this.Ask},{this.BidSize},{this.AskSize},{this.Timestamp.ToIso8601String()}";
+
+        /// <summary>
+        /// Returns a serializable string representation of the <see cref="Tick"/>.
+        /// </summary>
+        /// <returns>A <see cref="string"/>.</returns>
+        public string ToSerializableString() => $"{this.Bid},{this.Ask},{this.BidSize},{this.AskSize},{this.Timestamp.ToInstant().ToUnixTimeMilliseconds()}";
     }
 }

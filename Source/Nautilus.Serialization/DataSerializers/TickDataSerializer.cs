@@ -54,7 +54,7 @@ namespace Nautilus.Serialization.DataSerializers
         /// <inheritdoc />
         public byte[] Serialize(Tick tick)
         {
-            return Encoding.UTF8.GetBytes(tick.ToString());
+            return Encoding.UTF8.GetBytes(tick.ToSerializableString());
         }
 
         /// <inheritdoc />
@@ -89,7 +89,7 @@ namespace Nautilus.Serialization.DataSerializers
         {
             Debug.NotEmpty(dataBytes, nameof(dataBytes));
 
-            return Tick.FromStringWhichIncludesSymbol(Encoding.UTF8.GetString(dataBytes));
+            return Tick.FromSerializableStringWhichIncludesSymbol(Encoding.UTF8.GetString(dataBytes));
         }
 
         /// <inheritdoc />
@@ -100,7 +100,7 @@ namespace Nautilus.Serialization.DataSerializers
             var output = new Tick[dataBytesArray.Length];
             for (var i = 0; i < dataBytesArray.Length; i++)
             {
-                output[i] = Tick.FromString((Symbol)metadata!, Encoding.UTF8.GetString(dataBytesArray[i]));
+                output[i] = Tick.FromSerializableString((Symbol)metadata!, Encoding.UTF8.GetString(dataBytesArray[i]));
             }
 
             return output;
@@ -119,7 +119,7 @@ namespace Nautilus.Serialization.DataSerializers
             var ticks = new Tick[valueArray.Count];
             for (var i = 0; i < valueArray.Count; i++)
             {
-                ticks[i] = Tick.FromString(symbol,  Encoding.UTF8.GetString(valueArray[i].AsByteArray));
+                ticks[i] = Tick.FromSerializableString(symbol,  Encoding.UTF8.GetString(valueArray[i].AsByteArray));
             }
 
             return ticks;
