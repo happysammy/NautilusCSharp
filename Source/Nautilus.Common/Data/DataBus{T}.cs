@@ -24,6 +24,7 @@ using System.Threading.Tasks.Dataflow;
 using Microsoft.Extensions.Logging;
 using Nautilus.Common.Componentry;
 using Nautilus.Common.Interfaces;
+using Nautilus.Common.Logging;
 using Nautilus.Common.Messages.Commands;
 using Nautilus.Core.Annotations;
 using Nautilus.Core.Correctness;
@@ -152,7 +153,7 @@ namespace Nautilus.Common.Data
             var type = message.Subscription;
             if (message.Subscription != this.BusType)
             {
-                this.Logger.LogError($"Cannot subscribe to {type.Name} data (only {this.BusType.Name} data).");
+                this.Logger.LogError(LogId.Component, $"Cannot subscribe to {type.Name} data (only {this.BusType.Name} data).");
                 return;
             }
 
@@ -160,13 +161,13 @@ namespace Nautilus.Common.Data
 
             if (this.subscriptions.Contains(subscriber))
             {
-                this.Logger.LogWarning($"The {subscriber} is already subscribed to {this.BusType.Name} data.");
+                this.Logger.LogWarning(LogId.Component, $"The {subscriber} is already subscribed to {this.BusType.Name} data.");
                 return;  // Design time error
             }
 
             this.pipeline.LinkTo(subscriber.Endpoint.GetLink());
             this.subscriptions.Add(subscriber);
-            this.Logger.LogInformation($"Subscribed {subscriber} to {this.BusType.Name} data.");
+            this.Logger.LogInformation(LogId.Component, $"Subscribed {subscriber} to {this.BusType.Name} data.");
         }
 
         private void OnMessage(Unsubscribe<Type> message)
@@ -174,7 +175,7 @@ namespace Nautilus.Common.Data
             var type = message.Subscription;
             if (message.Subscription != this.BusType)
             {
-                this.Logger.LogError($"Cannot unsubscribe from {type.Name} data (only {this.BusType.Name} data).");
+                this.Logger.LogError(LogId.Component, $"Cannot unsubscribe from {type.Name} data (only {this.BusType.Name} data).");
                 return;
             }
 
@@ -182,12 +183,12 @@ namespace Nautilus.Common.Data
 
             if (!this.subscriptions.Contains(subscriber))
             {
-                this.Logger.LogWarning($"The {subscriber} is not subscribed to {this.BusType.Name} data.");
+                this.Logger.LogWarning(LogId.Component, $"The {subscriber} is not subscribed to {this.BusType.Name} data.");
                 return;
             }
 
             this.subscriptions.Remove(subscriber);
-            this.Logger.LogInformation($"Unsubscribed {subscriber} from {this.BusType.Name} data.");
+            this.Logger.LogInformation(LogId.Component, $"Unsubscribed {subscriber} from {this.BusType.Name} data.");
         }
     }
 }

@@ -17,6 +17,7 @@
 
 using Microsoft.Extensions.Logging;
 using Nautilus.Common.Interfaces;
+using Nautilus.Common.Logging;
 using Nautilus.DomainModel.Aggregates;
 using Nautilus.DomainModel.Entities;
 using Nautilus.DomainModel.Identifiers;
@@ -58,11 +59,11 @@ namespace Nautilus.Fix
         {
             if (this.IsConnected)
             {
-                this.Logger.LogWarning($"Already connected to session {this.SessionId}.");
+                this.Logger.LogWarning(LogId.Component, $"Already connected to session {this.SessionId}.");
                 return;
             }
 
-            this.Logger.LogDebug("Connecting...");
+            this.Logger.LogDebug(LogId.Network,"Connecting...");
             this.ConnectFix();
         }
 
@@ -71,11 +72,11 @@ namespace Nautilus.Fix
         {
             if (this.IsDisconnected && this.SocketStopped)
             {
-                this.Logger.LogWarning($"Already disconnected from session {this.SessionId}.");
+                this.Logger.LogWarning(LogId.Component,$"Already disconnected from session {this.SessionId}.");
                 return;
             }
 
-            this.Logger.LogDebug($"Disconnecting from session {this.SessionId}...");
+            this.Logger.LogDebug(LogId.Network,$"Disconnecting from session {this.SessionId}...");
             this.DisconnectFix();
         }
 

@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using Nautilus.Common.Interfaces;
+using Nautilus.Common.Logging;
 using Nautilus.Core.Message;
 using Nautilus.Core.Types;
 using Nautilus.Data.Messages.Requests;
@@ -82,7 +83,7 @@ namespace Nautilus.Data.Network
         {
             try
             {
-                this.Logger.LogInformation($"<--[REQ] {request}.");
+                this.Logger.LogInformation(LogId.Network,$"<--[REQ] {request}.");
 
                 var dataType = request.Query["DataType"];
                 if (dataType == typeof(Tick[]).Name)
@@ -107,7 +108,7 @@ namespace Nautilus.Data.Network
             }
             catch (Exception ex)
             {
-                this.Logger.LogError($"{ex}");
+                this.Logger.LogError(LogId.Network, $"{ex}");
                 this.SendQueryFailure(ex.Message, request.Id);
             }
         }
@@ -115,11 +116,15 @@ namespace Nautilus.Data.Network
         private void OnMessage(DataResponse response)
         {
             this.SendMessage(response);
+
+            this.Logger.LogInformation(LogId.Network,$"[RES]--> {response}.");
         }
 
         private void OnMessage(QueryFailure response)
         {
             this.SendMessage(response);
+
+            this.Logger.LogInformation(LogId.Network,$"[RES]--> {response}.");
         }
     }
 }

@@ -16,8 +16,10 @@
 // -------------------------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Nautilus.Common.Data;
+using Nautilus.DomainModel.Enums;
 using Nautilus.DomainModel.ValueObjects;
 using Nautilus.Redis;
 using Nautilus.Redis.Data;
@@ -44,7 +46,9 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             this.repository = new RedisMarketDataRepository(
                 container,
                 DataBusFactory.Create(container),
-                this.redisConnection);
+                this.redisConnection,
+                1,
+                new Dictionary<BarStructure, int> {{BarStructure.Minute, 1}});
 
             this.redisConnection.GetServer(RedisConstants.Localhost, RedisConstants.DefaultPort).FlushAllDatabases();
         }

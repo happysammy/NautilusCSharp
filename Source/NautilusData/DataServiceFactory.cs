@@ -92,7 +92,9 @@ namespace NautilusData
             var marketDataRepository = new RedisMarketDataRepository(
                 container,
                 dataBusAdapter,
-                connection);
+                connection,
+                config.DataConfig.RetentionTimeTicksDays,
+                config.DataConfig.RetentionTimeBarsDays);
 
             var tickProvider = new TickProvider(
                 container,

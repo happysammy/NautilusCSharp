@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using Nautilus.Common.Componentry;
 using Nautilus.Common.Interfaces;
+using Nautilus.Common.Logging;
 using Nautilus.Common.Messages.Commands;
 using Nautilus.Common.Messages.Events;
 using Nautilus.Common.Messaging;
@@ -89,14 +90,14 @@ namespace Nautilus.Service
             }
             else
             {
-                this.Logger.LogWarning($"Connection address {receiver} was already registered.");
+                this.Logger.LogWarning(LogId.Component, $"Connection address {receiver} was already registered.");
             }
         }
 
         /// <inheritdoc />
         protected override void OnStart(Start start)
         {
-            this.Logger.LogInformation($"Starting {this.GetType().Name}...");
+            this.Logger.LogInformation(LogId.Component, $"Starting {this.GetType().Name}...");
 
             this.CreateConnectFixJob();
             this.CreateDisconnectFixJob();
@@ -108,13 +109,13 @@ namespace Nautilus.Service
                 this.Send(start, this.connectionAddresses);
             }
 
-            this.Logger.LogInformation("Running...");
+            this.Logger.LogInformation(LogId.Component, "Running...");
         }
 
         /// <inheritdoc />
         protected override void OnStop(Stop stop)
         {
-            this.Logger.LogInformation($"Stopping {this.GetType().Name}...");
+            this.Logger.LogInformation(LogId.Component, $"Stopping {this.GetType().Name}...");
 
             this.maintainConnection = false;  // Avoid immediate reconnection
             this.Send(stop, this.connectionAddresses);
@@ -181,7 +182,7 @@ namespace Nautilus.Service
 
         private void OnMessage(SessionConnected message)
         {
-            this.Logger.LogInformation($"Connected to session {message.SessionId}.");
+            this.Logger.LogInformation(LogId.Network, $"Connected to session {message.SessionId}.");
 
             this.OnConnected();
         }
@@ -190,11 +191,11 @@ namespace Nautilus.Service
         {
             if (this.maintainConnection)
             {
-                this.Logger.LogWarning($"Disconnected from session {message.SessionId}.");
+                this.Logger.LogWarning(LogId.Network, $"Disconnected from session {message.SessionId}.");
             }
             else
             {
-                this.Logger.LogInformation($"Disconnected from session {message.SessionId}.");
+                this.Logger.LogInformation(LogId.Network, $"Disconnected from session {message.SessionId}.");
             }
 
             this.OnDisconnected();
@@ -226,10 +227,12 @@ namespace Nautilus.Service
                 this.TimeNow());
 
             this.Send(createJob,new Address(nameof(Scheduler)));
-            this.Logger.LogInformation($"Created {nameof(ConnectSession)} for " +
-                                       $"{this.connectWeeklyTime.DayOfWeek.ToDayOfWeek()}s " +
-                                       $"{this.connectWeeklyTime.Time.Hour:2D}:" +
-                                       $"{this.connectWeeklyTime.Time.Minute:2D} UTC.");
+            this.Logger.LogInformation(
+                LogId.Component,
+                $"Created {nameof(ConnectSession)} for " +
+                $"{this.connectWeeklyTime.DayOfWeek.ToDayOfWeek()}s " +
+                $"{this.connectWeeklyTime.Time.Hour:2D}:" +
+                $"{this.connectWeeklyTime.Time.Minute:2D} UTC.");
         }
 
         private void CreateDisconnectFixJob()
@@ -258,10 +261,12 @@ namespace Nautilus.Service
                 this.TimeNow());
 
             this.Send(createJob,new Address(nameof(Scheduler)));
-            this.Logger.LogInformation($"Created {nameof(DisconnectSession)} for " +
-                                       $"{this.disconnectWeeklyTime.DayOfWeek.ToDayOfWeek()}s " +
-                                       $"{this.disconnectWeeklyTime.Time.Hour:2D}:" +
-                                       $"{this.disconnectWeeklyTime.Time.Minute:2D} UTC.");
+            this.Logger.LogInformation(
+                LogId.Component,
+                $"Created {nameof(DisconnectSession)} for " +
+                $"{this.disconnectWeeklyTime.DayOfWeek.ToDayOfWeek()}s " +
+                $"{this.disconnectWeeklyTime.Time.Hour:2D}:" +
+                $"{this.disconnectWeeklyTime.Time.Minute:2D} UTC.");
         }
     }
 }

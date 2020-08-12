@@ -245,10 +245,10 @@ namespace Nautilus.Common.Componentry
             {
                 case NullReferenceException _:
                 case ArgumentException _:
-                    this.Logger.LogError(ex.Message, ex);
+                    this.Logger.LogError(LogId.Component, ex.Message, ex);
                     break;
                 default:
-                    this.Logger.LogCritical(ex.Message, ex);
+                    this.Logger.LogCritical(LogId.Component, ex.Message, ex);
                     throw ex;
             }
         }

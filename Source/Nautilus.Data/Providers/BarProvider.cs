@@ -83,7 +83,11 @@ namespace Nautilus.Data.Providers
                 var barType = new BarType(symbol, barSpec);
                 var fromDateTime = request.Query["FromDateTime"].ToNullableZonedDateTimeFromIso();
                 var toDateTime = request.Query["ToDateTime"].ToNullableZonedDateTimeFromIso();
-                var limit = long.Parse(request.Query["Limit"]);
+                long? limit = long.Parse(request.Query["Limit"]);
+                if (limit == 0)
+                {
+                    limit = null;
+                }
 
                 var data = this.repository.ReadBarData(
                     barType,
@@ -94,7 +98,7 @@ namespace Nautilus.Data.Providers
                 if (data.Length == 0)
                 {
                     var fromDateTimeString = fromDateTime is null ? "Min" : fromDateTime.ToString();
-                    var toDateTimeString = fromDateTime is null ? "Max" : fromDateTime.ToString();
+                    var toDateTimeString = toDateTime is null ? "Max" : toDateTime.ToString();
 
                     return this.QueryFailure($"No data found for {barType} from " +
                                              $"{fromDateTimeString} to {toDateTimeString}", request.Id);
@@ -138,17 +142,22 @@ namespace Nautilus.Data.Providers
 
         private void OnMessage(DataRequest request)
         {
-            this.Logger.LogInformation(LogId.Component, $"<--[REQ] {request}.");
+#if DEBUG
+            this.Logger.LogDebug(LogId.Component, $"<--[REQ] {request}.");
+#endif
 
             var response = this.FindData(request);
+
+#if DEBUG
             if (response is DataResponse)
             {
-                this.Logger.LogInformation(LogId.Component, $"[RES]--> {response}.");
+                this.Logger.LogDebug(LogId.Component, $"[RES]--> {response}.");
             }
             else
             {
                 this.Logger.LogWarning(LogId.Component, $"[RES]--> {response}.");
             }
+#endif
 
             this.Send(response, ComponentAddress.DataServer);
         }
