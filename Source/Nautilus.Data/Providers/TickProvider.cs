@@ -81,7 +81,11 @@ namespace Nautilus.Data.Providers
                 var symbol = Symbol.FromString(request.Query["Symbol"]);
                 var fromDateTime = request.Query["FromDateTime"].ToNullableZonedDateTimeFromIso();
                 var toDateTime = request.Query["ToDateTime"].ToNullableZonedDateTimeFromIso();
-                var limit = long.Parse(request.Query["Limit"]);
+                long? limit = long.Parse(request.Query["Limit"]);
+                if (limit == 0)
+                {
+                    limit = null;
+                }
 
                 var dataQuery = this.repository.ReadTickData(
                     symbol,
@@ -92,7 +96,7 @@ namespace Nautilus.Data.Providers
                 if (dataQuery.Length == 0)
                 {
                     var fromDateTimeString = fromDateTime is null ? "Min" : fromDateTime.ToString();
-                    var toDateTimeString = fromDateTime is null ? "Max" : fromDateTime.ToString();
+                    var toDateTimeString = toDateTime is null ? "Max" : toDateTime.ToString();
 
                     return this.QueryFailure($"No tick found for {symbol} from " +
                                              $"{fromDateTimeString} to {toDateTimeString}", request.Id);
@@ -136,12 +140,12 @@ namespace Nautilus.Data.Providers
 
         private void OnMessage(DataRequest request)
         {
-            this.Logger.LogInformation(LogId.Component, $"<--[REQ] {request}.");
+            this.Logger.LogDebug(LogId.Component, $"<--[REQ] {request}.");
 
             var response = this.FindData(request);
             if (response is DataResponse)
             {
-                this.Logger.LogInformation(LogId.Component, $"[RES]--> {response}.");
+                this.Logger.LogDebug(LogId.Component, $"[RES]--> {response}.");
             }
             else
             {

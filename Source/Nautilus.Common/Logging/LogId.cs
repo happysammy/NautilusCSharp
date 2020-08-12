@@ -32,7 +32,7 @@ namespace Nautilus.Common.Logging
         /// <summary>
         /// Gets the event identifier for networking events.
         /// </summary>
-        public static EventId Networking { get; } = new EventId(1, nameof(Networking));
+        public static EventId Network { get; } = new EventId(1, nameof(Network));
 
         /// <summary>
         /// Gets the event identifier for database events.

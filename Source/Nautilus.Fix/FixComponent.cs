@@ -162,11 +162,11 @@ namespace Nautilus.Fix
         {
             if (!this.MaintainConnection)
             {
-                this.Logger.LogError("QuickFix attempted to create a session with maintainConnection=false.");
+                this.Logger.LogError(LogId.Component, "QuickFix attempted to create a session with maintainConnection=false.");
                 return;
             }
 
-            this.Logger.LogDebug($"Creating session {sessionId}...");
+            this.Logger.LogDebug(LogId.Network, $"Creating session {sessionId}...");
             this.SessionId = sessionId;
             this.session = Session.LookupSession(sessionId);
             this.FixMessageRouter.InitializeSession(this.session);
@@ -185,7 +185,7 @@ namespace Nautilus.Fix
                 this.clock.TimeNow());
 
             this.messagingAdapter.SendToBus(connected, null, this.clock.TimeNow());
-            this.Logger.LogDebug($"Connected to session {sessionId}");
+            this.Logger.LogDebug(LogId.Network,$"Connected to session {sessionId}");
         }
 
         /// <summary>
@@ -202,7 +202,7 @@ namespace Nautilus.Fix
 
             this.messagingAdapter.SendToBus(disconnected, null, this.clock.TimeNow());
 
-            this.Logger.LogDebug($"Disconnected from session {sessionId}");
+            this.Logger.LogDebug(LogId.Network, $"Disconnected from session {sessionId}");
         }
 
         /// <summary>
@@ -226,7 +226,7 @@ namespace Nautilus.Fix
                 message.SetField(new Username(this.credentials.Username));
                 message.SetField(new Password(this.credentials.Password));
 
-                this.Logger.LogDebug("Authorizing session...");
+                this.Logger.LogDebug(LogId.Network, "Authorizing session...");
             }
 
             if (this.sendAccountTag)
@@ -251,11 +251,11 @@ namespace Nautilus.Fix
             {
                 if (ex is UnsupportedMessageType)
                 {
-                    this.Logger.LogWarning(LogId.Networking, ex.Message, ex);
+                    this.Logger.LogWarning(LogId.Network, ex.Message, ex);
                 }
                 else
                 {
-                    this.Logger.LogError(LogId.Networking, ex.Message, ex);
+                    this.Logger.LogError(LogId.Network, ex.Message, ex);
                 }
             }
         }
@@ -427,7 +427,7 @@ namespace Nautilus.Fix
             var storeFactory = new FileStoreFactory(settings);
             this.initiator = new SocketInitiator(this, storeFactory, settings, null);
 
-            this.Logger.LogDebug("Starting initiator...");
+            this.Logger.LogDebug(LogId.Network, "Starting initiator...");
             this.initiator.Start();
             this.SocketStopped = false;
         }
@@ -438,7 +438,7 @@ namespace Nautilus.Fix
         protected void DisconnectFix()
         {
             this.MaintainConnection = false;
-            this.Logger.LogDebug("Stopping initiator... ");
+            this.Logger.LogDebug(LogId.Network, "Stopping initiator... ");
             this.initiator?.Stop();
             this.SocketStopped = true;
         }

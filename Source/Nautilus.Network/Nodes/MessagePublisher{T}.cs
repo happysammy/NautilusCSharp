@@ -78,11 +78,11 @@ namespace Nautilus.Network.Nodes
             if (encryption.UseEncryption)
             {
                 EncryptionProvider.SetupSocket(encryption, this.socket);
-                this.Logger.LogInformation(LogId.Networking, $"{encryption.Algorithm} encryption setup for {this.networkAddress}");
+                this.Logger.LogInformation(LogId.Network, $"{encryption.Algorithm} encryption setup for {this.networkAddress}");
             }
             else
             {
-                this.Logger.LogWarning(LogId.Networking, $"No encryption setup for {this.networkAddress}");
+                this.Logger.LogWarning(LogId.Network, $"No encryption setup for {this.networkAddress}");
             }
 
             this.SentCount = 0;
@@ -112,7 +112,7 @@ namespace Nautilus.Network.Nodes
             }
             catch (Exception ex)
             {
-                this.Logger.LogCritical(LogId.Networking, ex.Message, ex);
+                this.Logger.LogCritical(LogId.Network, ex.Message, ex);
             }
 
             this.Logger.LogInformation(LogId.Component, "Disposed.");
@@ -124,11 +124,11 @@ namespace Nautilus.Network.Nodes
             try
             {
                 this.socket.Bind(this.networkAddress.Value);
-                this.Logger.LogInformation(LogId.Networking, $"Bound {this.socket.GetType().Name} to {this.networkAddress}");
+                this.Logger.LogInformation(LogId.Network, $"Bound {this.socket.GetType().Name} to {this.networkAddress}");
             }
             catch (Exception ex)
             {
-                this.Logger.LogError(LogId.Networking, ex.Message, ex);
+                this.Logger.LogError(LogId.Network, ex.Message, ex);
             }
         }
 
@@ -138,11 +138,11 @@ namespace Nautilus.Network.Nodes
             try
             {
                 this.socket.Unbind(this.networkAddress.Value);
-                this.Logger.LogInformation(LogId.Networking, $"Unbound {this.socket.GetType().Name} from {this.networkAddress}");
+                this.Logger.LogInformation(LogId.Network, $"Unbound {this.socket.GetType().Name} from {this.networkAddress}");
             }
             catch (Exception ex)
             {
-                this.Logger.LogError(LogId.Networking, ex.Message, ex);
+                this.Logger.LogError(LogId.Network, ex.Message, ex);
             }
         }
 
@@ -166,7 +166,7 @@ namespace Nautilus.Network.Nodes
         {
             var logMessage = $"[{this.SentCount}]--> Topic={topic}, Body={compressedLength} bytes";
 
-            this.Logger.LogTrace(LogId.Networking, logMessage);
+            this.Logger.LogTrace(LogId.Network, logMessage);
         }
     }
 }

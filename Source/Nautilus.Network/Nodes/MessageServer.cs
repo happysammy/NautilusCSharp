@@ -133,22 +133,22 @@ namespace Nautilus.Network.Nodes
             {
                 EncryptionProvider.SetupSocket(encryption, this.socketInbound);
                 this.Logger.LogInformation(
-                    LogId.Networking,
+                    LogId.Network,
                     $"{encryption.Algorithm} encryption setup for {this.requestAddress}");
 
                 EncryptionProvider.SetupSocket(encryption, this.socketOutbound);
                 this.Logger.LogInformation(
-                    LogId.Networking,
+                    LogId.Network,
                     $"{encryption.Algorithm} encryption setup for {this.responseAddress}");
             }
             else
             {
                 this.Logger.LogWarning(
-                    LogId.Networking,
+                    LogId.Network,
                     $"No encryption setup for {this.requestAddress}");
 
                 this.Logger.LogWarning(
-                    LogId.Networking,
+                    LogId.Network,
                     $"No encryption setup for {this.responseAddress}");
             }
 
@@ -188,7 +188,7 @@ namespace Nautilus.Network.Nodes
             }
             catch (Exception ex)
             {
-                this.Logger.LogCritical(LogId.Networking, ex.Message, ex);
+                this.Logger.LogCritical(LogId.Network, ex.Message, ex);
             }
 
             this.Logger.LogInformation(LogId.Component, "Disposed.");
@@ -222,13 +222,13 @@ namespace Nautilus.Network.Nodes
             }
             catch (Exception ex)
             {
-                this.Logger.LogError(LogId.Networking, ex.Message, ex);
+                this.Logger.LogError(LogId.Network, ex.Message, ex);
             }
 
             var logMsg1 = $"Bound {this.socketInbound.GetType().Name} to {this.requestAddress}";
             var logMsg2 = $"Bound {this.socketOutbound.GetType().Name} to {this.responseAddress}";
-            this.Logger.LogInformation(LogId.Networking, logMsg1);
-            this.Logger.LogInformation(LogId.Networking, logMsg2);
+            this.Logger.LogInformation(LogId.Network, logMsg1);
+            this.Logger.LogInformation(LogId.Network, logMsg2);
         }
 
         /// <inheritdoc />
@@ -236,7 +236,7 @@ namespace Nautilus.Network.Nodes
         {
             foreach (var (peer, session) in this.peers)
             {
-                this.Logger.LogError(LogId.Networking, $"Server was still connected to peer {peer.Value} with session {session.Value}.");
+                this.Logger.LogError(LogId.Network, $"Server was still connected to peer {peer.Value} with session {session.Value}.");
             }
 
             try
@@ -244,12 +244,12 @@ namespace Nautilus.Network.Nodes
                 this.queue.GracefulStop().Wait();
                 this.socketInbound.Unbind(this.requestAddress.Value);
                 this.socketOutbound.Unbind(this.responseAddress.Value);
-                this.Logger.LogInformation(LogId.Networking, $"Unbound {this.socketInbound.GetType().Name} from {this.requestAddress}");
-                this.Logger.LogInformation(LogId.Networking, $"Unbound {this.socketOutbound.GetType().Name} from {this.responseAddress}");
+                this.Logger.LogInformation(LogId.Network, $"Unbound {this.socketInbound.GetType().Name} from {this.requestAddress}");
+                this.Logger.LogInformation(LogId.Network, $"Unbound {this.socketOutbound.GetType().Name} from {this.responseAddress}");
             }
             catch (Exception ex)
             {
-                this.Logger.LogError(LogId.Networking, ex.Message, ex);
+                this.Logger.LogError(LogId.Network, ex.Message, ex);
             }
         }
 
@@ -313,7 +313,7 @@ namespace Nautilus.Network.Nodes
             else
             {
                 this.Logger.LogError(
-                    LogId.Networking,
+                    LogId.Network,
                     $"Cannot send message {response}, no receiver address found for correlation id {response.CorrelationId}).");
             }
         }
@@ -338,7 +338,7 @@ namespace Nautilus.Network.Nodes
             if (frames.Length != ExpectedFrameCount)
             {
                 var errorMsg = $"Message was malformed (expected {ExpectedFrameCount} frames, received {frames.Length}).";
-                this.Logger.LogError(LogId.Networking, errorMsg);
+                this.Logger.LogError(LogId.Network, errorMsg);
                 this.Reject(frames, errorMsg);
                 return;
             }
@@ -358,7 +358,7 @@ namespace Nautilus.Network.Nodes
             if (sender.IsNone)
             {
                 var errorMsg = "Message sender header address was malformed.";
-                this.Logger.LogError(LogId.Networking, errorMsg);
+                this.Logger.LogError(LogId.Network, errorMsg);
                 this.Reject(frames, errorMsg);
                 return;
             }
@@ -369,7 +369,7 @@ namespace Nautilus.Network.Nodes
             if (frameBody.Length == 0)
             {
                 var errorMsg = "Message body was empty.";
-                this.Logger.LogError(LogId.Networking, errorMsg);
+                this.Logger.LogError(LogId.Network, errorMsg);
                 this.SendRejected(errorMsg, sender);
                 return;
             }
@@ -382,7 +382,7 @@ namespace Nautilus.Network.Nodes
             if (frames.Length == 0)
             {
                 this.Logger.LogError(
-                    LogId.Networking,
+                    LogId.Network,
                     errorMsg.Remove(errorMsg.Length - 1, 1) + "with no reply address.");
                 return;
             }
@@ -396,7 +396,7 @@ namespace Nautilus.Network.Nodes
             if (!header.TryGetValue(nameof(MessageType), out var messageType))
             {
                 var errorMessage = $"Message header did not contain the 'MessageType' key.";
-                this.Logger.LogWarning(LogId.Networking, errorMessage);
+                this.Logger.LogWarning(LogId.Network, errorMessage);
                 this.SendRejected(errorMessage, sender);
                 return;
             }
@@ -415,7 +415,7 @@ namespace Nautilus.Network.Nodes
                 default:
                 {
                     var errorMessage = $"Message type '{messageType}' is not valid at this address {this.requestAddress}.";
-                    this.Logger.LogWarning(LogId.Networking, errorMessage);
+                    this.Logger.LogWarning(LogId.Network, errorMessage);
                     this.SendRejected(errorMessage, sender);
                     break;
                 }
@@ -431,7 +431,7 @@ namespace Nautilus.Network.Nodes
             catch (Exception ex)
             {
                 var errorMessage = $"Unable to deserialize message due {ex.GetType().Name}, {ex.Message}";
-                this.Logger.LogError(LogId.Networking, errorMessage, ex);
+                this.Logger.LogError(LogId.Network, errorMessage, ex);
                 this.SendRejected(errorMessage, sender);
             }
         }
@@ -458,7 +458,7 @@ namespace Nautilus.Network.Nodes
             catch (Exception ex)
             {
                 var errorMessage = $"Unable to deserialize message due {ex.GetType().Name}, {ex.Message}";
-                this.Logger.LogError(LogId.Networking, errorMessage, ex);
+                this.Logger.LogError(LogId.Network, errorMessage, ex);
                 this.SendRejected(errorMessage, sender);
             }
         }
@@ -477,7 +477,7 @@ namespace Nautilus.Network.Nodes
             catch (Exception ex)
             {
                 var errorMessage = $"Unable to deserialize message due {ex.GetType().Name}, {ex.Message}";
-                this.Logger.LogError(LogId.Networking, errorMessage, ex);
+                this.Logger.LogError(LogId.Network, errorMessage, ex);
                 this.SendRejected(errorMessage, sender);
             }
         }
@@ -492,13 +492,13 @@ namespace Nautilus.Network.Nodes
                 sessionId = new SessionId(connect.Authentication);
                 this.peers.TryAdd(connect.ClientId, sessionId);
                 message = $"{sender.Value} connected to {this.serviceName.Value} session {sessionId.Value}";
-                this.Logger.LogInformation(LogId.Networking, message);
+                this.Logger.LogInformation(LogId.Network, message);
             }
             else
             {
                 // Peer already connected to a session
                 message = $"{sender.Value} already connected to {this.serviceName.Value} session {sessionId.Value}";
-                this.Logger.LogWarning(LogId.Networking, message);
+                this.Logger.LogWarning(LogId.Network, message);
             }
 
             var response = new Connected(
@@ -521,14 +521,14 @@ namespace Nautilus.Network.Nodes
                 // Peer not previously connected to a session
                 sessionId = SessionId.None();
                 message = $"{sender.Value} had no session to disconnect from {this.serviceName.Value}";
-                this.Logger.LogWarning(LogId.Networking, message);
+                this.Logger.LogWarning(LogId.Network, message);
             }
             else
             {
                 // Peer connected to a session
                 this.peers.Remove(disconnect.ClientId); // Pop from dictionary
                 message = $"{sender.Value} disconnected from {this.serviceName.Value} session {sessionId.Value}";
-                this.Logger.LogInformation(LogId.Networking, message);
+                this.Logger.LogInformation(LogId.Network, message);
             }
 
             var response = new Disconnected(
@@ -573,13 +573,13 @@ namespace Nautilus.Network.Nodes
         [Conditional("DEBUG")]
         private void LogReceived(string message)
         {
-            this.Logger.LogTrace(LogId.Networking, $"<--[{this.ReceivedCount.ToString()}] Received {message}");
+            this.Logger.LogTrace(LogId.Network, $"<--[{this.ReceivedCount.ToString()}] Received {message}");
         }
 
         [Conditional("DEBUG")]
         private void LogSent(string outbound, string receiver)
         {
-            this.Logger.LogTrace(LogId.Networking, $"[{this.SentCount.ToString()}]--> {outbound} to {receiver}.");
+            this.Logger.LogTrace(LogId.Network, $"[{this.SentCount.ToString()}]--> {outbound} to {receiver}.");
         }
     }
 }
