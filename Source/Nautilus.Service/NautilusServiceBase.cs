@@ -231,8 +231,8 @@ namespace Nautilus.Service
                 LogId.Component,
                 $"Created {nameof(ConnectSession)} for " +
                 $"{this.connectWeeklyTime.DayOfWeek.ToDayOfWeek()}s " +
-                $"{this.connectWeeklyTime.Time.Hour:2D}:" +
-                $"{this.connectWeeklyTime.Time.Minute:2D} UTC.");
+                $"{this.connectWeeklyTime.Time.Hour:D2}:" +
+                $"{this.connectWeeklyTime.Time.Minute:D2} UTC.");
         }
 
         private void CreateDisconnectFixJob()
@@ -265,8 +265,8 @@ namespace Nautilus.Service
                 LogId.Component,
                 $"Created {nameof(DisconnectSession)} for " +
                 $"{this.disconnectWeeklyTime.DayOfWeek.ToDayOfWeek()}s " +
-                $"{this.disconnectWeeklyTime.Time.Hour:2D}:" +
-                $"{this.disconnectWeeklyTime.Time.Minute:2D} UTC.");
+                $"{this.disconnectWeeklyTime.Time.Hour:D2}:" +
+                $"{this.disconnectWeeklyTime.Time.Minute:D2} UTC.");
         }
     }
 }

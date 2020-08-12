@@ -374,7 +374,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
                 Price.Create(1.000350, 6),
                 Price.Create(0.999850, 6),
                 Price.Create(1.000025, 6),
-                Volume.Create(4),
+                Volume.Create(8),
                 StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(120));
 
             // Act

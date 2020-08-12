@@ -497,7 +497,7 @@ namespace Nautilus.Redis.Data
                     barValues[2][i].Val,
                     barValues[3][i].Val,
                     barValues[4][i].Val,
-                    barValues[3][i].Time + timeBucket,
+                    barValues[3][i].Time + timeBucket,  // End of the tick bucket
                     pricePrecision,
                     sizePrecision);
 
@@ -549,8 +549,8 @@ namespace Nautilus.Redis.Data
                     (bidValues[1][i].Val + askValues[1][i].Val) / 2,
                     (bidValues[2][i].Val + askValues[2][i].Val) / 2,
                     (bidValues[3][i].Val + askValues[3][i].Val) / 2,
-                    (bidValues[4][i].Val + askValues[4][i].Val) / 2,
-                    bidValues[3][i].Time + timeBucket,
+                    bidValues[4][i].Val + askValues[4][i].Val,
+                    bidValues[3][i].Time + timeBucket,  // End of the tick bucket
                     pricePrecision,
                     sizePrecision);
 
@@ -589,7 +589,7 @@ namespace Nautilus.Redis.Data
                     barValues[2][i].Val,
                     barValues[3][i].Val,
                     barValues[4][i].Val,
-                    barValues[3][i].Time + timeBucket,
+                    barValues[3][i].Time + timeBucket,  // End of the tick bucket
                     priceFormatting,
                     sizeFormatting);
 
@@ -641,8 +641,8 @@ namespace Nautilus.Redis.Data
                     (bidValues[1][i].Val + askValues[1][i].Val) / 2,
                     (bidValues[2][i].Val + askValues[2][i].Val) / 2,
                     (bidValues[3][i].Val + askValues[3][i].Val) / 2,
-                    (bidValues[4][i].Val + askValues[4][i].Val) / 2,
-                    bidValues[3][i].Time + timeBucket,
+                    bidValues[4][i].Val + askValues[4][i].Val,
+                    bidValues[3][i].Time + timeBucket,  // End of the tick bucket
                     priceFormatting,
                     sizeFormatting);
 
