@@ -90,12 +90,6 @@ namespace Nautilus.Fix
         }
 
         /// <inheritdoc />
-        public void OnMessage(string message)
-        {
-            // No implemented yet (general business messages)
-        }
-
-        /// <inheritdoc />
         protected override void OnStart(Start start)
         {
             this.fixClient.Connect();

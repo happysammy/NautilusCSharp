@@ -71,11 +71,5 @@ namespace Nautilus.Common.Interfaces
         /// </summary>
         /// <param name="instruments">The instruments collection.</param>
         void OnData(IEnumerable<Instrument> instruments);
-
-        /// <summary>
-        /// Handles received general messages.
-        /// </summary>
-        /// <param name="message">The message.</param>
-        void OnMessage(string message);
     }
 }
