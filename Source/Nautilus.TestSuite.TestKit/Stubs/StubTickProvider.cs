@@ -36,8 +36,8 @@ namespace Nautilus.TestSuite.TestKit.Stubs
                 symbol,
                 Price.Create(LastBid),
                 Price.Create(LastAsk),
-                Volume.One(),
-                Volume.One(),
+                Quantity.One(),
+                Quantity.One(),
                 StubZonedDateTime.UnixEpoch());
         }
 
@@ -47,8 +47,8 @@ namespace Nautilus.TestSuite.TestKit.Stubs
                 symbol,
                 Price.Create(LastBid),
                 Price.Create(LastAsk),
-                Volume.One(),
-                Volume.One(),
+                Quantity.One(),
+                Quantity.One(),
                 timestamp);
         }
     }

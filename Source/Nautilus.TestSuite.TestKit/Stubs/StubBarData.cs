@@ -31,7 +31,7 @@ namespace Nautilus.TestSuite.TestKit.Stubs
                 Price.Create(1.00000m),
                 Price.Create(1.00000m),
                 Price.Create(1.00000m),
-                Volume.Create(1000000),
+                Quantity.Create(1000000),
                 StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(offsetMinutes));
         }
 
@@ -42,7 +42,7 @@ namespace Nautilus.TestSuite.TestKit.Stubs
                 Price.Create(1.00000m),
                 Price.Create(1.00000m),
                 Price.Create(1.00000m),
-                Volume.Create(1000000),
+                Quantity.Create(1000000),
                 StubZonedDateTime.UnixEpoch() + offset);
         }
     }

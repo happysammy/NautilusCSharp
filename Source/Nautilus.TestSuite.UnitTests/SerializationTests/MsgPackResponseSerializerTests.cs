@@ -190,15 +190,15 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
                 symbol,
                 Price.Create(1.00000m),
                 Price.Create(1.00000m),
-                Volume.One(),
-                Volume.One(),
+                Quantity.One(),
+                Quantity.One(),
                 datetimeFrom);
             var tick2 = new Tick(
                 symbol,
                 Price.Create(1.00010m),
                 Price.Create(1.00020m),
-                Volume.One(),
-                Volume.One(),
+                Quantity.One(),
+                Quantity.One(),
                 datetimeTo);
 
             var ticks = new[] { tick1, tick2 };

@@ -245,8 +245,8 @@ namespace Nautilus.Fxcm
                 this.GetSymbol(message.GetField(Tags.Symbol)),
                 Price.Create(this.mdBidGroup.GetDecimal(Tags.MDEntryPx)),
                 Price.Create(this.mdAskGroup.GetDecimal(Tags.MDEntryPx)),
-                Volume.One(),
-                Volume.One(),
+                Quantity.One(),
+                Quantity.One(),
                 this.tickTimestampProvider());
 
             this.dataGateway?.OnData(tick);

@@ -44,8 +44,8 @@ namespace Nautilus.DomainModel.ValueObjects
             Symbol symbol,
             Price bid,
             Price ask,
-            Volume bidSize,
-            Volume askSize,
+            Quantity bidSize,
+            Quantity askSize,
             ZonedDateTime timestamp)
         {
             this.Symbol = symbol;
@@ -69,8 +69,8 @@ namespace Nautilus.DomainModel.ValueObjects
             Symbol symbol,
             Price bid,
             Price ask,
-            Volume bidSize,
-            Volume askSize,
+            Quantity bidSize,
+            Quantity askSize,
             long unixTimestamp)
         {
             this.Symbol = symbol;
@@ -99,12 +99,12 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <summary>
         /// Gets the ticks bid size.
         /// </summary>
-        public Volume BidSize { get; }
+        public Quantity BidSize { get; }
 
         /// <summary>
         /// Gets the ticks ask size.
         /// </summary>
-        public Volume AskSize { get; }
+        public Quantity AskSize { get; }
 
         /// <summary>
         /// Gets the ticks timestamp.
@@ -159,8 +159,8 @@ namespace Nautilus.DomainModel.ValueObjects
                 symbol,
                 Price.Create(values[0]),
                 Price.Create(values[1]),
-                Volume.Create(values[2]),
-                Volume.Create(values[3]),
+                Quantity.Create(values[2]),
+                Quantity.Create(values[3]),
                 Instant.FromUnixTimeMilliseconds(Convert.ToInt64(values[4])).InUtc());
         }
 

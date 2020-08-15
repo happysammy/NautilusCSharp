@@ -44,8 +44,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
                 this.symbol,
                 Price.Create(1.00000m),
                 Price.Create(1.00000m),
-                Volume.One(),
-                Volume.One(),
+                Quantity.One(),
+                Quantity.One(),
                 StubZonedDateTime.UnixEpoch());
 
             // Assert
@@ -63,8 +63,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
                 this.symbol,
                 Price.Create(1.00000m),
                 Price.Create(1.00000m),
-                Volume.One(),
-                Volume.One(),
+                Quantity.One(),
+                Quantity.One(),
                 StubZonedDateTime.UnixEpoch());
 
             // Act
@@ -84,8 +84,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
                 this.symbol,
                 Price.Create(1.00000m),
                 Price.Create(1.00010m),
-                Volume.One(),
-                Volume.One(),
+                Quantity.One(),
+                Quantity.One(),
                 StubZonedDateTime.UnixEpoch());
 
             // Assert
@@ -103,16 +103,16 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
                 this.symbol,
                 Price.Create(price1),
                 Price.Create(5),
-                Volume.One(),
-                Volume.One(),
+                Quantity.One(),
+                Quantity.One(),
                 StubZonedDateTime.UnixEpoch());
 
             var tick2 = new Tick(
                 this.symbol,
                 Price.Create(price2),
                 Price.Create(5),
-                Volume.One(),
-                Volume.One(),
+                Quantity.One(),
+                Quantity.One(),
                 StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(millisecondsOffset));
 
             // Act
