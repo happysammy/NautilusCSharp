@@ -66,7 +66,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
 
             var subscriber = new SubscriberSocket(TestAddress);
             subscriber.Connect(TestAddress);
-            subscriber.Subscribe(symbol.Value);
+            subscriber.Subscribe($"Quote:{symbol.Value}");
 
             Task.Delay(100).Wait();  // Allow subscribers to connect
 
@@ -80,7 +80,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
 
             // Assert
             Assert.Equal(1, this.publisher.SentCount);
-            Assert.Equal("AUDUSD.FXCM-Quote", Encoding.UTF8.GetString(topic));
+            Assert.Equal("Quote:AUDUSD.FXCM", Encoding.UTF8.GetString(topic));
             Assert.Equal(tick.ToSerializableString(), Encoding.UTF8.GetString(message));
 
             // Tear Down
