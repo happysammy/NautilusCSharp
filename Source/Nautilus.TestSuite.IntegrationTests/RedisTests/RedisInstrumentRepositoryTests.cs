@@ -45,7 +45,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             this.repository = new RedisInstrumentRepository(
                 container,
                 DataBusFactory.Create(container),
-                new InstrumentDataSerializer(),
+                new InstrumentSerializer(),
                 this.redisConnection);
         }
 

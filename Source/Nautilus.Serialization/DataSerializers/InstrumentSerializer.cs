@@ -33,7 +33,7 @@ using Nautilus.DomainModel.ValueObjects;
 namespace Nautilus.Serialization.DataSerializers
 {
     /// <inheritdoc />
-    public sealed class InstrumentDataSerializer : IDataSerializer<Instrument>
+    public sealed class InstrumentSerializer : IDataSerializer<Instrument>
     {
         private const string Data = nameof(Data);
         private const string DataType = nameof(DataType);

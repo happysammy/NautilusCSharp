@@ -40,7 +40,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
     {
         private const string TestAddress = "tcp://localhost:55511";
         private readonly BarSerializer barSerializer;
-        private readonly InstrumentDataSerializer instrumentDataSerializer;
+        private readonly InstrumentSerializer instrumentSerializer;
         private readonly DataPublisher publisher;
 
         public DataPublisherTests(ITestOutputHelper output)
@@ -49,12 +49,12 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
             // Fixture Setup
             var container = TestComponentryContainer.Create(output);
             this.barSerializer = new BarSerializer();
-            this.instrumentDataSerializer = new InstrumentDataSerializer();
+            this.instrumentSerializer = new InstrumentSerializer();
 
             this.publisher = new DataPublisher(
                 container,
                 DataBusFactory.Create(container),
-                this.instrumentDataSerializer,
+                this.instrumentSerializer,
                 new BypassCompressor(),
                 EncryptionSettings.None(),
                 new Port(55511));
@@ -82,7 +82,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
 
             // Assert
             Assert.Equal("Instrument:AUD/USD.FXCM", Encoding.UTF8.GetString(topic));
-            Assert.Equal(instrument, this.instrumentDataSerializer.Deserialize(message));
+            Assert.Equal(instrument, this.instrumentSerializer.Deserialize(message));
 
             // Tear Down
             subscriber.Disconnect(TestAddress);

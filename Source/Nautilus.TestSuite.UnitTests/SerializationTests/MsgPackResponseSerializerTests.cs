@@ -279,7 +279,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         internal void CanSerializeAndDeserialize_InstrumentResponses()
         {
             // Arrange
-            var dataSerializer = new InstrumentDataSerializer();
+            var dataSerializer = new InstrumentSerializer();
             var instrument = StubInstrumentProvider.AUDUSD();
             var correlationId = Guid.NewGuid();
 

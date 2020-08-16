@@ -21,14 +21,29 @@ using Xunit;
 
 namespace Nautilus.TestSuite.UnitTests.CoreTests.TypesTests
 {
-    // Required warning suppression for tests
-    // (do not remove even if compiler doesn't initially complain).
-#pragma warning disable 8602
-#pragma warning disable 8604
-#pragma warning disable 8625
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     public sealed class IdentifierTests
     {
+        [Fact]
+        internal void OperatorComparisons_WithVariousValues_ReturnsExpectedResult()
+        {
+            // Arrange
+            var identifier1 = new TestIdentifier("1");
+            var identifier2 = new TestIdentifier("1");
+            var identifier3 = new TestIdentifier("2");
+
+            // Act
+            // Assert
+            Assert.False(identifier1 < identifier2);
+            Assert.False(identifier3 <= identifier1);
+            Assert.False(identifier1 > identifier2);
+            Assert.False(identifier1 >= identifier3);
+            Assert.True(identifier1 < identifier3);
+            Assert.True(identifier1 <= identifier2);
+            Assert.True(identifier3 > identifier1);
+            Assert.True(identifier2 >= identifier1);
+        }
+
         [Fact]
         internal void Equal_WithVariousValues_ReturnsExpectedResult()
         {

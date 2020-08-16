@@ -72,7 +72,7 @@ namespace NautilusData
             var quoteSerializer = new QuoteTickSerializer();
             var tradeSerializer = new TradeTickSerializer();
             var barDataSerializer = new BarSerializer();
-            var instrumentDataSerializer = new InstrumentDataSerializer();
+            var instrumentDataSerializer = new InstrumentSerializer();
             var headerSerializer = new MsgPackDictionarySerializer();
             var requestSerializer = new MsgPackRequestSerializer();
             var responseSerializer = new MsgPackResponseSerializer();

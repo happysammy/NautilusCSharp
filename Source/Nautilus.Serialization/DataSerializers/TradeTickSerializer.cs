@@ -15,7 +15,6 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.Text;
 using MongoDB.Bson;
@@ -89,8 +88,10 @@ namespace Nautilus.Serialization.DataSerializers
         /// <inheritdoc />
         public TradeTick Deserialize(byte[] dataBytes)
         {
-            // Need to know the Symbol and TickSpecification up front in order to deserialize.
-            throw new NotImplementedException();
+            var pieces = Encoding.UTF8.GetString(dataBytes).Split(',', 2);
+            var symbol = this.cachedSymbols.Get(pieces[0]);
+
+            return TradeTick.FromSerializableString(symbol, pieces[1]);
         }
 
         /// <inheritdoc />
@@ -103,7 +104,7 @@ namespace Nautilus.Serialization.DataSerializers
                 return new TradeTick[]{ };
             }
 
-            var symbol = Symbol.FromString(metadata[nameof(Symbol)]);
+            var symbol = this.cachedSymbols.Get(metadata[nameof(Symbol)]);
 
             var output = new TradeTick[dataBytesArray.Length];
             for (var i = 0; i < dataBytesArray.Length; i++)
