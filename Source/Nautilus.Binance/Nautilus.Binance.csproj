@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -9,31 +9,27 @@
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <WarningsAsErrors />
-        <DocumentationFile>bin\Debug\netcoreapp3.1\Nautilus.Serialization.xml</DocumentationFile>
+        <DocumentationFile>bin\Debug\netcoreapp3.1\Nautilus.Binance.xml</DocumentationFile>
         <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <WarningsAsErrors />
-        <DocumentationFile>bin\Debug\netcoreapp3.1\Nautilus.Serialization.xml</DocumentationFile>
+        <DocumentationFile>bin\Debug\netcoreapp3.1\Nautilus.Binance.xml</DocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\Nautilus.Common\Nautilus.Common.csproj" />
-        <ProjectReference Include="..\Nautilus.Data\Nautilus.Data.csproj" />
         <ProjectReference Include="..\Nautilus.DomainModel\Nautilus.DomainModel.csproj" />
-        <ProjectReference Include="..\Nautilus.Execution\Nautilus.Execution.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <PackageReference Include="MessagePack" Version="2.1.165" />
-        <PackageReference Include="MessagePackAnalyzer" Version="2.1.165" />
-        <PackageReference Include="MongoDB.Bson" Version="2.11.0" />
     </ItemGroup>
 
     <ItemGroup>
         <AdditionalFiles Include="..\stylecop.json" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Binance.Net" Version="5.1.14" />
     </ItemGroup>
 
 </Project>

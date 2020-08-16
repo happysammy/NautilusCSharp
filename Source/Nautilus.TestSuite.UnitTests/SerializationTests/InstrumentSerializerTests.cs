@@ -27,9 +27,9 @@ using Xunit.Abstractions;
 namespace Nautilus.TestSuite.UnitTests.SerializationTests
 {
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
-    public sealed class BsonInstrumentSerializerTests : TestBase
+    public sealed class InstrumentSerializerTests : TestBase
     {
-        public BsonInstrumentSerializerTests(ITestOutputHelper output)
+        public InstrumentSerializerTests(ITestOutputHelper output)
             : base(output)
         {
         }
@@ -38,7 +38,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         internal void CanSerializeAndDeserializeInstrument()
         {
             // Arrange
-            var serializer = new InstrumentDataSerializer();
+            var serializer = new InstrumentSerializer();
             var instrument = StubInstrumentProvider.AUDUSD();
 
             // Act

@@ -75,7 +75,13 @@ namespace Nautilus.Fix
         }
 
         /// <inheritdoc />
-        public void OnData(Tick tick)
+        public void OnData(QuoteTick tick)
+        {
+            this.SendToBus(tick);
+        }
+
+        /// <inheritdoc />
+        public void OnData(TradeTick tick)
         {
             this.SendToBus(tick);
         }
@@ -87,12 +93,6 @@ namespace Nautilus.Fix
             {
                 this.SendToBus(instrument);
             }
-        }
-
-        /// <inheritdoc />
-        public void OnMessage(string message)
-        {
-            // No implemented yet (general business messages)
         }
 
         /// <inheritdoc />

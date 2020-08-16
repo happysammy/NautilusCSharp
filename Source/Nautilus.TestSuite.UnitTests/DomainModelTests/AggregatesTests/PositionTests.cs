@@ -296,7 +296,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             var position = new Position(new PositionId("P-123456"), orderFill1);
 
-            var tick = StubTickProvider.Create(new Symbol("AUDUSD", new Venue("FXCM")));
+            var tick = StubQuoteTickProvider.Create(new Symbol("AUDUSD", new Venue("FXCM")));
 
             // Act
             position.Apply(orderFill2);
@@ -364,7 +364,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             var position = new Position(new PositionId("P-123456"), orderFill1);
 
-            var tick = StubTickProvider.Create(new Symbol("AUDUSD", new Venue("FXCM")));
+            var tick = StubQuoteTickProvider.Create(new Symbol("AUDUSD", new Venue("FXCM")));
 
             // Act
             position.Apply(orderFill2);

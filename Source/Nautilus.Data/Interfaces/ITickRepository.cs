@@ -30,7 +30,7 @@ namespace Nautilus.Data.Interfaces
         /// Ingest the given tick into the database.
         /// </summary>
         /// <param name="tick">The tick to ingest.</param>
-        void Ingest(Tick tick);
+        void Ingest(QuoteTick tick);
 
         /// <summary>
         /// Returns a value indicating whether any ticks for the given symbol exist in the
@@ -56,7 +56,7 @@ namespace Nautilus.Data.Interfaces
         /// <param name="toDateTime">The to date time.</param>
         /// <param name="limit">The optional count limit for the data.</param>
         /// <returns>The tick data.</returns>
-        Tick[] GetTicks(
+        QuoteTick[] GetTicks(
             Symbol symbol,
             ZonedDateTime? fromDateTime = null,
             ZonedDateTime? toDateTime = null,

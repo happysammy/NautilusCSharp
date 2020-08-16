@@ -86,7 +86,7 @@ namespace Nautilus.Data.Network
                 this.Logger.LogInformation(LogId.Network,$"<--[REQ] {request}.");
 
                 var dataType = request.Query["DataType"];
-                if (dataType == typeof(Tick[]).Name)
+                if (dataType == typeof(QuoteTick[]).Name)
                 {
                     this.Send(request, ComponentAddress.TickProvider);
                 }

@@ -63,7 +63,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         {
             // Arrange
             var audusd = StubInstrumentProvider.AUDUSD();
-            var tick = StubTickProvider.Create(audusd.Symbol);
+            var tick = StubQuoteTickProvider.Create(audusd.Symbol);
 
             this.repository.Update(audusd);
 
@@ -85,11 +85,11 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             this.repository.Update(audusd);
             this.repository.Update(eurusd);
 
-            var tick1 = StubTickProvider.Create(audusd.Symbol);
-            var tick2 = StubTickProvider.Create(audusd.Symbol, StubZonedDateTime.UnixEpoch() + Duration.FromDays(1));
-            var tick3 = StubTickProvider.Create(audusd.Symbol, StubZonedDateTime.UnixEpoch() + Duration.FromDays(2));
-            var tick4 = StubTickProvider.Create(eurusd.Symbol, StubZonedDateTime.UnixEpoch());
-            var tick5 = StubTickProvider.Create(eurusd.Symbol, StubZonedDateTime.UnixEpoch() + Duration.FromDays(1));
+            var tick1 = StubQuoteTickProvider.Create(audusd.Symbol);
+            var tick2 = StubQuoteTickProvider.Create(audusd.Symbol, StubZonedDateTime.UnixEpoch() + Duration.FromDays(1));
+            var tick3 = StubQuoteTickProvider.Create(audusd.Symbol, StubZonedDateTime.UnixEpoch() + Duration.FromDays(2));
+            var tick4 = StubQuoteTickProvider.Create(eurusd.Symbol, StubZonedDateTime.UnixEpoch());
+            var tick5 = StubQuoteTickProvider.Create(eurusd.Symbol, StubZonedDateTime.UnixEpoch() + Duration.FromDays(1));
 
             // Act
             this.repository.Ingest(tick1);
@@ -126,7 +126,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var audusd = StubInstrumentProvider.AUDUSD();
             this.repository.Update(audusd);
 
-            var tick1 = StubTickProvider.Create(audusd.Symbol);
+            var tick1 = StubQuoteTickProvider.Create(audusd.Symbol);
 
             this.repository.Ingest(tick1);
 
@@ -146,8 +146,8 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var audusd = StubInstrumentProvider.AUDUSD();
             this.repository.Update(audusd);
 
-            var tick1 = StubTickProvider.Create(audusd.Symbol);
-            var tick2 = StubTickProvider.Create(audusd.Symbol, StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(100));
+            var tick1 = StubQuoteTickProvider.Create(audusd.Symbol);
+            var tick2 = StubQuoteTickProvider.Create(audusd.Symbol, StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(100));
 
             this.repository.Ingest(tick1);
             this.repository.Ingest(tick2);
@@ -170,8 +170,8 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             var fromDateTime = StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(1000);
 
-            var tick1 = StubTickProvider.Create(audusd.Symbol);
-            var tick2 = StubTickProvider.Create(audusd.Symbol, fromDateTime);
+            var tick1 = StubQuoteTickProvider.Create(audusd.Symbol);
+            var tick2 = StubQuoteTickProvider.Create(audusd.Symbol, fromDateTime);
 
             this.repository.Ingest(tick1);
             this.repository.Ingest(tick2);
@@ -192,8 +192,8 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var audusd = StubInstrumentProvider.AUDUSD();
             this.repository.Update(audusd);
 
-            var tick1 = StubTickProvider.Create(audusd.Symbol);
-            var tick2 = StubTickProvider.Create(audusd.Symbol, StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(1000));
+            var tick1 = StubQuoteTickProvider.Create(audusd.Symbol);
+            var tick2 = StubQuoteTickProvider.Create(audusd.Symbol, StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(1000));
 
             this.repository.Ingest(tick1);
             this.repository.Ingest(tick2);
@@ -232,52 +232,52 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var barType = StubBarType.AUDUSD_OneMinuteBid();
             this.repository.Update(audusd);
 
-            var tick0 = new Tick(
+            var tick0 = new QuoteTick(
                 audusd.Symbol,
                 Price.Create(1.00001, 5),
                 Price.Create(1.00010, 5),
-                Volume.One(),
-                Volume.One(),
+                Quantity.One(),
+                Quantity.One(),
                 StubZonedDateTime.UnixEpoch());
 
-            var tick1 = new Tick(
+            var tick1 = new QuoteTick(
                 audusd.Symbol,
                 Price.Create(1.00000, 5),
                 Price.Create(1.00010, 5),
-                Volume.One(),
-                Volume.One(),
+                Quantity.One(),
+                Quantity.One(),
                 StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(60));
 
-            var tick2 = new Tick(
+            var tick2 = new QuoteTick(
                 audusd.Symbol,
                 Price.Create(1.00030, 5),
                 Price.Create(1.00040, 5),
-                Volume.One(),
-                Volume.One(),
+                Quantity.One(),
+                Quantity.One(),
                 StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(62));
 
-            var tick3 = new Tick(
+            var tick3 = new QuoteTick(
                 audusd.Symbol,
                 Price.Create(0.99980, 5),
                 Price.Create(0.99990, 5),
-                Volume.One(),
-                Volume.One(),
+                Quantity.One(),
+                Quantity.One(),
                 StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(63));
 
-            var tick4 = new Tick(
+            var tick4 = new QuoteTick(
                 audusd.Symbol,
                 Price.Create(1.00001, 5),
                 Price.Create(1.00011, 5),
-                Volume.One(),
-                Volume.One(),
+                Quantity.One(),
+                Quantity.One(),
                 StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(119));
 
-            var tick5 = new Tick(
+            var tick5 = new QuoteTick(
                 audusd.Symbol,
                 Price.Create(1.00001, 5),
                 Price.Create(1.00011, 5),
-                Volume.One(),
-                Volume.One(),
+                Quantity.One(),
+                Quantity.One(),
                 StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(121));
 
             this.repository.Ingest(tick0);
@@ -292,7 +292,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
                 Price.Create(1.00030, 5),
                 Price.Create(0.99980, 5),
                 Price.Create(1.00001, 5),
-                Volume.Create(4),
+                Quantity.Create(4),
                 StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(120));
 
             // Act
@@ -314,52 +314,52 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var barType = StubBarType.AUDUSD_OneMinuteMid();
             this.repository.Update(audusd);
 
-            var tick0 = new Tick(
+            var tick0 = new QuoteTick(
                 audusd.Symbol,
                 Price.Create(1.00001, 5),
                 Price.Create(1.00010, 5),
-                Volume.One(),
-                Volume.One(),
+                Quantity.One(),
+                Quantity.One(),
                 StubZonedDateTime.UnixEpoch());
 
-            var tick1 = new Tick(
+            var tick1 = new QuoteTick(
                 audusd.Symbol,
                 Price.Create(1.00000, 5),
                 Price.Create(1.00010, 5),
-                Volume.One(),
-                Volume.One(),
+                Quantity.One(),
+                Quantity.One(),
                 StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(60));
 
-            var tick2 = new Tick(
+            var tick2 = new QuoteTick(
                 audusd.Symbol,
                 Price.Create(1.00030, 5),
                 Price.Create(1.00040, 5),
-                Volume.One(),
-                Volume.One(),
+                Quantity.One(),
+                Quantity.One(),
                 StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(62));
 
-            var tick3 = new Tick(
+            var tick3 = new QuoteTick(
                 audusd.Symbol,
                 Price.Create(0.99980, 5),
                 Price.Create(0.99990, 5),
-                Volume.One(),
-                Volume.One(),
+                Quantity.One(),
+                Quantity.One(),
                 StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(63));
 
-            var tick4 = new Tick(
+            var tick4 = new QuoteTick(
                 audusd.Symbol,
                 Price.Create(1.00001, 5),
                 Price.Create(1.00004, 5),
-                Volume.One(),
-                Volume.One(),
+                Quantity.One(),
+                Quantity.One(),
                 StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(119));
 
-            var tick5 = new Tick(
+            var tick5 = new QuoteTick(
                 audusd.Symbol,
                 Price.Create(1.00001, 5),
                 Price.Create(1.00011, 5),
-                Volume.One(),
-                Volume.One(),
+                Quantity.One(),
+                Quantity.One(),
                 StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(121));
 
             this.repository.Ingest(tick0);
@@ -374,7 +374,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
                 Price.Create(1.000350, 6),
                 Price.Create(0.999850, 6),
                 Price.Create(1.000025, 6),
-                Volume.Create(8),
+                Quantity.Create(8),
                 StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(120));
 
             // Act

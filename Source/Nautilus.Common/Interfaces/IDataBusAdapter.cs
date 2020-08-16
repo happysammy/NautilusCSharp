@@ -47,10 +47,16 @@ namespace Nautilus.Common.Interfaces
         void Unsubscribe<T>(Mailbox subscriber, Guid id, ZonedDateTime timestamp);
 
         /// <summary>
-        /// Send the given tick to the data bus.
+        /// Send the given quote tick to the data bus.
         /// </summary>
         /// <param name="data">The data to send.</param>
-        void SendToBus(Tick data);
+        void SendToBus(QuoteTick data);
+
+        /// <summary>
+        /// Send the given trade tick to the data bus.
+        /// </summary>
+        /// <param name="data">The data to send.</param>
+        void SendToBus(TradeTick data);
 
         /// <summary>
         /// Send the given bar data to the data bus.

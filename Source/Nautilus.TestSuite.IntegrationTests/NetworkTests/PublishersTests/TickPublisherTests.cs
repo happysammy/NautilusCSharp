@@ -49,7 +49,8 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
             this.publisher = new TickPublisher(
                 container,
                 DataBusFactory.Create(container),
-                new TickDataSerializer(),
+                new QuoteTickSerializer(),
+                new TradeTickSerializer(),
                 new BypassCompressor(),
                 EncryptionSettings.None(),
                 new Port(55606));
@@ -65,11 +66,11 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
 
             var subscriber = new SubscriberSocket(TestAddress);
             subscriber.Connect(TestAddress);
-            subscriber.Subscribe(symbol.Value);
+            subscriber.Subscribe($"Quote:{symbol.Value}");
 
             Task.Delay(100).Wait();  // Allow subscribers to connect
 
-            var tick = StubTickProvider.Create(symbol);
+            var tick = StubQuoteTickProvider.Create(symbol);
 
             // Act
             this.publisher.Endpoint.SendAsync(tick).Wait();
@@ -79,7 +80,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
 
             // Assert
             Assert.Equal(1, this.publisher.SentCount);
-            Assert.Equal(tick.Symbol.Value, Encoding.UTF8.GetString(topic));
+            Assert.Equal("Quote:AUDUSD.FXCM", Encoding.UTF8.GetString(topic));
             Assert.Equal(tick.ToSerializableString(), Encoding.UTF8.GetString(message));
 
             // Tear Down

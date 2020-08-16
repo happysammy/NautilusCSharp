@@ -40,7 +40,8 @@ namespace Nautilus.Data.Providers
         private const string DataType = nameof(DataType);
 
         private readonly ITickRepository repository;
-        private readonly IDataSerializer<Tick> dataSerializer;
+        private readonly IDataSerializer<QuoteTick> quoteSerializer;
+        private readonly IDataSerializer<TradeTick> tradeSerializer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TickProvider"/> class.
@@ -48,16 +49,19 @@ namespace Nautilus.Data.Providers
         /// <param name="container">The componentry container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="repository">The tick repository.</param>
-        /// <param name="dataSerializer">The data serializer.</param>
+        /// <param name="quoteSerializer">The quote tick serializer.</param>
+        /// <param name="tradeSerializer">The trade tick serializer.</param>
         public TickProvider(
             IComponentryContainer container,
             IMessageBusAdapter messagingAdapter,
             ITickRepository repository,
-            IDataSerializer<Tick> dataSerializer)
+            IDataSerializer<QuoteTick> quoteSerializer,
+            IDataSerializer<TradeTick> tradeSerializer)
             : base(container, messagingAdapter)
         {
             this.repository = repository;
-            this.dataSerializer = dataSerializer;
+            this.quoteSerializer = quoteSerializer;
+            this.tradeSerializer = tradeSerializer;
 
             this.RegisterHandler<DataRequest>(this.OnMessage);
         }
@@ -72,7 +76,7 @@ namespace Nautilus.Data.Providers
             try
             {
                 var dataType = request.Query[DataType];
-                if (dataType != typeof(Tick[]).Name)
+                if (dataType != typeof(QuoteTick[]).Name)
                 {
                     return this.QueryFailure($"Incorrect DataType requested, was {dataType}", request.Id);
                 }
@@ -103,9 +107,9 @@ namespace Nautilus.Data.Providers
                 }
 
                 return new DataResponse(
-                    this.dataSerializer.SerializeBlob(dataQuery, request.Query),
+                    this.quoteSerializer.SerializeBlob(dataQuery, request.Query),
                     dataType,
-                    this.dataSerializer.BlobEncoding,
+                    this.quoteSerializer.BlobEncoding,
                     request.Id,
                     this.NewGuid(),
                     this.TimeNow());

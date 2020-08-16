@@ -44,7 +44,7 @@ namespace Nautilus.DomainModel.ValueObjects
             Price high,
             Price low,
             Price close,
-            Volume volume,
+            Quantity volume,
             ZonedDateTime timestamp)
         {
             Debug.NotDefault(timestamp, nameof(timestamp));
@@ -71,7 +71,7 @@ namespace Nautilus.DomainModel.ValueObjects
             Price high,
             Price low,
             Price close,
-            Volume volume,
+            Quantity volume,
             long unixTimestamp)
         {
             this.Open = open;
@@ -105,7 +105,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <summary>
         /// Gets the bars volume.
         /// </summary>
-        public Volume Volume { get; }
+        public Quantity Volume { get; }
 
         /// <summary>
         /// Gets the bars timestamp.
@@ -147,7 +147,7 @@ namespace Nautilus.DomainModel.ValueObjects
                 Price.Create(Parser.ToDecimal(values[1])),
                 Price.Create(Parser.ToDecimal(values[2])),
                 Price.Create(Parser.ToDecimal(values[3])),
-                Volume.Create(Parser.ToDecimal(values[4])),
+                Quantity.Create(Parser.ToDecimal(values[4])),
                 Instant.FromUnixTimeMilliseconds(Convert.ToInt64(values[5])).InUtc());
         }
 

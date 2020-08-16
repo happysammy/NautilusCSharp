@@ -24,31 +24,31 @@ using NodaTime;
 namespace Nautilus.TestSuite.TestKit.Stubs
 {
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
-    public static class StubTickProvider
+    public static class StubQuoteTickProvider
     {
         private static readonly IList<Bar> StubBarList = StubBarProvider.BuildList();
         private static readonly decimal LastAsk = StubBarList[^1].Close + 0.00001m;
         private static readonly decimal LastBid = StubBarList[^1].Close.Value;
 
-        public static Tick Create(Symbol symbol)
+        public static QuoteTick Create(Symbol symbol)
         {
-            return new Tick(
+            return new QuoteTick(
                 symbol,
                 Price.Create(LastBid),
                 Price.Create(LastAsk),
-                Volume.One(),
-                Volume.One(),
+                Quantity.One(),
+                Quantity.One(),
                 StubZonedDateTime.UnixEpoch());
         }
 
-        public static Tick Create(Symbol symbol, ZonedDateTime timestamp)
+        public static QuoteTick Create(Symbol symbol, ZonedDateTime timestamp)
         {
-            return new Tick(
+            return new QuoteTick(
                 symbol,
                 Price.Create(LastBid),
                 Price.Create(LastAsk),
-                Volume.One(),
-                Volume.One(),
+                Quantity.One(),
+                Quantity.One(),
                 timestamp);
         }
     }

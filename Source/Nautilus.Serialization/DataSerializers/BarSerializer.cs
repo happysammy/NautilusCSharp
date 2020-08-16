@@ -27,7 +27,7 @@ using Nautilus.DomainModel.ValueObjects;
 namespace Nautilus.Serialization.DataSerializers
 {
     /// <inheritdoc />
-    public sealed class BarDataSerializer : IDataSerializer<Bar>
+    public sealed class BarSerializer : IDataSerializer<Bar>
     {
         private const string Data = nameof(Data);
         private const string DataType = nameof(DataType);
@@ -58,9 +58,14 @@ namespace Nautilus.Serialization.DataSerializers
         }
 
         /// <inheritdoc />
-        public byte[] SerializeBlob(byte[][] dataObjectsArray, Dictionary<string, string> metadata)
+        public byte[] SerializeBlob(byte[][] dataObjectsArray, Dictionary<string, string>? metadata)
         {
             Debug.NotEmpty(dataObjectsArray, nameof(dataObjectsArray));
+
+            if (metadata is null)
+            {
+                return new byte[]{};
+            }
 
             return new BsonDocument
             {
@@ -77,7 +82,7 @@ namespace Nautilus.Serialization.DataSerializers
         }
 
         /// <inheritdoc />
-        public Bar[] Deserialize(byte[][] dataBytesArray, object? metadata = null)
+        public Bar[] Deserialize(byte[][] dataBytesArray, Dictionary<string, string>? metadata)
         {
             Debug.NotEmpty(dataBytesArray, nameof(dataBytesArray));
 

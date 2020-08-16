@@ -33,7 +33,7 @@ using Nautilus.DomainModel.ValueObjects;
 namespace Nautilus.Serialization.DataSerializers
 {
     /// <inheritdoc />
-    public sealed class InstrumentDataSerializer : IDataSerializer<Instrument>
+    public sealed class InstrumentSerializer : IDataSerializer<Instrument>
     {
         private const string Data = nameof(Data);
         private const string DataType = nameof(DataType);
@@ -90,8 +90,13 @@ namespace Nautilus.Serialization.DataSerializers
         }
 
         /// <inheritdoc />
-        public byte[] SerializeBlob(byte[][] dataObjectsArray, Dictionary<string, string> metadata)
+        public byte[] SerializeBlob(byte[][] dataObjectsArray, Dictionary<string, string>? metadata)
         {
+            if (metadata is null)
+            {
+                return new byte[]{};
+            }
+
             var bson = new BsonDocument
             {
                 { DataType, typeof(Instrument[]).Name },
@@ -150,7 +155,7 @@ namespace Nautilus.Serialization.DataSerializers
 
         /// <inheritdoc />
         [PerformanceOptimized]
-        public Instrument[] Deserialize(byte[][] dataBytesArray, object? metadata = null)
+        public Instrument[] Deserialize(byte[][] dataBytesArray, Dictionary<string, string>? metadata)
         {
             Debug.NotEmpty(dataBytesArray, nameof(dataBytesArray));
 

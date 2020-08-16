@@ -92,25 +92,25 @@ namespace Nautilus.Redis.Data
                 { BarStructure.Day, 86400000 }
             };
 
-            this.RegisterHandler<Tick>(this.OnTick);
+            this.RegisterHandler<QuoteTick>(this.OnTick);
             this.RegisterHandler<Instrument>(this.OnInstrument);
 
-            this.Subscribe<Tick>();
+            this.Subscribe<QuoteTick>();
             this.Subscribe<Instrument>();
         }
 
         /// <inheritdoc />
-        public void Ingest(Tick tick)
+        public void Ingest(QuoteTick tick)
         {
             var keyBidPrices = KeyProvider.GetPricesKey(tick.Symbol, PriceType.Bid);
             var keyAskPrices = KeyProvider.GetPricesKey(tick.Symbol, PriceType.Ask);
-            var keyBidVolumes = KeyProvider.GetVolumesKey(tick.Symbol, PriceType.Bid);
-            var keyAskVolumes = KeyProvider.GetVolumesKey(tick.Symbol, PriceType.Ask);
+            var keyBidSizes = KeyProvider.GetSizesKey(tick.Symbol, PriceType.Bid);
+            var keyAskSizes = KeyProvider.GetSizesKey(tick.Symbol, PriceType.Ask);
 
             this.CheckPricesTimeSeries(keyBidPrices, tick.Symbol, PriceType.Bid);
             this.CheckPricesTimeSeries(keyAskPrices, tick.Symbol, PriceType.Ask);
-            this.CheckVolumesTimeSeries(keyBidVolumes, tick.Symbol, PriceType.Bid);
-            this.CheckVolumesTimeSeries(keyAskVolumes, tick.Symbol, PriceType.Ask);
+            this.CheckSizesTimeSeries(keyBidSizes, tick.Symbol, PriceType.Bid);
+            this.CheckSizesTimeSeries(keyAskSizes, tick.Symbol, PriceType.Ask);
 
             var timestamp = new TimeStamp(tick.Timestamp.ToInstant().ToUnixTimeMilliseconds());
 
@@ -118,8 +118,8 @@ namespace Nautilus.Redis.Data
             {
                 (keyBidPrices, timestamp, (double)tick.Bid.Value),
                 (keyAskPrices, timestamp, (double)tick.Ask.Value),
-                (keyBidVolumes, timestamp, (double)tick.BidSize.Value),
-                (keyAskVolumes, timestamp, (double)tick.AskSize.Value)
+                (keyBidSizes, timestamp, (double)tick.BidSize.Value),
+                (keyAskSizes, timestamp, (double)tick.AskSize.Value)
             };
 
             this.redisDatabase.TimeSeriesMAdd(input);
@@ -140,8 +140,8 @@ namespace Nautilus.Redis.Data
         {
             return this.KeyExists(KeyProvider.GetPricesKey(symbol, PriceType.Bid)) &&
                    this.KeyExists(KeyProvider.GetPricesKey(symbol, PriceType.Ask)) &&
-                   this.KeyExists(KeyProvider.GetVolumesKey(symbol, PriceType.Bid)) &&
-                   this.KeyExists(KeyProvider.GetVolumesKey(symbol, PriceType.Ask));
+                   this.KeyExists(KeyProvider.GetSizesKey(symbol, PriceType.Bid)) &&
+                   this.KeyExists(KeyProvider.GetSizesKey(symbol, PriceType.Ask));
         }
 
         /// <inheritdoc />
@@ -188,7 +188,7 @@ namespace Nautilus.Redis.Data
         }
 
         /// <inheritdoc />
-        public Tick[] GetTicks(
+        public QuoteTick[] GetTicks(
             Symbol symbol,
             ZonedDateTime? fromDateTime,
             ZonedDateTime? toDateTime,
@@ -206,7 +206,7 @@ namespace Nautilus.Redis.Data
             var pricePrecision = this.pricePrecisions[symbol];
             var sizePrecision = this.sizePrecisions[symbol];
 
-            var ticks = new Tick[tickValues[0].Count];
+            var ticks = new QuoteTick[tickValues[0].Count];
             for (var i = 0; i < tickValues[0].Count; i++)
             {
                 ticks[i] = BuildTick(
@@ -389,7 +389,7 @@ namespace Nautilus.Redis.Data
                 : new TimeStamp(dateTime.Value.ToInstant().ToUnixTimeMilliseconds());
         }
 
-        private void OnTick(Tick tick)
+        private void OnTick(QuoteTick tick)
         {
             this.Ingest(tick);
         }
@@ -421,11 +421,11 @@ namespace Nautilus.Redis.Data
             }
         }
 
-        private void CheckVolumesTimeSeries(string key, Symbol symbol, PriceType priceType)
+        private void CheckSizesTimeSeries(string key, Symbol symbol, PriceType priceType)
         {
             if (!this.KeyExists(key))
             {
-                this.SetupVolumesTimeSeries(key, symbol, priceType);
+                this.SetupSizesTimeSeries(key, symbol, priceType);
             }
         }
 
@@ -455,7 +455,7 @@ namespace Nautilus.Redis.Data
             }
         }
 
-        private void SetupVolumesTimeSeries(string key, Symbol symbol, PriceType priceType)
+        private void SetupSizesTimeSeries(string key, Symbol symbol, PriceType priceType)
         {
             this.redisDatabase.TimeSeriesCreate(key, this.retentionTimeTicksMs);
 
@@ -660,8 +660,8 @@ namespace Nautilus.Redis.Data
         {
             var keyBids = KeyProvider.GetPricesKey(symbol, PriceType.Bid);
             var keyAsks = KeyProvider.GetPricesKey(symbol, PriceType.Ask);
-            var keyBidSizes = KeyProvider.GetVolumesKey(symbol, PriceType.Bid);
-            var keyAskSizes = KeyProvider.GetVolumesKey(symbol, PriceType.Ask);
+            var keyBidSizes = KeyProvider.GetSizesKey(symbol, PriceType.Bid);
+            var keyAskSizes = KeyProvider.GetSizesKey(symbol, PriceType.Ask);
 
             var output = new IReadOnlyList<TimeSeriesTuple>[4];
 
@@ -810,7 +810,7 @@ namespace Nautilus.Redis.Data
             return output;
         }
 
-        private static Tick BuildTick(
+        private static QuoteTick BuildTick(
             Symbol symbol,
             double bid,
             double ask,
@@ -820,12 +820,12 @@ namespace Nautilus.Redis.Data
             int pricePrecision,
             int sizePrecision)
         {
-            return new Tick(
+            return new QuoteTick(
                 symbol,
                 Price.Create(bid, pricePrecision),
                 Price.Create(ask, pricePrecision),
-                Volume.Create(bidSize, sizePrecision),
-                Volume.Create(askSize, sizePrecision),
+                Quantity.Create(bidSize, sizePrecision),
+                Quantity.Create(askSize, sizePrecision),
                 unixTimestamp);
         }
 
@@ -844,7 +844,7 @@ namespace Nautilus.Redis.Data
                 Price.Create(high, pricePrecision),
                 Price.Create(low, pricePrecision),
                 Price.Create(close, pricePrecision),
-                Volume.Create(volume, sizePrecision),
+                Quantity.Create(volume, sizePrecision),
                 unixTimestamp);
         }
 

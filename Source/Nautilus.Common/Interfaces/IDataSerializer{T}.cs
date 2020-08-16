@@ -49,7 +49,7 @@ namespace Nautilus.Common.Interfaces
         /// <param name="dataObjectsArray">The data objects array to serialize.</param>
         /// <param name="metadata">The metadata for the given data objects array.</param>
         /// <returns>The serialized data bytes.</returns>
-        byte[] SerializeBlob(byte[][] dataObjectsArray, Dictionary<string, string> metadata);
+        byte[] SerializeBlob(byte[][] dataObjectsArray, Dictionary<string, string>? metadata);
 
         /// <summary>
         /// Returns the deserialize data object of type T array.
@@ -57,7 +57,7 @@ namespace Nautilus.Common.Interfaces
         /// <param name="dataBytesArray">The bytes array to deserialize.</param>
         /// <param name="metadata">The optional metadata for deserializing.</param>
         /// <returns>The deserialized data object.</returns>
-        T[] Deserialize(byte[][] dataBytesArray, object? metadata = null);
+        T[] Deserialize(byte[][] dataBytesArray, Dictionary<string, string>? metadata);
 
         /// <summary>
         /// Return the data objects bytes array deserialized to a two dimensional array.
