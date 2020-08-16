@@ -25,18 +25,18 @@ using Xunit;
 namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
 {
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
-    public sealed class TickTests
+    public sealed class QuoteTickTests
     {
         private readonly Symbol symbol;
 
-        public TickTests()
+        public QuoteTickTests()
         {
             // Fixture Setup
             this.symbol = new Symbol("AUD/USD", new Venue("FXCM"));
         }
 
         [Fact]
-        internal void InitializedTick_HasExpectedProperties()
+        internal void InitializedTick_WithZonedDateTime_HasExpectedProperties()
         {
             // Arrange
             // Act
@@ -53,6 +53,62 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
             Assert.Equal(decimal.One, tick.Bid.Value);
             Assert.Equal(decimal.One, tick.Ask.Value);
             Assert.Equal(1970, tick.Timestamp.Year);
+        }
+
+        [Fact]
+        internal void InitializedTick_WithUnixTimeMs_HasExpectedProperties()
+        {
+            // Arrange
+            // Act
+            var tick = new QuoteTick(
+                this.symbol,
+                Price.Create(1.00000m),
+                Price.Create(1.00000m),
+                Quantity.One(),
+                Quantity.One(),
+                1000);
+
+            // Assert
+            Assert.Equal("AUD/USD", tick.Symbol.Code);
+            Assert.Equal(decimal.One, tick.Bid.Value);
+            Assert.Equal(decimal.One, tick.Ask.Value);
+            Assert.Equal(1970, tick.Timestamp.Year);
+        }
+
+        [Theory]
+        [InlineData(1.00000, 1.00000, 0, true)]
+        [InlineData(1.00001, 1.00000, 0, false)]
+        [InlineData(1.00000, 1.00000, 1, false)]
+        internal void Equals_VariousValues_ReturnsExpectedResult(
+            decimal price1,
+            decimal price2,
+            int millisecondsOffset,
+            bool expected)
+        {
+            // Arrange
+            var tick1 = new QuoteTick(
+                this.symbol,
+                Price.Create(price1),
+                Price.Create(5),
+                Quantity.One(),
+                Quantity.One(),
+                StubZonedDateTime.UnixEpoch());
+
+            var tick2 = new QuoteTick(
+                this.symbol,
+                Price.Create(price2),
+                Price.Create(5),
+                Quantity.One(),
+                Quantity.One(),
+                StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(millisecondsOffset));
+
+            // Act
+            var result1 = tick1.Equals(tick2);
+            var result2 = tick1 == tick2;
+
+            // Assert
+            Assert.Equal(expected, result1);
+            Assert.Equal(expected, result2);
         }
 
         [Fact]
@@ -92,36 +148,21 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
             Assert.Equal("AUD/USD.FXCM,1.00000,1.00010,1,1,1970-01-01T00:00:00.000Z", tick.ToString());
         }
 
-        [Theory]
-        [InlineData(1.00000, 1.00000, 0, true)]
-        [InlineData(1.00001, 1.00000, 0, false)]
-        [InlineData(1.00000, 1.00000, 1, false)]
-        internal void Equals_VariousValues_ReturnsExpectedResult(decimal price1, decimal price2, int millisecondsOffset, bool expected)
+        [Fact]
+        internal void ToSerializableString_ReturnsExpectedString()
         {
             // Arrange
-            var tick1 = new QuoteTick(
+            // Act
+            var tick = new QuoteTick(
                 this.symbol,
-                Price.Create(price1),
-                Price.Create(5),
+                Price.Create(1.00000m),
+                Price.Create(1.00010m),
                 Quantity.One(),
                 Quantity.One(),
                 StubZonedDateTime.UnixEpoch());
 
-            var tick2 = new QuoteTick(
-                this.symbol,
-                Price.Create(price2),
-                Price.Create(5),
-                Quantity.One(),
-                Quantity.One(),
-                StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(millisecondsOffset));
-
-            // Act
-            var result1 = tick1.Equals(tick2);
-            var result2 = tick1 == tick2;
-
             // Assert
-            Assert.Equal(expected, result1);
-            Assert.Equal(expected, result2);
+            Assert.Equal("1.00000,1.00010,1,1,0", tick.ToSerializableString());
         }
     }
 }

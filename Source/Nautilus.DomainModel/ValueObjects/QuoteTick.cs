@@ -20,7 +20,6 @@ using Nautilus.Core;
 using Nautilus.Core.Annotations;
 using Nautilus.Core.Correctness;
 using Nautilus.Core.Extensions;
-using Nautilus.DomainModel.Enums;
 using Nautilus.DomainModel.Identifiers;
 using NodaTime;
 
@@ -48,7 +47,7 @@ namespace Nautilus.DomainModel.ValueObjects
             Quantity bidSize,
             Quantity askSize,
             ZonedDateTime timestamp)
-            : base(symbol, TickSpecification.Quote, timestamp)
+            : base(symbol, timestamp)
         {
             this.Bid = bid;
             this.Ask = ask;
@@ -72,7 +71,7 @@ namespace Nautilus.DomainModel.ValueObjects
             Quantity bidSize,
             Quantity askSize,
             long unixTimestamp)
-            : base(symbol, TickSpecification.Quote, unixTimestamp)
+            : base(symbol, unixTimestamp)
         {
             this.Bid = bid;
             this.Ask = ask;

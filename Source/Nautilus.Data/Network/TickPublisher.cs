@@ -28,6 +28,9 @@ namespace Nautilus.Data.Network
     /// </summary>
     public sealed class TickPublisher : PublisherDataBus
     {
+        private const string Quote = nameof(Quote);
+        private const string Trade = nameof(Trade);
+
         private readonly IDataSerializer<QuoteTick> quoteSerializer;
         private readonly IDataSerializer<TradeTick> tradeSerializer;
 
@@ -68,12 +71,12 @@ namespace Nautilus.Data.Network
 
         private void OnMessage(QuoteTick tick)
         {
-            this.Publish(tick.Symbol.Value, this.quoteSerializer.Serialize(tick));
+            this.Publish($"{tick.Symbol.Value}-{Quote}", this.quoteSerializer.Serialize(tick));
         }
 
         private void OnMessage(TradeTick tick)
         {
-            this.Publish(tick.Symbol.Value, this.tradeSerializer.Serialize(tick));
+            this.Publish($"{tick.Symbol.Value}-{Trade}", this.tradeSerializer.Serialize(tick));
         }
     }
 }

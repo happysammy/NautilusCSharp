@@ -80,7 +80,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
 
             // Assert
             Assert.Equal(1, this.publisher.SentCount);
-            Assert.Equal(tick.Symbol.Value, Encoding.UTF8.GetString(topic));
+            Assert.Equal("AUDUSD.FXCM-Quote", Encoding.UTF8.GetString(topic));
             Assert.Equal(tick.ToSerializableString(), Encoding.UTF8.GetString(message));
 
             // Tear Down

@@ -48,7 +48,7 @@ namespace Nautilus.DomainModel.ValueObjects
             Maker maker,
             MatchId matchId,
             ZonedDateTime timestamp)
-            : base(symbol, TickSpecification.Quote, timestamp)
+            : base(symbol, timestamp)
         {
             this.Price = price;
             this.Size = size;
@@ -72,7 +72,7 @@ namespace Nautilus.DomainModel.ValueObjects
             Maker maker,
             MatchId matchId,
             long unixTimestamp)
-            : base(symbol, TickSpecification.Quote, unixTimestamp)
+            : base(symbol, unixTimestamp)
         {
             this.Price = price;
             this.Size = size;

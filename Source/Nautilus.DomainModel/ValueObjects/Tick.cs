@@ -16,7 +16,6 @@
 //--------------------------------------------------------------------------------------------------
 
 using Nautilus.Core.Annotations;
-using Nautilus.DomainModel.Enums;
 using Nautilus.DomainModel.Identifiers;
 using NodaTime;
 
@@ -32,15 +31,10 @@ namespace Nautilus.DomainModel.ValueObjects
         /// Initializes a new instance of the <see cref="Tick"/> class.
         /// </summary>
         /// <param name="symbol">The tick symbol.</param>
-        /// <param name="tickSpec">The tick specification.</param>
         /// <param name="timestamp">The tick timestamp.</param>
-        protected Tick(
-            Symbol symbol,
-            TickSpecification tickSpec,
-            ZonedDateTime timestamp)
+        protected Tick(Symbol symbol, ZonedDateTime timestamp)
         {
             this.Symbol = symbol;
-            this.Specification = tickSpec;
             this.Timestamp = timestamp;
         }
 
@@ -48,15 +42,10 @@ namespace Nautilus.DomainModel.ValueObjects
         /// Initializes a new instance of the <see cref="Tick"/> class.
         /// </summary>
         /// <param name="symbol">The tick symbol.</param>
-        /// <param name="tickSpec">The tick specification.</param>
         /// <param name="unixTimestamp">The tick unix timestamp in milliseconds.</param>
-        protected Tick(
-            Symbol symbol,
-            TickSpecification tickSpec,
-            long unixTimestamp)
+        protected Tick(Symbol symbol, long unixTimestamp)
         {
             this.Symbol = symbol;
-            this.Specification = tickSpec;
             this.Timestamp = Instant.FromUnixTimeMilliseconds(unixTimestamp).InUtc();
         }
 
@@ -64,11 +53,6 @@ namespace Nautilus.DomainModel.ValueObjects
         /// Gets the ticks symbol.
         /// </summary>
         public Symbol Symbol { get; }
-
-        /// <summary>
-        /// Gets the ticks specification.
-        /// </summary>
-        public TickSpecification Specification { get; }
 
         /// <summary>
         /// Gets the ticks timestamp.
