@@ -71,12 +71,12 @@ namespace Nautilus.Data.Network
 
         private void OnMessage(QuoteTick tick)
         {
-            this.Publish($"{tick.Symbol.Value}-{Quote}", this.quoteSerializer.Serialize(tick));
+            this.Publish($"{Quote}:{tick.Symbol.Value}", this.quoteSerializer.Serialize(tick));
         }
 
         private void OnMessage(TradeTick tick)
         {
-            this.Publish($"{tick.Symbol.Value}-{Trade}", this.tradeSerializer.Serialize(tick));
+            this.Publish($"{Trade}:{tick.Symbol.Value}", this.tradeSerializer.Serialize(tick));
         }
     }
 }

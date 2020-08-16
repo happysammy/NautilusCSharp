@@ -121,7 +121,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
 
             var query = new Dictionary<string, string>
             {
-                { "DataType", "Tick[]" },
+                { "DataType", "QuoteTick[]" },
                 { "Symbol", symbol.Value },
                 { "FromDateTime", StubZonedDateTime.UnixEpoch().ToIso8601String() },
                 { "ToDateTime", StubZonedDateTime.UnixEpoch().ToIso8601String() },

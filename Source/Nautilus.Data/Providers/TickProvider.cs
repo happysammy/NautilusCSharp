@@ -76,7 +76,7 @@ namespace Nautilus.Data.Providers
             try
             {
                 var dataType = request.Query[DataType];
-                if (dataType != typeof(Tick[]).Name)
+                if (dataType != typeof(QuoteTick[]).Name)
                 {
                     return this.QueryFailure($"Incorrect DataType requested, was {dataType}", request.Id);
                 }
