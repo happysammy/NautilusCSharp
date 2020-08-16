@@ -48,44 +48,37 @@ namespace Nautilus.Binance
         /// </summary>
         public bool IsConnected => false;
 
-        /// <summary>
-        /// TBC.
-        /// </summary>
+        /// <inheritdoc />
         public void UpdateInstrumentSubscribe(Symbol symbol)
         {
             throw new System.NotImplementedException();
         }
 
-        /// <summary>
-        /// TBC.
-        /// </summary>
+        /// <inheritdoc />
         public void UpdateInstrumentsSubscribeAll()
         {
             throw new System.NotImplementedException();
         }
 
-        /// <summary>
-        /// TBC.
-        /// </summary>
-        /// <param name="symbol"></param>
+        /// <inheritdoc />
         public void MarketDataSubscribe(Symbol symbol)
         {
             throw new System.NotImplementedException();
         }
 
-        /// <summary>
-        /// TBC.
-        /// </summary>
-        /// <param name="tick"></param>
-        public void OnData(Tick tick)
+        /// <inheritdoc />
+        public void OnData(QuoteTick tick)
         {
             throw new System.NotImplementedException();
         }
 
-        /// <summary>
-        /// TBC.
-        /// </summary>
-        /// <param name="instruments"></param>
+        /// <inheritdoc />
+        public void OnData(TradeTick tick)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        /// <inheritdoc />
         public void OnData(IEnumerable<Instrument> instruments)
         {
             throw new System.NotImplementedException();

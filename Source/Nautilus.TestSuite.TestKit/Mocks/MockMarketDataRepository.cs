@@ -32,64 +32,70 @@ namespace Nautilus.TestSuite.TestKit.Mocks
     /// </summary>
     public sealed class MockMarketDataRepository : DataBusConnected, ITickRepository, IBarRepository
     {
-        private readonly Dictionary<Symbol, List<Tick>> tickDatabase;
+        private readonly Dictionary<Symbol, List<QuoteTick>> quoteTickDatabase;
+        private readonly Dictionary<Symbol, List<TradeTick>> tradeTickDatabase;
         private readonly Dictionary<BarType, List<Bar>> barsDatabase;
-        private readonly IDataSerializer<Tick> tickSerializer;
+        private readonly IDataSerializer<QuoteTick> quoteSerializer;
+        private readonly IDataSerializer<TradeTick> tradeSerializer;
         private readonly IDataSerializer<Bar> barSerializer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MockMarketDataRepository"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
-        /// <param name="tickSerializer">The tick serializer for the repository.</param>
+        /// <param name="quoteSerializer">The quote tick serializer for the repository.</param>
+        /// <param name="tradeSerializer">The trade tick serializer for the repository.</param>
         /// <param name="barSerializer">The bar serializer for the repository.</param>
         /// <param name="dataBusAdapter">The data bus adapter.</param>
         public MockMarketDataRepository(
             IComponentryContainer container,
-            IDataSerializer<Tick> tickSerializer,
+            IDataSerializer<QuoteTick> quoteSerializer,
+            IDataSerializer<TradeTick> tradeSerializer,
             IDataSerializer<Bar> barSerializer,
             IDataBusAdapter dataBusAdapter)
         : base(container, dataBusAdapter)
         {
-            this.tickDatabase = new Dictionary<Symbol, List<Tick>>();
+            this.quoteTickDatabase = new Dictionary<Symbol, List<QuoteTick>>();
+            this.tradeTickDatabase = new Dictionary<Symbol, List<TradeTick>>();
             this.barsDatabase = new Dictionary<BarType, List<Bar>>();
-            this.tickSerializer = tickSerializer;
+            this.quoteSerializer = quoteSerializer;
+            this.tradeSerializer = tradeSerializer;
             this.barSerializer = barSerializer;
 
-            this.RegisterHandler<Tick>(this.Ingest);
-            this.Subscribe<Tick>();
+            this.RegisterHandler<QuoteTick>(this.Ingest);
+            this.Subscribe<QuoteTick>();
         }
 
         /// <inheritdoc />
-        public void Ingest(Tick tick)
+        public void Ingest(QuoteTick tick)
         {
             this.Add(tick);
         }
 
-        public void Add(Tick tick)
+        public void Add(QuoteTick tick)
         {
-            if (this.tickDatabase.TryGetValue(tick.Symbol, out var tickList))
+            if (this.quoteTickDatabase.TryGetValue(tick.Symbol, out var tickList))
             {
                 tickList.Add(tick);
             }
             else
             {
-                this.tickDatabase[tick.Symbol] = new List<Tick> { tick };
+                this.quoteTickDatabase[tick.Symbol] = new List<QuoteTick> { tick };
             }
         }
 
-        public void Add(List<Tick> ticks)
+        public void Add(List<QuoteTick> ticks)
         {
             Debug.NotEmpty(ticks, nameof(ticks));
 
             var symbol = ticks[0].Symbol;
-            if (this.tickDatabase.TryGetValue(symbol, out var tickList))
+            if (this.quoteTickDatabase.TryGetValue(symbol, out var tickList))
             {
                 tickList.AddRange(ticks);
             }
             else
             {
-                this.tickDatabase[symbol] = ticks;
+                this.quoteTickDatabase[symbol] = ticks;
             }
         }
 
@@ -122,13 +128,13 @@ namespace Nautilus.TestSuite.TestKit.Mocks
         /// <inheritdoc />
         public bool TicksExist(Symbol symbol)
         {
-            return this.tickDatabase.ContainsKey(symbol);
+            return this.quoteTickDatabase.ContainsKey(symbol);
         }
 
         /// <inheritdoc />
         public long TicksCount(Symbol symbol)
         {
-            return !this.tickDatabase.ContainsKey(symbol) ? 0 : this.tickDatabase[symbol].Count;
+            return !this.quoteTickDatabase.ContainsKey(symbol) ? 0 : this.quoteTickDatabase[symbol].Count;
         }
 
         /// <inheritdoc />
@@ -144,20 +150,20 @@ namespace Nautilus.TestSuite.TestKit.Mocks
         }
 
         /// <inheritdoc />
-        public Tick[] GetTicks(Symbol symbol, ZonedDateTime? fromDateTime = null, ZonedDateTime? toDateTime = null,
+        public QuoteTick[] GetTicks(Symbol symbol, ZonedDateTime? fromDateTime = null, ZonedDateTime? toDateTime = null,
             long? limit = null)
         {
-            return this.tickDatabase.TryGetValue(symbol, out var tickList)
+            return this.quoteTickDatabase.TryGetValue(symbol, out var tickList)
                 ? tickList.ToArray()
-                : new Tick[]{};
+                : new QuoteTick[]{};
         }
 
         /// <inheritdoc />
         public byte[][] ReadTickData(Symbol symbol, ZonedDateTime? fromDateTime = null,
             ZonedDateTime? toDateTime = null, long? limit = null)
         {
-            return this.tickDatabase.TryGetValue(symbol, out var tickList)
-                ? this.tickSerializer.Serialize(tickList.ToArray())
+            return this.quoteTickDatabase.TryGetValue(symbol, out var tickList)
+                ? this.quoteSerializer.Serialize(tickList.ToArray())
                 : new byte[][]{};
         }
 

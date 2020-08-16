@@ -40,7 +40,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         {
             // Arrange
             // Act
-            var tick = new Tick(
+            var tick = new QuoteTick(
                 this.symbol,
                 Price.Create(1.00000m),
                 Price.Create(1.00000m),
@@ -59,7 +59,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         internal void FromString_WithValidString_ReturnsExpectedTick()
         {
             // Arrange
-            var tick = new Tick(
+            var tick = new QuoteTick(
                 this.symbol,
                 Price.Create(1.00000m),
                 Price.Create(1.00000m),
@@ -69,7 +69,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
 
             // Act
             var tickString = tick.ToSerializableString();
-            var result = Tick.FromSerializableString(this.symbol, tickString);
+            var result = QuoteTick.FromSerializableString(this.symbol, tickString);
 
             // Assert
             Assert.Equal(tick, result);
@@ -80,7 +80,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         {
             // Arrange
             // Act
-            var tick = new Tick(
+            var tick = new QuoteTick(
                 this.symbol,
                 Price.Create(1.00000m),
                 Price.Create(1.00010m),
@@ -99,7 +99,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         internal void Equals_VariousValues_ReturnsExpectedResult(decimal price1, decimal price2, int millisecondsOffset, bool expected)
         {
             // Arrange
-            var tick1 = new Tick(
+            var tick1 = new QuoteTick(
                 this.symbol,
                 Price.Create(price1),
                 Price.Create(5),
@@ -107,7 +107,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
                 Quantity.One(),
                 StubZonedDateTime.UnixEpoch());
 
-            var tick2 = new Tick(
+            var tick2 = new QuoteTick(
                 this.symbol,
                 Price.Create(price2),
                 Price.Create(5),

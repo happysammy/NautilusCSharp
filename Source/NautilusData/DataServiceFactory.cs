@@ -69,8 +69,9 @@ namespace NautilusData
             var scheduler = new Scheduler(container, messagingAdapter);
             scheduler.Start();
 
-            var tickDataSerializer = new TickDataSerializer();
-            var barDataSerializer = new BarDataSerializer();
+            var quoteSerializer = new QuoteTickSerializer();
+            var tradeSerializer = new TradeTickSerializer();
+            var barDataSerializer = new BarSerializer();
             var instrumentDataSerializer = new InstrumentDataSerializer();
             var headerSerializer = new MsgPackDictionarySerializer();
             var requestSerializer = new MsgPackRequestSerializer();
@@ -100,7 +101,8 @@ namespace NautilusData
                 container,
                 messagingAdapter,
                 marketDataRepository,
-                tickDataSerializer);
+                quoteSerializer,
+                tradeSerializer);
 
             var barProvider = new BarProvider(
                 container,
@@ -144,7 +146,8 @@ namespace NautilusData
             var tickPublisher = new TickPublisher(
                 container,
                 dataBusAdapter,
-                tickDataSerializer,
+                quoteSerializer,
+                tradeSerializer,
                 compressor,
                 config.WireConfig.EncryptionConfig,
                 config.NetworkConfig.TickPubPort);

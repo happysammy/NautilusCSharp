@@ -28,21 +28,24 @@ namespace Nautilus.Data.Network
     /// </summary>
     public sealed class TickPublisher : PublisherDataBus
     {
-        private readonly IDataSerializer<Tick> serializer;
+        private readonly IDataSerializer<QuoteTick> quoteSerializer;
+        private readonly IDataSerializer<TradeTick> tradeSerializer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TickPublisher"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
         /// <param name="dataBusAdapter">The data bus adapter.</param>
-        /// <param name="serializer">The tick serializer.</param>
+        /// <param name="quoteSerializer">The quote tick serializer.</param>
+        /// <param name="tradeSerializer">The trade tick serializer.</param>
         /// <param name="compressor">The data compressor.</param>
         /// <param name="encryption">The encryption configuration.</param>
         /// <param name="port">The publisher port.</param>
         public TickPublisher(
             IComponentryContainer container,
             IDataBusAdapter dataBusAdapter,
-            IDataSerializer<Tick> serializer,
+            IDataSerializer<QuoteTick> quoteSerializer,
+            IDataSerializer<TradeTick> tradeSerializer,
             ICompressor compressor,
             EncryptionSettings encryption,
             Port port)
@@ -53,16 +56,24 @@ namespace Nautilus.Data.Network
                 encryption,
                 ZmqNetworkAddress.AllInterfaces(port))
         {
-            this.serializer = serializer;
+            this.quoteSerializer = quoteSerializer;
+            this.tradeSerializer = tradeSerializer;
 
-            this.RegisterHandler<Tick>(this.OnMessage);
+            this.RegisterHandler<QuoteTick>(this.OnMessage);
+            this.RegisterHandler<TradeTick>(this.OnMessage);
 
-            this.Subscribe<Tick>();
+            this.Subscribe<QuoteTick>();
+            this.Subscribe<TradeTick>();
         }
 
-        private void OnMessage(Tick tick)
+        private void OnMessage(QuoteTick tick)
         {
-            this.Publish(tick.Symbol.Value, this.serializer.Serialize(tick));
+            this.Publish(tick.Symbol.Value, this.quoteSerializer.Serialize(tick));
+        }
+
+        private void OnMessage(TradeTick tick)
+        {
+            this.Publish(tick.Symbol.Value, this.tradeSerializer.Serialize(tick));
         }
     }
 }

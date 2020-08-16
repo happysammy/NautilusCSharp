@@ -244,7 +244,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// </summary>
         /// <param name="last">The position symbols last tick.</param>
         /// <returns>The points as a decimal.</returns>
-        public decimal UnrealizedPoints(Tick last)
+        public decimal UnrealizedPoints(QuoteTick last)
         {
             Debug.EqualTo(this.Symbol, last.Symbol, nameof(last.Symbol));
 
@@ -266,7 +266,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// </summary>
         /// <param name="last">The position symbols last tick.</param>
         /// <returns>The return as a double.</returns>
-        public double UnrealizedReturn(Tick last)
+        public double UnrealizedReturn(QuoteTick last)
         {
             Debug.EqualTo(this.Symbol, last.Symbol, nameof(last.Symbol));
 
@@ -288,7 +288,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// </summary>
         /// <param name="last">The position symbols last tick.</param>
         /// <returns>The PnL as a decimal.</returns>
-        public Money UnrealizedPnl(Tick last)
+        public Money UnrealizedPnl(QuoteTick last)
         {
             Debug.EqualTo(this.Symbol, last.Symbol, nameof(last.Symbol));
 
@@ -310,7 +310,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// </summary>
         /// <param name="last">The position symbols last tick.</param>
         /// <returns>The total points as a <see cref="decimal"/>.</returns>
-        public decimal TotalPoints(Tick last)
+        public decimal TotalPoints(QuoteTick last)
         {
             Debug.EqualTo(this.Symbol, last.Symbol, nameof(last.Symbol));
 
@@ -322,7 +322,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// </summary>
         /// <param name="last">The position symbols last tick.</param>
         /// <returns>The total return as a <see cref="double"/>.</returns>
-        public double TotalReturn(Tick last)
+        public double TotalReturn(QuoteTick last)
         {
             Debug.EqualTo(this.Symbol, last.Symbol, nameof(last.Symbol));
 
@@ -335,7 +335,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// </summary>
         /// <param name="last">The position symbols last tick.</param>
         /// <returns>The total PnL as a <see cref="decimal"/>.</returns>
-        public Money TotalPnl(Tick last)
+        public Money TotalPnl(QuoteTick last)
         {
             Debug.EqualTo(this.Symbol, last.Symbol, nameof(last.Symbol));
 
@@ -472,6 +472,8 @@ namespace Nautilus.DomainModel.Aggregates
                     return openPrice - (decimal)closePrice;
                 case MarketPosition.Flat:
                     return decimal.Zero;
+                case MarketPosition.Undefined:
+                    goto default;
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(this.MarketPosition, nameof(this.MarketPosition));
             }
@@ -492,6 +494,8 @@ namespace Nautilus.DomainModel.Aggregates
                     return ((double)openPrice - (double)closePrice) / (double)openPrice;
                 case MarketPosition.Flat:
                     return 0;
+                case MarketPosition.Undefined:
+                    goto default;
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(this.MarketPosition, nameof(this.MarketPosition));
             }

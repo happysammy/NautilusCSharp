@@ -39,7 +39,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
     public sealed class DataPublisherTests : NetMQTestBase
     {
         private const string TestAddress = "tcp://localhost:55511";
-        private readonly BarDataSerializer barDataSerializer;
+        private readonly BarSerializer barSerializer;
         private readonly InstrumentDataSerializer instrumentDataSerializer;
         private readonly DataPublisher publisher;
 
@@ -48,7 +48,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
         {
             // Fixture Setup
             var container = TestComponentryContainer.Create(output);
-            this.barDataSerializer = new BarDataSerializer();
+            this.barSerializer = new BarSerializer();
             this.instrumentDataSerializer = new InstrumentDataSerializer();
 
             this.publisher = new DataPublisher(

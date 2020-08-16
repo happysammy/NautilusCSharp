@@ -241,7 +241,7 @@ namespace Nautilus.Fxcm
             message.GetGroup(1, this.mdBidGroup);
             message.GetGroup(2, this.mdAskGroup);
 
-            var tick = new Tick(
+            var tick = new QuoteTick(
                 this.GetSymbol(message.GetField(Tags.Symbol)),
                 Price.Create(this.mdBidGroup.GetDecimal(Tags.MDEntryPx)),
                 Price.Create(this.mdAskGroup.GetDecimal(Tags.MDEntryPx)),

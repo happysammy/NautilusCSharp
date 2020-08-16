@@ -41,7 +41,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
         private readonly IComponentryContainer container;
         private readonly IMessageBusAdapter messagingAdapter;
         private readonly MockMarketDataRepository repository;
-        private readonly BarDataSerializer dataSerializer;
+        private readonly BarSerializer barSerializer;
 
         public BarProviderTests(ITestOutputHelper output)
             : base(output)
@@ -49,11 +49,12 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             // Fixture Setup
             this.container = TestComponentryContainer.Create(output);
             this.messagingAdapter = new MockMessageBusProvider(this.container).Adapter;
-            this.dataSerializer = new BarDataSerializer();
+            this.barSerializer = new BarSerializer();
             this.repository = new MockMarketDataRepository(
                 this.container,
-                new TickDataSerializer(),
-                this.dataSerializer,
+                new QuoteTickSerializer(),
+                new TradeTickSerializer(),
+                this.barSerializer,
                 DataBusFactory.Create(this.container));
         }
 
@@ -65,7 +66,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
                 this.container,
                 this.messagingAdapter,
                 this.repository,
-                this.dataSerializer);
+                this.barSerializer);
             provider.Start().Wait();
 
             var barType = StubBarType.AUDUSD_OneMinuteAsk();
@@ -100,7 +101,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
                 this.container,
                 this.messagingAdapter,
                 this.repository,
-                this.dataSerializer);
+                this.barSerializer);
             provider.Start().Wait();
 
             var barType = StubBarType.AUDUSD_OneMinuteAsk();
@@ -127,7 +128,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
 
             // Act
             var response = (DataResponse)provider.FindData(request);
-            var bars = this.dataSerializer.DeserializeBlob(response.Data);
+            var bars = this.barSerializer.DeserializeBlob(response.Data);
 
             // Assert
             Assert.Equal(typeof(DataResponse), response.Type);

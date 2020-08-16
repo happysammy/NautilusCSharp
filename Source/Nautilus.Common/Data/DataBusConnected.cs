@@ -68,10 +68,19 @@ namespace Nautilus.Common.Data
         }
 
         /// <summary>
-        /// Send the given tick to the data bus.
+        /// Send the given quote tick to the data bus.
         /// </summary>
         /// <param name="data">The data to send.</param>
-        protected void SendToBus(Tick data)
+        protected void SendToBus(QuoteTick data)
+        {
+            this.dataBusAdapter.SendToBus(data);
+        }
+
+        /// <summary>
+        /// Send the given trade tick to the data bus.
+        /// </summary>
+        /// <param name="data">The data to send.</param>
+        protected void SendToBus(TradeTick data)
         {
             this.dataBusAdapter.SendToBus(data);
         }

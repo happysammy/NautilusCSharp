@@ -92,15 +92,15 @@ namespace Nautilus.Redis.Data
                 { BarStructure.Day, 86400000 }
             };
 
-            this.RegisterHandler<Tick>(this.OnTick);
+            this.RegisterHandler<QuoteTick>(this.OnTick);
             this.RegisterHandler<Instrument>(this.OnInstrument);
 
-            this.Subscribe<Tick>();
+            this.Subscribe<QuoteTick>();
             this.Subscribe<Instrument>();
         }
 
         /// <inheritdoc />
-        public void Ingest(Tick tick)
+        public void Ingest(QuoteTick tick)
         {
             var keyBidPrices = KeyProvider.GetPricesKey(tick.Symbol, PriceType.Bid);
             var keyAskPrices = KeyProvider.GetPricesKey(tick.Symbol, PriceType.Ask);
@@ -188,7 +188,7 @@ namespace Nautilus.Redis.Data
         }
 
         /// <inheritdoc />
-        public Tick[] GetTicks(
+        public QuoteTick[] GetTicks(
             Symbol symbol,
             ZonedDateTime? fromDateTime,
             ZonedDateTime? toDateTime,
@@ -206,7 +206,7 @@ namespace Nautilus.Redis.Data
             var pricePrecision = this.pricePrecisions[symbol];
             var sizePrecision = this.sizePrecisions[symbol];
 
-            var ticks = new Tick[tickValues[0].Count];
+            var ticks = new QuoteTick[tickValues[0].Count];
             for (var i = 0; i < tickValues[0].Count; i++)
             {
                 ticks[i] = BuildTick(
@@ -389,7 +389,7 @@ namespace Nautilus.Redis.Data
                 : new TimeStamp(dateTime.Value.ToInstant().ToUnixTimeMilliseconds());
         }
 
-        private void OnTick(Tick tick)
+        private void OnTick(QuoteTick tick)
         {
             this.Ingest(tick);
         }
@@ -810,7 +810,7 @@ namespace Nautilus.Redis.Data
             return output;
         }
 
-        private static Tick BuildTick(
+        private static QuoteTick BuildTick(
             Symbol symbol,
             double bid,
             double ask,
@@ -820,7 +820,7 @@ namespace Nautilus.Redis.Data
             int pricePrecision,
             int sizePrecision)
         {
-            return new Tick(
+            return new QuoteTick(
                 symbol,
                 Price.Create(bid, pricePrecision),
                 Price.Create(ask, pricePrecision),

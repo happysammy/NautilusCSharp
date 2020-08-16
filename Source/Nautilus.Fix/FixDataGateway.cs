@@ -75,7 +75,13 @@ namespace Nautilus.Fix
         }
 
         /// <inheritdoc />
-        public void OnData(Tick tick)
+        public void OnData(QuoteTick tick)
+        {
+            this.SendToBus(tick);
+        }
+
+        /// <inheritdoc />
+        public void OnData(TradeTick tick)
         {
             this.SendToBus(tick);
         }

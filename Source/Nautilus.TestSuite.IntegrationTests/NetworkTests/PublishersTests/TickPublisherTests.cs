@@ -49,7 +49,8 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
             this.publisher = new TickPublisher(
                 container,
                 DataBusFactory.Create(container),
-                new TickDataSerializer(),
+                new QuoteTickSerializer(),
+                new TradeTickSerializer(),
                 new BypassCompressor(),
                 EncryptionSettings.None(),
                 new Port(55606));
@@ -69,7 +70,7 @@ namespace Nautilus.TestSuite.IntegrationTests.NetworkTests.PublishersTests
 
             Task.Delay(100).Wait();  // Allow subscribers to connect
 
-            var tick = StubTickProvider.Create(symbol);
+            var tick = StubQuoteTickProvider.Create(symbol);
 
             // Act
             this.publisher.Endpoint.SendAsync(tick).Wait();

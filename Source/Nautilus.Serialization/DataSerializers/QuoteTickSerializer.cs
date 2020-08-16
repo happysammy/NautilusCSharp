@@ -15,6 +15,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Text;
 using MongoDB.Bson;
@@ -29,7 +30,7 @@ using Nautilus.DomainModel.ValueObjects;
 namespace Nautilus.Serialization.DataSerializers
 {
     /// <inheritdoc />
-    public sealed class TickDataSerializer : IDataSerializer<Tick>
+    public sealed class QuoteTickSerializer : IDataSerializer<QuoteTick>
     {
         private const string Data = nameof(Data);
         private const string DataType = nameof(DataType);
@@ -38,9 +39,9 @@ namespace Nautilus.Serialization.DataSerializers
         private readonly ObjectCache<string, Symbol> cachedSymbols;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TickDataSerializer"/> class.
+        /// Initializes a new instance of the <see cref="QuoteTickSerializer"/> class.
         /// </summary>
-        public TickDataSerializer()
+        public QuoteTickSerializer()
         {
             this.cachedSymbols = new ObjectCache<string, Symbol>(Symbol.FromString);
         }
@@ -52,13 +53,13 @@ namespace Nautilus.Serialization.DataSerializers
         public DataEncoding ObjectEncoding => DataEncoding.Utf8;
 
         /// <inheritdoc />
-        public byte[] Serialize(Tick tick)
+        public byte[] Serialize(QuoteTick tick)
         {
             return Encoding.UTF8.GetBytes(tick.ToSerializableString());
         }
 
         /// <inheritdoc />
-        public byte[][] Serialize(Tick[] dataObjects)
+        public byte[][] Serialize(QuoteTick[] dataObjects)
         {
             Debug.NotEmpty(dataObjects, nameof(dataObjects));
 
@@ -72,57 +73,65 @@ namespace Nautilus.Serialization.DataSerializers
         }
 
         /// <inheritdoc />
-        public byte[] SerializeBlob(byte[][] dataObjectsArray, Dictionary<string, string> metadata)
+        public byte[] SerializeBlob(byte[][] dataObjectsArray, Dictionary<string, string>? metadata)
         {
-            Debug.NotEmpty(dataObjectsArray, nameof(dataObjectsArray));
+            Condition.NotNull(metadata, nameof(metadata));
+            Condition.NotEmpty(dataObjectsArray, nameof(dataObjectsArray));
 
             return new BsonDocument
             {
-                { DataType, typeof(Tick[]).Name },
+                { DataType, typeof(QuoteTick[]).Name },
                 { Data, new BsonArray(dataObjectsArray) },
                 { Metadata, metadata.ToBsonDocument() },
             }.ToBson();
         }
 
         /// <inheritdoc />
-        public Tick Deserialize(byte[] dataBytes)
+        public QuoteTick Deserialize(byte[] dataBytes)
         {
-            Debug.NotEmpty(dataBytes, nameof(dataBytes));
-
-            return Tick.FromSerializableStringWhichIncludesSymbol(Encoding.UTF8.GetString(dataBytes));
+            // Need to know the Symbol and TickSpecification up front in order to deserialize.
+            throw new NotImplementedException();
         }
 
         /// <inheritdoc />
-        public Tick[] Deserialize(byte[][] dataBytesArray, object? metadata = null)
+        public QuoteTick[] Deserialize(byte[][] dataBytesArray, Dictionary<string, string>? metadata)
         {
             Debug.NotNull(metadata, nameof(metadata));
 
-            var output = new Tick[dataBytesArray.Length];
+            if (metadata is null)
+            {
+                return new QuoteTick[]{ };
+            }
+
+            var symbol = Symbol.FromString(metadata[nameof(Symbol)]);
+
+            var output = new QuoteTick[dataBytesArray.Length];
             for (var i = 0; i < dataBytesArray.Length; i++)
             {
-                output[i] = Tick.FromSerializableString((Symbol)metadata!, Encoding.UTF8.GetString(dataBytesArray[i]));
+                output[i] = QuoteTick.FromSerializableString(symbol, Encoding.UTF8.GetString(dataBytesArray[i]));
             }
 
             return output;
         }
 
         /// <inheritdoc/>
-        public Tick[] DeserializeBlob(byte[] dataBytes)
+        public QuoteTick[] DeserializeBlob(byte[] dataBytes)
         {
             Debug.NotEmpty(dataBytes, nameof(dataBytes));
 
             var data = BsonSerializer.Deserialize<BsonDocument>(dataBytes);
 
             var symbol = this.cachedSymbols.Get(data[Metadata][nameof(Tick.Symbol)].AsString);
+
             var valueArray = data[Data].AsBsonArray;
 
-            var ticks = new Tick[valueArray.Count];
+            var output = new QuoteTick[valueArray.Count];
             for (var i = 0; i < valueArray.Count; i++)
             {
-                ticks[i] = Tick.FromSerializableString(symbol,  Encoding.UTF8.GetString(valueArray[i].AsByteArray));
+                output[i] = QuoteTick.FromSerializableString(symbol, Encoding.UTF8.GetString(valueArray[i].AsByteArray));
             }
 
-            return ticks;
+            return output;
         }
     }
 }

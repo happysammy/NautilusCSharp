@@ -45,7 +45,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
         private readonly IComponentryContainer container;
         private readonly IMessageBusAdapter messagingAdapter;
         private readonly ITickRepository repository;
-        private readonly TickDataSerializer dataSerializer;
+        private readonly QuoteTickSerializer tickSerializer;
 
         public TickProviderTests(ITestOutputHelper output)
             : base(output)
@@ -53,11 +53,12 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             // Fixture Setup
             this.container = TestComponentryContainer.Create(output);
             this.messagingAdapter = new MockMessageBusProvider(this.container).Adapter;
-            this.dataSerializer = new TickDataSerializer();
+            this.tickSerializer = new QuoteTickSerializer();
             this.repository = new MockMarketDataRepository(
                 this.container,
-                this.dataSerializer,
-                new BarDataSerializer(),
+                this.tickSerializer,
+                new TradeTickSerializer(),
+                new BarSerializer(),
                 DataBusFactory.Create(this.container));
         }
 
@@ -69,7 +70,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
                 this.container,
                 this.messagingAdapter,
                 this.repository,
-                this.dataSerializer);
+                this.tickSerializer,
+                new TradeTickSerializer());
             provider.Start().Wait();
 
             var symbol = new Symbol("AUD/USD", new Venue("FXCM"));
@@ -103,15 +105,16 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
                 this.container,
                 this.messagingAdapter,
                 this.repository,
-                this.dataSerializer);
+                this.tickSerializer,
+                new TradeTickSerializer());
             provider.Start().Wait();
 
             var datetimeFrom = StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1);
             var datetimeTo = datetimeFrom + Duration.FromMinutes(1);
 
             var symbol = new Symbol("AUD/USD", new Venue("FXCM"));
-            var tick1 = new Tick(symbol, Price.Create(1.00000m), Price.Create(1.00000m), Quantity.One(), Quantity.One(), datetimeFrom);
-            var tick2 = new Tick(symbol, Price.Create(1.00010m), Price.Create(1.00020m), Quantity.One(), Quantity.One(), datetimeTo);
+            var tick1 = new QuoteTick(symbol, Price.Create(1.00000m), Price.Create(1.00000m), Quantity.One(), Quantity.One(), datetimeFrom);
+            var tick2 = new QuoteTick(symbol, Price.Create(1.00010m), Price.Create(1.00020m), Quantity.One(), Quantity.One(), datetimeTo);
 
             this.repository.Ingest(tick1);
             this.repository.Ingest(tick2);
@@ -133,7 +136,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             // Act
             var response = (DataResponse)provider.FindData(request);
 
-            var ticks = this.dataSerializer.DeserializeBlob(response.Data);
+            var ticks = this.tickSerializer.DeserializeBlob(response.Data);
 
             // Assert
             Assert.Equal(typeof(DataResponse), response.Type);

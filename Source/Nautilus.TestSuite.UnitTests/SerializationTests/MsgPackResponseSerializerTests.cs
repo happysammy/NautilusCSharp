@@ -181,19 +181,21 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         internal void CanSerializeAndDeserialize_TickDataResponse()
         {
             // Arrange
-            var dataSerializer = new TickDataSerializer();
+            var dataSerializer = new QuoteTickSerializer();
             var datetimeFrom = StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1);
             var datetimeTo = datetimeFrom + Duration.FromMinutes(1);
 
             var symbol = new Symbol("AUD/USD", new Venue("FXCM"));
-            var tick1 = new Tick(
+
+            var tick1 = new QuoteTick(
                 symbol,
                 Price.Create(1.00000m),
                 Price.Create(1.00000m),
                 Quantity.One(),
                 Quantity.One(),
                 datetimeFrom);
-            var tick2 = new Tick(
+
+            var tick2 = new QuoteTick(
                 symbol,
                 Price.Create(1.00010m),
                 Price.Create(1.00020m),
@@ -236,7 +238,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         internal void CanSerializeAndDeserialize_BarDataResponses()
         {
             // Arrange
-            var dataSerializer = new BarDataSerializer();
+            var dataSerializer = new BarSerializer();
             var symbol = new Symbol("AUD/USD", new Venue("FXCM"));
             var barSpec = new BarSpecification(1, BarStructure.Minute, PriceType.Bid);
             var correlationId = Guid.NewGuid();

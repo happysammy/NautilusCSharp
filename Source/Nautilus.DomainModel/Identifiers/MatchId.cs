@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="TimeInForce.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="MatchId.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2020 Nautech Systems Pty Ltd. All rights reserved.
 //  https://nautechsystems.io
 //
@@ -16,33 +16,25 @@
 //--------------------------------------------------------------------------------------------------
 
 using Nautilus.Core.Annotations;
+using Nautilus.Core.Correctness;
+using Nautilus.Core.Types;
 
-namespace Nautilus.DomainModel.Enums
+namespace Nautilus.DomainModel.Identifiers
 {
     /// <summary>
-    /// The type of tick.
+    /// Represents a valid trade match identifier.
     /// </summary>
-    public enum TickType
+    [Immutable]
+    public sealed class MatchId : Identifier<MatchId>
     {
         /// <summary>
-        /// The enumerator value is undefined (invalid).
+        /// Initializes a new instance of the <see cref="MatchId"/> class.
         /// </summary>
-        [InvalidValue]
-        Undefined = 0,
-
-        /// <summary>
-        /// The tick represents the closest quotes in the market.
-        /// </summary>
-        Quote = 1,
-
-        /// <summary>
-        /// The tick represents a matched trade.
-        /// </summary>
-        Trade = 2,
-
-        /// <summary>
-        /// The tick represents open interest.
-        /// </summary>
-        OpenInterest = 3,
+        /// <param name="value">The match identifier value.</param>
+        public MatchId(string value)
+            : base(value)
+        {
+            Debug.NotEmptyOrWhiteSpace(value, nameof(value));
+        }
     }
 }

@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="BarDataSerializer.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="TickDataSerializer.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2020 Nautech Systems Pty Ltd. All rights reserved.
 //  https://nautechsystems.io
 //
@@ -15,23 +15,36 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Text;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
+using Nautilus.Common.Componentry;
 using Nautilus.Common.Enums;
 using Nautilus.Common.Interfaces;
 using Nautilus.Core.Correctness;
+using Nautilus.DomainModel.Identifiers;
 using Nautilus.DomainModel.ValueObjects;
 
 namespace Nautilus.Serialization.DataSerializers
 {
     /// <inheritdoc />
-    public sealed class BarDataSerializer : IDataSerializer<Bar>
+    public sealed class TradeTickSerializer : IDataSerializer<TradeTick>
     {
         private const string Data = nameof(Data);
         private const string DataType = nameof(DataType);
         private const string Metadata = nameof(Metadata);
+
+        private readonly ObjectCache<string, Symbol> cachedSymbols;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TradeTickSerializer"/> class.
+        /// </summary>
+        public TradeTickSerializer()
+        {
+            this.cachedSymbols = new ObjectCache<string, Symbol>(Symbol.FromString);
+        }
 
         /// <inheritdoc />
         public DataEncoding BlobEncoding => DataEncoding.Bson;
@@ -40,14 +53,16 @@ namespace Nautilus.Serialization.DataSerializers
         public DataEncoding ObjectEncoding => DataEncoding.Utf8;
 
         /// <inheritdoc />
-        public byte[] Serialize(Bar dataObject)
+        public byte[] Serialize(TradeTick tick)
         {
-            return Encoding.UTF8.GetBytes(dataObject.ToSerializableString());
+            return Encoding.UTF8.GetBytes(tick.ToSerializableString());
         }
 
         /// <inheritdoc />
-        public byte[][] Serialize(Bar[] dataObjects)
+        public byte[][] Serialize(TradeTick[] dataObjects)
         {
+            Debug.NotEmpty(dataObjects, nameof(dataObjects));
+
             var output = new byte[dataObjects.Length][];
             for (var i = 0; i < dataObjects.Length; i++)
             {
@@ -58,53 +73,65 @@ namespace Nautilus.Serialization.DataSerializers
         }
 
         /// <inheritdoc />
-        public byte[] SerializeBlob(byte[][] dataObjectsArray, Dictionary<string, string> metadata)
+        public byte[] SerializeBlob(byte[][] dataObjectsArray, Dictionary<string, string>? metadata)
         {
-            Debug.NotEmpty(dataObjectsArray, nameof(dataObjectsArray));
+            Condition.NotNull(metadata, nameof(metadata));
+            Condition.NotEmpty(dataObjectsArray, nameof(dataObjectsArray));
 
             return new BsonDocument
             {
-                { DataType, typeof(Bar[]).Name },
+                { DataType, typeof(QuoteTick[]).Name },
                 { Data, new BsonArray(dataObjectsArray) },
                 { Metadata, metadata.ToBsonDocument() },
             }.ToBson();
         }
 
         /// <inheritdoc />
-        public Bar Deserialize(byte[] dataBytes)
+        public TradeTick Deserialize(byte[] dataBytes)
         {
-            return Bar.FromSerializableString(Encoding.UTF8.GetString(dataBytes));
+            // Need to know the Symbol and TickSpecification up front in order to deserialize.
+            throw new NotImplementedException();
         }
 
         /// <inheritdoc />
-        public Bar[] Deserialize(byte[][] dataBytesArray, object? metadata = null)
+        public TradeTick[] Deserialize(byte[][] dataBytesArray, Dictionary<string, string>? metadata)
         {
-            Debug.NotEmpty(dataBytesArray, nameof(dataBytesArray));
+            Debug.NotNull(metadata, nameof(metadata));
 
-            var output = new Bar[dataBytesArray.Length];
+            if (metadata is null)
+            {
+                return new TradeTick[]{ };
+            }
+
+            var symbol = Symbol.FromString(metadata[nameof(Symbol)]);
+
+            var output = new TradeTick[dataBytesArray.Length];
             for (var i = 0; i < dataBytesArray.Length; i++)
             {
-                output[i] = this.Deserialize(dataBytesArray[i]);
+                output[i] = TradeTick.FromSerializableString(symbol, Encoding.UTF8.GetString(dataBytesArray[i]));
             }
 
             return output;
         }
 
-        /// <inheritdoc />
-        public Bar[] DeserializeBlob(byte[] dataBytes)
+        /// <inheritdoc/>
+        public TradeTick[] DeserializeBlob(byte[] dataBytes)
         {
             Debug.NotEmpty(dataBytes, nameof(dataBytes));
 
             var data = BsonSerializer.Deserialize<BsonDocument>(dataBytes);
+
+            var symbol = this.cachedSymbols.Get(data[Metadata][nameof(Tick.Symbol)].AsString);
+
             var valueArray = data[Data].AsBsonArray;
 
-            var bars = new Bar[valueArray.Count];
+            var output = new TradeTick[valueArray.Count];
             for (var i = 0; i < valueArray.Count; i++)
             {
-                bars[i] = this.Deserialize(valueArray[i].AsByteArray);
+                output[i] = TradeTick.FromSerializableString(symbol, Encoding.UTF8.GetString(valueArray[i].AsByteArray));
             }
 
-            return bars;
+            return output;
         }
     }
 }
