@@ -28,7 +28,7 @@ namespace Nautilus.DomainModel.ValueObjects
     /// Represents a non-negative quantity with a specified decimal precision.
     /// </summary>
     [Immutable]
-    public sealed class Quantity : DecimalNumber
+    public sealed class Quantity : Decimal64
     {
         private static readonly Quantity QuantityOfZero = new Quantity(decimal.Zero, 0);
         private static readonly Quantity QuantityOfOne = new Quantity(decimal.One, 0);
