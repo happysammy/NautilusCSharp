@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="FxcmFixClientFactory.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="BinanceDataGateway.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2020 Nautech Systems Pty Ltd. All rights reserved.
 //  https://nautechsystems.io
 //
@@ -25,7 +25,7 @@ using Nautilus.DomainModel.ValueObjects;
 namespace Nautilus.Binance
 {
     /// <summary>
-    /// Provides a data gateway for the Binance brokerage.
+    /// Provides a data gateway for the Binance exchange.
     /// </summary>
     public class BinanceDataGateway : MessageBusConnected, IDataGateway
     {
