@@ -38,14 +38,12 @@ namespace Nautilus.DomainModel.Commands
         /// <param name="traderId">The trader identifier.</param>
         /// <param name="accountId">The account identifier.</param>
         /// <param name="orderId">The order identifier.</param>
-        /// <param name="cancelReason">The cancel reason.</param>
         /// <param name="commandId">The command identifier.</param>
         /// <param name="commandTimestamp">The command timestamp.</param>
         public CancelOrder(
             TraderId traderId,
             AccountId accountId,
             OrderId orderId,
-            string cancelReason,
             Guid commandId,
             ZonedDateTime commandTimestamp)
             : base(
@@ -53,14 +51,12 @@ namespace Nautilus.DomainModel.Commands
                 commandId,
                 commandTimestamp)
         {
-            Debug.NotEmptyOrWhiteSpace(cancelReason, nameof(cancelReason));
             Debug.NotDefault(commandId, nameof(commandId));
             Debug.NotDefault(commandTimestamp, nameof(commandTimestamp));
 
             this.TraderId = traderId;
             this.AccountId = accountId;
             this.OrderId = orderId;
-            this.CancelReason = cancelReason;
         }
 
         /// <summary>
@@ -79,18 +75,12 @@ namespace Nautilus.DomainModel.Commands
         public OrderId OrderId { get; }
 
         /// <summary>
-        /// Gets the commands cancel reason.
-        /// </summary>
-        public string CancelReason { get; }
-
-        /// <summary>
         /// Returns a string representation of this object.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
         public override string ToString() => $"{this.Type.Name}(" +
                                              $"TraderId={this.TraderId.Value}, " +
                                              $"AccountId={this.AccountId.Value}, " +
-                                             $"OrderId={this.OrderId.Value}, " +
-                                             $"Reason={this.CancelReason})";
+                                             $"OrderId={this.OrderId.Value})";
     }
 }

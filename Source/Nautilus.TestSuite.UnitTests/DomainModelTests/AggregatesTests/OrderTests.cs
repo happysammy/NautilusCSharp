@@ -17,7 +17,6 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using Nautilus.Core.Types;
 using Nautilus.DomainModel.Enums;
 using Nautilus.DomainModel.Factories;
 using Nautilus.DomainModel.Identifiers;
@@ -46,9 +45,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var order = OrderFactory.Market(
                 new OrderId("O-123456-S1"),
                 new Symbol("SYMBOL", "LMAX"),
-                new Label("S1-E"),
                 OrderSide.Buy,
-                OrderPurpose.Entry,
                 Quantity.Create(10),
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid());
@@ -56,10 +53,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Assert
             Assert.Equal(new Symbol("SYMBOL", "LMAX"), order.Symbol);
             Assert.Equal("O-123456-S1", order.Id.Value);
-            Assert.Equal("S1-E", order.Label.Value);
             Assert.Equal(OrderSide.Buy, order.OrderSide);
             Assert.Equal(OrderType.Market, order.OrderType);
-            Assert.Equal(OrderPurpose.Entry, order.OrderPurpose);
             Assert.Equal(10, order.Quantity.Value);
             Assert.Null(order.AveragePrice);
             Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEvent.Timestamp);
@@ -74,9 +69,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var order = OrderFactory.StopMarket(
                 new OrderId("O-123456"),
                 new Symbol("SYMBOL", "LMAX"),
-                new Label("S1_SL"),
                 OrderSide.Buy,
-                OrderPurpose.Entry,
                 Quantity.Create(10),
                 Price.Create(2000m, 1),
                 TimeInForce.GTD,
@@ -87,10 +80,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Assert
             Assert.Equal(new Symbol("SYMBOL", "LMAX"), order.Symbol);
             Assert.Equal("O-123456", order.Id.Value);
-            Assert.Equal("S1_SL", order.Label.Value);
             Assert.Equal(OrderSide.Buy, order.OrderSide);
             Assert.Equal(OrderType.Stop, order.OrderType);
-            Assert.Equal(OrderPurpose.Entry, order.OrderPurpose);
             Assert.Equal(10, order.Quantity.Value);
             Assert.Equal(Price.Create(2000m, 1), order.Price);
             Assert.Null(order.AveragePrice);

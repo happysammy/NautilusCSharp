@@ -252,7 +252,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 traderId,
                 accountId,
                 order.Id,
-                "TEST",
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -286,7 +285,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 traderId,
                 accountId,
                 order.Id,
-                "TEST",
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 

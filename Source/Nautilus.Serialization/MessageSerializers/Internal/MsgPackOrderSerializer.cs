@@ -59,10 +59,8 @@ namespace Nautilus.Serialization.MessageSerializers.Internal
             {
                 { nameof(Order.Id), Encode(order.Id.Value) },
                 { nameof(Order.Symbol), Encode(order.Symbol.Value) },
-                { nameof(Order.Label), Encode(order.Label.Value) },
                 { nameof(OrderSide), Encode(order.OrderSide.ToString()) },
                 { nameof(OrderType), Encode(order.OrderType.ToString()) },
-                { nameof(OrderPurpose), Encode(order.OrderPurpose.ToString()) },
                 { nameof(Order.Quantity), Encode(order.Quantity.ToString()) },
                 { nameof(Order.Price), ObjectSerializer.Serialize(order.Price) },
                 { nameof(Order.TimeInForce), Encode(order.TimeInForce.ToString()) },
@@ -114,9 +112,7 @@ namespace Nautilus.Serialization.MessageSerializers.Internal
             var type = ObjectDeserializer.AsEnum<OrderType>(unpacked[nameof(OrderType)]);
             var id = ObjectDeserializer.AsOrderId(unpacked, nameof(Order.Id));
             var symbol = this.symbolCache.Get(ObjectDeserializer.AsString(unpacked[nameof(Symbol)]));
-            var label = ObjectDeserializer.AsLabel(unpacked);
             var side = ObjectDeserializer.AsEnum<OrderSide>(unpacked[nameof(OrderSide)]);
-            var purpose = ObjectDeserializer.AsEnum<OrderPurpose>(unpacked[nameof(OrderPurpose)]);
             var quantity = ObjectDeserializer.AsQuantity(unpacked[nameof(Order.Quantity)]);
             var timestamp = ObjectDeserializer.AsZonedDateTime(unpacked[nameof(Order.Timestamp)]);
             var initialId = ObjectDeserializer.AsGuid(unpacked[nameof(Order.InitId)]);
@@ -127,9 +123,7 @@ namespace Nautilus.Serialization.MessageSerializers.Internal
                     return OrderFactory.Market(
                         id,
                         symbol,
-                        label,
                         side,
-                        purpose,
                         quantity,
                         timestamp,
                         initialId);
@@ -137,9 +131,7 @@ namespace Nautilus.Serialization.MessageSerializers.Internal
                     return OrderFactory.Limit(
                         id,
                         symbol,
-                        label,
                         side,
-                        purpose,
                         quantity,
                         ObjectDeserializer.AsPrice(unpacked[nameof(Order.Price)]),
                         ObjectDeserializer.AsEnum<TimeInForce>(unpacked[nameof(Order.TimeInForce)]),
@@ -150,9 +142,7 @@ namespace Nautilus.Serialization.MessageSerializers.Internal
                     return OrderFactory.StopLimit(
                         id,
                         symbol,
-                        label,
                         side,
-                        purpose,
                         quantity,
                         ObjectDeserializer.AsPrice(unpacked[nameof(Order.Price)]),
                         ObjectDeserializer.AsEnum<TimeInForce>(unpacked[nameof(Order.TimeInForce)]),
@@ -163,22 +153,7 @@ namespace Nautilus.Serialization.MessageSerializers.Internal
                     return OrderFactory.StopMarket(
                         id,
                         symbol,
-                        label,
                         side,
-                        purpose,
-                        quantity,
-                        ObjectDeserializer.AsPrice(unpacked[nameof(Order.Price)]),
-                        ObjectDeserializer.AsEnum<TimeInForce>(unpacked[nameof(Order.TimeInForce)]),
-                        ObjectDeserializer.AsNullableZonedDateTime(unpacked[nameof(Order.ExpireTime)]),
-                        timestamp,
-                        initialId);
-                case OrderType.MIT:
-                    return OrderFactory.MarketIfTouched(
-                        id,
-                        symbol,
-                        label,
-                        side,
-                        purpose,
                         quantity,
                         ObjectDeserializer.AsPrice(unpacked[nameof(Order.Price)]),
                         ObjectDeserializer.AsEnum<TimeInForce>(unpacked[nameof(Order.TimeInForce)]),

@@ -29,7 +29,7 @@
     <ItemGroup>
         <PackageReference Include="MessagePack" Version="2.1.165" />
         <PackageReference Include="MessagePackAnalyzer" Version="2.1.165" />
-        <PackageReference Include="MongoDB.Bson" Version="2.11.0" />
+        <PackageReference Include="MongoDB.Bson" Version="2.11.1" />
     </ItemGroup>
 
     <ItemGroup>

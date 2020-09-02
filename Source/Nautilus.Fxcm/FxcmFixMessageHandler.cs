@@ -24,7 +24,6 @@ using Nautilus.Common.Logging;
 using Nautilus.Core.Annotations;
 using Nautilus.Core.Correctness;
 using Nautilus.Core.Extensions;
-using Nautilus.Core.Types;
 using Nautilus.DomainModel.Entities;
 using Nautilus.DomainModel.Events;
 using Nautilus.DomainModel.Identifiers;
@@ -556,16 +555,12 @@ namespace Nautilus.Fxcm
         {
             var orderId = this.GetOrderId(message);
             var orderIdBroker = new OrderIdBroker(message.GetField(Tags.OrderID));
-            var orderLabel = message.IsSetField(Tags.SecondaryClOrdID)
-                ? new Label(message.GetField(Tags.SecondaryClOrdID))
-                : new Label();
             var acceptedTime = FxcmMessageHelper.ParseTimestamp(message.GetField(Tags.TransactTime));
 
             return new OrderAccepted(
                 this.accountId,
                 orderId,
                 orderIdBroker,
-                orderLabel,
                 acceptedTime,
                 this.NewGuid(),
                 this.TimeNow());
@@ -611,9 +606,6 @@ namespace Nautilus.Fxcm
             var orderId = this.GetOrderId(message);
             var orderIdBroker = new OrderIdBroker(message.GetField(Tags.OrderID));
             var symbol = this.GetSymbol(message.GetField(Tags.Symbol));
-            var orderLabel = message.IsSetField(Tags.SecondaryClOrdID)
-                ? new Label(message.GetField(Tags.SecondaryClOrdID))
-                : new Label();
             var orderSide = FxcmMessageHelper.GetOrderSide(message.GetField(Tags.Side));
             var orderType = FxcmMessageHelper.GetOrderType(message.GetField(Tags.OrdType));
             var quantity = Quantity.Create(message.GetDecimal(Tags.OrderQty));
@@ -627,7 +619,6 @@ namespace Nautilus.Fxcm
                 orderId,
                 orderIdBroker,
                 symbol,
-                orderLabel,
                 orderSide,
                 orderType,
                 quantity,

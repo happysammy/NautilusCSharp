@@ -61,12 +61,6 @@ namespace Nautilus.Fxcm.MessageFactories
             var order1 = new NewOrderList.NoOrdersGroup();
             order1.SetField(new ClOrdID(entry.Id.Value));
             order1.SetField(new ListSeqNo(0));
-
-            if (entry.Label.NotNone())
-            {
-                order1.SetField(new SecondaryClOrdID(entry.Label.Value));
-            }
-
             order1.SetField(new ClOrdLinkID("1"));
             order1.SetField(new Account(accountNumber.Value));
             order1.SetField(new Symbol(symbolCode));
@@ -87,9 +81,6 @@ namespace Nautilus.Fxcm.MessageFactories
                         order1.SetField(new StopPx(entry.Price.Value));
                         break;
                     case OrderType.StopLimit:
-                        order1.SetField(new StopPx(entry.Price.Value));
-                        break;
-                    case OrderType.MIT:
                         order1.SetField(new StopPx(entry.Price.Value));
                         break;
                     case OrderType.Market:
@@ -119,12 +110,6 @@ namespace Nautilus.Fxcm.MessageFactories
             order2.SetField(new OrdType(OrdType.STOP));
             order2.SetField(FxcmMessageHelper.GetFixTimeInForce(stopLoss.TimeInForce));
             order2.SetField(new OrderQty(stopLoss.Quantity.Value));
-
-            // Optional tags
-            if (stopLoss.Label.NotNone())
-            {
-                order2.SetField(new SecondaryClOrdID(stopLoss.Label.Value));
-            }
 
             // Stop-loss orders should always have a stop price
             if (stopLoss.Price?.Value != null)
@@ -189,9 +174,6 @@ namespace Nautilus.Fxcm.MessageFactories
                     case OrderType.StopLimit:
                         order1.SetField(new StopPx(entry.Price.Value));
                         break;
-                    case OrderType.MIT:
-                        order1.SetField(new StopPx(entry.Price.Value));
-                        break;
                     case OrderType.Market:
                     case OrderType.Undefined:
                         goto default;
@@ -201,11 +183,6 @@ namespace Nautilus.Fxcm.MessageFactories
             }
 
             // Optional tags
-            if (entry.Label.NotNone())
-            {
-                order1.SetField(new SecondaryClOrdID(entry.Label.Value));
-            }
-
             if (entry.ExpireTime.HasValue)
             {
                 var expireTime = entry.ExpireTime.Value.ToDateTimeUtc();
@@ -224,12 +201,6 @@ namespace Nautilus.Fxcm.MessageFactories
             order2.SetField(FxcmMessageHelper.GetFixOrderType(stopLoss.OrderType));
             order2.SetField(FxcmMessageHelper.GetFixTimeInForce(stopLoss.TimeInForce));
             order2.SetField(new OrderQty(stopLoss.Quantity.Value));
-
-            // Optional tags
-            if (stopLoss.Label.NotNone())
-            {
-                order2.SetField(new SecondaryClOrdID(entry.Label.Value));
-            }
 
             // Stop-loss orders should always have a price
             if (stopLoss.Price?.Value != null)
@@ -254,12 +225,6 @@ namespace Nautilus.Fxcm.MessageFactories
                 order3.SetField(FxcmMessageHelper.GetFixOrderType(takeProfit.OrderType));
                 order3.SetField(FxcmMessageHelper.GetFixTimeInForce(takeProfit.TimeInForce));
                 order3.SetField(new OrderQty(takeProfit.Quantity.Value));
-
-                // Optional tags
-                if (takeProfit.Label.NotNone())
-                {
-                    order3.SetField(new SecondaryClOrdID(entry.Label.Value));
-                }
 
                 // Take-profit orders should always have a limit price
                 if (takeProfit.Price?.Value != null)

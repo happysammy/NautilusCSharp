@@ -86,7 +86,6 @@ namespace Nautilus.Serialization.MessageSerializers
                     package.Add(nameof(cmd.TraderId), ObjectSerializer.Serialize(cmd.TraderId));
                     package.Add(nameof(cmd.AccountId), ObjectSerializer.Serialize(cmd.AccountId));
                     package.Add(nameof(cmd.OrderId), ObjectSerializer.Serialize(cmd.OrderId));
-                    package.Add(nameof(cmd.CancelReason), ObjectSerializer.Serialize(cmd.CancelReason));
                     break;
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(command, nameof(command));
@@ -147,7 +146,6 @@ namespace Nautilus.Serialization.MessageSerializers
                         this.identifierCache.TraderId(unpacked),
                         this.identifierCache.AccountId(unpacked),
                         ObjectDeserializer.AsOrderId(unpacked),
-                        ObjectDeserializer.AsString(unpacked[nameof(CancelOrder.CancelReason)]),
                         id,
                         timestamp);
                 default:

@@ -67,10 +67,8 @@ namespace Nautilus.Serialization.MessageSerializers
                 case OrderInitialized evt:
                     package.Add(nameof(evt.OrderId), ObjectSerializer.Serialize(evt.OrderId));
                     package.Add(nameof(evt.Symbol), ObjectSerializer.Serialize(evt.Symbol));
-                    package.Add(nameof(evt.Label), ObjectSerializer.Serialize(evt.Label));
                     package.Add(nameof(evt.OrderSide), ObjectSerializer.Serialize(evt.OrderSide));
                     package.Add(nameof(evt.OrderType), ObjectSerializer.Serialize(evt.OrderType));
-                    package.Add(nameof(evt.OrderPurpose), ObjectSerializer.Serialize(evt.OrderPurpose));
                     package.Add(nameof(evt.Quantity), ObjectSerializer.Serialize(evt.Quantity));
                     package.Add(nameof(evt.Price), ObjectSerializer.Serialize(evt.Price));
                     package.Add(nameof(evt.TimeInForce), ObjectSerializer.Serialize(evt.TimeInForce));
@@ -93,7 +91,6 @@ namespace Nautilus.Serialization.MessageSerializers
                     package.Add(nameof(evt.AccountId), ObjectSerializer.Serialize(evt.AccountId));
                     package.Add(nameof(evt.OrderId), ObjectSerializer.Serialize(evt.OrderId));
                     package.Add(nameof(evt.OrderIdBroker), ObjectSerializer.Serialize(evt.OrderIdBroker));
-                    package.Add(nameof(evt.Label), ObjectSerializer.Serialize(evt.Label));
                     package.Add(nameof(evt.AcceptedTime), ObjectSerializer.Serialize(evt.AcceptedTime));
                     break;
                 case OrderRejected evt:
@@ -107,7 +104,6 @@ namespace Nautilus.Serialization.MessageSerializers
                     package.Add(nameof(evt.OrderId), ObjectSerializer.Serialize(evt.OrderId));
                     package.Add(nameof(evt.OrderIdBroker), ObjectSerializer.Serialize(evt.OrderIdBroker));
                     package.Add(nameof(evt.Symbol), ObjectSerializer.Serialize(evt.Symbol));
-                    package.Add(nameof(evt.Label), ObjectSerializer.Serialize(evt.Label));
                     package.Add(nameof(evt.OrderSide), ObjectSerializer.Serialize(evt.OrderSide));
                     package.Add(nameof(evt.OrderType), ObjectSerializer.Serialize(evt.OrderType));
                     package.Add(nameof(evt.Quantity), ObjectSerializer.Serialize(evt.Quantity));
@@ -202,10 +198,8 @@ namespace Nautilus.Serialization.MessageSerializers
                     return new OrderInitialized(
                         ObjectDeserializer.AsOrderId(unpacked),
                         this.identifierCache.Symbol(unpacked),
-                        ObjectDeserializer.AsLabel(unpacked),
                         ObjectDeserializer.AsEnum<OrderSide>(unpacked[nameof(OrderInitialized.OrderSide)]),
                         ObjectDeserializer.AsEnum<OrderType>(unpacked[nameof(OrderInitialized.OrderType)]),
-                        ObjectDeserializer.AsEnum<OrderPurpose>(unpacked[nameof(OrderInitialized.OrderPurpose)]),
                         ObjectDeserializer.AsQuantity(unpacked[nameof(OrderInitialized.Quantity)]),
                         ObjectDeserializer.AsNullablePrice(unpacked[nameof(OrderInitialized.Price)]),
                         ObjectDeserializer.AsEnum<TimeInForce>(unpacked[nameof(OrderInitialized.TimeInForce)]),
@@ -236,7 +230,6 @@ namespace Nautilus.Serialization.MessageSerializers
                         this.identifierCache.AccountId(unpacked),
                         ObjectDeserializer.AsOrderId(unpacked),
                         ObjectDeserializer.AsOrderIdBroker(unpacked),
-                        ObjectDeserializer.AsLabel(unpacked),
                         ObjectDeserializer.AsZonedDateTime(unpacked[nameof(OrderAccepted.AcceptedTime)]),
                         id,
                         timestamp);
@@ -254,7 +247,6 @@ namespace Nautilus.Serialization.MessageSerializers
                         ObjectDeserializer.AsOrderId(unpacked),
                         ObjectDeserializer.AsOrderIdBroker(unpacked),
                         this.identifierCache.Symbol(unpacked),
-                        ObjectDeserializer.AsLabel(unpacked),
                         ObjectDeserializer.AsEnum<OrderSide>(unpacked[nameof(OrderWorking.OrderSide)]),
                         ObjectDeserializer.AsEnum<OrderType>(unpacked[nameof(OrderWorking.OrderType)]),
                         ObjectDeserializer.AsQuantity(unpacked[nameof(OrderWorking.Quantity)]),
