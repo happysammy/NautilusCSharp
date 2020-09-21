@@ -15,7 +15,6 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-using System.Diagnostics.CodeAnalysis;
 using Nautilus.Core.Annotations;
 
 namespace Nautilus.DomainModel.Enums
@@ -63,15 +62,5 @@ namespace Nautilus.DomainModel.Enums
         /// the price at which the order can be executed.
         /// </summary>
         StopLimit = 4,
-
-        /// <summary>
-        /// The market-if-touched order type. A market-if-touched order (MIT) is an order to buy
-        /// (or sell) an instrument below (or above) the market. This order is held with the broker
-        /// until the trigger price is touched, and is then submitted as a market order. An MIT
-        /// order is similar to a stop order, except that an MIT sell order is placed above the
-        /// current market price, and a stop sell order is placed below.
-        /// </summary>
-        [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Correct name")]
-        MIT = 5,
     }
 }

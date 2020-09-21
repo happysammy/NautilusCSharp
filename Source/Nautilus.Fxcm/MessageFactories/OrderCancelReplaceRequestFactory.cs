@@ -68,9 +68,6 @@ namespace Nautilus.Fxcm.MessageFactories
                 case OrderType.Stop:
                     message.SetField(new StopPx(modifiedPrice));
                     break;
-                case OrderType.MIT:
-                    message.SetField(new StopPx(modifiedPrice));
-                    break;
                 case OrderType.Market:
                 case OrderType.Undefined:
                     goto default;

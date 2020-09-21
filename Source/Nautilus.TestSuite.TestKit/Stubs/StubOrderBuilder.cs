@@ -17,7 +17,6 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using Nautilus.Core.Types;
 using Nautilus.DomainModel.Aggregates;
 using Nautilus.DomainModel.Enums;
 using Nautilus.DomainModel.Factories;
@@ -34,11 +33,7 @@ namespace Nautilus.TestSuite.TestKit.Stubs
 
         private OrderId OrderId { get; set; } = new OrderId("O-123456");
 
-        private Label OrderLabel { get; set; } = new Label("TEST_ORDER");
-
         private OrderSide OrderSide { get; set; } = OrderSide.Buy;
-
-        private OrderPurpose OrderPurpose { get; set; } = OrderPurpose.None;
 
         private Quantity Quantity { get; set; } = Quantity.Create(100000);
 
@@ -60,13 +55,6 @@ namespace Nautilus.TestSuite.TestKit.Stubs
         public StubOrderBuilder WithOrderId(string orderId)
         {
             this.OrderId = new OrderId(orderId);
-
-            return this;
-        }
-
-        public StubOrderBuilder WithLabel(string label)
-        {
-            this.OrderLabel = new Label(label);
 
             return this;
         }
@@ -118,7 +106,6 @@ namespace Nautilus.TestSuite.TestKit.Stubs
             this.Symbol = new Symbol("AUD/USD", new Venue("FXCM"));
             this.OrderId = new OrderId(orderId);
             this.OrderSide = OrderSide.Buy;
-            this.OrderPurpose = OrderPurpose.Entry;
             this.Quantity = Quantity.Create(100000);
             this.Price = Price.Create(0.80000m, 5);
             this.TimeInForce = TimeInForce.GTD;
@@ -132,7 +119,6 @@ namespace Nautilus.TestSuite.TestKit.Stubs
             this.Symbol = new Symbol("AUD/USD", "FXCM");
             this.OrderId = new OrderId(orderId);
             this.OrderSide = OrderSide.Sell;
-            this.OrderPurpose = OrderPurpose.StopLoss;
             this.Quantity = Quantity.Create(100000);
             this.Price = Price.Create(0.79900m, 5);
             this.TimeInForce = TimeInForce.GTC;
@@ -145,7 +131,6 @@ namespace Nautilus.TestSuite.TestKit.Stubs
             this.Symbol = new Symbol("AUD/USD", new Venue("FXCM"));
             this.OrderId = new OrderId(orderId);
             this.OrderSide = OrderSide.Sell;
-            this.OrderPurpose = OrderPurpose.TakeProfit;
             this.Quantity = Quantity.Create(100000);
             this.Price = Price.Create(0.80100m, 5);
             this.TimeInForce = TimeInForce.GTC;
@@ -158,9 +143,7 @@ namespace Nautilus.TestSuite.TestKit.Stubs
             return OrderFactory.Market(
                 this.OrderId,
                 this.Symbol,
-                this.OrderLabel,
                 this.OrderSide,
-                this.OrderPurpose,
                 this.Quantity,
                 this.Timestamp,
                 Guid.NewGuid());
@@ -171,9 +154,7 @@ namespace Nautilus.TestSuite.TestKit.Stubs
             return OrderFactory.Limit(
                 this.OrderId,
                 this.Symbol,
-                this.OrderLabel,
                 this.OrderSide,
-                this.OrderPurpose,
                 this.Quantity,
                 this.Price,
                 this.TimeInForce,
@@ -187,9 +168,7 @@ namespace Nautilus.TestSuite.TestKit.Stubs
             return OrderFactory.StopMarket(
                 this.OrderId,
                 this.Symbol,
-                this.OrderLabel,
                 this.OrderSide,
-                this.OrderPurpose,
                 this.Quantity,
                 this.Price,
                 this.TimeInForce,
@@ -203,9 +182,7 @@ namespace Nautilus.TestSuite.TestKit.Stubs
             return OrderFactory.StopLimit(
                 this.OrderId,
                 this.Symbol,
-                this.OrderLabel,
                 this.OrderSide,
-                this.OrderPurpose,
                 this.Quantity,
                 this.Price,
                 this.TimeInForce,

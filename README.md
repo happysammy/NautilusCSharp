@@ -2,7 +2,7 @@
 
 ----------
 
-# Nautilus
+# Nautilus Enterprise
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/fb2f64bf5cf8468983dbbd841d29c4e3)](https://app.codacy.com/gh/nautechsystems/Nautilus?utm_source=github.com&utm_medium=referral&utm_content=nautechsystems/Nautilus&utm_campaign=Badge_Grade_Dashboard)
 ![Build](https://github.com/nautechsystems/Nautilus/workflows/build/badge.svg)
@@ -10,11 +10,17 @@
 ![Stable Version](https://img.shields.io/github/v/release/nautechsystems/Nautilus)
 ![Latest Version](https://img.shields.io/github/v/release/nautechsystems/Nautilus?include_prereleases)
 
+**BETA**
+
+- **The integration with NautilusTrader has temporary breaking changes**
+- **The API is still in a state of flux with potential further breaking changes**
+
 ## Introduction
 
-Nautilus is an enterprise grade distributed algorithmic trading platform allowing flexible deployment 
-topologies including embedded/local on a single machine - or distributed across a Cloud/VPC.
-Architectural methodologies include domain driven design, event-sourcing and messaging.
+Nautilus Enterprise is a back-end infrastructure suite supporting algorithmic trading operations. 
+Flexible deployment topologies facilitate running services both embedded/local on a single machine, 
+or distributed across a Cloud/VPC. Architectural methodologies include domain driven design, 
+event-sourcing and messaging.
 
 Nautilus is written entirely in C# for .NET Core and has been open-sourced from working production code.
 Nautilus forms part of larger infrastructure designed and built to support the trading operations of 

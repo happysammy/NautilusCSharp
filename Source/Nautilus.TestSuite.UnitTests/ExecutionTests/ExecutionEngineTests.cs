@@ -18,6 +18,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading.Tasks;
 using Nautilus.Core.Message;
 using Nautilus.DomainModel.Commands;
 using Nautilus.DomainModel.Enums;
@@ -34,7 +35,7 @@ using Xunit.Abstractions;
 namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 {
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
-    public sealed class ExecutionEngineTests
+    public sealed class ExecutionEngineTests : IDisposable
     {
         private readonly MockTradingGateway tradingGateway;
         private readonly MockComponent receiver;
@@ -64,6 +65,14 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             this.engine.Start().Wait();
         }
 
+        public void Dispose()
+        {
+            // Tear down
+            this.tradingGateway.Stop().Wait();
+            this.engine.Stop().Wait();
+            this.receiver.Stop().Wait();
+        }
+
         [Fact]
         internal void OnAccountInquiryCommand_SendsToGateway()
         {
@@ -76,12 +85,11 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Act
             this.engine.Endpoint.SendAsync(command).Wait();
-            this.engine.Stop().Wait();
-            this.receiver.Stop().Wait();
+            Task.Delay(100).Wait();  // Buffer to avoid intermittent tests
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
-            Assert.Equal(3, this.engine.ProcessedCount);
+            Assert.Equal(2, this.engine.ProcessedCount);
             Assert.Equal(1, this.engine.CommandCount);
             Assert.Single(this.tradingGateway.CalledMethods);
             Assert.Equal("AccountInquiry", this.tradingGateway.CalledMethods[0]);
@@ -108,12 +116,11 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Act
             this.engine.Endpoint.SendAsync(command).Wait();
-            this.engine.Stop().Wait();
-            this.receiver.Stop().Wait();
+            Task.Delay(100).Wait();  // Buffer to avoid intermittent tests
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
-            Assert.Equal(3, this.engine.ProcessedCount);
+            Assert.Equal(2, this.engine.ProcessedCount);
             Assert.Equal(1, this.engine.CommandCount);
             Assert.Single(this.tradingGateway.CalledMethods);
             Assert.Single(this.tradingGateway.ReceivedObjects);
@@ -141,14 +148,13 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.engine.Endpoint.SendAsync(command);
             this.engine.Endpoint.SendAsync(command).Wait();
-            this.engine.Stop().Wait();
-            this.receiver.Stop().Wait();
+            this.engine.Endpoint.SendAsync(command).Wait();
+            Task.Delay(100).Wait();  // Buffer to avoid intermittent tests
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
-            Assert.Equal(4, this.engine.ProcessedCount);
+            Assert.Equal(3, this.engine.ProcessedCount);
             Assert.Equal(2, this.engine.CommandCount);
             Assert.Single(this.tradingGateway.CalledMethods);
             Assert.Single(this.tradingGateway.ReceivedObjects);
@@ -177,12 +183,11 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Act
             this.engine.Endpoint.SendAsync(command).Wait();
-            this.engine.Stop().Wait();
-            this.receiver.Stop().Wait();
+            Task.Delay(100).Wait();  // Buffer to avoid intermittent tests
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
-            Assert.Equal(3, this.engine.ProcessedCount);
+            Assert.Equal(2, this.engine.ProcessedCount);
             Assert.Equal(1, this.engine.CommandCount);
             Assert.Single(this.tradingGateway.CalledMethods);
             Assert.Single(this.tradingGateway.ReceivedObjects);
@@ -210,14 +215,13 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.engine.Endpoint.SendAsync(command);
             this.engine.Endpoint.SendAsync(command).Wait();
-            this.engine.Stop().Wait();
-            this.receiver.Stop().Wait();
+            this.engine.Endpoint.SendAsync(command).Wait();
+            Task.Delay(100).Wait();  // Buffer to avoid intermittent tests
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
-            Assert.Equal(4, this.engine.ProcessedCount);
+            Assert.Equal(3, this.engine.ProcessedCount);
             Assert.Equal(2, this.engine.CommandCount);
             Assert.Single(this.tradingGateway.CalledMethods);
             Assert.Single(this.tradingGateway.ReceivedObjects);
@@ -248,21 +252,19 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 traderId,
                 accountId,
                 order.Id,
-                "TEST",
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.engine.Endpoint.SendAsync(submit);
-            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderAcceptedEvent(order));
-            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderWorkingEvent(order));
+            this.engine.Endpoint.SendAsync(submit).Wait();
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderAcceptedEvent(order)).Wait();
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderWorkingEvent(order)).Wait();
             this.engine.Endpoint.SendAsync(cancel).Wait();
-            this.engine.Stop().Wait();
-            this.receiver.Stop().Wait();
+            Task.Delay(100).Wait();  // Buffer to avoid intermittent tests
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
-            Assert.Equal(6, this.engine.ProcessedCount);
+            Assert.Equal(5, this.engine.ProcessedCount);
             Assert.Equal(2, this.engine.CommandCount);
             Assert.Equal(2, this.tradingGateway.CalledMethods.Count);
             Assert.Equal(2, this.tradingGateway.ReceivedObjects.Count);
@@ -283,18 +285,16 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 traderId,
                 accountId,
                 order.Id,
-                "TEST",
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             // Act
             this.engine.Endpoint.SendAsync(command).Wait();
-            this.engine.Stop().Wait();
-            this.receiver.Stop().Wait();
+            Task.Delay(100).Wait();  // Buffer to avoid intermittent tests
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
-            Assert.Equal(3, this.engine.ProcessedCount);
+            Assert.Equal(2, this.engine.ProcessedCount);
             Assert.Equal(1, this.engine.CommandCount);
             Assert.Empty(this.tradingGateway.CalledMethods);
             Assert.Empty(this.tradingGateway.ReceivedObjects);
@@ -329,16 +329,15 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.engine.Endpoint.SendAsync(submit);
-            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderAcceptedEvent(order));
-            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderWorkingEvent(order));
+            this.engine.Endpoint.SendAsync(submit).Wait();
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderAcceptedEvent(order)).Wait();
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderWorkingEvent(order)).Wait();
             this.engine.Endpoint.SendAsync(modify).Wait();
-            this.engine.Stop().Wait();
-            this.receiver.Stop().Wait();
+            Task.Delay(100).Wait();  // Buffer to avoid intermittent tests
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
-            Assert.Equal(6, this.engine.ProcessedCount);
+            Assert.Equal(5, this.engine.ProcessedCount);
             Assert.Equal(2, this.engine.CommandCount);
             Assert.Equal(2, this.engine.EventCount);
             Assert.Equal(2, this.tradingGateway.CalledMethods.Count);
@@ -366,13 +365,12 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.engine.Endpoint.SendAsync(modify).Wait();
-            this.engine.Stop().Wait();
-            this.receiver.Stop().Wait();
+            this.engine.Endpoint.SendAsync(modify);
+            Task.Delay(100).Wait();  // Buffer to avoid intermittent tests
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
-            Assert.Equal(3, this.engine.ProcessedCount);
+            Assert.Equal(2, this.engine.ProcessedCount);
             Assert.Equal(1, this.engine.CommandCount);
             Assert.Equal(0, this.engine.EventCount);
             Assert.Empty(this.tradingGateway.CalledMethods);
@@ -409,14 +407,13 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.engine.Endpoint.SendAsync(submit);
+            this.engine.Endpoint.SendAsync(submit).Wait();
             this.engine.Endpoint.SendAsync(modify).Wait();
-            this.engine.Stop().Wait();
-            this.receiver.Stop().Wait();
+            Task.Delay(100).Wait();  // Buffer to avoid intermittent tests
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
-            Assert.Equal(4, this.engine.ProcessedCount);
+            Assert.Equal(3, this.engine.ProcessedCount);
             Assert.Equal(2, this.engine.CommandCount);
             Assert.Single(this.tradingGateway.CalledMethods);
             Assert.Single(this.tradingGateway.ReceivedObjects);
@@ -461,18 +458,16 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.engine.Endpoint.SendAsync(submit);
-            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderAcceptedEvent(order));
-            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderWorkingEvent(order));
-            this.engine.Endpoint.SendAsync(modify1);
+            this.engine.Endpoint.SendAsync(submit).Wait();
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderAcceptedEvent(order)).Wait();
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderWorkingEvent(order)).Wait();
+            this.engine.Endpoint.SendAsync(modify1).Wait();
             this.engine.Endpoint.SendAsync(modify2).Wait();
-
-            this.engine.Stop().Wait();
-            this.receiver.Stop().Wait();
+            Task.Delay(100).Wait();  // Buffer to avoid intermittent tests
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
-            Assert.Equal(7, this.engine.ProcessedCount);
+            Assert.Equal(6, this.engine.ProcessedCount);
             Assert.Equal(3, this.engine.CommandCount);
             Assert.Equal(2, this.engine.EventCount);
             Assert.Equal(2, this.tradingGateway.CalledMethods.Count);
@@ -489,14 +484,13 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             var @event = StubEventMessageProvider.AccountStateEvent();
 
             // Act
-            this.engine.Endpoint.SendAsync(@event);
-            this.engine.Endpoint.SendAsync(@event);
-            this.engine.Stop().Wait();
-            this.receiver.Stop().Wait();
+            this.engine.Endpoint.SendAsync(@event).Wait();
+            this.engine.Endpoint.SendAsync(@event).Wait();
+            Task.Delay(100).Wait();  // Buffer to avoid intermittent tests
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
-            Assert.Equal(4, this.engine.ProcessedCount);
+            Assert.Equal(3, this.engine.ProcessedCount);
             Assert.Equal(0, this.engine.CommandCount);
             Assert.Equal(2, this.engine.EventCount);
             Assert.Equal(2, this.receiver.Messages.Count);
@@ -523,12 +517,11 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 
             // Act
             this.engine.Endpoint.SendAsync(submitOrder).Wait();
-            this.engine.Stop().Wait();
-            this.receiver.Stop().Wait();
+            Task.Delay(100).Wait();  // Buffer to avoid intermittent tests
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
-            Assert.Equal(3, this.engine.ProcessedCount);
+            Assert.Equal(2, this.engine.ProcessedCount);
             Assert.Equal(1, this.engine.CommandCount);
             Assert.Equal(0, this.engine.EventCount);
             Assert.Single(this.receiver.Messages);
@@ -555,14 +548,13 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.engine.Endpoint.SendAsync(submitOrder);
+            this.engine.Endpoint.SendAsync(submitOrder).Wait();
             this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderAcceptedEvent(order)).Wait();
-            this.engine.Stop().Wait();
-            this.receiver.Stop().Wait();
+            Task.Delay(100).Wait();  // Buffer to avoid intermittent tests
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
-            Assert.Equal(4, this.engine.ProcessedCount);
+            Assert.Equal(3, this.engine.ProcessedCount);
             Assert.Equal(1, this.engine.CommandCount);
             Assert.Equal(1, this.engine.EventCount);
             Assert.Equal(2, this.receiver.Messages.Count);
@@ -589,14 +581,13 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.engine.Endpoint.SendAsync(submitOrder);
+            this.engine.Endpoint.SendAsync(submitOrder).Wait();
             this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderRejectedEvent(order)).Wait();
-            this.engine.Stop().Wait();
-            this.receiver.Stop().Wait();
+            Task.Delay(100).Wait();  // Buffer to avoid intermittent tests
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
-            Assert.Equal(4, this.engine.ProcessedCount);
+            Assert.Equal(3, this.engine.ProcessedCount);
             Assert.Equal(1, this.engine.CommandCount);
             Assert.Equal(1, this.engine.EventCount);
             Assert.Equal(2, this.receiver.Messages.Count);
@@ -632,16 +623,15 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.engine.Endpoint.SendAsync(submit);
-            this.engine.Endpoint.SendAsync(modify);
-            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderAcceptedEvent(order));
+            this.engine.Endpoint.SendAsync(submit).Wait();
+            this.engine.Endpoint.SendAsync(modify).Wait();
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderAcceptedEvent(order)).Wait();
             this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderWorkingEvent(order)).Wait();
-            this.engine.Stop().Wait();
-            this.receiver.Stop().Wait();
+            Task.Delay(100).Wait();  // Buffer to avoid intermittent tests
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
-            Assert.Equal(6, this.engine.ProcessedCount);
+            Assert.Equal(5, this.engine.ProcessedCount);
             Assert.Equal(2, this.engine.CommandCount);
             Assert.Equal(2, this.engine.EventCount);
             Assert.Equal(2, this.tradingGateway.CalledMethods.Count);
@@ -671,15 +661,14 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.engine.Endpoint.SendAsync(submitOrder);
-            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderAcceptedEvent(order));
+            this.engine.Endpoint.SendAsync(submitOrder).Wait();
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderAcceptedEvent(order)).Wait();
             this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderWorkingEvent(order)).Wait();
-            this.engine.Stop().Wait();
-            this.receiver.Stop().Wait();
+            Task.Delay(100).Wait();  // Buffer to avoid intermittent tests
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
-            Assert.Equal(5, this.engine.ProcessedCount);
+            Assert.Equal(4, this.engine.ProcessedCount);
             Assert.Equal(1, this.engine.CommandCount);
             Assert.Equal(2, this.engine.EventCount);
             Assert.Equal(3, this.receiver.Messages.Count);
@@ -715,17 +704,16 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.engine.Endpoint.SendAsync(submit);
-            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderAcceptedEvent(order));
-            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderWorkingEvent(order));
-            this.engine.Endpoint.SendAsync(modify);
+            this.engine.Endpoint.SendAsync(submit).Wait();
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderAcceptedEvent(order)).Wait();
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderWorkingEvent(order)).Wait();
+            this.engine.Endpoint.SendAsync(modify).Wait();
             this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderModifiedEvent(order, Price.Create(1.00010m, 5))).Wait();
-            this.engine.Stop().Wait();
-            this.receiver.Stop().Wait();
+            Task.Delay(100).Wait();  // Buffer to avoid intermittent tests
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
-            Assert.Equal(7, this.engine.ProcessedCount);
+            Assert.Equal(6, this.engine.ProcessedCount);
             Assert.Equal(2, this.engine.CommandCount);
             Assert.Equal(3, this.engine.EventCount);
             Assert.Equal(2, this.tradingGateway.CalledMethods.Count);
@@ -756,16 +744,15 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.engine.Endpoint.SendAsync(submitOrder);
-            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderAcceptedEvent(order));
-            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderWorkingEvent(order));
+            this.engine.Endpoint.SendAsync(submitOrder).Wait();
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderAcceptedEvent(order)).Wait();
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderWorkingEvent(order)).Wait();
             this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderExpiredEvent(order)).Wait();
-            this.engine.Stop().Wait();
-            this.receiver.Stop().Wait();
+            Task.Delay(100).Wait();  // Buffer to avoid intermittent tests
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
-            Assert.Equal(6, this.engine.ProcessedCount);
+            Assert.Equal(5, this.engine.ProcessedCount);
             Assert.Equal(1, this.engine.CommandCount);
             Assert.Equal(3, this.engine.EventCount);
             Assert.Equal(4, this.receiver.Messages.Count);
@@ -792,16 +779,15 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.engine.Endpoint.SendAsync(submitOrder);
-            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderAcceptedEvent(order));
-            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderWorkingEvent(order));
+            this.engine.Endpoint.SendAsync(submitOrder).Wait();
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderAcceptedEvent(order)).Wait();
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderWorkingEvent(order)).Wait();
             this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderCancelledEvent(order)).Wait();
-            this.engine.Stop().Wait();
-            this.receiver.Stop().Wait();
+            Task.Delay(100).Wait();  // Buffer to avoid intermittent tests
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
-            Assert.Equal(6, this.engine.ProcessedCount);
+            Assert.Equal(5, this.engine.ProcessedCount);
             Assert.Equal(1, this.engine.CommandCount);
             Assert.Equal(3, this.engine.EventCount);
             Assert.Equal(4, this.receiver.Messages.Count);
@@ -828,16 +814,15 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.engine.Endpoint.SendAsync(submitOrder);
-            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderAcceptedEvent(order));
-            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderWorkingEvent(order));
+            this.engine.Endpoint.SendAsync(submitOrder).Wait();
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderAcceptedEvent(order)).Wait();
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderWorkingEvent(order)).Wait();
             this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderCancelRejectEvent(order)).Wait();
-            this.engine.Stop().Wait();
-            this.receiver.Stop().Wait();
+            Task.Delay(100).Wait();  // Buffer to avoid intermittent tests
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
-            Assert.Equal(6, this.engine.ProcessedCount);
+            Assert.Equal(5, this.engine.ProcessedCount);
             Assert.Equal(1, this.engine.CommandCount);
             Assert.Equal(3, this.engine.EventCount);
             Assert.Equal(4, this.receiver.Messages.Count);
@@ -864,15 +849,14 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.engine.Endpoint.SendAsync(submitOrder);
-            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderAcceptedEvent(order));
+            this.engine.Endpoint.SendAsync(submitOrder).Wait();
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderAcceptedEvent(order)).Wait();
             this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderFilledEvent(order)).Wait();
-            this.engine.Stop().Wait();
-            this.receiver.Stop().Wait();
+            Task.Delay(100).Wait();  // Buffer to avoid intermittent tests
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
-            Assert.Equal(5, this.engine.ProcessedCount);
+            Assert.Equal(4, this.engine.ProcessedCount);
             Assert.Equal(1, this.engine.CommandCount);
             Assert.Equal(2, this.engine.EventCount);
             Assert.Equal(3, this.receiver.Messages.Count);
@@ -899,18 +883,17 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.engine.Endpoint.SendAsync(submitOrder);
-            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderAcceptedEvent(order));
+            this.engine.Endpoint.SendAsync(submitOrder).Wait();
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderAcceptedEvent(order)).Wait();
             this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderPartiallyFilledEvent(
                 order,
                 Quantity.Create(50000),
                 Quantity.Create(50000))).Wait();
-            this.engine.Stop().Wait();
-            this.receiver.Stop().Wait();
+            Task.Delay(100).Wait();  // Buffer to avoid intermittent tests
 
             // Assert
             Assert.Null(this.engine.UnhandledMessages.FirstOrDefault());
-            Assert.Equal(5, this.engine.ProcessedCount);
+            Assert.Equal(4, this.engine.ProcessedCount);
             Assert.Equal(1, this.engine.CommandCount);
             Assert.Equal(2, this.engine.EventCount);
             Assert.Equal(3, this.receiver.Messages.Count);
@@ -937,12 +920,11 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.engine.Endpoint.SendAsync(submitOrder);
-            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderSubmittedEvent(order));
-            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderAcceptedEvent(order));
+            this.engine.Endpoint.SendAsync(submitOrder).Wait();
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderSubmittedEvent(order)).Wait();
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderAcceptedEvent(order)).Wait();
             this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderFilledEvent(order)).Wait();
-            this.engine.Stop().Wait();
-            this.receiver.Stop().Wait();
+            Task.Delay(100).Wait();  // Buffer to avoid intermittent tests
 
             // Assert
             Assert.Single(this.database.GetPositions());
@@ -977,18 +959,17 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            this.engine.Endpoint.SendAsync(submitOrder1);
-            this.engine.Endpoint.SendAsync(submitOrder2);
-            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderSubmittedEvent(order1));
-            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderSubmittedEvent(order2));
-            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderAcceptedEvent(order1));
-            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderAcceptedEvent(order2));
+            this.engine.Endpoint.SendAsync(submitOrder1).Wait();
+            this.engine.Endpoint.SendAsync(submitOrder2).Wait();
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderSubmittedEvent(order1)).Wait();
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderSubmittedEvent(order2)).Wait();
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderAcceptedEvent(order1)).Wait();
+            this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderAcceptedEvent(order2)).Wait();
             this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderFilledEvent(order1)).Wait();
 
             // Act
             this.engine.Endpoint.SendAsync(StubEventMessageProvider.OrderFilledEvent(order2));
-            this.engine.Stop().Wait();
-            this.receiver.Stop().Wait();
+            Task.Delay(100).Wait();  // Buffer to avoid intermittent tests
 
             // Assert
             Assert.Single(this.database.GetPositions());

@@ -15,7 +15,7 @@ jobs:
       - name: Setup Environment
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 3.1.401
+          dotnet-version: 3.1.402
 
       - name: Set Version
         run: |
