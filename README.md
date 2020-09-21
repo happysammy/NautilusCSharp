@@ -10,9 +10,14 @@
 ![Stable Version](https://img.shields.io/github/v/release/nautechsystems/Nautilus)
 ![Latest Version](https://img.shields.io/github/v/release/nautechsystems/Nautilus?include_prereleases)
 
+**BETA**
+
+- **The integration with NautilusTrader has temporary breaking changes**
+- **The API is still in a state of flux with potential further breaking changes**
+
 ## Introduction
 
-Nautilus Enterprise is a backend infrastructure suite supporting algorithmic trading operations. 
+Nautilus Enterprise is a back-end infrastructure suite supporting algorithmic trading operations. 
 Flexible deployment topologies facilitate running services both embedded/local on a single machine, 
 or distributed across a Cloud/VPC. Architectural methodologies include domain driven design, 
 event-sourcing and messaging.
