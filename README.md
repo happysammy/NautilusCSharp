@@ -1,8 +1,8 @@
-![Nautech Systems](https://github.com/nautechsystems/nautilus_trader/blob/master/docs/artwork/ns-logo.png?raw=true "logo")
+![Nautech Systems](https://github.com/nautechsystems/nautilus_trader/blob/master/docs/artwork/nautech-systems-logo.png?raw=true "logo")
 
 ----------
 
-# Nautilus Enterprise
+# NautilusEnterprise
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/fb2f64bf5cf8468983dbbd841d29c4e3)](https://app.codacy.com/gh/nautechsystems/Nautilus?utm_source=github.com&utm_medium=referral&utm_content=nautechsystems/Nautilus&utm_campaign=Badge_Grade_Dashboard)
 ![Build](https://github.com/nautechsystems/Nautilus/workflows/build/badge.svg)
@@ -17,7 +17,7 @@
 
 ## Introduction
 
-Nautilus Enterprise is a back-end infrastructure suite supporting algorithmic trading operations. 
+NautilusEnterprise is a back-end infrastructure suite supporting algorithmic trading operations. 
 Flexible deployment topologies facilitate running services both embedded/local on a single machine, 
 or distributed across a Cloud/VPC. Architectural methodologies include domain driven design, 
 event-sourcing and messaging.
@@ -33,8 +33,8 @@ through C extension modules.
 > https://github.com/nautechsystems/nautilus_trader
 
 This means the Python ecosystem can be fully leveraged to research, backtest and trade strategies developed 
-through machine learning techniques, with data ingest, order management and risk management
-being handled by the Nautilus platform services. 
+through AI/ML techniques, with data ingest, order management and risk management
+being handled by the Nautilus platform services.
 
 Each Nautilus service uses a common intra-service messaging library built on top of the Task Parallel Library 
 (TPL) Dataflow, which allows the service sub-components to connect to central message buses to fully utilize 

@@ -681,33 +681,25 @@ namespace Nautilus.Redis.Data
                 keyBids,
                 fromTimestamp,
                 toTimestamp,
-                limit,
-                null,
-                null);
+                limit);
 
             output[1] = this.redisDatabase.TimeSeriesRevRange(
                 keyAsks,
                 fromTimestamp,
                 toTimestamp,
-                limit,
-                null,
-                null);
+                limit);
 
             output[2] = this.redisDatabase.TimeSeriesRevRange(
                 keyBidSizes,
                 fromTimestamp,
                 toTimestamp,
-                limit,
-                null,
-                null);
+                limit);
 
             output[3] = this.redisDatabase.TimeSeriesRevRange(
                 keyAskSizes,
                 fromTimestamp,
                 toTimestamp,
-                limit,
-                null,
-                null);
+                limit);
 
             return output;
         }
