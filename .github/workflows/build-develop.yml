@@ -15,24 +15,7 @@ jobs:
       - name: Setup Environment
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 3.1.402
-
-      - name: Set Version
-        run: |
-          echo ::set-env name=VERSION::$(cat Source/version.txt)
-          echo ::set-env name=BUILD_NUMBER::$(echo $GITHUB_RUN_NUMBER)
-
-      - name: Set Naming
-        run: |
-          echo ::set-env name=NAUTILUS_VERSION::$(echo $VERSION.$BUILD_NUMBER-beta)
-          echo ::set-env name=NAUTILUS_RELEASE_NAME::$(echo Nautilus-$VERSION.$BUILD_NUMBER-beta)
-
-      - name: Check Naming
-        run: |
-          echo version: $VERSION
-          echo build: $BUILD_NUMBER
-          echo tag: $NAUTILUS_VERSION
-          echo release: $NAUTILUS_RELEASE_NAME
+          dotnet-version: 3.1.404
 
       - name: Install dependencies
         run: |
