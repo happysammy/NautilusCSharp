@@ -25,7 +25,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="K4os.Compression.LZ4.Streams" Version="1.2.6" />
+        <PackageReference Include="K4os.Compression.LZ4.Streams" Version="1.2.8-beta" />
         <PackageReference Include="NetMQ" Version="4.0.1.6" />
     </ItemGroup>
 
