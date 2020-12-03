@@ -2,19 +2,20 @@
 
 ----------
 
-# NautilusEnterprise
+# NautilusCSharp
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/fb2f64bf5cf8468983dbbd841d29c4e3)](https://app.codacy.com/gh/nautechsystems/Nautilus?utm_source=github.com&utm_medium=referral&utm_content=nautechsystems/Nautilus&utm_campaign=Badge_Grade_Dashboard)
 ![Build](https://github.com/nautechsystems/Nautilus/workflows/build/badge.svg)
 
 **BETA**
 
-- **The integration with NautilusTrader has temporary breaking changes**
+- **This repo is currently unmaintained and will potentially become a C# reference architecture**
+- **The integration with NautilusTrader has breaking changes**
 - **The API is still in a state of flux with potential further breaking changes**
 
 ## Introduction
 
-NautilusEnterprise is a back-end infrastructure suite supporting algorithmic trading operations. 
+NautilusCSharp is a back-end infrastructure suite supporting algorithmic trading operations. 
 Flexible deployment topologies facilitate running services both embedded/local on a single machine, 
 or distributed across a Cloud/VPC. Architectural methodologies include domain driven design, 
 event-sourcing and messaging.
@@ -51,7 +52,6 @@ The repository is grouped into the following solution folders;
   - `Services` provides generic data and execution services.
   - `Infrastructure` provides technology specific implementations. At present utilizing Redis.
   - `Adapters` provides broker specific implementations. At present supporting `FIX4.4` with FXCM.
-  - `Applications` provides `NautilusData` and `NautilusExecutor` ASP.NET Core applications.
   - `TestSuite` provides the unit and integration tests for the codebase.
 
 There is currently a large effort to develop improved documentation.
