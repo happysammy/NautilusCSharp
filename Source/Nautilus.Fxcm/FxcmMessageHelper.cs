@@ -322,7 +322,7 @@ namespace Nautilus.Fxcm
         {
             return message.IsSetField(Tags.ExpireTime)
                 ? ParseTimestamp(message.GetField(Tags.ExpireTime))
-                : (ZonedDateTime?)null;
+                : null;
         }
 
         /// <summary>
