@@ -4,8 +4,8 @@
 
 # NautilusCSharp
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/fb2f64bf5cf8468983dbbd841d29c4e3)](https://app.codacy.com/gh/nautechsystems/Nautilus?utm_source=github.com&utm_medium=referral&utm_content=nautechsystems/Nautilus&utm_campaign=Badge_Grade_Dashboard)
-![Build](https://github.com/nautechsystems/Nautilus/workflows/build/badge.svg)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/fb2f64bf5cf8468983dbbd841d29c4e3)](https://app.codacy.com/gh/nautechsystems/NautilusCSharp?utm_source=github.com&utm_medium=referral&utm_content=nautechsystems/NautilusCSharp&utm_campaign=Badge_Grade_Dashboard)
+![Build](https://img.shields.io/github/workflow/status/nautechsystems/NautilusCSharp/build)
 
 **BETA**
 
