@@ -29,7 +29,7 @@ jobs:
 #          cd RedisTimeSeries
 #          sudo make build
 #          cd -
-#          redis-server --daemonize yes
+          redis-server --daemonize yes
 #          redis-cli MODULE LOAD /home/runner/work/Nautilus/Nautilus/RedisTimeSeries/bin/linux-x64-release/redistimeseries.so
 
       - name: Test
