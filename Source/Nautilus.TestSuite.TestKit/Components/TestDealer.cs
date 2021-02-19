@@ -101,22 +101,22 @@ namespace Nautilus.TestSuite.TestKit.Components
             {
                 EncryptionProvider.SetupSocket(encryption, this.socketOutbound);
                 this.Logger.LogInformation(
-                    LogId.Networking,
+                    LogId.Network,
                     $"{encryption.Algorithm} encryption setup for connections to {this.ServerReqAddress}");
 
                 EncryptionProvider.SetupSocket(encryption, this.socketInbound);
                 this.Logger.LogInformation(
-                    LogId.Networking,
+                    LogId.Network,
                     $"{encryption.Algorithm} encryption setup for connections to {this.ServerResAddress}");
             }
             else
             {
                 this.Logger.LogWarning(
-                    LogId.Networking,
+                    LogId.Network,
                     $"No encryption setup for connections to {this.ServerReqAddress}");
 
                 this.Logger.LogWarning(
-                    LogId.Networking,
+                    LogId.Network,
                     $"No encryption setup for connections to {this.ServerResAddress}");
             }
 
@@ -245,10 +245,10 @@ namespace Nautilus.TestSuite.TestKit.Components
             this.socketOutbound.Connect(this.ServerReqAddress.Value);
             this.socketInbound.Connect(this.ServerResAddress.Value);
             this.Logger.LogInformation(
-                LogId.Networking,
+                LogId.Network,
                 $"Connecting {this.socketInbound.GetType().Name} to {this.ServerReqAddress}...");
             this.Logger.LogInformation(
-                LogId.Networking,
+                LogId.Network,
                 $"Connecting {this.socketInbound.GetType().Name} to {this.ServerResAddress}...");
         }
 
@@ -258,10 +258,10 @@ namespace Nautilus.TestSuite.TestKit.Components
             this.socketOutbound.Disconnect(this.ServerReqAddress.Value);
             this.socketInbound.Disconnect(this.ServerResAddress.Value);
             this.Logger.LogInformation(
-                LogId.Networking,
+                LogId.Network,
                 $"Disconnected {this.socketInbound.GetType().Name} from {this.ServerReqAddress}");
             this.Logger.LogInformation(
-                LogId.Networking,
+                LogId.Network,
                 $"Disconnected {this.socketInbound.GetType().Name} from {this.ServerResAddress}");
         }
 

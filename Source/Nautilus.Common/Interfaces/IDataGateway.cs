@@ -61,21 +61,21 @@ namespace Nautilus.Common.Interfaces
         void MarketDataSubscribe(Symbol symbol);
 
         /// <summary>
-        /// Handles received ticks.
+        /// Handles received quote ticks.
         /// </summary>
-        /// <param name="tick">The tick.</param>
-        void OnData(Tick tick);
+        /// <param name="tick">The quote tick.</param>
+        void OnData(QuoteTick tick);
+
+        /// <summary>
+        /// Handles received trade ticks.
+        /// </summary>
+        /// <param name="tick">The trade tick.</param>
+        void OnData(TradeTick tick);
 
         /// <summary>
         /// Handles the collection of received instruments.
         /// </summary>
         /// <param name="instruments">The instruments collection.</param>
         void OnData(IEnumerable<Instrument> instruments);
-
-        /// <summary>
-        /// Handles received general messages.
-        /// </summary>
-        /// <param name="message">The message.</param>
-        void OnMessage(string message);
     }
 }

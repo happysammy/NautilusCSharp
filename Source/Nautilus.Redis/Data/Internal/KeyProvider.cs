@@ -31,12 +31,12 @@ namespace Nautilus.Redis.Data.Internal
     {
         private const string NautilusData = nameof(NautilusData) + ":" + nameof(Nautilus.Data);
         private const string Prices = nameof(Prices);
-        private const string Volumes = nameof(Volumes);
+        private const string Sizes = nameof(Sizes);
         private const string Bars = nameof(Bars);
         private const string Instruments = nameof(Instruments);
 
         private static readonly string PricesNamespace = $"{NautilusData}:{Prices}";
-        private static readonly string VolumesNamespace = $"{NautilusData}:{Volumes}";
+        private static readonly string SizesNamespace = $"{NautilusData}:{Sizes}";
         private static readonly string BarsNamespace = $"{NautilusData}:{Bars}";
         private static readonly string InstrumentsNamespace = $"{NautilusData}:{Instruments}";
 
@@ -57,9 +57,9 @@ namespace Nautilus.Redis.Data.Internal
         /// <param name="symbol">The symbol for the key.</param>
         /// <param name="priceType">The price type for the key.</param>
         /// <returns>A key string.</returns>
-        internal static string GetVolumesKey(Symbol symbol, PriceType priceType)
+        internal static string GetSizesKey(Symbol symbol, PriceType priceType)
         {
-            return $"{VolumesNamespace}:{symbol.Venue.Value}:{symbol.Code}:{priceType.ToString()}";
+            return $"{SizesNamespace}:{symbol.Venue.Value}:{symbol.Code}:{priceType.ToString()}";
         }
 
         /// <summary>
@@ -75,57 +75,57 @@ namespace Nautilus.Redis.Data.Internal
                 barType.Specification.PriceType);
         }
 
-        /// <summary>
-        /// Returns a highs key from the given arguments.
-        /// </summary>
-        /// <param name="barType">The bar type for the key.</param>
-        /// <returns>A key string.</returns>
-        internal static string GetBarHighsKey(BarType barType)
-        {
-            return GetBarHighsKey(
-                barType.Symbol,
-                barType.Specification.BarStructure,
-                barType.Specification.PriceType);
-        }
-
-        /// <summary>
-        /// Returns a lows key from the given arguments.
-        /// </summary>
-        /// <param name="barType">The bar type for the key.</param>
-        /// <returns>A key string.</returns>
-        internal static string GetBarLowsKey(BarType barType)
-        {
-            return GetBarLowsKey(
-                barType.Symbol,
-                barType.Specification.BarStructure,
-                barType.Specification.PriceType);
-        }
-
-        /// <summary>
-        /// Returns a closes key from the given arguments.
-        /// </summary>
-        /// <param name="barType">The bar type for the key.</param>
-        /// <returns>A key string.</returns>
-        internal static string GetBarClosesKey(BarType barType)
-        {
-            return GetBarClosesKey(
-                barType.Symbol,
-                barType.Specification.BarStructure,
-                barType.Specification.PriceType);
-        }
-
-        /// <summary>
-        /// Returns a volumes key from the given arguments.
-        /// </summary>
-        /// <param name="barType">The bar type for the key.</param>
-        /// <returns>A key string.</returns>
-        internal static string GetBarVolumesKey(BarType barType)
-        {
-            return GetBarVolumesKey(
-                barType.Symbol,
-                barType.Specification.BarStructure,
-                barType.Specification.PriceType);
-        }
+        // /// <summary>
+        // /// Returns a highs key from the given arguments.
+        // /// </summary>
+        // /// <param name="barType">The bar type for the key.</param>
+        // /// <returns>A key string.</returns>
+        // internal static string GetBarHighsKey(BarType barType)
+        // {
+        //     return GetBarHighsKey(
+        //         barType.Symbol,
+        //         barType.Specification.BarStructure,
+        //         barType.Specification.PriceType);
+        // }
+        //
+        // /// <summary>
+        // /// Returns a lows key from the given arguments.
+        // /// </summary>
+        // /// <param name="barType">The bar type for the key.</param>
+        // /// <returns>A key string.</returns>
+        // internal static string GetBarLowsKey(BarType barType)
+        // {
+        //     return GetBarLowsKey(
+        //         barType.Symbol,
+        //         barType.Specification.BarStructure,
+        //         barType.Specification.PriceType);
+        // }
+        //
+        // /// <summary>
+        // /// Returns a closes key from the given arguments.
+        // /// </summary>
+        // /// <param name="barType">The bar type for the key.</param>
+        // /// <returns>A key string.</returns>
+        // internal static string GetBarClosesKey(BarType barType)
+        // {
+        //     return GetBarClosesKey(
+        //         barType.Symbol,
+        //         barType.Specification.BarStructure,
+        //         barType.Specification.PriceType);
+        // }
+        //
+        // /// <summary>
+        // /// Returns a volumes key from the given arguments.
+        // /// </summary>
+        // /// <param name="barType">The bar type for the key.</param>
+        // /// <returns>A key string.</returns>
+        // internal static string GetBarVolumesKey(BarType barType)
+        // {
+        //     return GetBarVolumesKey(
+        //         barType.Symbol,
+        //         barType.Specification.BarStructure,
+        //         barType.Specification.PriceType);
+        // }
 
         /// <summary>
         /// Returns a opens key from the given arguments.

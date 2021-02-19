@@ -28,7 +28,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.PrimitivesTests
 #pragma warning disable 8625
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Test Suite")]
     [SuppressMessage("ReSharper", "SA1131", Justification = "Test Suite")]
-    public sealed class DecimalNumberTests
+    public sealed class Decimal64Tests
     {
         [Fact]
         internal void Value_WithValidValueGiven_ReturnsExpectedValue()
@@ -154,7 +154,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.PrimitivesTests
             Assert.Equal("0.0", number1.ToString());
         }
 
-        private sealed class TestDecimal : DecimalNumber
+        private sealed class TestDecimal : Decimal64
         {
             public TestDecimal(decimal value, byte precision = 1)
                 : base(value, precision)

@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
-        <LangVersion>8</LangVersion>
+        <TargetFramework>netcoreapp5.0</TargetFramework>
+        <LangVersion>9</LangVersion>
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
@@ -20,8 +20,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="NodaTime" Version="3.0.0" />
-        <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.205">
+        <PackageReference Include="NodaTime" Version="3.0.5" />
+        <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.321">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

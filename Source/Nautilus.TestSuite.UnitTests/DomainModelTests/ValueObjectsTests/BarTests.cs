@@ -42,12 +42,12 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
                 Price.Create(0.80010m, 5),
                 Price.Create(0.79990m, 5),
                 Price.Create(0.80001m, 5),
-                Volume.Create(1000000),
+                Quantity.Create(1000000),
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            var barString = bar.ToString();
-            var result = Bar.FromString(barString);
+            var barString = bar.ToSerializableString();
+            var result = Bar.FromSerializableString(barString);
 
             // Assert
             Assert.Equal(bar, result);
@@ -62,7 +62,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
                 Price.Create(0.80010m, 5),
                 Price.Create(0.79990m, 5),
                 Price.Create(0.80001m, 5),
-                Volume.Create(1000000),
+                Quantity.Create(1000000),
                 StubZonedDateTime.UnixEpoch());
 
             var bar2 = new Bar(
@@ -70,7 +70,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
                 Price.Create(0.80010m, 5),
                 Price.Create(0.79990m, 5),
                 Price.Create(0.80001m, 5),
-                Volume.Create(1000000),
+                Quantity.Create(1000000),
                 StubZonedDateTime.UnixEpoch());
 
             // Act
@@ -91,7 +91,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
                 Price.Create(0.80010m, 5),
                 Price.Create(0.79990m, 5),
                 Price.Create(0.80001m, 5),
-                Volume.Create(1000000),
+                Quantity.Create(1000000),
                 StubZonedDateTime.UnixEpoch());
 
             var bar2 = new Bar(
@@ -99,7 +99,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
                 Price.Create(0.80010m, 5),
                 Price.Create(0.79990m, 5),
                 Price.Create(0.80001m, 5),
-                Volume.Create(1000000),
+                Quantity.Create(1000000),
                 StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1));
 
             // Act
@@ -120,7 +120,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
                 Price.Create(0.80010m, 5),
                 Price.Create(0.79990m, 5),
                 Price.Create(0.80001m, 5),
-                Volume.Create(1000000),
+                Quantity.Create(1000000),
                 StubZonedDateTime.UnixEpoch());
 
             // Act
@@ -140,7 +140,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
                 Price.Create(0.80010m, 5),
                 Price.Create(0.79990m, 5),
                 Price.Create(0.80001m, 5),
-                Volume.Create(1000000),
+                Quantity.Create(1000000),
                 StubZonedDateTime.UnixEpoch());
 
             // Act

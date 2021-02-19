@@ -38,7 +38,6 @@ namespace Nautilus.TestSuite.UnitTests.TestKitTests.TestDoublesTests
             // Assert
             Assert.Equal(new Symbol("AUD/USD", new Venue("FXCM")), order.Symbol);
             Assert.Equal("O-123456", order.Id.Value);
-            Assert.Equal("TEST_ORDER", order.Label.Value);
             Assert.Equal(OrderSide.Buy, order.OrderSide);
             Assert.Equal(OrderType.Stop, order.OrderType);
             Assert.Equal(Quantity.Create(100000), order.Quantity);
@@ -56,7 +55,6 @@ namespace Nautilus.TestSuite.UnitTests.TestKitTests.TestDoublesTests
             var order = new StubOrderBuilder()
                .WithSymbol(new Symbol("AUD/USD", new Venue("FXCM")))
                .WithOrderId("O-678910")
-               .WithLabel("TEST_ORDER2")
                .WithOrderSide(OrderSide.Sell)
                .WithQuantity(Quantity.Create(100000))
                .WithPrice(Price.Create(1.00000m, 5))
@@ -68,7 +66,6 @@ namespace Nautilus.TestSuite.UnitTests.TestKitTests.TestDoublesTests
             // Assert
             Assert.Equal(new Symbol("AUD/USD", new Venue("FXCM")), order.Symbol);
             Assert.Equal("O-678910", order.Id.Value);
-            Assert.Equal("TEST_ORDER2", order.Label.Value);
             Assert.Equal(OrderSide.Sell, order.OrderSide);
             Assert.Equal(OrderType.Stop, order.OrderType);
             Assert.Equal(Quantity.Create(100000), order.Quantity);

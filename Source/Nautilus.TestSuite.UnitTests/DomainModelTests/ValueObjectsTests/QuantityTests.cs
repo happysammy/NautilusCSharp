@@ -108,7 +108,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
             var quantity2 = Quantity.Create(amount2);
 
             // Act
-            var result = quantity1.Subtract(quantity2);
+            var result = quantity1.Sub(quantity2);
 
             // Assert
             Assert.Equal(expected, result.Value);

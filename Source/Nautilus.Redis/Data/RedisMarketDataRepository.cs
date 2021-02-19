@@ -22,7 +22,6 @@ using Nautilus.Common.Data;
 using Nautilus.Common.Interfaces;
 using Nautilus.Common.Messages.Commands;
 using Nautilus.Core.Correctness;
-using Nautilus.Core.Extensions;
 using Nautilus.Data.Interfaces;
 using Nautilus.DomainModel.Entities;
 using Nautilus.DomainModel.Enums;
@@ -43,12 +42,14 @@ namespace Nautilus.Redis.Data
     /// </summary>
     public sealed class RedisMarketDataRepository : DataBusConnected, ITickRepository, IBarRepository, IRepository
     {
+        private const long MillisecondsPerDay = 24 * 60 * 60 * 1000;  // 86,400,000ms
+
         private readonly IServer redisServer;
         private readonly IDatabase redisDatabase;
-        private readonly long retentionTimeTicks;
+        private readonly long retentionTimeTicksMs;
         private readonly Dictionary<Symbol, int> pricePrecisions;
         private readonly Dictionary<Symbol, int> sizePrecisions;
-        private readonly Dictionary<BarStructure, long> retentionTimeBars;
+        private readonly Dictionary<BarStructure, long> retentionTimeBarsMs;
         private readonly Dictionary<BarStructure, long> timeBuckets;
 
         /// <summary>
@@ -57,10 +58,14 @@ namespace Nautilus.Redis.Data
         /// <param name="container">The componentry container.</param>
         /// <param name="dataBusAdapter">The data bus adapter for the component.</param>
         /// <param name="connection">The clients manager.</param>
+        /// <param name="retentionTimeTicksDays">The rolling retention time for tick data in days.</param>
+        /// <param name="retentionTimeBarsDays">The rolling retention time for bar data in days.</param>
         public RedisMarketDataRepository(
             IComponentryContainer container,
             IDataBusAdapter dataBusAdapter,
-            ConnectionMultiplexer connection)
+            ConnectionMultiplexer connection,
+            int retentionTimeTicksDays,
+            IReadOnlyDictionary<BarStructure, int> retentionTimeBarsDays)
             : base(container, dataBusAdapter)
         {
             this.redisServer = connection.GetServer(RedisConstants.Localhost, RedisConstants.DefaultPort);
@@ -69,39 +74,43 @@ namespace Nautilus.Redis.Data
             this.pricePrecisions = new Dictionary<Symbol, int>();
             this.sizePrecisions = new Dictionary<Symbol, int>();
 
-            // TODO: Retention time config
-            this.retentionTimeTicks = 1000 * 60 * 60 * 24;         // (1 day - milliseconds)
-            this.retentionTimeBars = new Dictionary<BarStructure, long>
-            {
-                { BarStructure.Minute, 1000 * 60 * 60 * 24 * 5 },  // (1 trading week - milliseconds)
-                { BarStructure.Hour, 1000 * 60 * 60 * 24 * 20 },   // (1 trading month - milliseconds)
-            };
+            this.retentionTimeTicksMs = retentionTimeTicksDays * MillisecondsPerDay;
+            this.retentionTimeBarsMs = new Dictionary<BarStructure, long>();
 
+            // Configure retention times converting to milliseconds
+            foreach (var (barStructure, retentionDays) in retentionTimeBarsDays)
+            {
+                this.retentionTimeBarsMs.Add(barStructure, retentionDays * MillisecondsPerDay);
+            }
+
+            // Hardcode time bucket constants
             this.timeBuckets = new Dictionary<BarStructure, long>
             {
+                { BarStructure.Second, 1000 },
                 { BarStructure.Minute, 60000 },
-                { BarStructure.Hour, 3600000 }
+                { BarStructure.Hour, 3600000 },
+                { BarStructure.Day, 86400000 }
             };
 
-            this.RegisterHandler<Tick>(this.OnTick);
+            this.RegisterHandler<QuoteTick>(this.OnTick);
             this.RegisterHandler<Instrument>(this.OnInstrument);
 
-            this.Subscribe<Tick>();
+            this.Subscribe<QuoteTick>();
             this.Subscribe<Instrument>();
         }
 
         /// <inheritdoc />
-        public void Ingest(Tick tick)
+        public void Ingest(QuoteTick tick)
         {
             var keyBidPrices = KeyProvider.GetPricesKey(tick.Symbol, PriceType.Bid);
             var keyAskPrices = KeyProvider.GetPricesKey(tick.Symbol, PriceType.Ask);
-            var keyBidVolumes = KeyProvider.GetVolumesKey(tick.Symbol, PriceType.Bid);
-            var keyAskVolumes = KeyProvider.GetVolumesKey(tick.Symbol, PriceType.Ask);
+            var keyBidSizes = KeyProvider.GetSizesKey(tick.Symbol, PriceType.Bid);
+            var keyAskSizes = KeyProvider.GetSizesKey(tick.Symbol, PriceType.Ask);
 
             this.CheckPricesTimeSeries(keyBidPrices, tick.Symbol, PriceType.Bid);
             this.CheckPricesTimeSeries(keyAskPrices, tick.Symbol, PriceType.Ask);
-            this.CheckVolumesTimeSeries(keyBidVolumes, tick.Symbol, PriceType.Bid);
-            this.CheckVolumesTimeSeries(keyAskVolumes, tick.Symbol, PriceType.Ask);
+            this.CheckSizesTimeSeries(keyBidSizes, tick.Symbol, PriceType.Bid);
+            this.CheckSizesTimeSeries(keyAskSizes, tick.Symbol, PriceType.Ask);
 
             var timestamp = new TimeStamp(tick.Timestamp.ToInstant().ToUnixTimeMilliseconds());
 
@@ -109,8 +118,8 @@ namespace Nautilus.Redis.Data
             {
                 (keyBidPrices, timestamp, (double)tick.Bid.Value),
                 (keyAskPrices, timestamp, (double)tick.Ask.Value),
-                (keyBidVolumes, timestamp, (double)tick.BidSize.Value),
-                (keyAskVolumes, timestamp, (double)tick.AskSize.Value)
+                (keyBidSizes, timestamp, (double)tick.BidSize.Value),
+                (keyAskSizes, timestamp, (double)tick.AskSize.Value)
             };
 
             this.redisDatabase.TimeSeriesMAdd(input);
@@ -131,8 +140,8 @@ namespace Nautilus.Redis.Data
         {
             return this.KeyExists(KeyProvider.GetPricesKey(symbol, PriceType.Bid)) &&
                    this.KeyExists(KeyProvider.GetPricesKey(symbol, PriceType.Ask)) &&
-                   this.KeyExists(KeyProvider.GetVolumesKey(symbol, PriceType.Bid)) &&
-                   this.KeyExists(KeyProvider.GetVolumesKey(symbol, PriceType.Ask));
+                   this.KeyExists(KeyProvider.GetSizesKey(symbol, PriceType.Bid)) &&
+                   this.KeyExists(KeyProvider.GetSizesKey(symbol, PriceType.Ask));
         }
 
         /// <inheritdoc />
@@ -179,7 +188,7 @@ namespace Nautilus.Redis.Data
         }
 
         /// <inheritdoc />
-        public Tick[] GetTicks(
+        public QuoteTick[] GetTicks(
             Symbol symbol,
             ZonedDateTime? fromDateTime,
             ZonedDateTime? toDateTime,
@@ -197,7 +206,7 @@ namespace Nautilus.Redis.Data
             var pricePrecision = this.pricePrecisions[symbol];
             var sizePrecision = this.sizePrecisions[symbol];
 
-            var ticks = new Tick[tickValues[0].Count];
+            var ticks = new QuoteTick[tickValues[0].Count];
             for (var i = 0; i < tickValues[0].Count; i++)
             {
                 ticks[i] = BuildTick(
@@ -238,10 +247,12 @@ namespace Nautilus.Redis.Data
             var priceFormatting = $"F{this.pricePrecisions[symbol]}";
             var sizeFormatting = $"F{this.sizePrecisions[symbol]}";
 
-            var data = new byte[tickValues[0].Count][];
-            for (var i = 0; i < tickValues[0].Count; i++)
+            var rowCount = tickValues[0].Count;
+            var index = 0;
+            var data = new byte[rowCount][];
+            for (var i = rowCount - 1; i >= 0; i--)  // Reverse loop as data arrives in reverse
             {
-                data[i] = EncodeTick(
+                data[index] = EncodeTick(
                     tickValues[0][i].Val,
                     tickValues[1][i].Val,
                     tickValues[2][i].Val,
@@ -249,6 +260,8 @@ namespace Nautilus.Redis.Data
                     tickValues[0][i].Time,
                     priceFormatting,
                     sizeFormatting);
+
+                index++;
             }
 
             return data;
@@ -376,7 +389,7 @@ namespace Nautilus.Redis.Data
                 : new TimeStamp(dateTime.Value.ToInstant().ToUnixTimeMilliseconds());
         }
 
-        private void OnTick(Tick tick)
+        private void OnTick(QuoteTick tick)
         {
             this.Ingest(tick);
         }
@@ -408,19 +421,19 @@ namespace Nautilus.Redis.Data
             }
         }
 
-        private void CheckVolumesTimeSeries(string key, Symbol symbol, PriceType priceType)
+        private void CheckSizesTimeSeries(string key, Symbol symbol, PriceType priceType)
         {
             if (!this.KeyExists(key))
             {
-                this.SetupVolumesTimeSeries(key, symbol, priceType);
+                this.SetupSizesTimeSeries(key, symbol, priceType);
             }
         }
 
         private void SetupPricesTimeSeries(string key, Symbol symbol, PriceType priceType)
         {
-            this.redisDatabase.TimeSeriesCreate(key, this.retentionTimeTicks);
+            this.redisDatabase.TimeSeriesCreate(key, this.retentionTimeTicksMs);
 
-            foreach (var (barStructure, retentionTime) in this.retentionTimeBars)
+            foreach (var (barStructure, retentionTime) in this.retentionTimeBarsMs)
             {
                 // Bars
                 var keyOpens = KeyProvider.GetBarOpensKey(symbol, barStructure, priceType);
@@ -442,11 +455,11 @@ namespace Nautilus.Redis.Data
             }
         }
 
-        private void SetupVolumesTimeSeries(string key, Symbol symbol, PriceType priceType)
+        private void SetupSizesTimeSeries(string key, Symbol symbol, PriceType priceType)
         {
-            this.redisDatabase.TimeSeriesCreate(key, this.retentionTimeTicks);
+            this.redisDatabase.TimeSeriesCreate(key, this.retentionTimeTicksMs);
 
-            foreach (var (barStructure, retentionTime) in this.retentionTimeBars)
+            foreach (var (barStructure, retentionTime) in this.retentionTimeBarsMs)
             {
                 var keyVolumes = KeyProvider.GetBarVolumesKey(symbol, barStructure, priceType);
 
@@ -473,18 +486,22 @@ namespace Nautilus.Redis.Data
                 toTimestamp,
                 limit);
 
-            var bars = new Bar[barValues[0].Count];
-            for (var i = 0; i < barValues[0].Count; i++)
+            var rowCount = barValues[0].Count;
+            var index = 0;
+            var bars = new Bar[rowCount];
+            for (var i = rowCount - 1; i >= 0; i--)  // Reverse loop as data arrives in reverse
             {
-                bars[i] = BuildBar(
+                bars[index] = BuildBar(
                     barValues[0][i].Val,
                     barValues[1][i].Val,
                     barValues[2][i].Val,
                     barValues[3][i].Val,
                     barValues[4][i].Val,
-                    barValues[3][i].Time + timeBucket,
+                    barValues[3][i].Time + timeBucket,  // End of the tick bucket
                     pricePrecision,
                     sizePrecision);
+
+                index++;
             }
 
             return new BarDataFrame(barType, bars);
@@ -522,18 +539,22 @@ namespace Nautilus.Redis.Data
             pricePrecision += 1;  // To accomodate mid rounding
             sizePrecision += 1;   // To accomodate mid rounding
 
-            var bars = new Bar[bidValues[0].Count];
-            for (var i = 0; i < bidValues[0].Count; i++)
+            var rowCount = bidValues[0].Count;
+            var index = 0;
+            var bars = new Bar[rowCount];
+            for (var i = rowCount - 1; i >= 0; i--)  // Reverse loop as data arrives in reverse
             {
-                bars[i] = BuildBar(
+                bars[index] = BuildBar(
                     (bidValues[0][i].Val + askValues[0][i].Val) / 2,
                     (bidValues[1][i].Val + askValues[1][i].Val) / 2,
                     (bidValues[2][i].Val + askValues[2][i].Val) / 2,
                     (bidValues[3][i].Val + askValues[3][i].Val) / 2,
-                    (bidValues[4][i].Val + askValues[4][i].Val) / 2,
-                    bidValues[3][i].Time + timeBucket,
+                    bidValues[4][i].Val + askValues[4][i].Val,
+                    bidValues[3][i].Time + timeBucket,  // End of the tick bucket
                     pricePrecision,
                     sizePrecision);
+
+                index++;
             }
 
             return new BarDataFrame(barType, bars);
@@ -557,18 +578,22 @@ namespace Nautilus.Redis.Data
             var priceFormatting = $"F{pricePrecision}";
             var sizeFormatting = $"F{sizePrecision}";
 
-            var data = new byte[barValues[0].Count][];
-            for (var i = 0; i < barValues[0].Count; i++)
+            var rowCount = barValues[0].Count;
+            var index = 0;
+            var data = new byte[rowCount][];
+            for (var i = rowCount - 1; i >= 0; i--)  // Reverse loop as data arrives in reverse
             {
-                data[i] = EncodeBar(
+                data[index] = EncodeBar(
                     barValues[0][i].Val,
                     barValues[1][i].Val,
                     barValues[2][i].Val,
                     barValues[3][i].Val,
                     barValues[4][i].Val,
-                    barValues[3][i].Time + timeBucket,
+                    barValues[3][i].Time + timeBucket,  // End of the tick bucket
                     priceFormatting,
                     sizeFormatting);
+
+                index++;
             }
 
             return data;
@@ -606,18 +631,22 @@ namespace Nautilus.Redis.Data
             var priceFormatting = $"F{pricePrecision + 1}";
             var sizeFormatting = $"F{sizePrecision + 1}";
 
-            var data = new byte[bidValues[0].Count][];
-            for (var i = 0; i < bidValues[0].Count; i++)
+            var rowCount = bidValues[0].Count;
+            var index = 0;
+            var data = new byte[rowCount][];
+            for (var i = rowCount - 1; i >= 0; i--)  // Reverse loop as data arrives in reverse
             {
-                data[i] = EncodeBar(
+                data[index] = EncodeBar(
                     (bidValues[0][i].Val + askValues[0][i].Val) / 2,
                     (bidValues[1][i].Val + askValues[1][i].Val) / 2,
                     (bidValues[2][i].Val + askValues[2][i].Val) / 2,
                     (bidValues[3][i].Val + askValues[3][i].Val) / 2,
-                    (bidValues[4][i].Val + askValues[4][i].Val) / 2,
-                    bidValues[3][i].Time + timeBucket,
+                    bidValues[4][i].Val + askValues[4][i].Val,
+                    bidValues[3][i].Time + timeBucket,  // End of the tick bucket
                     priceFormatting,
                     sizeFormatting);
+
+                index++;
             }
 
             return data;
@@ -631,8 +660,8 @@ namespace Nautilus.Redis.Data
         {
             var keyBids = KeyProvider.GetPricesKey(symbol, PriceType.Bid);
             var keyAsks = KeyProvider.GetPricesKey(symbol, PriceType.Ask);
-            var keyBidSizes = KeyProvider.GetVolumesKey(symbol, PriceType.Bid);
-            var keyAskSizes = KeyProvider.GetVolumesKey(symbol, PriceType.Ask);
+            var keyBidSizes = KeyProvider.GetSizesKey(symbol, PriceType.Bid);
+            var keyAskSizes = KeyProvider.GetSizesKey(symbol, PriceType.Ask);
 
             var output = new IReadOnlyList<TimeSeriesTuple>[4];
 
@@ -652,33 +681,25 @@ namespace Nautilus.Redis.Data
                 keyBids,
                 fromTimestamp,
                 toTimestamp,
-                limit,
-                null,
-                null);
+                limit);
 
             output[1] = this.redisDatabase.TimeSeriesRevRange(
                 keyAsks,
                 fromTimestamp,
                 toTimestamp,
-                limit,
-                null,
-                null);
+                limit);
 
             output[2] = this.redisDatabase.TimeSeriesRevRange(
                 keyBidSizes,
                 fromTimestamp,
                 toTimestamp,
-                limit,
-                null,
-                null);
+                limit);
 
             output[3] = this.redisDatabase.TimeSeriesRevRange(
                 keyAskSizes,
                 fromTimestamp,
                 toTimestamp,
-                limit,
-                null,
-                null);
+                limit);
 
             return output;
         }
@@ -730,16 +751,14 @@ namespace Nautilus.Redis.Data
                 return output;
             }
 
-            var timeBucket = period == 1
-                ? (long?) null
-                : this.timeBuckets[barStructure] * period;
+            var timeBucket = this.timeBuckets[barStructure] * period;
 
             output[0] = this.redisDatabase.TimeSeriesRevRange(
                 keyOpens,
                 fromTimestamp,
                 toTimestamp,
                 count,
-                null,
+                Aggregation.FIRST,
                 timeBucket);
 
             output[1] = this.redisDatabase.TimeSeriesRevRange(
@@ -747,7 +766,7 @@ namespace Nautilus.Redis.Data
                 fromTimestamp,
                 toTimestamp,
                 count,
-                null,
+                Aggregation.MAX,
                 timeBucket);
 
             output[2] = this.redisDatabase.TimeSeriesRevRange(
@@ -755,7 +774,7 @@ namespace Nautilus.Redis.Data
                 fromTimestamp,
                 toTimestamp,
                 count,
-                null,
+                Aggregation.MIN,
                 timeBucket);
 
             output[3] = this.redisDatabase.TimeSeriesRevRange(
@@ -763,7 +782,7 @@ namespace Nautilus.Redis.Data
                 fromTimestamp,
                 toTimestamp,
                 count,
-                null,
+                Aggregation.LAST,
                 timeBucket);
 
             output[4] = this.redisDatabase.TimeSeriesRevRange(
@@ -771,11 +790,10 @@ namespace Nautilus.Redis.Data
                 fromTimestamp,
                 toTimestamp,
                 count,
-                null,
+                Aggregation.SUM,
                 timeBucket);
 
             var outputFirstCount = output[0].Count;
-
             Debug.EqualTo(output[1].Count, outputFirstCount, nameof(outputFirstCount));
             Debug.EqualTo(output[2].Count, outputFirstCount, nameof(outputFirstCount));
             Debug.EqualTo(output[3].Count, outputFirstCount, nameof(outputFirstCount));
@@ -784,23 +802,23 @@ namespace Nautilus.Redis.Data
             return output;
         }
 
-        private static Tick BuildTick(
+        private static QuoteTick BuildTick(
             Symbol symbol,
             double bid,
             double ask,
             double bidSize,
             double askSize,
-            long timestamp,
+            long unixTimestamp,
             int pricePrecision,
             int sizePrecision)
         {
-            return new Tick(
+            return new QuoteTick(
                 symbol,
                 Price.Create(bid, pricePrecision),
                 Price.Create(ask, pricePrecision),
-                Volume.Create(bidSize, sizePrecision),
-                Volume.Create(askSize, sizePrecision),
-                Instant.FromUnixTimeMilliseconds(timestamp).InUtc());
+                Quantity.Create(bidSize, sizePrecision),
+                Quantity.Create(askSize, sizePrecision),
+                unixTimestamp);
         }
 
         private static Bar BuildBar(
@@ -809,7 +827,7 @@ namespace Nautilus.Redis.Data
             double low,
             double close,
             double volume,
-            long timestamp,
+            long unixTimestamp,
             int pricePrecision,
             int sizePrecision)
         {
@@ -818,8 +836,8 @@ namespace Nautilus.Redis.Data
                 Price.Create(high, pricePrecision),
                 Price.Create(low, pricePrecision),
                 Price.Create(close, pricePrecision),
-                Volume.Create(volume, sizePrecision),
-                Instant.FromUnixTimeMilliseconds(timestamp).InUtc());
+                Quantity.Create(volume, sizePrecision),
+                unixTimestamp);
         }
 
         private static byte[] EncodeTick(
@@ -827,7 +845,7 @@ namespace Nautilus.Redis.Data
             double askVal,
             double bidSizeVal,
             double askSizeVal,
-            long timestampVal,
+            long unixTimestamp,
             string priceFormatting,
             string sizeFormatting)
         {
@@ -835,9 +853,8 @@ namespace Nautilus.Redis.Data
             var ask = askVal.ToString(priceFormatting);
             var bidSize = bidSizeVal.ToString(sizeFormatting);
             var askSize = askSizeVal.ToString(sizeFormatting);
-            var timestamp = Instant.FromUnixTimeMilliseconds(timestampVal).InUtc().ToIso8601String();
 
-            return Encoding.UTF8.GetBytes($"{bid},{ask},{bidSize},{askSize},{timestamp}");
+            return Encoding.UTF8.GetBytes($"{bid},{ask},{bidSize},{askSize},{unixTimestamp}");
         }
 
         private static byte[] EncodeBar(
@@ -846,7 +863,7 @@ namespace Nautilus.Redis.Data
             double lowVal,
             double closeVal,
             double volumeVal,
-            long timestampVal,
+            long unixTimestamp,
             string priceFormatting,
             string sizeFormatting)
         {
@@ -855,9 +872,8 @@ namespace Nautilus.Redis.Data
             var low = lowVal.ToString(priceFormatting);
             var close = closeVal.ToString(priceFormatting);
             var volume = volumeVal.ToString(sizeFormatting);
-            var timestamp = Instant.FromUnixTimeMilliseconds(timestampVal).InUtc().ToIso8601String();
 
-            return Encoding.UTF8.GetBytes($"{open},{high},{low},{close},{volume},{timestamp}");
+            return Encoding.UTF8.GetBytes($"{open},{high},{low},{close},{volume},{unixTimestamp}");
         }
     }
 }

@@ -18,7 +18,6 @@
 using System;
 using Nautilus.Core.Annotations;
 using Nautilus.Core.Correctness;
-using Nautilus.Core.Types;
 using Nautilus.DomainModel.Enums;
 using Nautilus.DomainModel.Events.Base;
 using Nautilus.DomainModel.Identifiers;
@@ -40,10 +39,8 @@ namespace Nautilus.DomainModel.Events
         /// </summary>
         /// <param name="orderId">The event order identifier.</param>
         /// <param name="symbol">The event symbol.</param>
-        /// <param name="label">The event order label.</param>
         /// <param name="orderSide">The event order side.</param>
         /// <param name="orderType">The event order type.</param>
-        /// <param name="orderPurpose">The event order purpose.</param>
         /// <param name="quantity">The event order quantity.</param>
         /// <param name="price">The event order price (optional).</param>
         /// <param name="timeInForce">The event order time in force.</param>
@@ -53,10 +50,8 @@ namespace Nautilus.DomainModel.Events
         public OrderInitialized(
             OrderId orderId,
             Symbol symbol,
-            Label label,
             OrderSide orderSide,
             OrderType orderType,
-            OrderPurpose orderPurpose,
             Quantity quantity,
             Price? price,
             TimeInForce timeInForce,
@@ -71,15 +66,12 @@ namespace Nautilus.DomainModel.Events
         {
             Condition.NotDefault(orderSide, nameof(orderSide));
             Condition.NotDefault(orderType, nameof(orderType));
-            Condition.NotDefault(orderPurpose, nameof(orderPurpose));
             Debug.NotDefault(eventId, nameof(eventId));
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
 
             this.Symbol = symbol;
-            this.Label = label;
             this.OrderSide = orderSide;
             this.OrderType = orderType;
-            this.OrderPurpose = orderPurpose;
             this.Quantity = quantity;
             this.Price = price;
             this.TimeInForce = timeInForce;
@@ -92,11 +84,6 @@ namespace Nautilus.DomainModel.Events
         public Symbol Symbol { get; }
 
         /// <summary>
-        /// Gets the events order label.
-        /// </summary>
-        public Label Label { get; }
-
-        /// <summary>
         /// Gets the events order side.
         /// </summary>
         public OrderSide OrderSide { get; }
@@ -105,11 +92,6 @@ namespace Nautilus.DomainModel.Events
         /// Gets the events order type.
         /// </summary>
         public OrderType OrderType { get; }
-
-        /// <summary>
-        /// Gets the events order purpose.
-        /// </summary>
-        public OrderPurpose OrderPurpose { get; }
 
         /// <summary>
         /// Gets the events order quantity.

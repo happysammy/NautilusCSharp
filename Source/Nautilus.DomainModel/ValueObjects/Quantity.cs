@@ -28,9 +28,10 @@ namespace Nautilus.DomainModel.ValueObjects
     /// Represents a non-negative quantity with a specified decimal precision.
     /// </summary>
     [Immutable]
-    public sealed class Quantity : DecimalNumber
+    public sealed class Quantity : Decimal64
     {
-        private static readonly Quantity ZeroQuantity = new Quantity(decimal.Zero, 0);
+        private static readonly Quantity QuantityOfZero = new Quantity(decimal.Zero, 0);
+        private static readonly Quantity QuantityOfOne = new Quantity(decimal.One, 0);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Quantity"/> class.
@@ -47,7 +48,13 @@ namespace Nautilus.DomainModel.ValueObjects
         /// Returns a new <see cref="Quantity"/> with zero value.
         /// </summary>
         /// <returns>A <see cref="Quantity"/>.</returns>
-        public static Quantity Zero() => ZeroQuantity;
+        public static Quantity Zero() => QuantityOfZero;
+
+        /// <summary>
+        /// Returns a new <see cref="Quantity"/> with a value of one.
+        /// </summary>
+        /// <returns>A <see cref="Quantity"/>.</returns>
+        public static Quantity One() => QuantityOfOne;
 
         /// <summary>
         /// Returns a new <see cref="Quantity"/> parsed from the given string value.
@@ -83,6 +90,17 @@ namespace Nautilus.DomainModel.ValueObjects
         }
 
         /// <summary>
+        /// Returns a new <see cref="Quantity"/> with the given value and decimal precision.
+        /// </summary>
+        /// <param name="value">The quantity value.</param>
+        /// <param name="precision">The quantity precision.</param>
+        /// <returns>A <see cref="Quantity"/>.</returns>
+        public static Quantity Create(double value, int precision)
+        {
+            return new Quantity(Parser.ToDecimal(value.ToString($"F{precision}")), precision);
+        }
+
+        /// <summary>
         /// Returns a new <see cref="Quantity"/> as the result of the sum of this <see cref="Quantity"/>
         /// and the given <see cref="Quantity"/>.
         /// </summary>
@@ -100,7 +118,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// </summary>
         /// <param name="other">The other quantity.</param>
         /// <returns>A <see cref="Quantity"/>.</returns>
-        public Quantity Subtract(Quantity other)
+        public Quantity Sub(Quantity other)
         {
             Debug.True(other.Value <= this.Value, nameof(other));
 

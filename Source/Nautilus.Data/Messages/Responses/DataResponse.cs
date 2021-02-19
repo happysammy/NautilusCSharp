@@ -78,5 +78,11 @@ namespace Nautilus.Data.Messages.Responses
         /// Gets the responses data encoding.
         /// </summary>
         public DataEncoding DataEncoding { get; }
+
+        /// <summary>
+        /// Returns a string representation of this <see cref="DataResponse"/>.
+        /// </summary>
+        /// <returns>A <see cref="string"/>.</returns>
+        public override string ToString() => $"{nameof(DataResponse)}(DataType={this.DataType}, Size={Data.Length.ToString("N0")} bytes, Encoding={this.DataEncoding}, Id={this.Id})";
     }
 }

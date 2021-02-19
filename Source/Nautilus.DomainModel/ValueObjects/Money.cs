@@ -27,7 +27,7 @@ namespace Nautilus.DomainModel.ValueObjects
     /// Represents the 'concept' of money.
     /// </summary>
     [Immutable]
-    public sealed class Money : DecimalNumber
+    public sealed class Money : Decimal64
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Money"/> class.
@@ -139,7 +139,7 @@ namespace Nautilus.DomainModel.ValueObjects
         public bool Equals(Money other) => this.Value.Equals(other.Value) && this.Currency.Equals(other.Currency);
 
         /// <summary>
-        /// Returns the hash code for this <see cref="DecimalNumber"/>.
+        /// Returns the hash code for this <see cref="Decimal64"/>.
         /// </summary>
         /// <returns>The hash code <see cref="int"/>.</returns>
         public override int GetHashCode() => Hash.GetCode(this.Value, this.Currency);

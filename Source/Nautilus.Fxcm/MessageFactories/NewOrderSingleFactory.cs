@@ -59,12 +59,6 @@ namespace Nautilus.Fxcm.MessageFactories
             message.SetField(new OrderQty(order.Quantity.Value));
             message.SetField(new TransactTime(timeNow.ToDateTimeUtc()));
 
-            // Optional tags
-            if (order.Label.NotNone())
-            {
-                message.SetField(new SecondaryClOrdID(order.Label.Value));
-            }
-
             if (!(positionIdBroker is null))
             {
                 message.SetField(new StringField(FxcmTags.PosID, positionIdBroker.Value));
@@ -88,9 +82,6 @@ namespace Nautilus.Fxcm.MessageFactories
                         message.SetField(new StopPx(order.Price.Value));
                         break;
                     case OrderType.StopLimit:
-                        message.SetField(new StopPx(order.Price.Value));
-                        break;
-                    case OrderType.MIT:
                         message.SetField(new StopPx(order.Price.Value));
                         break;
                     case OrderType.Market:

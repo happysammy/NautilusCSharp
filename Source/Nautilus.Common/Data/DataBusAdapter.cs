@@ -37,37 +37,48 @@ namespace Nautilus.Common.Data
     public sealed class DataBusAdapter : IDataBusAdapter
     {
         private readonly Dictionary<Type, IEndpoint> endpoints;
-        private readonly DataBus<Tick> tickBus;
+        private readonly DataBus<QuoteTick> quoteBus;
+        private readonly DataBus<TradeTick> tradeBus;
         private readonly DataBus<BarData> barBus;
         private readonly DataBus<Instrument> instrumentBus;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataBusAdapter"/> class.
         /// </summary>
-        /// <param name="tickBus">The tick bus endpoint.</param>
-        /// <param name="barBus">The bar bus endpoint.</param>
-        /// <param name="instrumentBus">The instrument bus endpoint.</param>
+        /// <param name="quoteBus">The quote tick data bus.</param>
+        /// <param name="tradeBus">The trade tick data bus.</param>
+        /// <param name="barBus">The bar data bus.</param>
+        /// <param name="instrumentBus">The instrument data bus.</param>
         public DataBusAdapter(
-            DataBus<Tick> tickBus,
+            DataBus<QuoteTick> quoteBus,
+            DataBus<TradeTick> tradeBus,
             DataBus<BarData> barBus,
             DataBus<Instrument> instrumentBus)
         {
             this.endpoints = new Dictionary<Type, IEndpoint>
             {
-                { tickBus.BusType, tickBus.Endpoint },
+                { quoteBus.BusType, quoteBus.Endpoint },
+                { tradeBus.BusType, tradeBus.Endpoint },
                 { barBus.BusType, barBus.Endpoint },
                 { instrumentBus.BusType, instrumentBus.Endpoint },
             };
 
-            this.tickBus = tickBus;
+            this.quoteBus = quoteBus;
+            this.tradeBus = tradeBus;
             this.barBus = barBus;
             this.instrumentBus = instrumentBus;
         }
 
         /// <inheritdoc />
-        public void SendToBus(Tick data)
+        public void SendToBus(QuoteTick data)
         {
-            this.tickBus.PostData(data);
+            this.quoteBus.PostData(data);
+        }
+
+        /// <inheritdoc />
+        public void SendToBus(TradeTick data)
+        {
+            this.tradeBus.PostData(data);
         }
 
         /// <inheritdoc />
@@ -113,7 +124,7 @@ namespace Nautilus.Common.Data
         /// </summary>
         public void Start()
         {
-            Task.WaitAll(this.tickBus.Start(), this.barBus.Start(), this.instrumentBus.Start());
+            Task.WaitAll(this.quoteBus.Start(), this.barBus.Start(), this.instrumentBus.Start());
         }
 
         /// <summary>
@@ -121,7 +132,7 @@ namespace Nautilus.Common.Data
         /// </summary>
         public void Stop()
         {
-            Task.WaitAll(this.tickBus.Stop(), this.barBus.Stop(), this.instrumentBus.Stop());
+            Task.WaitAll(this.quoteBus.Stop(), this.barBus.Stop(), this.instrumentBus.Stop());
         }
 
         private void Send(Type subscription, Message message)

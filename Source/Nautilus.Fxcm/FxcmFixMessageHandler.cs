@@ -24,7 +24,6 @@ using Nautilus.Common.Logging;
 using Nautilus.Core.Annotations;
 using Nautilus.Core.Correctness;
 using Nautilus.Core.Extensions;
-using Nautilus.Core.Types;
 using Nautilus.DomainModel.Entities;
 using Nautilus.DomainModel.Events;
 using Nautilus.DomainModel.Identifiers;
@@ -119,14 +118,14 @@ namespace Nautilus.Fxcm
         [SystemBoundary]
         public void OnMessage(BusinessMessageReject message)
         {
-            this.Logger.LogWarning(LogId.Networking, $"{Received}{Fix} {nameof(BusinessMessageReject)}");
+            this.Logger.LogWarning(LogId.Network, $"{Received}{Fix} {nameof(BusinessMessageReject)}");
         }
 
         /// <inheritdoc />
         [SystemBoundary]
         public void OnMessage(Email message)
         {
-            this.Logger.LogWarning(LogId.Networking, $"{Received}{Fix} {nameof(Email)}");
+            this.Logger.LogWarning(LogId.Network, $"{Received}{Fix} {nameof(Email)}");
         }
 
         /// <inheritdoc />
@@ -137,7 +136,7 @@ namespace Nautilus.Fxcm
 
             var responseId = message.GetField(Tags.SecurityResponseID);
             var result = FxcmMessageHelper.GetSecurityRequestResult(message.SecurityRequestResult);
-            this.Logger.LogDebug(LogId.Networking, $"{Received}{Fix} {nameof(SecurityList)}(ResponseId={responseId}, Result={result}).");
+            this.Logger.LogDebug(LogId.Network, $"{Received}{Fix} {nameof(SecurityList)}(ResponseId={responseId}, Result={result}).");
 
             var instruments = new List<Instrument>();
             var groupCount = int.Parse(message.NoRelatedSym.ToString());
@@ -171,7 +170,7 @@ namespace Nautilus.Fxcm
                         minLimitDistanceEntry,
                         minStopDistance,
                         minLimitDistance,
-                        Price.Create(tickSize),
+                        Price.Create(tickSize, tickPrecision),
                         Quantity.Create(roundLot),
                         Quantity.Create(minTradeSize),
                         Quantity.Create(maxTradeSize),
@@ -193,7 +192,7 @@ namespace Nautilus.Fxcm
                         minLimitDistanceEntry,
                         minStopDistance,
                         minLimitDistance,
-                        Price.Create(tickSize),
+                        Price.Create(tickSize, tickPrecision),
                         Quantity.Create(roundLot),
                         Quantity.Create(minTradeSize),
                         Quantity.Create(maxTradeSize),
@@ -213,23 +212,23 @@ namespace Nautilus.Fxcm
         public void OnMessage(QuoteStatusReport message)
         {
 #if DEBUG
-            this.Logger.LogTrace(LogId.Networking, $"{Received}{Fix} {nameof(QuoteStatusReport)}");
+            this.Logger.LogTrace(LogId.Network, $"{Received}{Fix} {nameof(QuoteStatusReport)}");
 #endif
-            this.Logger.LogInformation(LogId.Networking, message.Product.ToString());
+            this.Logger.LogInformation(LogId.Network, message.Product.ToString());
         }
 
         /// <inheritdoc />
         [SystemBoundary]
         public void OnMessage(TradingSessionStatus message)
         {
-            this.Logger.LogWarning(LogId.Networking, $"{Received}{Fix} Unhandled {nameof(TradingSessionStatus)}");
+            this.Logger.LogWarning(LogId.Network, $"{Received}{Fix} Unhandled {nameof(TradingSessionStatus)}");
         }
 
         /// <inheritdoc />
         [SystemBoundary]
         public void OnMessage(MarketDataRequestReject message)
         {
-            this.Logger.LogWarning(LogId.Networking, $"{Received}{Fix} {nameof(MarketDataRequestReject)}(Text={message.GetField(Tags.Text)}).");
+            this.Logger.LogWarning(LogId.Network, $"{Received}{Fix} {nameof(MarketDataRequestReject)}(Text={message.GetField(Tags.Text)}).");
         }
 
         /// <inheritdoc />
@@ -241,12 +240,12 @@ namespace Nautilus.Fxcm
             message.GetGroup(1, this.mdBidGroup);
             message.GetGroup(2, this.mdAskGroup);
 
-            var tick = new Tick(
+            var tick = new QuoteTick(
                 this.GetSymbol(message.GetField(Tags.Symbol)),
                 Price.Create(this.mdBidGroup.GetDecimal(Tags.MDEntryPx)),
                 Price.Create(this.mdAskGroup.GetDecimal(Tags.MDEntryPx)),
-                Volume.One(),
-                Volume.One(),
+                Quantity.One(),
+                Quantity.One(),
                 this.tickTimestampProvider());
 
             this.dataGateway?.OnData(tick);
@@ -259,7 +258,7 @@ namespace Nautilus.Fxcm
             var inquiryId = message.GetField(Tags.CollInquiryID);
             var accountNumber = message.GetField(Tags.Account);
 
-            this.Logger.LogDebug(LogId.Networking, $"{Received}{Fix} {nameof(CollateralInquiryAck)}(InquiryId={inquiryId}, AccountNumber={accountNumber}).");
+            this.Logger.LogDebug(LogId.Network, $"{Received}{Fix} {nameof(CollateralInquiryAck)}(InquiryId={inquiryId}, AccountNumber={accountNumber}).");
         }
 
         /// <inheritdoc />
@@ -334,7 +333,7 @@ namespace Nautilus.Fxcm
         [SystemBoundary]
         public void OnMessage(PositionReport message)
         {
-            this.Logger.LogDebug(LogId.Networking, $"{Received}{Fix} {nameof(PositionReport)}({message.Account})");
+            this.Logger.LogDebug(LogId.Network, $"{Received}{Fix} {nameof(PositionReport)}({message.Account})");
         }
 
         /// <inheritdoc />
@@ -343,7 +342,7 @@ namespace Nautilus.Fxcm
         {
             Debug.NotNull(this.tradingGateway, nameof(this.tradingGateway));
 
-            this.Logger.LogDebug(LogId.Networking, $"{Received}{Fix} {nameof(OrderCancelReject)}");
+            this.Logger.LogDebug(LogId.Network, $"{Received}{Fix} {nameof(OrderCancelReject)}");
 
             var orderId = this.GetOrderId(message);
             var rejectedTime = FxcmMessageHelper.ParseTimestamp(message.GetField(Tags.TransactTime));
@@ -372,7 +371,7 @@ namespace Nautilus.Fxcm
             {
                 case OrdStatus.REJECTED:
                 {
-                    this.Logger.LogDebug(LogId.Networking, $"{Received}{Fix} {nameof(ExecutionReport)}({nameof(OrdStatus.REJECTED)})");
+                    this.Logger.LogDebug(LogId.Network, $"{Received}{Fix} {nameof(ExecutionReport)}({nameof(OrdStatus.REJECTED)})");
 
                     this.tradingGateway?.Send(this.GenerateOrderRejectedEvent(message));
                     break;
@@ -380,7 +379,7 @@ namespace Nautilus.Fxcm
 
                 case OrdStatus.PENDING_NEW:
                 {
-                    this.Logger.LogDebug(LogId.Networking, $"{Received}{Fix} {nameof(ExecutionReport)}({nameof(OrdStatus.PENDING_NEW)}).");
+                    this.Logger.LogDebug(LogId.Network, $"{Received}{Fix} {nameof(ExecutionReport)}({nameof(OrdStatus.PENDING_NEW)}).");
 
                     // Do nothing
                     break;
@@ -389,7 +388,7 @@ namespace Nautilus.Fxcm
                 case OrdStatus.NEW:
                 {
                     var fxcmOrdStatus = message.GetField(FxcmTags.OrdStatus);
-                    this.Logger.LogDebug(LogId.Networking, $"{Received}{Fix} {nameof(ExecutionReport)}({nameof(OrdStatus.NEW)}-{fxcmOrdStatus})");
+                    this.Logger.LogDebug(LogId.Network, $"{Received}{Fix} {nameof(ExecutionReport)}({nameof(OrdStatus.NEW)}-{fxcmOrdStatus})");
 
                     switch (fxcmOrdStatus)
                     {
@@ -415,7 +414,7 @@ namespace Nautilus.Fxcm
 
                             break;
                         default:
-                            this.Logger.LogError(LogId.Networking, $"Cannot process event (FXCMOrdStatus {fxcmOrdStatus} not recognized).");
+                            this.Logger.LogError(LogId.Network, $"Cannot process event (FXCMOrdStatus {fxcmOrdStatus} not recognized).");
                             break;
                     }
 
@@ -425,7 +424,7 @@ namespace Nautilus.Fxcm
                 case OrdStatus.PENDING_CANCEL:
                 {
 #if DEBUG
-                    this.Logger.LogDebug(LogId.Networking, $"{Received}{Fix} {nameof(ExecutionReport)}({nameof(OrdStatus.PENDING_CANCEL)}).");
+                    this.Logger.LogDebug(LogId.Network, $"{Received}{Fix} {nameof(ExecutionReport)}({nameof(OrdStatus.PENDING_CANCEL)}).");
 #endif
 
                     // Do nothing
@@ -435,7 +434,7 @@ namespace Nautilus.Fxcm
                 case OrdStatus.CANCELED:
                 {
 #if DEBUG
-                    this.Logger.LogDebug(LogId.Networking, $"{Received}{Fix} {nameof(ExecutionReport)}({nameof(OrdStatus.CANCELED)})");
+                    this.Logger.LogDebug(LogId.Network, $"{Received}{Fix} {nameof(ExecutionReport)}({nameof(OrdStatus.CANCELED)})");
 #endif
 
                     this.tradingGateway?.Send(this.GenerateOrderCancelledEvent(message));
@@ -445,7 +444,7 @@ namespace Nautilus.Fxcm
                 case OrdStatus.REPLACED:
                 {
 #if DEBUG
-                    this.Logger.LogDebug(LogId.Networking, $"{Received}{Fix} {nameof(ExecutionReport)}({nameof(OrdStatus.REPLACED)})");
+                    this.Logger.LogDebug(LogId.Network, $"{Received}{Fix} {nameof(ExecutionReport)}({nameof(OrdStatus.REPLACED)})");
 #endif
 
                     this.tradingGateway?.Send(this.GenerateOrderModifiedEvent(message));
@@ -455,7 +454,7 @@ namespace Nautilus.Fxcm
                 case OrdStatus.EXPIRED:
                 {
 #if DEBUG
-                    this.Logger.LogDebug(LogId.Networking, $"{Received}{Fix} {nameof(ExecutionReport)}({nameof(OrdStatus.EXPIRED)})");
+                    this.Logger.LogDebug(LogId.Network, $"{Received}{Fix} {nameof(ExecutionReport)}({nameof(OrdStatus.EXPIRED)})");
 #endif
 
                     this.tradingGateway?.Send(this.GenerateOrderExpiredEvent(message));
@@ -465,7 +464,7 @@ namespace Nautilus.Fxcm
                 case OrdStatus.STOPPED:
                 {
 #if DEBUG
-                    this.Logger.LogDebug(LogId.Networking, $"{Received}{Fix} {nameof(ExecutionReport)}({nameof(OrdStatus.STOPPED)}).");
+                    this.Logger.LogDebug(LogId.Network, $"{Received}{Fix} {nameof(ExecutionReport)}({nameof(OrdStatus.STOPPED)}).");
 #endif
 
                     // Order is executing
@@ -475,7 +474,7 @@ namespace Nautilus.Fxcm
                 case OrdStatus.FILLED:
                 {
 #if DEBUG
-                    this.Logger.LogDebug(LogId.Networking, $"{Received}{Fix} {nameof(ExecutionReport)}({nameof(OrdStatus.FILLED)})");
+                    this.Logger.LogDebug(LogId.Network, $"{Received}{Fix} {nameof(ExecutionReport)}({nameof(OrdStatus.FILLED)})");
 #endif
 
                     this.tradingGateway?.Send(this.GenerateOrderFilledEvent(message));
@@ -485,7 +484,7 @@ namespace Nautilus.Fxcm
                 case OrdStatus.PARTIALLY_FILLED:
                 {
 #if DEBUG
-                    this.Logger.LogDebug(LogId.Networking, $"{Received}{Fix} {nameof(ExecutionReport)}({nameof(OrdStatus.PARTIALLY_FILLED)})");
+                    this.Logger.LogDebug(LogId.Network, $"{Received}{Fix} {nameof(ExecutionReport)}({nameof(OrdStatus.PARTIALLY_FILLED)})");
 #endif
 
                     this.tradingGateway?.Send(this.GenerateOrderPartiallyFilledEvent(message));
@@ -494,20 +493,20 @@ namespace Nautilus.Fxcm
 
                 case OrdStatus.SUSPENDED:
                 {
-                    this.Logger.LogError(LogId.Networking, $"{Received}{Fix} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.SUSPENDED)}).");
+                    this.Logger.LogError(LogId.Network, $"{Received}{Fix} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.SUSPENDED)}).");
                     break;
                 }
 
                 case OrdStatus.CALCULATED:
                 {
-                    this.Logger.LogError(LogId.Networking, $"{Received}{Fix} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.CALCULATED)}).");
+                    this.Logger.LogError(LogId.Network, $"{Received}{Fix} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.CALCULATED)}).");
                     break;
                 }
 
                 case OrdStatus.DONE_FOR_DAY:
                 {
 #if DEBUG
-                    this.Logger.LogDebug(LogId.Networking, $"{Received}{Fix} {nameof(ExecutionReport)}({nameof(OrdStatus.DONE_FOR_DAY)}).");
+                    this.Logger.LogDebug(LogId.Network, $"{Received}{Fix} {nameof(ExecutionReport)}({nameof(OrdStatus.DONE_FOR_DAY)}).");
 #endif
 
                     this.tradingGateway?.Send(this.GenerateOrderExpiredEvent(message));
@@ -516,13 +515,13 @@ namespace Nautilus.Fxcm
 
                 case OrdStatus.PENDING_REPLACE:
                 {
-                    this.Logger.LogError(LogId.Networking, $"{Received}{Fix} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.PENDING_REPLACE)}).");
+                    this.Logger.LogError(LogId.Network, $"{Received}{Fix} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.PENDING_REPLACE)}).");
                     break;
                 }
 
                 case OrdStatus.ACCEPTED_FOR_BIDDING:
                 {
-                    this.Logger.LogError(LogId.Networking, $"{Received}{Fix} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.ACCEPTED_FOR_BIDDING)}).");
+                    this.Logger.LogError(LogId.Network, $"{Received}{Fix} Unhandled {nameof(ExecutionReport)}({nameof(OrdStatus.ACCEPTED_FOR_BIDDING)}).");
                     break;
                 }
 
@@ -556,16 +555,12 @@ namespace Nautilus.Fxcm
         {
             var orderId = this.GetOrderId(message);
             var orderIdBroker = new OrderIdBroker(message.GetField(Tags.OrderID));
-            var orderLabel = message.IsSetField(Tags.SecondaryClOrdID)
-                ? new Label(message.GetField(Tags.SecondaryClOrdID))
-                : new Label();
             var acceptedTime = FxcmMessageHelper.ParseTimestamp(message.GetField(Tags.TransactTime));
 
             return new OrderAccepted(
                 this.accountId,
                 orderId,
                 orderIdBroker,
-                orderLabel,
                 acceptedTime,
                 this.NewGuid(),
                 this.TimeNow());
@@ -611,9 +606,6 @@ namespace Nautilus.Fxcm
             var orderId = this.GetOrderId(message);
             var orderIdBroker = new OrderIdBroker(message.GetField(Tags.OrderID));
             var symbol = this.GetSymbol(message.GetField(Tags.Symbol));
-            var orderLabel = message.IsSetField(Tags.SecondaryClOrdID)
-                ? new Label(message.GetField(Tags.SecondaryClOrdID))
-                : new Label();
             var orderSide = FxcmMessageHelper.GetOrderSide(message.GetField(Tags.Side));
             var orderType = FxcmMessageHelper.GetOrderType(message.GetField(Tags.OrdType));
             var quantity = Quantity.Create(message.GetDecimal(Tags.OrderQty));
@@ -627,7 +619,6 @@ namespace Nautilus.Fxcm
                 orderId,
                 orderIdBroker,
                 symbol,
-                orderLabel,
                 orderSide,
                 orderType,
                 quantity,

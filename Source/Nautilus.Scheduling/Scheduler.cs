@@ -18,6 +18,7 @@
 using System.Collections.Specialized;
 using Microsoft.Extensions.Logging;
 using Nautilus.Common.Interfaces;
+using Nautilus.Common.Logging;
 using Nautilus.Common.Messages.Commands;
 using Nautilus.Common.Messaging;
 using Nautilus.Scheduling.Messages;
@@ -72,18 +73,18 @@ namespace Nautilus.Scheduling
         {
             if (this.quartzScheduler.CheckExists(message.JobKey).Result)
             {
-                this.Logger.LogError($"Job create failed (JobKey={message.JobKey}, Reason=DuplicateJobKey).");
+                this.Logger.LogError(LogId.Component, $"Job create failed (JobKey={message.JobKey}, Reason=DuplicateJobKey).");
                 return;
             }
 
             var create = this.quartzScheduler.ScheduleJob(message.JobDetail, message.Trigger);
             if (create.IsCompletedSuccessfully)
             {
-                this.Logger.LogInformation($"Job created (JobKey={message.JobKey}, TriggerKey={message.Trigger.Key}).");
+                this.Logger.LogInformation(LogId.Component, $"Job created (JobKey={message.JobKey}, TriggerKey={message.Trigger.Key}).");
             }
             else
             {
-                this.Logger.LogError($"Job create failed (JobKey={message.JobKey}, Reason=Unknown).");
+                this.Logger.LogError(LogId.Component, $"Job create failed (JobKey={message.JobKey}, Reason=Unknown).");
             }
         }
 
@@ -91,18 +92,18 @@ namespace Nautilus.Scheduling
         {
             if (!this.quartzScheduler.CheckExists(message.JobKey).Result)
             {
-                this.Logger.LogError($"Job pause failed (JobKey={message.JobKey}, Reason=JobNotFound).");
+                this.Logger.LogError(LogId.Component, $"Job pause failed (JobKey={message.JobKey}, Reason=JobNotFound).");
                 return;
             }
 
             var paused = this.quartzScheduler.PauseJob(message.JobKey);
             if (paused.IsCompletedSuccessfully)
             {
-                this.Logger.LogInformation($"Job paused successfully (JobKey={message.JobKey}).");
+                this.Logger.LogInformation(LogId.Component, $"Job paused successfully (JobKey={message.JobKey}).");
             }
             else
             {
-                this.Logger.LogError($"Job pause failed (JobKey={message.JobKey}, Reason=Unknown).");
+                this.Logger.LogError(LogId.Component, $"Job pause failed (JobKey={message.JobKey}, Reason=Unknown).");
             }
         }
 
@@ -110,18 +111,18 @@ namespace Nautilus.Scheduling
         {
             if (!this.quartzScheduler.CheckExists(message.JobKey).Result)
             {
-                this.Logger.LogError($"Job resume failed (JobKey={message.JobKey}, Reason=JobNotFound).");
+                this.Logger.LogError(LogId.Component, $"Job resume failed (JobKey={message.JobKey}, Reason=JobNotFound).");
                 return;
             }
 
             var resume = this.quartzScheduler.ResumeJob(message.JobKey);
             if (resume.IsCompletedSuccessfully)
             {
-                this.Logger.LogInformation($"Job resumed successfully (JobKey={message.JobKey}).");
+                this.Logger.LogInformation(LogId.Component, $"Job resumed successfully (JobKey={message.JobKey}).");
             }
             else
             {
-                this.Logger.LogError($"Job resume failed (JobKey={message.JobKey}, Reason=Unknown).");
+                this.Logger.LogError(LogId.Component, $"Job resume failed (JobKey={message.JobKey}, Reason=Unknown).");
             }
         }
 
@@ -131,7 +132,7 @@ namespace Nautilus.Scheduling
             {
                 if (!this.quartzScheduler.CheckExists(message.JobKey).Result)
                 {
-                    this.Logger.LogDebug($"Job not remove (JobKey={message.JobKey}, IfJobExists=True, Reason=JobNotFound).");
+                    this.Logger.LogDebug(LogId.Component, $"Job not remove (JobKey={message.JobKey}, IfJobExists=True, Reason=JobNotFound).");
                     return;
                 }
 
@@ -142,11 +143,11 @@ namespace Nautilus.Scheduling
             var deleted = this.quartzScheduler.DeleteJob(message.JobKey);
             if (deleted.IsCompletedSuccessfully)
             {
-                this.Logger.LogInformation($"Job removed (JobKey={message.JobKey}).");
+                this.Logger.LogInformation(LogId.Component, $"Job removed (JobKey={message.JobKey}).");
             }
             else
             {
-                this.Logger.LogError($"Job remove failed (JobKey={message.JobKey}, Reason=Unknown).");
+                this.Logger.LogError(LogId.Component, $"Job remove failed (JobKey={message.JobKey}, Reason=Unknown).");
             }
         }
     }

@@ -114,7 +114,7 @@ namespace Nautilus.Network
             }
             catch (AggregateException ex)
             {
-                this.Logger.LogError(ex.Message, ex);
+                this.Logger.LogError(LogId.Component, ex.Message, ex);
                 return Task.FromResult(false);
             }
         }
@@ -132,7 +132,7 @@ namespace Nautilus.Network
             }
             catch (AggregateException ex)
             {
-                this.Logger.LogError(ex.Message, ex);
+                this.Logger.LogError(LogId.Component, ex.Message, ex);
             }
 
             return Task.CompletedTask;
@@ -157,10 +157,10 @@ namespace Nautilus.Network
             }
             catch (NetMQException ex)
             {
-                this.Logger.LogError(LogId.Networking, ex.ToString(), ex);
+                this.Logger.LogError(LogId.Network, ex.ToString(), ex);
             }
 
-            this.Logger.LogDebug(LogId.Networking, "Stopped receiving inbound frames.");
+            this.Logger.LogDebug(LogId.Network, "Stopped receiving inbound frames.");
             return Task.CompletedTask;
         }
 
@@ -183,11 +183,11 @@ namespace Nautilus.Network
                 {
                     // A RouterSocket will throw HostUnreachableException if a message cannot be routed
                     var msg = "Could not send frames (the host was no longer connected).";
-                    this.Logger.LogWarning(LogId.Networking, msg);
+                    this.Logger.LogWarning(LogId.Network, msg);
                 }
                 else
                 {
-                    this.Logger.LogError(LogId.Networking, ex.ToString(), ex);
+                    this.Logger.LogError(LogId.Network, ex.ToString(), ex);
                 }
             }
 

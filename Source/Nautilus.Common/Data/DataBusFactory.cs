@@ -34,7 +34,8 @@ namespace Nautilus.Common.Data
         public static DataBusAdapter Create(IComponentryContainer container)
         {
             return new DataBusAdapter(
-                new DataBus<Tick>(container),
+                new DataBus<QuoteTick>(container),
+                new DataBus<TradeTick>(container),
                 new DataBus<BarData>(container),
                 new DataBus<Instrument>(container));
         }

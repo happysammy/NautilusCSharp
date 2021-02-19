@@ -40,7 +40,8 @@ namespace Nautilus.Data.Providers
         private const string DataType = nameof(DataType);
 
         private readonly ITickRepository repository;
-        private readonly IDataSerializer<Tick> dataSerializer;
+        private readonly IDataSerializer<QuoteTick> quoteSerializer;
+        private readonly IDataSerializer<TradeTick> tradeSerializer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TickProvider"/> class.
@@ -48,16 +49,19 @@ namespace Nautilus.Data.Providers
         /// <param name="container">The componentry container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="repository">The tick repository.</param>
-        /// <param name="dataSerializer">The data serializer.</param>
+        /// <param name="quoteSerializer">The quote tick serializer.</param>
+        /// <param name="tradeSerializer">The trade tick serializer.</param>
         public TickProvider(
             IComponentryContainer container,
             IMessageBusAdapter messagingAdapter,
             ITickRepository repository,
-            IDataSerializer<Tick> dataSerializer)
+            IDataSerializer<QuoteTick> quoteSerializer,
+            IDataSerializer<TradeTick> tradeSerializer)
             : base(container, messagingAdapter)
         {
             this.repository = repository;
-            this.dataSerializer = dataSerializer;
+            this.quoteSerializer = quoteSerializer;
+            this.tradeSerializer = tradeSerializer;
 
             this.RegisterHandler<DataRequest>(this.OnMessage);
         }
@@ -72,7 +76,7 @@ namespace Nautilus.Data.Providers
             try
             {
                 var dataType = request.Query[DataType];
-                if (dataType != typeof(Tick[]).Name)
+                if (dataType != typeof(QuoteTick[]).Name)
                 {
                     return this.QueryFailure($"Incorrect DataType requested, was {dataType}", request.Id);
                 }
@@ -81,7 +85,11 @@ namespace Nautilus.Data.Providers
                 var symbol = Symbol.FromString(request.Query["Symbol"]);
                 var fromDateTime = request.Query["FromDateTime"].ToNullableZonedDateTimeFromIso();
                 var toDateTime = request.Query["ToDateTime"].ToNullableZonedDateTimeFromIso();
-                var limit = long.Parse(request.Query["Limit"]);
+                long? limit = long.Parse(request.Query["Limit"]);
+                if (limit == 0)
+                {
+                    limit = null;
+                }
 
                 var dataQuery = this.repository.ReadTickData(
                     symbol,
@@ -92,16 +100,16 @@ namespace Nautilus.Data.Providers
                 if (dataQuery.Length == 0)
                 {
                     var fromDateTimeString = fromDateTime is null ? "Min" : fromDateTime.ToString();
-                    var toDateTimeString = fromDateTime is null ? "Max" : fromDateTime.ToString();
+                    var toDateTimeString = toDateTime is null ? "Max" : toDateTime.ToString();
 
                     return this.QueryFailure($"No tick found for {symbol} from " +
                                              $"{fromDateTimeString} to {toDateTimeString}", request.Id);
                 }
 
                 return new DataResponse(
-                    this.dataSerializer.SerializeBlob(dataQuery, request.Query),
+                    this.quoteSerializer.SerializeBlob(dataQuery, request.Query),
                     dataType,
-                    this.dataSerializer.BlobEncoding,
+                    this.quoteSerializer.BlobEncoding,
                     request.Id,
                     this.NewGuid(),
                     this.TimeNow());
@@ -136,12 +144,12 @@ namespace Nautilus.Data.Providers
 
         private void OnMessage(DataRequest request)
         {
-            this.Logger.LogInformation(LogId.Component, $"<--[REQ] {request}.");
+            this.Logger.LogDebug(LogId.Component, $"<--[REQ] {request}.");
 
             var response = this.FindData(request);
             if (response is DataResponse)
             {
-                this.Logger.LogInformation(LogId.Component, $"[RES]--> {response}.");
+                this.Logger.LogDebug(LogId.Component, $"[RES]--> {response}.");
             }
             else
             {

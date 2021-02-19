@@ -19,7 +19,6 @@ using System;
 using Nautilus.Core.Collections;
 using Nautilus.Core.Correctness;
 using Nautilus.Core.Extensions;
-using Nautilus.Core.Types;
 using Nautilus.DomainModel.Aggregates.Base;
 using Nautilus.DomainModel.Aggregates.Internal;
 using Nautilus.DomainModel.Enums;
@@ -51,10 +50,8 @@ namespace Nautilus.DomainModel.Aggregates
             this.executionIds = new UniqueList<ExecutionId>();
 
             this.Symbol = initial.Symbol;
-            this.Label = initial.Label;
             this.OrderSide = initial.OrderSide;
             this.OrderType = initial.OrderType;
-            this.OrderPurpose = initial.OrderPurpose;
             this.Quantity = initial.Quantity;
             this.FilledQuantity = Quantity.Zero();
             this.Price = initial.Price;
@@ -99,11 +96,6 @@ namespace Nautilus.DomainModel.Aggregates
         public Symbol Symbol { get; }
 
         /// <summary>
-        /// Gets the orders label.
-        /// </summary>
-        public Label Label { get; }
-
-        /// <summary>
         /// Gets the orders type.
         /// </summary>
         public OrderType OrderType { get; }
@@ -112,11 +104,6 @@ namespace Nautilus.DomainModel.Aggregates
         /// Gets the orders side.
         /// </summary>
         public OrderSide OrderSide { get; }
-
-        /// <summary>
-        /// Gets the orders purpose.
-        /// </summary>
-        public OrderPurpose OrderPurpose { get; }
 
         /// <summary>
         /// Gets the orders quantity.
@@ -183,10 +170,8 @@ namespace Nautilus.DomainModel.Aggregates
         /// </summary>
         /// <param name="orderId">The order identifier.</param>
         /// <param name="symbol">The order symbol.</param>
-        /// <param name="label">The order label.</param>
         /// <param name="side">The order side.</param>
         /// <param name="type">The order type.</param>
-        /// <param name="purpose">The order purpose.</param>
         /// <param name="quantity">The order quantity.</param>
         /// <param name="price">The order price (optional).</param>
         /// <param name="timeInForce">The order time in force.</param>
@@ -197,10 +182,8 @@ namespace Nautilus.DomainModel.Aggregates
         public static Order Create(
             OrderId orderId,
             Symbol symbol,
-            Label label,
             OrderSide side,
             OrderType type,
-            OrderPurpose purpose,
             Quantity quantity,
             Price? price,
             TimeInForce timeInForce,
@@ -214,10 +197,8 @@ namespace Nautilus.DomainModel.Aggregates
             var initial = new OrderInitialized(
                 orderId,
                 symbol,
-                label,
                 side,
                 type,
-                purpose,
                 quantity,
                 price,
                 timeInForce,
@@ -287,15 +268,12 @@ namespace Nautilus.DomainModel.Aggregates
 
         private void When(OrderAccepted @event)
         {
-            Debug.EqualTo(@event.Label, this.Label, nameof(@event.Label));
-
             this.IdBroker = @event.OrderIdBroker;
         }
 
         private void When(OrderWorking @event)
         {
             Debug.EqualTo(@event.Symbol, this.Symbol, nameof(@event.Symbol));
-            Debug.EqualTo(@event.Label, this.Label, nameof(@event.Label));
             Debug.EqualTo(@event.OrderSide, this.OrderSide, nameof(@event.OrderSide));
             Debug.EqualTo(@event.OrderType, this.OrderType, nameof(@event.OrderSide));
             Debug.EqualTo(@event.Quantity, this.Quantity, nameof(@event.OrderSide));

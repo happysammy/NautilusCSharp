@@ -49,7 +49,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.ProvidersTests
             // Fixture Setup
             this.container = TestComponentryContainer.Create(output);
             this.messagingAdapter = new MockMessageBusProvider(this.container).Adapter;
-            this.dataSerializer = new InstrumentDataSerializer();
+            this.dataSerializer = new InstrumentSerializer();
             this.repository = new MockInstrumentRepository(this.dataSerializer);
         }
 

@@ -76,18 +76,13 @@ namespace Nautilus.DomainModel.Enums
         Expired = 9,
 
         /// <summary>
-        /// The over filled order state.
-        /// </summary>
-        OverFilled = 10,
-
-        /// <summary>
         /// The partially filled order state.
         /// </summary>
-        PartiallyFilled = 11,
+        PartiallyFilled = 10,
 
         /// <summary>
         /// The completely filled order state.
         /// </summary>
-        Filled = 12,
+        Filled = 11,
     }
 }

@@ -19,7 +19,6 @@ using System;
 using Nautilus.Core.Annotations;
 using Nautilus.Core.Correctness;
 using Nautilus.Core.Extensions;
-using Nautilus.Core.Types;
 using Nautilus.DomainModel.Enums;
 using Nautilus.DomainModel.Events.Base;
 using Nautilus.DomainModel.Identifiers;
@@ -43,7 +42,6 @@ namespace Nautilus.DomainModel.Events
         /// <param name="orderId">The event order identifier.</param>
         /// <param name="orderIdBroker">The event order identifier from the broker.</param>
         /// <param name="symbol">The event symbol.</param>
-        /// <param name="label">The event order label. </param>
         /// <param name="orderSide">The event order side.</param>
         /// <param name="orderType">The event order type.</param>
         /// <param name="quantity">The event order quantity.</param>
@@ -58,7 +56,6 @@ namespace Nautilus.DomainModel.Events
             OrderId orderId,
             OrderIdBroker orderIdBroker,
             Symbol symbol,
-            Label label,
             OrderSide orderSide,
             OrderType orderType,
             Quantity quantity,
@@ -84,7 +81,6 @@ namespace Nautilus.DomainModel.Events
             this.AccountId = accountId;
             this.OrderIdBroker = orderIdBroker;
             this.Symbol = symbol;
-            this.Label = label;
             this.OrderSide = orderSide;
             this.OrderType = orderType;
             this.Quantity = quantity;
@@ -108,11 +104,6 @@ namespace Nautilus.DomainModel.Events
         /// Gets the events order symbol.
         /// </summary>
         public Symbol Symbol { get; }
-
-        /// <summary>
-        /// Gets the events order label.
-        /// </summary>
-        public Label Label { get; }
 
         /// <summary>
         /// Gets the events order side.
@@ -163,7 +154,6 @@ namespace Nautilus.DomainModel.Events
                    $"AccountId={this.AccountId.Value},  " +
                    $"OrderId={this.OrderId.Value}, " +
                    $"OrderIdBroker={this.OrderIdBroker.Value}, " +
-                   $"Label={this.Label.Value}, " +
                    $"{this.OrderSide.ToString().ToUpper()} " +
                    $"{this.Quantity.ToStringFormatted()} " +
                    $"{this.Symbol.Value} " +

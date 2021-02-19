@@ -175,7 +175,7 @@ namespace Nautilus.Fxcm
         {
             if (this.session is null)
             {
-                this.Logger.LogError("Cannot send FIX message (the session is null).");
+                this.Logger.LogError(LogId.Network, "Cannot send FIX message (the session is null).");
                 return;
             }
 
@@ -186,7 +186,7 @@ namespace Nautilus.Fxcm
             }
             catch (Exception ex)
             {
-                this.Logger.LogError(LogId.Networking, ex.Message, ex);
+                this.Logger.LogError(LogId.Network, ex.Message, ex);
             }
         }
 

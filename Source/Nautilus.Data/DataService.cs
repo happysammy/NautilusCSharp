@@ -24,7 +24,6 @@ using Nautilus.Common.Messaging;
 using Nautilus.DomainModel.Identifiers;
 using Nautilus.Messaging;
 using Nautilus.Service;
-using NodaTime;
 
 namespace Nautilus.Data
 {
@@ -37,8 +36,6 @@ namespace Nautilus.Data
         private readonly List<Address> managedComponents;
         private readonly IDataGateway dataGateway;
         private readonly IReadOnlyCollection<Symbol> subscribingSymbols;
-        private readonly LocalTime trimTimeTicks;
-        private readonly int trimWindowDaysTicks;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataService"/> class.
@@ -75,9 +72,6 @@ namespace Nautilus.Data
             };
 
             this.subscribingSymbols = config.DataConfig.SubscribingSymbols;
-
-            this.trimTimeTicks = config.DataConfig.TickDataTrimTime;
-            this.trimWindowDaysTicks = config.DataConfig.TickDataTrimWindowDays;
 
             this.RegisterConnectionAddress(ComponentAddress.DataGateway);
         }

@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="TickDataSerializer.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="BarDataSerializer.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2020 Nautech Systems Pty Ltd. All rights reserved.
 //  https://nautechsystems.io
 //
@@ -19,31 +19,19 @@ using System.Collections.Generic;
 using System.Text;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
-using Nautilus.Common.Componentry;
 using Nautilus.Common.Enums;
 using Nautilus.Common.Interfaces;
 using Nautilus.Core.Correctness;
-using Nautilus.DomainModel.Identifiers;
 using Nautilus.DomainModel.ValueObjects;
 
 namespace Nautilus.Serialization.DataSerializers
 {
     /// <inheritdoc />
-    public sealed class TickDataSerializer : IDataSerializer<Tick>
+    public sealed class BarSerializer : IDataSerializer<Bar>
     {
         private const string Data = nameof(Data);
         private const string DataType = nameof(DataType);
         private const string Metadata = nameof(Metadata);
-
-        private readonly ObjectCache<string, Symbol> cachedSymbols;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TickDataSerializer"/> class.
-        /// </summary>
-        public TickDataSerializer()
-        {
-            this.cachedSymbols = new ObjectCache<string, Symbol>(Symbol.FromString);
-        }
 
         /// <inheritdoc />
         public DataEncoding BlobEncoding => DataEncoding.Bson;
@@ -52,16 +40,14 @@ namespace Nautilus.Serialization.DataSerializers
         public DataEncoding ObjectEncoding => DataEncoding.Utf8;
 
         /// <inheritdoc />
-        public byte[] Serialize(Tick tick)
+        public byte[] Serialize(Bar dataObject)
         {
-            return Encoding.UTF8.GetBytes(tick.ToString());
+            return Encoding.UTF8.GetBytes(dataObject.ToSerializableString());
         }
 
         /// <inheritdoc />
-        public byte[][] Serialize(Tick[] dataObjects)
+        public byte[][] Serialize(Bar[] dataObjects)
         {
-            Debug.NotEmpty(dataObjects, nameof(dataObjects));
-
             var output = new byte[dataObjects.Length][];
             for (var i = 0; i < dataObjects.Length; i++)
             {
@@ -72,57 +58,58 @@ namespace Nautilus.Serialization.DataSerializers
         }
 
         /// <inheritdoc />
-        public byte[] SerializeBlob(byte[][] dataObjectsArray, Dictionary<string, string> metadata)
+        public byte[] SerializeBlob(byte[][] dataObjectsArray, Dictionary<string, string>? metadata)
         {
             Debug.NotEmpty(dataObjectsArray, nameof(dataObjectsArray));
 
+            if (metadata is null)
+            {
+                return new byte[]{};
+            }
+
             return new BsonDocument
             {
-                { DataType, typeof(Tick[]).Name },
+                { DataType, typeof(Bar[]).Name },
                 { Data, new BsonArray(dataObjectsArray) },
                 { Metadata, metadata.ToBsonDocument() },
             }.ToBson();
         }
 
         /// <inheritdoc />
-        public Tick Deserialize(byte[] dataBytes)
+        public Bar Deserialize(byte[] dataBytes)
         {
-            Debug.NotEmpty(dataBytes, nameof(dataBytes));
-
-            return Tick.FromStringWhichIncludesSymbol(Encoding.UTF8.GetString(dataBytes));
+            return Bar.FromSerializableString(Encoding.UTF8.GetString(dataBytes));
         }
 
         /// <inheritdoc />
-        public Tick[] Deserialize(byte[][] dataBytesArray, object? metadata = null)
+        public Bar[] Deserialize(byte[][] dataBytesArray, Dictionary<string, string>? metadata)
         {
-            Debug.NotNull(metadata, nameof(metadata));
+            Debug.NotEmpty(dataBytesArray, nameof(dataBytesArray));
 
-            var output = new Tick[dataBytesArray.Length];
+            var output = new Bar[dataBytesArray.Length];
             for (var i = 0; i < dataBytesArray.Length; i++)
             {
-                output[i] = Tick.FromString((Symbol)metadata!, Encoding.UTF8.GetString(dataBytesArray[i]));
+                output[i] = this.Deserialize(dataBytesArray[i]);
             }
 
             return output;
         }
 
-        /// <inheritdoc/>
-        public Tick[] DeserializeBlob(byte[] dataBytes)
+        /// <inheritdoc />
+        public Bar[] DeserializeBlob(byte[] dataBytes)
         {
             Debug.NotEmpty(dataBytes, nameof(dataBytes));
 
             var data = BsonSerializer.Deserialize<BsonDocument>(dataBytes);
-
-            var symbol = this.cachedSymbols.Get(data[Metadata][nameof(Tick.Symbol)].AsString);
             var valueArray = data[Data].AsBsonArray;
 
-            var ticks = new Tick[valueArray.Count];
+            var bars = new Bar[valueArray.Count];
             for (var i = 0; i < valueArray.Count; i++)
             {
-                ticks[i] = Tick.FromString(symbol,  Encoding.UTF8.GetString(valueArray[i].AsByteArray));
+                bars[i] = this.Deserialize(valueArray[i].AsByteArray);
             }
 
-            return ticks;
+            return bars;
         }
     }
 }

@@ -237,11 +237,6 @@ namespace Nautilus.Fxcm
                 return OrderType.Limit;
             }
 
-            if (fixType == OrdType.MARKET_IF_TOUCHED.ToString())
-            {
-                return OrderType.MIT;
-            }
-
             return OrderType.Undefined;
         }
 
@@ -262,8 +257,6 @@ namespace Nautilus.Fxcm
                     return new OrdType(OrdType.STOP_LIMIT);
                 case OrderType.Limit:
                     return new OrdType(OrdType.LIMIT);
-                case OrderType.MIT:
-                    return new OrdType(OrdType.MARKET_IF_TOUCHED);
                 case OrderType.Undefined:
                     goto default;
                 default:
@@ -315,12 +308,9 @@ namespace Nautilus.Fxcm
         /// <returns>A <see cref="decimal"/>.</returns>
         public static Price GetOrderPrice(OrderType orderType, ExecutionReport message)
         {
-            if (orderType == OrderType.Stop || orderType == OrderType.MIT)
-            {
-                return Price.Create(message.GetDecimal(Tags.StopPx));
-            }
-
-            return Price.Create(message.GetDecimal(Tags.Price));
+            return Price.Create(orderType == OrderType.Stop
+                ? message.GetDecimal(Tags.StopPx)
+                : message.GetDecimal(Tags.Price));
         }
 
         /// <summary>
@@ -332,7 +322,7 @@ namespace Nautilus.Fxcm
         {
             return message.IsSetField(Tags.ExpireTime)
                 ? ParseTimestamp(message.GetField(Tags.ExpireTime))
-                : (ZonedDateTime?)null;
+                : null;
         }
 
         /// <summary>

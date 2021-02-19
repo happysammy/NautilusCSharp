@@ -62,7 +62,6 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             Assert.Equal(order.OrderType, unpacked.OrderType);
             Assert.Equal(order.Price, unpacked.Price);
             Assert.Equal(order.ExecutionId, unpacked.ExecutionId);
-            Assert.Equal(order.Label, unpacked.Label);
             Assert.Equal(order.Quantity, unpacked.Quantity);
             Assert.Equal(order.ExpireTime, unpacked.ExpireTime);
             this.Output.WriteLine(Convert.ToBase64String(packed));
@@ -85,7 +84,6 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             Assert.Equal(order.OrderType, unpacked.OrderType);
             Assert.Equal(order.Price, unpacked.Price);
             Assert.Equal(order.ExecutionId, unpacked.ExecutionId);
-            Assert.Equal(order.Label, unpacked.Label);
             Assert.Equal(order.Quantity, unpacked.Quantity);
             Assert.Equal(order.ExpireTime, unpacked.ExpireTime);
             this.Output.WriteLine(Convert.ToBase64String(packed));
@@ -108,7 +106,6 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             Assert.Equal(order.OrderType, unpacked.OrderType);
             Assert.Equal(order.Price, unpacked.Price);
             Assert.Equal(order.ExecutionId, unpacked.ExecutionId);
-            Assert.Equal(order.Label, unpacked.Label);
             Assert.Equal(order.Quantity, unpacked.Quantity);
             Assert.Equal(order.ExpireTime, unpacked.ExpireTime);
             this.Output.WriteLine(Convert.ToBase64String(packed));
@@ -131,7 +128,6 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             Assert.Equal(order.OrderType, unpacked.OrderType);
             Assert.Equal(order.Price, unpacked.Price);
             Assert.Equal(order.ExecutionId, unpacked.ExecutionId);
-            Assert.Equal(order.Label, unpacked.Label);
             Assert.Equal(order.Quantity, unpacked.Quantity);
             Assert.Equal(order.ExpireTime, unpacked.ExpireTime);
             this.Output.WriteLine(Convert.ToBase64String(packed));
@@ -154,7 +150,6 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             Assert.Equal(order.OrderType, unpacked.OrderType);
             Assert.Equal(order.Price, unpacked.Price);
             Assert.Equal(order.ExecutionId, unpacked.ExecutionId);
-            Assert.Equal(order.Label, unpacked.Label);
             Assert.Equal(order.Quantity, unpacked.Quantity);
             Assert.Equal(order.ExpireTime, unpacked.ExpireTime);
             this.Output.WriteLine(Convert.ToBase64String(packed));

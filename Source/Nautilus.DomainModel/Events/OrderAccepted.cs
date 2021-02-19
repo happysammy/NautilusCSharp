@@ -18,7 +18,6 @@
 using System;
 using Nautilus.Core.Annotations;
 using Nautilus.Core.Correctness;
-using Nautilus.Core.Types;
 using Nautilus.DomainModel.Events.Base;
 using Nautilus.DomainModel.Identifiers;
 using NodaTime;
@@ -39,7 +38,6 @@ namespace Nautilus.DomainModel.Events
         /// <param name="accountId">The event account identifier.</param>
         /// <param name="orderId">The event order identifier.</param>
         /// <param name="orderIdBroker">The event order identifier from the broker.</param>
-        /// <param name="label">The event order label. </param>
         /// <param name="acceptedTime">The event accepted time.</param>
         /// <param name="eventId">The event identifier.</param>
         /// <param name="eventTimestamp">The event timestamp.</param>
@@ -47,7 +45,6 @@ namespace Nautilus.DomainModel.Events
             AccountId accountId,
             OrderId orderId,
             OrderIdBroker orderIdBroker,
-            Label label,
             ZonedDateTime acceptedTime,
             Guid eventId,
             ZonedDateTime eventTimestamp)
@@ -63,7 +60,6 @@ namespace Nautilus.DomainModel.Events
 
             this.OrderIdBroker = orderIdBroker;
             this.AccountId = accountId;
-            this.Label = label;
             this.AcceptedTime = acceptedTime;
         }
 
@@ -78,11 +74,6 @@ namespace Nautilus.DomainModel.Events
         public OrderIdBroker OrderIdBroker { get; }
 
         /// <summary>
-        /// Gets the events order label.
-        /// </summary>
-        public Label Label { get; }
-
-        /// <summary>
         /// Gets the events order accepted time.
         /// </summary>
         public ZonedDateTime AcceptedTime { get; }
@@ -94,7 +85,6 @@ namespace Nautilus.DomainModel.Events
         public override string ToString() => $"{this.Type.Name}(" +
                                              $"AccountId={this.AccountId.Value}, " +
                                              $"OrderId={this.OrderId.Value}, " +
-                                             $"OrderIdBroker={this.OrderIdBroker.Value}, " +
-                                             $"Label={this.Label.Value})";
+                                             $"OrderIdBroker={this.OrderIdBroker.Value})";
     }
 }

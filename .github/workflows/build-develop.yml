@@ -15,24 +15,7 @@ jobs:
       - name: Setup Environment
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 3.1.302
-
-      - name: Set Version
-        run: |
-          echo ::set-env name=VERSION::$(cat Source/version.txt)
-          echo ::set-env name=BUILD_NUMBER::$(echo $GITHUB_RUN_NUMBER)
-
-      - name: Set Naming
-        run: |
-          echo ::set-env name=NAUTILUS_VERSION::$(echo $VERSION.$BUILD_NUMBER-beta)
-          echo ::set-env name=NAUTILUS_RELEASE_NAME::$(echo Nautilus-$VERSION.$BUILD_NUMBER-beta)
-
-      - name: Check Naming
-        run: |
-          echo version: $VERSION
-          echo build: $BUILD_NUMBER
-          echo tag: $NAUTILUS_VERSION
-          echo release: $NAUTILUS_RELEASE_NAME
+          dotnet-version: 5.0.x
 
       - name: Install dependencies
         run: |
@@ -42,12 +25,7 @@ jobs:
           sudo make
           sudo make install
           cd -
-          git clone --recursive https://github.com/RedisTimeSeries/RedisTimeSeries.git
-          cd RedisTimeSeries
-          sudo make build
-          cd -
           redis-server --daemonize yes
-          redis-cli MODULE LOAD /home/runner/work/Nautilus/Nautilus/RedisTimeSeries/bin/linux-x64-release/redistimeseries.so
 
       - name: Test
         run: |

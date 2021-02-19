@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="BarDataSerializer.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="TickDataSerializer.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2020 Nautech Systems Pty Ltd. All rights reserved.
 //  https://nautechsystems.io
 //
@@ -19,19 +19,31 @@ using System.Collections.Generic;
 using System.Text;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
+using Nautilus.Common.Componentry;
 using Nautilus.Common.Enums;
 using Nautilus.Common.Interfaces;
 using Nautilus.Core.Correctness;
+using Nautilus.DomainModel.Identifiers;
 using Nautilus.DomainModel.ValueObjects;
 
 namespace Nautilus.Serialization.DataSerializers
 {
     /// <inheritdoc />
-    public sealed class BarDataSerializer : IDataSerializer<Bar>
+    public sealed class QuoteTickSerializer : IDataSerializer<QuoteTick>
     {
         private const string Data = nameof(Data);
         private const string DataType = nameof(DataType);
         private const string Metadata = nameof(Metadata);
+
+        private readonly ObjectCache<string, Symbol> cachedSymbols;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="QuoteTickSerializer"/> class.
+        /// </summary>
+        public QuoteTickSerializer()
+        {
+            this.cachedSymbols = new ObjectCache<string, Symbol>(Symbol.FromString);
+        }
 
         /// <inheritdoc />
         public DataEncoding BlobEncoding => DataEncoding.Bson;
@@ -40,14 +52,16 @@ namespace Nautilus.Serialization.DataSerializers
         public DataEncoding ObjectEncoding => DataEncoding.Utf8;
 
         /// <inheritdoc />
-        public byte[] Serialize(Bar dataObject)
+        public byte[] Serialize(QuoteTick tick)
         {
-            return Encoding.UTF8.GetBytes(dataObject.ToString());
+            return Encoding.UTF8.GetBytes(tick.ToSerializableString());
         }
 
         /// <inheritdoc />
-        public byte[][] Serialize(Bar[] dataObjects)
+        public byte[][] Serialize(QuoteTick[] dataObjects)
         {
+            Debug.NotEmpty(dataObjects, nameof(dataObjects));
+
             var output = new byte[dataObjects.Length][];
             for (var i = 0; i < dataObjects.Length; i++)
             {
@@ -58,53 +72,67 @@ namespace Nautilus.Serialization.DataSerializers
         }
 
         /// <inheritdoc />
-        public byte[] SerializeBlob(byte[][] dataObjectsArray, Dictionary<string, string> metadata)
+        public byte[] SerializeBlob(byte[][] dataObjectsArray, Dictionary<string, string>? metadata)
         {
-            Debug.NotEmpty(dataObjectsArray, nameof(dataObjectsArray));
+            Condition.NotNull(metadata, nameof(metadata));
+            Condition.NotEmpty(dataObjectsArray, nameof(dataObjectsArray));
 
             return new BsonDocument
             {
-                { DataType, typeof(Bar[]).Name },
+                { DataType, typeof(QuoteTick[]).Name },
                 { Data, new BsonArray(dataObjectsArray) },
                 { Metadata, metadata.ToBsonDocument() },
             }.ToBson();
         }
 
         /// <inheritdoc />
-        public Bar Deserialize(byte[] dataBytes)
+        public QuoteTick Deserialize(byte[] dataBytes)
         {
-            return Bar.FromString(Encoding.UTF8.GetString(dataBytes));
+            var pieces = Encoding.UTF8.GetString(dataBytes).Split(',', 2);
+            var symbol = this.cachedSymbols.Get(pieces[0]);
+
+            return QuoteTick.FromSerializableString(symbol, pieces[1]);
         }
 
         /// <inheritdoc />
-        public Bar[] Deserialize(byte[][] dataBytesArray, object? metadata = null)
+        public QuoteTick[] Deserialize(byte[][] dataBytesArray, Dictionary<string, string>? metadata)
         {
-            Debug.NotEmpty(dataBytesArray, nameof(dataBytesArray));
+            Debug.NotNull(metadata, nameof(metadata));
 
-            var output = new Bar[dataBytesArray.Length];
+            if (metadata is null)
+            {
+                return new QuoteTick[]{ };
+            }
+
+            var symbol = this.cachedSymbols.Get(metadata[nameof(Symbol)]);
+
+            var output = new QuoteTick[dataBytesArray.Length];
             for (var i = 0; i < dataBytesArray.Length; i++)
             {
-                output[i] = this.Deserialize(dataBytesArray[i]);
+                output[i] = QuoteTick.FromSerializableString(symbol, Encoding.UTF8.GetString(dataBytesArray[i]));
             }
 
             return output;
         }
 
-        /// <inheritdoc />
-        public Bar[] DeserializeBlob(byte[] dataBytes)
+        /// <inheritdoc/>
+        public QuoteTick[] DeserializeBlob(byte[] dataBytes)
         {
             Debug.NotEmpty(dataBytes, nameof(dataBytes));
 
             var data = BsonSerializer.Deserialize<BsonDocument>(dataBytes);
+
+            var symbol = this.cachedSymbols.Get(data[Metadata][nameof(Tick.Symbol)].AsString);
+
             var valueArray = data[Data].AsBsonArray;
 
-            var bars = new Bar[valueArray.Count];
+            var output = new QuoteTick[valueArray.Count];
             for (var i = 0; i < valueArray.Count; i++)
             {
-                bars[i] = this.Deserialize(valueArray[i].AsByteArray);
+                output[i] = QuoteTick.FromSerializableString(symbol, Encoding.UTF8.GetString(valueArray[i].AsByteArray));
             }
 
-            return bars;
+            return output;
         }
     }
 }

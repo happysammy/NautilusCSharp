@@ -153,7 +153,6 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
                 new TraderId("TESTER", "000"),
                 new AccountId("FXCM", "028999999", "SIMULATED"),
                 new OrderId("O-123456"),
-                "EXPIRED",
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 

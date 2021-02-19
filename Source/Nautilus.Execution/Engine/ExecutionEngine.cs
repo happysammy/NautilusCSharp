@@ -550,7 +550,6 @@ namespace Nautilus.Execution.Engine
                 traderId,
                 accountId,
                 order.Id,
-                "GTD_EXPIRY_BACKUP",
                 this.NewGuid(),
                 order.ExpireTime.Value);
 

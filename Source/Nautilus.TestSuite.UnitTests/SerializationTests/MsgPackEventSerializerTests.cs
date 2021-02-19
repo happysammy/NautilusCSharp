@@ -17,7 +17,6 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using Nautilus.Core.Types;
 using Nautilus.DomainModel.Enums;
 using Nautilus.DomainModel.Events;
 using Nautilus.DomainModel.Identifiers;
@@ -81,10 +80,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var initialized = new OrderInitialized(
                 order.Id,
                 order.Symbol,
-                order.Label,
                 order.OrderSide,
                 order.OrderType,
-                order.OrderPurpose,
                 order.Quantity,
                 order.Price,
                 order.TimeInForce,
@@ -171,7 +168,6 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
                 AccountId.FromString("FXCM-02851908-DEMO"),
                 order.Id,
                 new OrderIdBroker("B" + order.Id.Value),
-                order.Label,
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -217,7 +213,6 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
                 order.Id,
                 new OrderIdBroker("B" + order.Id.Value),
                 order.Symbol,
-                new Label("E"),
                 order.OrderSide,
                 order.OrderType,
                 order.Quantity,
@@ -251,7 +246,6 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
                 order.Id,
                 new OrderIdBroker("B" + order.Id.Value),
                 order.Symbol,
-                new Label("E"),
                 order.OrderSide,
                 order.OrderType,
                 order.Quantity,
