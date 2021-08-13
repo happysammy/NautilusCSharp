@@ -1,10 +1,5 @@
-![Nautech Systems](https://github.com/nautechsystems/nautilus_trader/blob/master/docs/artwork/nautech-systems-logo.png?raw=true "logo")
-
-----------
-
 # NautilusCSharp
 
-NautilusCSharp?utm_source=github.com&utm_medium=referral&utm_content=nautechsystems/NautilusCSharp&utm_campaign=Badge_Grade_Dashboard)
 ![Build](https://img.shields.io/github/workflow/status/nautechsystems/NautilusCSharp/build)
 
 **This repo is now archived and unmaintained. It may serve as a C# reference for any future development.**
