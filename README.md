@@ -4,14 +4,10 @@
 
 # NautilusCSharp
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/fb2f64bf5cf8468983dbbd841d29c4e3)](https://app.codacy.com/gh/nautechsystems/NautilusCSharp?utm_source=github.com&utm_medium=referral&utm_content=nautechsystems/NautilusCSharp&utm_campaign=Badge_Grade_Dashboard)
+NautilusCSharp?utm_source=github.com&utm_medium=referral&utm_content=nautechsystems/NautilusCSharp&utm_campaign=Badge_Grade_Dashboard)
 ![Build](https://img.shields.io/github/workflow/status/nautechsystems/NautilusCSharp/build)
 
-**BETA**
-
-- **This repo is currently unmaintained and will potentially become a C# reference architecture**
-- **The integration with NautilusTrader has breaking changes**
-- **The API is still in a state of flux with potential further breaking changes**
+**This repo is now archived and unmaintained. It may serve as a C# reference for any future development.**
 
 ## Introduction
 
