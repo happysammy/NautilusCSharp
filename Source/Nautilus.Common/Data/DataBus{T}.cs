@@ -84,7 +84,7 @@ namespace Nautilus.Common.Data
         /// <param name="data">The data to post.</param>
         public void PostData(T data)
         {
-            this.pipeline.Post(data!); // data cannot be null (checked in constructor)
+            this.pipeline.Post(data);
         }
 
         /// <summary>
